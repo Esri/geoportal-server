@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Config_Standalone.xml -->
+<items>
+  
+  <!-- standalone XML files that should pass -->
+  <item shouldPass="true" >
+    <file recursive="true"><![CDATA[standalone/pass]]></file>
+  </item>
+  
+  <!-- standalone XML files that should fail -->
+  <item shouldPass="false" >
+    <file recursive="true"><![CDATA[standalone/fail]]></file>
+  </item>
+  
+</items>

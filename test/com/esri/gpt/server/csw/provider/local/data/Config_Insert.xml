@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Config_Insert.xml -->
+<items>
+
+  <!-- insert (no documents included) -->
+  <item shouldPass="false" owsLocator="csw:Insert/*" owsCode="MissingParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Insert></csw:Insert>
+      </csw:Transaction>
+    ]]></xml> 
+  </item> 
+  
+  <!-- insert (unrecognized schema) -->
+  <item shouldPass="false" owsCode="NoApplicableCode">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Insert><a></a></csw:Insert>
+      </csw:Transaction>
+    ]]></xml> 
+  </item> 
+  
+  <!-- insert (validation exceptions) -->
+  <item shouldPass="false" owsCode="NoApplicableCode">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Insert handle="hdl">
+			<MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/metadataEntity.xsd">
+				<fileIdentifier>
+					<gco:CharacterString>{B5FA4B49-788A-4236-9B37-AEC095AB62E9}</gco:CharacterString>
+				</fileIdentifier>
+				<language>
+					<gco:CharacterString>en</gco:CharacterString>
+				</language>
+				<contact>
+					<CI_ResponsibleParty>
+						<organisationName>
+							<gco:CharacterString>ESRI</gco:CharacterString>
+						</organisationName>
+						<role>
+							<CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="custodian">custodian</CI_RoleCode>
+						</role>
+					</CI_ResponsibleParty>
+				</contact>
+				<dateStamp>
+					<gco:Date>2010-03-29</gco:Date>
+				</dateStamp>
+				<metadataStandardName>
+					<gco:CharacterString>ISO 19139/19115 Metadata for Datasets</gco:CharacterString>
+				</metadataStandardName>
+				<metadataStandardVersion>
+					<gco:CharacterString>2003</gco:CharacterString>
+				</metadataStandardVersion>
+				<referenceSystemInfo>
+					<MD_ReferenceSystem>
+					</MD_ReferenceSystem>
+				</referenceSystemInfo>
+				<identificationInfo>
+					<MD_DataIdentification>
+						<citation>
+							<CI_Citation>
+								<title>
+									<gco:CharacterString>Document with validation errors.</gco:CharacterString>
+								</title>
+								<date>
+									<CI_Date>
+										<date>
+											<gco:Date>2010-03-29</gco:Date>
+										</date>
+										<dateType>
+											<CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+										</dateType>
+									</CI_Date>
+								</date>
+							</CI_Citation>
+						</citation>
+						<abstract>
+							<gco:CharacterString/>
+						</abstract>
+						<graphicOverview>
+						</graphicOverview>
+						<language>
+							<gco:CharacterString>en</gco:CharacterString>
+						</language>
+						<extent>
+							<EX_Extent>
+								<geographicElement>
+									<EX_GeographicBoundingBox>
+										<westBoundLongitude>
+											<gco:Decimal>-180</gco:Decimal>
+										</westBoundLongitude>
+										<eastBoundLongitude>
+											<gco:Decimal>180</gco:Decimal>
+										</eastBoundLongitude>
+										<southBoundLatitude>
+											<gco:Decimal>-90</gco:Decimal>
+										</southBoundLatitude>
+										<northBoundLatitude>
+											<gco:Decimal>90</gco:Decimal>
+										</northBoundLatitude>
+									</EX_GeographicBoundingBox>
+								</geographicElement>
+							</EX_Extent>
+						</extent>
+					</MD_DataIdentification>
+				</identificationInfo>
+			</MD_Metadata>
+        </csw:Insert>
+      </csw:Transaction>
+    ]]></xml> 
+  </item> 
+  
+  <!-- delete existing test records -->
+  <item shouldPass="true">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete1</ogc:Literal>
+                </ogc:PropertyIsEqualTo>   
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete2</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete3</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>csw:Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete4</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+              </ogc:Or>
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+  
+  <!-- insert some records -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="4" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalInserted"/>
+    <assertion type="assertEquals" 
+      expected="0" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalUpdated"/>
+    <assertion type="assertEquals" 
+      expected="0" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalDeleted"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Insert>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete1</dc:identifier>
+            <dc:title>idDelete1</dc:title>
+          </csw:Record>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete2</dc:identifier>
+            <dc:title>idDelete2</dc:title>
+          </csw:Record>
+        </csw:Insert>
+        <csw:Insert>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete3</dc:identifier>
+            <dc:title>idDelete3</dc:title>
+          </csw:Record>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete4</dc:identifier>
+            <dc:title>idDelete4</dc:title>
+          </csw:Record>
+        </csw:Insert>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>  
+  
+  <!-- query the inserted records -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordByIdResponse/csw:SummaryRecord)"/>
+    <url><![CDATA[service=CSW&request=GetRecordById&id=idDelete1]]></url>
+    <url><![CDATA[service=CSW&request=GetRecordById&id=idDelete2]]></url>
+    <url><![CDATA[service=CSW&request=GetRecordById&id=idDelete3]]></url>
+    <url><![CDATA[service=CSW&request=GetRecordById&id=idDelete4]]></url>
+  </item>
+  
+  <!-- check one on the titles -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="idDelete2" src="xpath-string:/csw:GetRecordByIdResponse/csw:SummaryRecord/dc:title"/>
+    <url><![CDATA[service=CSW&request=GetRecordById&id=idDelete2]]></url>
+  </item>
+  
+  <!-- clean up the test records -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="0" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalInserted"/>
+    <assertion type="assertEquals" 
+      expected="0" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalUpdated"/>
+    <assertion type="assertEquals" 
+      expected="4" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalDeleted"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete1</ogc:Literal>
+                </ogc:PropertyIsEqualTo>   
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete2</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete3</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>csw:Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete4</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+              </ogc:Or>
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+  
+</items>

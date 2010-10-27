@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Config_GetRecords.xml -->
+<items>
+
+  <!-- GetRecords,GetRecordById ElementNames can only be specified for Dublin Core responses -->
+
+  <!-- Query/@typeNames tests ?? -->
+  <!-- ElementSetName/@typeNames tests ?? -->
+  <!-- csw:ElementName tests ?? -->
+  <!-- property comparison queries against a geometry property -->
+  <!-- spatial queries against a non geometry property -->
+  <!-- valid ogc:Filter tests ?? -->
+  <!-- outputSchema tests ?? -->
+  <!-- requestId responseHandler distributedSearch hopCount ?? -->
+
+  <!-- invalid outputFormat -->
+  <item shouldPass="false" owsLocator="outputFormat" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=GetRecords&outputFormat=]]></url>
+    <url><![CDATA[service=CSW&request=GetRecords&outputFormat=a]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="@outputFormat" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" outputFormat="">
+      </csw:GetRecords>
+    ]]></xml> 
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" outputFormat="a">
+      </csw:GetRecords>
+    ]]></xml> 
+  </item>
+
+  <!-- invalid outputSchema -->
+  <item shouldPass="false" owsLocator="outputSchema" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=GetRecords&outputSchema=]]></url>
+    <url><![CDATA[service=CSW&request=GetRecords&outputSchema=a]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="@outputSchema" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" outputSchema="">
+      </csw:GetRecords>
+    ]]></xml> 
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" outputSchema="a">
+      </csw:GetRecords>
+    ]]></xml> 
+  </item>
+  
+  <!-- invalid resultType -->
+  <item shouldPass="false" owsLocator="resultType" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=GetRecords&resultType=]]></url>
+    <url><![CDATA[service=CSW&request=GetRecords&resultType=a]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="@resultType" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        service="CSW" resultType="">
+      </csw:GetRecords>
+    ]]></xml> 
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        service="CSW" resultType="a">
+      </csw:GetRecords>
+    ]]></xml> 
+  </item>
+  
+  <!-- invalid ElementSetName -->
+  <item shouldPass="false" owsLocator="ElementSetName" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=GetRecords&ElementSetName=]]></url>
+    <url><![CDATA[service=CSW&request=GetRecords&ElementSetName=a]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="csw:ElementSetName" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Query><csw:ElementSetName></csw:ElementSetName></csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Query><csw:ElementSetName>a</csw:ElementSetName></csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item>
+  
+  <!-- invalid constraintLanguage -->
+  <item shouldPass="false" owsLocator="constraintLanguage" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=GetRecords&constraintLanguage=]]></url>
+    <url><![CDATA[service=CSW&request=GetRecords&constraintLanguage=a]]></url>
+  </item> 
+  
+  <!-- csw:CqlText is not supported -->
+  <item shouldPass="false" owsLocator="constraintLanguage" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=GetRecords&constraintLanguage=CQL_TEXT]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="csw:CqlText" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Query>
+          <csw:Constraint version="1.1.0"><csw:CqlText></csw:CqlText></csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- invalid ogc:Filter constraintVersion -->
+  <item shouldPass="false" owsLocator="constraint_language_version" owsCode="InvalidParameterValue">
+    <url><![CDATA[
+      service=CSW&request=GetRecords&constraintLanguage=FILTER&constraint_language_version=a&constraint=b
+    ]]></url>
+  </item> 
+  <item shouldPass="false" owsLocator="csw:Constraint/@version" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Query>
+          <csw:Constraint version="a"><ogc:Filter></ogc:Filter></csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- invalid namespace specification -->
+  <item shouldPass="false" owsLocator="namespace" owsCode="InvalidParameterValue">
+    <url><![CDATA[
+      service=CSW&request=GetRecords&constraint=b&namespace=a
+    ]]></url>
+    <url><![CDATA[
+      service=CSW&request=GetRecords&constraint=b&namespace=xmlns()
+    ]]></url>
+    <url><![CDATA[
+      service=CSW&request=GetRecords&constraint=b&namespace=xmlns(gml=http://www.opengis.net/gml),xmlns()
+    ]]></url>
+  </item> 
+  
+</items>

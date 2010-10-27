@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Config_GetRecords3.xml -->
+<items>
+
+  <!-- ad hoc element names test -->
+  <item shouldPass="true">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Insert>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete1</dc:identifier>
+            <dc:title>idDelete1</dc:title>
+            <dc:relation>relation1</dc:relation>
+          </csw:Record>
+        </csw:Insert>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="2.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:Record[dc:title='idDelete1']/*)"/>
+    <url><![CDATA[
+      service=CSW&request=GetRecords&elementName=title,relation&resultType=results&constraint=<Filter><PropertyIsLike><PropertyName>title</PropertyName><Literal>idDelete?</Literal></PropertyIsLike></Filter>
+    ]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementName>dc:title</csw:ElementName>
+          <csw:ElementName>dc:relation</csw:ElementName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsLike wildCard="*" escapeChar="\" singleChar="?">
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idDelete?</ogc:Literal>
+                </ogc:PropertyIsLike>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml>  
+  </item> 
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalDeleted"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete1</ogc:Literal>
+                </ogc:PropertyIsEqualTo>   
+              </ogc:Or>
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+  
+  <!-- make some test data -->
+  <item shouldPass="true">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Insert>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete1</dc:identifier>
+            <dc:title>idDelete1</dc:title>
+          </csw:Record>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete2</dc:identifier>
+            <dc:title>idDelete2</dc:title>
+          </csw:Record>
+        </csw:Insert>
+        <csw:Insert>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete3</dc:identifier>
+            <dc:title>idDelete3</dc:title>
+          </csw:Record>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete4</dc:identifier>
+            <dc:title>idDelete4</dc:title>
+          </csw:Record>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete5</dc:identifier>
+            <dc:title>idDelete5</dc:title>
+          </csw:Record>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete6</dc:identifier>
+            <dc:title>idDelete6</dc:title>
+          </csw:Record>
+        </csw:Insert>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+  
+  <!-- query for all inserted test records -->
+  <item shouldPass="true">
+    <assertion type="assertNotNull" src="xpath-node:/csw:GetRecordsResponse/csw:SearchStatus/@timestamp"/>
+    <assertion type="assertEquals" 
+      expected="summary" src="xpath-string:/csw:GetRecordsResponse/csw:SearchResults/@elementSet"/>
+    <assertion type="assertEquals" 
+      expected="0.0" src="xpath-number:/csw:GetRecordsResponse/csw:SearchResults/@nextRecord"/>
+    <assertion type="assertEquals" 
+      expected="6.0" src="xpath-number:/csw:GetRecordsResponse/csw:SearchResults/@numberOfRecordsMatched"/>
+    <assertion type="assertEquals" 
+      expected="6.0" src="xpath-number:/csw:GetRecordsResponse/csw:SearchResults/@numberOfRecordsReturned"/>
+    <assertion type="assertEquals" 
+      expected="http://www.opengis.net/cat/csw/2.0.2" src="xpath-string:/csw:GetRecordsResponse/csw:SearchResults/@recordSchema"/>
+    <url><![CDATA[
+      service=CSW&request=GetRecords&elementSetName=summary&resultType=results&constraint=<Filter><PropertyIsLike><PropertyName>title</PropertyName><Literal>idDelete?</Literal></PropertyIsLike></Filter>
+    ]]></url>
+    <url><![CDATA[
+      service=CSW&request=GetRecords&elementSetName=summary&resultType=results&constraintLanguage=filter&constraint_language_version=1.1.0&&constraint=<Filter><PropertyIsLike><PropertyName>title</PropertyName><Literal>idDelete?</Literal></PropertyIsLike></Filter>
+    ]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsLike wildCard="*" escapeChar="\" singleChar="?">
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idDelete?</ogc:Literal>
+                </ogc:PropertyIsLike>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml>  
+  </item> 
+  
+  <!-- startPosition, maxRecords and sortby tests -->
+  <item shouldPass="true">
+    <assertion type="assertNotNull" src="xpath-node:/csw:GetRecordsResponse/csw:SearchStatus/@timestamp"/>
+    <assertion type="assertEquals" 
+      expected="summary" src="xpath-string:/csw:GetRecordsResponse/csw:SearchResults/@elementSet"/>
+    <assertion type="assertEquals" 
+      expected="5.0" src="xpath-number:/csw:GetRecordsResponse/csw:SearchResults/@nextRecord"/>
+    <assertion type="assertEquals" 
+      expected="6.0" src="xpath-number:/csw:GetRecordsResponse/csw:SearchResults/@numberOfRecordsMatched"/>
+    <assertion type="assertEquals" 
+      expected="3.0" src="xpath-number:/csw:GetRecordsResponse/csw:SearchResults/@numberOfRecordsReturned"/>
+    <assertion type="assertEquals" 
+      expected="http://www.opengis.net/cat/csw/2.0.2" src="xpath-string:/csw:GetRecordsResponse/csw:SearchResults/@recordSchema"/>
+   <assertion type="assertEquals" 
+      expected="idDelete5" 
+      src="xpath-string:/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord[1]/dc:title"/>
+    <url><![CDATA[
+      service=CSW&request=GetRecords&startPosition=2&maxRecords=3&sortby=title:D,id:A&elementSetName=summary&resultType=results&constraint=<Filter><PropertyIsLike><PropertyName>title</PropertyName><Literal>idDelete?</Literal></PropertyIsLike></Filter>
+    ]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" 
+        service="CSW" resultType="RESULTS" startPosition="2" maxRecords="3">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsLike wildCard="*" escapeChar="\" singleChar="?">
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idDelete?</ogc:Literal>
+                </ogc:PropertyIsLike>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+          <ogc:SortBy>
+            <ogc:SortProperty>
+              <ogc:PropertyName>title</ogc:PropertyName>
+              <ogc:SortOrder>DESC</ogc:SortOrder>
+            </ogc:SortProperty>
+            <ogc:SortProperty>
+              <ogc:PropertyName>id</ogc:PropertyName>
+              <ogc:SortOrder>ASC</ogc:SortOrder>
+            </ogc:SortProperty>
+          </ogc:SortBy>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml>  
+  </item> 
+  
+  <!-- clean up the test records -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="0" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalInserted"/>
+    <assertion type="assertEquals" 
+      expected="0" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalUpdated"/>
+    <assertion type="assertEquals" 
+      expected="6" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalDeleted"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete1</ogc:Literal>
+                </ogc:PropertyIsEqualTo>   
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete2</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete3</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>csw:Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete4</ogc:Literal>
+                </ogc:PropertyIsEqualTo> 
+                 <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete5</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete6</ogc:Literal>
+                </ogc:PropertyIsEqualTo>   
+              </ogc:Or>
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+  
+</items>

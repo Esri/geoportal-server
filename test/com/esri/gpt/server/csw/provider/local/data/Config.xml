@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Config.xml -->
+<items>
+  <configFile>Config_Global.xml</configFile>
+  <configFile>Config_GetCapabilities.xml</configFile>
+  <configFile>Config_DescribeRecord.xml</configFile>
+  <configFile>Config_GetRecordById.xml</configFile>
+  <configFile>Config_GetRecords.xml</configFile>
+  <configFile>Config_GetRecords2.xml</configFile>
+  <configFile>Config_GetRecords3.xml</configFile>
+  <configFile>Config_GetRecords4.xml</configFile>
+  <configFile>Config_GetRecords5.xml</configFile>
+  <configFile>Config_GetRecords6.xml</configFile>
+  <configFile>Config_GetRecords7.xml</configFile>
+  <configFile>Config_GetRecords8.xml</configFile>
+  <configFile>Config_Transaction.xml</configFile>
+  <configFile>Config_Insert.xml</configFile>
+  <configFile>Config_Update.xml</configFile>
+  <configFile>Config_Delete.xml</configFile>
+  <configFile>Config_Standalone.xml</configFile>
+</items>

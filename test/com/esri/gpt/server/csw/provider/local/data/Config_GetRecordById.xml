@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Config_GetRecordById.xml -->
+<items>
+
+  <!-- invalid outputFormat -->
+  <item shouldPass="false" owsLocator="outputFormat" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=GetRecordById&id=1&outputFormat=]]></url>
+    <url><![CDATA[service=CSW&request=GetRecordById&id=1&outputFormat=a]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="@outputFormat" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" outputFormat="">
+      </csw:GetRecordById>
+    ]]></xml> 
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" outputFormat="a">
+      </csw:GetRecordById>
+    ]]></xml> 
+  </item>
+
+  <!-- invalid outputSchema -->
+  <item shouldPass="false" owsLocator="outputSchema" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=GetRecordById&id=1&outputSchema=]]></url>
+    <url><![CDATA[service=CSW&request=GetRecordById&id=1&outputSchema=a]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="@outputSchema" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" outputSchema="">
+      </csw:GetRecordById>
+    ]]></xml> 
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" outputSchema="a">
+      </csw:GetRecordById>
+    ]]></xml> 
+  </item>
+
+  <!-- invalid id -->
+  <item shouldPass="false" owsLocator="Id" owsCode="MissingParameterValue">
+    <url><![CDATA[service=CSW&request=GetRecordById]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="Id" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=GetRecordById&id=]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="csw:Id" owsCode="MissingParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+      </csw:GetRecordById>
+    ]]></xml> 
+  </item>
+  <item shouldPass="false" owsLocator="csw:Id" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Id></csw:Id>
+      </csw:GetRecordById>
+    ]]></xml> 
+  </item>
+  
+  <!-- asking for an original output schema for more that one id is invalid -->
+  <item shouldPass="false" owsLocator="Id" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=GetRecordById&id=1,2&outputSchema=original]]></url>
+    <url><![CDATA[service=CSW&request=GetRecordById&id=1&id=2&outputSchema=original]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="csw:Id" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        service="CSW" outputSchema="original">
+        <csw:Id>1</csw:Id>
+        <csw:Id>2</csw:Id>
+      </csw:GetRecordById>
+    ]]></xml> 
+  </item>
+  
+  <!-- invalid ElementSetName -->
+  <item shouldPass="false" owsLocator="ElementSetName" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=GetRecordById&id=1&ElementSetName=]]></url>
+    <url><![CDATA[service=CSW&request=GetRecordById&id=1&ElementSetName=a]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="csw:ElementSetName" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Id>1</csw:Id>
+        <csw:ElementSetName></csw:ElementSetName>
+      </csw:GetRecordById>
+    ]]></xml> 
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Id>1</csw:Id>
+        <csw:ElementSetName>a</csw:ElementSetName>
+      </csw:GetRecordById>
+    ]]></xml> 
+  </item>
+  
+  <!-- make some test data -->
+  <item shouldPass="true">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Insert>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete1</dc:identifier>
+            <dc:title>idDelete1</dc:title>
+          </csw:Record>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete2</dc:identifier>
+            <dc:title>idDelete2</dc:title>
+          </csw:Record>
+        </csw:Insert>
+        <csw:Insert>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete3</dc:identifier>
+            <dc:title>idDelete3</dc:title>
+          </csw:Record>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete4</dc:identifier>
+            <dc:title>idDelete4</dc:title>
+          </csw:Record>
+        </csw:Insert>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+    
+  <!-- general test -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" expected="CSW" src="serviceProperties.serviceName"/>
+    <assertion type="assertEquals" expected="2.0.2" src="serviceProperties.serviceVersion"/>
+    <assertion type="assertEquals" expected="text/xml" src="operationResponse.outputFormat"/>
+    <assertion type="assertNotNull" src="xpath-node:/csw:GetRecordByIdResponse"/>
+    <url><![CDATA[service=csw&request=getRecordById&version=2.0.2&id=1&outputFormat=text/xml&elementSetName=summary]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+        service="CSW" 
+        version="2.0.2" 
+        outputFormat="text/xml"
+        outputSchema="http://www.opengis.net/cat/csw/2.0.2"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+        <csw:Id>1</csw:Id>
+        <csw:ElementSetName>summary</csw:ElementSetName>
+      </csw:GetRecordById>
+    ]]></xml> 
+  </item> 
+        
+  <!-- query for an id that does not exist -->
+  <item shouldPass="true">
+    <assertion type="assertNotNull" src="xpath-node:/csw:GetRecordByIdResponse"/>
+    <assertion type="assertNull" src="xpath-node:/csw:GetRecordByIdResponse/csw:SummaryRecord"/>
+    <url><![CDATA[service=csw&request=getRecordById&id=idThatDoesNotExist&elementSetName=summary]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Id>idThatDoesNotExist</csw:Id>
+        <csw:ElementSetName>summary</csw:ElementSetName>
+      </csw:GetRecordById>
+    ]]></xml> 
+  </item>
+  
+  <!-- query for an id that does exist -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordByIdResponse/csw:SummaryRecord)"/>
+    <url><![CDATA[
+      service=CSW&request=GetRecordById&id=idDelete1
+    ]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Id>idDelete1</csw:Id>
+        <csw:ElementSetName>summary</csw:ElementSetName>
+      </csw:GetRecordById>
+    ]]></xml> 
+  </item>   
+  
+  <!-- query for multiple ids -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="2.0" src="xpath-number:count(/csw:GetRecordByIdResponse/csw:SummaryRecord)"/>
+    <url><![CDATA[
+      service=CSW&request=GetRecordById&id=idDelete1,idDelete2
+    ]]></url>
+    <url><![CDATA[
+      service=CSW&request=GetRecordById&id=idDelete1&id=idDelete2
+    ]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Id>idDelete1</csw:Id>
+        <csw:Id>idDelete2</csw:Id>
+        <csw:ElementSetName>summary</csw:ElementSetName>
+      </csw:GetRecordById>
+    ]]></xml> 
+  </item>
+  
+  <!-- ensure proper element set types -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordByIdResponse/csw:BriefRecord)"/>
+    <url><![CDATA[
+      service=CSW&request=GetRecordById&elementSetName=brief&id=idDelete1
+    ]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Id>idDelete1</csw:Id>
+        <csw:ElementSetName>brief</csw:ElementSetName>
+      </csw:GetRecordById>
+    ]]></xml> 
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordByIdResponse/csw:SummaryRecord)"/>
+    <url><![CDATA[
+      service=CSW&request=GetRecordById&elementSetName=summary&id=idDelete1
+    ]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Id>idDelete1</csw:Id>
+        <csw:ElementSetName>summary</csw:ElementSetName>
+      </csw:GetRecordById>
+    ]]></xml> 
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordByIdResponse/csw:Record)"/>
+    <url><![CDATA[
+      service=CSW&request=GetRecordById&elementSetName=full&id=idDelete1
+    ]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Id>idDelete1</csw:Id>
+        <csw:ElementSetName>full</csw:ElementSetName>
+      </csw:GetRecordById>
+    ]]></xml> 
+  </item>
+  
+  <!-- outputSchema tests ?? -->
+  
+  <!-- clean up the test records -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="0" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalInserted"/>
+    <assertion type="assertEquals" 
+      expected="0" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalUpdated"/>
+    <assertion type="assertEquals" 
+      expected="4" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalDeleted"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete1</ogc:Literal>
+                </ogc:PropertyIsEqualTo>   
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete2</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete3</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>csw:Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete4</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+              </ogc:Or>
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+  
+</items>

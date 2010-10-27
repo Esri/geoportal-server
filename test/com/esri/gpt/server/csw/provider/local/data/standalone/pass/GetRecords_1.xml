@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+  service="CSW" version="2.0.2"   
+  resultType="RESULTS" startPosition="1" maxRecords="10">
+  <csw:Query typeNames="csw:Record"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:ogc="http://www.opengis.net/ogc"
+    xmlns:gml="http://www.opengis.net/gml">
+    <csw:ElementSetName>summary</csw:ElementSetName>
+    <csw:Constraint version="1.1.0">
+      <ogc:Filter>
+        <ogc:And>      
+          <ogc:PropertyIsGreaterThan>
+            <ogc:PropertyName>Title</ogc:PropertyName>
+            <ogc:Literal>A</ogc:Literal>
+          </ogc:PropertyIsGreaterThan>   
+        </ogc:And>
+      </ogc:Filter>
+    </csw:Constraint>
+  </csw:Query>
+</csw:GetRecords>
+

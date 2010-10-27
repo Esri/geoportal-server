@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Config_DescribeRecord.xml -->
+<items>
+  
+  <!-- invalid outputFormat tests -->
+  <item shouldPass="false" owsLocator="outputFormat" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=DescribeRecord&outputFormat=]]></url>
+    <url><![CDATA[service=CSW&request=DescribeRecord&outputFormat=a]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="@outputFormat" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:DescribeRecord xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" outputFormat="">
+      </csw:DescribeRecord>
+    ]]></xml> 
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:DescribeRecord xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" outputFormat="a">
+      </csw:DescribeRecord>
+    ]]></xml> 
+  </item>
+  
+  <!-- invalid schemaLanguage tests -->
+  <item shouldPass="false" owsLocator="schemaLanguage" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=DescribeRecord&schemaLanguage=]]></url>
+    <url><![CDATA[service=CSW&request=DescribeRecord&schemaLanguage=a]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="@schemaLanguage" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:DescribeRecord xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" schemaLanguage="">
+      </csw:DescribeRecord>
+    ]]></xml> 
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:DescribeRecord xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" schemaLanguage="a">
+      </csw:DescribeRecord>
+    ]]></xml> 
+  </item>
+  
+  <!-- invalid TypeName tests (check empty only) -->
+  <item shouldPass="false" owsLocator="TypeName" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=DescribeRecord&TypeName=]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="csw:TypeName" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:DescribeRecord xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:TypeName></csw:TypeName>
+      </csw:DescribeRecord>
+    ]]></xml> 
+  </item>
+  
+  <!-- general test -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" expected="CSW" src="serviceProperties.serviceName"/>
+    <assertion type="assertEquals" expected="2.0.2" src="serviceProperties.serviceVersion"/>
+    <assertion type="assertEquals" expected="text/xml" src="operationResponse.outputFormat"/>
+    <assertion type="assertNotNull" src="xpath-node:/csw:DescribeRecordResponse"/>
+    <url><![CDATA[
+      service=csw&request=describeRecord&version=2.0.2&outputFormat=text/xml
+    ]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:DescribeRecord xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+        service="CSW" 
+        version="2.0.2" 
+        outputFormat="text/xml"
+        schemaLanguage="http://www.w3.org/XML/Schema"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+        <csw:TypeName>csw:Record</csw:TypeName>
+      </csw:DescribeRecord>
+    ]]></xml> 
+  </item> 
+  
+  <!-- valid schemaLanguage/TypeName combinations -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:DescribeRecordResponse/csw:SchemaComponent[@schemaLanguage='XMLSCHEMA'])"/>
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(//xsd:schema[@id='csw:Record'])"/>
+    <url><![CDATA[
+      service=CSW&request=DescribeRecord&schemaLanguage=http://www.w3.org/XML/Schema&TypeName=csw:Record
+    ]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:DescribeRecord xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        service="CSW" schemaLanguage="http://www.w3.org/XML/Schema">
+        <csw:TypeName>csw:Record</csw:TypeName>
+      </csw:DescribeRecord>
+    ]]></xml> 
+  </item> 
+  
+</items>
