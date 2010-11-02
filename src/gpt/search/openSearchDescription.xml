@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:geo="http://a9.com/-/opensearch/extensions/geo/1.0/">
+  <ShortName>{openSearch.shortName}</ShortName>
+  <Description>{openSearch.description}</Description>
+  <Tags>geospatial metadata</Tags>
+  <Contact></Contact>
+  <Url type="application/rss+xml" indexOffset="1" pageOffset="1"
+    template="{openSearch.restPath}?searchText={searchTerms}&amp;start={startIndex?}&amp;max={count?}&amp;bbox={geo:box?}&amp;f=georss"/>
+  <Url type="text/html" indexOffset="1" pageOffset="1"
+    template="{openSearch.restPath}?searchText={searchTerms}&amp;start={startIndex?}&amp;max={count?}&amp;bbox={geo:box?}&amp;f=html"/>
+    
+  <Image height="16" width="16" type="image/png">{openSearch.imagePath}/openSearch.png</Image>
+  <Query role="example" searchTerms="land" />
+  <OutputEncoding>UTF-8</OutputEncoding>
+  <InputEncoding>UTF-8</InputEncoding>
+  
+  <!-- 
+  <LongName>Example.com Web Search</LongName>
+  <Image height="64" width="64" type="image/png">{openSearch.imagePath}/websearch.png</Image>
+  <Developer>Example.com Development Team</Developer>
+  <Attribution>Search data Copyright 2005, Example.com, Inc., All Rights Reserved</Attribution>
+  <SyndicationRight>open</SyndicationRight>
+  <AdultContent>false</AdultContent>
+  <Language>en-us</Language>
+  -->
+  
+</OpenSearchDescription>

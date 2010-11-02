@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<property-meanings>
+
+  <property-meaning name="uuid" meaningType="uuid" valueType="String" comparisonType="value"> 
+    <dc name="dct:identifier" aliases="uuid,docID" 
+        scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:DocID"/>
+  </property-meaning>
+  
+  <property-meaning name="fileIdentifier" meaningType="fileIdentifier" valueType="String" comparisonType="value"> 
+    <dc name="dc:identifier" aliases="fileIdentifier,fid,id,identifier,fileID" 
+        scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:FileID"/>
+  </property-meaning>
+  
+  <property-meaning name="dateModified" meaningType="dateModified" valueType="Timestamp" comparisonType="value">
+    <dc name="dct:modified" aliases="modified"/>
+  </property-meaning> 
+  
+  <property-meaning name="geometry" meaningType="geometry" valueType="geometry" comparisonType="value">
+    <!--<defaultEnvelope>-180.0 -90.0 180.0 90.0</defaultEnvelope>-->
+    <dc name="ows:BoundingBox" aliases="geometry,envelope,/ows:BoundingBox"/> 
+  </property-meaning>
+  
+  <property-meaning name="anytext" meaningType="anytext" valueType="String" comparisonType="terms" allowLeadingWildcard="true">
+    <consider>title,abstract,keywords,body</consider>
+    <dc name="AnyText" aliases="csw:AnyText"/>
+  </property-meaning>   
+  
+  <property-meaning name="title" valueType="String" comparisonType="terms"> 
+    <dc name="dc:title" aliases="title"/>
+  </property-meaning>
+  
+  <property-meaning name="abstract" valueType="String" comparisonType="terms"> 
+    <dc name="dct:abstract" aliases="abstract"/>
+  </property-meaning> 
+  
+  <property-meaning name="keywords" valueType="String" comparisonType="keyword">
+  </property-meaning> 
+  
+  <property-meaning name="body" valueType="String" comparisonType="terms">
+  </property-meaning> 
+  
+<!--
+  <property-meaning name="contentType" valueType="String" comparisonType="keyword">
+    <dc name="dc:type" aliases="type,format,dc:format" 
+        scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType"/>
+  </property-meaning> 
+
+   
+  <property-meaning name="dataTheme" valueType="String" comparisonType="keyword">
+    <dc name="dc:subject" aliases="subject"/>
+  </property-meaning>
+-->  
+  <property-meaning name="resource.url" valueType="String" comparisonType="value">
+    <dc name="dct:references" scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Server"/>
+  </property-meaning>
+  
+  <property-meaning name="thumbnail.url" meaningType="thumbnailurl" valueType="String" comparisonType="value">
+    <dc name="dct:references" scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Thumbnail"/>
+  </property-meaning>
+  
+  <property-meaning name="website.url" valueType="String" comparisonType="value">
+    <dc name="dct:references" scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Onlink"/>
+  </property-meaning>
+  
+  <property-meaning name="xml.url" meaningType="xmlurl" valueType="String" comparisonType="value">
+    <dc name="dct:references" scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Document"/>
+  </property-meaning>
+  
+  <!-- date is fairly random, it has no explicit meaning, simply associated with some date found
+  within a metadata document -->
+  <property-meaning name="date" valueType="Timestamp" comparisonType="value">
+    <dc name="dc:date" aliases="date"/>
+  </property-meaning> 
+  
+  <property-meaning name="type" valueType="String" comparisonType="keyword">
+    <dc name="dc:type" aliases="type"/>
+  </property-meaning> 
+
+   <property-meaning name="format" valueType="String" comparisonType="keyword">
+    <dc name="dc:format" aliases="format"/>
+  </property-meaning>
+
+  <property-meaning name="subject" valueType="String" comparisonType="keyword">
+    <dc name="dc:subject" aliases="subject"/>
+  </property-meaning>
+
+  <property-meaning name="relation" valueType="String" comparisonType="keyword">
+    <dc name="dc:relation" aliases="relation"/>
+  </property-meaning>
+  <!-- ================================================================================= -->
+      
+  <propertySets>
+    <brief>
+      <dc>
+        <meaning-names>fileIdentifier,title,type,geometry</meaning-names>
+      </dc>
+    </brief>
+     <summary>
+      <dc>
+        <meaning-names>fileIdentifier,title</meaning-names>
+        <meaning-names>type,format</meaning-names>
+        <meaning-names>dateModified,abstract</meaning-names>
+        <meaning-names>geometry</meaning-names>
+      </dc>
+    </summary>
+    <full>
+    <!--  <dc>
+        <meaning-names>fileIdentifier,title</meaning-names>
+        <meaning-names>type,format,subject</meaning-names>
+        <meaning-names>dateModified,abstract</meaning-names>
+        <meaning-names>resource.url,website.url,thumbnail.url,xml.url</meaning-names>
+        <meaning-names>geometry</meaning-names>
+        <meaning-names>date</meaning-names>
+        <meaning-names>relation,dct:spatial,geometry</meaning-names>
+      </dc>-->
+      <dc>
+              <meaning-names>fileIdentifier,title</meaning-names>
+              <meaning-names>type,format</meaning-names>
+              <meaning-names>date,dateModified,abstract</meaning-names>
+              <meaning-names>geometry</meaning-names>
+      </dc>
+    </full>    
+    
+  </propertySets>
+            
+</property-meanings>

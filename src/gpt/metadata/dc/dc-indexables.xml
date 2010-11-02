@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<!-- dc-indexables.xml -->
+<indexables>
+
+  <!-- namespaces -->
+  <namespace prefix="rdf" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+  <namespace prefix="dc" uri="http://purl.org/dc/elements/1.1/"/>
+  <namespace prefix="dct" uri="http://purl.org/dc/terms/"/>
+  <namespace prefix="ows" uri="http://www.opengis.net/ows"/>
+
+  <property meaning="fileIdentifier" xpath="/rdf:RDF/rdf:Description/dc:identifier"/>
+
+  <property meaning="title" xpath="/rdf:RDF/rdf:Description/dc:title"/>
+  <property meaning="abstract" xpath="/rdf:RDF/rdf:Description/dc:description"/>
+    
+  <property meaning="keywords" xpath="/rdf:RDF/rdf:Description/dc:subject"/>
+    
+  <property meaning="envelope" xpath="/rdf:RDF/rdf:Description/ows:WGS84BoundingBox">
+    <property meaning="envelope.lowerCorner" xpath="ows:LowerCorner"/>
+    <property meaning="envelope.upperCorner" xpath="ows:UpperCorner"/>
+
+    <!-- these are incorrect, but we'll include to be compatible with envelopes defined in this way -->
+    <property meaning="envelope.west" xpath="westbc"/>
+    <property meaning="envelope.south" xpath="southbc"/>
+    <property meaning="envelope.east" xpath="eastbc"/>
+    <property meaning="envelope.north" xpath="northbc"/>
+  </property>   
+    
+  <property meaning="resource.url" xpath="/rdf:RDF/rdf:Description/dct:references"/>
+  <!-- <property meaning="website.url" xpath=""/> -->
+  <!-- <property meaning="thumbnail.url" xpath=""/> -->
+  <!-- <property meaning="thumbnail.binary" xpath=""/> -->
+    
+  <property meaning="contentType" xpath="/rdf:RDF/rdf:Description/dc:type"/>
+  <property meaning="contentType" xpath="/rdf:RDF/rdf:Description/dc:format"/>
+  <property meaning="dataTheme" xpath="/rdf:RDF/rdf:Description/dc:subject"/>
+  <property meaning="relation" xpath="/rdf:RDF/rdf:Description/dc:relation"/>
+
+  <!-- index all text content as part of the body field -->
+  <property meaning="body" xpath="/rdf:RDF/rdf:Description/*"/>
+
+  
+</indexables>
+

@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<gptConfig version="1.0.0.0">
+
+    <databaseReference name="gpt" jndiName="jdbc/gpt"/>
+    
+    <!-- Mail server configuration.
+        - smtpHost: mail server SMTP host
+        - smtpPort: mail server SMPT port (optional)
+        - siteEmailAddress: portal contact E-Mail address
+        - emailAddressRegexp: a regular expression for validating input E-Mail addresses    
+        - smptAuth: configuration for a mail server requiring authentication credentials
+        - username: the username credential
+        - password: the password credential
+        - encrypted: "true" or "false" (indicates if this password is encrypted) -->
+    <mail
+        smtpHost="mail_server_smtp_host"  
+        smtpPort="" 
+        siteEmailAddress="portal_contact_email_address"
+        emailAddressRegexp="^[a-zA-Z0-9,!#\$%&amp;'\*\+/=\?\^_`\{\|}~-]+(\.[a-zA-Z0-9,!#\$%&amp;'\*\+/=\?\^_`\{\|}~-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*$">
+        <smtpAuth
+            username=""
+            password=""
+            encrypted="false"/>
+    </mail>
+    
+    <!-- ===================================================================== -->
+  <!-- Search page map configuration.
+		- jsapiUrl: url to the JavaScript API
+		- mapServiceUrl: REST URL to an ArcGIS Server MapServer service
+		- mapServiceType: type of map service, dynamic or tiled.
+		- geometryServiceUrl: REST URL to an ArcGIS Server GeometryServer service
+		- locatorUrl: REST URL to an ArcGIS Server GeocodeServer service
+		- locatorSingleFieldParameter: field for the GeocodeServer service upon which locations can be searched -->
+		
+    <interactiveMap
+        jsapiUrl="http://serverapi.arcgisonline.com/jsapi/arcgis/?v=2.0"
+        mapServiceUrl="REST_API_URL_to_MapService"
+        mapServiceType="dynamic_or_tiled" 
+        geometryServiceUrl="http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer"
+        locatorUrl="http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Locators/ESRI_Geocode_USA/GeocodeServer"
+        locatorSingleFieldParameter = "parameter_name_associated_with_single_field_locator"/>
+  
+    <catalog gptTablePrefix="GPT_">
+          
+				<!-- Lucene configuration.
+				- indexLocation: path to the folder that will hold indexed documents 
+					(e.g. c:/geoportal/lucene-index/catalog1)
+				- writeLockTimeout: the wait time in milli-seconds for acquiring a write lock
+				- useNativeFSLockFactory: if true a NativeFSLockFactory is used otherwise use a SimpleFSLockFactory
+				- analyzerClassName: the class name for the Lucene analyzer
+				- adaptor: parameters that define the optional OntologyService configuration, as per geoportal webhelp at 
+				http://help.arcgis.com/en/geoportal_extension/10.0/help/index.html#/Enable_Search_Using_an_Ontology_Service/00t00000003v000000/ -->
+			
+			<lucene
+				indexLocation="lucene_index_location"
+				writeLockTimeout="60000"
+				useNativeFSLockFactory="true"
+				analyzerClassName="org.apache.lucene.analysis.standard.StandardAnalyzer">
+				<!--
+					<adaptor name="like" className="com.esri.gpt.catalog.lucene.StandardNetworkParserAdaptor">
+						<attribute key="baseUrl" value="http://serverName/OntologyService/query?threshold=0.25&amp;term="/>
+					</adaptor>
+				-->
+			</lucene>  
+		        
+			<!--  Lucene index based assertions (resource ratings and comments).  
+			  - assertion.index.enabled: indicates if ratings and comments should be enabled.
+			  - assertion.index.location: path to the folder that will hold the indexed comments and ratings. NOTE: This assertion.index.location should 
+		        not be the same location as the lucene\indexLocation value. These indexes should not be deleted and should be on a file backup/restore 
+		        plan. 
+			  - assertion.index.allowNonLocalResourceIds: if true, comments and ratings can be made about resources that do not exist in the local 
+				catalog.
+			  - assertion.rating.enabled: allow users to rate resources.
+			  - assertion.comment.enabled: allow users to leave comments for resources.
+			  - assertion.comment.maxLength: maximum characters allowed for one comment.	-->
+		
+			<parameter key="assertion.index.enabled" value="true"/>
+			<parameter key="assertion.index.location" value="lucene_assertion_index_location"/>
+			<parameter key="assertion.index.allowNonLocalResourceIds" value="false"/>
+			<parameter key="assertion.rating.enabled" value="true"/>
+			<parameter key="assertion.comment.enabled" value="true"/>
+			<parameter key="assertion.comment.maxLength" value="2048"/>
+		      
+			<!-- Map Viewer configuration. Optional. You can use the following section to integrate a map viewer with your geoportal, according to the  Integrate a Map Viewer webhelp documentation at http://help.arcgis.com/en/geoportal_extension/10.0/help/index.html#/Integrate_a_Map_Viewer/00t00000000s000000/.  Below is the flex map viewer configuration. 
+			- url = Url of the Flex viewer 
+			- className: class name of the map viewer instance, e.g., for Flex example is com.esri.gpt.catalog.search.MapViewerFlex. NOTE: The 	
+				MapViewerFlex must be in the same domain and port in order for layering of resources to work -->
+			<!--   
+			<mapViewer>
+			 <instance 
+			  url="" 
+			  className="com.esri.gpt.catalog.search.MapViewerFlex">
+			  <parameter key="width" value="1000"/>
+			  <parameter key="height" value="700"/>
+			  <parameter key="regexCanConsumeUrl" value=""/>
+			  </instance>
+			</mapViewer>
+			-->
+		        
+			<!-- Search settings.
+			- searchTimeoutMillisecs: length of time allotted to a search attempt before a timeout error occurs
+			- distributedSearchTimeoutMillisecs: length of time allotted to a federated search attempt before a timeout error occurs
+			- distributedSearchMaxSelectedSites: maximum number of sites allowed to be searched in one federated search attempt
+			- searchResultsPerPage: number of results to show on a page.  If more results are returned than this value, page navigation will be visible
+			- searchResultsReviewsShown: How should the reviews be shown on the results page.  Options are "none", "only-reviewed" or "all"
+			- maxSavedSearches: maximum number of allowed searches in storage, per user.
+			-allowExternalSiteSearch: Flag enabling federated search-->   
+			  
+			<search
+				searchTimeoutMillisecs="10000"
+				distributedSearchTimeoutMillisecs="5000"
+				distributedSearchMaxSelectedSites="5"
+				searchResultsPerPage="10"
+				searchResultsReviewsShown="only-reviewed"
+				maxSavedSearches="10"
+				allowExternalSiteSearch="true">
+		
+				<!-- Settings for repositories available in federated search
+				- key: regular expression, can be used to identify the rid for the repository.
+				- class: search engine instance, a Java class that will process the search request.
+				- labelResourceKey: text that appears in the federated search list. If no key is given, the repository will not be visible in the federated search list.
+				- abstractResourceKey: text that appears on the REST distributed search, describing the repository. -->
+
+          <repositories> 
+          
+            <repository key="local" 
+              class="com.esri.gpt.catalog.search.SearchEngineLocal"
+              labelResourceKey="catalog.search.searchSite.defaultsite"
+               abstractResourceKey="catalog.search.searchSite.defaultsite.abstract"/>
+               
+			       <!--  Default search engine that catches blank rids -->   
+			      <repository key="^$" 
+			          class="com.esri.gpt.catalog.search.SearchEngineLocal"
+			          labelResourceKey=""
+			          abstractResourceKey=""/> 
+			       
+			      <!-- arcgis.com rid.  Optional. -->    
+			      <repository key="arcgis.com"  
+			          class="com.esri.gpt.catalog.search.SearchEngineRest"
+			          labelResourceKey="catalog.search.searchSite.agsonline"
+			          abstractResourceKey="catalog.search.searchSite.agsonline.abstract">
+			          <parameter key="endPointSearchUrl" 
+			              value="http://www.arcgis.com/sharing/search?q={searchTerms}&amp;start={startIndex}&amp;num={count}&amp;f=json"/>  
+			          <parameter key="defaultParamValues"
+			              value="q&#x2714;access:shared || access:public || access:private "/>  
+			          <parameter key="profileId" 
+			              value="urn:esri:gpt:HTTP:JSON:ESRI:AGSONLINE" /> 
+			      </repository>
+		      
+            <!-- For the registered CS-W repositories flagged for viewing in federated search -->
+            <repository key="*" 
+                 class="com.esri.gpt.catalog.search.SearchEngineExternalCsw"/>
+                 
+          </repositories>
+      </search>		
+		                
+      <!-- Metadata Access Policy Configuration 
+          For Ldap identity adapter, single group restriction policy configure as below, 
+          if not configured then publisher selects from all ldap groups 
+          type="unrestricted"
+          or
+          type="public-protected" protectedGroupDN="distinguishedName(E.g. cn=gpt_administrators,ou=groups,ou=system)"
+          or
+          type="restricted" -->  
+ 
+      <metadataAccessPolicy type="unrestricted"/> 
+        
+     <!-- Sitemap parameters 
+       - sitemap.baseUrl: the base URL for sitemap files
+           default = auto-generated, e.g. http://host:port/[contextPath]/sitemap
+       - sitemap.documentUrlPattern: the default URL pattern referencing documents within a sitemap,
+           {0} will be replaced with the document's UUID,
+           default = /sitemap/document/{0}?f=html   
+       - sitemap.documentUrlPattern.[format]: response format specific document URL patterns,
+           {0} will be replaced with the document's UUID, 
+           e.g. 
+             http://host:port/[contextPath]/sitemap?f=xml 
+             will produce specific document references with the following pattern
+             http://host:port/[contextPath]/sitemap/document/{0}?f=xml
+       - sitemap.urlsPerIndexFile: the maximum number of sitemap files to be referenced within
+           the sitemap index file (should not exceed 1000),
+           default = 1000
+       - sitemap.urlsPerSitemapFile: the maximum number of documents to be referenced within 
+           an individual sitemap file (should not exceed 50000),
+           default = 1000
+       - sitemap.namespaceUri: the sitemap namespace URI,
+           default = http://www.sitemaps.org/schemas/sitemap/0.9
+       - sitemap.changefreg: the change frequency to be listed per document reference,
+           hourly daily weekly monthly yearly ,
+           default = weekly
+       - sitemap.priority: the priority to be listed per document reference, 0.0 -> 1.0,
+           default = none   -->
+		     
+      <parameter key="sitemap.baseUrl" value=""/>
+      <parameter key="sitemap.documentUrlPattern" value="/sitemap/document/{0}?f=html"/>
+      <parameter key="sitemap.documentUrlPattern.html" value="/sitemap/document/{0}?f=html"/>
+      <parameter key="sitemap.documentUrlPattern.htmlfragment" value="/sitemap/document/{0}?f=htmlfragment"/>
+      <parameter key="sitemap.documentUrlPattern.xml" value="/sitemap/document/{0}?f=xml"/>
+      <parameter key="sitemap.documentUrlPattern.kml" value="/sitemap/document/{0}?f=kml"/>
+      <parameter key="sitemap.urlsPerIndexFile" value="1000"/>
+      <parameter key="sitemap.urlsPerSitemapFile" value="1000"/>
+      <parameter key="sitemap.namespaceUri" value="http://www.sitemaps.org/schemas/sitemap/0.9"/>
+      <parameter key="sitemap.changefreq" value="weekly"/>
+      <parameter key="sitemap.priority" value=""/>
+		
+		<!-- Synchronizer parameters.
+			- webharvester.active: flag for if synchronization is active at startup. Default: true
+            - webharvester.queueEnabled: flag to enable task queue. Default: current webharvester.active value. Note! its is not possible to set this flag to false if webharvester.active is true
+			- webharvester.poolsize: pool size of the Threads. Default: 4
+			- webharvester.autoSelectFrequency: Resources auto-selection frequency. Default: 1[HOUR]
+			- webharvester.watchDogFrequency: Watch-dog activation frequency. Default: 1[MINUTE]
+			- webharvester.baseContextPath: Base context path used inside email notifications. Default: none (no report link in the notification)
+			- webharvester.maxRepRecords: Maximum number of records to report. Default: 10000. -1 to remove limit.
+			- webharvester.maxRepErrors: Maximum number of errors to report. Default: 5000. -1 to remove limit
+			- webharvester.resource.autoApprove: Autoapprove newly registered resources. Default: false -->
+			
+	  <parameter key="webharvester.active" value="true"/>
+	  <parameter key="webharvester.queueEnabled" value=""/>
+	  <parameter key="webharvester.poolsize" value=""/>
+	  <parameter key="webharvester.autoSelectFrequency" value=""/>
+	  <parameter key="webharvester.watchDogFrequency" value=""/>
+	  <parameter key="webharvester.baseContextPath" value=""/>
+      <parameter key="webharvester.maxRepRecords" value="70"/> 
+      <parameter key="webharvester.maxRepErrors" value="7"/> 
+      <parameter key="webharvester.resource.autoApprove" value=""/> 
+		
+   	</catalog>
+    
+    <!-- Download data configuration.
+        - taskUrl: geoprocessing task URL
+        - mapServiceUrl: map service URL used by geoprocessing task
+        - mapServiceType: The caching scheme for the map service. The value can be "dynamic" or "tiled"  -->
+  
+    <downloadData
+       taskUrl=""
+       mapServiceUrl=""
+       mapServiceType="">
+
+       <features>
+         <feature key="File Geodatabase - GDB - .gdb" alias="gdb" resKey="catalog.download.feature.gdb"/>
+         <feature key="Shapefile - SHP - .shp" alias="shp" resKey="catalog.download.feature.shp"/>
+         <feature key="Autodesk AutoCAD - ACAD - .dxf" alias="dxf" resKey="catalog.download.feature.dxf"/>
+         <feature key="Autodesk AutoCAD - ACAD - .dwg" alias="dwg"  resKey="catalog.download.feature.dwg"/>
+         <feature key="Bentley Microstation Design (V8) - DGN_V8 - .dgn" alias="dgn"  resKey="catalog.download.feature.dgn"/>
+       </features>
+
+       <rasters>
+         <raster key="ESRI GRID - GRID" alias="grd" resKey="catalog.download.raster.grd"/>
+         <raster key="File Geodatabase - GDB - .gdb" alias="gdb" resKey="catalog.download.raster.gdb"/>
+         <raster key="ERDAS IMAGINE - IMG - .img" alias="img"  resKey="catalog.download.raster.img"/>
+         <raster key="Tagged Image File Format - TIFF - .tif" alias="tif"  resKey="catalog.download.raster.tif"/>
+         <raster key="Graphic Interchange Format - GIF - .gif" alias="gif"  resKey="catalog.download.raster.gif"/>
+         <raster key="Joint Photographics Experts Group - JPEG - .jpg" alias="jpg"  resKey="catalog.download.raster.jpg"/>
+         <raster key="Joint Photographics Experts Group - JPEG 2000 - .jp2" alias="jp2"  resKey="catalog.download.raster.jp2"/>
+         <raster key="Bitmap - BMP - .bmp" alias="bmp"  resKey="catalog.download.raster.bmp"/>
+         <raster key="Portable Network Graphics - PNG - .png" alias="png"  resKey="catalog.download.raster.png"/>
+       </rasters>
+       
+       <!-- To support backward compatibility for the Geoportal 9.3.x data download customizations, these projections and format sections are provided. These are not used in the Geoportal 10 data download customization -->
+			<!--<projections>
+           <projection key="Mercator (world)" alias="54004" resKey="catalog.download.projection.54004"/>
+           <projection key="WGS 1984 UTM Zone 10N" alias="32610" resKey="catalog.download.projection.32610"/>
+           <projection key="WGS 1984 Web Mercator" alias="102113" resKey="catalog.download.projection.102113"/>
+           <projection key="WGS 1984" alias="4326" resKey="catalog.download.projection.4326"/>
+       </projections>
+         
+       <formats>
+           <format key="GML - (.gml)" alias="gml" resKey="catalog.download.outputFormat.gml"/>
+           <format key="GMLSF - (.gmlsf)" alias="gmlsf" resKey="catalog.download.outputFormat.gmlsf"/>
+           <format key="MIF - (.mif)" alias="mif" resKey="catalog.download.outputFormat.mif"/>
+           <format key="ACAD - (.dwg)" alias="dwg" resKey="catalog.download.outputFormat.acad"/>
+           <format key="IGDS - (.dgn)" alias="dgn" resKey="catalog.download.outputFormat.igds"/>
+       </formats> -->        
+    </downloadData>
+  
+    <!-- ===================================================================== -->
+		<!-- User Management configuration. simpleAdapter OR ldapAdapter.
+			- simpleAdpater: configures geoportal with one administrative user
+			- ldapAdapter: configures geoportal to connect to LDAP user directory store. -->
+	
+    <identity encKey="PtkESRI" realm="Geoportal">  
+        <!-- 
+          <simpleAdapter>
+              <account username="gptaccount" password="gpt.account" encrypted="false"/>
+              <roles>
+                  <role key="gptRegisteredUser"/>
+                  <role key="gptPublisher"/>
+                  <role key="gptAdministrator"/>
+              </roles>
+          </simpleAdapter>
+         -->
+      
+       <ldapAdapter>
+       
+          <ldapConnectionProperties
+              providerURL="ldap://ldap_host_name:ldap_port"
+              initialContextFactoryName="com.sun.jndi.ldap.LdapCtxFactory"
+              securityAuthentication="simple"
+              securityProtocol="">
+              <ldapServiceAccount
+                  securityPrincipal="ldap_admin_user"
+                  securityCredentials="ldap_admin_password"
+                  encrypted="false"
+                  catalogAdminDN="catalog_admin_distinguished_name"/>
+          </ldapConnectionProperties>
+        
+          <singleSignOn
+              active="false"
+              credentialLocation="userPrincipal"
+              anonymousValue=""
+              logoutOutcome=""/>
+            
+          <selfCareSupport
+              supportsLogin="true"
+              supportsLogout="true"
+              supportsUserRegistration="true"
+              supportsUserProfileManagement="true"
+              supportsPasswordChange="true"
+              supportsPasswordRecovery="true"/>
+            
+          <roles authenticatedUserRequiresRole="true">
+              <role
+                  key="gptRegisteredUser"
+                  groupDN="group_distinguished_name_for_registered_user"/>
+              <role
+                  key="gptPublisher"
+                  inherits="gptRegisteredUser"
+                  groupDN="group_distinguished_name_for_publisher"/>
+              <role
+                  key="gptAdministrator"
+                  inherits="gptPublisher"
+                  groupDN="group_distinguished_name_for_administrator"/>
+          </roles>
+        
+          <users
+              displayNameAttribute="cn"
+              passwordEncryptionAlgorithm="SHA"
+              newUserDNPattern="cn={0},Users_Node_DN"
+              usernameSearchPattern="(&amp;(objectclass=person)(cn={0}))"
+              searchDIT="Users_Node_DN">
+              <requiredObjectClasses>
+                  <objectClass name="top"/>
+                  <objectClass name="person"/>
+                  <objectClass name="organizationalPerson"/>
+                  <objectClass name="inetOrgPerson"/>
+              </requiredObjectClasses>
+              <userAttributeMap>
+                  <attribute key="username"     ldapName="uid"/>
+                  <attribute key="password"     ldapName="userPassword"/>
+                  <attribute key="email"        ldapName="mail"/>
+                  <attribute key="firstName"    ldapName="givenName"/>
+                  <attribute key="lastName"     ldapName="sn"/>
+                  <attribute key="organization" ldapName="o"/>
+                  <attribute key="affiliation"  ldapName="businessCategory"/>
+                  <attribute key="street"       ldapName="street"/>
+                  <attribute key="city"         ldapName="l"/>
+                  <attribute key="stateOrProv"  ldapName="st"/>
+                  <attribute key="postalCode"   ldapName="postalCode"/>
+                  <attribute key="country"      ldapName=""/>
+                  <attribute key="phone"        ldapName="telephoneNumber"/>
+              </userAttributeMap>
+          </users>
+      
+          <groups
+              displayNameAttribute="cn"
+              dynamicMemberOfGroupsAttribute=""
+              dynamicMembersAttribute=""
+              memberAttribute="uniquemember"
+              memberSearchPattern="(&amp;(objectclass=groupOfUniqueNames)(uniquemember={0}))"
+              searchDIT="Groups_Node_DN">
+     
+          <!-- 
+          <metadataManagementGroup
+              name="Region 1"
+              groupDN="group_distinguished_name"/>
+          <metadataManagementGroup
+              name="Region 2"
+              groupDN="group_distinguished_name"/>
+          -->
+          </groups>
+       </ldapAdapter>
+    </identity>
+  
+    <!-- Scheduled Background Threads ================================================== -->
+
+    <scheduler active="true" corePoolSize="0">
+  
+       <!-- Catalog synchronization -->
+       <thread class="com.esri.gpt.catalog.context.CatalogSynchronizer" period='1[HOUR]' delay="30[SECOND]"/>
+       
+       <!-- Index optimixation -->
+       <thread class="com.esri.gpt.catalog.lucene.LuceneIndexOptimizer" at="02:30"/>
+         
+    </scheduler>
+
+</gptConfig>

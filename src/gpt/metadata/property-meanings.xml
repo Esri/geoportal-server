@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<property-meanings>
+
+  <property-meaning name="uuid" meaningType="uuid" valueType="String" comparisonType="value"> 
+    <dc name="dc:identifier" aliases="uuid,identifier,id,docID" 
+        scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:DocID"/>
+  </property-meaning>
+  
+  <property-meaning name="fileIdentifier" meaningType="fileIdentifier" valueType="String" comparisonType="value"> 
+    <dc name="~dc:identifier" aliases="fileIdentifier,fid,fileID" 
+        scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:FileID"/>
+  </property-meaning>
+  
+  <property-meaning name="sys.siteuuid" valueType="String" comparisonType="value"> 
+    <dc name="dc:source" aliases="source"/>
+  </property-meaning>
+  
+  <property-meaning name="dateModified" meaningType="dateModified" valueType="Timestamp" comparisonType="value">
+    <dc name="dct:modified" aliases="modified"/>
+  </property-meaning> 
+  
+  <property-meaning name="geometry" meaningType="geometry" valueType="geometry" comparisonType="value"> 
+    <dc name="ows:BoundingBox" aliases="geometry,envelope,/ows:BoundingBox"/> 
+  </property-meaning>
+  
+  <property-meaning name="keywords" valueType="String" comparisonType="keyword">
+  </property-meaning> 
+  
+  <property-meaning name="body" valueType="String" comparisonType="terms">
+  </property-meaning> 
+ 
+  <property-meaning name="anytext" meaningType="anytext" valueType="String" comparisonType="terms" allowLeadingWildcard="true">
+    <consider>title,abstract,keywords,body,contentType,dataTheme,title.org</consider>
+    <dc name="AnyText" aliases="csw:AnyText,any,csw:Any"/>
+  </property-meaning> 
+  
+  <property-meaning name="title" valueType="String" comparisonType="terms"> 
+    <dc name="dc:title" aliases="title"/>
+  </property-meaning>
+
+  <property-meaning name="title.org" valueType="String" comparisonType="terms">
+  </property-meaning>
+  
+  <property-meaning name="abstract" valueType="String" comparisonType="terms"> 
+    <dc name="dct:abstract" aliases="abstract"/>
+  </property-meaning>  
+  
+  <property-meaning name="contentType" valueType="String" comparisonType="keyword">
+    <dc name="dc:type" aliases="type,format,dc:format" 
+        scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType"/>
+  </property-meaning> 
+   
+  <property-meaning name="dataTheme" valueType="String" comparisonType="keyword">
+    <dc name="dc:subject" aliases="subject"/>
+  </property-meaning>
+  
+  <property-meaning name="resource.url" valueType="String" comparisonType="value">
+    <dc name="dct:references" scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Server"/>
+  </property-meaning>
+  
+  <property-meaning name="thumbnail.url" meaningType="thumbnailurl" valueType="String" comparisonType="value">
+    <dc name="dct:references" scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Thumbnail"/>
+  </property-meaning>
+  
+  <property-meaning name="website.url" valueType="String" comparisonType="value">
+    <dc name="dct:references" scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Onlink"/>
+  </property-meaning>
+  
+  <property-meaning name="xml.url" meaningType="xmlurl" valueType="String" comparisonType="value">
+    <dc name="dct:references" scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Document"/>
+  </property-meaning>
+  
+  <!-- date is fairly random, it has no explicit meaning, simply associated with some date found
+  within a metadata document -->
+  <property-meaning name="date" valueType="Timestamp" comparisonType="value">
+    <dc name="dc:date" aliases="date"/>
+  </property-meaning>
+  
+  <property-meaning name="relation" valueType="String" comparisonType="keyword">
+    <dc name="dc:relation" aliases="relation"/>
+  </property-meaning> 
+    
+  <!-- ================================================================================= -->
+      
+  <!--  Dublin Core response property sets (brief, summary, full) -->
+  <propertySets>
+    <brief>
+      <dc>
+        <meaning-names>fileIdentifier,uuid,title,contentType,geometry</meaning-names>
+      </dc>
+    </brief>
+     <summary>
+      <dc>
+        <meaning-names>fileIdentifier,uuid,title</meaning-names>
+        <meaning-names>contentType,dataTheme</meaning-names>
+        <meaning-names>dateModified,abstract</meaning-names>
+        <meaning-names>resource.url,website.url,thumbnail.url,xml.url</meaning-names>
+        <meaning-names>geometry,date,relation</meaning-names>
+      </dc>
+    </summary>
+    <full>
+      <dc>
+        <meaning-names>fileIdentifier,uuid,title</meaning-names>
+        <meaning-names>contentType,dataTheme</meaning-names>
+        <meaning-names>dateModified,abstract</meaning-names>
+        <meaning-names>resource.url,website.url,thumbnail.url,xml.url</meaning-names>
+        <meaning-names>geometry,date,relation</meaning-names>
+      </dc>
+    </full>    
+    
+  </propertySets>
+  
+  <!-- ================================================================================= -->
+  
+  <!--  APISO properties -->   
+  
+  <!-- Alias or Definition of Common Queryables -->  
+  <!-- page 41 - Table 6 of CSW ISO AP spec -->
+  
+  <property-alias meaning-name="dataTheme" value="apiso:Subject,Subject"/> 
+  <property-alias meaning-name="title" value="apiso:Title,Title"/>
+  <property-alias meaning-name="abstract" value="apiso:Abstract,Abstract"/>    
+  <property-alias meaning-name="anytext" value="apiso:AnyText,AnyText"/>
+  <property-alias meaning-name="thumbnail.url" value="apiso:BrowseGraphic"/>
+  <property-alias meaning-name="fileIdentifier" value="apiso:Identifier,Identifier"/>
+  <property-alias meaning-name="geometry" value="apiso:BoundingBox"/>
+  
+  <property-meaning name="apiso.Format" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:Format"/>
+  </property-meaning> 
+
+  <property-meaning name="apiso.Modified" valueType="Timestamp" comparisonType="value">
+    <apiso name="apiso:Modified"/>
+  </property-meaning>
+  
+  <property-meaning name="apiso.Type" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:Type"/>
+  </property-meaning>
+  
+  <!-- Table 8, page 43 -->
+  <property-meaning name="apisoCRS" valueType="String" comparisonType="terms">
+    <apiso name="apiso:CRS" aliases="CRS"/>
+   </property-meaning>  
+
+  <!-- end of CSW  common queryables -->
+  
+  <!-- Table 10 (page 46) - additional ISO common queryables -->
+  <property-meaning name="apiso.RevisionDate" valueType="Timestamp" comparisonType="value">
+    <apiso name="apiso:RevisionDate"/>
+  </property-meaning> 
+  <property-meaning name="apiso.AlternateTitle" valueType="String" comparisonType="terms">
+    <apiso name="apiso:AlternateTitle"/>
+  </property-meaning> 
+  <property-meaning name="apiso.CreationDate" valueType="Timestamp" comparisonType="value">
+    <apiso name="apiso:CreationDate"/>
+  </property-meaning> 
+  <property-meaning name="apiso.PublicationDate" valueType="Timestamp" comparisonType="value">
+    <apiso name="apiso:PublicationDate"/>
+  </property-meaning> 
+  <property-meaning name="apiso.OrganizationName" valueType="String" comparisonType="terms">
+    <apiso name="apiso:OrganizationName"/>
+  </property-meaning> 
+  <property-meaning name="apiso.HasSecurityConstraints" valueType="String" comparisonType="terms">
+    <apiso name="apiso:HasSecurityConstraints"/>
+  </property-meaning> 
+  <property-meaning name="apiso.Language" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:Language"/>
+  </property-meaning> 
+  <property-meaning name="apiso.ResourceIdentifier" valueType="String" comparisonType="value">
+    <apiso name="apiso:ResourceIdentifier"/>
+  </property-meaning> 
+  <property-meaning name="apiso.ParentIdentifier" valueType="String" comparisonType="value">
+    <apiso name="apiso:ParentIdentifier"/>
+  </property-meaning> 
+  <property-meaning name="apiso.KeywordType" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:KeywordType"/>
+  </property-meaning> 
+
+  <!-- table 11 (page 47) for datasets, series and applications  -->
+  <property-meaning name="apiso.TopicCategory" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:TopicCategory"/>
+  </property-meaning> 
+  <property-meaning name="apiso.ResourceLanguage" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:ResourceLanguage"/>
+  </property-meaning> 
+  <property-meaning name="apiso.GeographicDescriptionCode" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:GeographicDescriptionCode"/>
+  </property-meaning> 
+  
+  <!--  spatial resolution (table 12): denominator or  distanceValue+distanceUOM -->
+  <property-meaning name="apiso.Denominator" valueType="Long" comparisonType="value">
+    <apiso name="apiso:Denominator"/>
+  </property-meaning> 
+  <property-meaning name="apiso.DistanceValue" valueType="Double" comparisonType="value">
+    <apiso name="apiso:DistanceValue"/>
+  </property-meaning> 
+  <property-meaning name="apiso.DistanceUOM" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:DistanceUOM"/>
+  </property-meaning> 
+  
+  <!-- temporalExtent (table 13)-->
+  <property-meaning name="apiso.TempExtent_begin" valueType="Timestamp" comparisonType="value">
+    <apiso name="apiso:TempExtent_begin"/>
+  </property-meaning> 
+  <property-meaning name="apiso.TempExtent_end" valueType="Timestamp" comparisonType="value">
+    <apiso name="apiso:TempExtent_end"/>
+  </property-meaning>   
+  
+  <!-- table 14 (page 49) for service  -->
+  <!-- service based queryables -->
+  <property-meaning name="apiso.ServiceType" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:ServiceType"/>
+  </property-meaning> 
+  <property-meaning name="apiso.ServiceTypeVersion" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:ServiceTypeVersion"/>
+  </property-meaning> 
+  <property-meaning name="apiso.Operation" valueType="String" comparisonType="terms">
+    <apiso name="apiso:Operation"/>
+  </property-meaning>  
+  
+  <!-- OperatesOnData defined in Table 15 -->
+  <property-meaning name="apiso.OperatesOn" valueType="String" comparisonType="value">
+    <apiso name="apiso:OperatesOn"/>
+  </property-meaning> 
+  <property-meaning name="apiso.OperatesOnIdentifier" valueType="String" comparisonType="value">
+    <apiso name="apiso:OperatesOnIdentifier"/>
+  </property-meaning>   
+  <property-meaning name="apiso.OperatesOnName" valueType="String" comparisonType="value">
+    <apiso name="apiso:OperatesOnName"/>
+  </property-meaning>   
+  <property-meaning name="apiso.CouplingType" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:CouplingType"/>
+  </property-meaning> 
+
+ <!-- additional INSPIRE queryables -->
+ <property-meaning name="apiso.Degree" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:Degree"/>
+  </property-meaning>  
+  
+ <property-meaning name="apiso.AccessConstraints" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:AccessConstraints"/>
+  </property-meaning>  
+ <property-meaning name="apiso.OtherConstraints" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:OtherConstraints"/>
+  </property-meaning>  
+ <property-meaning name="apiso.Classification" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:Classification"/>
+  </property-meaning>  
+
+  <property-meaning name="apiso.SpecificationTitle" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:SpecificationTitle"/>
+  </property-meaning>  
+ <property-meaning name="apiso.SpecificationDate" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:SpecificationDate"/>
+  </property-meaning>  
+ <property-meaning name="apiso.SpecificationDateType" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:SpecificationDateType"/>
+  </property-meaning>  
+  	
+ <property-meaning name="apiso.Lineage" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:Lineage"/>
+  </property-meaning>  
+  
+   <property-meaning name="apiso.ResponsiblePartyRole" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:ResponsiblePartyRole"/>
+  </property-meaning>  
+
+ <property-meaning name="apiso.ConditionApplyingToAccessAndUse" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:ConditionApplyingToAccessAndUse"/>
+  </property-meaning>    
+        
+</property-meanings>
