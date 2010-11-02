@@ -1,0 +1,99 @@
+@import url('common.css');
+
+ /*Reset Style*/
+body {margin:0; padding:0; line-height: 1.4em; word-spacing:1px; letter-spacing:0.2px; font: 10px Verdana, Arial, Helvetica,"Lucida Grande", serif; color: #000;}
+
+body { margin-top: 0.5em;
+    margin-left:0.3em;
+}
+#printmetadata:before{
+    content: "URL: ";
+}
+#printmetadata {
+    font-size:0.7em;
+    border: 0px solid black;
+}
+
+div#breadcrumb, .modtime  {
+    font-size: 0.7em;
+    margin-bottom:0;
+    color:black;
+    line-height:1.3em;
+}
+
+
+#content {
+    font-size: 10pt;
+}
+
+#content table, #content td {
+    border: 1px solid black;
+
+}
+
+#content th,
+#content td.th_p,
+#content td.th_e,
+#content td.th_d,
+#content td.th_en,
+#content td.th_des,
+#content td.th_gpl0,
+#content td.th_gpl1,
+#content td.th_gpl2,
+#content td.th_gpl3 
+{
+background: #FFFFFF;
+border:1px solid black;
+}
+
+#content tr.tr_tool_even,
+#content tr.tr_tool_odd
+ {
+ background: #FFFFFF;
+}
+
+#content div.header {
+border-bottom:1px solid black;
+width:100%;
+}
+
+#content .footer {
+border-top:1px solid black;
+color:black;
+font-size:0.7em;
+margin:5px auto;
+padding:10px 0;
+text-align:left;
+width:100%;
+}
+
+
+#content div.notes {
+border-bottom:1px solid #000;
+border-top:1px solid #000;
+}
+
+
+#content pre {
+background-color:#FFFFFF;
+border:1px dashed #black;
+font-size:80%;
+line-height:1.2em;
+margin-left:10px;
+padding:2px 2px 2px;
+width:95%;
+white-space:pre-wrap;
+overflow:visible;
+}
+#content div.caption {text-align:left;}
+
+#content td > p{
+    margin-top:0;
+}
+#content div.caption span.usertext {
+    font-size: 12px;
+    font-style:none;
+}
+/* Show URL */
+
+#content :link, #content a:visited {background: transparent; color:#000; text-decoration:none;}

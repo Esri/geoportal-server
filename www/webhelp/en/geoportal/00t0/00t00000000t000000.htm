@@ -1,0 +1,29 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Error Messages in the Geoportal Web Application Error Messages in the Geoportal Web Application Listed below are some common errors that can occur when configuring your Geoportal, and how to begin for resolving them. For errors related to logging into the Geoportal or user registration page, see Problems Connecting the Geoportal LDAP to Active Directory. Note: After changing any of the Geoportal configuration files during troubleshooting, your servlet engine (e.g., Tomcat) must be restarted for changes to take effect. Error message: The LuceneConfig indexLocation is empty. Action: Check that the <indexLocation> tag in the gpt.xml file has a folder path"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - Error Messages in the Geoportal Web Application</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-0C2C61A7-3048-4C3E-B620-5EDD213D0C0A]--><body><div id="content"><div class="header"><h1>Error Messages in the Geoportal Web Application</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="GUID-8927219A-7308-4442-AC30-3E054162BD3E" purpose="section1"><h2> Error Messages in the Geoportal Web Application</h2><p id="GUID-51C4F105-84B1-4D01-836D-641568E66334">Listed below are some common errors that can occur when configuring your geoportal, and how to begin for resolving them. For errors related to logging into the geoportal or user registration page, see 
+ <a class="xref" rel="00t0/00t00000000z000000.htm" href="00t0/00t00000000z000000.htm">Problems Connecting the Geoportal LDAP to Active Directory</a>. Note: After changing any of the geoportal configuration files during troubleshooting, your servlet engine (e.g., Tomcat) must be restarted for changes to take effect. 
+<ul purpose="ul" id="UL_EE3A80E6DBBC48448B05CFD78DF74AB5">
+					<li purpose="li" id="GUID-9C22842D-C773-4CA7-9CFF-97AD0AA610A9"><i><b>Error message: The LuceneConfig indexLocation is empty</b></i>. Action: Check that the &lt;indexLocation&gt; tag in the gpt.xml file has a folder path specified</li>
+					<li purpose="li" id="GUID-02E6CB08-4C6C-4A0D-9FDD-3F2BA2FFBF90"><i><b>Error message: Could not translate gpt criteria as string query : Could not make xslt template from path null. Could not perform operation</b></i>. Action: Check that the metadataAccessPolicy in the gpt.xml file has been specified properly.</li>
+					<li purpose="li" id="GUID-08F6550C-6025-49A6-9DC1-57916F0BBBC0"><i><b>Error message: Error getting metadata: Error accessing full metadata xml for: {&lt;Doc UUID&gt;}</b></i>. Action: Check the following things:
+<ul purpose="ul" id="UL_A4D3C34DE64640E9A367956A60640632">
+							<li purpose="li" id="GUID-10E507A2-AD13-48C6-AEA9-5C7756195933">Check that the JNDI connection information is correct.  For Tomcat, this is specified in the geoportal.xml context file. For WebLogic, GlassFish, and ServletExec, the JNDI connection is configured through these application servers' interfaces, as per their respective installation guides found in the <i>Documentation</i> folder when you run the geoportal file installation media.</li>
+							<li purpose="li" id="GUID-D7BA165C-D684-461F-8C57-EC17D9318DA4">In your gpt.xml file, check that the user settings are correct, and that issues outlined in <a class="xref" rel="00t0/00t00000000z000000.htm" href="00t0/00t00000000z000000.htm">Problems for Connecting Geoportal LDAP to an Active Directory</a> have been resolved.  Especially check that the user specified in the <span class="uicontrol">catalogAdminDN</span> attribute is a member of the geoportal Administrators group in your LDAP structure.</li>
+						</ul>
+					</li>
+					<li purpose="li" id="GUID-D885BCD9-0990-463E-8B59-CC1347B10A8A"><i><b>Error behavior: After logging in, the Administration and Repositories Tabs do not appear</b>.</i> Action: Check that the metadataAccessPolicy in the gpt.xml file has been specified properly. Also, follow troubleshooting suggestions in <a class="xref" rel="00t0/00t00000000z000000.htm" href="00t0/00t00000000z000000.htm">Problems for Connecting Geoportal LDAP to an Active Directory</a> to verify that the &lt;ldapAdapter&gt; section in the gpt.xml file has been configured properly.</li>
+					<li purpose="li" id="GUID-00FF6928-6EF1-4BFF-BB39-D5C7248709B9"><i>
+							<b>Error behavior: Download Tab does not appear</b></i>. Action: Check gpt.xml file and locate the taskUrl and mapserviceUrl tags. Verify that the geoprocessing and map service url are specified correctly.</li><li purpose="li" id="LI_BFCED521B6994FED94B4BE7022D61A02"><b>Error behavior: (Glassfish) Navigation from Search page results in HTTP request error</b>. Action: Check the gpt.xml file that the searchResultsRender="jsf" has been added. This needs to be added in the Search setting section. Refer to the Glassfish installation document for full instructions.</li>
+				</ul></p></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

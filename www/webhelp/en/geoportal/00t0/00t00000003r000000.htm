@@ -1,0 +1,95 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="ISO-Only Geoportal ISO-Only GeoportalThis topic provides the steps necessary to customize a geoportal implementation to support ISO-based metadata standards only. The main aspects affected by limiting the catalog content to a specific format are discussed in the topics below; additional resources can be found at the Geoportal  Resource Center: Configuring supported metadata profiles Register resources on the network Customization of the capabilities document Configuring supported metadata profilesWithin the geoportal web application, there is a file that defines the metadata profile definitions that the Geoportal will handle while creating, validating, uploading and synchronizing catalogs of metadata. This file is called schemas.xml, and is located in the \\geoportal\WEB-INF\classes\gpt\metadata directory. By"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - ISO-Only Geoportal</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-738EE2FF-1A7E-4B5A-A196-D7DE3A8F34F9]--><body><div id="content"><div class="header"><h1>ISO-Only Geoportal</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="ESRI_SECTION1_C40927B0ACD946079CB27CE9DDFA6F85" purpose="section1"><h2>ISO-Only Geoportal</h2><p id="GUID-A594575D-014F-4A88-91E1-A7E75CCB6DB6">This topic provides the steps necessary to customize a geoportal implementation to support ISO-based metadata standards only. The
+main aspects affected by limiting the catalog content to a specific
+format are discussed in the topics below; additional resources can be found at the <a target="_blank" class="xref" href="http://resources.arcgis.com/content/geoportal-extension/" rel="http://resources.arcgis.com/content/geoportal-extension/">Geoportal Resource Center</a>:<ul purpose="ul" id="UL_07DE60FF8A0D4607B6D3B67FE542BB9A"><li purpose="li" id="LI_28AA60150A1D4878A4D6CF1A509D23E7">
+						<a class="xref" rel="00t0/00t00000003r000000.htm#ESRI_SECTION2_AB3D9CD0083B4080A7BF7277056ABEA4" href="00t0/00t00000003r000000.htm#ESRI_SECTION2_AB3D9CD0083B4080A7BF7277056ABEA4">Configuring supported metadata profiles</a></li><li purpose="li" id="LI_52D8B4F4D497423986E50EDA5D05351F">
+						<a class="xref" rel="00t0/00t00000003r000000.htm#ESRI_SECTION2_16FE1BEA04A24012BF6D9748D90F4D87" href="00t0/00t00000003r000000.htm#ESRI_SECTION2_16FE1BEA04A24012BF6D9748D90F4D87">Register resources on the network</a></li><li purpose="li" id="LI_459B114A0D8C4571927070728A3E4320">
+						<a class="xref" rel="00t0/00t00000003r000000.htm#ESRI_SECTION2_B26B43887CE547DFB43E9810E14B6936" href="00t0/00t00000003r000000.htm#ESRI_SECTION2_B26B43887CE547DFB43E9810E14B6936">Customization of the capabilities document</a></li></ul></p><div class="section2" id="ESRI_SECTION2_AB3D9CD0083B4080A7BF7277056ABEA4" purpose="section2"><h3>Configuring supported metadata profiles</h3><p id="GUID-3346F966-E270-4E42-B92A-53FB3CD78E25">Within the geoportal web application, there is a file that defines the metadata profile definitions that the geoportal will handle while
+creating, validating, uploading and synchronizing catalogs of
+metadata.  This file is called <i>schemas.xml</i>, and is located in the <i>\\geoportal\WEB-INF\classes\gpt\metadata</i> directory. 
+ By default, <i>schemas.xml</i> includes Dublin core, FGDC, ISO
+19115 and 19119, ISO North American Profile, INSPIRE, and other sources of metadata
+(e.g. GeoRSS).  Customizing a geoportal to only support ISO-based metadata will require removing profiles that your organization does not want to support from this list, and possibly adding ISO-based profiles that you want to support. By modifying the <i>schemas.xml</i> file such that only ISO-based metadata profiles are supported, the creation, validation, upload, and synchronizing of non-ISO metadata
+is prevented.</p><p id="GUID-B114E0BC-F16E-4D2F-B5BC-83EBF59765DC"> The following xml fragments
+show first the  default <i>schemas.xml</i>, and then a sample <i>schemas.xml</i> that only accepts ISO-based metadata.</p><div class="block_table" id="TABLE_5FFEB0F544F34E00AB513E02E1C53995" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1"><p id="GUID-A4355F6C-D462-4C85-9D75-BD68FDFCB00F"> default schemas.xml</p></th><th class="th" purpose="th" rowspan="1" colspan="1"><p id="GUID-57E6ECB1-5BDD-4348-A090-96784E7D95B4">ISO metadata only schemas.xml sample</p></th></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+									<pre class="lines" purpose="lines">&lt; schemas &gt;
+&lt;!-- .......... --&gt;
+ &lt; schema fileName =" gpt/metadata/dc/dc-definition.xml "/&gt;
+ &lt; schema fileName =" gpt/metadata/fgdc/fgdc-definition.xml "/&gt;
+ &lt; schema fileName =" gpt/metadata/iso/inspire/inspire-iso-19115-definition.xml "/&gt;
+&lt; schema fileName =" gpt/metadata/iso/inspire/inspire-iso-19119-definition.xml "/&gt;
+&lt; schema fileName =" gpt/metadata/iso/nap/nap-iso-19115-definition.xml "/&gt;
+ &lt; schema fileName =" gpt/metadata/iso/nap/nap-iso-19119-definition.xml "/&gt;
+&lt; schema fileName =" gpt/metadata/iso/iso-19115-definition.xml "/&gt;
+&lt; schema fileName =" gpt/metadata/iso/iso-19119-definition.xml "/&gt;
+&lt;!-- .......... --&gt;
+ &lt;/ schemas &gt;</pre></td><td purpose="entry" rowspan="1" colspan="1"><pre class="lines" purpose="lines">&lt; schemas &gt;
+&lt;!-- .......... --&gt;
+ &lt; schema fileName =" gpt/metadata/iso/inspire/inspire-iso-19115-definition.xml "/&gt;
+&lt; schema fileName =" gpt/metadata/iso/inspire/inspire-iso-19119-definition.xml "/&gt;
+&lt; schema fileName =" gpt/metadata/iso/nap/nap-iso-19115-definition.xml "/&gt;
+ &lt; schema fileName =" gpt/metadata/iso/nap/nap-iso-19119-definition.xml "/&gt;
+&lt; schema fileName =" gpt/metadata/iso/iso-19115-definition.xml "/&gt;
+&lt; schema fileName =" gpt/metadata/iso/iso-19119-definition.xml "/&gt;
+&lt;!-- .......... --&gt;
+ &lt;/ schemas &gt;</pre></td></tr></table><span class="table_desc"></span></div></div><div class="section2" id="ESRI_SECTION2_16FE1BEA04A24012BF6D9748D90F4D87" purpose="section2"><h3>Register resources on the network</h3><p id="GUID-774F1BF7-27A6-4AE1-89BA-4A0DD1DF7BB9">When you <a class="xref" rel="00t0/00t00000000n000000.htm#GUID-B6BC8579-36DD-44A1-8EF3-67EF05FDC250" href="00t0/00t00000000n000000.htm#GUID-B6BC8579-36DD-44A1-8EF3-67EF05FDC250">register resources on the network</a> to be synchronized to the geoportal catalog, you will want to restrict the resources that are synchronized to only those having ISO-based metadata.   Two of the <span class="uicontrol">Protocol type</span> options on the <span class="uicontrol">Register a network resource page</span> may need to be customized: the <span class="uicontrol">CSW</span> option, and the <span class="uicontrol">URL</span> option.</p><p id="GUID-FBA19EDB-35A6-4F11-AE03-D1589E80EAFF">For the <span class="uicontrol">CSW</span> option, you may want to 
+allow synchronizing only ISO metadata so the content of
+the remote CS-W endpoint will be compatible with your ISO-only geoportal. To do this, you will need to select the <span class="uicontrol">ArcGIS Geoportal Extension (version
+10) CSW ISO AP</span> profile when registering a CS-W endpoint for synchronization with your geoportal.   By selecting this profile, federated searches to this catalog will be applied to only ISO-based metadata stored in the
+remote geoportal catalog. Content synchronized from this catalog will only be published to your geoportal if it has ISO-based metadata.</p><p id="GUID-26370DB1-0AE9-4FCA-8D5D-8CCB2F86422F"> For the <span class="uicontrol">URL</span> option, you will need to change the default upload schema. Metadata for a resource registered through a URL is automatically generated by the geoportal, and by default follows the Dublin Core metadata schema. Dublin Core is the
+default because many OGC services do not have extensive metadata, so Dublin Core captures the basic elements but does not need accommodate much more. Lack of further metadata elements may
+cause the document to fail validation when published under a
+different schema. Even so, it is possible to easily change the
+default schema for OGC services from Dublin Core to the ISO 19119
+metadata standard for services, thus ensuring that resources registered through a URL have ISO metadata generated for them. If your organization desires this
+customization, do the following:
+<ol purpose="ol" id="OL_9E0D72BF3CA446A585D34513D02A52D8">
+						<li purpose="li" id="LI_641DB40687654969B55B77D600974469"> Navigate to the
+<i>\\geoportal\WEB-INF\classes\gpt\metadata\ogc</i> folder and open the
+<i>ogc-definition.xml</i> file in a text editor.</li><li purpose="li" id="LI_FE3935A47FA44EB992A25E71470FF0E4"> Find the first <span class="uicontrol">&lt;schema&gt;</span> tag near the top of
+the file, the one with the <span class="usertext">key="ogc-csw-wms-wfs-wcs-wps-sos-sps"</span>.
+This defines the parameters for OGC services.</li><li purpose="li" id="LI_9B2ECB6A38B54895B49187EA477D329B"> Change the <span class="usertext">toKnownSchemaXslt</span> attribute from the
+default <span class="usertext">gpt/metadata/ogc/ogc-toDC.xslt</span> value to
+<span class="usertext">gpt/metadata/ogc/ogc-toISO19139.xslt</span>.</li><li purpose="li" id="LI_E12D8B7ED7BD48A9A89A0C457DFC0477"> Save the file.</li><li purpose="li" id="LI_47FE2EC873B742DE95728D40408C0F1D"> Restart the geoportal web application.</li>
+					</ol>
+				</p></div><div class="section2" id="ESRI_SECTION2_B26B43887CE547DFB43E9810E14B6936" purpose="section2"><h3>Customization of the capabilities document</h3><p id="GUID-A004F6C5-712E-4A68-AEEE-42710FDFAC62">When the geoportal is customized to support only ISO-based metadata,
+the capabilities of the catalog service can be more specialized than in
+the general case where all the default schemas are supported. In this section, we will show how the CSW capabilities document
+can be enriched in order to meet specific requirements, using the INSPIRE requirements for the Discovery service metadata and multilingual support as an example.</p><p id="GUID-2CEA0F0A-D79D-4340-8E45-54CA97C69F49">If you navigate to the <i>\\geoportal\WEB-INF\classes\gpt\metadata\</i> folder in your geoportal web application file structure, you will see two <i>cswCapabilities</i> files. One is the default <i>cswCapabilities.xml</i> file and the other is called <i>cswCapabilities-INSPIRE.xml</i>.  The geoportal web application will always look to the <i>cswCapabilities.xml</i> for how the capabilities should be defined.   If your organization wants to support INSPIRE, then you will need to copy the content of the <i>cswCapabilities-INSPIRE.xml</i>  file into the <i>cswCapabilities.xml</i> file.  The <i>cswCapabilities-INSPIRE.xml</i> file contains additional information including the language for
+free text elements and a new (OGC compliant) Capabilities section
+called <i>ExtendedCapabilities</i>. </p><p id="GUID-497CD142-16AF-42E1-ABD5-78D2469A1EE3">Notice that free text elements have an  <span class="usertext">xml:lang</span> attribute. This is used by the geoportal to determine which description
+corresponds to a specific language. The following XML fragment
+illustrates how to describe <span class="usertext">title</span> and <span class="usertext">abstract</span> in English and
+Italian: <pre class="lines" purpose="lines">&lt; ows:ServiceIdentification &gt;
+ &lt; ows:Title xml:lang =" eng "&gt; This is a geoportal exposing INSPIRE Discovery service metadata capabilities &lt;/ ows:Title &gt;
+&lt; ows:Title xml:lang =" ita "&gt; Questo Geoportale espone un servizio di Discovery per INSPIRE &lt;/ ows:Title &gt;
+&lt; ows:Abstract xml:lang =" eng "&gt; A catalogue service that conforms to the HTTP protocol binding of the OpenGIS Catalogue
+Service ISO Metadata Application Profile specification (version 2.0.2) &lt;/ ows:Abstract &gt;
+&lt; ows:Abstract xml:lang =" ita "&gt; Un servizio di catalogo che si conforma al protocollo del servizio di catalogo di OpenGIS (versione 2.0.2) &lt;/ ows:Abstract &gt;
+ &lt;!-- .... --&gt;
+</pre></p><p id="GUID-16504B20-B7E0-47CA-9DF6-ACD5993A6E10">The OGC CSW getCapabilities operation is extended to support an
+additional LANGUAGE parameter (only for HTTP GET binding) accepting
+3-letter language codes as described in ISO 639-2/T.</p><p id="GUID-F44A980E-B736-446E-B27E-88937F03D97C">The additional elements you need to fill in the
+ExtendedCapabilities section are defined accordingly with the  <a target="_blank" class="xref" href="http://inspire.jrc.ec.europa.eu/" rel="http://inspire.jrc.ec.europa.eu/">INSPIRE Discovery Services Technical Guidance Version 2.12</a> . The fragment relevant for multilingual support is the
+one defining the supported languages; an example declaring English
+(default language) and Italian follows: <pre class="lines" purpose="lines">&lt; inspire_ds:Languages &gt;
+&lt; inspire_ds:Language default =" true "&gt; eng &lt;/ inspire_ds:Language &gt;
+&lt; inspire_ds:Language &gt; ita &lt;/ inspire_ds:Language &gt;
+ &lt;/ inspire_ds:Languages &gt;</pre></p><p id="GUID-9A453F66-8FFE-407B-9236-1CF0672206B9">An example of a <i>getCapabilities</i> request asking for a response in
+Italian follows:<pre class="lines" purpose="lines">http://myServer:8080/geoportal/csw?request=getCapabilities&amp;service=CSW&amp;version=2.0.2&amp;<b>Language=ita</b></pre>If the Italian (code: ita) language is supported the geoportal, the 
+catalog will return a capabilities document with Italian title and
+abstract; otherwise the title and abstract will be returned in the
+default language.</p></div></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

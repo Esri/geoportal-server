@@ -1,0 +1,88 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Preview Function Preview Function The Preview function provides a map view of live data described by metatdata records in the Geoportal. Instructions for navigating the map are provided below. The Preview can be launched from the search result page from the Preview link in a search result, through the web browser URL window, or from an embedded URL in another web page. It is also contained in the search result Details page, displaying only if the metadata describes a live data resource. The Preview page has four sections: Service field: URL of the service or referenced website that is loaded in the Preview window Embed"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - Preview Function</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-359D0DDC-9D63-4630-BE66-7CA06000FDB3]--><body><div id="content"><div class="header"><h1>Preview Function</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="GUID-2CFCC960-67BD-48C7-B731-80C274E6982A" purpose="section1"><h2>Preview Function</h2><p id="GUID-3FD6582E-936F-4CAA-994B-FF1B0F958A17">The Preview function provides a map view of live data described by metatdata records in the geoportal. Instructions for navigating the map are provided below.  The Preview can be launched from the search result page from the <span class="uicontrol">Preview</span> link in a search result, through the web browser URL window, or from an embedded URL in another web page. It is also contained in the search result <span class="uicontrol">Details</span> page, displaying only if the metadata describes a live data resource. The <span class="uicontrol">Preview</span> page has four sections: <ol purpose="ol" id="OL_FA3F6B621968486C973B37A61082E786">
+					<li purpose="li" id="LI_94790F62E0204AC3916962C37F4575DF"><b>Service field:</b> URL of the service or referenced
+website that is loaded in the Preview window</li>
+					<li purpose="li" id="LI_67DFDED4A5E24619A7D5E64D4256913E"><b>Embed field:</b> html element that can be copied and
+input as a customization to other web pages</li>
+					<li purpose="li" id="LI_B74F86BD493F4BCFB051FA4E0923DC42"><b>Preview window:</b> window in center of page that will
+display the map service, an uploaded image, the organization's
+website, or another element if possible. Some metadata documents do
+not provide enough information to populate the Preview window, or
+reference a service that does not support an image (for example, a
+CS-W service). Currently, the Preview will display ArcGIS Server
+services (will show a map for MapServer services), OGC WMS
+services, KMZ, Sensor Observations Services, and ArcIMS
+services.</li>
+					<li purpose="li" id="LI_8F35D6535ACB42999B6DD5850B90BDFD"><b>REST API
+metadata information:</b> displays the REST API metadata entry.</li>
+				</ol> There are four ways to access the Preview: <ol purpose="ol" id="OL_BFD87E2FE58D409C9E6C931C0EFDBD65">
+					<li purpose="li" id="LI_80D819CFDFF946E6A68443C89CCA69EB">When viewing a list of search results in the <span class="uicontrol">Search</span> page, the search results will have a <span class="uicontrol">Preview</span> link. Clicking on the <span class="uicontrol">Preview</span> link will load the <span class="uicontrol">Preview </span>page for that metadata record.</li>
+					<li purpose="li" id="LI_300EA151EDD847E08996A1B0B9DA492A">If the <span class="uicontrol">Details</span> link is clicked for a search result that describes live data, then the <span class="uicontrol">Details</span> page will also display a <span class="uicontrol">Preview</span> link at the top.</li>
+					<li purpose="li" id="LI_E60134BC8DE9450EB2E1A72F3DD7F2D6">Outside of the geoportal, you can access the Preview for a specific service by entering the following into your browser: <div class="block_table" id="TABLE_A920AFDCB3164006B9F99324BA03680A" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-080D9651-7131-469A-8F89-D98DDC92AECF">Syntax</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-058BAE62-043B-490D-A2BF-47A960553C94">Example</p>
+										</th></tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-45DABAE4-9AAC-470C-9FC7-10EC7879D1CA">&lt;Geoportal Instance Name&gt;/catalog/livedata/preview.page?url=&lt;service url&gt;</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-C0B11D94-8FA9-4518-841F-1359AAF33395">http://ESRI_server/geoportal/catalog/livedata/preview.jsp?url=http://esri_server:8399/arcgis/services/California_Map/MapServer/WMSServer?request=GetCapabilities&amp;service=WMS</p>
+										</td>
+									</tr>
+								</table><span class="table_desc"></span></div></li>
+					<li purpose="li" id="LI_68656BFF1F974841849C4EA23BF3D2DE">It is also possible to embed the Preview in another webpage. Simply copy the information from the <span class="uicontrol">Embed</span> field into the webpage (can be a page outside the geoportal web application structure), and save the file.</li>
+				</ol></p></div>
+		<div class="section1" id="ESRI_SECTION1_75A9B88266924533BFA1BC2D099DD662" purpose="section1"><h2>Navigating the Preview Map</h2><p id="GUID-B69C2301-7E0D-4C1D-B760-7A54F1FBA099">The Preview map is built using the javascript API. Navigation
+behavior will be like the javascript api map available as an <a target="_blank" class="xref" href="http://resources.esri.com/help/9.3/arcgisserver/apis/javascript/arcgis/demos/map/map_add.html" rel="http://resources.esri.com/help/9.3/arcgisserver/apis/javascript/arcgis/demos/map/map_add.html">example on the ESRI resource center</a>.<ul purpose="ul" id="UL_571FDBE485AE480F9EBFFEA5C7143654">
+					<li purpose="li" id="LI_722248DCB84D44E68A6444F85FB4A2AB">
+						<i>Preview Map navigation controls, using the
+mouse:</i><ul purpose="ul" id="UL_18C781C3F9CA49B7A6113C3C35C24128">
+							<li purpose="li" id="LI_B00C796D7C27407DA37D9A8AFB691225">Drag to pan</li>
+							<li purpose="li" id="LI_B7CC91E3F4D64A03809F0A9462E4440F">SHIFT + click to recenter</li>
+							<li purpose="li" id="LI_F72F2FC4A10D4990AD64ECF7DA32B064">SHIFT + click + drag to define an extent in which to
+zoom</li>
+							<li purpose="li" id="LI_C491D452E1EA4E2EBC2E3E4B96F7A991">Mouse scroll forward to zoom in</li>
+							<li purpose="li" id="LI_733724D141C94E3C9DC35076A3753BD8">Mouse scroll backward to zoom out</li>
+							<li purpose="li" id="LI_E3B31AE9A8914F8183A25F9EE697F8F6">Double click to center and zoom in</li>
+						</ul>
+					</li>
+					<li purpose="li" id="LI_997B6C72E9334ADCA329B8DBDBCBE24B">
+						<i>Preview Map navigation controls, using the
+keyboard:</i><ul purpose="ul" id="UL_C3F34C87DC4D4EF98DDD81E03DE08049">
+							<li purpose="li" id="LI_9A4D52FE8EAE4F3C834C589AD0BCC084">Up, down, left, right Arrow keys to pan</li>
+							<li purpose="li" id="LI_E7218662644A4D3FA731F6936604B45C">+ key to zoom in a level</li>
+							<li purpose="li" id="LI_AADFD355933C49E8B1593D8E529B201C">- key to zoom out a level</li>
+						</ul>
+					</li>
+					<li purpose="li" id="LI_8094DBB76D0D4A2D908269A295B820A9">
+						<i>Map navigation buttons:</i><ul purpose="ul" id="UL_82D3988F10524DE697289B335C8CFDD5">
+							<li purpose="li" id="LI_5BE9EDAB1CB848079B906FA57BB4F69A">Full Extent button will zoom to the full extent of
+the world</li>
+							<li purpose="li" id="LI_95BC59B11E334601AA638EAF835E073B">Previous Extent button will take you to the extent
+accessed just before the current extent, if applicable</li>
+							<li purpose="li" id="LI_0E05E9FD64E94A12BDEBC54D5A0632DF">Next Extent button will take you forward to the
+extent accessed just after the current extent, if applicable</li>
+							<li purpose="li" id="LI_B0DF519C0CA04394B5FF6C978CBE8257">Base Map checkbox: the basemap configured to display
+on the search page will also display for WMS, GeoRSS, and KML
+services. The Base Map checkbox will not display for ArcIMS or
+ArcGIS Server services because for these types of services, the service layer obscures what would be the basemap even if the extent of the service is smaller than the extent of the basemap (this empty space renders as whitespace). The OGC-based services, in contrast, actually overlay upon the map.  For OGC-based services, if you uncheck the Base Map checkbox the base map layer underneath the service
+being previewed will be turned off.</li>
+						</ul>
+					</li>
+				</ul></p><p id="GUID-F9290FE6-2835-48D9-BD2D-AF9344BA9671">
+			</p></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

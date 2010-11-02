@@ -1,0 +1,111 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Enable Search Using an Ontology Service Enable Search Using an Ontology Service An ontology service allows users to search not only for a specific term, but also terms related to that term according to the ontology's definition of related terms. For more about using the ontology service once its configured in a Geoportal, see How to Search with an Ontology Service The sample ontology service that comes with the Geoportal  is already preconfigured and ready to be integrated with your Geoportal. If you would like to leverage multiple ontologies, you can do so by deploying multiple ontology services and referencing additional adapter parameters in gpt.xml. Follow the steps below"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - Enable Search Using an Ontology Service</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-C2975670-143E-4E59-8354-1F04573F3DDE]--><body><div id="content"><div class="header"><h1>Enable Search Using an Ontology Service</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="ESRI_SECTION1_3888FC095B1C4C20BB136C8C56FECF28" purpose="section1"><h2>Enable Search Using an Ontology Service</h2><p id="GUID-9F39334B-8074-4DF4-A37A-9EF13412BC44">An ontology service allows users to search not only for a
+specific term, but also terms related to that term according to the
+ontology's definition of related terms. For more about using the
+ontology service once its configured in a geoportal, see <a class="xref" rel="00t0/00t00000000p000000.htm" href="00t0/00t00000000p000000.htm">How to Search with an Ontology Service</a>
+			</p><p id="GUID-71E3B28E-BFB9-4557-A90C-44EE745DF4FA">The sample ontology service that is part of the Geoportal Server
+is already preconfigured and ready to be integrated with your
+geoportal. If you would like to leverage multiple ontologies, you can do so by deploying multiple ontology services and referencing additional <span class="uicontrol">adapter</span> parameters in <i>gpt.xml</i>.  Follow the steps below to deploy the sample Ontology
+Service.   <ol purpose="ol" id="GUID-D7E24E6F-8E44-445E-8904-FEEF96AE99EB">
+					<li purpose="li" id="LI_CA723536A09D49559375ED89315D0284">
+						<b>
+							<i>Configure Java Virtual Memory (Tomcat web servers only)</i>:
+</b> Before
+deploying the ontology service, we recommend allocating more Java
+Virtual Machine memory to Tomcat if possible. The sample ontology
+service can cause Java Heap Space errors if there is not enough
+memory allocated.
+The process to change Tomcat's memory allocation differs from one
+system environment compared to another. If Tomcat is started as a
+windows service, the process is different than if its started from
+the command line. Instructions for a windows-service startup are
+given below; for other setups, see <a target="_blank" class="xref" rel="http://tomcat.apache.org" href="http://tomcat.apache.org">Tomcat documentation</a>.
+To change the memory allocation: 
+
+<p id="GUID-9EA3852C-5A7E-4354-A8FB-8C0BDE8507A0">
+							<ul purpose="ul" id="UL_0B0E477FAA01416283CB44D305418F92">
+								<li purpose="li" id="LI_7F9605EFD34B4A0E8B4CA624724996CE">Navigate to <i>&lt;TOMCAT installation folder&gt;\bin</i>
+folder</li>
+								<li purpose="li" id="LI_CF59D61BA57A44DF807219426F9E71E3">Doubleclick on the <i>tomcat6w</i> file (or <i>Tomcat5w</i> if using Tomcat 5.5.x)</li>
+								<li purpose="li" id="LI_8D2B2FA35CA945D9A24296715470A14B">In the <span class="wintitle">Apache Tomcat properties</span> window,
+select the <span class="uicontrol">Java</span> tab</li>
+								<li purpose="li" id="LI_A08E00FA49924E2387DF5469DD7765F1">Near the bottom of the resulting window, there are
+three fields. You must set the value in the first two - <span class="uicontrol">Initial
+Memory Pool </span>and <span class="uicontrol">Maximum Memory Pool</span> - to at least <span class="usertext">128</span>. <div class="notes" id="GUID-7E90BA70-8B47-4BB6-BCB4-1F711A4296DD"><div class="caution"><img class="note_img" src="rsrc/caution.png" alt="Caution" title="Caution"><span>Caution:</span></div><div class="tipbody"><p id="GUID-2D603998-F2EE-4D09-A3FA-421801471859">the initial memory pool setting must match or exceed the maximum
+memory pool setting; if not, errors will result.</p></div></div>
+								</li>
+								<li purpose="li" id="LI_4A71A6797D1C4D58A88EE00331FF02AA">After changing the settings, select <span class="uicontrol">Ok</span>.</li>
+							</ul>
+						</p>
+					</li><li purpose="li" id="GUID-B39823E6-6367-4941-B6CD-B5C33E89B260">
+						<b>
+							<i>Deploy and Configure the
+OntologyService web application</i>
+						</b>
+						<ul purpose="ul" id="UL_4781378F236C4AFFAE1755FCCD381B05">
+							<li purpose="li" id="LI_07841815EDB64A8588EC75F42ABA087A">To deploy the sample ontology service, deploy the <i>OntologyService.war</i> file as a web application using the same methods you used to deploy your <i>geoportal.war</i> file.  The OntologyService web application will need time (usually about 45
+seconds or so) to initialize itself. So when the service is
+started, it will not be available immediately.
+<div class="notes" id="GUID-5CD71AAC-90FE-4599-AAFD-40E404214A1D"><div class="caution"><img class="note_img" src="rsrc/caution.png" alt="Caution" title="Caution"><span>Caution:</span></div><div class="tipbody"><p id="GUID-8E224346-AD5A-4B0E-A6D6-7F7F187B5065">If you are using WebLogic to deploy the OntologyService, you will have to unzip the <i>OntologyService.war</i> file and deploy it as a folder rather than deploy it as a .war file. Failure to do this will result in the OntologyService not retrieving results. </p></div></div></li><li purpose="li" id="LI_7D31CCFD523047D090C71101258C80D2">To check  if the service is running, access  its URL. The URL is shown below, where the <span class="uicontrol">host</span> is the machine hosting the service and the <span class="uicontrol">port</span>
+is your web server port number. The page will
+display an interface where you can test the ontology service as a
+standalone. <pre class="lines" purpose="lines">
+http://&lt;host&gt;:&lt;port&gt;/OntologyService
+</pre>
+							</li>
+							<li purpose="li" id="LI_9432091CCA114D299194627B0B10C40C">On the OntologyService interface, notice that entering a search term results in a lucene
+query at the bottom of the interface. When the <span class="uicontrol">submit</span> button is
+clicked, the request is processed and the ontology for that term is
+returned.</li>
+							<li purpose="li" id="LI_7123109FFE1844EDB43373C8E016A70F">Again, be patient for the ontology service to
+respond. It takes longer to do searches based on the ontology
+service because this sample implementation is built upon third
+party software libraries not optimized for performance. If your
+organization deploys its own ontology service, performance can be
+improved.</li>
+							<li purpose="li" id="LI_FC79D218E65C45109F4024F076A3086E">You can further customize the ontology service by
+overriding its default settings in the
+<i>\\OntologyService\WEB-INF\web.xml</i> file. You
+may have to restart the OntologyService web application for configuration changes to take
+affect:<div class="block_table" id="TABLE_B34C1E9E022B4A4F98F1AD7773D0B57C" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1"><p id="GUID-8321996C-4F5E-47D5-856B-9BFB598FADA0">setting</p></th><th class="th" purpose="th" rowspan="1" colspan="1"><p id="GUID-5CE1ACBC-6861-4C6D-B4CC-8C02C0261F26">meaning</p></th><th class="th" purpose="th" rowspan="1" colspan="1"><p id="GUID-0BF13444-570E-47F9-9D63-6A33878125F4">default value</p></th></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-C363E233-808A-4BE7-B626-3CA3067B5992">&lt;init-param&gt;&lt;param-name&gt;categories</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-F92B2D5C-BFF7-4A60-8CC4-8EEA98D51BC1">categories	relative or full path to the "Categories" enumeration (this is an XML file containing association between category keyword and category name)	</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-01CD20D8-460D-4A30-AA26-0B247AB46769">categories-lite.xml
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-BB149476-75E1-437C-B9A2-4B71B70B2BDA">&lt;init-param&gt;&lt;param-name&gt;gemet</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-B5F2A590-3D4E-425C-9DD9-54DAC7913355">gemet	relative or full path to the "GEMET" database file (this is XML file containing definition of all terms and relationship between them)</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-BA9E5B4C-BAEC-405B-94A4-436E0EEF3A37">gemet_ont.owl</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-DE4EDB2E-222B-411B-AF4F-B9ECCD578386">&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;	</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-14C8083C-4ABA-4A5E-9D31-96FE3A829270">comment this out if you do not want the ontology service to load when your web server is started. This is good for verifying that your geoportal is functioning smoothly and to isolate if errors are related to your ontology service	</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-137EC322-AC85-4A81-B1A3-25FFAF180B76">uncommented</p></td></tr></table><span class="table_desc"></span></div></li>
+						</ul>
+					</li>
+					<li purpose="li" id="GUID-6B072D60-1084-4ED0-8E10-2880467F4AF9">
+						<i>
+							<b>Integrate the OntologyService with the Geoportal</b>
+						</i>
+						<ul purpose="ul" id="UL_78090E6CB7714644AFCD29FB0924D2BD">
+							<li purpose="li" id="GUID-58F29171-4F61-464F-87A3-4CE614C3835A">Navigate to the <i>\\geoportal\WEB-INF\classes\gpt\config</i> folder and open the gpt.xml file in a text editor</li>
+							<li purpose="li" id="LI_979493EF38E443EBA97F2D1189274600">Find the section where the <span class="uicontrol">&lt;lucene&gt;</span> configuration is defined</li>
+							<li purpose="li" id="GUID-87AEB9F9-8C04-4CD3-9A4A-A3A7E4DFA5D9">Find the commented out  <span class="uicontrol">adapter</span> section, and uncomment the code: <pre class="lines" purpose="lines">
+&lt;adaptor name="like"
+ className="com.esri.gpt.catalog.lucene.StandardNetworkParserAdaptor"&gt;
+        &lt;attribute key="baseUrl" value=" <i>http://serverName/OntologyService/query?threshold=0.25&amp;amp;term=</i> "/&gt;
+ &lt;/adaptor&gt;
+</pre></li><li purpose="li" id="LI_8E1102AE04C04065964ACA46280B4FA9">Update the parameters in this section as described below:<ul purpose="ul" id="UL_3B890634D14D4CE2A5D8CCAAFD0482A1">
+									<li purpose="li" id="GUID-D88256CD-5A70-4521-8E26-2383DB30D3B6"><b>name</b> - name of the adaptor; will be used within user interface to call Ontology Service; can be short for convenience or leave as default "like". <b>Tip:</b> setting this to something intuitive for users, such as "like", may help with usability.</li>
+									<li purpose="li" id="LI_0FE9DD837F4A4C64979498A8C724B0B1"><b>className</b> - standard parser adaptor class supplied with the geoportal. <b>Do not change</b>.</li>
+									<li purpose="li" id="GUID-72198341-C0B9-4D01-8485-159FC7F00430"><b>attribute key</b> - "baseUrl"; required by standard parser adaptor. Do not change.</li>
+									<li purpose="li" id="LI_67B2BF5647C944F68ADE8BB8933AE2DE"><b>attribute value</b> - ontology service base URL; for this sample implementation of the Ontology Service, input the following value replacing <span class="usertext">host</span> with your OntologyService web application's host server name, and <span class="usertext">port</span> with the servlet engine port number: <pre class="lines" purpose="lines">
+ "http://&lt;host&gt;:&lt;port&gt;/OntologyService/query?threshold=0.25&amp;term="
+</pre><div class="notes" id="GUID-C38BE477-A2FC-44A4-B970-13241669C0F4"><div class="caution"><img class="note_img" src="rsrc/caution.png" alt="Caution" title="Caution"><span>Caution:</span></div><div class="tipbody"><p id="GUID-01D0662B-C5C2-404F-99AF-F1569FE04981"> do not forget to leave the <span class="usertext">query?threshold=0.25&amp;term=</span> part in the URL.</p></div></div></li>
+								</ul></li>
+							<li purpose="li" id="GUID-4559AC46-9613-493B-B6E6-58997D3648A9">Save the <i>gpt.xml</i> file.</li>
+							<li purpose="li" id="LI_6D7C83F37A144E43A2878CA74BAE1CFF">Restart the geoportal web application for the changes to take affect.</li>
+						</ul>
+					</li>
+				</ol></p></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

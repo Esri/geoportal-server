@@ -1,0 +1,89 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Search Map Customize the Search Map The search map is referenced in the \\geoportal\WEB-INF\classes\gpt\config\gpt.xml file. It is called up on the interface by the ArcGIS Server JavaScript API. To change the search map itself, simply reference a new service URL in the mapServiceUrl attribute of the <interactiveMap> tag in the gpt.xml file. This topic addresses important things to keep in mind if you change the search map service and how to change the dimensions of the search map. Important things to remember if you change the search map serviceMake sure that the search map service you use considers the following: The URL specified in the mapServiceUrl parameter must be a REST"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - Search Map</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-2DE8DD0E-C85E-48A4-82C1-0F314D8B1173]--><body><div id="content"><div class="header"><h1>Search Map</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="GUID-3219CC73-E370-4730-B690-237C78825222" purpose="section1"><h2>Customize the Search Map</h2><p id="GUID-20BEBA42-EE74-42B2-9ACE-5D8041231EBD">The search map is referenced in the
+<i>\\geoportal\WEB-INF\classes\gpt\config\gpt.xml</i> file. It is called
+up on the interface by the ArcGIS Server JavaScript API. To change
+the search map itself, simply reference a new service URL in the
+<i>mapServiceUrl</i> attribute of the <i>&lt;interactiveMap&gt;</i> tag in the <i>gpt.xml</i> file.
+This topic addresses <a class="xref" rel="00t0/00t00000001n000000.htm#ESRI_SECTION2_8CE14020F4C24097AA115DF8D448282E" href="00t0/00t00000001n000000.htm#ESRI_SECTION2_8CE14020F4C24097AA115DF8D448282E">important things to keep in mind if you change the search map service</a> and <a class="xref" rel="00t0/00t00000001n000000.htm#ESRI_SECTION2_60AE5A014A8C46CBB198B3781345E6C7" href="00t0/00t00000001n000000.htm#ESRI_SECTION2_60AE5A014A8C46CBB198B3781345E6C7">how to change the dimensions of the search map</a>.</p><div class="section2" id="ESRI_SECTION2_8CE14020F4C24097AA115DF8D448282E" purpose="section2"><h3>Important things to remember if you change the search map service</h3><p id="GUID-528DE980-AD2F-47C2-A062-9BEB6051760D">Make sure that the search map service you use considers the following:</p><ul purpose="ul" id="UL_630DBE27F893443783DD95D55837D639">
+					<li purpose="li" id="LI_360A1C8D4B7A46FE999A77E198D03000">The URL specified in the <span class="uicontrol">mapServiceUrl</span> parameter
+must be a REST URL. It cannot be a SOAP URL.</li>
+					<li purpose="li" id="LI_AE91A57AAE1D44828C2CDBB2591DCD31">Projected services are supported, but with
+consequences. As the metadata document envelopes and searches are
+based upon opposing geographic coordinate system coordinates, the
+opposing corners cannot be drawn in a projected rectangle. This
+will cause instances where the search results do not match the
+visible criteria. In order to use a projected service, the
+<i>geometryServiceUrl</i> attribute has to be set on the
+<i>&lt;interactiveMap&gt;</i> tag.</li>
+					<li purpose="li" id="LI_67AFF1EF8EA046579461136FD61DE516">The <i>mapServiceType</i> parameter should be set to
+<span class="usertext">dynamic</span>, even if you are referencing a tiled service. This is a
+known limitation. Specifying <span class="usertext">tiled</span> in this
+parameter will result in navigation problems on the search
+map.</li>
+					<li purpose="li" id="LI_4A0D0A9BC85B411C805CA8C32A9D83CE">Do not use map services with spatial reference not
+defined using a well-known ID (WKID). Because the search map is
+based on the JavaScript API, limitations for the JavaScript API
+will apply to the search map. There is a known issue with the
+JavaScript API only supporting coordinate systems defined by a
+WKID. It is possible for the spatial reference of a map to also be
+defined as a definition string (WKT), but this will result in odd
+behaviors in the search map. For example, you may not see a
+footprint of the metadata records on the search page, you may not
+be able to define envelope for the metadata created/edited on the
+Create Metadata form, and Preview will fail for displaying
+'graphical' services such as GeoRSS or KML/KMZ.</li><li purpose="li" id="LI_17A9EA6EBEF94065A19B65B2F2494F66"> If you plan to use a map service for your search map that uses a coordinate system other than WGS 1984 - EPSG 4326, then you may have to set the jsapiUrl parameter in the gpt.xml file  to reference the version 1.6 JavaScript API instead of the default version 2.0.</li>
+				</ul></div><div class="section2" id="ESRI_SECTION2_60AE5A014A8C46CBB198B3781345E6C7" purpose="section2"><h3>Change the Search Map Dimensions</h3><p id="GUID-9609A45B-6E02-4078-AA5B-D3AB910A88B5"> If you change the default search map that appears on the search
+page, you may have to change the dimensions of the map container
+itself to better suit your geographic area. The code for the search
+page can be found in the <i>\\geoportal\catalog\search\criteria.jsp
+</i>file. <ol purpose="ol" id="OL_A57CB44C2F8D43ABB81A48FA93BB5F61">
+						<li purpose="li" id="LI_5C97726951184ED8A5955458480363E3">Open the <i>\\geoportal\catalog\search\criteria.jsp</i>
+file in a text editor.</li>
+						<li purpose="li" id="LI_D8F011B163914D599D206B95FCF8B669">Navigate to the <i>div</i> that has an <i>id</i> of
+<i>interactiveMap</i>.</li>
+						<li purpose="li" id="LI_42FDE720914E4AEBBF0ECD501DE3D4CB">The <i>div</i> has an associated <i>width</i> and <i>height</i> specified
+in its <i>style</i> attribute. Change the <i>width</i> and <i>height</i> values as
+needed.</li>
+						<li purpose="li" id="LI_F2BFD7D9926A40BCBCFB41FA83CDBA9B">The <i>div</i> that holds the <i>interactiveMap</i> has a parent <i>div</i> that
+creates the border around the map. If you change the dimensions of the child <i>div</i>, you must also update the dimensions of this parent <i>div</i>. Locate the <i>div</i> declaration immediately above the
+<i>interactiveMap</i> div. Change the <i>width</i> and <i>height</i> values of the style
+attribute as needed.</li>
+						<li purpose="li" id="LI_B28D81B811A045A89615BE889D62B6ED">An example where the height and width are changed to
+<span class="usertext">537</span> pixels and <span class="usertext">360</span> pixels respectively is shown below:<pre class="lines" purpose="lines">
+&lt;f:verbatim&gt;
+&lt;div id="locatorCandidates"
+class="locatorCandidates"&gt;&lt;/div&gt;
+&lt;div style="width: 537px; height: 360px; margin-top: 1px;
+border: 1px solid #000000;"&gt;
+&lt;div id="interactiveMap"
+dojotype="dijit.layout.ContentPane"
+style="width:537px; height:360px; cursor:pointer;
+cursor:pointer;"&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/f:verbatim&gt;
+</pre></li>
+						<li purpose="li" id="LI_F11410795F164A4791A48F085AD3FCF7">It is also important to change the width of the
+Geoportal page size to accomodate your larger map. To change the
+width, open the <i>preview.css</i> from the
+<i>\\geoportal\catalog\skins\themes\[color theme]</i> folder. In that
+file, increase the size of page by adjusting the <i>width</i> value. In the example below, the width is increased from <span class="usertext">880px</span> to <span class="usertext">980px</span>:<pre class="lines" purpose="lines">
+div#gptMainWrap {
+width: 980px;
+</pre></li>
+						<li purpose="li" id="LI_1F2F1BD98F194026B2DF44A1BBD29BF3">Save the altered files, restart the geoportal web application, and open a
+new browser window for your geoportal to see the change in
+effect.</li>
+					</ol></p></div></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

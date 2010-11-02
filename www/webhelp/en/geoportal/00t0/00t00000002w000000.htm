@@ -1,0 +1,95 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Integrate with a Content Management System Integrate the Geoportal  with a Content Management System A Content Management System (CMS) is software that allows users to enter and change content on a website. There are a number of CMS available, and the Geoportal can be integrated within a CMS, or a CMS can be integrated within the Geoportal  as a new tab. A CMS is not a requirement of the Geoportal, but integrating one can give a more directed view of the content of the geographic metadata catalog. CMS pages can highlight sets of geographic data and services that are"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - Integrate with a Content Management System</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-F1B13C01-84BF-4A3D-B989-BEFCF9878604]--><body><div id="content"><div class="header"><h1>Integrate with a Content Management System</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="GUID-FE884B5F-B5A5-45CF-854C-4846BDA74EE9" purpose="section1"><h2>Integrate the Geoportal with a Content Management System</h2><p id="GUID-FA42D5BD-DB7C-4F18-9ACE-EF0CA7F1FECE"> A Content Management System (CMS) is software that allows users to enter and change content on a website. There are a number of CMS available, and the geoportal can be integrated within a CMS, or a CMS can be integrated within the geoportal as a <a class="xref" rel="00t0/00t000000006000000.htm" href="00t0/00t000000006000000.htm">new tab</a>. A CMS is not a requirement of the geoportal, but integrating one can give a more directed view of the content of the geographic metadata catalog. CMS pages can highlight sets of geographic data and services that are applicable to certain user groups or topics. Several options are available for CMS integration, as illustrated in the figure below: <div class="image" purpose="image"><table><tr><td><img class="break" src="00t0/GUID-F81BBEC2-C986-4942-BAE1-323AB54AA0F9-web.png" purpose="img" alt="" title=""></td></tr></table></div><ul purpose="ul" id="UL_252329E7BD394CB5B0B8307A2B336E4A">
+					<li purpose="li" id="GUID-7BBE484C-0ABE-4BFF-848D-E51472DAB23B"><b>Option 1</b> - A browser can embed CMS web pages within geoportal web pages through an HTML <i>&lt;iframe&gt;</i> tag. A typical approach would involve adding a tab to the geoportal user interface that references a CMS starting page.</li>
+					<li purpose="li" id="GUID-703F4B12-1E9C-4B8C-AADC-8B43FBE9153B"><b>Option 2</b> - Conversely, a browser can embed geoportal web pages within CMS web pages through an HTML <i>&lt;iframe&gt;</i> tag. A typical approach would involve adding a tab to the CMS user interface that references a geoportal starting page.</li>
+					<li purpose="li" id="GUID-109259EB-37A9-493B-9C8F-4AA89F1F8ACC"><b>Option 3 </b>- Geoportal web pages could simply launch the CMS in a separate window by adding an HTML <i>&lt;a&gt;</i> tag to the geoportal user interface.</li>
+					<li purpose="li" id="GUID-5740B696-CAEB-444F-8B79-97DA4A2517CA"><b>Option 4</b> - CMS web pages could simply launch the geoportal in a separate window by adding an HTML <i>&lt;a&gt;</i> tag to the CMS user interface.</li>
+					<li purpose="li" id="GUID-11EFA3C0-B4B7-4ADB-865A-A6E26E899606"><b>Option 5</b> - The CMS could also ingest targeted content through the geoportal's Rest API. The Rest API allows for the submission of catalog query requests through a simple URL, and can return the results of the query in HTML, HTML fragment (no &lt;html&gt; header tag), GeoRSS, KML, or JSON format. As an example: <pre class="lines" purpose="lines">
+http://host:port/[GeoportalApplicationName]?searchText=maps&amp;f=georss&amp;max=100
+</pre> This example search would be executed against the term <i>maps</i> and a GeoRSS response would be returned with a maximum of 100 records. The CMS would then render the response.</li>
+				</ul> The methodology for rendering the
+response within a CMS page can vary. Some systems have inherent
+capability to render one or more of the response formats provided
+by the geoportal. Another approach involves transforming
+a response using XSL technology; this gives full control over the
+look and feel of the rendered response content. Implementing this
+approach will depend upon the capabilities of the CMS. Many content
+management systems also provide the ability to plug-in customized
+rendering adapters. This approach would involve developing a custom component.
+This topic provides an example for integrating the geoportal
+with a freely available CMS called <a target="_blank" class="xref" href="http://www.jspwiki.org/" rel="http://www.jspwiki.org/">JSP Wiki</a>. There are
+two parts to this topic: <ol purpose="ol" id="GUID-45C79168-29E6-4D11-AD53-E506036DE502">
+					<li purpose="li" id="GUID-D3C149B6-A174-4814-9F33-6FE7CE8A2AA0"><a class="xref" rel="00t0/00t00000002w000000.htm#ESRI_SECTION2_20AF2958F8014F438B321EE41FE235D9" href="00t0/00t00000002w000000.htm#ESRI_SECTION2_20AF2958F8014F438B321EE41FE235D9">Using JSPWiki with Geoportal GeoRSS feeds</a></li>
+					<li purpose="li" id="GUID-F07C9E6C-1585-45FA-8EEF-7A11F4AB7081"><a class="xref" rel="00t0/00t00000002w000000.htm#ESRI_SECTION2_AB72A80989344B978AFB2D3804CC7EC9" href="00t0/00t00000002w000000.htm#ESRI_SECTION2_AB72A80989344B978AFB2D3804CC7EC9">Using JSPWiki with the Geoportal REST API</a></li>
+				</ol> After you have configured your JSPWiki page, integrate it into a new tab in your geoportal by following instructions at <a class="xref" rel="00t0/00t000000006000000.htm" href="00t0/00t000000006000000.htm">Add Another Tab to the Geoportal Interface</a>. </p><div class="section2" id="ESRI_SECTION2_20AF2958F8014F438B321EE41FE235D9" purpose="section2"><h3>Using JSPWiki with Geoportal GeoRSS feeds</h3><p id="GUID-7FC848F1-6302-4D60-999F-EA64540073B5">In this example, you will install JSP Wiki from the <a target="_blank" class="xref" href="http://www.jspwiki.org/" rel="http://www.jspwiki.org/">JSP Wiki site</a>. After installing JSP Wiki, you will need to install an RSS plugin, located at <a target="_blank" class="xref" href="http://www.jspwiki.org/wiki/RssViewerPlugin" rel="http://www.jspwiki.org/wiki/RssViewerPlugin">http://www.jspwiki.org/wiki/RssViewerPlugin</a>. Remember to restart your geoportal web application after installing the plugin jar files. Steps to create JSP Wiki page to fetch geoportal RSS feeds are below: </p><ol purpose="ol" id="OL_C42D71B6B58D4F42B4D45E6855193324"><li purpose="li" id="GUID-13A38E32-5CD7-42D9-AC12-9FA801BC6CCA">Install JSP Wiki.</li>
+					<li purpose="li" id="GUID-0731BEDB-CC07-4BF8-9273-2C8E63EC4F15">Create a new page in JSP Wiki into which you will insert GeoRSS feeds.</li>
+					<li purpose="li" id="GUID-D02ED3F0-2E37-4D30-9C3B-C0E73A04B0D4">Go to the edit mode of the page, and paste the string below into it. This change will insert GeoRSS feeds from your geoportal. In the string, the url attribute should reference the REST result string for the search you want to display on the wiki page. For example, if you want the wiki page to display wildfire-related resources, the url parameter would look like the one in the example below. The parameters such as "detail", "ttl", "date", and "maxitems" are parameters defined by the plugin, and can be adjusted according to the syntax documentation on the <a target="_blank" class="xref" href="http://www.jspwiki.org/wiki/RssViewerPlugin" rel="http://www.jspwiki.org/wiki/RssViewerPlugin">RssViewerPlugin page</a>: <pre class="lines" purpose="lines">
+[{fr.univ.reunion.iremia.rss.RssViewer url='http://yourGeoportalserver/geoportal/rest/find/document?searchText=wildfire' detail='1' ttl='120' date='1' maxitems='20'}]
+</pre></li>
+					<li purpose="li" id="GUID-FE1E3747-4E7E-4500-BF95-88B526E171C6">You can define more complex search results by using the <a class="xref" rel="00t0/00t000000029000000.htm" href="00t0/00t000000029000000.htm">REST syntax</a> to specify extent, topic categories, dates, and more.</li>
+					<li purpose="li" id="GUID-0F83E8C8-459D-4370-93E1-B264FE49040F">Save the wiki page, exit the edit mode, and you will see a page displaying results corresponding to the search criteria you specified with the RssViewer url. </li></ol></div><div class="section2" id="ESRI_SECTION2_AB72A80989344B978AFB2D3804CC7EC9" purpose="section2"><h3>Using JSPWiki with the geoportal REST API</h3><p id="GUID-84B285A1-A92D-4984-997E-6B30A4B703CA"> It is also possible to display your REST results using the geoportal REST API. In this example, you will need to install an <i>xslt-plugin.jar</i>, and publish an xsl called <i>IdentityTransform.xsl</i> so that JSPWiki may have access to the xsl file. Steps are below: <ol purpose="ol" id="OL_8A2E5A543D654DA5B994EAAF9DCC95FA"><li purpose="li" id="GUID-E1A44DD4-500A-445B-92D6-E06DF88E0001">Install JSP Wiki.</li>
+						<li purpose="li" id="GUID-7C70BECC-D293-4354-990E-9E0E5D461A68">Install the xslt_plugin.jar, available at <a target="_blank" class="xref" href="http://www.jspwiki.org/wiki/XSLTPlugin" rel="http://www.jspwiki.org/wiki/XSLTPlugin">http://www.jspwiki.org/wiki/XSLTPlugin</a>: <ul purpose="ul" id="UL_F3539E9EB0B5401382F4A9DD831CEFDC">
+								<li purpose="li" id="GUID-8E260725-C6DA-43A0-B015-16D592A6CFE8">Go to the <span class="uicontrol">Attach</span> tab on the website, and copy the <i>xslt_plugin.jar</i> file into your <i>\\JSPwiki\WEB-INF\lib</i> folder.</li>
+								<li purpose="li" id="GUID-7E78FAC2-3B21-4975-B03D-973ADE8A9B37">Add the following entry to your<i> jspwiki.properties</i> file in the <span class="uicontrol">Plugin search paths</span> section: <pre class="lines" purpose="lines">
+#############################################################################
+#
+#  Plugin search paths.
+#
+#  Define here the packages you want to use for searching plugins, 
+#  separated with commas.
+#  For example, use the following command to add "org.myorganisation.jspwiki.myplugins"
+#  and "com.foobar.myplugins" to the search path.
+#
+#  The default path is "com.ecyrd.jspwiki.plugins", and it will be always
+#  the last item on the path.  This allows you to override JSPWiki default
+#  plugins.  Note that you are only adding to the path, not replacing it (ie.
+#  the default path is never removed.)
+#
+#  jspwiki.plugin.searchPath = org.myorganisation.jspwiki.myplugins,com.foobar.myplugins
+#
+jspwiki.plugin.searchPath =net.panonet.XSLTPlugin
+</pre></li>
+							</ul></li><li purpose="li" id="GUID-C08BE85D-4A28-40AF-97C5-EEBAA3C65936">Create the <i>IdentityTransform.xsl</i> file, and save it to your JSPWiki folder. You can name the file whatever you want, as long as you reference it in your JSPWiki. The text for the file is: <pre class="lines" purpose="lines">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format"&gt;
+	&lt;xsl:output method="text"/&gt;
+	&lt;xsl:template match="/"&gt;
+		&lt;xsl:for-each select="//item"&gt;
+			&lt;div&gt;
+				&lt;xsl:text&gt;&amp;lt;a &lt;/xsl:text&gt; href="&lt;xsl:value-of select="link/@href"/&gt;" target="_blank"&lt;xsl:text&gt; &amp;gt;&lt;/xsl:text&gt;
+				&lt;xsl:text&gt;&amp;lt;h4&amp;gt;&lt;/xsl:text&gt;
+					&lt;xsl:value-of select="title"/&gt;
+				&lt;xsl:text&gt;&amp;lt;/h4&amp;gt;&lt;/xsl:text&gt;
+				&lt;xsl:text&gt;&amp;lt;/a&amp;gt;&lt;/xsl:text&gt;
+				&lt;p&gt;
+					&lt;xsl:value-of select="description"/&gt;
+				&lt;/p&gt;
+				&lt;xsl:text&gt;&amp;lt;br&amp;gt;&lt;/xsl:text&gt;
+			&lt;/div&gt;
+		&lt;/xsl:for-each&gt;
+	&lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;
+</pre></li>
+						<li purpose="li" id="GUID-E2BE8804-A3F4-4532-AB5D-EC8B36A9EFCB">Now you will create a new JSP wiki page, and integrate the geoportal REST API results within it. <ul purpose="ul" id="UL_34337A56C7A049B294925F9BFABA8D13">
+								<li purpose="li" id="GUID-1E1E5E05-111F-4CF3-8285-4C8630AE76DD">Create the JSP wiki page.</li>
+								<li purpose="li" id="GUID-C54C01E4-6B59-4D2B-8C0C-1167B5D5748F">Go to the edit mode of the page.</li>
+								<li purpose="li" id="GUID-65FD14C2-C06B-4AE9-A576-6D24CA613210">Paste the string below into it. The <span class="uicontrol">xml=</span> parameter will need to have the URL of your search result page for the geoportal REST API results, and the <span class="uicontrol">xsl=</span> parameter will need to reference the URL to your published <i>IdentityTransform.xsl</i>. <pre class="lines" purpose="lines">
+[{INSERT net.panonet.XSLTPlugin WHERE xml='{url to document (or search result page) of Geoportal REST API}', xsl='{url to IdentityTransform.xsl}'}]
+</pre> For example:Wildfire Metadata <pre class="lines" purpose="lines">
+[{INSERT net.panonet.XSLTPlugin WHERE xml='http:// yourGeoportalServer /geoportal/rest/find/document?searchText=wildfire*', xsl='C:/Tomcat/webapps/JSPWiki/channelPage.xsl'}]
+</pre></li>
+							</ul></li>
+						<li purpose="li" id="GUID-AC254B48-6CEC-44AF-9A86-DE378D900246">Save the page, exit the edit mode, and you will see search results in the page that correspond to the REST url you input to the XSLTPlugin.</li></ol></p></div></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

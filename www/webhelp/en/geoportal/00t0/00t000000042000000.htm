@@ -1,0 +1,119 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Geoportal Search Widget for Silverlight Geoportal Search Widget for Silverlight The Geoportal Search Widget for Silverlight allows users to search other geoportals from within a Silverlight Viewer. How to Use The ArcGIS API for MIcrosoft Silverlight/WPF allows for the creation of Rich Internet applications on top of ArcGIS Server. The API is built on the free Microsoft Silverlight framework. ESRI provides a sample viewer templates that can be integrated with the Geoportal, using the Geoportal Search Widget for Silverlight. For instructions on how to add the Geoportal Search Widget to your existing sample viewer, see the Add the Geoportal Widget to an Existing Silverlight"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - 
+Geoportal Search Widget for Silverlight
+</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-2E856383-28EB-45F3-8B64-5135D24E60F4]--><body><div id="content"><div class="header"><h1>
+Geoportal Search Widget for Silverlight
+</h1><div id="breadcrumb"></div></div>
+		<p id="GUID-61AE0596-293E-489E-839C-C617AAB602B7">
+			
+		</p>
+		<div class="section1" id="GUID-A9D40E1A-3790-4677-8631-A01304A97DC5" purpose="section1"><h2>
+Geoportal Search Widget for Silverlight
+</h2><p id="GUID-98481E47-FCCB-4473-B9FA-608CBEBDB63A">
+The Geoportal Search Widget for Silverlight allows users to search other geoportals from within a Silverlight Viewer.</p></div><div class="section1" id="GUID-47598B4B-F762-4469-A9DE-F4625613F755" purpose="section1"><h2>
+How to Use</h2><p id="GUID-D54B885C-7296-4C88-95AE-354820242C11">
+The <a target="_blank" class="xref" href="http://help.arcgis.com/en/webapi/silverlight/index.html" rel="http://help.arcgis.com/en/webapi/silverlight/index.html">ArcGIS API for MIcrosoft Silverlight/WPF</a> allows for the creation of Rich Internet applications on top of ArcGIS Server. The API is built on the free <a target="_blank" class="xref" href="http://www.silverlight.net/" rel="http://www.silverlight.net/">Microsoft Silverlight</a> framework. ESRI provides a <a target="_blank" class="xref" href="http://help.arcgis.com/en/webapi/silverlight/samples/TemplateGalleryWeb/start.htm" rel="http://help.arcgis.com/en/webapi/silverlight/samples/TemplateGalleryWeb/start.htm">sample viewer templates</a> that can be integrated with the geoportal, using the Geoportal Search Widget for Silverlight. For instructions on how to add the Geoportal Search Widget to your existing sample viewer, see the <a class="xref" rel="00t0/00t000000042000000.htm#GUID-B6108B7C-772B-4EF4-B8EA-F6D463FB111D" href="00t0/00t000000042000000.htm#GUID-B6108B7C-772B-4EF4-B8EA-F6D463FB111D">Add the Geoportal Widget to an Existing Silverlight Viewer</a> section below.
+
+</p><p id="GUID-A29B44F7-C62B-4C86-8240-900D9417A458">The Geoportal Server ships with an example viewer that is preconfigured with the Geoportal Search Widget for Silverlight. To launch the example viewer, go to the examples page (http://server_name/geoportal/widgets/example.jsp) and launch the Silverlight Viewer from the link on the page. The <span class="wintitle">Find GIS Data</span> window will automatically be opened when the application is launched; this <span class="wintitle">Find GIS Data</span> window is the Geoportal Search Widget for Silverlight.</p><div class="section2" id="HOWTOSEARCHFLEXWIDGET" purpose="section2"><h3>How to search</h3><p id="GUID-82F6DD92-8725-4DBC-B90D-4092EAC4844F"> Notice that the <span class="wintitle">Find GIS Data</span> window has one input field, a <span class="uicontrol">Search</span> button, and three radio buttons. The input field accepts any lucene search query. You can type in a simple query, such as just one keyword to search, or you can develop more complex queries using the <a class="xref" rel="00t0/00t000000004000000.htm" href="00t0/00t000000004000000.htm">Lucene syntax</a>. Furthermore, you can limit search results to a certain spatial extent. Select the appropriate radio button: <span class="uicontrol">Anywhere</span> means no spatial filter will be applied, <span class="uicontrol">Intersecting</span> will retrieve records that overlap the spatial extent currently shown in the Silverlight Viewer, and <span class="uicontrol">Fully Within</span> will retrieve records where the spatial extent falls fully within the extent currently shown in the Silverlight  Viewer.</p><p id="GUID-92D76F64-52D0-4203-9382-CEE8E59347F0">Once you have entered the search criteria, click the <span class="uicontrol">Search</span> button.</p><p id="GUID-B3EF6E5D-3B13-49D1-9FAE-53034FDF5296">Search results matching your criteria are returned. Click on one of the records, and the interface zooms to the spatial extent of the resource. Another window appears, showing information for that search result resource and links that provide the same functionality that you'd see on the geoportal search page. You will notice that an <span class="uicontrol">Add to Map</span> link appears for Live Data resources. That is because in this Silverlight application, users can preview the service when they chose to add it to the map with the <span class="uicontrol">Add to Map</span> link.</p></div><div class="section2" id="OTHERTOOLSINFINDDATA" purpose="section2"><h3>Other tools in the Find Data window</h3><p id="GUID-DCCE1FEB-87A7-47B5-BE6B-B822FD76B140">The Silverlight widget allows you to turn off the bounding box extents for all records or individual records. Beside each search result title is a check box, by default it will be checked which means the bounding box for that record will be displayed on the map. You can uncheck the box and the bounding box will not display on the map. You could also check uncheck the box beside the number of documents found to remove all search result bounding boxes from the map.</p><p id="GUID-894D872A-4E59-46C8-BCDD-CDA448DFA81B">If you close the window, but want to open it again, hover the pointer over the cube "Globe" icon in the viewer's main menu, and you will see the Find GIS Data tool display. Click on it to restore it to the <span class="wintitle">Find GIS Data</span> user interface.</p></div><div class="section2" id="VIEWSERVICEFLEX" purpose="section2"><h3>Viewing a service in the interface</h3><p id="GUID-79A5BBF1-FB31-4BAE-A814-ED85AF513A24">The example Silverlight Viewer provided with the Geoportal Server supports ArcIMS, ArcGIS Server REST services, OGC WMS, and GeoRSS. If a service is not running or is an unsupported service type, it will not appear on the map interface even though an <span class="uicontrol">Add to Map</span> link is displayed with the search result.</p></div><div class="section2" id="NAVIGATEFLEXMAP" purpose="section2"><h3>How to navigate the Silverlight Viewer map</h3><p id="GUID-A28C9DE0-3F3D-48F1-85EF-02712D4476A0">Documentation for how to use the Silverlight Viewer is specific to its implementing organization, and will be defined in the Silverlight Viewer's help by the organization hosting the viewer.</p></div></div>
+		<div class="section1" id="GUID-B6108B7C-772B-4EF4-B8EA-F6D463FB111D" purpose="section1"><h2>How to Add the Geoportal Widget to an Existing Silverlight Viewer</h2><p id="GUID-7B6C98E2-2447-4488-98A8-F2120426C34B">The Silverlight Viewer that ships with the Geoportal Server is a sample. If you are hosting your own <a target="_blank" class="xref" href="http://help.arcgis.com/en/webapi/silverlight/samples/TemplateGalleryWeb/start.htm" rel="http://help.arcgis.com/en/webapi/silverlight/samples/TemplateGalleryWeb/start.htm">ESRI Silverlight Viewer</a> and would like to add the Geoportal Search Widget to that application, you will need to acquire the source code package of the geoportal. You can add the Geoportal Search Widget to your Esri Silverlight  Viewer by following the steps below.
+
+
+</p><ol purpose="ol" id="GUID-8083BF79-6AE0-48DF-8391-E91689E5BBA7">
+				<li purpose="li" id="GUID-370BC34C-1EE3-430F-AFC1-A3B8713D43AC"> Reference GeoportalWidget.dll in your Silverlight map application project (this file is located in the source code distribution). </li>
+				<li purpose="li" id="GUID-A457E2EE-4EFC-4050-8251-1B9E274C7D33">Next you will have to add the GeoportalWidget control to your xaml page. <ul purpose="ul" id="UL_7CCF6910E84142B7979DBAB44135FD7A">
+						<li purpose="li" id="GUID-3D77DBEB-9F2E-4883-BAF3-13255CF9917C"> First add the code below  to the <span class="uicontrol">&lt;UserControl&gt;</span> tag<div class="codeblock" purpose="codeblock"><pre class="codeblockbody" id="GUID-688A8B42-D0E2-4F8D-823B-B1931E54F2D7" purpose="codeblockbody"> xmlns : slptk ="clr-namespace:GeoportalWidget;assembly=GeoportalWidget"</pre></div>
+						</li>
+						<li purpose="li" id="LI_433DEBEB7E944FFBAD0166AF7B0C6809"> Second add the control to the page similar to code below.<div class="codeblock" purpose="codeblock"><pre class="codeblockbody" id="GUID-AE705235-2BE2-4E85-967E-7E22C03396CC" purpose="codeblockbody"> &lt; StackPanel Orientation ="Vertical"&gt;
+&lt; slptk : GeoPortalMain x : Name ="GeoPortal1" Map ="{ Binding ElementName =MapView}" /&gt;
+&lt;/ StackPanel &gt;</pre></div>
+						</li>
+					</ul>
+				</li><li purpose="li" id="LI_CECD9F6119BE4EE487AF193A0CC07C3D"> Follow the steps on the <a target="_blank" class="xref" rel="http://help.arcgis.com/en/webapi/silverlight/index.html" href="http://help.arcgis.com/en/webapi/silverlight/index.html">ArcGIS API for Microsoft Silverlight/WPF page</a> for the map viewer compiling instructions.</li><li purpose="li" id="LI_C5C1FA4726474FABAC7F902308BC0438">Navigate to the [Your ESRI Silverlight Sample Viewer Root
+Directory]/clientBin folder, and open the
+<i>geoportalWidgetConfig.xml</i> file in a text editor. This file contains
+a number of settings you can specify to customize your Geoportal
+Search Widget. Most of these settings are optional, and are listed
+in the table below. Before configuring the optional settings, you
+must do the following:
+<ul purpose="ul" id="UL_E185AA03C83F48F2BCF1499BCF29C837"><li purpose="li" id="LI_5EAA18AC0ACB4F72B8926EF32882D32C">Find the section shown below, and comment it out so it reads as
+follows:
+<div class="codeblock" purpose="codeblock"><div class="codeblockdesc" purpose="codeblockdesc"></div><pre class="codeblockbody" id="GUID-C5409BF2-379F-4E8F-AD45-CA7A30C17C7F" purpose="codeblockbody">&lt;!-- &lt;gptEndpoint url="rest/find/document"
+name="Default Site"/&gt; --&gt;</pre></div></li></ul><ul purpose="ul" id="UL_42F24412152C41FAA9C2DE8A603EC51C"><li purpose="li" id="LI_CB3E0D84443B411992DD6EA7B04F5785">Now, copy the next <span class="uicontrol">gptEndpoint</span> element that describes the GEOSS
+portal URL, and paste it just below your commented text:
+<div class="codeblock" purpose="codeblock"><pre class="codeblockbody" id="GUID-8835A6E8-8110-40CC-AA37-3D542A1742A0" purpose="codeblockbody">&lt;gptEndpoint
+url="http://geoss.esri.com/geoportal/rest/find/document?"
+name="GEOSS"/&gt;</pre></div></li><li purpose="li" id="LI_84542F3ADE364D149AF85EAAD615803C">Edit the copied <span class="uicontrol">gptEndpoint</span> element by changing the URL to point to your geoportal, and updating the 'name' attribute with the name of your geoportal. This will allow users to select your geoportal from the list of default sites to search. You can remove the GEOSS or GOS portals from the list by removing their <span class="uicontrol">gptEndpoint</span> entries.
+</li></ul></li><li purpose="li" id="LI_F7BAE1AF917248A5A2EB63F55CB04F81">If you desire to change the look and feel of your search widget or
+how it behaves, configure any of the following optional elements.
+Elements not listed in this table should not be altered:
+<div class="block_table" id="TABLE_BE1CF8FE49864BBAA0C8C2DCE54D2EF6" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1"><p id="GUID-C8A009E6-6AC8-419F-BC87-3D11217414AA">Element Name	</p></th><th class="th" purpose="th" rowspan="1" colspan="1"><p id="GUID-7B8D4A20-5AA2-4EC3-8E36-9A3D0E2764A1">Description</p></th><th class="th" purpose="th" rowspan="1" colspan="1"><p id="GUID-AFB13BCD-9041-40F3-A5EA-2664B90FD172">Accepted Values</p></th></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-2ED2FC8E-E596-4E4A-A2B3-445C117C5530">&lt;label&gt;</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-E83571F2-5CE7-45E4-8C93-501626E3EB2F">refers to labels in the Search Widget. The <i>value</i> attribute is what the user sees. Do not change the <i>name</i> attribute.</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-BE81C814-1686-40D9-AD2F-B35BC4542FE4"><i>value</i> should be a string</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-66626A87-850D-4FF2-B667-7ACE99426F7C">&lt;searchTimeout&gt;</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-26D3272F-4BD4-4533-9333-5E39857A8F2C">max time in seconds a search will be allowed to run before it times out</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-0B02275B-384D-454E-A570-144AB9293484">integer
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-ADA93C7B-7FF7-421B-8F46-35CC4AE8F592">&lt;addLayerTimeout&gt;</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-1042C912-06B1-408E-8766-D9F95DF5A646">max time in seconds adding a layer will be allowed to run before it times out</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-9484D641-7228-425B-8062-8782F55FC085">integer
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-EC005115-27FC-4230-8AC0-EC911EBFB1D0">&lt;iconSearch&gt;</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-874C1D9D-1776-4DFF-A298-796DE8D52BE1">filepath to the search icon in the Search Widget interface</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-8A2BCAA3-C591-4ABA-AE72-24C9E71B9841">string
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-BBD2CFF0-12D0-4901-AB98-3619F7BFECD0">&lt;iconResult&gt;	</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-926D5F58-11EE-46FC-943D-A6AC9478B82A">filepath to the table icon in the Search Widget interface</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-29B65604-0347-430C-A062-080848041226">string
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-7E03D5FF-76DF-460A-A546-B046EFC4F470">&lt;iconHelp&gt;</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-FE2CE266-E858-4336-9F88-F026DFC584DB">filepath to the help icon in the Search Widget interface	</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-5EA69694-5176-47D8-B705-49AF8D2F7E05">string</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-43834B6D-2C92-4C25-BACE-71EDD2BAEC97">&lt;zoomFactor&gt;</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-6578D371-9C07-429E-9941-BC4872A31A5C">how much buffer to add to the view of the extent so that the borders of the extent and some surrounding area can be seen when you choose Zoom to Extent for a search result</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-8357B044-98B4-4287-9123-FE497F3BAA8F">integer
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-256DD89E-57B6-4F66-ABC6-58E639090B19">&lt;urlHelp&gt;</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-3D2E8DA7-E842-46FB-90F1-188822F59891">URL to the help webpage. You can update this to point to a file hosted by your organization. The default is the Geoportal's Search Widget help topic.</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-89A726CA-BE48-45DA-AE6F-4CB087BFD1BA">URL string
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-0536EFD1-7BDC-4E8C-8AE4-EBF7A54C3876">&lt;color id="mainBboxesPlain"&gt;</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-049CEFA3-B8FD-4B77-92E7-8B4625E40900">defines look and feel for bounding boxes showing the extent of returned search results</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-2F3FDEFA-DD0D-4888-BB47-41986B8B2DE7">variable - several parameters are defined here
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-8595E1D5-D177-4815-8196-EE12A8722096">&lt;color id="mainBboxesHighlight"</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-AB03CA29-92AB-4CBF-A9A4-216D13DB3DC2">defines look and feel for a highlighted bounding box showing the extent of a selected search result</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-A337DA62-1D07-42B9-A3B4-4738AF312A6E">variable - several parameters are defined here
+</p></td></tr></table><span class="table_desc"></span></div>
+				</li><li purpose="li" id="LI_E6B068E66A0D4061BD95C4BA2718E2AF"><p id="GUID-5F83B4EA-4C10-4D58-A30A-68D3B9E9B547"> The Silverlight viewer in order to access
+another site for information the site has to have a <i>crossdomain.xml</i>
+that defines access policy. To get around this restriction,
+the Geoportal Search Widget for Silverlight can use a proxy. If the proxy
+is not used, then all of the search and the map service endpoint
+domains must have a <i>crossdomain.xml</i> file explicitly allowing access
+from the domain the ESRI Silverlight Sample Viewer runs on. If the ESRI
+Silverlight Sample Viewer and the map services found are going to be on
+the same domain then a crossdomain file and/or a proxy is not
+needed and you can skip this step.
+</p><p id="GUID-B3972301-E43A-4D29-BF92-E0C635430328"><note id="GUID-D5BEF63D-7C35-4410-966A-9AE6336FAB96"></note></p>
+					<p id="GUID-DBA3AD8D-62DE-4339-B29D-2A8A2831C27A">
+						<ul purpose="ul" id="UL_CAEBF2480C2D40A6BE259DC865932BE0">
+							<li purpose="li" id="LI_BF1BA91352AE4F828DB10104FE91FC9A">
+								<b>Example A: Replace proxy.jsp with the proxy.jsp
+from the Geoportal Example Silverlight Viewer</b>
+								<p id="GUID-AD223903-61E0-4389-94B1-6266D2BD17F5">
+									<ul purpose="ul" id="UL_AB40CEAF5A0C4B06AA65D8EE8EBE7B71">
+										<li purpose="li" id="LI_110C6AD0D28840CCA3841D76EC6DEBB4">Overwrite the <i>proxy.jsp</i> file in your Flex Viewer
+root directory with the <i>proxy.jsp</i> file from the [Geoportal Install
+Directory]/Widgets folder.</li>
+									</ul>
+								</p>
+							</li>
+							<li purpose="li" id="LI_DDBD20F7B3EE4E76A06D7A1AAE661840">
+								<b>Example B: Reference proxy.jsp</b>
+								<p id="GUID-407B4DD0-0A9D-4B4F-9368-1DA3BE57A7C2">
+									<ul purpose="ul" id="UL_B30C7C0F226945DF9BF4BA6E5CA098A7">
+										<li purpose="li" id="LI_AF33F8D9B71F4BD296D184911FCAF321">Copy the the <i>proxy.jsp</i> file from the [Geoportal
+Install Directory]/Widgets folder into one of your Java web
+applications.</li>
+										<li purpose="li" id="LI_D551721280C34AB6A9038014AC7FB89B">Verify that your Silverlight Viewer is in the same domain
+as where you are hosting this <i>proxy.jsp</i>.</li>
+										<li purpose="li" id="LI_D179E18342814758BBFEB7E1A833AA8F">Open the <i>geoportalWidgetConfig.xml</i> file (from [Your
+Silverlight Viewer Root Directory]/Clientbin folder)
+and update the <span class="uicontrol">&lt;useProxy&gt;</span> element's <span class="uicontrol">proxyUrl</span> attribute with
+the following URL: <span class="usertext">"http://yourdomain/yourcontext/proxy.jsp?url="</span> .
+The updated element is shown below:<div class="codeblock" purpose="codeblock"><pre class="codeblockbody" id="GUID-43004CD0-AF53-47CE-8096-97CDFFD945E2" purpose="codeblockbody">&lt;useProxy
+proxyUrl="http://yourdomain/yourcontext/proxy.jsp?url="&gt;&lt;/useProxy&gt;</pre></div></li>
+										<li purpose="li" id="LI_425448912F324C40A63DFCB75DF17F53">Change "yourdomain" to reference the server hosting
+your Silverlight Viewer, and change "yourcontext" to the web application
+hosting your <i>proxy.jsp</i> file.</li>
+										<li purpose="li" id="LI_6BDFD30CA3574FE3B9F40E7C39B54C43">Save the <i>geoportalWidgetConfig.xml</i> file.</li>
+									</ul>
+								</p>
+							</li>
+						</ul>
+					</p>
+				</li><li purpose="li" id="LI_72B1F63767F24C708A9EE8C32D58D9EC"> Launch your ESRI Silverlight Sample Viewer and try out the Geoportal Search Widget.</li>
+			</ol></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

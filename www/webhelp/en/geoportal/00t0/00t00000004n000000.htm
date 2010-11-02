@@ -1,0 +1,270 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Database Tables Geoportal Database Tables The Geoportal 10 database scripts create a set of tables that define database users, permissions, indexes, tables, and initial values for the database.The tables are described below. Tables created by the Geoportal SQL database creation scripts Seven tables are created by the Geoportal SQL database creation scripts. Read about each table's columns and the meaning of that column's information in the chart below. Table Name Column Name Meaning GPT_HARVESTING_HISTORY UUID Unique string associated with each harvesting history record HARVEST_ID ID of the repository that was harvested HARVEST_DATE Date of the harvest HARVESTED_COUNT Number of documents harvested (duplicated from harvest_report column for better performance and sorting) VALIDATED_COUNT Number of harvested documents that were"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - Database Tables</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-D15B6935-BCE6-40A8-90B2-936E74ADF856]--><body><div id="content"><div class="header"><h1>Database Tables</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="GUID-76A041E3-9336-4E3C-90BD-23427B3E1CEB" purpose="section1"><h2>Geoportal Database Tables</h2><p id="GUID-45728F01-01EE-4DE4-AF7F-C50C56D34DE3">The geoportal database scripts create a set of tables that define database users, permissions, indexes, tables, and initial values for the database.The tables are described below. <ol purpose="ol" id="OL_1BC7FA7CF0AD484F82E41E7199CF0886">
+					<li purpose="li" id="LI_75D6CD38968C4C758FFB5FB906DAF552"><b>Tables created by the geoportal SQL database creation scripts</b> Seven tables are created by the geoportal SQL database creation scripts. Read about each table's columns and the meaning of that column's information  in the chart below. <div class="block_table" id="TABLE_2BEC8282057A44558DC4E01631F7EC67" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-114CAE08-6CB7-4206-970F-DB5A551D0BF8">
+Table Name
+</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-DF4D33BA-E208-464F-8741-7E298F108A6E">
+Column Name
+</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-A5E6BA33-992D-4970-9902-6F46BDEC5042">
+Meaning
+</p>
+										</th></tr>
+									<tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-A314777E-9567-411E-A2D5-DA7228D3564E">GPT_HARVESTING_HISTORY</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-47919E05-4A67-4B94-BFED-8E137A69603A">
+UUID
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-2864BDDF-2F57-45B6-ABD4-68D2CF1E4CFB">
+Unique string associated with each harvesting history record
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-5985551B-EF20-46F6-824B-A05A08CBD0CF">
+HARVEST_ID
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-A450D072-8FBC-4779-8C5B-942E5814F87C">
+ID of the repository that was harvested
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-42B33A11-472D-4462-8D49-1B8DB53B9A32">
+HARVEST_DATE
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-E27B944B-3729-4F0D-96CB-5342E0844421">
+Date of the harvest
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-7B6A520E-7834-4555-ADAE-4F662394D261">
+HARVESTED_COUNT</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-F246F487-BCE6-47A6-AA1E-C988BF663BD2">
+Number of documents harvested (duplicated from harvest_report
+column for better performance and sorting)
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-4C815616-107E-40BC-9689-02F4C00D7B2A">
+VALIDATED_COUNT
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-F6BB1D33-B256-45BE-8875-B1F23DB90E9F">
+Number of harvested documents that were valid (duplicated from
+harvest_report column for better performance and sorting)
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-2FB14904-66C9-4EE1-966B-F686DFF116D4">
+PUBLISHED_COUNT
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-B14BDA4E-8181-4A0F-9BA9-BDA75ADE2F81">
+	Number of harvested documents that were published to the portal (duplicated from harvest_report column for better performance and sorting)
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-94432499-84AF-42F2-B445-F4E1C1C06FB3">
+HARVEST_REPORT
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-CE57EDF2-CCCD-4AFA-9F5B-DC5376CE5D5C">
+	Information that will be displayed for the harvesting report text
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-46308B8B-DAFB-4265-A70C-C7B54A8B3AF8">GPT_HARVESTING_JOBS_COMPLETED</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-C8F466F9-EBCD-4818-9C69-2AB7DD4B114F">
+UUID
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-1B585701-EEFE-4CAE-A171-B1A44BFA3B7F">
+Unique string associated with each completed harvesting job
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-C5B137FE-0D3E-41D0-8F8C-EA747A6B93BB">
+HARVEST_ID
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-3A52D65A-331A-4FB9-87AA-1B56FECC55D3">
+ID of the repository that was harvested in that job
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-80A4E237-6E71-4C88-9752-298C940D25BE">
+INPUT_DATE
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-A2A35E87-761A-4C53-AFE9-16A1A69DBD81">
+Date and timestamp marking when the harvesting job was created.
+This is the same INPUT_DATE that is in the
+GPT_HARVESTING_JOBS_PENDING table
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-DDDBAA21-79DE-45F8-9EFB-8D02B4A56ED8">
+HARVEST_DATE
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-50DDAB2B-AA7D-4958-B1CA-6D2D67B272EB">
+Date and timestamp for when the harvesting job was completed. This
+is the same HARVEST_DATE that is in the GPT_HARVESTING_JOBS_PENDING
+table
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-9C68DD36-EF8A-4CA6-9147-911DC5FB9A98">
+JOB_TYPE
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-9975B4BC-C5AA-45F5-A05B-C93B79A3F80A">
+	Harvesting job type (e.g., "full"=Full Harvest or "now"= Harvest Records that have been updated since last harvest. Same JOB_TYPE that is in the GPT_HARVESTING_JOBS_PENDING table
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-A802F75F-7463-457F-AD13-52F7EBBF47F4">
+SERVICE_ID
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-A8253E16-15B5-475C-8ABF-3E6828325A15">
+The Harvesting Service ID of the Harvesting Service that took over
+the job. Its ID is defined through the Harvesting Service install
+wizard (e.g., GPT_Harvesting_Service)
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-5E3FC8F3-A4D9-4B50-818E-97829D7EDB14">GPT_HARVESTING_JOBS_PENDING</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-F864B1BC-9316-4CC5-8904-0C76FB096F71">
+UUID
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-990788CC-AD4E-4E5E-9470-084ECF207DCB">
+Unique string associated with each pending harvesting job
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-BA0D1A30-E23E-424F-BB6A-47592332029A">
+HARVEST_ID
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-E18B50DC-8794-4A96-B4FC-1A7398EBBEA9">
+ID of the repository that will be harvested in this job
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-96AA3634-CC33-42FA-A556-D4C3627FA9F9">
+INPUT_DATE
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-F3CDB495-E66B-4641-AA32-833F6893640B">
+	Date and timestamp marking when the harvesting job was created. This is the same INPUT_DATE that is in the GPT_HARVESTING_JOBS_COMPLETED table
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-AC2F42AA-1C23-4BD8-AF9C-BCF46C6631F8">
+HARVEST_DATE
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-CDCC5174-58C7-4EC6-8B76-D0D88CFC590D">
+Date and timestamp for when the harvesting job was completed. This
+is the same HARVEST_DATE that is in the
+GPT_HARVESTING_JOBS_COMPLETED table
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-E208EC5B-2B93-43DF-95FA-854B79EE06C9">
+JOB_STATUS
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-D1DD4CD3-3DAE-4AFE-9CA7-138919DC2F07">
+Status of the harvesting job (e.g., "submitted" or "running")
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-D78C8A67-14B6-48E0-9C0D-2923DB5A3C6F">
+JOB_TYPE
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-48C423C8-43AC-44E6-BC5C-B0FF968A974C">
+	Harvesting job type (e.g., "full"=Full Harvest or "now"= Harvest Records that have been updated since last harvest. Same JOB_TYPE that is in the GPT_HARVESTING_JOBS_COMPLETED table
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-29152FF7-1F73-4CAF-96EE-0CE14408FDD2">
+CRITERIA
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-6EB49102-DDB9-4879-BAD7-346D961F06B9">
+												
+											</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-617A0F52-2944-408F-A8B1-0B7B100531D9">
+SERVICE_ID
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-A91E7222-AB7B-453B-8F8C-0B9F97D94E19">
+The Harvesting Service ID of the Harvesting Service that will take
+over the job. Its ID is defined through the Harvesting Service
+install wizard (e.g., GPT_Harvesting_Service).
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-479AF291-5127-4490-AAE1-DEFEECD2D7A8">GPT_RESOURCE </p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-96DD18CF-D939-4862-BD87-65ECE5C1D142">
+DOCUUID
+</p></td><td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-533E7842-3619-4239-A964-6CBC03A97484">  Unique string associated with each resource</p>
+										</td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-A0466317-BDDF-4742-841A-C5B4F02AEB78">
+TITLE
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-8F3849B7-38D8-460F-B048-CB82A95BE58E">
+ Title of the resource
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-2F6ED0AB-DDED-443C-B6BE-A18015FBFA2E">
+OWNER
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-0945C1AB-BFA7-458D-A687-979C6BCF8A53">
+ UserID of the user who has ownership of the document. Corresponds to USERID in the GPT_USER table
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-4AE839EB-4DE3-4FD0-8B96-99A158FAE1ED">
+INPUTDATE
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-D16BC37E-027C-47B5-A1BA-75C04DBCFA3D">
+ Date resource was registered
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-4CCD5A5D-8F37-48C9-991C-93E6792C27CA">
+UPDATEDATE
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-4154AEDE-8189-4B26-8365-65218B738D82">
+ Date resource was last updated
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-374C32D6-91D8-4835-A2C0-BA4F2E8201C5">
+ID
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-0D6CC32D-FE9A-434D-A6ED-734821250016">
+ Number assigned to registered resources to provide  backward compatibility with the Geoportal 9.3.x harvesting mechanisms</p><div class="notes" id="GUID-EC4BEC33-7EB6-40C5-9656-24CA14997C48"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody"><p id="GUID-5B5C45AE-8EA7-47C3-BB4F-1E595CE79808">DOCUUID vs. ID: DOCUUID is used to
+uniquely identify resources. ID, being a numerical value, is also used because certain database operations are faster on numerical values.
+If you are migrating a Geoportal 9.3.x database to Geoportal Server, migration will extract the metadata xml out of the 9.3.x GPT_METADATA table to the Geoportal Server's GPT_RESOURCE_DATA table. Both GPT_RESOURCE and GPT_RESOURCE_DATA are
+linked together using the ID for performance on UPDATE
+requests. For searching, and reading/downloading raw metadata, the DOCUUID is better to use.  Maintaining both the ID and the DOCUUID for resources is a balance that  maintains backward
+compatibility, usability, and increases performance.</p></div></div></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-2398C6F4-46AE-4C4D-B105-306215AAC01C">
+APPROVALSTATUS
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-DA5BA251-EB5D-4F28-9263-C7989D5BBB02">
+ Indicates if resource is approved ("approved"=approved, "NULL"= not approved, record has any other status)
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-28F2EE13-9429-4ED1-BBE3-754F9F211B97">
+PUBMETHOD
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-A1EBAEA1-32B6-4D57-A020-295E980D1976">
+ How the resource was published to the portal (e.g. "upload", "registration", "harvester" (synchronization), "batch", "editor")
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-5CD9DB2A-D6EE-417F-9163-770FB75B7DCA">
+SITEUUID
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-8AFD8B44-5113-4D2B-99A6-74D598BC924C">
+ If the resource is synchronized, this is the site identifier string of the registered resource from which it came.
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-3AEE8164-30F5-4C50-8F11-68FC934CCAA4">
+SOURCEURI
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-64768560-60D3-4E69-B051-90E9ABB376D6">
+ User id and originating filename/location of the resource</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-DA35A38F-EE3E-4EB4-BA47-5A9FF8BFF241">
+FILEIDENTIFIER
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-9B1170B7-81AD-4B89-935C-EF8F97A2BEFA">
+ Value that may be stored in the resource's metadata xml to distinguish it from other resources. Because not every record may have a FileIdentifier in its XML, the geoportal assigns the DOCUUID to uniquely identify each record
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-EF430D03-00D2-4908-9D15-FE711132B7CB">
+ACL
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-51C6084B-54FA-498B-AD35-BDBDCDEF101E">
+ Indicates the restriction policy (if any) on the record
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-67972AE1-AAF1-4C57-9B65-74EC589BC857">
+HOST_URL
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-60AFF360-A498-46B1-89C3-73F33A909C85">
+ If the resource is a registered network resource, this is its URL</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-67A3AC32-782E-42DB-94C7-6CD882C8C47B">
+PROTOCOL_TYPE
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-4BC339C0-F0DE-4DE9-A601-6F02DB0F0D23">
+  If the resource is a registered network resource, this is the protocol it uses (e.g., "arcims", "res", "csw", "oai", "waf")
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-9AF89E2F-186B-4497-9C0B-B8A3A62348AB">
+PROTOCOL
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-48F04685-F198-4DC0-B916-C72BCA3AC5DF">
+ Xml encoding of the resource's parameters, as defined when the resource is registered. An example with WAF:<pre class="lines" purpose="lines">&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;protocol type="WAF"&gt;&lt;username/&gt;&lt;password/&gt;&lt;/protocol&gt;</pre>
+											</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-0D9418C5-FB3B-4739-87E2-11607D03F51C">
+FREQUENCY
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-67A8504D-BC01-4B6A-9A6E-724C26C0255A">
+ How often the resource should be synchronized (e.g., "Monthly", "BiWeekly", "Weekly", "Daily", "Hourly", "Once", "Skip")
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-FE355B27-8F45-4C38-8602-827D5ED2152B">
+SEND_NOTIFICATION
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-5C0E7083-B9AC-4FF3-9E94-BDAE162B2171">
+ True/false: send user an email when resource is synchronized
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-6BE50DB7-4359-4A93-83D2-FFAF1BF9DC3A">
+FINDABLE</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-03F6B32C-3519-4DD9-899E-28FE17723474">String associated with each metadata record, indicating whether it can be found when searching for metadata. The value can either be null for metadata that is not describing a searchable endpoint or true or false for metadata records that are describing a searchable endpoint.</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-C5E17D0B-E7D8-4B0D-A381-9B02631FE97E">SEARCHABLE</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-6AA3AC10-A62C-4536-8690-2130CCB9E99D">String associated with each metadata record indicating whether to include the resource in the distributed search list. The value can either be null for metadata that is not describing a searchable endpoint or true or false for metadata records that are describing a searchable endpoint.</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-D4EB6087-6C36-491E-B4CD-5E1C99E32DE9">SYNCHRONIZABLE</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-5D334861-EFF3-4F35-8BE3-73BB57A4D546">String associated with each metadata record indicating whether the content can be synchronized. The value can either be null for metadata that is not describing a searchable endpoint or true or false for metadata records that are describing a searchable endpoint.</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-438F1E55-0B7D-43F1-ABA8-B69C60F2CDAA">LASTSYNCDATE
+</p></td><td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-62903ED1-A9B4-4DB0-A672-0B0839DE2527">Date resource was last synchronized</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-4AFBEEC6-2F29-440F-B006-90244080F87C">GPT_RESOURCE_DATA
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-75996042-82BB-40EC-B7BF-32BC8681B256">
+DOCUUID
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-150A6FF4-CAB2-4E43-8E45-62A9A198E97B">
+	Unique string associated with each metadata record, connecting this table to the GPT_RESOURCE table
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-7DECE645-8D78-4E82-BB56-06478631C694">
+ID
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-722CE166-466B-480F-94AE-1DC4423EF613">
+
+ Number assigned to registered resources to provide  backward compatibility with the Geoportal 9.3.x harvesting mechanisms</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-DA3B964A-FCF1-4BB1-BF27-6F7DC7E23B7F">
+XML
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-3555316A-ED7D-4484-821B-8CEB5228EF66">
+complete xml of the metadata record
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-373873C8-BF83-4EAF-B423-75DD7D521BE7">
+THUMBNAIL
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-AE894313-C5D8-435B-9322-113A9AE117FE">
+stored image associated with the thumbnail graphic for records
+containing binary image information in the metadata xml
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-C4B5582E-5C21-4D5C-9A9D-B8C4A5517C29">
+GPT_SEARCH
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-93C1E924-DB79-4C7B-BFB9-EDA74D579E93">
+UUID
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-19FD620D-3462-4C73-80CB-4E58CE5ED2BE">
+Unique string associated with each saved search
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-FDE1E7FF-0CF7-45BA-951F-B5BD6C6FC4DE">
+NAME
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-FD48D963-9964-40ED-A2EA-9E0DCDA836B8">
+Name of the saved search
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-826B2484-F67E-40C6-AE5F-4B487D04A50F">
+USERID
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-F3ECE42A-9177-44B2-9D27-6DA627DE74C2">
+UserID of the user who saved the search
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-A50416DA-CA67-4F96-B5B0-BA617F103C6C">
+CRITERIA
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-D433BADE-3FAF-4AA4-AA24-E28FF70B951F">
+XML string that defines the saved search
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-1BA4FD66-5B0E-4E45-8774-64DFA9343184">
+GPT_USER
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-AFAA3E93-026F-4682-9F89-4B44EFDE4204">
+USERID
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-BCC1A0AB-BE3E-4EF2-84E7-F6EBA5C3914A">
+Unique number assigned to each user
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-D07FF05E-3BF4-4C18-97C3-75A7A55FA7E7">
+DN
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-4A7E3078-90B0-4C2A-BAB6-56A8C3FABA01">
+Full LDAP distinguished name (e.g., cn=gptadmin,ou=users,ou=system)
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-C794703C-0426-4BB1-959C-D534F744FB1C">
+USERNAME
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-7FCDFF38-0D32-4FD5-8952-C169F7F93DBB">
+Username (e.g., gptadmin)
+
+</p></td></tr>
+								</table><span class="table_desc"></span></div></li>
+				</ol></p></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

@@ -1,0 +1,83 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Add Another Tab to the Geoportal Interface Add Another Tab to the Geoportal Interface The steps below outline how to add another tab to your Geoportal Interface. In these steps, we add a (example) tab called Links that could possibly host a webpage, integrating with a content management system. These same steps can be used to add other tabs according to your geoportal's specifications. This topic assumes that you understand the geoportal web application jsp page tile structure, as described in geoportal web application layout and tiles. Create the folder and JSP pages to which your new tab will navigate First, you will"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - Add Another Tab to the Geoportal Interface</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-4CEB455A-F3AA-4E47-8EC3-11AE3A2CFEEE]--><body><div id="content"><div class="header"><h1>Add Another Tab to the Geoportal Interface</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="ESRI_SECTION1_DF64A9C6F862402EB4AEE6ABFE409EF6" purpose="section1"><h2>Add Another Tab to the Geoportal Interface</h2><p id="GUID-5E254C21-9CEF-4885-AC46-F6536451C3DC"> The steps below outline how to add another tab to your geoportal interface. In these steps, we add a (example) tab called <span class="uicontrol">Links</span> that could possibly host a webpage, integrating with a content management system. These same steps can be used to add other tabs according to your geoportal's specifications. <div class="notes" id="GUID-30AD2DF7-6DCD-4609-866F-B5B5BB433222"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody"><p id="GUID-A5398827-E9D3-44BA-BC00-DC927806F08C">This topic assumes that you understand the geoportal web application jsp page tile structure, as described in <a class="xref" rel="00t0/00t00000004s000000.htm#GUID-3A3F1F22-8C59-4F36-8698-5CD10F132AF6" href="00t0/00t00000004s000000.htm#GUID-3A3F1F22-8C59-4F36-8698-5CD10F132AF6">Geoportal web application layout and tiles</a>.</p></div></div><ol purpose="ol" id="OL_C5A89C414A674708B21D89258EC8207B">
+					<li purpose="li" id="LI_90645CFE4EF2424D8DA1EB9479F9B029">
+						<i>Create the folder and JSP pages to which your new tab will navigate</i>
+						<ul purpose="ul" id="UL_6DD18C6E05F14A9D92FAC5D92CB253D7">
+							<li purpose="li" id="LI_224D379D02A44724ADA580C57CE5755E"> First, you will create the folder that will house your new tab's functionality. Navigate to the <i>\\geoportal\catalog</i> directory, and create a new folder in that catalog directory.  In this example, we name our new folder  <i>quicklink</i>.</li>
+							<li purpose="li" id="LI_BE1BFB3144244E89B3B0D1952A52DD27">Now you will create the parent jsp page that will house your new tab's <i>body.jsp</i> page. Create a new text file, and give it a name. Save it with a .jsp file extension. In our example, we create quicklink.jsp.  </li><li purpose="li" id="LI_3E8044C4C38D407A8C922C114CE12881"> Paste the following code into the new empty .jsp file, replacing <i>quicklink</i> in the code with your new folder name. Note that the <i>tiles: put name</i> value parameter will reference the body jsp, which we'll create next: <pre class="lines" purpose="lines">
+&lt;% // quicklink.jsp - Link pages (tiles definition) %&gt;			
+&lt;%@taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %&gt;			
+&lt;%@taglib uri="http://www.esri.com/tags-gpt" prefix="gpt" %&gt;						
+&lt;% // initialize the page %&gt;			
+&lt;gpt:page id="catalog.quicklink.home"/&gt;			
+&lt;tiles:insert definition=".gptLayout" flush="false" &gt;			
+	&lt;tiles:put name="body" value="/catalog/quicklink/quicklinkBody.jsp"/&gt;			
+&lt;/tiles:insert&gt;
+			</pre></li>
+							<li purpose="li" id="GUID-262734DD-0F96-4412-A168-A6FE7600A74D">Now, you will create the body page that will hold the real content of your new tab.  Create another blank .jsp file in your new folder, and name the file the same as you named the .jsp you just created, except with <span class="usertext">Body</span> appended to the file name.  In our example, this will be  <span class="usertext">quicklinkBody.jsp</span>. In this new file, paste the following code. The example below references web content specified in the <i>iframe id src</i> attribute.  This uses an IFrame with javascript to render an imported page in proper browser window size.  In our example, the imported page is  <span class="usertext">http://www.esri.com</span>. <pre class="lines" purpose="lines">
+&lt;% // quicklinkBody.jsp - Links page (JSF body) %&gt;
+&lt;iframe id="frame" src="http://www.esri.com" style="overflow-y:auto;overflow-x:hidden"  width="100%" frameborder="0" marginheight="0" marginwidth="0" height="100%" &gt;
+&lt;/iframe&gt;
+
+&lt;script type="text/javascript"&gt;
+function resizeIframe() {
+    var height = document.documentElement.clientHeight;
+    height += document.getElementById('frame').offsetTop;
+    height -= 20; /* whatever you set your body bottom margin/padding to be */    document.getElementById('frame').style.height = height +"px";};
+document.getElementById('frame').onload = resizeIframe;
+window.onresize = resizeIframe;
+&lt;/script&gt;
+</pre></li>
+						</ul>
+					</li>
+					<li purpose="li" id="LI_40F87696C863415B94CC3D266E1134BA">
+						<i>Create the new tab and reference it </i>
+						<ul purpose="ul" id="UL_81B0C746E70048049617C63A9A07F6E9">
+							<li purpose="li" id="LI_5A7AFB2568AA4C058692BC7D3428A71A">Navigate to the <i>\\geoportal\catalog\skins\tiles</i> folder and open the <i>primaryNavigation.jsp</i> file in a text editor.</li>
+							<li purpose="li" id="LI_826701B2EEE74AC0A8A49A7193CC90DF"> Paste the following code near the bottom of the file, just above <i>&lt;/h:form&gt;</i>, editing the pasted code according to match the names you've given to your jsp pages and folder. Note that the <i>id</i>
+								<span class="usertext">quicklinkHome</span> is a unique id that you assign to this tab. The <i>action</i>
+								<span class="usertext">catalog.quicklink.home</span> sets this link to open files in the folder you created earlier, the <i>\\geoportal\catalog\quicklink</i> folder. The <i>value</i> attribute is the bean that references the name that will appear to the user on the new tab, as set in the <i>gpt.properties</i> file which we will update later. The <i>styleClass</i> is a reference to the tab styling. Make sure to change the <span class="usertext">[catalog.quicklink]</span> in the <i>styleClass</i> attribute to reference the same folder that you referenced in your <i>action</i> attribute.  Use the example below as a guide.<pre class="lines" purpose="lines">
+&lt;h:commandLink 
+        	id="quicklinkHome" 
+        	action="catalog.quicklink.home" 
+        	value="#{gptMsg['catalog.quicklink.home.menuCaption']}" 
+      	styleClass="#{PageContext.tabStyleMap['catalog.quicklink']}"/&gt;
+</pre></li>
+							<li purpose="li" id="LI_74A2A3729E844A139524D49F4D7117C3"> You will need to define the new page opened by your tab in the <i>gpt-faces-config.xml</i> file.  Navigate to the  <i>\\geoportal\WEB-INF</i> folder and open <i>gpt-faces-config.xml </i> in a text editor. Paste the following code just below the navigation-rule for <i>&lt;!-- Extract pages --&gt;</i>. Edit the <i>from-outcome</i> parameter to reference the <i>action</i> attribute from the previous step. The <i>to-view-id</i> parameter references that first jsp page you created:<pre class="lines" purpose="lines">  
+&lt;!-- link page --&gt;
+  &lt;navigation-rule&gt;
+    &lt;navigation-case&gt;
+      &lt;from-outcome&gt;catalog.quicklink.home&lt;/from-outcome&gt;
+      &lt;to-view-id&gt;/catalog/quicklink/quicklink.jsp&lt;/to-view-id&gt;
+      &lt;redirect/&gt;
+    &lt;/navigation-case&gt;
+  &lt;/navigation-rule&gt;
+</pre></li>
+						</ul>
+					</li>
+					<li purpose="li" id="LI_7988029801C14A31B17460342148716D">
+						<i>Update the gpt.properties file</i>
+						<ul purpose="ul" id="UL_A732A4DB1CF041D992B5A714E51D894E">
+							<li purpose="li" id="GUID-14B0B361-D13E-4752-AE3B-51EBBE0D7A88">Navigate to the <i>\\geoportal\WEB-INF\classes\gpt\resources</i> folder and open the <i>gpt.properties</i> file in a text editor.</li>
+							<li purpose="li" id="LI_212F59B70AAC4F9FBDE20E619525DB01">Update the file by entering in the new key value you referenced from the <i>primaryNavigation.jsp</i>. The term you specify in the bean will display as the text on the new tab. The <i>caption</i> entry below the <i>menuCaption</i> entry will display at the top of the page after clicking your new tab and navigating to the page. The example below shows the two new entries for a tab called <i>Links</i> and the welcome text displayed just underneath the tab when a user clicks it. <pre class="lines" purpose="lines"> 
+# quicklink page ###################
+catalog.quicklink.home.menuCaption 	= Links
+catalog.quicklink.home.caption = Welcome to the Link Page
+</pre></li>
+						</ul>
+					</li>
+					<li purpose="li" id="LI_33F03AB2ACB844CDB3FF651970884038"><i>Save the files you have modified and restart your geoportal web application.</i> Your new tab should appear on the homepage. </li>
+				</ol></p></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

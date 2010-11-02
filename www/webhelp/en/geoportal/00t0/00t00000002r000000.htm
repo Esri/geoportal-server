@@ -1,0 +1,53 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Map LDAP Attributes on the Registration Page Map LDAP Attributes to Items on the Geoportal Registration Page Out of the box, the Geoportal Registration page show several fields that can map to an organization's LDAP. Note that the Username and Password are mandatory because they are required for logging in. Email is mandatory so the Geoportal administrator can contact a user if necessary. Other fields are optional. This topic explains how fields can be added or removed from this registration page. IMPORTANT: Verify that you understand the LDAP concepts outlined in the article Important LDAP Concepts before proceeding. The fields shown on the"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - Map LDAP Attributes on the Registration Page</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-5D1BD696-C8E8-4CBC-ABFF-DE84C5E062C6]--><body><div id="content"><div class="header"><h1>Map LDAP Attributes on the Registration Page</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="GUID-6EA0AF69-558F-400F-BBAB-3B3A6BA88FDE" purpose="section1"><h2>Map LDAP Attributes to Items on the geoportal Registration Page</h2><p id="GUID-CE060113-2999-4F48-9FD5-03ABBAA8D936">Out of the box, the geoportal Registration page show several fields that can map to an organization's LDAP.  Note that the Username and Password are mandatory because they are required for logging in. Email is mandatory so the geoportal administrator can contact a user if necessary. Other fields are optional. This topic explains how fields can be added or removed from this registration page.  <b>IMPORTANT:</b> Verify that you understand the LDAP concepts outlined in the article <a class="xref" rel="00t0/00t00000000z000000.htm#IMPORTANTLDAPCONCEPTS" href="00t0/00t00000000z000000.htm#IMPORTANTLDAPCONCEPTS">Important LDAP Concepts</a> before proceeding.</p><p id="GUID-D6ED11A6-D4F4-4C20-B707-27DBC729C584">  The fields shown on the registration page are mapped in LDAP, and called "attributes".  You can see the attributes available in your LDAP when you view a user, using a Directory browsing tool such as JXplorer.  In JXplorer,  select a user from the tree and click the "Table Editor" tab in the window to the right. All of the attributes assigned to that user are displayed. Every entity in the LDAP structure has attributes associated with it. These attributes are defined by LDAP Data Interchange Format, and map information to the user or group. The geoportal's gpt.xml file uses attributes defined in LDAP to define fields in the geoportal Registration page. Notice the name of the attributes in the "attribute type" column to the left. If you open the gpt.xml file from your \\geoportal\WEB-INF\classes\gpt\config folder, you will see that these attributes correspond to the attributes' "ldapName" values defined in the &lt;userAttributeMap&gt; section. </p><p id="GUID-F5DFFBD8-D3DD-4A6F-9E0F-5B91FFF1F4C4">It is likely that not all of the attributes shown in your LDAP directory  are listed in gpt.xml, and conversely not every attribute in gpt.xml may be listed in your LDAP structure. How these items are defined should be discussed with the LDAP administrator in your organization.</p><p id="GUID-2C082670-2E95-42BB-BC0B-736F46D0F0DB">
+				<i>Add an Additional Field to the geoportal Registration Page</i>
+			</p><p id="GUID-99B00484-03F3-4721-A80C-F53F5C9AFA23">Follow the steps below to add an additional field to the geoportal registration page:</p><ol purpose="ol" id="GUID-5D383807-A524-43E8-A03C-010624603F34">
+				<li purpose="li" id="GUID-AE042369-1E25-4B7A-864B-07FB941FFFDD">Navigate to the \\geoportal\WEB-INF\classes\gpt\config folder and open the gpt.xml file in a text editor.</li>
+				<li purpose="li" id="GUID-A5E6A1E3-9471-4CDA-8371-59A70BB7EA4D">Create a new &lt;attribute&gt; tag in the &lt;userAttributeMap&gt; section of the gpt.xml file<ul purpose="ul" id="UL_4BC469A76FE145DF98D3F09FF721EB93">
+						<li purpose="li" id="GUID-A1EDCC55-DA3E-4C2A-BB03-6D4CF17BEAF4">For the key attribute, give it any string value, preferably one that easily identifies the data to be entered (i.e. telephoneExtension, employeeNumber)</li>
+						<li purpose="li" id="GUID-C902AB5C-EC40-4542-B9DA-E4430F814894">For the ldapName attribute, choose an LDAP attribute not in use for any other attribute. This attribute must correspond to an LDAP attribute shown in JXplorer.</li>
+						<li purpose="li" id="GUID-2923C0A7-1C95-44DF-ACA3-23A62045C044">For example, to add a field for the Home Phone Number on the geoportal Registration page, add a new attribute to the list in gpt.xml, as shown below. Assign the key attribute to be "home_phone", and map the ldapName attribute to "homePhone" - an unused attribute in LDAP as seen in the table view screenshot. <pre class="lines" purpose="lines"> 
+&lt;userAttributeMap&gt;          
+&lt;attribute key="username"     ldapName="uid"/&gt;          
+&lt;attribute key="password"     ldapName="userPassword"/&gt;          
+&lt;attribute key="email"        ldapName="mail"/&gt;          
+&lt;attribute key="firstName"    ldapName="givenName"/&gt;          
+&lt;attribute key="lastName"     ldapName="sn"/&gt;          
+&lt;attribute key="organization" ldapName="o"/&gt;            
+&lt;attribute key="affiliation"  ldapName="businessCategory"/&gt;               
+&lt;attribute key="street"       ldapName="street"/&gt;                   
+&lt;attribute key="city"         ldapName="l"/&gt;                
+&lt;attribute key="stateOrProv"  ldapName="st"/&gt;                
+&lt;attribute key="postalCode"   ldapName="postalCode"/&gt;            
+&lt;attribute key="country"      ldapName=""/&gt;            
+&lt;attribute key="phone"        ldapName="telephoneNumber"/&gt;          
+&lt;attribute key="home_phone" ldapName="homePhone"/&gt;          
+&lt;/userAttributeMap&gt;
+</pre></li>
+					</ul></li>
+				<li purpose="li" id="GUID-6ECF3C96-BFB6-4BA5-9510-2009B9B886B2">Now, navigate to the \\geoportal\catalog\identity folder, and open userAttributes.jsp in a text editor. Add a new set of output label tags, taking care to use the attribute's key name in the parameters: 
+<div class="codeblock" purpose="codeblock"><pre class="codeblockbody" id="GUID-77CB2859-AB3D-435D-B111-473FF83E805E" purpose="codeblockbody">&lt;% // home phone number %&gt;  
+&lt;h:outputLabel for="home_phone" rendered="#{SelfCareController.hasUserAttribute['home_phone']}"    
+value="#{gptMsg['catalog.identity.profile.label.home_phone']}"/&gt;  
+&lt;h:inputText id="home_phone" size="30" maxlength="128"  rendered="#{SelfCareController.hasUserAttribute['home_phone']}"    
+value="#{SelfCareController.activeUserAttributes['home_phone'].value}"/&gt;</pre></div></li>
+				<li purpose="li" id="GUID-26CECDBC-2A43-43DE-B1FE-409D766685E8">Notice that the 'catalog.identity.profile.label.home_phone' is used to generate the name of the label on the Registration page. You need to add this entry to your gpt.properties file in the \\geoportal\WEB-INF\classes\gpt\resources folder. The new entry in gpt.properties for our Home Phone Number example is: 
+<div class="codeblock" purpose="codeblock"><pre class="codeblockbody" id="GUID-7A8D1A68-D15F-442A-ACF2-C5475DD617C6" purpose="codeblockbody">catalog.identity.profile.label.home_phone	= Home Phone Number:</pre></div></li>
+				<li purpose="li" id="GUID-F923C711-F9CD-4A9F-8CC9-EB3191DB34AA">After updating both userAttributes.jsp and gpt.properties, save both files and close them. Then restart the geoportal web application.</li>
+				<li purpose="li" id="GUID-8BCDE470-1A11-4F0A-8269-72F98FEE744C">To see how your Registration page relates to LDAP, launch the geoportal site and click the "Register" button.</li>
+				<li purpose="li" id="GUID-347B840E-52E6-4AAD-989B-6332C07C00D1">Register a new user by inputing the mandatory information items, and also providing information you've just customized - for example, Home Phone Number.</li><li purpose="li" id="LI_41B872D99B6E461E8BFB80034546B823">Click "Register".</li>
+				<li purpose="li" id="GUID-1FADC1F2-3719-4845-B454-39E6AC9165D2">Now refresh your view in JXplorer to see the new user added to the tree. Click on the new user, and see how the properties - including the new Home Phone Number - are mapped in LDAP.</li>
+			</ol></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

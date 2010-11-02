@@ -1,0 +1,560 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Geoportal Web App File Organization Geoportal Web App File Organization Through the installation process for the Geoportal , a web application called geoportal.war is deployed on the web server. This section discusses the geoportal.war file structure, how the underlying jsp pages are organized, and details about the files within each folder in the 'geoportal' file directory structure. The 'geoportal' folder is divided into seven main sub-folders: catalog csw META-INF misc webhelp WEB-INF widgets Each folder and its contents are described below. catalog folder: The catalog folder holds all of the JavaServer Pages (JSP) files that make up the Geoportal interface. Its subfolder structure follows the division of functionality and/or"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - Geoportal Web App File Organization</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-545E949E-677E-400E-BC15-DD5891993E88]--><body><div id="content"><div class="header"><h1>Geoportal Web App File Organization</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="ESRI_SECTION1_E4B6BB22435C4BF4B0F47072FC38B16D" purpose="section1"><h2>Geoportal Web App File Organization</h2><p id="GUID-38AD5727-7182-4DBD-B741-F256BE4337A1">Through the installation process for the Geoportal Server, a web application called geoportal.war is deployed on the web server. This section discusses the geoportal.war file structure, how the underlying jsp pages are organized, and details about the files within each folder in the 'geoportal' file directory structure. The 'geoportal' folder is divided into seven main sub-folders:  <ol purpose="ol" id="OL_CA6BAB5A7266457393404AAE1C22F196">
+					<li purpose="li" id="LI_327F88C8EBDF409C926919E220D8E883">catalog</li>
+					<li purpose="li" id="LI_D4845B8C93174AF2BC09236E0FF92C10">csw</li>
+					<li purpose="li" id="LI_DB3BBA8A5B6141A0B3D691C2987D596E">META-INF</li>
+					<li purpose="li" id="LI_CB66D7866FDF4DD4B2E21A113CE065FE">misc</li>
+					<li purpose="li" id="LI_A794DB0B49C74DF287F0C5451C81C3EA">webhelp</li>
+					<li purpose="li" id="LI_334A03957D6549AEB399293783E9F657">WEB-INF</li>
+					<li purpose="li" id="LI_40E3A202B3B546658892402F0785E134">widgets</li>
+				</ol>  Each folder and its contents are described below. <ul purpose="ul" id="UL_C466D8CF56764D7BAA1939E4C8CF1D88">
+					<li purpose="li" id="LI_95C5A397E6454184B1B12DBB2DC74A81"><b>catalog folder:</b> The catalog folder holds all of the JavaServer Pages (JSP) files that make up the geoportal interface. Its subfolder structure follows the division of functionality and/or sections within the geoportal. Each page in the interface is made up of two JSP pages - a header page and a body page. For example, the <span class="uicontrol">About</span> page is made up of <i>about.jsp</i> and <i>aboutBody.jsp</i>. The header page references the body page, by pointing to the body page that is to replace the "body tile" in the <a class="xref" rel="00t0/00t00000004s000000.htm#GUID-3A3F1F22-8C59-4F36-8698-5CD10F132AF6" href="00t0/00t00000004s000000.htm#GUID-3A3F1F22-8C59-4F36-8698-5CD10F132AF6">tiles definition template</a> . <ol purpose="ol" id="OL_48530D086E10431499636A925F6E7C0E">
+							<li purpose="li" id="GUID-8C1DB043-6172-4D8E-ABAA-6CF79FFED98F"><i>
+									<b>content folder:</b>
+								</i> The content folder contains code for the about, privacy and disclaimer pages. The filenames are<i> about.jsp, aboutBody.jsp, privacy.jsp, privacyBody.jsp, disclaimer.jsp</i> and <i>disclaimerBody.jsp</i>.</li>
+							<li purpose="li" id="LI_AFBA57BB85F94367B5924AF50BE0FF7E"><i>
+									<b>download folder:</b>
+								</i> The download folder contains code for pages used in the optional Data Download tab. The filenames are <i>download.jsp</i> and <i>downloadBody.jsp</i>. The folder also contains a <i>proxy.jsp</i> file, whose code serves as a proxy for the ArcGIS Server JavaScript API. The ArcGIS Server JavaScript API is used when interacting with the map on the download and search page (Note: the search page points to this proxy.jsp file).</li>
+							<li purpose="li" id="LI_789BFACB8700453CB7C9A2E95FD7C5FE"><i>
+									<b>harvest folder:</b>
+								</i> The harvest folder contains pages used within the <span class="uicontrol">Administration</span> tab.<div class="block_table" id="TABLE_BA6DD905FC894A7285DD96F90C1ECC7D" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-8AFCC6CE-65DC-4628-839A-BE5F6F194E2C">Filename</p>
+												</th><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-E1A98989-4C8C-43AF-A99E-FEEE6F33E7EB">Function</p>
+												</th></tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-55D14542-1015-4C9F-A370-D6355D703CCC">create.jsp</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-109E0878-71F5-4597-AB6C-4ECFDA686A2C">Header code for the Register Resource page. Its body page is
+harvestBody.jsp.</p>
+												</td>
+											</tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-46D98EA4-D4E1-4099-A003-23BCAC9A9F96">edit.jsp</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1"><p id="GUID-87A49950-A792-46F8-92F7-44AE9C1BC07F">Header code for the Edit Resource page. Its body page is
+harvestBody.jsp.</p></td>
+											</tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-88D9B33A-217C-4034-BAD0-DBDCC3F7C199">harvestBody.jsp</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-1F3C60DC-7463-447B-9C93-7C3C80A39A3F">Body code for the Register and Edit Resource page.</p>
+												</td>
+											</tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-7AF010B1-7F8F-45A3-BD77-BE471CC7B0CD">history.jsp and historyBody.jsp</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-6AA8997A-4F40-48E2-9192-61FFDFC10F0B"> Header and body code for the Synchronization History page.</p>
+												</td>
+											</tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-D7FA1D08-4EC0-4A2A-A407-045097B8F8DC">manage.jsp and manageBody.jsp</p>
+												</td><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-CA37E02E-C459-443D-807B-6D87054A9550"> Header and body code for the Manage metadata page on the Administration tab.</p>
+												</td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-A1B49941-44FB-4BE3-9461-89BDC9456ED3">history.jsp and historyBody.jsp</p>
+												</td><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-3156931D-1DA1-44E7-8471-3E9B1D81ED0D"> Header and body code for the Synchronization Report page.</p>
+												</td></tr>
+										</table><span class="table_desc"></span></div></li>
+							<li purpose="li" id="LI_9CAE28912F804C9695497C2F85A8D1A2"><i>
+									<b>identity folder:</b>
+								</i> The identity folder contains pages used for identity and profile management. <div class="block_table" id="TABLE_36732C95AEAE4BAA99C3DF88F55F1196" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-AC163E6F-3A9D-4F57-A796-B343BFDC16E2">Filename</p>
+												</th><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-E2EB9B73-032A-44E3-9888-318AE9FA747A">Function</p>
+												</th></tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-D031CA52-8577-4530-B090-7C05DBE0BB43">changePassword.jsp and changePasswordBody.jsp
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-5BB835ED-B875-4C96-AE62-3541A07BA018">Header and body code for the Change Password page.
+</p>
+												</td>
+											</tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-2E5C0B24-B186-4BD2-90AC-20609112CB47">encyrptPassword.jsp and encyrptPasswordBody.jsp
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1"><p id="GUID-A98884E1-A310-4DCB-9F84-D42D9CAEA930">Header and body code for the Encrypt Password page.
+</p></td>
+											</tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-9A55FD0B-592F-42A4-8455-DCDEA054B90B">feedback.jsp and feedbackBody.jsp
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-D5150B19-5551-418E-8408-74CAF02DF506">Header and body code for the Feedback/Contact Us page.
+</p>
+												</td>
+											</tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-5DCA939D-E668-4D34-BFCB-9CCDA6F3DCFB">forgotPassword.jsp and forgotPasswordBody.jsp
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-427FCA26-55D0-494D-B152-C5858E8645A9"> Header and body code for the Forgot Password page.
+</p>
+												</td>
+											</tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-E3BE084F-B9E0-4FD3-9073-46FDFE4DB9AE">login.jsp and loginBody.jsp
+</p>
+												</td><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-E2824695-A8D2-4A04-94FE-8B4B9EC2C974"> Header and body code for the Login page when single sign-on is not
+enabled. The body references the loginParameters.jsp
+</p>
+												</td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-E1944F03-C924-4109-8586-4FA98ACC771B">loginJsc.jsp and loginJscBody.jsp
+</p>
+												</td><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-F219213A-3B0C-44A8-B32D-53C850845C82"> Header and body code for the Login page when single sign-on is
+enabled.The page submits credentials to something called
+j_security_check for authentication. The web server then picks up
+calls to j_security_check. The body references loginParameters.jsp.
+</p>
+												</td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-8C203829-193A-4695-8929-0AF7110EAE94">loginParameters.jsp
+</p></td><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-A0D730A0-5394-45EC-9BEA-700036F64ACC">	Code for the form on the login page.</p>
+												</td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-2962E8E3-4F10-4270-A064-78894DDCE0AE">myProfile.jsp and myProfileBody.jsp
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-1B29E42D-308C-402F-B0D3-44042406F1C7">Header and body code for the My Profile page. The body
+references userAttributes.jsp.
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-2E6ECDA8-F2F7-4984-960C-D251E86B0389">userAttributes.jsp
+</p></td><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-5E79A366-AAC1-49BB-8922-AEA5D0246FF4">Code for the form elements that appear below the username &amp;
+password text inputs on the user registration page.
+
+</p>
+												</td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-D3F489F4-DC9D-45DE-9932-CD5E781B4548">userRegistration.jsp and userRegistrationBody.jsp
+</p></td><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-2B0FA680-BBD5-4378-99DB-95470BFB297A"> Header and body code for the User Registration page. The body
+references userAttributes.jsp.
+</p>
+												</td></tr>
+										</table><span class="table_desc"></span></div></li>
+							<li purpose="li" id="GUID-4EC065EA-740D-4E08-944E-67509134B12F"><i>
+									<b>images folder:</b>
+								</i> The images folder contains all of the images that are used throughout the geoportal interface. This folder does not include images referenced in the webhelp.</li>
+							<li purpose="li" id="LI_BA961522B0824229BC4EF565E8A5B3DC"><i>
+									<b>js folder:</b>
+								</i> The JS folder contains all of the JavaScript files that are used by pages in the geoportal interface for the Geoportal Server. The V931SP1 folder contains all the JavaScript files used by pages in the Geoportal interface for 9.3.1 SP1 version. The files described below are present in both folders except where specified. <div class="block_table" id="TABLE_DF2E62E87A804CBC9EA15A10FEC1A1B3" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-BDAD6337-374A-403E-8814-AA73FD90712E">Filename</p>
+												</th><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-0B2C1C06-ECF0-4C16-885D-D319E6BD5FC8">Function</p>
+												</th></tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-BF6FD945-0D7F-4196-BA9D-448155638606">gpt.js
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-F504F895-CDD9-4938-9C2B-35CA7DF32EF3">		The Geoportal  JavaScript library.</p>
+												</td>
+											</tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-E2842544-E235-4C27-9C65-BBBCBE08138F">GPTMapViewer.js
+
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1"><p id="GUID-226DB61C-B351-4AFF-8462-EDA93AC092B7">Functions for interacting with the optional map viewer.
+</p></td>
+											</tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-95D79ED0-433C-4085-A500-B3121EA06053">jquery-1.2.3.pack.js
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-46F8A689-0409-496A-B17F-1E11CFFA9E06">	Javascript provided by  jquery. 
+</p>
+												</td>
+											</tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-09AA4889-3D43-4202-BB78-A802701098F1">livedata.js
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-D88C0180-47C1-400A-9493-896CD57F5554">Contains the logic used to display live data layers in the
+JavaScript API.
+</p>
+												</td>
+											</tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-010EF414-24EF-4381-8486-A02683E43753">sample-ESRI_Geocode_USA.js
+</p>
+												</td><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-2DD635D1-353C-4AE0-BA25-DFB64E0EDDF4">Functions used by the sample locator (place finder) used in the
+Geoportal search and create metadata pages.
+<div class="notes" id="GUID-697000A5-BFCD-4019-BEDA-0E514B28D2F6"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody"><p id="GUID-040E4B4B-FD25-46CB-894B-6FC3BADE4F02">this file is not present in the V931SP1 folder
+</p></div></div>
+													</p>
+												</td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-0CF93550-DCA9-4BFD-B089-832DF5F352FC">ui.datepicker.packed.js
+</p>
+												</td><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-3BD25595-D017-4F7F-A268-0214A53CF0B9">Third-party javascript for displaying date calendars.
+
+</p>
+												</td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-FA650DEE-C6B2-4FD6-821E-2CA6CD6FD9B6">Utils.js
+
+</p>
+												</td><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-690EB064-53C9-4943-AF73-D5366E38458C">	Geoportal utility functions.</p>
+												</td></tr>
+										</table><span class="table_desc"></span></div></li>
+							<li purpose="li" id="LI_DAB1B2C6575E46559EE026CD330B557D"><i>
+									<b>livedata folder:</b>
+								</i> The livedata folder contains files related to the live data preview functionality and page.<div class="block_table" id="TABLE_42FC7D2351CD4E5A849FCFD4F55F6B1C" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-81150346-821D-475E-84A9-37395D470950">Filename</p>
+												</th><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-2BC62256-1000-4B84-A2C2-D07E4509B5BB">Function</p>
+												</th></tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-292F6D0A-87D6-42D9-9977-DA49312E2CCE">embed.jsp
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-93008F4E-27FB-40CA-9181-AD87A6E4AAD2">	Placeholder for preview widget on the preview page.</p>
+												</td>
+											</tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-F071822B-A3F5-464E-AB1C-3DDADD07A8F3">liveDataProxy.jsp
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1"><p id="GUID-5C2304CE-1D5A-445F-A49D-7FEA2688D1E5">	Interprets text submitted to server from browser to determine format for live data url to be used in the preview widget.</p></td>
+											</tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-C361BC85-D1F1-419B-A2E8-188104FA8A90">preview.jsp and previewBody.jsp
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-DF8CF3F0-DF55-47D9-8FFD-A0254C8D83AF">Header and Body code for the Preview page.
+</p>
+												</td>
+											</tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-0554B106-094E-4BCE-979B-CFFEF0B6C32C">kmzBridge.jsp
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-6F247D64-71FA-4D10-96FB-B36794D5FF23">	Serves as a proxy for KMZ files.</p>
+												</td>
+											</tr>
+										</table><span class="table_desc"></span></div></li>
+							<li purpose="li" id="LI_315B846D8AD6428B9FF1C1CA8660569D"><i>
+									<b>main folder:</b>
+								</i> The main folder contains the code for the home page. <i>home.jsp and homeBody.jsp</i> are the main header and body files. <i>Home.page</i> is needed for Tomcat purposes only, and causes <i>home.jsp</i> to be invoked.</li>
+							<li purpose="li" id="GUID-0E91AFB9-35BF-4D81-8E47-CECFEF5C96D7"><i>
+									<b>migration folder:</b>
+								</i>The migration folder contains code for the data migration page.<div class="block_table" id="TABLE_4CCD2CBA45DB48E1A659C3BFAD8917BC" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-8E8A0D56-585C-4ADE-912F-5BB0A3CA3320">Filename</p>
+												</th><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-E9F1C50F-3CD3-4575-BB7B-DEE381D24926">Function</p>
+												</th></tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-C6DA3FF7-9B07-48D5-979B-A12DD358603B">dataMigration.jsp</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1"><p id="GUID-1AEA9D6E-8A84-48A0-857A-3CB88D44D91D">Header and body code for the Geoportal 9.3.x to the Geoportal Server migration page.
+</p></td>
+											</tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-9558B2D0-E253-4EF5-930A-E7E5F6990BB1">dataMigrationForm.jsp</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-1FDEBF4A-C709-4132-AB5A-F488CA946294">Code for the data migration page.</p></td></tr>
+										</table><span class="table_desc"></span></div></li>
+							<li purpose="li" id="LI_0D019B993E8E470C99FF64D938DB8A73"><i>
+									<b>publication folder:</b>
+								</i> The publication folder contains pages for metadata publishing functionality.<div class="block_table" id="TABLE_C297A56F0F3944A99480775FF5BBCF18" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-9C7CAFB2-7165-4C8D-8765-EC94025710ED">Filename</p>
+												</th><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-C5718B27-8447-49BA-815C-13DFF83A2498">Function</p>
+												</th></tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-AEB9118D-0AB2-4D2F-8D98-DA15D894355B"> createMetadata.jsp and createMetadataBody.jsp
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-A85FC7D9-F2A3-44A6-8652-813F068A6BEB">Header and body code for the GPT 3.1 to Geoportal extension 9.3.1 migration page.
+</p>
+												</td>
+											</tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-A41A4409-BCD8-4460-A5A4-D88CBBE277AF">downloadMetadata.jsp</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1"><p id="GUID-95986EDB-0C3B-4835-BE34-5BB124426845">Code for when the "download" metadata action button is clicked in
+the Manage Resource page.
+</p></td>
+											</tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-2F2DA6CE-E4CC-48F8-8E29-4441531DBEB9">editMetadata.jsp and editMetadataBody.jsp</p>
+												</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-D5E19450-B473-4AC3-8885-D1131A9FA4EF">Header and body code for the Edit Metadata (online metadata editing
+form) page.
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-A957C7FF-97B0-445E-890D-743E73123CCD">manageMetadata and manageMetadataBody.jsp</p>
+												</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-CA28E3AE-075D-41BE-9AEB-EF76775B998D">Header and body code for the Manage Resources page.
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-76518A35-2F45-4A03-A723-4E7B048D62E0">uploadMetadata and uploadMetadataBody.jsp</p>
+												</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-73B59592-2DAF-4B05-A7AB-41FB8DEE7BE5">Header and body code for the Upload Metadata page.
+
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-4A95B869-17E0-4D28-9908-6313AB365B7C">validateMetadata.jsp and validateMetadataBody.jsp</p>
+												</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-6D58ED24-475E-45CD-A9E0-1F418EA6BA5E">Header and body code for the Validate Metadata page.
+</p></td></tr>
+										</table><span class="table_desc"></span></div></li>
+							<li purpose="li" id="LI_B10E8DA7C9ED4F4E8CD05077BD06B1C5"><i>
+									<b>tc folder:</b>
+								</i> The tc folder contains pages for the optional securityManager, licenseManager, serviceMonitor, and smartEditor functionality, per the <a class="xref" rel="00t0/00t000000043000000.htm" href="00t0/00t000000043000000.htm">Integrate with con terra security solution</a> customization.<div class="block_table" id="TABLE_EDE574A3965F4BD1BD628E26E46F8DB7" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-CB3B54F9-B83A-4B0C-BF08-B0344BC4929C">Filename</p>
+												</th><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-D3C5ABD4-D047-44E8-81ED-5F72296E7551">Function</p>
+												</th></tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-4087BC00-BCE3-4DC8-8D3D-E14CE16FDCE8"> securityManager.jsp and securityManagerBody.jsp
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-99EA94CE-15BA-4187-AE84-FE9DC170FAC1">Header and body code for the securityManager page. </p>
+												</td>
+											</tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-036596DA-DBA4-43F3-A7F5-64CDE74F312B">serviceMonitor.jsp and serviceMonitorBody.jsp</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1"><p id="GUID-81B9EE3A-65E0-43BE-89D9-415D655B2A65">Header and body code for the serviceMonitor page. 
+</p></td>
+											</tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-8A608B86-30E6-4C25-A197-13D4A74A657A">smartEditor.jsp and smartEditorBody.jsp</p>
+												</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-D4A2435A-A483-4FFB-AEAB-6042F869C864">Header and body code for the smartEditor page. </p></td></tr>
+										</table><span class="table_desc"></span></div></li><li purpose="li" id="LI_CAF87B27B653422BAEDBB059539D974B"><i>
+									<b>search folder:</b>
+								</i> The search folder contains pages used for the search functionality. <div class="block_table" id="TABLE_7EB2EF0540794D3C8DDB3E4143C336EC" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-7917B4D6-10FF-4881-A1AE-A4775F1631CA">Filename</p>
+												</th><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-86290D2B-8C89-4E23-BC32-BA0069F42B34">Function</p>
+												</th></tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-82DC71BD-EAB1-40CF-AF04-32E85DE7B2BE">criteria.jsp
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-70A11927-23B6-4DCF-AE13-1C3401F793B0">	Code for the search criteria on the search page.</p>
+												</td>
+											</tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-A19D64F3-015A-4E17-8A2A-EEB68AF931F7">dsFullMetadata.jsp and dsFullMetadataBody.jsp
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1"><p id="GUID-10009CAA-E2EF-4574-8910-FC7117EB9CBF">Header and body code for viewing the metadata from a federated
+search page.
+</p></td>
+											</tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-3CAB6CD6-0864-448A-9943-DB25E45848DD">mysearches.jsp
+</p>
+												</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-60B67FC0-6C0C-444C-A1F9-456810B02A99">	Code for "My Saved Searches" available to logged in users on the search page.
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-C8B64F81-5E83-4ABB-AB1E-AFDCC3906B56">results.jsp and resultsBody.jsp
+</p>
+												</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-AB479858-66F5-4B86-8F47-0753F54D11A5">	Code for initial display of results, appearing on the right-hand side of the search page.</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-9981AFF1-119A-4905-810A-84ADDCE7A3FE">search.jsp and searchBody.jsp
+</p>
+												</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-552B4B3C-6899-45D1-A8CC-D3FCCB47B15B">
+	Header and body code for the search page. The body references criteria.jsp, mysearches.jsp and results.jsp.</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-35B7367E-A879-4D8F-B597-F41524DE67E4">viewMetadataDetails.jsp and viewMetadataDetailsBody.jsp
+</p>
+												</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-4ABD22BD-72C0-4A2C-A0F0-541C932FB1EA">
+Header and body code for the View Resource Details page.
+</p></td></tr>
+										</table><span class="table_desc"></span></div></li>
+							<li purpose="li" id="LI_1C74AEB718FE4193A0B873882C75F0C3"><i>
+									<b>skins folder:</b>
+								</i> At the root level, the skins folder contains the pages defining the layout of geoportal. <div class="block_table" id="TABLE_08DC4302083D4F78B756D42BAFBB5D65" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-51B9A2FF-C5E6-4C36-89F9-4DC75EAD50A0">Filename</p>
+												</th><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-C7BE3CB7-66A2-460E-817D-4C6BD75CF32B">Function</p>
+												</th></tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-0DD13619-E29C-45D5-B7E5-E3A10A6ECDA7">centeredLayout.jsp
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-BEE57812-88E4-4DE0-95F5-DFE3BC9075D9">	Code defining the layout of a page within the geoportal site. Most
+pages take on the centered layout.
+</p>
+												</td>
+											</tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-BC83D6DE-A44F-44FB-BAC0-9EEE0EF9528C">centeredLayoutMinimal.jsp
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1"><p id="GUID-80AE5F50-F6AF-463F-8C83-CC1C1A11433A">	Code defining the layout of a page that has most navigation elements removed. The page only has a header, banner, content area and footer. This layout is used by the resource migration pages.</p></td>
+											</tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-FFCD2CB3-0C92-4326-B9B1-5C9B13A642C2">lookAndFeel.jsp
+</p>
+												</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-601C3E5A-F0EB-4CAB-8677-80E5F3312B63">Defines 'look and feel' aspects of all geoportal pages.
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-8E264D0E-3D03-4CF6-8839-EFF0679E0D68">popupLayout.jsp
+</p>
+												</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-C3F6E1EA-B344-489C-A8AC-6CA515897C1F">	Code defining the layout of popup pages.</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-44967669-2188-472E-A25A-FD0C397E95ED">previewLayout.jsp
+</p>
+												</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-417F0C32-5F13-46C6-8B9A-47F11742187A">	Code defining the layout of the previewer page.</p></td></tr>
+										</table><span class="table_desc"></span></div>Within the skins folder there are two (2) sub-directories: <b>
+									<i>themes</i>
+								</b> and <b>
+									<i>tiles</i>
+								</b> . The themes directory holds the various themes of the geoportal. The interface can only display in one theme at a time (for instance, blue or red). To switch between the various themes, see <a class="xref" rel="00t0/00t000000015000000.htm" href="00t0/00t000000015000000.htm">Customize the Look and Feel of User-Interface</a>. The tiles directory holds pages that define the content of the various defined tiles. See <a class="xref" rel="00t0/00t00000004s000000.htm#GUID-3A3F1F22-8C59-4F36-8698-5CD10F132AF6" href="00t0/00t00000004s000000.htm#GUID-3A3F1F22-8C59-4F36-8698-5CD10F132AF6">Geoportal Layout and Tiles</a> for details on the contents of the tiles defined in this folder.<div class="block_table" id="TABLE_142A36CD05FD43DF8D885077470664A6" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-F7341BD0-2B1B-462A-8DB7-86A4C2EE4956">Filename</p>
+												</th><th class="th" purpose="th" rowspan="1" colspan="1">
+													<p id="GUID-32D7EFF0-DD3E-462B-9747-DB7FB5413264">Function</p>
+												</th></tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-259624A8-DD0F-420D-9B09-EBB116316728">banner.jsp
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-31D44390-666D-4526-8628-8865C9766B61">	Code for the banner tile.
+</p>
+												</td>
+											</tr>
+											<tr purpose="row">
+												<td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-767355EE-1D68-4B3A-94C7-C31E90007C52">footer.jsp
+
+</p>
+												</td>
+												<td purpose="entry" rowspan="1" colspan="1"><p id="GUID-EBAA8FB9-833A-43FB-9B3C-E48CBA2A8490">	 Code for the footer tile.</p></td>
+											</tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-B8E61396-5F8E-46FB-BD93-1641F6E907F8">head.jsp
+</p>
+												</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-19111B03-1BA7-43C5-AB94-8D8659326041">	Code for the head tile.</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-FCE17AEB-D877-4F4A-86E5-59B765FE8104">previewBanner.jsp
+</p>
+												</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-E0418336-11E9-4FD6-9555-698B1DC9CA11">		Code for the preview page banner tile.</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-DBB9465A-8FA2-470C-B1CF-E0518AC3ABBE">primaryNavigation.jsp
+</p>
+												</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-4262B921-B5A9-4416-BFFE-2AFFC510759A">		 Code for the primary navigation tile.</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-4919F87B-A182-4C7B-AF5A-461E6DC4BC4D">resourceNavigation.jsp</p>
+												</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-7059EC9F-D981-4DD5-8CBE-E0F1E630FCEA">		Code for the resource details navigation tile.</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-5A627DBB-45A5-4E75-BE1C-684CEAA3129B">secondaryNavigation.jsp
+
+</p>
+												</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-92A00730-2C3C-40AD-8395-9EE0E6FAAFC4">		Code for the secondary navigation tile.
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+													<p id="GUID-617D04E8-1D36-4CF6-8913-11FAF8F1DAE5">tertiaryNavigation.jsp
+</p>
+												</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-4F1C34CB-F98C-4E68-A478-476873EC6711">	Code for the tertiary navigation tile.</p></td></tr>
+										</table><span class="table_desc"></span></div></li>
+						</ol></li>
+					<li purpose="li" id="GUID-A3320685-0BDC-4CB1-A776-87D210E770B2"><b>csw folder:</b> The csw folder contains web service definition files for <a class="xref" rel="00t0/00t00000004m000000.htm" href="00t0/00t00000004m000000.htm">CS-W</a> endpoints. Each file is described below.<div class="block_table" id="TABLE_76B6517645C046D383D3D72CAD209AC3" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-92D242D9-01DF-4FC5-BA66-380F2FD5FC1E">Filename</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-F93B4C45-8B51-4067-B1CC-5106BC3727F6">Function</p>
+										</th></tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-D7485C55-DF37-406A-BA6E-09E9D84CE3BE">http-binding.wsdl
+</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-809F5ED6-62B2-4757-B8B3-07F3D7AC666C">WSDL for XML-based CSW request-response.
+</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-D2624B19-1CF1-4B3C-BB6D-B9C6022BA0CD">kvp-binding.wsdl
+</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1"><p id="GUID-3617CAD6-677E-4FA0-BEDD-EC279D6D9317">WSDL for KVP-based CS-W request-response.
+</p></td>
+									</tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-AE59F973-ED00-4C9A-A89A-9FA893A85F26">responses.wsdl
+</p>
+										</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-A39EA92F-4BD8-458B-9B4A-6E753AD0AAE6">	WSDL for CS-W response messages.</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-F8419C64-32B8-496A-B398-6813A30BFEF9">service-wsdl.jsp
+</p>
+										</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-9E0B549E-108D-425E-9C44-6F6F4DF48029">		Jsp page used to retrieve CS-W service information.
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-490D153A-0BFB-45D9-857A-CA5D74ADD0B5">soap-binding.wsdl
+
+</p>
+										</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-0E1B1283-6661-442E-8BE0-7D2F38628729">	WSDL for SOAP-based CS-W request-response.</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-759DFE7C-4220-4AEA-B768-96C088DFCAD5">xml-interfaces.wsdl
+</p>
+										</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-3580353F-4CF2-4A76-8CB5-3DDCF77C7C0B">WSDL for CS-W request messages.
+</p></td></tr>
+								</table><span class="table_desc"></span></div></li>
+					<li purpose="li" id="LI_1C593CD17F054A849ED4ADFFAC452B76"><b>META-INF folder:</b> The META-INF folder holds the manifest.mf file. This file gives details about the Java version and ANT version that the geoportal was compiled against, as well as the build number of the geoportal application.</li><li purpose="li" id="LI_2C6C3E611D614EE2AC5E1C8BFE909C20"><p id="GUID-124C12A8-A8DE-4170-A29E-233DD7B76316">
+							<b>misc folder:</b>
+						</p>
+The misc folder holds the http.jsp file, which is an HTTP client
+utility. This HTTP client utility can be accessed from
+http://&lt;machineName&gt;:&lt;port&gt;/&lt;appName&gt;/misc/http.jsp.</li>
+					<li purpose="li" id="LI_61A83E0B14624A2E88E0F0B983C91ACE"><b>webhelp folder:</b> The webhelp folder contains all the code, text, and images for the help system. It enables context-sensitive help available from the help link on all pages within the geoportal. At the root level is the index.jsp file. This file acts as a "dispatcher", determining in which language to launch the help if multiple languages have been defined. By default, the help directory contains one (1) sub-directory, "en", where the English online help system is stored. Additional sub-directories may be added to the content directory, with each new sub-directory defining a localized help system. Please see the section on <a class="xref" rel="00t0/00t000000019000000.htm" href="00t0/00t000000019000000.htm">Localize the Geoportal</a> for details.</li>
+					<li purpose="li" id="LI_A40AFDB84BFB4F5F925AC0CACE46442A"><b>WEB-INF folder:</b> The WEB-INF folder holds the files that make the application run within the Tomcat environment. Files present at the root level should not be modified without expert knowledge, as even minor errors may cause the application to fail. The WEB-INF folder contains two (2) sub-directories: lib and classes. The lib directory holds all of the Java Archive (JAR) files. These files contain compiled Java code that makes up the geoportal. These files should not be modified or deleted. Within the classes directory, there are many xml, xslt and property files. Some of these may need to be modified to <a class="xref" rel="00t0/00t000000026000000.htm" href="00t0/00t000000026000000.htm">customize</a> the geoportal. Do not modify any files within this classes directory unless other documentation instructs you to do so.</li>
+					<li purpose="li" id="GUID-2C763618-A8AE-4DDB-8277-07F8EEFE45A1"><b>widgets folder:</b> The widgets folder contains files associated with the Geoportal Search Widget for HTML. It also contains a FlexExample folder and a SilverLightExample folder that contain files associated with a sample flex viewer and a sample silverlight viewer as well as  the Geoportal Search Widget for Flex and the Geoportal Search Widget for Silverlight. Note, the widgets folder does not contain files associated with the Preview widget.<div class="block_table" id="TABLE_E459452255874E70B10F7B3DB3F3FB0D" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-6A64C0E9-E63A-4085-A93F-5369E4DEBC35">Filename</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-08E48481-D8C8-4361-AE9C-5D3B21967B3C">Function</p>
+										</th></tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-1C4AD89D-CB5B-4C21-96A1-EB851C1FFE2B">example.jsp
+</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-3CE157E7-1EED-45CB-80DC-7BE73001DCBA">	Provides an example of how to use available widgets.</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-5318F1F9-EB4E-4E64-AC3C-69CD71964942">searchjs.jsp
+</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1"><p id="GUID-76E57997-1432-4305-A00B-898E6C58934C">Provides the Javascript for the search widget.</p></td>
+									</tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-127CC5B1-9EBB-4C99-AF62-EE974AC0531A">searchProxy.jsp
+</p>
+										</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-12587256-18DE-4368-8668-386189FCBB81">	A proxy for executing requests from the search widget.
+</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-827E44E9-43FD-40D1-986C-5E8B4E1E82AD">widgets.css
+</p>
+										</td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-8D47DC39-2CD9-4D5D-A5E6-E6B46E2B1A58">		Cascading style sheet for widget look and feel.
+</p></td></tr>
+								</table><span class="table_desc"></span></div></li>
+				</ul></p></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

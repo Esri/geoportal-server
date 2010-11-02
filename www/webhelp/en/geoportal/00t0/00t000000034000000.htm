@@ -1,0 +1,89 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Troubleshooting the Database Troubleshooting Database Issues Below are steps for general troubleshooting for database issues. Specific information about the database tables and columns within them can be found in the Geoportal Database Tables section. If the general items below do not help solve your problem, then look at the specific items to check for your type of database system software: SQL Server 2005 and 2008 PostgreSQL General Database Troubleshooting Error: &quot;Cannot create PoolableConnectionFactory...&quot; or &quot;Cannot load JDBC driver class...&quot;: Things to check: If using Tomcat, verify that settings are correct in the geoportal.xml file found in the \\TOMCAT\conf\Catalina\localhost folder. Doublecheck that the correct driverClassName, jdbc url, username and"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - Troubleshooting the Database</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-3D374A92-C95D-4DED-978C-B6E606101BE9]--><body><div id="content"><div class="header"><h1>Troubleshooting the Database</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="GUID-04EC9D7B-EE9A-4A3E-8609-26FB012DD1D1" purpose="section1"><h2>Troubleshooting Database Issues</h2><p id="GUID-E1CB3C86-A4CD-4538-B68E-938AA361A1B8">Below are steps for general troubleshooting for database issues. Specific information about the database tables and columns within them can be found in the  <a class="xref" rel="00t0/00t00000004n000000.htm" href="00t0/00t00000004n000000.htm">Geoportal Database Tables</a> section. If the general items below do not help solve your problem, then look at the specific items to check for your type of database system software:
+<ul purpose="ul" id="UL_9F53A61FDB7F4BFC8EC808C437FEBB77">
+					<li purpose="li" id="GUID-6D912756-776C-411C-AC08-93DEB233D6F4">
+						<a class="xref" rel="00t0/00t000000034000000.htm#SQLSERVER2005_2008TRBLSHTG" href="00t0/00t000000034000000.htm#SQLSERVER2005_2008TRBLSHTG">SQL Server 2005 and 2008</a></li>
+					<li purpose="li" id="GUID-D7F27D01-0C21-4C3E-B9CC-4CAB212FC63A">
+						<a class="xref" rel="00t0/00t000000034000000.htm#POSTGRESQL_TRBLSHTG" href="00t0/00t000000034000000.htm#POSTGRESQL_TRBLSHTG">PostgreSQL</a></li>
+				</ul>
+				<b>General Database Troubleshooting</b>
+				<ul purpose="ul" id="UL_74422013F3CC4F05AAF2ADBABCB0AFE1"><li purpose="li" id="GUID-E7739E00-5717-4FE0-9E58-2C7B8F35B9E1"><i><b>Error: "Cannot create PoolableConnectionFactory..." or "Cannot load JDBC driver class...":</b></i> Things to check:
+<ol purpose="ol" id="GUID-C7EB0967-B308-4270-A14B-FF69CCD63654">
+							<li purpose="li" id="GUID-720CF36E-C1D1-4B06-AD93-5ADD4BA9EC3B">If using Tomcat, verify that settings are correct in the <i>geoportal.xml</i> file found in the <i>\\TOMCAT\conf\Catalina\localhost</i> folder. Doublecheck that the correct <span class="uicontrol">driverClassName</span>, <span class="uicontrol">jdbc url</span>, <span class="uicontrol">username</span> and <span class="uicontrol">password</span> are correct and have been entered without extra spaces, characters, or missing quotation marks.</li>
+							<li purpose="li" id="GUID-849A5F7F-554B-408D-BCA5-8BF32A9462E2">Verify that the correct jdbc driver for your database has been copied to the correct location in your servlet container. See the jdbc database driver table in Section 7 of the Geoportal Server Installation Guide for which drivers to use with each database and guidance where to copy the driver. For other servlet application software, see the respective installation guides for those environments. Those installation guides are available on the Installation page of the Geoportal Server's help wiki.</li>
+							<li purpose="li" id="LI_EE13201D52FA40BF8E6EBF9777B4656B">Verify the port that your database is using. If the port is different from the port stated in jdbc connection information (e.g., the <i>geoportal.xml</i> file for Tomcat0, or if your database is dynamically assigning the port number, then change dynamically assigned ports to a static setting and edit <i>geoportal.xml</i> to reflect the port that is assigned. A useful tool for reporting port status is a command-line utility called <a target="_blank" class="xref" href="http://www.microsoft.com/DOWNLOADS/details.aspx?FamilyID=89811747-c74b-4638-a2d5-ac828bdc6983&amp;displaylang=en" rel="http://www.microsoft.com/DOWNLOADS/details.aspx?FamilyID=89811747-c74b-4638-a2d5-ac828bdc6983&amp;displaylang=en">PortQry</a>.</li>
+						</ol></li>
+				</ul></p><div class="section2" id="SQLSERVER2005_2008TRBLSHTG" purpose="section2"><h3>SQL Server 2005 and 2008</h3><ul purpose="ul" id="UL_CE57656188FE4EBCA136FB24F1B40631">
+					<li purpose="li" id="GUID-4A0B9B6C-F726-428C-B09B-3BFD413A8705"><p id="GUID-1037FB26-15D3-4667-A106-F76F06026D7A"><i><b>Verify that TCP/IP is turned on as a protocol</b></i>
+							<ol purpose="ol" id="GUID-B48BD784-0B98-4D9D-9920-1676A4112F5D"><li purpose="li" id="GUID-97F95B1E-E03B-49E5-8D9B-A02BEED25F74">Launch SQL Server Configuration Manager  from <span class="uicontrol">Start menu <span class="greaterthan">&gt;</span> Microsoft SQL Server 200x <span class="greaterthan">&gt;</span> Configuration Tools <span class="greaterthan">&gt;</span> SQL Server Configuration Manager</span>.</li>
+								<li purpose="li" id="GUID-DB45E3A9-11DD-4583-A878-44DA06476DB7">Enable TCP/IP protocol by choosing from the tree <span class="uicontrol">SQL Server Network Configuration</span>, then <span class="uicontrol">Protocols for MSSQLSERVER</span>. Right-click on <span class="uicontrol">TCP/IP</span> and select <span class="uicontrol">Enable</span>.</li>
+							</ol>
+						</p>
+					</li>
+					<li purpose="li" id="GUID-333A2BBF-CE5D-4B18-AB11-EFFC20903680"><p id="GUID-4F42E832-DA1E-419F-A382-172578EC5447"><i><b>Verify that the correct Port is assigned for TCP/IP</b></i>
+							<ol purpose="ol" id="GUID-8411DA24-4C76-4405-A022-99448A041AB6">
+								<li purpose="li" id="GUID-2FEE8EC9-0431-4199-8204-27728313665C">Follow same steps above to select <span class="uicontrol">TCP/IP</span> from the <span class="uicontrol">SQL Server Configuration Manager</span>.</li>
+								<li purpose="li" id="GUID-0E27B16A-2E2B-4F4A-BFC0-CA3FB00A1BCC">Right-click on <span class="uicontrol">TCP/IP</span>, and select <span class="uicontrol">Properties</span>.</li>
+								<li purpose="li" id="GUID-8AD74F9E-4382-439F-8F05-ABDD625803D4">Click on the <span class="uicontrol">IP Addresses</span> tab. Scroll through the listed IP's, and verify the port number assignment for the database host machine and the TCP Port. This port should be used in the <i>geoportal.xml</i> file for the <span class="uicontrol">jdbc url</span>. </li><li purpose="li" id="LI_D688580DC4C248F49034ED64DA80BE6F">If your port is dynamically assigned, then you need to change this setting in your database software such that it is not dynamically assigned, and then use the designated port for your jdbc connection information.</li></ol>
+						</p>
+					</li>
+					<li purpose="li" id="GUID-802FC285-2AAB-44F6-851D-F54430D13C47"><p id="GUID-DDF286D7-C8B9-43A7-9A78-447E1EC1E0EF"><i><b>Verify that your server allows both Windows authentication and SQL Server authentication</b></i>
+If your server only allows Windows authentication, then the user that the script creates will not be able to logon to create the tables. The error in the <i>build_schema.log </i>file will read <span class="usertext">Login failed for user</span>.  To check and possibly change the security authentication mode (as per Microsoft, see <a target="_blank" class="xref" href="http://msdn.microsoft.com/en-us/library/ms188670.aspx" rel="http://msdn.microsoft.com/en-us/library/ms188670.aspx">http://msdn.microsoft.com/en-us/library/ms188670.aspx</a> ), do the following:
+<ol purpose="ol" id="GUID-086295C7-8CB9-4632-A933-54C50F27B376">
+								<li purpose="li" id="GUID-3C1C943D-9658-4152-96D7-B28B2A62D7BD">Login to <span class="uicontrol">SQL Server Management Studio</span>.</li>
+								<li purpose="li" id="GUID-AA3F845B-5E81-422F-8D7D-F84D27C61873">In <span class="uicontrol">SQL Server Management Studio Object Explorer</span>, right-click the server, and then click <span class="uicontrol">Properties</span>.</li>
+								<li purpose="li" id="GUID-5ABE8239-197B-454B-B701-6081BECEC622">On the <span class="uicontrol">Security</span> page, under <span class="uicontrol">Server authentication</span>, select the <span class="uicontrol">SQL Server and Windows Authentication Mode</span> radial if it is not already selected, and then click <span class="uicontrol">OK</span>.</li>
+								<li purpose="li" id="GUID-9CF4586E-2A25-4709-B632-002BDC6D1770">In the SQL Server Management Studio dialog box, click <span class="uicontrol">OK</span> to acknowledge the requirement to restart SQL Server.</li>
+							</ol>
+						</p>
+					</li>
+					<li purpose="li" id="GUID-FA07D8E9-BBC7-42D8-807C-678B22489329"><p id="GUID-C6DBD65E-48F3-423E-84E3-7B58D5C0D3CE"><i><b>Verify that SQL Server is not running on a compressed drive:</b></i> According to the <a target="_blank" class="xref" href="http://support.microsoft.com/kb/231347/en-us target=_blank" rel="http://support.microsoft.com/kb/231347/en-us target=_blank">Microsoft Developer Network support site</a>, it is no longer possible to create a read/write database on a compressed file system as of the SQL Server 2005 release. If the geoportal database scripts are run in a compressed file environment, errors will result.
+</p></li>
+				</ul></div><div class="section2" id="POSTGRESQL_TRBLSHTG" purpose="section2"><h3>PostgreSQL</h3><ul purpose="ul" id="UL_3AE5027CB8F14F0880451BE5547FC282">
+					<li purpose="li" id="GUID-101A47CF-3EA1-4EFB-8A97-7035E0BB0E49"><i><b>TCP/IP Information has not been declared:</b></i> Verify that the TCP/IP is specified as a parameter in the <i>pg_hba.con</i>f file. You will need to enter a new parameter at the end of the file. The syntax is as follows:
+<div class="block_table" id="GUID-E93B80D0-7300-47DD-B434-4ED902A963DA" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><colgroup width="*"></colgroup><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-5B7FEE45-31DE-4385-8DD8-49BE1E1AB763"># TYPE</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-713E73CD-9C56-4762-B4D2-48271ECA76FC">DATABASE</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-6EF4D7E3-C7EC-4F42-9404-DEC9BF7E3B9E">USER</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-F683B1CE-36C0-424A-A0B1-661C5AFE8498">CIDR-ADDRESS</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-9E84D71C-B1E0-42FC-AB56-57F6CA1F0704">METHOD</p>
+										</th></tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-800E3D3D-E1EF-42A7-BFFE-5923A845BC95">host</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-DF8AF3C5-60F2-42CF-B9B8-FD7A89C0A82A">all</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-3339C623-24CE-437B-B593-BA4544561F93">all</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-676F004E-A514-492C-9238-354D82E99603">&lt;database server IP Address&gt;/32</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-39605218-8C64-409B-8875-F0EB6FB6F3B5">trust</p>
+										</td>
+									</tr>
+								</table><span class="table_desc"></span></div></li>
+					<li purpose="li" id="GUID-4F986451-A977-4E5A-A038-E2705D0AD557"><i><b>Listen_addresses have not been changed from the default 'localhost':</b></i> In the <i>postgresql.conf</i> file you will have to update the <span class="uicontrol">listen_addresses</span> section under the connection settings section to enable what IP addresses to listen on. <pre class="lines" purpose="lines">
+e.g. listen_addresses = "*" (* indicates all)
+</pre> Changes to the <i>pg_hba.conf</i> and the <i>postgresql.conf</i> files will require a restart of the postgres service and the servlet engine (Tomcat, Glassfish or Weblogic). For more information on the <i>pg_hba.conf</i> or the <i>postgresql.conf</i> files please see the  <a target="_blank" class="xref" href="http://www.postgresql.org/docs/8.3/static/client-authentication.html" rel="http://www.postgresql.org/docs/8.3/static/client-authentication.html">Client Authentication section</a> in the PostgreSQL documentation.</li>
+				</ul></div></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

@@ -1,0 +1,34 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Search Results 'Share' Link Customize Search Results with a 'Share' Link for Sharing Records This customization enables a Share link for each metadata record that appears in the search results page. The Share link allows users to bookmark (i.e., Add to Favorites) or share (i.e., through Digg, MySpace, Google, etc.) a particular metadata record directly from the search results page using technology from AddThis. Follow the steps below to add the Share link to the geoportal implementation. To perform this customization, access to the geoportal .jsp files on the geoportal web application server is necessary. Navigate to the \\geoportal\catalog\search folder. Open the results.jsp"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - Search Results 'Share' Link</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-988F2114-1059-465C-8100-35B8E5A5A86F]--><body><div id="content"><div class="header"><h1>Search Results 'Share' Link</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="GUID-4182AAEE-6B21-44C9-ADB5-7077AF305685" purpose="section1"><h2>Customize Search Results with a 'Share' Link for Sharing Records</h2><p id="GUID-4FB2B8D9-9B4B-444B-B271-329D3E82C827">This customization enables a <span class="uicontrol">Share</span> link for each metadata record that appears in the search results page. The <span class="uicontrol">Share</span> link allows users to bookmark (i.e., Add to Favorites) or share (i.e., through Digg, MySpace, Google, etc.) a particular metadata record directly from the search results page using technology from <a target="_blank" class="xref" href="http://www.addthis.com/" rel="http://www.addthis.com/">AddThis</a>. <div class="image" purpose="image"><table><tr><td><img class="break" src="00t0/GUID-0CBAC063-FC8F-413A-8467-412D8ACB6A0D-web.png" purpose="img" alt="" title=""></td></tr></table></div> Follow the steps below to add the <span class="uicontrol">Share</span> link to the geoportal implementation. To perform this customization, access to the geoportal .jsp files on the geoportal web application server is necessary. <ol purpose="ol" id="GUID-27A9781D-EE9F-4061-B74C-5FA4DA252601">
+					<li purpose="li" id="GUID-C5B39122-1FA8-4B66-A264-CF12BAA441D1">Navigate to the \\geoportal\catalog\search folder.</li>
+					<li purpose="li" id="GUID-63450039-AD16-443A-91F8-B4FA02CC082B">Open the <i>results.jsp</i> file in a text editor.</li>
+					<li purpose="li" id="GUID-2100173B-65B2-4A4D-95C3-9183DAEEC66B">At the top of the file, you will add some javascript. Find the first  <span class="uicontrol">&lt;f:verbatim&gt;</span> tag, and add the following lines just beneath that <span class="uicontrol">f:verbatim</span> tag: 
+<div class="codeblock" purpose="codeblock"><pre class="codeblockbody" id="GUID-BE1110A8-CFC7-45B9-8B32-01B61205B021" purpose="codeblockbody">&lt;script type="text/javascript" src="http://s7.addthis.com/js/200/addthis_widget.js"&gt;
+&lt;script type="text/javascript"&gt;
+                var addthis_pub=" ";
+&lt;/script&gt;</pre></div></li>
+					<li purpose="li" id="GUID-1491F007-4225-442D-B3D9-7DE721357FA6">Now, find in the <i>results.jsp</i> file where the <span class="uicontrol">&lt;% // Resource links %&gt;&lt;h:panelGroup&gt;</span> output links are defined. Add a new <span class="uicontrol">&lt; h:outputLink&gt;</span> section, right above the line that starts with <span class="uicontrol">&lt;% // Zoom map</span>, that has the following code: <div class="codeblock" purpose="codeblock"><pre class="codeblockbody" id="GUID-2583209B-E01F-4B4F-BE84-4DE00AA6B517" purpose="codeblockbody">&lt;% // Share result %&gt;
+&lt;h:outputLink id="_lnkShare" rendered="#{record.viewMetadataUrl != ''}"
+               value="http://www.addthis.com/bookmark.php?v=20" styleClass="resultsLink"                onmouseover="return addthis_open(this, '', '#{record.viewMetadataUrl}', '#{record.title}')"onmouseout="addthis_close()" onclick="return addthis_sendto()"&gt;
+                &lt;h:outputText id="_txtShareThis" value="#{gptMsg['catalog.search.searchResult.share']}" /&gt;
+&lt;/h:outputLink&gt;</pre></div></li>
+					<li purpose="li" id="GUID-75021629-B175-41DF-86C8-F3DFBADD4290">Save the <i>results.jsp</i> file and close it.</li>
+					<li purpose="li" id="GUID-18ADFBAD-7D06-44A8-A5CA-DA74F6A9D60C">Navigate to the \\geoportal\WEB-INF\classes\gpt\resources folder. Open the <i>gpt.properties</i> file in a text editor.</li>
+					<li purpose="li" id="GUID-53F2001E-1CB9-4135-9A5D-7012CFE08BA7">Add the following resource key under the <span class="uicontrol"># search related pages</span> heading. The resource key is the name of the link that appears in the search results user interface. Replace the text after the equals sign with a title for the link (<span class="usertext">Share</span> in the example below): 
+<div class="codeblock" purpose="codeblock"><pre class="codeblockbody" id="GUID-C5924BB2-6272-4B60-8822-407F55063754" purpose="codeblockbody">catalog.search.searchResult.share = Share</pre></div></li>
+					<li purpose="li" id="GUID-DAD2560A-6642-4AFC-8838-57E20BBF8F4A">Save the <i>gpt.properties</i> file and close it.</li>
+					<li purpose="li" id="GUID-5E99F432-8C74-4F34-908F-AB9D66BA3F7D">Restart the geoportal web application, and do a search to see the new <span class="uicontrol">Share</span> link in each search result.</li>
+				</ol></p></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

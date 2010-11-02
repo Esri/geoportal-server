@@ -1,0 +1,26 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Search Components Search Components The primary components associated with the execution of a search against the Geoportal  metadata catalog are depicted in the figure below. The website search page exposes a service endpoint for metadata discovery. Requests from the page are processed by a SearchController component that, in turn, executes requests through the SearchEngine component. The website exposes a REST Query API service endpoint for metadata discovery. This service endpoint has the ability to generate GeoRSS, KML, ATOM, JSON, HTML and HTML fragment responses. Requests are parsed by a RestQueryParser component and executed through the SearchEngine component. Any client that can understand RSS,"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - Search Components</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-E6CE6146-F6BF-41BE-9C62-24ACA4C484E9]--><body><div id="content"><div class="header"><h1>Search Components</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="GUID-A5F581A0-7DF1-4BBC-A3AE-66D96FA0E710" purpose="section1"><h2>Search Components</h2><p id="GUID-57192A8D-5036-4496-9F13-5DC9FCE60C35">The primary components associated with the execution of a search against the geoportal metadata catalog are depicted in the figure below.  </p><p id="GUID-5FD9C798-2AE2-4658-A7D8-7DDAE9475E55"><img purpose="img" placement="inline" alt="" title="" src="00t0/GUID-A237A02C-8BC2-4760-976B-C4449C4219A4-web.png"></p><p id="GUID-B6739388-B2D5-4631-925A-DEA5EA50AE7A">The website search page exposes a service endpoint for metadata discovery. Requests from the page are processed by a SearchController component that, in turn, executes requests through the SearchEngine component.
+
+</p><p id="GUID-E50F50A7-9976-4641-BE93-E6A8692C2F46">The website exposes a REST Query API service endpoint for metadata discovery. This service endpoint has the ability to generate GeoRSS, KML, ATOM, JSON, HTML and HTML fragment responses. Requests are parsed by a RestQueryParser component and executed through the SearchEngine component. Any client that can understand RSS, GeoRSS, KML, ATOM, JSON or HTML protocol can utilize this endpoint. Typical clients include: browsers, content management systems, ArcGIS Explorer, and Google Earth.
+
+</p><p id="GUID-FF1E9F31-F940-4DEF-AABA-B74A5D91BEA9">The website exposes a <a class="xref" rel="00t0/00t00000004m000000.htm" href="00t0/00t00000004m000000.htm">CSW 2.0.2 Discovery service endpoint</a> for metadata discovery. Any client that understands the CSW 2.0.2 Discovery protocol can query the catalog through this end point. The Geoportal CSW Client components that plug into ArcGIS Explorer and ArcGIS Desktop can utilize this end point. External mapping applications can be configured to utilize this end point. 
+
+</p><p id="GUID-154E85EB-52B1-4199-9404-1804DD79E974">The SearchEngine component handles inbound requests from the website search page and the exposed Rest Query API end point. Requests targeting the local metadata catalog are transformed to a CSW 2.0.2 discovery XML and submitted to a CSW Discovery Parser for processing. Requests targeting a remote CSW service are submitted and processed by a CSW Client component.
+
+</p><p id="GUID-0FE6AE32-61E3-437D-BA40-32DEED2431CB">CSW 2.0.2 Discovery requests to the local metadata catalog implement a standardized methodology for processing each request:
+
+<ol purpose="ol" id="OL_4C71DB5E416F4C23865EF75C3FF2DEBF"><li purpose="li" id="LI_A5CB5D1CF18B44C59A2D0A2172778DCA">The request is parsed (CSW Discovery Parser), extracting CSW request parameters and OGC filter information. This information is used to build an abstract Discovery Model (package com.esri.gpt.catalog.discovery)
+</li><li purpose="li" id="LI_0B645590953E4F71914DF84D5AC78C3D">The discovery model is sent to a LuceneQueryAdapter that utilizes the Apache Lucene Java API to build and execute a query against the Apache Lucene index. The results are then used to populate resultant component objects of the Discovery Model</li><li purpose="li" id="LI_92A7A5950FAB41EB81B0BE8F90BA3143">A CSW 2.0.2 Discovery response XML is then generated from the resultant component objects of the Discovery Model</li></ol></p></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

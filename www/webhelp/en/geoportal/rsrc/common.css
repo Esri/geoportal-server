@@ -1,0 +1,562 @@
+body {
+    font-family: Verdana,Arial,Helvetica,sans-serif;
+    line-height: 1.4em !important;
+    font-size: 0.80em !important;
+}
+
+#content  p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+/* ---Headings----------------------------*/
+#content  div.header{
+    border-bottom:1px solid #c2c4ba;
+    width:100%;
+
+    
+}
+#content div.header:after {
+    clear:both;
+}
+#content div.header span.subheader {
+    float:right;
+    position:absolute;
+    top: 45px;
+    width: 75px;
+    left: 82%;
+    font-size: 0.7em;
+
+}
+
+#content h1, 
+#content h2, 
+#content h3, 
+#content h4, 
+#content span.section_title, 
+#content span.codeblock_title {
+    line-height: 1.2em;
+    margin-bottom: 0.2em;
+    display: block;
+}
+
+#content h1 {
+    font-size: 18px;
+    font-weight:normal;
+}
+
+#content h2, 
+#content span.section_title {
+    color: #103E4E;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+#content h3,
+#content span.cfgs_title  {
+    color: #AF7209;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+#content h4, 
+#content span.codeblock_title,
+#content span.cfg_title {
+    font-size: 13px;
+    font-weight: bold;
+    
+    
+}
+#content pre {
+    margin-left: 15px;
+    border: 1px dashed #c2c4ba;
+    padding: 10px;
+    padding-bottom:25px;
+    font-size: 110%;
+    line-height: 1.2em;
+    background-color:#EEEEEE;
+    overflow-x: auto;
+    width:95%;
+}
+
+#content pre.lines {
+    background-color:#FFFFFF;
+    border:medium none;
+    font-family:verdana;
+    font-size:100%;
+    line-height:1.5em;
+    margin-left:15px;
+    padding:0;
+}
+#content pre.equation {
+    background-color:#FFFFFF;
+    border:medium none;
+    font-family:monospace;
+    font-size:110%;
+    line-height:1.5em;
+    margin-left:15px;
+    padding:0;
+}
+
+
+#content div {
+    margin-bottom: 0.3em;
+}
+
+#content span.section_title, 
+#content span.codeblock_title {
+    margin-left:10px;    
+    }
+/*---Links -------------------------------*/
+#content a {
+    color: #21759B;
+	
+}
+
+#content a.xref_bad {
+    color: #FF0000;
+}
+
+#content a:hover {
+	background-color:#DFF0F8;
+}
+
+#content .section1, 
+#content .section2, 
+#content .section3, 
+#content .section4 {
+    /*clear:both;*/
+}
+/* ---Section1----------------------------*/
+#content div.section1{
+    margin-left: 10px;
+}
+#content div.section1 p {
+    margin-left: 10px;
+}
+/* ---Section2----------------------------*/
+#content div.section2{
+    margin-left: 15px;
+}
+#content div.section2 p {
+    margin-left: 10px;
+}
+/* ---Section3----------------------------*/
+#content div.section3{
+    margin-left: 15px;
+}
+#content div.section3 p {
+    margin-left: 10px;
+}
+/*---Lists/steps------------------------------*/
+#content ol, 
+#content ul{
+    margin-top: 0em;
+    margin-bottom: 1.2em;
+}
+#content ol{
+    list-style-type: decimal;
+    list-style-position: outside;
+}
+#content ol li {
+}
+#content ol ol {
+    list-style-type: lower-alpha;
+    list-style-position: outside;
+}
+#content ol ol ol{
+    list-style-type: lower-roman;
+    list-style-position: outside;
+}
+#content ul ul {
+    list-style-type: square;
+    list-style-position: outside;
+}
+#content ul ul ul{
+    list-style-type: circle;
+    list-style-position: outside;
+}
+#content li {
+    margin-bottom:5px;
+    padding-left:5px;
+    margin-left: 30px;
+}
+#content ul{
+    list-style-type: disc;
+    list-style-position: outside;
+    padding:0px;
+    margin:0px;
+}
+#content ul li{
+}
+#content li p {
+    margin:0;
+}
+#content div.step_title{   
+    color: #AF7209;
+    font-weight:bold;
+    margin-left:15px;
+}
+/* ---Tables----------------------------*/
+#content table {
+	  border: 1px solid #c2c4ba;
+	  border-spacing: 0px;
+	  border-collapse: collapse;
+	  font-size: 95%;
+    margin-left: 15px;
+    width:90%
+}
+#content th p {
+    padding:0;
+    margin:0;
+}
+
+#content td{
+    border: 1px solid #c2c4ba;
+    padding: 2px 5px 0px 5px;
+    vertical-align:top;
+    
+}
+#content th, 
+#content td.th_p, 
+#content td.th_e, 
+#content td.th_d, 
+#content td.th_en, 
+#content td.th_des {
+    font-weight: bold;
+    color: #000000;
+    background: #c2c4ba url(tblheader.jpg) repeat-x top;
+    border: 1px solid #c2c4ba;
+    vertical-align:middle;
+    padding: 2px 0px 2px 4px;
+    text-align: left;
+}
+#content td.th_p {
+    width: 20%;
+}
+#content td.th_e {
+    width: 60%;
+    }
+
+#content td.th_d {
+    width: 20%;
+}
+#content td.th_en {
+    width: 30%;
+}
+#content td.th_des {}
+
+#content td p {
+    padding-bottom: 2px;
+}
+#content span.table_title, 
+#content span.sqltable_title {
+    font-size:95%;
+    font-weight:bold;
+    margin-left:15px;
+    display:block; 
+}
+
+#content span.table_desc {
+    font-size: .75em;
+    font-style:italic;
+    margin-left:15px;
+    margin-bottom:2em;
+    display:block;
+}
+
+#content div.section3  table.gptoolretvaltbl {
+    margin-left:0px;
+}
+
+#content div.sqltblinfo th {
+    width: 15%;
+}
+#content div.sqltblinfo th + th {
+    width: 15%;
+}
+#content div.sqltblinfo th + th + th{
+    width: 60%;
+}
+#content div.sqltblinfo th + th + th + th{
+    width: 10%;
+}
+
+/*---Images------------------------------*/
+
+ #content div.image {
+     margin-left: 10px;
+    
+ }
+ #content div.image table {
+    width:1px;
+ }
+ #content div.image table, 
+ #content div.image table td{
+    border: none;
+
+     
+ }
+ #content div.caption {
+    font-size: .75em;
+    font-style:italic;
+    width:100%;
+    text-align: center;
+
+ }
+/*---Notes------------------------------*/
+#content div.notes {
+    width:90%;
+    margin: 10px;
+    border-top: 1px solid #CCCCCC;
+    border-bottom: 1px solid #CCCCCC;
+    clear:both;
+    display:inline-block;
+    
+ }
+ 
+ #content div.notes img.note_img {
+     margin-right: 5px;
+     float:left;
+     position:relative;
+     top:2px;
+ }
+
+ #content div.tipbody {
+    float:left;
+    background: #FFFFFF;
+    padding: 5px 5px 20px 0px;
+    width:80%;
+  }
+ #content div.tipbody p {
+    margin: 0 0.5em;
+}
+#content div.caution, 
+#content div.legacy, 
+#content div.license, 
+#content div.divein, 
+#content div.tip, 
+#content div.note {
+    float:left;
+    padding: 5px 5px 20px 0px;
+    font-weight:bold;
+    height:16px;
+    display:inline;
+ }
+#content div.caution {}
+#content div.legacy {}
+#content div.license {}
+#content div.divin {}
+#content div.tip {}
+#content div.note {}
+
+#content span.topiclicense {
+    font-style:italic;
+}
+
+#content span.sectionlicense {
+    font-style:italic;
+}
+
+/*---See Also------------------------------*/
+#content div.seealso {
+    margin-left: 15px;
+}
+#content div.seealso div{
+    color: #AF7209;
+    font-size: 15px;
+    font-weight: normal;
+}
+#content div.seealso a {
+    display:block;
+    margin-left: 10px;
+}
+
+/*---UI Elements------------------------------*/
+#content span.uicontrol {font-weight:bold; font-size:90%;}
+#content span.shortcut {text-decoration: none; padding: 0 1 0 1; text-transform: uppercase;}
+#content span.usertext {font-family:'Courier New', Courier, Monospace;}
+#content span.wintitle {font-weight:bold; font-style: italic; font-size:90%}
+#content span.greaterthan{font-weight:normal;font-size:100%;}
+#content span.arcpyref {font-family:'Courier New', Courier, Monospace; font-weight:bold;}
+#content span.modelbuilder {font-family:'Microsoft Sans Serif'; color:#777777; font-size:90%;font-weight:bold;}
+
+
+/*---Glossary------------------------------
+span.glossary {
+    color: #2D7104;
+    background-color: #FFFFFF;
+    border-bottom:1px dashed #2D7104;
+
+}
+span.glossary:hover {
+    color: #FFFFFF;
+    background-color: #2D7104;
+    border-bottom:1px dashed #FFFFFF;
+}*/
+/*---Footer------------------------------*/
+#content .footer {
+    border-top:1px solid #c2c4ba;
+    color:#1A679E;
+    font-size:0.70em;
+    margin:5px auto;
+    padding:10px 0;
+    text-align:center;
+    width:100%;
+}
+
+/*--- Clean up --------------------------*/
+#content div.foreign {
+    background-color: yellow;
+    display:inline;
+    font-weight:bold;
+
+}
+
+#content div.migration{
+    display:inline;
+
+}
+#content div.relatedtopic_block a.xref_bad{
+    display: inline;
+}
+
+
+/*--- ArcPy/GP Tool --------------------------*/
+#content div.paramhint {
+    font-size: 0.9em;
+}
+#content div.expressionhint {
+    font-size: 0.9em;
+    padding: 2px;
+    border: 1px solid #999999;
+    background-color: #FFFFE1;
+}
+
+#content div.arcpyclass_method_fullview {
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+    border-bottom: 1px solid #CCCCCC;
+}
+
+/*--- concept subtype : Q&A ----------*/
+#content div.question {
+    font-size: 1.1em;
+    font-weight:bold;
+}
+
+/* -- GP licensing tbl -- */
+#content table.gplicensetable {
+    margin-top: 2em;
+}
+#content table.gplicensetable td {
+    padding: 3px;
+    padding-left:15px;
+}
+#content tr.tr_toolset td{
+    padding-left:3px;
+}
+
+#content tr.tr_tool_even {
+    background-color:#EEEEEE;
+}
+
+#content tr.tr_tool_odd {
+    background-color:#EDF5FF;
+}
+
+#content td.th_gpl0, 
+#content td.th_gpl1, 
+#content td.th_gpl2, 
+#content td.th_gpl3 {    
+    font-weight: bold;
+    color: #000000;
+    background: #C2C4BA url(tblheader.jpg) repeat-x top;
+    border: 1px solid #c2c4ba;
+    vertical-align:middle;
+    padding: 3px !important;
+    margin-left:0px;
+}
+
+#content td.th_gpl0 {
+}
+
+#content td.th_gpl1 {
+}
+
+#content td.th_gpl2 {
+}
+
+#content td.th_gpl3 {
+}
+
+#content td.td_toolsetgpl1 {
+    font-weight: bold;
+    vertical-align:middle;
+}
+
+#content td.td_toolsetgpl2 {
+    font-style:italic;
+    vertical-align:middle;
+}
+
+#content td.td_toolsetgpl3 {
+    font-style:italic;
+    vertical-align:middle;
+}
+
+#content td.td_toolgpl {
+    vertical-align:middle;
+    text-align: center;
+    padding: 3px !important;
+}
+
+#content span.gpl_extension {
+    font-size: 75%
+}
+
+#content .wfheader {
+    float:right;
+    position:relative;
+    font-size: 80%;
+    border-left:1px solid #c2c4ba;
+    padding: 5px;
+    width: 200px;
+    margin-left: 15px;
+    margin-bottom: 15px;
+    line-height: 1.1em;
+    color: #3C3c3c;
+}
+#content .wfmetahead{
+    font-weight: bold;
+    display: block;
+}
+#content .wfmetacontent{
+    margin-left: 10px;
+    display: block;
+    margin-bottom: .5em;
+}
+/*---- CFGs -----*/
+#content div.cfgs, 
+#content div.cfg {
+	margin-left:15px;
+}
+
+#content div.cfgs span.cfgs_title, 
+#content div.cfg span.cfg_title {
+	margin-left:-15px;
+}
+
+/*-- video -- */
+#content div.videoimage {width:100%;
+padding:5px 5px 5px 0px;}
+#content div.videoimage table, #content div.videoimage table td {
+	border:none;
+}
+#content div.videoimage table{width:1%;}
+#content div.videoimage div.caption{
+	text-align: left;
+	font-style:normal;
+	font-size:1em;
+	padding-left:5px;
+}

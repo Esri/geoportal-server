@@ -1,0 +1,178 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="REST API Syntax Details of the REST API The Geoportal  REST interface follows the design of the ArcGIS Server REST API. Through the REST API, it is possible to query the locally-hosted resources, and also resources hosted on remote repositories. These two scenarios are shown below. In these scenarios, requestParameter is a placeholder for a REST parameter. REST parameters are discussed later in this topic.To query the local geoportal catalog only, use the following url pattern: http://machineName/geoportal/rest/find/document?requestParameterTo query remote repositories, use the following url pattern: http://machineName/geoportal/rest/distributed?rid=repositoryID&amp;requestParameters. Here, the rid parameter is the identification for the repository being searched. By using multiple rid parameters,"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - REST API Syntax</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-936C6C5F-F789-4FD3-A499-10F7B4A1B482]--><body><div id="content"><div class="header"><h1>REST API Syntax</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="ESRI_SECTION1_274F1A31495E4808B02BAD72316A7D2C" purpose="section1"><h2>Details of the REST API</h2><p id="GUID-29C32A45-0FCC-48A7-9D52-F299BD518902">The Geoportal Server REST interface follows the design of the <a target="_blank" class="xref" href="http://resources.esri.com/help/9.3/arcgisserver/apis/rest/index.html" rel="http://resources.esri.com/help/9.3/arcgisserver/apis/rest/index.html">ArcGIS Server REST API</a>. Through the REST API, it is possible to query the locally-hosted resources, and also resources hosted on remote repositories. These two scenarios are shown below.  In these scenarios, <i>requestParameter</i> is a placeholder for a REST parameter. REST parameters are discussed later in this topic.<ul purpose="ul" id="UL_A5B9D84E11B24AB6A2C6C33B1F552D1B"><li purpose="li" id="LI_0A210DB610A8455080A0EB2897A759AF">To query the local geoportal catalog only, use the following url pattern: <i>http://machineName/geoportal/rest/find/document?requestParameter</i></li><li purpose="li" id="LI_DE54455161E04B6D8FB7F8C1B48A5867">To query remote repositories, use the following url pattern: <i>http://machineName/geoportal/rest/distributed?rid=repositoryID&amp;requestParameters</i>.  Here, the <i>rid</i> parameter is the identification for the repository being searched.</li></ul>
+			</p><p id="GUID-4E918B46-BC05-4F9A-84EB-D948CF7510E6">By using multiple <i>rid</i> parameters, you can search multiple repositories at the same time. Use the following url pattern: <i>http://machineName/geoportal/rest/distributed?rid=repositoryID1&amp;rid=repositoryID2&amp;requestParameter</i>
+			</p><p id="GUID-BED436AA-F199-4B92-95F1-7A706CB77F4C">  Here is an example: <i>http://exampleserver/geoportal/rest/distributed?rid=local&amp;rid=ArcGIS.COM&amp;start=1&amp;max=10&amp;orderBy=relevance&amp;searchText=water&amp;f=atom</i></p><p id="GUID-37200CCC-6ED7-43E7-812C-7C2DA761C7CF">The table below lists the parameters that are available in the Geoportal Server REST API. For a full description of each parameter, refer to the <i>com.esri.gpt.control.georss</i> and <i>com.esri.gpt.control.rest.search</i>
+packages in the <a target="_blank" class="xref" href="http://links.esri.com/geoportal_javadoc" rel="http://links.esri.com/geoportal_javadoc">Geoportal Server Javadoc</a>. For requests that have more than one parameter, the parameters must be concatenated using the ampersand (&amp;) symbol. Use the following url pattern:  <i>http://machineName/geoportal/rest/find/document?requestParameter1&amp;requestParameter2&amp;...</i></p><div class="block_table" id="TABLE_DD6B206B8478494B94807C53F976F136" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+								<p id="GUID-E9441D88-994A-4230-92B4-485C9D90C17C">requestParameter</p>
+							</th><th class="th" purpose="th" rowspan="1" colspan="1">
+								<p id="GUID-9C5D5630-4174-4163-B18A-2FA4896B90DD">Function</p>
+							</th><th class="th" purpose="th" rowspan="1" colspan="1">
+								<p id="GUID-7A197CC5-D628-4652-8795-95E701D419FB">Accepted Values</p>
+							</th></tr>
+						<tr purpose="row">
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-E3DDCF2A-17E9-4328-A67C-688A28F2E69C">bbox</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-A91D3964-DEDC-4BB4-AC0A-26DA68A3DC9E"> Query by extent specified as two pairs of coordinates (west-south and east-north)</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-0B430CEC-CE3C-4293-9A1E-257AE63B773B"> Comma-delimited string of integers between -180,180 and -90, 90.</p>
+							</td>
+						</tr>
+						<tr purpose="row">
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-6F03BD49-F5F1-4D47-8739-7BB2F975E97D"> spatialRel</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-9A7B8332-5D86-482D-A1FE-BBA09BB03DFE"> Query by spatial relationship. Used in conjunction with bbox parameter.</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-C45B2545-25BF-43D6-949D-624C7C8740CB"> String value. One of esriSpatialRelWithin (default), esriSpatialRelOverlaps.</p>
+							</td>
+						</tr>
+						<tr purpose="row">
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-B38502D0-A27F-406D-BAD7-3DF757021D23"> searchText</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-ED486B7A-0D7C-4096-B8D1-50F1A63AD948"> Query by keyword</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-233BA6B5-2AF4-42EF-937B-85E3D71E96B4"> String value representing a keyword.</p>
+							</td>
+						</tr>
+						<tr purpose="row">
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-604CF838-CCD8-4A15-BF9F-76A8B103C467">contains</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-AE2CAC06-5FEA-444F-8924-101CE6BC4615"> Keyword concatenation options. This parameter is obsolete with the  <a class="xref" rel="00t0/00t000000004000000.htm" href="00t0/00t000000004000000.htm">Lucene syntax</a>.</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-05759CA9-71E7-4ADD-A86F-9433A180EE68">For an exact match use double quotes. For example, see the syntax for two terms, <span class="usertext">Hawaii</span> and <span class="usertext">quads</span>: <ul purpose="ul" id="UL_FF761865F7E64E27B21A484E9C4D5CD5">
+										<li purpose="li" id="LI_400703B931B74A8F84CB6CB63F5233D9">Exact: "Hawaii quads"</li>
+										<li purpose="li" id="LI_61932F574FD24848A6F3419BDD7B8B3B">Any: Hawaii quads</li>
+										<li purpose="li" id="LI_BFA0FE15D4C3405EB6178F2C81E80F56">All: +Hawaii+quads</li>
+									</ul>
+									<i>http://serverName/geoportal/rest/find/document?searchText="Hawaii quads"&amp;f=georss </i></p>
+							</td>
+						</tr>
+						<tr purpose="row">
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-2E279630-9B4E-486C-9534-902B2438BB24"> contentType</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-0CB59B9E-6FFF-49AC-9BA0-402B0A8C783D"> Query by content type</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-7477D7A1-D0F1-4AAB-B6A9-74F4688953AC"> String value representing an ESRI content type. See Javadoc for complete list.</p>
+							</td>
+						</tr>
+						<tr purpose="row">
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-9E0D54FD-BC32-4A98-B870-2EF81A52870D">dataCategory</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-958CDF4D-3660-42A0-9643-A19937F3EFD4">Query by data category (ISO 19115 themes)</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-D47D5D11-525E-4C58-89F3-DD46F91C5D46"> Comma-delimited list of strings. Keywords identified by the ISO 19115 specification. See JavaDoc for complete list.</p>
+							</td>
+						</tr>
+						<tr purpose="row">
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-A7EA1778-006C-41D0-8970-14EBBBBC2DAD">after, before</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-0D6BBC7B-2651-438E-8B7D-CF91C042E09A">Query by date</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-EC102BE2-622C-42E2-BF09-1EB62D97FA54">Date string in the format yyyy-mm-dd.</p>
+							</td>
+						</tr>
+						<tr purpose="row">
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-C1FE7607-916D-4AC4-82DD-68B47FAB656E">orderBy</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-72400838-D53C-4244-A4F7-7BAD6FC1EFBA">Result sort options </p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-7879CF41-67F1-4D28-A246-BB91BFA6CE9A">String value. One of areaAscending, areaDescending, dateAscending, dateDescending (default), format, relevance, title.</p>
+							</td>
+						</tr>
+						<tr purpose="row">
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-B809135D-3A0E-4AF2-AF8A-F2DBE87FFCA4">max</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-EB10ED72-D730-4EB5-945B-7A434F908DC4"> Specify max number of records to retrieve.</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-3AEE7175-F143-4152-8237-E1397C56BD62"> Integer. There is a limit of max=100 on unqualified queries. An 'unqualified query' is when there are no search parameters set. The limit on qualified queries is max=5000. Default: 10.  </p>
+							</td>
+						</tr>
+						<tr purpose="row">
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-E216C955-BC36-498F-AC3D-3F0159CB5DAB">geometryType</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-4B51483B-9E54-4F6C-9C57-E7E071BF2588">Defines how spatial data will be represented.</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-91205522-B962-46D3-9FC2-5DB36FABA7A5"> String value. One of esriGeometryPoint, esriGeometryPolygon (default), esriGeometryBox.</p>
+							</td>
+						</tr>
+						<tr purpose="row">
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-812949D9-78AF-4C1F-87E5-D846BE5FB497">f</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-207029A1-63FE-4A04-9871-9FBFF2A17F75"> the response format</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-17727607-3088-4993-8DA3-D9CEB9EC8D72"> String value. One of georss (default), atom, json, kml, html, htmlfragment.</p>
+							</td>
+						</tr>
+						<tr purpose="row">
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-1C3E984B-732B-48CF-8E55-E6FC7637B81C">style</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-7D3945A9-C054-423F-A3F6-9C0A0966D157">CSS stylesheet for HTML results</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-5DFDAE31-FBAA-455D-B492-88CAA784C566">String value representing a URL to a stylesheet. </p>
+							</td>
+						</tr>
+						<tr purpose="row">
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-CE26565F-7AAE-42D2-B2AA-8F3B2650AEA8">target</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-95554DBC-CCD6-4B7F-834A-0DE6F6332CD9">Behavior of links (open in same or new window).</p>
+							</td>
+							<td purpose="entry" rowspan="1" colspan="1">
+								<p id="GUID-23894664-B3AE-4039-8440-BB7C6F49275C">String value. One of blank (default), parent, self, top.</p>
+							</td>
+						</tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-DE112CAA-DDA0-46AA-8986-1D52915ECE6C"> rid</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-D140E1C6-A300-4ADB-903B-3F8AD0568916">Id associated with the repository. Multiple
+<i>rid</i> parameters are allowed for comparing results between
+different repositories
+</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-E27B4EE9-5A5B-4B23-8FEE-22F24030FE22">String value.</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-7ED28B14-65DE-498C-B807-66B923B5B480"> rids </p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-EE540B66-FEDA-4CED-B2CA-12D9B4B75888">Comma Delimited <i>rid</i>. Can be used instead of the multiple <i>rid</i>
+parameters.</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-717C14C6-999A-491D-B4CF-3CBDABC0C51C">String values.</p></td></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-A444AB2D-3C6A-4DE4-96EF-FB3E2AE5FCF7"> maxSearchTimeMilliSec </p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-D7823388-947D-4D94-AB54-D74A59E38A3F">Maximum amount of time allowed to retrieve results. </p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-72D1BB08-F617-48D8-BEFB-40579E7A2F95">Integer. Default is 5000 milliseconds.
+</p></td></tr>
+					</table><span class="table_desc"></span></div></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

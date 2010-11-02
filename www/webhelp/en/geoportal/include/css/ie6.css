@@ -1,0 +1,25 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+/***************************************
+	TOC
+***************************************/
+
+.jQueryLazyTree li.leaf{
+	background:			transparent url(../js/lazyTree/v1.0/images/document-text-image.gif) no-repeat 0px 0px;
+}
+
+.jQueryLazyTree li.leaf.selected{
+	background:			#E2EDF4 url(../js/lazyTree/v1.0/images/document-text-image.gif) no-repeat 0px 0px;
+}
+
+
+
+/***************************************
+	TABS
+***************************************/
+
+.tabs li{
+	width:					70px;
+}

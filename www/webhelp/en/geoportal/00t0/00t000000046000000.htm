@@ -1,0 +1,69 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Create Relationships between Resources Create Relationships between Resources On a resource's Details page, there is a link to view relationships the resource has with other resources in the geoportal catalog. The mechanism for defining relationships between resources is through the metadata for the resource itself. The syntax for defining the relationship tree is similar to the syntax used for defining the nodes in the Browse tab's tree, but instead of defining REST filters for specific search criteria, filters for relationships are defined. This topic describes how to define those filters, and how to prepare metadata such that it includes elements that allow relationships"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - 
+Create Relationships between Resources
+</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-75AB98E9-AA19-419A-B706-FB0106C5C29F]--><body><div id="content"><div class="header"><h1>
+Create Relationships between Resources
+</h1><div id="breadcrumb"></div></div>
+		<p id="GUID-4682C61D-F72E-4CC7-9EB2-519886E3448B">
+			
+		</p>
+		<div class="section1" id="GUID-F3E5A15A-19A3-432F-AF6E-FC0437CF2EA0" purpose="section1"><h2>
+Create Relationships between Resources
+</h2><p id="GUID-D3E0ADE2-27F0-4F71-9966-EDA9A7740C2F">On a resource's <span class="uicontrol">Details</span> page, there is a link to <a class="xref" rel="00t0/00t000000048000000.htm" href="00t0/00t000000048000000.htm">view relationships</a> the resource has with other resources in the geoportal catalog. The mechanism for defining relationships between resources is through the metadata for the resource itself.  </p><p id="GUID-D3D85A7D-BBF5-4E5B-B795-4D2AE4471642">The syntax for defining the relationship tree is similar to the syntax used for <a class="xref" rel="00t0/00t000000049000000.htm" href="00t0/00t000000049000000.htm">defining the nodes in the Browse tab's tree</a>, but instead of defining REST filters for specific search criteria, filters for relationships are defined.  This topic describes how to define those filters, and how to prepare metadata such that it includes elements that allow relationships between resources.</p><div class="section2" id="ESRI_SECTION2_9E24A819948247B3B3F0DB69D023B975" purpose="section2"><h3>Defining Relationships</h3><p id="GUID-796AFF66-54CB-4318-9D7E-73806BA61DAD">Although it is possible to
+configure a REST search request for each relationship node, the
+resource relationship mechanism is primarily designed for searching
+resources having a given property matching a specific property of
+the selected resource. This differs from the Browse tab's query syntax, in that the searchText REST query is not used, but instead a query for the specific relationship.  </p><p id="GUID-D25E8587-0295-4EDA-A07D-CF8AFF212CD5">The browsing structure to view resource relationships is defined in the <i>\\geoportal\WEB-INF\classes\gpt\search\browse\browse-resource.xml</i> file.  Open this file, and you will see the definitions for the nodes that appear in the <span class="uicontrol">Relationship</span> page's <span class="uicontrol">Resource</span> tree.  Each node has a <span class="uicontrol">&lt;query&gt;</span> tag associated with it, and it is in this <span class="uicontrol">&lt;query&gt;</span> tag that the search for a relationship is defined. The query within the <span class="uicontrol">&lt;query&gt;</span> tag consists of three parts: <ul purpose="ul" id="UL_3C4D909E417345D2A9BF570E047D8588"><li purpose="li" id="LI_C5A022D6A6BC4E3BBD77C7458125E58C">
+							<b>urn:esri:geoportal:browse:resourceRelationship:</b>
+means that the query will depend on both a property of the selected
+resource and a property of related resources.</li><li purpose="li" id="LI_1BDA84A8411F4C83A90E0A3A393388A5"><i>&lt;property-meaning for selected resource&gt;</i>
+indicates the property-meaning of the selected resource used to set
+the search matching value.</li><li purpose="li" id="LI_6F22FA6F88794186A4995E25A95A9307"><i>&lt;property-meaning for related resources&gt;</i>
+indicates the property-meaning against which the related resources
+must match the search value.</li></ul><div class="notes" id="GUID-67AE0866-8853-4158-B152-864203814925"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody">
+						<p id="GUID-9CC2341A-5038-423E-97EE-5B549372F852">The available  property-meanings can be found in the <i>property-meanings.xml</i> file, in the<i>   \\geoportal\WEB-INF\classes\gpt\metadata</i> folder.</p></div></div></p><p id="GUID-F6FC4474-CCB4-4ACE-A724-07F816F71985">For example, the second <span class="uicontrol">&lt;query&gt;</span> tag in the default <i>browse-resource.xml</i> file defines the <i>usedBy</i> relationship, which is usually used with services that operate on specified datasets.  Within it the <span class="uicontrol">&lt;query&gt;</span> tag, you will see the following string:<pre class="lines" purpose="lines">urn:esri:geoportal:browse:resourceRelationship:apiso.ResourceIdentifier-apiso.OperatesOn</pre></p><p id="GUID-D9285B85-9CBD-4EFC-A46A-5BE39F2EB0C2">The query expresses a search seeking for resources having the
+<span class="usertext">apiso.OperatesOn</span> property matching the <span class="usertext">apiso.ResourceIdentifier</span> property value of the selected resource.</p><p id="GUID-12D15757-B0AA-4D9B-AEA3-6E8291BC9624">For example, consider the following two INSPIRE metadata records, <i>Example A</i> and <i>Example B</i>. Example A has its
+<span class="uicontrol">apiso.ResourceIdentifier</span> property set to
+<span class="usertext">{FC784D97-30F7-4AB0-A9EA-A690D43E1295}</span>.  Example B has its <span class="uicontrol">apiso.OperatesOn</span> property set to
+the same value. Under these circumstances, the resources related
+with Example A according to a "usedBy" relationship would include
+Example B:<div class="block_table" id="TABLE_0972A3F6C2E24E8B8AF85C9E94F2C80A" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1"><p id="GUID-FE48861D-741E-4011-A474-FA31776DB7B8">Example A</p></th><th class="th" purpose="th" rowspan="1" colspan="1"><p id="GUID-D50CC1FE-2050-4B8A-9B7A-F4E2CC86F3E4">Example B</p></th></tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-E75209DC-8B45-4096-8BC5-67CC0735FE1B"><pre class="lines" purpose="lines">&lt; MD_Metadata xmlns =" http://www.isotc211.org/2005/gmd "
+ xmlns:gco =" http://www.isotc211.org/2005/gco " 
+xmlns:gmd = http://www.isotc211.org/2005/gmd …&gt;
+&lt;…INSPIRE metadata for datasets..&gt;
+&lt; identifier &gt;
+&lt; MD_Identifier &gt;
+ &lt; code &gt;
+&lt; gco:CharacterString &gt;
+<b> {FC784D97-30F7-4AB0-A9EA-A690D43E1295}</b> 
+&lt;/ gco:CharacterString &gt;
+ &lt;/ code &gt;
+&lt;/ MD_Identifier &gt;
+&lt;/ identifier &gt;
+&lt;…..&gt;
+&lt;/ MD_Metadata &gt;
+</pre></p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-9CBE7DBF-7DE2-49D9-B681-0F02B44FD5C8"><pre class="lines" purpose="lines">&lt; MD_Metadata xmlns =" http://www.isotc211.org/2005/gmd " 
+xmlns:gco =" http://www.isotc211.org/2005/gco " 
+xmlns:gmd = 
+http://www.isotc211.org/2005/gmd …&gt;
+&lt;…INSPIRE metadata for services
+..&gt;
+&lt; srv:operatesOn xmlns:xlink =" http://www.w3.org/1999/xlink " 
+uuidref ="<b> {FC784D97-30F7-4AB0-A9EA-A690D43E1295}</b> "/&gt;
+&lt;…..&gt;
+&lt;/ MD_Metadata &gt;
+</pre></p></td></tr></table><span class="table_desc"></span></div></p><p id="GUID-04DD6904-30F9-4DD3-B7DB-017F2661D0C8">Similarly, it is possible to implement relationships based on the fact
+that the resource has the same value in a given field (e.g. title,
+content type). </p></div></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

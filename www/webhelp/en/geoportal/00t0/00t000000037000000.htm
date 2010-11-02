@@ -1,0 +1,220 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Single Sign-On Configure Single Sign-On Single sign-on allows users to login once to a software application and gain access to multiple software systems without being prompted to login again. If you configure single sign-on for your Content Management System (CMS) or any other pages you add, users of your Geoportal will only need to login one time to access all the single sign-on enabled applications. Tomcat Instructions Weblogic Instructions Note:The instructions provided below are suggestions according to how SSO was configured during testing. Your organization may require a different procedure depending on your servlet container software, other applications using SSO, security policies and other considerations. Tomcat LDAP and Single Sign-On Configuration Instructions This single sign-on configuration"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - Single Sign-On</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-E1CA9916-30FD-4153-8048-1CD9D086C3AB]--><body><div id="content"><div class="header"><h1>Single Sign-On</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="ESRI_SECTION1_FA863EF4A59C441A81C4D43D38B0E8E2" purpose="section1"><h2>Configure Single Sign-On</h2><p id="GUID-65178E53-828B-43C7-8242-7A5E8FF80ADA">Single sign-on allows users to login once to a software
+application and gain access to multiple software systems without
+being prompted to login again. If you configure single sign-on for
+your Content Management System (CMS) or any other pages you add,
+users of your geoportal will only need to login one time to access
+all the single sign-on enabled applications.
+<ul purpose="ul" id="UL_9F1A8E32D72649218265A7087CB27310">
+					<li purpose="li" id="LI_A76103AB1DD94CEC8E7FAD8AA345C663"><a class="xref" rel="00t0/00t000000037000000.htm#ESRI_SECTION1_9CB829F5EEDF42BC90ADD6485088641B" href="00t0/00t000000037000000.htm#ESRI_SECTION1_9CB829F5EEDF42BC90ADD6485088641B">Tomcat Instructions</a></li>
+					<li purpose="li" id="LI_01DEF43D4E5D4895A2EBAEBF17391C47"><a class="xref" rel="00t0/00t000000037000000.htm#ESRI_SECTION1_D742ED3C187E4D41B30D6EFB6D893B96" href="00t0/00t000000037000000.htm#ESRI_SECTION1_D742ED3C187E4D41B30D6EFB6D893B96">Weblogic Instructions</a></li>
+				</ul><b>Note:</b>The instructions provided below are suggestions
+according to how SSO was configured during testing. Your
+organization may require a different procedure depending on your
+servlet container software, other applications using SSO, security
+policies and other considerations.</p><p id="GUID-E7EFFB3B-E430-44F1-A8D0-F0F58FE5A734">
+			</p></div>
+		<div class="section1" id="ESRI_SECTION1_9CB829F5EEDF42BC90ADD6485088641B" purpose="section1"><h2>Tomcat LDAP and Single Sign-On Configuration Instructions</h2><p id="GUID-1F79D696-C4F2-42B2-98B5-7300331DA236"> This single sign-on configuration is tested against Tomcat 5.5.17, and assumes that you have already configured users through LDAP, as per the geoportal installation guide. If you have set up LDAP, then proceed with the following steps to enable single sign-on. You will need to make changes to both your Tomcat server.xml file and your geoportal web application configuration file. <ol purpose="ol" id="OL_449E692EFD7F45D592380E83689CFB55">
+					<li purpose="li" id="LI_51A68F687F214410BD2929620C68F7B8">
+						<b>
+							<i>Modify the Tomcat server.xml File</i>
+						</b><ul purpose="ul" id="UL_29B450784BB84AEF82E33DC32EA87E00">
+							<li purpose="li" id="LI_9DFB0F0D15F0408E955F978B3684B3D5">Navigate to the &lt;TOMCAT&gt;\conf folder and open the server.xml file in a text editor.</li>
+							<li purpose="li" id="LI_14BC873EFC9440D1B5C099604125C0CB">Find the section where the &lt;Realms&gt; are defined. This can be under the &lt;engine&gt; element or the &lt;host&gt; element; where you define realms depends on the other web applications that you deploy in your system that are not necessarily related to the geoportal. In the following example, we place the &lt;realm&gt; element within &lt;host&gt;. If &lt;Realms&gt; are found under the &lt;engine&gt; element, replace all references to &lt;host&gt; for &lt;engine&gt; in the instructions that follow. For more information, please refer to <a target="_blank" class="xref" rel="http://tomcat.apache.org/tomcat-5.5-doc/config/" href="http://tomcat.apache.org/tomcat-5.5-doc/config/">Apache Tomcat documentation</a>.</li>
+							<li purpose="li" id="LI_44A60175199D44668670DAD558096326">Paste the following &lt;realm&gt; element in the &lt;host&gt; section. Make sure to change the code to match your LDAP settings where it is shown in bold. The example shows typical settings for Apache Directory Server: <ul purpose="ul" id="UL_962A2E9D37CC44B592E08838F5739E9A">
+									<li purpose="li" id="LI_736FB490A4B146FF92A4E06ED049BBE3">connectionName: LDAP administrator connection distinguished name.</li>
+									<li purpose="li" id="LI_ACD2D9194F3049B6922FBD733E97848B">connectionPassword: LDAP administrator connection password</li>
+									<li purpose="li" id="LI_7EC5295AF4EB4A91A0DBB1E2EF2E5929">connectionURL: LDAP connection URL</li>
+									<li purpose="li" id="LI_BBC9C84B1F6141ACAA9BD724735D13F8">roleBase: element that is the base of the search for matching roles. The example below is defining a structure where "groups" are defined under "system" in the active directory tree.</li>
+									<li purpose="li" id="LI_853BB9161E204B5B999A05834EDDDF5C">roleName: attribute name of the role/group. Default: cn</li>
+									<li purpose="li" id="LI_F36ED6F33ABC4386B56BA759C3E20616">roleSearch: an expression used to search for role/group elements in the roleBase context. The search will find those roles/groups that contain a given username, with {0} being a placeholder for the username.</li>
+									<li purpose="li" id="LI_A563E934722D423A840D7028555BCA4E">userPattern: The pattern of the distinguished name for users.</li>
+								</ul><pre class="lines" purpose="lines">&lt;Realm
+className="org.apache.catalina.realm.JNDIRealm" 
+connectionName="<b>uid=admin,ou=system</b>" 
+connectionPassword="<b>password</b>" 
+connectionURL="<b>ldap://myServer:10389</b>" 
+debug="99" roleBase="<b>ou=groups,ou=system</b>" 
+roleName="<b>cn</b>" 
+roleSearch="<b>(uniquemember={0})</b>" 
+userPattern="<b>cn={0},ou=users,ou=system</b>"/&gt;
+</pre>
+							</li>
+							<li purpose="li" id="LI_B31177DDA95A4740A40BF61AD4C32A3D">Paste the following &lt;valve&gt; element also within the &lt;host&gt; section:<pre class="lines" purpose="lines">
+&lt;Valve className="org.apache.catalina.authenticator.SingleSignOn" /&gt;
+</pre></li>
+							<li purpose="li" id="LI_9CF1718F8743463DB893393B61F1961A">Save the file.</li>
+						</ul>
+					</li>
+					<li purpose="li" id="LI_192D80F722594339A0C2651C6D0150D0">
+						<b>
+							<i>Modify the geoportal gpt.xml File</i>
+						</b>
+						<ul purpose="ul" id="UL_6BDCA047EB914E2F9CD267BA46DBCE31">
+							<li purpose="li" id="LI_8778E7A7ABEF45FE834E31F5AA48B7F9">Activate single sign-on in the gpt.xml file: <ul purpose="ul" id="UL_1068E0C4790D4B6C9BC1C3D48F04F324">
+									<li purpose="li" id="LI_6EEB7C2770284B70A662DE19418A9500">Navigate to the &lt;TOMCAT&gt;\webapps\geoportal\WEB-INF\classes\gpt\config folder and open gpt.xml in a text editor.</li>
+									<li purpose="li" id="LI_2D1D1099A07A48309C7C3ACB418491E6">Find the "&lt;singleSignOn&gt; element</li>
+									<li purpose="li" id="LI_8ECB4ABDA10940CFAE48D9675B277FBF">Set its "active" attribute to "true", as shown below:<pre class="lines" purpose="lines">
+&lt;singleSignOn active="true" ...
+</pre></li>
+								</ul>
+							</li>
+							<li purpose="li" id="LI_AAF075B2C0C14E33BB9DD5D94714B33F">Verify that in the &lt;Groups&gt; section in gpt.xml, the "searchDIT" distinguished name matches the "roleBase" distinguished name specified in the Tomcat server.xml &lt;realm&gt; element you configured earlier. For Apache Directory Server, both could be "ou=groups,ou=system".</li>
+							<li purpose="li" id="LI_1D3CA1D4744845C0A4BE2B85C7820A05">Save the file.</li>
+						</ul></li>
+					<li purpose="li" id="LI_3AD9D80B50754AD5AF2E10FAC46DB627">
+						<b>
+							<i>Modify the web.xml File</i>
+						</b><ul purpose="ul" id="UL_232F5B276CB24299AA693CD7DE7DA6F3">
+							<li purpose="li" id="LI_66E52E05E1AC406AA47FA19B41CA8758">Navigate to the &lt;TOMCAT&gt;\webapps\geoportal\WEB-INF folder and open the web.xml file in a text editor.</li>
+							<li purpose="li" id="LI_6377A253CC7643FC9CBAD289030128B7">Uncomment the &lt;security-constraint&gt; element in web.xml:<pre class="lines" purpose="lines">
+&lt;security-constraint&gt;
+&lt;web-resource-collection&gt; 
+&lt;web-resource-name&gt;login&lt;/web-resource-name&gt; 
+&lt;description&gt;login&lt;/description&gt;
+&lt;url-pattern&gt;/catalog/identity/login.page&lt;/url-pattern&gt;
+&lt;http-method&gt;GET&lt;/http-method&gt;
+&lt;http-method&gt;POST&lt;/http-method&gt;
+&lt;/web-resource-collection&gt;
+&lt;auth-constraint&gt;
+&lt;description&gt;These are the roles who have access&lt;/description&gt;
+&lt;role-name&gt;gpt_administrators&lt;/role-name&gt;
+&lt;role-name&gt;gpt_publishers&lt;/role-name&gt;
+&lt;role-name&gt;gpt_registeredUsers&lt;/role-name&gt;
+&lt;/auth-constraint&gt;
+&lt;/security-constraint&gt;
+&lt;login-config&gt;
+&lt;auth-method&gt;FORM&lt;/auth-method&gt;
+&lt;realm-name&gt;Restricted content&lt;/realm-name&gt;
+&lt;form-login-config&gt;
+&lt;form-login-page&gt;/catalog/identity/loginJsc.page&lt;/form-login-page&gt;
+&lt;form-error-page&gt;/catalog/identity/loginJsc.page?error=true&lt;/form-error-page&gt;
+&lt;/form-login-config&gt;
+&lt;/login-config&gt;
+</pre></li>
+							<li purpose="li" id="LI_4C6A4E0327D3441CB276D5C146B11150">Uncomment &lt;security-role&gt; block like below in web.xml:<pre class="lines" purpose="lines">
+&lt;security-role&gt; 
+&lt;role-name&gt;gpt_administrators&lt;/role-name&gt; 
+&lt;/security-role&gt; 
+&lt;security-role&gt; 
+&lt;role-name&gt;gpt_publishers&lt;/role-name&gt; 
+&lt;/security-role&gt; 
+&lt;security-role&gt; 
+&lt;role-name&gt;gpt_registeredUsers&lt;/role-name&gt; 
+&lt;/security-role&gt;
+</pre></li>
+							<li purpose="li" id="LI_DA6B8F1E415640CABAC3FD2D34A3F26C">Save the file and close it.</li>
+							<li purpose="li" id="LI_3C84F6059E38414B8058631A766F792B">Restart Tomcat.</li>
+						</ul>
+					</li>
+				</ol>
+			</p></div><div class="section1" id="ESRI_SECTION1_D742ED3C187E4D41B30D6EFB6D893B96" purpose="section1"><h2>Weblogic LDAP and Single Sign-On Configuration Instructions</h2><p id="GUID-69BFCFBC-4038-42EF-97B2-9AA9F77BB9F9"> This single sign-on configuration is tested against Weblogic 10.3.1, and assumes that you have already configured users through LDAP, as per the geoportal installation guide. This example also assumes that your LDAP is configured with Apache Directory Server. Directions below may need adjustment for other Directory Server vendors. If you have set up LDAP, then proceed with the following steps to enable single sign-on. You will need to make changes from within the Weblogic Administration Console to the security realm. For more detailed information on security realms visit the <a target="_blank" class="xref" href="http://download.oracle.com/docs/cd/E13222_01/wls/docs90/secintro/realm_chap.html" rel="http://download.oracle.com/docs/cd/E13222_01/wls/docs90/secintro/realm_chap.html">Weblogic Website</a>. <ol purpose="ol" id="OL_8A3E9C66D665473086C72E313DBFE059">
+					<li purpose="li" id="LI_5C374DA076304C69995AD0A2269C583C">
+						<b>
+							<i>Create Security Realm</i>
+						</b>
+						<ul purpose="ul" id="UL_9560A7F5301B4883A11925B1570E326D">
+							<li purpose="li" id="LI_8DAB876A07A046D399690B3273314327">Login to the Weblogic Server Administration Console.</li>
+							<li purpose="li" id="LI_8BD9FCCFC9B3450E83A009405DF809ED">Click Security Realms under the Domain Structure table of contents.</li>
+							<li purpose="li" id="LI_36251DF6F49543559F8909D79EC9C505">Select myrealm from the table.</li>
+							<li purpose="li" id="LI_DC3278C3AE234C5083BCD3A5B0E03DB0">Click the Providers tab.</li>
+							<li purpose="li" id="LI_4C348E002049440DBF658693126B46D5">Select New.</li>
+							<li purpose="li" id="LI_1271248165F743D094C3F51F81103D1F">Input the name of the Authentication provider. (In this example we will use geoportal as the name.</li>
+							<li purpose="li" id="LI_BE8D486592D2496C9122A7C98FBADC33">Select the Type from the dropdown. In this example for Apache Directory Server, select the LDAP Authenticator. If you are using a different Directory Server vendor, you'll need to select a type that corresponds to that vendor.</li>
+							<li purpose="li" id="LI_F018E0A2B6CB44C8A2D5E0D9B7F26F09">Click Ok. The new provider will be added to the list of authenticated providers.</li>
+							<li purpose="li" id="LI_9D9E71FD35C04308B69A19CD3DB27814">Once you have completed these steps you will now have to edit the new provider information to match your current LDAP configuration.  Click the new provider.</li>
+							<li purpose="li" id="LI_5AEAED138D814BBBA3B7453E59FAE961">Select the Provider Specific tab.</li>
+						</ul>  You will need to update certain fields with information from your LDAP. Fields not mentioned below should be left as their default values. The example shows typical settings for Apache Directory Server: <ul purpose="ul" id="UL_D5344FBFA6F249BBB67F8D2437142606">
+							<li purpose="li" id="LI_250F476D501C410FB2A6528221BA9BA6">User Name Attribute: The attribute of an LDAP user object that specifies the name of the user. default: uid.</li>
+							<li purpose="li" id="LI_374AA0F47A974B5FB8C00E9E9D6FB941">Principal: DN of LDAP user Weblogic uses to connectr to LDAP.</li>
+							<li purpose="li" id="LI_E8782DBA680649AD8868D39424CD7AF0">Propogate Cause for Login Exception: make sure that this is checked.</li>
+							<li purpose="li" id="LI_75C8C7B108FA4B5687195A6B029D60DF">Host: The host name or IP address of the LDAP server.</li>
+							<li purpose="li" id="LI_BA69BF042FEB4BA4925D6ADF2DE85F24">Use Retrieved User Name as Principal: make sure that this is checked.</li>
+							<li purpose="li" id="LI_2EB08DBFCC5349BD8D051B584C7ABB55">Credential: password used to connect to LDAP server.</li>
+							<li purpose="li" id="LI_7F9E0BCF70844B90BAA915FC04F89B8E">Confirm Credential: confirmation of password.</li>
+							<li purpose="li" id="LI_E98027F9D3BE4B9689E1D8F4F434F06F">Group Base DN: The base distinguished name (DN) of the tree in the LDAP directory that contains groups. Note: write this down for a future step.</li>
+							<li purpose="li" id="LI_F016525008BD4CD48219603BBDCE1622">User Base DN: The base distinguished name (DN) of the tree in the LDAP directory that contains users.</li>
+							<li purpose="li" id="LI_BB35E4B607D84AE4B27CD20C802D6ED9">Port: The port number on which the LDAP server is listening.</li>
+							<li purpose="li" id="LI_E7379233EAB94FAF8C2C5104307FF83F">Click Save.</li>
+						</ul></li>
+					<li purpose="li" id="LI_3762FB61358D47DCB54D3E8949C18BB8">
+						<b>
+							<i>Alter the DefaultAuthenticator in myrealm</i>
+						</b>    Weblogic has its own security provider that protects weblogic resources, that provider os called DefaultAuthenticator. You will need to adjust the Control Flag setting of the DefaultAuthenticator.  <ul purpose="ul" id="UL_9A76ADB4418740C9A7314D395E5B11A1">
+							<li purpose="li" id="LI_CDEB463DA1D04AB88DC8A305D2508147">Click Security Realms under the Domain Structure table of contents.</li>
+							<li purpose="li" id="LI_34D439E1423D403F951B04D4B3D5EAB5">Select myrealm.</li>
+							<li purpose="li" id="LI_FCB7AFA5EBFF46858917E071A73EE656">Click the Providers tab.</li>
+							<li purpose="li" id="LI_69ED55D001314676A53FCA3271692C71">Select DefaultAuthenticator.</li>
+							<li purpose="li" id="LI_16E265C0450B45FD8C108B28AE9EA1D4">Select "Sufficient" from the Control Flag dropdown.</li>
+							<li purpose="li" id="LI_36B0C7CF058C41F491826974734F036F">Click Save.</li>
+						</ul></li>
+					<li purpose="li" id="LI_F3E4EA4F6CBF4FF3BDEBBF5D2742E6F0">
+						<b>
+							<i>Modify the geoportal gpt.xml File</i>
+						</b><ul purpose="ul" id="UL_47093C659EB647D29F037F33529B11C7">
+							<li purpose="li" id="LI_22B3A360C6584821AFD1BAFD898CE5A6">Activate single sign-on in the gpt.xml file:</li>
+							<li purpose="li" id="LI_9AAFF3EA190A46219627C180492942CB">Navigate to the \\geoportal\WEB-INF\classes\gpt\config folder and open gpt.xml in a text editor.</li>
+							<li purpose="li" id="LI_FA75F95F303F469281023671A5AA860F">Find the "&lt;singleSignOn&gt; element</li>
+							<li purpose="li" id="LI_1D47B161F95046B6BABC00491FF87FC2">Set its "active" attribute to "true", as shown below:<pre class="lines" purpose="lines">
+&lt;singleSignOn active="true" ...
+</pre></li>
+							<li purpose="li" id="LI_D3D543C5AD4B4CDCB838123CE20E29FB">Verify that in the &lt;Groups&gt; section in gpt.xml, the "searchDIT" distinguished name matches the Group Base DN that you wrote down earlier when configuring the security realm. For Apache Directory Server, both could be "ou=groups,ou=system".</li>
+							<li purpose="li" id="LI_F2B592E310EB4B698A12E718C59EE9FE">Save the file.</li>
+						</ul></li>
+					<li purpose="li" id="LI_48FCCE6767A54AC8A5E552E36789C482">
+						<b>
+							<i>Modify the web.xml File</i>
+						</b><ul purpose="ul" id="UL_1D4EDAD0F14646D4B6822638A74DAB7F">
+							<li purpose="li" id="LI_1DD6BFE4D73A4FB59FA6CA646B683C37">Navigate to the \\geoportal\WEB-INF folder and open the web.xml file in a text editor.</li>
+							<li purpose="li" id="LI_B2B85ABAD9624C9DA478844BDEA71FFD">Uncomment the &lt;security-constraint&gt; and &lt;securityrole&gt; block in web.xml:<pre class="lines" purpose="lines">
+&lt;security-constraint&gt; 
+&lt;web-resource-collection&gt; 
+&lt;web-resource-name&gt;login&lt;/web-resource-name&gt; 
+&lt;description&gt;login&lt;/description&gt; 
+&lt;url-pattern&gt;/catalog/identity/login.page&lt;/url-pattern&gt; 
+&lt;http-method&gt;GET&lt;/http-method&gt; 
+&lt;http-method&gt;POST&lt;/http-method&gt; 
+&lt;/web-resource-collection&gt; 
+&lt;auth-constraint&gt; 
+&lt;description&gt;These are the roles who have access&lt;/description&gt; 
+&lt;role-name&gt;gpt_administrators&lt;/role-name&gt; 
+&lt;role-name&gt;gpt_publishers&lt;/role-name&gt; 
+&lt;role-name&gt;gpt_registeredUsers&lt;/role-name&gt; 
+&lt;/auth-constraint&gt; &lt;/security-constraint&gt; 
+&lt;login-config&gt; 
+&lt;auth-method&gt;FORM&lt;/auth-method&gt; 
+&lt;realm-name&gt;myRealm&lt;/realm-name&gt; 
+&lt;form-login-config&gt; 
+&lt;form-login-page&gt;/catalog/identity/loginJsc.page&lt;/form-login-page&gt; 
+&lt;form-error-page&gt;/catalog/identity/loginJsc.page?error=true&lt;/form-error-page&gt; 
+&lt;/form-login-config&gt; 
+&lt;/login-config&gt;
+
+&lt;security-role&gt; 
+&lt;role-name&gt;gpt_administrators&lt;/role-name&gt; 
+&lt;/security-role&gt; 
+&lt;security-role&gt; 
+&lt;role-name&gt;gpt_publishers&lt;/role-name&gt; 
+&lt;/security-role&gt; 
+&lt;security-role&gt; 
+&lt;role-name&gt;gpt_registeredUsers&lt;/role-name&gt; 
+&lt;/security-role&gt;
+</pre></li>
+							<li purpose="li" id="LI_BFFF9C12AD2E46F3BE893F5AE6639AD1">Save the file and close it.</li>
+							<li purpose="li" id="LI_4DA16009056D452EAACA3A514AC0CF59">Restart Weblogic.</li>
+						</ul>
+					</li>
+				</ol>
+			</p></div><br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

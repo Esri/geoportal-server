@@ -1,0 +1,128 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Look and Feel of User Interface Customize the Look and Feel of User-Interface An easy way to customize your Geoportal is to change its text, graphics, and color scheme. Instructions are in the sections below:Customize the Geoportal interface textChange the default color theme to another pre-defined oneCreate a custom themeSwitch the default faviconCustomize the Geoportal interface text Most of the text for the Geoportal interface is managed in the gpt.properties file in the \\geoportal\WEB-INF\classes\gpt\resources folder. The text seen on the interface is associated with a unique identifying 'bean', which maps it to text in the gpt.properties file. It is important to review the text in the gpt.properties file and update it according to"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - Look and Feel of User Interface</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-A7F58A90-7DFB-458E-A773-85A89820AE58]--><body><div id="content"><div class="header"><h1>Look and Feel of User Interface</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="GUID-D5C7EFB7-457A-4210-95EE-730A5A24B4D6" purpose="section1"><h2>Customize the Look and Feel of User-Interface</h2><p id="GUID-5D5D2F23-1A3C-4801-90A4-79AD77435289">An easy way to customize your geoportal is to change its text, graphics, and color scheme. Instructions are in the sections below:<ul purpose="ul" id="UL_6F83263BB8EE442984BD7C93F2B765D4"><li purpose="li" id="LI_ED69BA9C024243D592A813CC34CDB662"><a class="xref" rel="00t0/00t000000015000000.htm#ESRI_SECTION2_8E2718F8BC7946FEA7347934D0A94F6E" href="00t0/00t000000015000000.htm#ESRI_SECTION2_8E2718F8BC7946FEA7347934D0A94F6E">Customize the geoportal interface text</a></li><li purpose="li" id="LI_B5D71DCDDA0A40AB988E7444BE4EE268"><a class="xref" rel="00t0/00t000000015000000.htm#ESRI_SECTION2_A43C4AE969884D00BE97459C5BF27914" href="00t0/00t000000015000000.htmio#ESRI_SECTION2_A43C4AE969884D00BE97459C5BF27914">Change the default color theme to another pre-defined one</a></li><li purpose="li" id="LI_DFB64AFF7AEC46A7917A5CDD52C7BC89"><a class="xref" rel="00t0/00t000000015000000.htm#ESRI_SECTION2_609057E41ECD454FB8018DD7EFD5A955" href="00t0/00t000000015000000.htm#ESRI_SECTION2_609057E41ECD454FB8018DD7EFD5A955">Create a custom theme</a></li><li purpose="li" id="LI_19CBBC19CF8D4E08A62185305671D9E9"><a class="xref" rel="00t0/00t000000015000000.htm#ESRI_SECTION2_129FCACC466240F19DBA456D354058C0" href="00t0/00t000000015000000.htm#ESRI_SECTION2_129FCACC466240F19DBA456D354058C0">Switch the default favicon</a></li></ul></p><div class="section2" id="ESRI_SECTION2_8E2718F8BC7946FEA7347934D0A94F6E" purpose="section2"><h3>Customize the geoportal interface
+text</h3><p id="GUID-9508C1A0-7531-4B3C-96AE-B0FE709C14A6">
+Most of the text for the geoportal interface is managed in the
+<i>gpt.properties</i> file in the
+<i>\\geoportal\WEB-INF\classes\gpt\resources</i> folder. The text seen on
+the interface is associated with a unique identifying 'bean', which
+maps it to text in the <i>gpt.properties</i> file.
+It is important to review the text in the <i>gpt.properties</i> file and
+update it according to your organization's geoportal
+implementation. To find out what text in the interface is mapped to
+what text string in the gpt.properties file, do the
+following:<ol purpose="ol" id="GUID-0A6D025D-61B1-4CAB-96C0-C2C01CB496EE">
+						<li purpose="li" id="LI_608F47AC8AEE432D9F7FC2E5C66F8C25">In a text editor, open the <i>body.jsp</i> file associated
+with the web page that you want to change. These files are stored
+in the <i>\\geoportal\catalog\content</i> folder. In this example, we will
+open the <i>aboutBody.jsp</i> file and alter text on the <span class="uicontrol">About</span> page.</li><li purpose="li" id="LI_BFFC1D07C7B34FF088B4C93BA31AB895">Notice where the bean text is located. It is often
+indicated by a preceding <span class="uicontrol">'value="#{gptMsg'</span> string. In our
+<i>aboutBody.jsp</i> file, there are two beans referenced. In this
+example, the second one will be updated. This bean,
+<span class="uicontrol">catalog.content.about.statement</span>,contains text that will
+display on the <span class="uicontrol">About</span> page describing your organization's geoportal implementation.</li><li purpose="li" id="LI_E0D4F02BE97C4B52834569CA4D3431D2">Navigate to the <i>\\geoportal\WEB-INF\classes\gpt\resources</i> folder and open the <i>gpt.properties file</i> in a text editor.</li><li purpose="li" id="LI_45BEC3502251487E874C6821D31D0C4F">Search for the <span class="uicontrol">catalog.content.about.statement</span>
+bean. You should see an entry like the following:<pre class="lines" purpose="lines">
+catalog.content.about.statement = \
+&lt;p&gt;\
+customize this text to describe your organization's geoportal implementation
+&lt;/p&gt;
+</pre></li><li purpose="li" id="LI_71A2A7E4A34E4991BBF5A92BEDCAFAE4">Change the text after the <span class="uicontrol">=</span> sign to include
+appropriate text for your organization's geoportal.</li><li purpose="li" id="LI_D3C0CF35DE6748B894BB6475FC309EA6">Save the <i>gpt.properties</i> file.</li><li purpose="li" id="LI_0F6286DCBE824518B040A935B37ED7AE">Refresh the web page, click on the <span class="uicontrol">About</span> link at
+the top, and see that the page has been updated. If other jsp pages referenced the
+<span class="uicontrol">catalog.content.about.statement</span> bean, those pages would be updated
+with your new text in the geoportal interface as well. The bean
+references are useful for quickly updating text used
+throughout the geoportal interface.</li><li purpose="li" id="GUID-5E838FEB-80D6-4120-894F-E62854DAB9AE">Verify that you have updated text associated with the <span class="uicontrol">Privacy</span>,
+and <span class="uicontrol">Disclaimer</span> pages. These pages are easy to overlook.
+
+
+</li>
+					</ol></p></div><div class="section2" id="ESRI_SECTION2_A43C4AE969884D00BE97459C5BF27914" purpose="section2"><h3>Change the default color theme to
+another pre-defined one</h3><p id="GUID-B7C500E5-4AA6-40A9-B1F4-1ACCC154F9E8">
+
+The <i>\\geoportal\catalog\skins\themes</i> directory contains 2
+sub-folders: <span class="uicontrol">blue</span> and <span class="uicontrol">red</span>. The active color theme is
+referenced in the<i> \\geoportal\catalog\skins\lookAndFeel.jsp</i> file.
+By default, the active theme is the red theme. The simplest
+customization is to change from one pre-defined color theme to
+another - for example, from the red theme to the blue
+one.<ol purpose="ol" id="OL_DC06F26510B94F9E8075840B60D5D309"><li purpose="li" id="LI_11EF485B2C8243C3849A4469D1977406">Navigate to the <i>\\geoportal\catalog\skins</i>
+folder.</li>
+						<li purpose="li" id="LI_9A37253FBEE545B0972EEC6CBC23C35B">Open the <i>lookAndFeel.jsp</i> file in a text editor.</li>
+						<li purpose="li" id="LI_65888B77BFBE4BDF9C541E2E9B5192A4">Notice there are three <span class="uicontrol">&lt;link rel="stylesheet"
+…&gt;</span> tags. <ul purpose="ul" id="UL_382E2EF2C61D431CB753EE32A046159B"><li purpose="li" id="LI_4B9773B8AB574843810B131EAA82EB89">The first <span class="uicontrol">(...\tundra.css)</span> defines the stylesheet
+reference for the <a class="xref" rel="00t0/00t000000047000000.htm" href="00t0/00t000000047000000.htm">Browse tab</a> and some other functionalities within the geoportal web application.  There is no need to alter this <span class="uicontrol">\tundra.css</span> location</li><li purpose="li" id="LI_0D30AE8F60A94A3CA4D5148E0BCE397D">The second <span class="uicontrol">&lt;link rel="stylesheet"
+…&gt;</span> tag sets the location of the main.css, which 
+defines the color scheme for the geoportal interface. </li><li purpose="li" id="LI_EF8C496169644E3DAD22F4E2ED4F5F33"> The third
+<span class="uicontrol">&lt;link rel="stylesheet"
+…&gt;</span> tag sets the location of the preview.css, defining the color scheme for the Preview
+functionality.</li></ul></li>
+						<li purpose="li" id="LI_750C36B4F7854ABCB5A12579D03C8E68">By default, the main and preview stylesheets are set
+to reference stylesheets in the <span class="uicontrol">red</span> theme folder. When you change
+these to reference the <span class="uicontrol">blue</span> folder, the geoportal interface and
+Preview function will be displayed according to styles in the
+<span class="uicontrol">blue</span> theme folder.   Change these references to point to the blue folder, as shown
+below:<pre class="lines" purpose="lines">
+&lt;link rel="stylesheet" type="text/css"
+href="&lt;%=request.getContextPath()%&gt;/catalog/skins/themes/blue/main.css"/&gt;
+
+&lt;link rel="stylesheet" type="text/css"
+href="&lt;%=request.getContextPath()%&gt;/catalog/skins/themes/blue/preview.css"/&gt;
+</pre>
+						</li>
+						<li purpose="li" id="LI_FBAB74E254D34D008FE4CA538380521F">Save the <i>lookAndFeel.jsp</i> file.</li><li purpose="li" id="LI_9EE6A7A9D86B41D2AF34730BFCA11BF6"> Restart the geoportal web application for your changes to take effect.</li></ol></p></div><div class="section2" id="ESRI_SECTION2_609057E41ECD454FB8018DD7EFD5A955" purpose="section2"><h3>Create a  custom theme</h3><p id="GUID-637749A0-7943-4343-9E71-5334BAF22F62">The simplest way to create your own color theme is to use one of
+the pre-defined themes as a base and edit it. Make a copy of one of
+the pre-defined themes that are available out-of-the-box and modify
+its images and class definitions, as described in the steps below.<ol purpose="ol" id="OL_7E559C1E074344B3BF0EA56863F96202">
+						<li purpose="li" id="LI_F11120C88B2847ED800BDA0B9B17ADCA">Navigate to the <i>\\geoportal\catalog\skins\themes</i>
+folder.</li>
+						<li purpose="li" id="LI_D538AAB9C39A48ACB5ED4F53A53648CA">Copy the <span class="uicontrol">red</span> folder into the same directory, giving
+it a new name (e.g., "green")</li>
+						<li purpose="li" id="LI_660BB0411088457D86F6F28F456B81BB">In your newly named folder, open the <span class="uicontrol">main.css</span> file and modify it to define new
+styling</li><li purpose="li" id="LI_34A4A44E4BE44EF0B6D6483A0203499E">Open the <i>preview.css</i> and modify it as well to define styling. This preview.css file defines styles for the geoportal live services previewing page.</li><li purpose="li" id="LI_E697B8D9898A4920B53A55721FBD7D2A">Open the images directory in your new folder, and replace any of the images with your own. <div class="notes" id="GUID-0AE07319-2F90-4B2C-B6EC-9796A80F235D"><div class="tip"><img class="note_img" src="rsrc/tip.png" alt="Tip" title="Tip"><span>Tip:</span></div><div class="tipbody"><p id="GUID-38DD89C6-2CB9-42F3-9F4A-DA4CFE01F8F5">To change the banner, you can do either of the following:<ul purpose="ul" id="UL_68262EE942AD4631B2ECE21A546F121E"><li purpose="li" id="LI_2FE3C8CEEC0843B9A8C9BA6D51B7D52F">Name your banner image 'banner.jpg', and copy it into this image
+folder, thus overwriting the default <i>banner.jp</i>g file.</li><li purpose="li" id="LI_16DBAF7B80044DDBB2683BBB9D1894F4"> If
+your banner image has a different name, you can find the reference
+to the <i>banner.jpg</i> file in the <i>main.css</i> file, and change it to match
+the name of your banner image.</li></ul></p>
+							</div></div></li><li purpose="li" id="LI_C39D2A7B7B9C4A0FA002A0F0A8EE666D">Follow the steps in the <a class="xref" rel="00t0/00t000000015000000.htm#ESRI_SECTION2_A43C4AE969884D00BE97459C5BF27914" href="00t0/00t000000015000000.htm#ESRI_SECTION2_A43C4AE969884D00BE97459C5BF27914">Change the default color theme to another pre-defined one</a> topic above to reference your new theme in the <i>lookAndFeel.jsp</i> file.</li>
+					</ol></p></div><div class="section2" id="ESRI_SECTION2_129FCACC466240F19DBA456D354058C0" purpose="section2"><h3>Switch the default favicon</h3><p id="GUID-5CB5E285-4758-4676-A5B4-1F7E057DB825">
+ A favicon allows users to quickly distinguish the geoportal web page from other webpages in a list of favorites or tabs they may have open in a browser. Most web browsers will use a favicon, and where it is displayed may vary depending on the browser.
+<img src="00t0/GUID-E4FA3B43-D73A-4AEE-8ABD-07DA7CF0368B-web.png"></p><p id="GUID-D987A463-EC6D-481A-889D-9115F89E6A61"> By default, the geoportal uses a
+favicon that looks like the ESRI globe logo. Likely, your
+organization will want to implement its own favicon. The steps to
+switch the favicon to one that better suits your organization are
+described below.<ol purpose="ol" id="OL_A6750FA9A66744149E169FCB94C99E09">
+						<li purpose="li" id="LI_0B5E0B7FC7234DAAB0142B11E2F5B904">Navigate to the <i>\\geoportal\catalog\skins</i> directory
+and open the <i>lookAndFeel.jsp</i> in a text editor.</li>
+						<li purpose="li" id="LI_3ECFC1F32C3A45CAB523A4EA47A2CDF4">There are two parameters that define the favicon in
+this file, both shown below. You do not need to alter these lines,
+but do note that the geoportal is looking for a favicon called
+<i>favicon.ico</i>. If your new favicon image has a different name, you
+can either change the name of your image to <i>favicon.ico</i>, or alter
+the <i>lookAndFeel.jsp</i> with the name of your image. 
+
+<pre class="lines" purpose="lines">
+&lt;link rel="icon" type="image/x-icon"   href="&lt;%=request.getContextPath()%&gt;/catalog/images/favicon.ico" /&gt;
+&lt;link rel="shortcut icon" type="image/x-icon" href="&lt;%=request.getContextPath()%&gt;/catalog/images/favicon.ico" /&gt;
+</pre>
+						</li>
+						<li purpose="li" id="LI_080D0E40C04C4FCAA915F29903129C4C">Navigate to the <i>\\geoportal\catalog\images</i>
+folder.</li>
+						<li purpose="li" id="LI_419ADA154C3A497EABD55165918DA79E">Replace the <i>favicon.ico</i> file in this folder with
+your image.</li>
+						<li purpose="li" id="LI_EAED49273F1F4FB586356B7DBF722780">Restart your geoportal web application.</li>
+						<li purpose="li" id="LI_25880E64960D4E24A27EBDB12D527D53">Most browsers keep favicons in a cache. Users will
+have to clear their browser cache to see the new favicon.</li>
+					</ol></p></div></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

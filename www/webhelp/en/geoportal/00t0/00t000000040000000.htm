@@ -1,0 +1,139 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="DataDownload Tab Introduction The Download page is an optional component providing Extract Data and Email Task functionality for datasets. The data download interfaces with an ArcGIS Server Map Service and Geoprocessing service to provide the functionality to clip layers and download them. The data download customization does not come standard as part of the default Geoportal. The sample discussed in this topic should be used as a starting point to create a customized task that suits your organization's needs.When downloading data, a user will draw the area they wish to download, select layers for download, select an output format for the"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - DataDownload Tab</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-E53B5177-CBB9-4D32-8AD0-578EF7A1770F]--><body><div id="content"><div class="header"><h1>DataDownload Tab</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="GUID-DED56734-2355-4932-9A4C-2713EB045AE9" purpose="section1"><h2> Introduction</h2><p id="GUID-66A22500-0CE3-468D-B4C7-0030BAD4DB5A"> The Download page is an optional component providing Extract Data and Email Task functionality for datasets. The data download interfaces with an ArcGIS Server Map Service and Geoprocessing service to provide the functionality to clip layers and download them.  The data download customization does not come standard as part of the default geoportal implementation. The sample discussed in this topic should be used as a starting point
+ to create a customized task that suits your organization's needs.</p><p id="GUID-5D628876-C470-4961-939A-2C5C9604C1FE">When downloading data, a user will draw the area they wish to download, select layers for download, select an output format for the data, and supply their E-Mail address. The geoportal data download page will then use the input information as inputs to the data download geoprocessing service. When the request has been completed, an E-Mail message will be sent to the user with an attached ZIP file of their data.
+			</p><p id="GUID-6CA464AC-62F0-4E80-98CF-80886DDC1FC1">The figure below shows the primary components of the Data Download functionality and the communication interfaces among them. <div class="image" purpose="image"><table><tr><td><img class="break" src="00t0/GUID-86625ED9-2AC0-49FD-B2D4-FB1D47D2C7F9-web.png" purpose="img" alt="" title=""></td></tr></table></div>
+			</p><p id="GUID-60D01A34-3166-460D-8C6D-39353DBCF8C1">For Data Download to be functional in the geoportal, the following must be present and configured: <ul purpose="ul" id="UL_848E3857D18B43E0BA7ADE7B49A66EA7">
+					<li purpose="li" id="GUID-85D0B8E0-8015-4C94-A223-CC30E3A00633">A map service to provide the view of the downloadable data</li>
+					<li purpose="li" id="GUID-EE038504-ACF0-4ACC-A4D4-304920D825DB">A geoprocessing service to extract and process the selected data</li>
+					<li purpose="li" id="GUID-505A2F6C-2025-42EB-B193-ED5B412FCD1E">A mail server to send the clipped and zipped data to the requesting user via email </li><li purpose="li" id="LI_AB0CC20F61B34677A87ACD220FCA18C0">The ArcGIS SOC account must have access to the data sources used in your map and geoprocessing services. Access must be Full Control (Read, Write, and Execute). If your data is in SDE, then the ArcSOC account must have these same privileges to the data. The ArcSOC account must also have Full Control privileges to the folder where the interim clipped output file is stored, and the arcgisserver folder.</li><li purpose="li" id="LI_7CCB314B6F464119AA67474B25238A94">The ArcGIS Server machine must have access to the JavaScript API referenced in your <i>gpt.xml</i> file at the <i>&lt;interactiveMap jsapiUrl</i> parameter. By default, this refers to the JavaScript API hosted on ArcGIS.com. If your geoportal will not have external internet access, you may have to deploy a local instance of the JavaScript API. Instructions for installing the JavaScript API locally are part of the ArcGIS JavaScript API product.</li><li purpose="li" id="LI_9C6BB90A9F7941F490814B233FD87217">
+						<b>Optional:</b> Fully licensed Data Interoperability extension for ArcGIS Desktop and ArcGIS Server to provide certain additional output formats.</li>
+				</ul>
+			</p></div>
+		<div class="section1" id="GUID-25069856-1F0C-4BBE-B02C-13336780C99B" purpose="section1"><h2>Configure DataDownload Tab</h2><p id="GUID-57EA6CE3-4F74-48A2-8EED-B88CEFDB2E68"> This section describes how to configure the geoportal to enable data download from a custom map document using the ArcGIS 10  Extract Data and Email Task. This is a sample, and may require customization and testing by your organization to suit your organization's needs. Configuring Data Download for the geoportal entails the steps below: <ol purpose="ol" id="GUID-CA719F9F-B3A5-43FE-801B-66D1A707CCE8">
+					<li purpose="li" id="GUID-5E8203B9-D0DE-4CE0-A740-16476FED30D0"> Prepare the geoprocessing task (Extract Data and Email Task)</li><li purpose="li" id="LI_295F2D6D17F440A3A929C1D6ACA656AB">Prepare the map service and geoprocessing service mxd file</li>
+					<li purpose="li" id="GUID-C1029029-4676-4510-BA25-BC58EEED2513">Publish the map and geoprocessing services into ArcGIS Server</li>
+					<li purpose="li" id="GUID-B14146FF-8FA2-407D-8620-297B96E953C9">Configure the geoportal to use these services in the Download tab</li>
+				</ol>
+			</p><div class="section2" id="ESRI_SECTION2_BFB26FA9D41F493F95C4A6022F6CE847" purpose="section2"><h3>Prepare the geoprocessing task (Extract Data and Email Task)</h3><p id="GUID-D015562D-542C-4181-9ED7-2D6F821BEAF6">The geoprocessing task used for the geoprocessing service is created by following instructions from the webhelp topic <a target="_blank" class="xref" href="http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00540000000v000000.htm" rel="http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//00540000000v000000.htm">Extract Data and Email Task</a>.  After configuration according to this help topic, you should have your custom toolbox with the <i>Extract Data and Email Task</i>. A brief summary of the necessary steps to prepare the custom toolbox are below.<ol purpose="ol" id="OL_7D3A997750474492877BEB5B72B61C57"><li purpose="li" id="LI_291AF9BE19794FC4B7DBC74879CCBA44"> Open ArcMap with a blank document, to which you will add the layers that will be downloadable and your <i>Extract Data and Email Task</i>.</li><li purpose="li" id="LI_4FF589D34FAF4AFD87646EBE90BDB99E">Enable the <span class="wintitle">ArcToolbox</span> window. Right click on the ArcToolbox icon and select <span class="uicontrol">Add Toolbox</span> from the menu.</li><li purpose="li" id="LI_8094456A8F5E4A03A59C69FFD7D3F621">In the <span class="uicontrol">Add Toolbox</span> dialog, click on either <span class="uicontrol">My Toolboxes</span> or <span class="uicontrol">System Toolboxes</span>, and select the new toolbox icon at the top right to create a new toolbox. Name this toolbox <span class="usertext">geoportal_data_download</span>.</li><li purpose="li" id="LI_7C567A034B8245EE9A5F81C18324B53B"> Navigate to the <span class="uicontrol">Server Tools</span>toolbox in the <span class="wintitle">ArcGIS Toolbox</span> window. Within the <span class="uicontrol">Server Tools</span> toolbox, expand the <span class="uicontrol">Data Extraction</span> toolbox.</li><li purpose="li" id="LI_623BDD605C9F44A58514FFC368325E9E">Copy the following three items from <span class="uicontrol">Data Extraction</span>
+toolbox and paste them into your new toolbox:<ul purpose="ul" id="UL_D867512C12764CD187B3EE3EFCD2FE7D"><li purpose="li" id="LI_F006DB22ED7B46CBAE00FFE76BDC817D">Extract Data</li><li purpose="li" id="LI_196165A0D2F44842A1639CD09CE0B60E">Extract Data and Email Task</li><li purpose="li" id="LI_953899DADFC8489EAAF031C049175A74">Send Email With Zip File Attachment</li></ul>
+						</li><li purpose="li" id="LI_070814E02B93428C85A6332EE1F5C512"> Now you will configure the email server settings in the <span class="uicontrol">Extract Data and Email Task</span>. Right-click the Task from your <span class="uicontrol">geoportal_data_download</span> toolbox and select <span class="uicontrol">Edit</span>. The model window should appear.</li><li purpose="li" id="LI_A74A2B3D0B9F4B909C0A0F05FF627340"> Doubleclick the <span class="uicontrol">Send Email With Zip File Attachment</span> box in the model. The input dialog box for the <span class="uicontrol">Send Email With Zip File Attachment</span> tool should appear.</li><li purpose="li" id="LI_0094933AE2DD4C8ABC630DFACBE6332A"> Enter values for <span class="uicontrol">From</span>, <span class="uicontrol">Subject</span>, <span class="uicontrol">Text</span>, <span class="uicontrol">Max File Size</span>, and <span class="uicontrol">SMTP Email Server</span>. Click <span class="uicontrol">OK</span> to persist the values you entered in the model.</li><li purpose="li" id="LI_4DCEEA535E9C40649195DE2F198146C2">Save and exit the model.</li><li purpose="li" id="LI_4CB88677CEF349689AF89FE2C5E37B68">Save your map document whatever suits your organization. In this example, it will be called <span class="usertext">DataDownload.mxd</span>.</li></ol>
+				</p></div><div class="section2" id="ESRI_SECTION2_D0CDA3C6C1BA4155B179BF98984216B2" purpose="section2"><h3>Prepare the map service and geoprocessing service mxd file</h3><p id="GUID-00E7175C-6C82-4AD4-A555-338B933BA374">From one map document will come both the map service and the geoprocessing service.  This one map document  - your <i>DataDownload.mxd</i> - must be prepared for the <span class="uicontrol">Extract Data and Email Task</span>. This map document will be used to create a map and geoprocessing service within ArcGIS Server that will appear on the <span class="uicontrol">Download</span> page of the geoportal. The geoprocessing service will be used to clip and deliver the data to the end user. <div class="notes" id="GUID-4490A012-D10D-482D-8F89-441C9AB80085"><div class="caution"><img class="note_img" src="rsrc/caution.png" alt="Caution" title="Caution"><span>Caution:</span></div><div class="tipbody"><p id="GUID-DDFB8BAF-3F0D-437E-88D9-BC7179110381">The geoportal Download page can only display layers within one level of a Group layer in the Map Service. For example, below are three screenshots of the Table of Contents in ArcMap for three different mxd map documents. The one on the left would display all layers for download in the geoportal. The one in the middle would also display all the layers, even though they are within a Group layer. The one on the right would not display the layers in the second Group layer, because they are a Group within a Group.<div class="image" purpose="image"><table><tr><td><img class="break" src="00t0/GUID-731B156A-F5B7-48DF-B638-D0723EB11A34-web.png" purpose="img" alt="" title=""></td></tr></table></div></p></div></div></p><p id="GUID-905E9AA3-529C-4D98-9091-7967ED2191D3">To prepare the <i>DataDownload.mxd</i> document do the following: <ol purpose="ol" id="OL_54F88113AC7D4A35816F10ECCEACED06"><li purpose="li" id="LI_112A098AD1474E7B848790C7C8B2300C">Add feature layers and/or raster layers that you want users to be able to clip and download.</li><li purpose="li" id="LI_B929E7A1121B4483B520650A63FAAAA0">In the ArcToolbox panel, expand the custom <span class="uicontrol">geoportal_data_download</span> toolbox you created earlier.</li><li purpose="li" id="LI_2B1A36A6EA7C4BAE8333B6D14C702E4B">Drag the  <span class="uicontrol">Extract Data and Email Task</span> model from that toolbox into
+your <i>DataDownload</i> map document's <span class="uicontrol">Table of Contents</span>.
+Place the model at the top level of the <span class="uicontrol">Table of Contents</span>, so it is listed as the first item and is above the other layers.</li><li purpose="li" id="LI_0E35F372CBD74F7599D93597336D0937">Right-click the <span class="uicontrol">Extract Data and Email Task</span> model layer in the <span class="uicontrol">Table of Contents</span>, and select
+<span class="uicontrol">Open</span>.
+</li><li purpose="li" id="LI_5D7C0B67A226443CA47575562F74CD2B">Provide the inputs requested for your tool. Click <span class="uicontrol">OK</span> to run.
+</li><li purpose="li" id="LI_42B0D55E55DC4441970C9B68CFEEF0B1">Save the 
+<i>DataDownload.mxd</i>.
+</li></ol><div class="notes" id="GUID-8D80FC5E-7085-4D55-866B-72903C864609"><div class="tip"><img class="note_img" src="rsrc/tip.png" alt="Tip" title="Tip"><span>Tip:</span></div><div class="tipbody"><p id="GUID-A2D5207B-4D5E-47C7-B54D-73204BB172E6"> If you want to change the functions of the Extract Data and Email Task or other python scripts referenced in your document, you can make these changes and also change the model building without republishing mxd files. Republishing is needed only when you change input parameters to your model. </p></div></div></p></div><div class="section2" id="ESRI_SECTION2_77A871F6D12B48169B75B0066A65EFA9" purpose="section2"><h3>  Publish the map and geoprocessing services into ArcGIS Server </h3><p id="GUID-38AC009D-5286-4303-9062-9E9C3C1D57AD"> You can use ArcGIS Server manager or ArcCatalog to publish the DataDownload.mxd file. Please read instructions from the webhelp topic <a target="_blank" class="xref" href="http://help.arcgis.com/en/arcgisserver/10.0/help/arcgis_server_dotnet_help/index.html#//00930000002t000000.htm" rel="http://help.arcgis.com/en/arcgisserver/10.0/help/arcgis_server_dotnet_help/index.html#//00930000002t000000.htm">Publishing geoprocessing services</a> for the detailed process to publish into ArcGIS Server. At ArcGIS Server 10, ArcGIS Server will automatically generate a map service when you publish your geoprocessing service.    Publish <i>DataDownload.mxd</i> as a geoprocessing service, and both the map and geoprocessing services will be available for integration into the geoportal. <div class="notes" id="GUID-D8DED3CB-06C1-4A98-A92F-90EE6F36A721"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody"><p id="GUID-C9D54268-5DF1-47B2-985B-F9267024F0CC">After creating the two services, it is necessary to refresh the ArcGIS REST cache so they can be accessed by your geoportal. Refresh the ArcGIS REST cache by doing the following:<ol purpose="ol" id="OL_D8665CFE0538430BA9AD9378C2609F52">
+								<li purpose="li" id="LI_3BD0ED4B92744202B0E6D5AE3C8A3AA4">Open a web browser and type the following (substituting your ArcGIS Server machine): <span class="usertext">http://yourArcGISServer/arcgis/rest/admi</span>n</li>
+								<li purpose="li" id="LI_CD88AA5A273D438A87C1E5BBF87D92D1">The ArcGIS REST API Admin page should appear. Log in to the page with your ArcGIS Server admin account. </li>
+								<li purpose="li" id="LI_12488C87765A4BCEACFB52247E26AAD3">After logging in, you will see the REST API Admin page. Select the <span class="uicontrol">Clear Cache Options</span> link. </li>
+								<li purpose="li" id="LI_0D5A0F82A4874BBBB2A0787D5478140E">On the <span class="uicontrol">Clear Cache Options</span> page, click the <span class="uicontrol">Clear Cache Now</span> link.</li>
+								<li purpose="li" id="LI_92E85343A5B940A58925B4DCF3A8DAC1">Logout and close the browser.</li>
+							</ol></p>
+					</div></div></p></div><div class="section2" id="ESRI_SECTION2_E6FFB77EAD0640519FF5AF09B9F79E99" purpose="section2"><h3>Configure the geoportal to use these services in the  Download tab</h3><p id="GUID-158C5499-4215-493F-B67E-1F545E8F40D3"> The Extract Data and Email Task  configuration is located
+in the <span class="usertext">&lt;downloadData&gt;</span> element in your <i>gpt.xml</i> file. To configure
+this element, do the following:</p><p id="GUID-687B2436-7290-4E72-AD93-69FB33439CAF">
+					<ol purpose="ol" id="OL_B07728C0AE8C420BAE42EEF0F0E25646">
+						<li purpose="li" id="LI_308D535CBA204125AC5A45A96A14FCCE">Navigate to the <i>\\geoportal\WEB-INF\classes\gpt\config</i> folder and open the <i>gpt.xml</i> file in a text editor.</li><li purpose="li" id="LI_A13F172FDEE94498BB378DCEF29E2862">Scroll to the
+<span class="usertext">&lt;downloadData&gt;</span> element.</li>
+						<li purpose="li" id="LI_B84792050E124FC297903A245C3791AB">Find the <span class="usertext">taskUrl</span> attribute, and update it with
+the ArcGIS Server REST URL to your published
+DataDownload geoprocessing service. To get the REST
+URL to the ExtractDataTool, open a web browser and enter the
+following address (substituting your ArcGIS Server):
+<span class="usertext">http://yourArcGISServer/rest/services/</span>. The
+DataDownload geoprocessing service should be listed in this list.
+Click on the <span class="uicontrol">Extract Data and Email Task</span>  link on that page. When
+the page redirects, copy the URL that is in the web browser and
+paste it in the <span class="usertext">taskUrl</span> attribute, as shown below.<pre class="lines" purpose="lines">
+taskUrl="http://yourArcGISServer/rest/services/DataDownload/GPServer/Extract%20Data%20and%20Email%20Task"
+</pre></li>
+						<li purpose="li" id="LI_54C32983A8F34A34981B5AB476F9994F">Find the mapServiceUrl attribute and update it
+with the ArcGIS Server REST URL to the published DataDownload map service.
+You can get the REST URL to the map service by going to the same
+ArcGIS REST services link as you did for the geoprocessing service
+(<span class="usertext">http://yourArcGISServer/rest/services/</span>) and clicking on the link to
+your map service.
+In this example:<pre class="lines" purpose="lines">
+mapServiceUrl="http://yourArcGISServer/rest/services/DataDownload/MapServer"
+</pre></li>
+						<li purpose="li" id="LI_87A0A3AB2B35457EABD8BD528375A105">Find the mapServiceType attribute and update
+it with the value <span class="usertext">dynamic</span>. This represents your data download map
+service's type, usually tiled or dynamic. Even if your map is a
+tiled map, enter <span class="usertext">dynamic</span> as the value, as the display map will
+not display correctly if this value reads <span class="usertext">tiled</span>.</li><li purpose="li" id="LI_14763E7AA3714285A04179C6A622EA46">Save the <i>gpt.xml</i> file.</li><li purpose="li" id="LI_80AFC5BE5D0A4EFB88DECAE0A4AAD323">Restart your geoportal web application. </li>
+					</ol>
+				</p><p id="GUID-3FAF6676-EC3E-4487-9145-2B6A3113F794">There should now be a <span class="uicontrol">Download</span> tab appearing on the interface, and your map services should be visible when the <span class="uicontrol">Download</span> tab is selected.<div class="notes" id="GUID-E218E7E9-4522-4269-B06D-E7F0C87DA725"><div class="tip"><img class="note_img" src="rsrc/tip.png" alt="Tip" title="Tip"><span>Tip:</span></div><div class="tipbody"><p id="GUID-5C601A63-71C3-4906-B8AA-E4EEC77D696E"> If you think the geoprocessing task is not working correctly, you can look at the <i>message.xml</i> log file  in your <i>%scratchworkspace%</i>, e.g. <i>C:\arcgisserver\arcgisjobs\extractdata_gpserver\{current job id}\scratch\</i>.   </p></div></div></p><p id="GUID-98F04BE7-183D-491C-A791-F3B3B9E8159C">
+				</p></div><div class="section2" id="ESRI_SECTION2_5E9EE8F4073740C9B82330DBC49D5BEF" purpose="section2"><h3>Additional Output Formats</h3><p id="GUID-4453CC98-1E72-4A80-9760-B5B5DDB547F6">You will likely want to configure the geoportal to offer different output file formats for the feature or raster layers in the Data Download interface. Feature output file formats are defined in the <span class="uicontrol">&lt;features&gt;</span> tag in the gpt.xml file, and raster output file formats are defined in the <span class="uicontrol">&lt;rasters&gt;</span> tag.   Instructions for parameters within each <span class="uicontrol">&lt;feature&gt;</span> and <span class="uicontrol">&lt;raster&gt;</span> entry are described below.  <div class="notes" id="GUID-FD1CFB55-D0AF-4D9D-A46F-A80E9CDA4A4C"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody"><p id="GUID-0AB353E0-7E79-441C-923C-B89E79DF3B85">For some output formats, the Esri Data Interoperability extension
+must be installed and enabled in ArcGIS Desktop for the map service
+basemap and geoprocessing task basemap, and the Data
+Interoperability extension for ArcGIS Server must also be installed
+on the machine hosting ArcGIS Server. You may also need to adjust the Extract Data and Email ArcGIS Desktop task to handle the specified format.   Because this customization is not included in the
+Geoportal Server general documentation, the <a target="_blank" class="xref" href="http://forums.arcgis.com/forums/13-Geoportal" rel="http://forums.arcgis.com/forums/13-Geoportal">Geoportal Server User Forum</a> is a good place
+to find out how other users may have added additional data types
+for download.</p></div></div><ol purpose="ol" id="OL_D2F230EBAE8F4E549DE03D3C12F8F2B7">
+						<li purpose="li" id="LI_1C1F921F0F5C423DA7543FF9E1ED5500">The Data Interoperability extension uses Feature
+Manipulation Engine (FME) technology from SafeSoftware. To get the
+information that you will need to update the list of output
+formats, you will need to reference the <a target="_blank" class="xref" href="http://www.safe.com/products/desktop/formats/index.php" rel="http://www.safe.com/products/desktop/formats/index.php">FME website</a>. The example below shows adding the
+ESRI ArcInfo format to the list of <span class="uicontrol">&lt;features&gt;</span> feature output formats. Use a similar process to add a format to the <span class="uicontrol">&lt;rasters&gt;</span> raster output formats.<ul purpose="ul" id="UL_9712C398651F467CA658E0B7A72C9A3C">
+								<li purpose="li" id="LI_72A77396F5654152B804D0E893E5AB80">Obtain the format identifier and file extension
+information by accessing the FEM website and clicking the link next
+to the format in which you are interested. This will redirect to a
+.pdf file giving additional details.</li>
+								<li purpose="li" id="LI_5F6EDFFC91C849C48B803AF9356548B1">Find <span class="uicontrol">Format Identifier</span> and <span class="uicontrol">Typical File
+Extensions</span>. For ESRI ArcInfo Export, format identifier is "E00"
+and typical file extension is ".e00".</li>
+							</ul>
+						</li>
+						<li purpose="li" id="LI_539E752823C645339AB062ED8B54F2E4">In the <i>gpt.xml</i> file, insert an additional
+<span class="uicontrol">&lt;feature&gt;</span> element with the following attributes into the
+<span class="uicontrol">&lt;features&gt;</span> element to include the supported output format. 
+
+<ul purpose="ul" id="UL_E5148E5BE8FE4F88B0B41FF37F72D107">
+								<li purpose="li" id="LI_6AAAF72CC90F4CF09CCFE2A0DBE1E2A7"><span class="uicontrol">key</span>: {Format Identifier} - ({typical file
+extension}). In the ArcInfo example, it should be <span class="usertext">E00 - (.e00)</span></li>
+								<li purpose="li" id="LI_0EB010DCDB12407DBEAAB83B5F4DB258"><span class="uicontrol">alias</span>: optional - repeat the file extension.</li>
+								<li purpose="li" id="LI_A5B1A40531004F81ABCAEAE3833657A8"><span class="uicontrol">resKey</span>: assigns the key for referencing the
+display name as defined in <i>gpt.properties</i> for this format. Should
+be unique. In this example, <i>resKey</i> is
+<i>catalog.download.feature.e00</i>.
+</li>
+							</ul>
+						</li><li purpose="li" id="LI_299B252C62014F9AB83E7A3DC23D01BF">The new <span class="uicontrol">E00</span> entry has been added to the default list
+in the example below:<pre class="lines" purpose="lines">
+&lt;features&gt;
+&lt;feature key="File Geodatabase - GDB - .gdb" alias="gdb" resKey="catalog.download.feature.gdb"/&gt;
+&lt;feature key="Shapefile - SHP - .shp" alias="shp" resKey="catalog.download.feature.shp"/&gt;
+&lt;feature key="Autodesk AutoCAD - ACAD - .dxf" alias="dxf" resKey="catalog.download.feature.dxf"/&gt;
+&lt;feature key="Autodesk AutoCAD - ACAD - .dwg" alias="dwg"  resKey="catalog.download.feature.dwg"/&gt;
+&lt;feature key="Bentley Microstation Design (V8) - DGN_V8 - .dgn" alias="dgn"  resKey="catalog.download.feature.dgn"/&gt;
+&lt;feature key="E00 - (.e00) " alias = "e00" resKey="catalog.download.feature.e00"/&gt;
+&lt;/features&gt;
+</pre>
+						</li>
+						<li purpose="li" id="LI_83896A2079E24744A4EA787A04C4B182">Open the <i>gpt.properties</i> file in your
+\<i>\geoportal\WEB-INF\classes\gpt\resources</i> folder</li>
+						<li purpose="li" id="LI_ADB849DBCCF747B9913F7C695AD3DE2E">Add the display names for the added format in the <span class="uicontrol">#
+download data</span> section, using your <span class="uicontrol">resKey</span> described above as a
+guide. For example, we could add the key below to match the <span class="uicontrol">resKey</span>
+in the <i>gpt.xml</i> file:<pre class="lines" purpose="lines">catalog.download.feature.e00= E00 - (.e00)</pre>
+						</li>
+						<li purpose="li" id="LI_E5ABD40CA5C445658795146EB06734AC">Save the <i>gpt.properties</i> file and the <i>gpt.xml</i> file.
+Restart the geoportal web application for you
+changes to take effect.</li>
+					</ol></p></div></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

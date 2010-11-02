@@ -1,0 +1,133 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Using Lucene Search Text Queries Using Lucene Search Text Queries The Geodiscover Suite uses a sophisticated search engine that provides many search options, ranking options, fast performance, and extensibility. The search engine is based on the open source search engine Apache Lucene. To make the most of the geoportal's search page, keep in mind the following features that Lucene provides for search syntax: Terms A query is broken up into terms and operators. There are two types of terms: Single Terms and Phrases. A Single Term is a single word such as air or quality. A Phrase is a group of words surrounded"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - Using Lucene Search Text Queries</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-C298C098-4D87-4B70-BC1C-96EA3B4D3106]--><body><div id="content"><div class="header"><h1>Using Lucene Search Text Queries</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="GUID-6260FDF9-BF40-4F59-A25F-5A08084FCEBC" purpose="section1"><h2>Using Lucene Search Text Queries</h2><p id="GUID-C965DCE8-77BB-4F27-B036-FAFA7EE375F0"> The Geoportal Server uses a sophisticated search engine that provides many search options, ranking options, fast performance, and extensibility. The search engine is based on the open source search engine <a target="_blank" class="xref" href="http://lucene.apache.org/" rel="http://lucene.apache.org/">Apache Lucene</a>. To make the most of the geoportal's search page, keep in mind the following features that Lucene provides for search syntax:<ol purpose="ol" id="OL_95048EC8B67E4AA29435210774870BF9"><li purpose="li" id="GUID-D0516B16-AF10-429C-AB31-C00A2C7C62DC"><i>
+							<b>Terms</b>
+						</i><p id="GUID-8A90579F-249C-4B04-A9AA-6253BE662A50">A query is broken up into terms and operators. There are two types of terms: <i>Single Terms </i>and <i>Phrases</i>. A <i>Single Term</i> is a single word such as <span class="usertext">air</span> or <span class="usertext">quality</span>. A <i>Phrase</i> is a group of words surrounded by double quotes such as <span class="usertext">"air quality"</span>. Multiple terms can be combined together with Boolean operators to form a more complex query. Examples:<ul purpose="ul" id="UL_E7856E5E56A348A4A88DB7716ADBA7F5">
+								<li purpose="li" id="GUID-B6FDD482-9A3D-4892-A5FA-73B620F696F5">Searching for <span class="usertext">air</span> could result in 35 hits (items contain the word <span class="usertext">air</span>)</li>
+								<li purpose="li" id="GUID-29677D8C-4362-4AAC-A13E-CD819115207A">Searching for <span class="usertext">quality</span> results in 123 hits (items contain the word <span class="usertext">quality</span>)</li>
+								<li purpose="li" id="GUID-87620A30-E00E-4304-BEE9-9A36FA3183E3">Searching for <span class="usertext">air quality</span> (without quotes) results in 148 hits (items contain the words <span class="usertext">air</span> or <span class="usertext">quality</span> or both)</li>
+								<li purpose="li" id="GUID-FF7FA960-8FCC-4743-87A5-5F24F02B31A0">Searching for <span class="usertext">air AND quality</span> results in 10 hits (results contain both words <span class="usertext">air</span> and <span class="usertext">quality</span>)</li>
+								<li purpose="li" id="GUID-226D4326-058C-4A3A-B5A9-5BA793235900">Searching for <span class="usertext">"air quality"</span> (with quotes) results in 7 hits (items contain the words <span class="usertext">air</span> and <span class="usertext">quality</span> directly after each other)</li>
+								<li purpose="li" id="GUID-7FD20909-817D-4737-8CAA-9C18A8C1A53C">Searching for <span class="usertext">title:air</span> results in 5 hits (items contain the word <span class="usertext">air</span> in the title)</li>
+								<li purpose="li" id="GUID-CBF044A1-0E47-4B07-A92C-05BC8E9409B6">Searching for <span class="usertext">title:quality</span> results in 14 hits (items contain the word <span class="usertext">quality</span> in the title)</li>
+								<li purpose="li" id="GUID-780F1714-EE5D-4B17-95CA-C34EF7A507E4">Searching for <span class="usertext">+title:air +title:quality</span> or <span class="usertext">title:"air quality"</span> results in 2 hits (both items contain both words <span class="usertext">air</span> and <span class="usertext">quality</span> in the title)</li>
+							</ul></p>
+					</li><li purpose="li" id="GUID-D23AB740-7368-4A72-90BF-2C093494B2C6"><i>
+							<b>Special Characters</b>
+						</i>
+						<p id="GUID-C29A5E0A-580C-4514-9F95-9B9DD1468B80">The Geoportal Server supports escaping special characters that are part of the query syntax. The current list special characters are <span class="usertext">+ - &amp;&amp; || ! ( ) { } [ ] ^ " ~ * ? : \</span> To escape these character use the <span class="usertext">\</span> before the character. For example to search for items that contain the scale hit <span class="usertext">1:250k</span> use the query: <span class="usertext">\1\:250k</span>.</p></li><li purpose="li" id="GUID-1657F6CE-809C-4C2B-9858-19ED33EF34C9"><i>
+							<b>Fields</b>
+						</i><p id="GUID-BD88B017-6D45-4A52-A349-F725589C0CEC">Lucene supports fielded data. When performing a search you can either specify a field, or use the default field. The field names and default field is implementation-specific. You can search any field by typing the field name followed by a colon and then the term for which you are looking. Targeting a specific field in the query can be more accurate than just searching with terms. Keep in mind that some fields are case sensitive. Remember that certain special characters must be escaped in the query by using a back-slash (\) character or embraced within quotation ("") whenever they are a part of text to search. Examples:</p><ul purpose="ul" id="UL_6BEE7D1623044451ADF54CCA36D48761">
+							<li purpose="li" id="LI_CA4A904B772F4F9B88EE5104629AD8AD">
+								<i>title:"The Right Way" AND text:"don't go this
+way"</i>
+							</li>
+							<li purpose="li" id="LI_A2AB766347A74140A211C10BAD764C30">
+								<i>uuid:"{550E8400-E29B-41D4-A716-446655440000}"</i>
+							</li>
+							<li purpose="li" id="LI_6DA4064D077C45B79C6A5A7749B0CA46">
+								<i>uuid:\{550E8400\-E29B\-41D4\-A716\-446655440000\}</i>
+							</li>
+							<li purpose="li" id="LI_F838B30801AE442299EC646D991280DA">
+								<i>resource.url:"http://server.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer"</i>
+							</li>
+						</ul><div class="notes" id="GUID-BFA817A3-B7DC-4B59-9648-FA0442979058"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody"><p id="GUID-94584CF2-C1F0-49D2-AF5C-FC3BA04DD68D">The field is only valid for the term that it directly precedes, so the query <i>title:Do it right</i> will only find "Do" in the title field.  </p></div></div>
+					</li><li purpose="li" id="GUID-5432DBC6-B9F2-4055-BA8C-1703B559F0AE"><i>
+							<b>Wildcard Searches</b>
+						</i>
+						<p id="GUID-1B7914CA-F803-49F3-9ACF-F0286C2C1CC7">The Geoportal Server supports single and multiple character wildcard searches within single terms (not within phrase queries). <div class="notes" id="GUID-2BC857A4-C417-4976-A70A-87BE295A389C"><div class="caution"><img class="note_img" src="rsrc/caution.png" alt="Caution" title="Caution"><span>Caution:</span></div><div class="tipbody"><p id="GUID-7F9495B9-1E51-48FA-A4A4-667B6E3D13C6">You cannot use a * or ? symbol as the first character of a search. </p></div></div>
+						</p><ul purpose="ul" id="UL_E888BF40EB584F4F8A27584A18F6E4E7">
+							<li purpose="li" id="GUID-59B9D38A-6108-4B64-A5A1-DC58C8DD67BB">To perform a single character wildcard search use the "?" symbol. The single character wildcard search looks for terms that match that with the single character replaced. For example, to search for <span class="usertext">text</span> or <span class="usertext">test</span> you can use the search:<span class="usertext">te?t</span></li>
+							<li purpose="li" id="GUID-BA553089-E3B5-453F-95D7-8F5DE1189CE5">To perform a multiple character wildcard search use the "*" symbol. Multiple character wildcard searches looks for 0 or more characters. For example, to search for test, tests or tester, you can use the search:<span class="usertext"> test*</span> . You can also use the wildcard searches in the middle of a term: <span class="usertext">te*t</span></li>
+						</ul></li><li purpose="li" id="GUID-A5341E23-E9B5-4A0D-B0C2-04E693DD08B8"><i>
+							<b>Fuzzy Searches</b>
+						</i><p id="GUID-D96EC497-FC58-4D30-8D4A-A56082CDE6DF">The Geoportal Server supports fuzzy searches based on the Levenshtein Distance, or Edit Distance algorithm. To do a fuzzy search use the tilde, "~", symbol at the end of a <i>Single Term</i>. For example to search for a term similar in spelling to <span class="usertext">air</span> use the fuzzy search: <span class="usertext">air~</span>. This search will not only  find items containing terms like <span class="usertext">air</span> and <span class="usertext">airplane</span>, but also <span class="usertext">aid</span>. The Geoportal Server supports specifying the required similarity. The value is between 0 and 1, with a value closer to 1 only terms with a higher similarity will be matched. For example: <span class="usertext">air~0.8</span> The default that is used if the parameter is not given is 0.5.</p>
+					</li><li purpose="li" id="GUID-D5E0CE00-669C-42FD-B2D2-8A1B1BE98605"><i>
+							<b>Proximity Searches</b>
+						</i>
+						<p id="GUID-6B715F50-8408-4B7A-AEE1-073685178DCA">The Geoportal Server supports finding words are a within a specific distance away. To do a proximity search use the tilde, "~", symbol at the end of a <i>Phrase</i>. For example to search for <span class="usertext">air</span> and <span class="usertext">quality</span> within 10 words of each other in a document use the search:<span class="usertext"> air quality"~10</span></p></li><li purpose="li" id="LI_53DC1BF2C5134D88ACC2EBC87D8758E6"><b><i>Range Searches</i></b><p id="GUID-F3B22FC9-E06F-4149-BB6E-9B700411B6C7"> The Geoportal Server supports range
+queries for envelope and timestamp. This allows the user to match
+documents whose field(s) values are between the lower and upper
+bound specified by the Range Query. Range Queries can be inclusive
+or exclusive of the upper and lower bounds.</p>
+						<ul purpose="ul" id="UL_30EF14BEA5444788869DE3E368444B19">
+							<li purpose="li" id="LI_B3D8F66A741F449E9FFB60228DAFC2C3">
+Envelope examples:
+<ul purpose="ul" id="UL_D0E4AD66924549E4ADFEACD7162F9696">
+									<li purpose="li" id="LI_8001433630E54AD5A6DB93B1AF2CE0F4"><span class="usertext">envelope:[-80,-70 TO
++30,+70]</span>
+  This search would result in returned documents that intersect a
+spatial envelope with a Southwest bounding coordinate of -80° W and
+-70° S, and a Northeast bounding coordinate of 30° W and 70°
+N.</li>
+									<li purpose="li" id="LI_2A9C230CC035469FA4FAD0C3A7A27F64"><span class="usertext">envelope:{-80,-70 TO
++30,+70}
+</span>This search would result in returned documents that fall exactly
+within the range of a spatial envelope with a Southwest bounding
+coordinate of -80° W and -70° S, and a Northeast bounding
+coordinate of 30° W and 70° N.</li>
+								</ul>
+								<div class="notes" id="GUID-6DEE4B3E-010A-44EC-B746-FF6F02E76B6C"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody"><p id="GUID-F4F5C26E-44F2-400C-A8D7-82D7BF22B47C">The syntax here is important. It is the field name (<span class="usertext">envelope</span>) followed by colon
+(<span class="usertext">:</span>), and then either an inclusive range definition or exclusive
+range definition. For an inclusive search square brackets ([ ]) are
+used and for an exclusive search curly braces are used ({ }). The
+difference is that exclusive range searches will select only
+those resources in which the envelope falls exactly within the range
+specified, while an inclusive range search will select resources
+that intersect the range specified but also fall outside.
+The first pair of values are the lower left corner coordinates
+followed by <span class="usertext">TO</span> keyword (uppercase), than the upper right corner
+coordinates. Coordinates are always given in WGS 1984 (4236)
+projection system.
+Wildcards can also be used in place of a single coordinate or an
+entire pair of corner coordinates, for example <span class="usertext">envelope:[*,-70
+TO +30,*] </span>or <span class="usertext">envelope:{-80,-70 TO *}
+</span></p></div></div></li>
+							<li purpose="li" id="LI_EB61D1BDAB6F4BEDB936D96882F8F0DA">
+Timestamp examples:
+<ul purpose="ul" id="UL_E466D9DD529D41CC9720108CD488AFB2">
+									<li purpose="li" id="LI_0E236F1998764179B75E56962A31ADCC"><span class="usertext">dateModified:[2009-10-11 TO 2009-11-10]</span></li>
+									<li purpose="li" id="LI_92937DE220444A579F3C0703D68D0ACA"><span class="usertext">dateModified:[2006 TO 2010]</span></li>
+									<li purpose="li" id="LI_9F71B3C502714BE4B5319C62BF20EBE6"><span class="usertext">dateModified:2009-12</span></li>
+								</ul>
+
+For the timestamp syntax, the field name specified is <span class="usertext">dateModified</span>
+followed by colon and then an inclusive range definition. The first
+example will select resources with dateModified between 2009-10-11 to
+2009-11-10 including these range dates. The second example will
+select resources with dateModified from the year 2006 to 2010. The
+last example will select resources with dateModified in December of
+2009 (no brackets required).</li>
+						</ul>
+					</li><li purpose="li" id="GUID-0607BE94-DE01-4062-975A-A7D6BA4B7CFE"><i>
+							<b>Boosting a Term</b>
+						</i>
+						<p id="GUID-92129CAA-C69F-4285-B685-90F30FB0A300">The Geoportal Server provides the relevance level of matching documents based on the terms found. To boost a term use the caret, <span class="usertext">^</span>, symbol with a boost factor (a number) at the end of the term you are searching. The higher the boost factor, the more relevant the term will be. Boosting allows you to control the relevance of a document by boosting its term. For example, if you are searching for <span class="usertext">air quality</span> and you want the term <span class="usertext">air</span> to be more relevant, boost it using the ^ symbol along with the boost factor next to the term. You would type: <span class="usertext">air^4 quality</span>. This will make documents with the term air appear more relevant. You can also boost Phrase Terms as in the example: <span class="usertext">"air quality"^4 "water quality"</span>. By default, the boost factor is 1. Although the boost factor must be positive, it can be less than 1 (e.g. 0.2)</p></li><li purpose="li" id="GUID-FFB6611A-AB81-4F90-88FD-5F632E80247A"><i>
+							<b>Boolean Operators</b>
+						</i><p id="GUID-94F93105-02BB-4870-94AC-42926F8B6664">Boolean operators allow terms to be combined through logic operators. The Geoportal Server supports <span class="usertext">AND</span>, <span class="usertext">+</span>, <span class="usertext">OR</span>, <span class="usertext">NOT</span> and <span class="usertext">-</span> as Boolean operators.   <div class="notes" id="GUID-B819695C-F0E2-4C81-A3B8-4EBA6D3ACDAD"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody"><p id="GUID-CD9EDB2A-E86D-4D8F-9D87-F96C8E041A6C">Boolean operators must be ALL CAPS</p></div></div>
+						</p>
+						<ul purpose="ul" id="UL_1E460A9684CC4FEF9887C992C4000846">
+							<li purpose="li" id="GUID-4CDD891B-EE75-4481-8053-EA6A0F80C276">The <span class="usertext">OR</span> operator is the default conjunction operator. This means that if there is no Boolean operator between two terms, the OR operator is used. The OR operator links two terms and finds a matching document if either of the terms exist in a document. This is equivalent to a union using sets. The symbol <span class="usertext">||</span> can be used in place of the word <span class="usertext">OR</span>.</li>
+							<li purpose="li" id="GUID-6695E682-04AC-418E-9322-63EB1893C853">The <span class="usertext">AND</span> operator matches documents where both terms exist anywhere in the text of a single document. This is equivalent to an intersection using sets. The symbol <span class="usertext">&amp;&amp;</span> can be used in place of the word <span class="usertext">AND</span>.</li>
+							<li purpose="li" id="GUID-258575D8-BF20-46EC-90F6-913520918103">The <span class="usertext">+</span> or required operator requires that the term after the <span class="usertext">+</span> symbol exist somewhere in a field of a single document.</li>
+							<li purpose="li" id="GUID-2E31B722-15D7-451B-8C3F-B0F6D4021299">The <span class="usertext">NOT</span> operator excludes documents that contain the term after NOT. This is equivalent to a difference using sets. The symbol <span class="usertext">!</span> can be used in place of the word <span class="usertext">NOT</span>. <div class="notes" id="GUID-628DE14D-2815-4B99-BC9A-1317DDD634CA"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody"><p id="GUID-E92DFC4E-CB31-4F37-83F5-D5B083B819EE">The NOT operator cannot be used with just one term.</p></div></div>
+							</li>
+						</ul></li><li purpose="li" id="GUID-A931EAF0-044A-4336-B59F-3C48B4878DD2"><i>
+							<b>Grouping</b>
+						</i>
+						<p id="GUID-E8B0726A-B8D0-42FA-94E4-D9EB72419121">The Geoportal Server supports using parentheses to group clauses to form sub queries. This can be very useful if you want to control the boolean logic for a query. For example: <span class="usertext">(air OR water) AND quality</span> will find documents containing the words <span class="usertext">air</span> and <span class="usertext">quality</span> or the words <span class="usertext">water</span> and <span class="usertext">quality</span>.</p></li><li purpose="li" id="GUID-79715E86-9186-41F7-B73A-CCF2348C6451"><i>
+							<b>Field Grouping</b>
+						</i>
+						<p id="GUID-5277D4AA-C264-47E6-85DF-8285DB5F97F4">The Geoportal Server supports using parentheses to group multiple clauses to a single field. For example: <span class="usertext">title:(air OR water)</span> finds items that contain the words <span class="usertext">air</span> or <span class="usertext">water</span> in the title.</p></li></ol> Fore more information on how to specifically leverage Lucene search syntax for powerful searching in your geoportal, please see the <a target="_blank" class="xref" href="http://lucene.apache.org/java/2_3_2/queryparsersyntax.html" rel="http://lucene.apache.org/java/2_3_2/queryparsersyntax.html">Lucene website</a>.</p></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

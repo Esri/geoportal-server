@@ -1,0 +1,1036 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Catalog Service Geoportal  Catalog Service If the Geoportal  was a car, the Geoportal  Catalog Service would be its engine, controlling other components, managing transactions, and providing the central interface for the discovery, publishing, and validation of metadata. Starting at version 9.3, the Geoportal included an implementation of the Open Geospatial Consortium (OGC) Catalog Service for the Web (CS-W) 2.0.2 interface specification. The link to this service will typically follow the format below: http://serverName:port/geoportal/csw?Request=GetCapabilities&amp;Service=CSW&amp;Version=2.0.2 where serverName is the name of the geoportal web server port is the geoportal's port number The Geoportal  CS-W service makes possible support for arbitrary metadata"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server -  Catalog Service</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-A7E93F4A-B34C-4A34-A5F8-0D46B0CC50DF]--><body><div id="content"><div class="header"><h1> Catalog Service</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="GUID-767B4669-E6D3-4BD0-8020-123752DE7618" purpose="section1"><h2>Geoportal Server Catalog Service</h2><p id="GUID-D2B72CE5-44A9-4C88-AA3A-AEC238C42913">If the geoportal web application was a car, the Catalog Service would be its engine, controlling other components, managing transactions, and providing the central interface for the discovery, publishing, and validation of metadata. Starting at version 9.3, the geoportal included an implementation of the Open Geospatial Consortium (OGC) <a target="_blank" class="xref" href="http://www.opengeospatial.org/standards/cat" rel="http://www.opengeospatial.org/standards/cat">Catalog Service for the Web (CS-W)</a> 2.0.2 interface specification. The link to this service will typically follow the format below: <pre class="lines" purpose="lines">
+http://serverName:port/geoportal/csw?Request=GetCapabilities&amp;Service=CSW&amp;Version=2.0.2
+</pre> where <ul purpose="ul" id="UL_FDF1948A9E3E4B1AB7C0A23A7640BC1F">
+					<li purpose="li" id="LI_3695DB3F9D1643709C1ED2A9154F7C87"><i>serverName</i> is the name of the geoportal web server</li>
+					<li purpose="li" id="LI_6F1F031C9D7C49DD882687C234D0A377"><i>port</i> is the geoportal's port number</li>
+				</ul> The geoportal CS-W service makes possible support for arbitrary metadata schemas without complicating the search component of the geoportal. When a metadata document is published to the geoportal, the original metadata is retained unchanged and is used when editing the metadata in the online form or when displaying the full metadata as part of search results. At the same time, the geoportal is able to extract searchable elements into a uniform structure, standardize domain values across metadata standards, determine the topic category codes or content types of the metadata document, select key content for connecting to online resources, and assign a unique identifier to the record. The <a class="xref" rel="00t0/00t00000004m000000.htm#GUID-FC963E94-FF56-465B-BE67-DD1B98E7DC65" href="00t0/00t00000004m000000.htm#GUID-FC963E94-FF56-465B-BE67-DD1B98E7DC65">capabilities of the geoportal CS-W implementation</a> will be described and <a class="xref" rel="00t0/00t00000004m000000.htm#GUID-D84D3114-E29D-49E5-A842-368164BBB286" href="00t0/00t00000004m000000.htm#GUID-D84D3114-E29D-49E5-A842-368164BBB286">sample requests and responses</a> included in the sections below. See <a class="xref" rel="00t0/00t00000004m000000.htm#GUID-BFA7B0C1-98C0-4708-8C67-2413AACA00E9" href="00t0/00t00000004m000000.htm#GUID-BFA7B0C1-98C0-4708-8C67-2413AACA00E9">Geoportal  WSDL</a> for information about the web service definition files.</p><div class="section2" id="GUID-FC963E94-FF56-465B-BE67-DD1B98E7DC65" purpose="section2"><h3>Details of the CS-W Interface </h3><ol purpose="ol" id="OL_82C781FAA09141FD9094F45E69ED05E7">
+					<li purpose="li" id="LI_5903881F004A43F9B6C516D7BAD50F66"><b>SUPPORTED OPERATIONS:</b> The geoportal  CS-W implementation supports the mandatory CS-W requests as well as the optional <i>GetRecordsById</i> and <i>Transaction</i>. The Transaction requests publish or update entire documents only. The Transaction <i>delete</i> request is based on file identifier alone. Geoportal publisher permissions for executing Transaction requests must be included in the HTTP header in the client application that submits the CS-W request. The client application's header and credentials must follow <a target="_blank" class="xref" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html" rel="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html">HTTP Authorization standards</a>. The <i>GetDomain</i> and <i>Harvest</i> operations are not supported at this time.<div class="notes" id="GUID-88BA24F6-8226-4637-91DF-6EDB0F868218"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody"><p id="GUID-A665C1B2-DA2F-4B73-94D0-73F2E95F545B">In the table below, the <i>Obligation</i> column indicates if the operation is mandatory or optional. Mandatory operations are required for the service to be minimally compliant with this CS-W specification. Optional operations are not required by the CS-W specification. </p></div></div>
+						<div class="block_table" id="TABLE_0FF8019F279342728312AC4D77EF8672" purpose="block_table"><span class="table_title">Table 1- Supported CS-W Operations </span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><colgroup width="*"></colgroup><colgroup width="1.33*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-62425F9E-BB97-466E-93DB-00CEBCEEC848">Operation</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-850BADEF-6D09-447C-932A-2393BE8A929C"> Obligation</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-470076BA-69F3-4341-8332-1195C756F783">Supported</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-DB84EE3A-F133-4416-8C7B-36875482A2E7">Binding</p>
+										</th></tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-C8864A1B-56B1-44D0-A7DF-788BC6BC610C">GetCapabilities</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-76AA0DF1-7503-4432-92FB-6D499D0BEB11">mandatory</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-A2986ACB-377F-4ECF-B809-9FF2A1041A3D">yes</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-8571A744-64B0-4D79-A357-9F40F47FE214">KVP+POST+SOAP</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-47D0A648-2CDF-4F81-A79C-94FB25C17475">DescribeRecord</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-68FB974D-EDAD-44AF-9F8F-6F45F521FC5B">mandatory</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-BD9B55B8-B803-44F8-B4DE-58E5F31D51B0">yes</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-9EE54860-B1E0-4245-A6B7-4DDAC8996224">KVP+POST+SOAP</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-6E6AC700-3B08-4971-A523-538E2F9E3051">GetRecords</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-BE71488C-6C02-4888-B42D-ABA2F3357C76">mandatory</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-74A8FE12-31E3-41C0-9928-8AF73ED74B81">yes</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-E0459097-91E0-40BD-B273-903027B87333">KVP+POST+SOAP</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-5303413A-FEB8-400F-B2A2-49D98EAEB612">GetRecordById</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-C92231A5-CB7B-4E7A-8E60-A4DF11BEB01D">optional</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-0B3C1AE9-F10F-4EA6-98D9-7879527C188F">yes</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-5E89942C-EE25-459C-B633-B565817DF049">KVP+POST+SOAP</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-3478BAFD-5E21-4A33-966C-CECD1A854101">GetDomain</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-8E6BBA6B-FC02-48D0-8468-CB1226178F15">optional</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-8F5CDB94-C048-45C2-A20A-E8B27066C485">No</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-0310E556-9195-481B-A621-07027DED5397">N/A</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-681BC594-8F47-45CC-A359-B1550CD62933">Harvest</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-57951BF6-6B9B-4594-A3E6-2AFD9020753F">optional</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-474EFB74-9EF4-47D4-B3B7-A4C380AE38E3">No</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-F91BC235-E151-4786-A2CF-F7639BEB59D6">N/A</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-845EC375-4F72-47AE-86E8-AFFDB3E84FB2">Transaction</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-91D7714C-33E1-44CA-BA25-8A95B91DE188">optional</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-D9B85977-337D-4223-A25D-B797E87A7C5E">yes</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-828562E7-B5AC-4B9A-BD2F-5EED96464462">POST+SOAP</p>
+										</td>
+									</tr>
+								</table><span class="table_desc"></span></div> For each of the supported operations, the geoportal  CS-W implementation supports KVP, POST, and SOAP implementations</li>
+					<li purpose="li" id="LI_D5F197034DB2490E82747F43A268487D"><b>NAMESPACES:</b> The following table lists the namespace prefix declarations that are used throughout this document and the associated specification and version. <div class="block_table" id="TABLE_4A28F79AC4574F499F1DC20F23DF1D52" purpose="block_table"><span class="table_title">Table 2 - Namespace Prefix Declarations </span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-C43508CF-C7A4-41A5-9BCD-35134EA135CF">Prefix</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-B62A3A0D-8A7C-4375-B333-452C418857F6">Namespace URI</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-60350A79-0A15-4146-849A-EF584A6B6597">Specification</p>
+										</th></tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-D2F58143-F014-437B-9FDE-13D42E4B22DD"> csw</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-1D2F76D8-2E57-4EF2-9A33-0958FE842483">http://www.opengis.net/cat/csw/2.0.2</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-C2E0870E-E8CB-40AA-A9A3-0FDCD5C669E1">OGC Catalogue Services 2.0.2, Corrigendum 2 Release, OGC 07-006r1</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-D1AE8869-4374-40FB-B5D6-9C2525BC842D">ows</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-BA672947-F5F3-4CDA-9CA0-B8BE70DE69AC">http://www.opengis.net/ows</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-BDE4D73E-1DF7-486A-8F33-0434CBD2D71B">OGC Common 1.0.0</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-064DDA7E-630C-4BB4-9C2D-72CA1CB1A840">ogc</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-01ECF278-75D1-45F5-865A-564F71072EE7">http://www.opengis.net/ogc </p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-F28066AC-F4AB-47C6-AC94-0D3893D802C8">OGC Filter 1.1.0</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-93B3915E-F46F-4211-B576-1D8882E713E5">gml</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-65CE46A3-CF6C-40D0-AB2F-9EF5C61A3F68">http://www.opengis.net/gml</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-F257A28B-35D4-4211-87BB-853BF81B7938">GML 3.0.0 </p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-0653DD66-128A-4ECA-AFC5-4620B4A97107">dc</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-0D8AC548-9270-4AF3-BD16-ED154C99EAB1">http://purl.org/dc/elements/1.1/ </p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-0F8C53C0-AA62-42EC-89D7-E7181B108FA3">Dublin Core</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-4D77E85E-343B-42EB-A7E5-3A18D56025FD">dct </p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-14F110C9-91AC-4E62-977D-3A9490906D3F">http://purl.org/dc/terms</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-13638C52-152D-40C9-A41D-D1591B8F85F5">Dublin Core terms</p>
+										</td>
+									</tr>
+									<tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-555AFB57-22D6-41A9-8078-7DFED44D8707">gmd</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-9436A583-48C9-452D-8B76-82C2B6CF2C7A">http://www.isotc211.org/2005/gmd</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-17DF8D8B-F735-41DE-916E-1022F071199F">	ISO 19115/19139</p></td></tr><tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-8D5ABE54-455A-4BC9-802A-A026FECC0305">SOAP-ENV</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-E61992C2-7784-47B7-A9C7-C64717D32AF0">http://schemas.xmlsoap.org/soap/envelope</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-299E592C-FC0F-4DDB-983B-F284C6FDEBA3">SOAP Version 1.1</p>
+										</td>
+									</tr><tr purpose="row"><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-A91C4F75-4A1F-4E14-9BD0-4ECFB8DACEA6">env</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-6AC62F0B-9396-4736-B610-B941FFE9BDFB">http://www.w3.org/2003/05/soap-envelope/</p></td><td purpose="entry" rowspan="1" colspan="1"><p id="GUID-AD398FE2-7C83-4751-9629-D4C739D86EEA">SOAP Version 1.2</p></td></tr>
+								</table><span class="table_desc"></span></div></li>
+					<li purpose="li" id="LI_7706FCE126224C63B898A9D35269F1DD"><b>CORE QUERYABLES:</b>  The geoportal CS-W implementation supports CS-W core queryable properties, the ones defined in the CSW ISO Application Profile and additional queryables (applicable to ISO metadata only). The geoportal information model is backed by XML documents and a spatial database. Its XML documents contain FGDC, ISO 19139, Dublin Core, or other XML elements and attributes. Below is a table, mapping OGC Catalog Core Queryables to items in the geoportal information model. The remaining queryable properties relying on ISO 19115 and ISO 19119 metadata are faithfully following the names and mappings defined in <a target="_blank" class="xref" href="http://www.opengeospatial.org/standards" rel="http://www.opengeospatial.org/standards">OpenGIS® Catalogue Services Specification 2.0.2 - ISO Metadata Application Profile</a> and <a target="_blank" class="xref" href="http://inspire.jrc.ec.europa.eu/" rel="http://inspire.jrc.ec.europa.eu/">Technical Guidance to implement INSPIRE Discovery Services Technical Guidance Version 2.12</a> . <div class="block_table" id="TABLE_6CA8F74190AB4FB0953506B9C6DF4D99" purpose="block_table"><span class="table_title">Table 3 - Core Queryable Description and Mapping </span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><colgroup width="*"></colgroup><colgroup width="*"></colgroup><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-B89BE55B-EC2C-4405-B745-3C112E1BF560">Name</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-076BB187-8D06-4E48-A42A-74278E0E96F6">Aliases</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-4F946D83-DDD9-4916-AD20-7727CCCB8B70">Definition</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-00DF63B4-414E-4458-B35A-664E3EAF1458">Data Type</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-811446B9-7547-436C-A355-ED351E8E7D41"> Allowed OGC Property Filters</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-EA24920F-7C02-42E4-AA88-8A4158D39004">Mapping to Information Model </p>
+										</th></tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-98B64CA6-DA2A-4B64-AB4D-210049D0C8A4"> dc:identifier</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-C64915A2-8FB5-45CA-8B7F-7DC5FAECAD12">fileIdentifier, fid, id, identifier, fileID</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-373C249C-BA27-4F51-914E-0D961796A8D7"> An unambiguous reference to the resource within a given context.</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-2ECAB448-935D-4002-9436-90F7A016E2BE">string</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-5A5D8B6B-5C97-4F70-9F37-4163B02CC8F2">All *</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-6EA064C8-1221-4835-9934-9D0DB9C467EA">ISO 19139: /gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString Dublin Core:/rdf:RDF/rdf:Description/dc:identifier FGDC:System assigned identifier as FGDC does not include a provision for this. </p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-7C76CFF2-B89B-4E5C-A48C-42F5BDC39EC5">dct:modified </p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-8A41B4B4-631D-462F-A3A6-64F4BAEC87AD">modified, dc:date, date</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-5C980545-28B3-4279-A941-2FD85E7E02B6">Date on which the resource was last changed.</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-D6545BC8-1461-430E-A297-478C7425E17C">Date formatted string (yyyy-mm-dd)</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-C17DD279-3FF4-487D-9AC5-65DDB4744692"> All * are allowed, except for ogc:PropertyIsLike</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-8A6D5F36-F588-410D-A3EB-F999597E2FA4">Stored in database. Read from file system information.</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-9D819D29-F248-4573-B4E4-A83D48A4C5B7">ows:BoundingBox </p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-4BD59A60-1B01-4360-9239-0FF9D303D7FD">geometry, envelope </p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-9AADEA10-F186-4FF1-AB71-C3FD9340A12E">A bounding box for identifying a geographic area of interest.</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-CD0BA328-D53B-46C9-B7F7-30ECB03F269E">gml:Envelope, gml:Point</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-C5232226-47C9-44F7-A309-D21E3401DF6A">Set of spatial operators (see section below on spatial queries)</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-5FFF4D04-6E46-4DB0-89AD-4D2BF6BC7657">Examples are for "West", but use simliar syntax for East, North, and South: ISO 19139: /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal Dublin Core, two options (east = UpperCorner, north = UpperCorner, south = LowerCorner): /rdf:RDF/rdf:Description/ows:WGS84BoundingBox/westbc /rdf:RDF/rdf:Description/ows:WGS84BoundingBox/ows:LowerCorner FGDC: west: /metadata/idinfo/spdom/bounding/westbc</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-750945D0-FD81-4425-A480-DE005AF40CDB">anyText</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-5B26E5BC-DCBF-4A49-ACA1-7FC3AC818BCC">csw:anyText </p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-7FDC1400-653A-45C8-BB29-AF5950DACB37">This queryable represents the catalog entry as a whole.</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-0DCB8258-F8F5-44FB-AB80-8C396D2ED4B0">string</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-1B7D5DEB-AD1E-4392-8704-FBF265B7EA50">ogc:PropertyIsLike</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-A5EC9E51-5FCF-49A9-93EF-18068FC3B8D0"> Those elements that have been marked as having one of the following meanings: title, abstract, keywords, or body. Refer to the "How Lucene Indexing Works" section for the default settings for these meanings and how to modify this.</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-814F5C74-A5E1-46D1-9A66-7972ED4981E6">dc:title</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-46CD280A-F5DF-4DDE-A5F0-115EB6E254CD"> title</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-F3AE1FCB-46F8-4D49-B784-CC6163E7353B">A name given to the resource</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-35BDA276-57CB-44FC-9404-4C37A08973E5">string</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-8257E06E-9330-409E-8A5A-BEBE8F449115">All *</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-A6C3C0CD-A649-40AF-8D3E-7C025EB9A92A">ISO 19139: /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString Dublin Core: /rdf:RDF/rdf:Description/dc:title FGDC: /metadata/idinfo/citation/citeinfo/title</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-02EEEE4E-70DD-40A1-AEB3-5B275BA1E92C">dc:abstract</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-0CACEAA2-ABB0-4A3C-990A-32F46E214317">abstract</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-B89E2AFF-F3BA-4211-BB55-4E7DF6AFE31E">Overview description of the resource </p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-3ED3BA3B-7B97-46FF-AD58-43DAD47C691A">string</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-2B803FD5-2691-499D-BE9A-D320EF9F5761">All *</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-6796C54B-37A9-4E37-AB3F-7E8BB040E61B"> ISO 19139: /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString Dublin Core: /rdf:RDF/rdf:Description/dc:description FGDC: /metadata/idinfo/descript/abstract</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-97DFB794-7CAF-4C6E-8839-C6FDE5A15EDD">dc:subject</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-60D0017B-501C-430E-B53B-166EDBCCEA5F">subject</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-0D00060D-45E0-44D9-B5FF-73674BA7BF77">The topic of the content of the resource. Controlled-list.</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-9CEA7C2B-DA65-49C2-9E7F-463DAE1F01E3">string</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-DA3C343D-1C17-4977-8D36-032702F8F8D7">ogc:PropertyIsEqualTo</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-438601F5-390B-4DC2-BE9B-641538B24526"> Accepted values are based on the ISO 19115 topic category codes: farming biota boundaries climatologyMeteorologyAtmosphere economy elevation environment geoscientificInformation health imageryBaseMapsEarthCover intelligenceMilitary inlandWaters location oceans planningCadastre society structure transportation utilitiesCommunication ISO 19139:/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode Dublin Core: /rdf:RDF/rdf:Description/dc:subject FGDC: /metadata/idinfo/keywords/theme[1]/themekey </p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-B0F60E71-5272-4A2C-A226-132AD0B2B45D">dc:type</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-2F2D9EB8-8536-47EE-9F63-CCE6685AB83E"> type, dc:format, format</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-E2DB0662-CD8C-4864-9AE8-5740D9A256DC">The physical or digital manifestation of the resource.</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-08350CBF-8F08-4ACC-9754-F3FAF80A663E">string</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-1C55E9A5-FA17-4B34-A0C3-A3073D5F5608">All * are allowed, but only "ogc:PropertyIsEqualTo" makes logical sense.</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-870D9AEE-7204-4B8E-A888-E7FB6229B9BC"> Accepted values are: liveData downloadableData offlineData staticMapImage document application geographicService clearinghouse mapFiles geographicActivities ISO 19139: determined by choice between ISO19115 or ISO19119 content standards. Dublin Core: /rdf:RDF/rdf:Description/dc:type FGDC: /metadata/distinfo/resdesc</p>
+										</td>
+									</tr>
+								</table><span class="table_desc"></span></div><div class="notes" id="GUID-2B2BDADF-0A6C-4744-A67E-C21B252E581D"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody"><p id="GUID-FB63A156-99B8-41AB-90A5-DCC7E081EA56"><b>*</b>"All" implies all OGC comparison operators: <ul purpose="ul" id="UL_2E93B5874FF8497C830EF29E0E18343B">
+									<li purpose="li" id="LI_8F67B896AB7B49E896B85D675691E80D">ogc:PropertyIsEqualTo</li>
+									<li purpose="li" id="LI_BAE34CAC16F54350BB36270080666D65">ogc:PropertyIsNotEqualTo</li>
+									<li purpose="li" id="LI_CFA6AD4FE6F44844A9BE1AF4E591C17E">ogc:PropertyIsLessThan</li>
+									<li purpose="li" id="LI_E508B004B5254D77B4F0E3CCEE194DC0">ogc:PropertyIsGreaterThan</li>
+									<li purpose="li" id="LI_B87088E94DF54F95A0D733F56B4DDBCE">ogc:PropertyIsLessThanOrEqualTo</li>
+									<li purpose="li" id="LI_EBF9BD30615A4DACBEE866574496DE8B">ogc:PropertyIsGreaterThanOrEqualTo</li>
+									<li purpose="li" id="LI_B4DB1B2835044469AF2249913E3547FC">ogc:PropertyIsLike</li>
+								</ul></p></div></div>
+					</li>
+					<li purpose="li" id="LI_1E1C59502B754D4BB34040D211826834"><b>SPATIAL QUERIES:</b> Envelope queries are encoded using OGC Filter spatial predicates. The geoportal CS-W API doesn't support every spatial predicate available in the Filter specification. <div class="block_table" id="TABLE_089F8F10D22A4B6698C9AA3562E541AB" purpose="block_table"><span class="table_title">Table 4 - Supported Spatial Predicates </span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-57FF6836-D968-457E-A091-07264282CE88">OGC Filter Spatial Predicate</p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-366CE23C-D6F6-4D20-9598-91F7F0E1C74B">Geoportal CS-W Spatial Predicate </p>
+										</th></tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-C89A9AFD-8605-4732-B712-12C9DE8530FB">ogc:BBOX</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-3F812DF5-B58C-481B-9927-D11EA40DCE17">Overlaps</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-D7D61EB3-589F-4E43-AEBC-FB3A7D75F146">ogc:Intersects</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-E52D154C-A9D8-40C9-B8EB-F2D4C3F5C606"> Overlaps</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-DE4FE459-81ED-4B47-893F-7209E68A0FC6">ogc:Within</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-B4EA9487-5438-4A8F-A919-B4E3F4E956DA">Within</p>
+										</td>
+									</tr>
+								</table><span class="table_desc"></span></div><ul purpose="ul" id="UL_8B24B6FEB6D3465C992535AFBC514F19">
+							<li purpose="li" id="LI_A91F531D09704F29B51E6EAA02D2E0F2"><b>overlaps</b> - finds metadata documents in which part or all of the metadata document's envelope falls within the specified search box. Anything the search box touches is found.</li>
+							<li purpose="li" id="LI_80D4DF505D954CD59FCD7FABD867C033"><b>within</b> - finds metadata documents where the document's envelope falls entirely within the specified search box. The document's spatial envelope can touch the search box boundary.</li>
+							<li purpose="li" id="LI_993277D471864347BF7B7A7BFD5AB6BE">The geometry operands supported for spatial queries are: <ol purpose="ol" id="OL_B45B6CFAFEF94CC3994038455854C022">
+									<li purpose="li" id="LI_B39B62F50FE042F3B4EE54871DE40EC1">gml:Envelope</li>
+									<li purpose="li" id="LI_789701EDECBE4587BC47D0354BFAA943">gml:Point</li>
+								</ol></li>
+						</ul></li>
+					<li purpose="li" id="LI_0448313DBA194BAD85AE4D609D7D2617"><b>COMPARISON OPERATORS:</b> Comparison operators are included in a <i>csw:GetRecord</i> request: <ul purpose="ul" id="UL_B126B060B1D843B0A08C15DD61304226">
+							<li purpose="li" id="LI_EB52EA5E8BA442C583425A7B5533A1E5">Between</li>
+							<li purpose="li" id="LI_21F6E6D4C78540448E77287B09367ED7">EqualTo</li>
+							<li purpose="li" id="LI_FB0201335BBA447FAA4D9D59DD8CCBAC">GreaterThan</li>
+							<li purpose="li" id="LI_CD88C031306E4972A897F58CB1165B70">GreaterThanEqualTo</li>
+							<li purpose="li" id="LI_36D3F20F0D544690A48D625A6534B5EE">LessThan</li>
+							<li purpose="li" id="LI_C1562F21FCAE40C69EB46FE4409F5F74">LessthanEqualTo</li>
+							<li purpose="li" id="LI_9733AEEFEE2D462496388DF2AA0A19FE">Like</li>
+							<li purpose="li" id="LI_44A95C5703284FE99E8C27F24DFC210C">NotEqualTo</li>
+							<li purpose="li" id="LI_8B05551F5BC7425FBA7D0A0D17CB5614">NullCheck</li>
+						</ul></li>
+					<li purpose="li" id="LI_4F233681AAA8422783BA1839A9C9D22F"><b>PARAMETERS:</b> The following table outlines the parameters for each supported operation.  <div class="block_table" id="TABLE_629E8CBF5A47479CB05CAB82C13A007C" purpose="block_table"><span class="table_title">Table 5- Supported Parameters</span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-B3070AD3-16D2-4679-A6E9-50499058C9A2">Operation </p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-41608586-49FF-43B7-87D3-6A89BF11708F">Parameter </p>
+										</th><th class="th" purpose="th" rowspan="1" colspan="1">
+											<p id="GUID-92AC8F14-9E1A-4A57-86D2-7EF6370C4726">Accepted Values </p>
+										</th></tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-BA881F76-1141-405F-859C-6B246EACFDF2">DescribeRecord </p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-5C4D143B-5BC3-456D-9283-8B0D2127E8C7">typeName</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-14D66B14-079F-447A-83AB-7A96366F3697">csw:Record, csw:SummaryRecord, csw:BriefRecord</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1"></td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-FE0D2E2C-9331-47D3-B73F-AEF8CD04349F">outputFormat</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-09384CB3-1612-426E-8714-AA6DD8F8D2A7">text/xml, application/xml </p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-943967AB-26D9-4F7E-B499-E566CD460C60">GetRecords</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-10F60F1D-8914-44CB-9D8D-A871BDE7CB96">typeNames</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-59A8073E-FC72-4E57-8DCD-9E599A3B77F9">csw:Record</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1"></td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-98ED34B6-EF82-4D6F-B946-F0FF2F301AC8">outputFormat</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-148C1286-5257-4CDA-BC21-198CD76E62F3">text/xml, application/xml </p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1"></td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-F4A7E0D5-9E03-4173-9434-16DEBC25875E">outputSchema</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-BD74C6B7-649A-4A84-8349-EFE089BBD3EB">
+http://www.opengis.net/cat/csw/2.0.2</p>
+											<p id="GUID-B2EDE7C5-33E4-4AC7-8754-BF90142B8A04">
+http://www.isotc211.org/2005/gmd
+</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1"></td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-46909831-331B-4B74-90C6-7EB573D4ED9C">resultType</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-2B353481-4F8E-49BD-A8FF-DF33EC99957E">results, hits, validate</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1"></td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-D7814289-F4B5-4DE0-8C9D-8A9D5E3CC642">ElementSetName</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-97584D03-38B5-4223-B9CF-1F627755367C">summary, brief, full </p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1"></td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-633BD52D-85E5-47F3-979B-7CD0F0096301">constraintLanguage</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-EC496387-8BDF-4BD0-95A4-6A0B07836F61">Filter</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-C9E8C40D-28B9-456D-88E0-74CFF548E52D">GetRecordById</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-93F2C538-45C4-4DF5-8E1B-38C734B0CB22">ElementSetName</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-CEB830AF-56D0-4E0A-9731-CD92AEAA0A08">summary, brief, full</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1"></td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-885C9627-C000-4A2A-A91E-D0196DDCCC8F">outputFormat </p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-24D393B3-5929-43AF-A330-E3F3F9C10696">text/xml, application/xml</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1"></td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-F0913067-F69A-41ED-8168-F8D5E1D1472A">outputSchema</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-BAD0ABA6-FEC2-4FD8-B5D7-765379D81525">http://www.opengis.net/cat/csw/2.0.2</p><p id="GUID-45B733AA-6A67-437E-8B09-116F154FEF6B">
+http://www.isotc211.org/2005/gmd
+</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1"></td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-612BD906-95D3-4D0C-8845-9E6388D6BF30">service</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-81D69A6F-0014-497B-B080-81E94F09B847">CSW, http://www.opengis.net/cat/csw/2.0.2</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1"></td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-17300DAF-8C59-4097-848A-24FF3B27B070">version</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-299B2156-E433-4956-BBD1-92E6191B5F4E"> 2.0.2</p>
+										</td>
+									</tr>
+									<tr purpose="row">
+										<td purpose="entry" rowspan="1" colspan="1"></td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-2E52A60B-FD4C-415D-BE60-01171C72B936">PostEncoding</p>
+										</td>
+										<td purpose="entry" rowspan="1" colspan="1">
+											<p id="GUID-989955B3-5277-44FF-B514-977E731ACBBD">XML</p>
+										</td>
+									</tr>
+								</table><span class="table_desc"></span></div></li>
+					<li purpose="li" id="LI_1075771724EB4FE9B8417C951713E6C4">
+						<b>RETURNABLES:</b>
+						<p id="GUID-6D646878-1A9A-4386-A5D4-EA076421ABFD">For the csw:Record output schema, the records returned contain a selection of the core returnables, of which the subset is dependent on the element set. When request=GetRecordById, outputSchema=original, and ElementSetName=full, the geoportal CS-W interface returns the original metadata document as it was published to the geoportal.  For the gmd:MD_Metadata output schema, the records returned contain a selection of ISO metadata elements, of which the subset is dependent on the element set as defined in the OGC CSW ISO Application Profile.</p>
+						<p id="GUID-71E4D3C8-DB5C-4D4E-9253-A421BF489656"><div class="block_table" id="TABLE_CACDE606611D40F990153FE79E63FC49" purpose="block_table"><span class="table_title">Table 6 - Returnable Properties</span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="1">
+												<p id="GUID-7BFB5EC6-20DC-4F10-8DC6-2C75E9410E04">Element Set</p>
+											</th><th class="th" purpose="th" rowspan="1" colspan="1">
+												<p id="GUID-15CDB4FE-34A5-4031-96F5-F4A8574D9A46">Returnables</p>
+											</th></tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-68765F77-A1AD-4851-B2B2-7A432EEB46FF">brief</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-7B5865E6-255A-4CF3-BE9F-73302A6B9BB4">dc:identifier, dc:title, dc:type, ows:Envelope</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-1BF4E968-3C89-432D-A7E0-C066D1F97925">Summary</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-14340C42-EBDF-48F4-B400-3BD55558F5BD">dc:identifier, dc:title, dc:type, dc:format, ows:Envelope, dc:subject, dct:modified, dc:abstract </p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-742FD52A-F65B-4048-A965-51D03730C99D">Full</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-43A8A3BE-5EFA-4803-A64F-F5894B450749">dc:identifier, dc:title, dc:type, ows:Envelope, dc:subject, dct:modified, dc:abstract, dct:references</p>
+											</td>
+										</tr>
+									</table><span class="table_desc"></span></div></p>
+					</li>
+				</ol></div><div class="section2" id="GUID-D84D3114-E29D-49E5-A842-368164BBB286" purpose="section2"><h3>Sample Requests</h3><p id="GUID-78010038-49E7-4793-A0A0-D3FBAE14BA90">This section includes sample requests. <ol purpose="ol" id="OL_45ED90D8D616452DA4E7481A26F3E734">
+						<li purpose="li" id="LI_6E35CF8D4F78487681F29B5315BA6108"><b>GetCapabilities:</b> Both KVP, POST, and SOAP requests are supported by the geoportal CS-W service. <div class="block_table" id="TABLE_FCEDA0979ADB47619A5D2351FA78B644" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-D9B9B78F-6DD2-4540-A03F-A9586F041F18">
+													<i>
+														<b>KVP</b>
+													</i>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-69E8BF45-CE9C-4934-A3C0-D67D061F743E">?REQUEST=GetCapabilities&amp;SERVICE=CSW&amp;version=2.0.2</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-D5464E36-017A-4655-A56E-07D3AA6F8CBF">
+													<i>
+														<b>POST</b>
+													</i>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-BFC5991E-2E9A-425C-B797-448A45F60E08">&lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" xmlns="http://www.opengis.net/ows"&gt; &lt;/csw:GetCapabilities&gt;</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-AFD9D362-B6AB-4AB8-9B20-D868EA6C4343">
+													<i>
+														<b>SOAP</b>
+													</i>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-35716D05-DA54-4CBA-A15A-A9AA6613F36B">&lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema"&gt; &lt;SOAP-ENV:Body&gt; &lt;csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" xmlns="http://www.opengis.net/ows"&gt; &lt;/csw:GetCapabilities&gt; &lt;/SOAP-ENV:Body&gt; &lt;/SOAP-ENV:Envelope&gt;</p>
+											</td>
+										</tr>
+									</table><span class="table_desc"></span></div></li>
+						<li purpose="li" id="LI_D7A896011AF34513A8D461C721ED8898">
+							<b>DescribeRecord </b>
+							<b></b>
+							<div class="block_table" id="TABLE_39BA4C467B5D47BCAB26E7EFF92FC6F0" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-5BC6CC36-0882-43DC-9D46-F77DA0E58A69">
+													<i>
+														<b>KVP</b>
+													</i>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-AE1D647E-C32E-443C-A92F-6BFCA0644637">?REQUEST=DescribeRecord&amp;service=CSW&amp;version=2.0.0</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-2C985642-45D1-499E-84AB-F715D981BAEA">
+													<i>
+														<b>POST</b>
+													</i>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-D3D52EC3-FE04-4CE5-B355-941EF360E16C">&lt;csw:DescribeRecord service="CSW" version="2.0.2" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"&gt;&lt;/csw:DescribeRecord&gt;</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-AA380E4A-8968-4B17-93F7-619E6E5240BA">
+													<i>
+														<b>SOAP</b>
+													</i>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-93BC7ADA-20AC-41D2-8059-DAB1DFCB2DD7">&lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema"&gt; &lt;SOAP-ENV:Body&gt; &lt;csw:DescribeRecord service="CSW" version="2.0.2" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"&gt; &lt;/csw:DescribeRecord&gt; &lt;/SOAP-ENV:Body&gt; &lt;/SOAP-ENV:Envelope&gt;</p>
+											</td>
+										</tr>
+									</table><span class="table_desc"></span></div>
+						</li>
+						<li purpose="li" id="LI_46CDA094B1474F1BBD5F3991F1274506"><b>GetRecords:</b> A GetRecords request requires a constraint language and since the geoportal CS-W service doesn't support CQL (Common Query Language), only XML Filter with POST style requests are supported. <div class="block_table" id="TABLE_B0050C91256247A18A17D491B49D1B18" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="2">
+												<p id="GUID-12557FFA-0490-4BBD-968F-C7851A683A06">AnyText</p>
+											</th></tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-E1D21763-E631-40FB-89B2-D15B21100B1A">
+													<b>
+														<i>KVP</i>
+													</b>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-40B7C048-5D2B-429B-ABEA-13813A048899">N/A</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-7615B24C-2A79-4F44-A24E-41A07AA1664B">
+													<b>
+														<i>POST</i>
+													</b>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-F6C0480E-6274-41C0-9BEA-6BB15DE044EB"> &lt;csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" version="2.0.2" service="CSW" resultType="results" startPosition="1" maxRecords="10"&gt; &lt;csw:Query typeNames="csw:Record" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"&gt; &lt;csw:ElementSetName&gt;full&lt;/csw:ElementSetName&gt; &lt;csw:Constraint version="1.1.0"&gt; &lt;ogc:Filter&gt; &lt;ogc:And&gt; &lt;ogc:PropertyIsLike wildCard="*" escape="\" singleChar="?"&gt; &lt;ogc:PropertyName&gt;AnyText&lt;/ogc:PropertyName&gt; &lt;ogc:Literal&gt;data&lt;/ogc:Literal&gt; &lt;/ogc:PropertyIsLike&gt; &lt;ogc:PropertyIsEqualTo&gt; &lt;ogc:PropertyName&gt;dc:type&lt;/ogc:PropertyName&gt; &lt;ogc:Literal&gt;liveData&lt;/ogc:Literal&gt; &lt;/ogc:PropertyIsEqualTo&gt; &lt;ogc:PropertyIsEqualTo&gt; &lt;ogc:PropertyName&gt;dc:subject&lt;/ogc:PropertyName&gt; &lt;ogc:Literal&gt;imageryBaseMapsEarthCover&lt;/ogc:Literal&gt; &lt;/ogc:PropertyIsEqualTo&gt; &lt;ogc:BBOX&gt; &lt;ogc:PropertyName&gt;ows:BoundingBox&lt;/ogc:PropertyName&gt; &lt;gml:Envelope&gt; &lt;gml:lowerCorner&gt;-118.3 32.1&lt;/gml:lowerCorner&gt; &lt;gml:upperCorner&gt;-87.1 45.2&lt;/gml:upperCorner&gt; &lt;/gml:Envelope&gt; &lt;/ogc:BBOX&gt; &lt;/ogc:And&gt; &lt;/ogc:Filter&gt; &lt;/csw:Constraint&gt; &lt;/csw:Query&gt; &lt;/csw:GetRecords&gt;</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-8DE04F35-E815-4A9C-8AA4-B75B8DA18BC7">
+													<b>
+														<i>SOAP</i>
+													</b>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-BF5DC167-9FCC-40BD-9393-A7ABE7AA3B38"> &lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema"&gt; &lt;SOAP-ENV:Body&gt; &lt;csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" version="2.0.2" service="CSW" resultType="results" startPosition="1" maxRecords="10"&gt; &lt;csw:Query typeNames="csw:Record" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"&gt; &lt;csw:ElementSetName&gt;full&lt;/csw:ElementSetName&gt; &lt;csw:Constraint version="1.1.0"&gt; &lt;ogc:Filter&gt; &lt;ogc:And&gt; &lt;ogc:PropertyIsLike wildCard="*" escape="\" singleChar="?"&gt; &lt;ogc:PropertyName&gt;AnyText&lt;/ogc:PropertyName&gt; &lt;ogc:Literal&gt;data&lt;/ogc:Literal&gt; &lt;/ogc:PropertyIsLike&gt; &lt;ogc:PropertyIsEqualTo&gt; &lt;ogc:PropertyName&gt;dc:type&lt;/ogc:PropertyName&gt; &lt;ogc:Literal&gt;liveData&lt;/ogc:Literal&gt; &lt;/ogc:PropertyIsEqualTo&gt; &lt;ogc:PropertyIsEqualTo&gt; &lt;ogc:PropertyName&gt;dc:subject&lt;/ogc:PropertyName&gt; &lt;ogc:Literal&gt;imageryBaseMapsEarthCover&lt;/ogc:Literal&gt; &lt;/ogc:PropertyIsEqualTo&gt; &lt;ogc:BBOX&gt; &lt;ogc:PropertyName&gt;ows:BoundingBox&lt;/ogc:PropertyName&gt; &lt;gml:Envelope&gt; &lt;gml:lowerCorner&gt;-118.3 32.1&lt;/gml:lowerCorner&gt; &lt;gml:upperCorner&gt;-87.1 45.2&lt;/gml:upperCorner&gt; &lt;/gml:Envelope&gt; &lt;/ogc:BBOX&gt; &lt;/ogc:And&gt; &lt;/ogc:Filter&gt; &lt;/csw:Constraint&gt; &lt;/csw:Query&gt; &lt;/csw:GetRecords&gt; &lt;/SOAP-ENV:Body&gt; &lt;/SOAP-ENV:Envelope <b>
+														<i>&gt;</i>
+													</b></p>
+											</td>
+										</tr>
+									</table><span class="table_desc"></span></div><div class="block_table" id="TABLE_206528CBEA984A40AC6402604FFDC58C" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="2">
+												<p id="GUID-33A9941C-A18A-4902-88B2-18C9647FA47C">Title</p>
+											</th></tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-5A5CA186-44A1-4BA0-9EAA-D87493F3EB1E">
+													<b>
+														<i>KVP</i>
+													</b>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-664302F0-80A4-4097-94BA-0ACB06C8B0E9">N/A</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-796B73EE-9789-49C4-92F6-496D9D1F2AD9">
+													<b>
+														<i>POST</i>
+													</b>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-67DE0252-CEAB-4F9F-BAE3-36F8862EB9C4"> &lt;csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" version="2.0.2" service="CSW" resultType="results" startPosition="1" maxRecords="10"&gt; &lt;csw:Query typeNames="csw:Record" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"&gt; &lt;csw:ElementSetName&gt;full&lt;/csw:ElementSetName&gt; &lt;csw:Constraint version="1.1.0"&gt; &lt;ogc:Filter&gt; &lt;ogc:PropertyIsLike wildCard="*" escape="\" singleChar="?"&gt; &lt;ogc:PropertyIsEqualTo&gt; &lt;ogc:PropertyName&gt;dc:title&lt;/ogc:PropertyName&gt; &lt;ogc:Literal&gt;Sample Document&lt;/ogc:Literal&gt; &lt;/ogc:PropertyIsEqualTo&gt; &lt;/ogc:Filter&gt; &lt;/csw:Constraint&gt; &lt;ogc:SortBy&gt; &lt;ogc:SortProperty&gt; &lt;ogc:PropertyName&gt;dc:title&lt;/ogc:PropertyName&gt; &lt;ogc:SortOrder&gt;ASC&lt;/ogc:SortOrder&gt; &lt;/ogc:SortProperty&gt; &lt;/ogc:SortBy&gt; &lt;/csw:Query&gt; &lt;/csw:GetRecords&gt;</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-18CB7EB0-BAFF-4ABD-A97D-72AA580363F1">
+													<b>
+														<i>SOAP</i>
+													</b>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-C22B1EE2-ABB7-459F-BB27-8FDDF5BF6F89"> &lt;SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema"&gt; &lt;SOAP-ENV:Body&gt; &lt;csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" version="2.0.2" service="CSW" resultType="results" startPosition="1" maxRecords="10"&gt; &lt;csw:Query typeNames="csw:Record" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"&gt; &lt;csw:ElementSetName&gt;full&lt;/csw:ElementSetName&gt; &lt;csw:Constraint version="1.1.0"&gt; &lt;ogc:Filter&gt; &lt;ogc:PropertyIsLike wildCard="*" escape="\" singleChar="?"&gt; &lt;ogc:PropertyIsEqualTo&gt; &lt;ogc:PropertyName&gt;dc:title&lt;/ogc:PropertyName&gt; &lt;ogc:Literal&gt;Sample Document&lt;/ogc:Literal&gt; &lt;/ogc:PropertyIsEqualTo&gt; &lt;/ogc:Filter&gt; &lt;/csw:Constraint&gt; &lt;ogc:SortBy&gt; &lt;ogc:SortProperty&gt; &lt;ogc:PropertyName&gt;dc:title&lt;/ogc:PropertyName&gt; &lt;ogc:SortOrder&gt;ASC&lt;/ogc:SortOrder&gt; &lt;/ogc:SortProperty&gt; &lt;/ogc:SortBy&gt; &lt;/csw:Query&gt; &lt;/csw:GetRecords&gt; &lt;/SOAP-ENV:Body&gt; &lt;/SOAP-ENV:Envelope&gt;</p>
+											</td>
+										</tr>
+									</table><span class="table_desc"></span></div><div class="block_table" id="TABLE_D2B7C9AAD8F6429693DC1A5C807C3DC3" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="2">
+												<p id="GUID-D6986B60-B89D-41DE-8AB7-080873B14BFB">Subject</p>
+											</th></tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-92FEAD2A-B3E0-480E-A48B-171ED0754950">
+													<b>
+														<i>KVP</i>
+													</b>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-4B6F3066-9016-434F-B374-E1F5D590CDF0">N/A</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-5033DFDA-0648-4C02-B103-8D87ACED218A">
+													<b>
+														<i>POST</i>
+													</b>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-5FC88F92-E677-479A-A836-3722A9C20157"> &lt;csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" version="2.0.2" service="CSW" resultType="results" startPosition="1" maxRecords="10"&gt; &lt;csw:Query typeNames="csw:Record" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"&gt; &lt;csw:ElementSetName&gt;full&lt;/csw:ElementSetName&gt; &lt;csw:Constraint version="1.1.0"&gt; &lt;ogc:Filter&gt; &lt;ogc:PropertyIsEqualTo&gt; &lt;ogc:PropertyName&gt;dc:subject&lt;/ogc:PropertyName&gt; &lt;ogc:Literal&gt;imageryBaseMapsEarthCover&lt;/ogc:Literal&gt; &lt;/ogc:PropertyIsEqualTo&gt; &lt;/ogc:Filter&gt; &lt;/csw:Constraint&gt; &lt;ogc:SortBy&gt; &lt;ogc:SortProperty&gt; &lt;ogc:PropertyName&gt;dc:title&lt;/ogc:PropertyName&gt; &lt;ogc:SortOrder&gt;ASC&lt;/ogc:SortOrder&gt; &lt;/ogc:SortProperty&gt; &lt;/ogc:SortBy&gt; &lt;/csw:Query&gt; &lt;/csw:GetRecords&gt;</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-3486A6BE-CB59-4D36-B0EE-F9E18574E50E">
+													<b>
+														<i>SOAP</i>
+													</b>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-8C8E3DB0-5B63-4F21-A889-68C1277AD14E"> &lt;SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema"&gt; &lt;SOAP-ENV:Body&gt; &lt;csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" version="2.0.2" service="CSW" resultType="results" startPosition="1" maxRecords="10"&gt; &lt;csw:Query typeNames="csw:Record" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"&gt; &lt;csw:ElementSetName&gt;full&lt;/csw:ElementSetName&gt; &lt;csw:Constraint version="1.1.0"&gt; &lt;ogc:Filter&gt; &lt;ogc:PropertyIsEqualTo&gt; &lt;ogc:PropertyName&gt;dc:subject&lt;/ogc:PropertyName&gt; &lt;ogc:Literal&gt;imageryBaseMapsEarthCover&lt;/ogc:Literal&gt; &lt;/ogc:PropertyIsEqualTo&gt; &lt;/ogc:Filter&gt; &lt;/csw:Constraint&gt; &lt;ogc:SortBy&gt; &lt;ogc:SortProperty&gt; &lt;ogc:PropertyName&gt;dc:title&lt;/ogc:PropertyName&gt; &lt;ogc:SortOrder&gt;ASC&lt;/ogc:SortOrder&gt; &lt;/ogc:SortProperty&gt; &lt;/ogc:SortBy&gt; &lt;/csw:Query&gt; &lt;/csw:GetRecords&gt; &lt;/SOAP-ENV:Body&gt; &lt;/SOAP-ENV:Envelope&gt;</p>
+											</td>
+										</tr>
+									</table><span class="table_desc"></span></div><div class="block_table" id="TABLE_2EA581418E2F49F2991543B1F4500CAC" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="0">
+												<p id="GUID-EFD2AE73-1308-4DDC-8034-07B1A8F1B41D">Modified</p>
+											</th></tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-F73BA0C6-F27A-4873-9538-38C5EE9B308A">
+													<b>
+														<i>KVP</i>
+													</b>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-725C7757-694F-4795-BD88-9276A9E58933">N/A</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-B0BED0EE-E543-4E87-8B24-A00BB7096142">
+													<b>
+														<i>POST</i>
+													</b>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-88A7099A-0974-4E63-8824-83560B9FE75F"> &lt;csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" version="2.0.2" service="CSW" resultType="results" startPosition="1" maxRecords="10"&gt; &lt;csw:Query typeNames="csw:Record" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"&gt; &lt;csw:ElementSetName&gt;full&lt;/csw:ElementSetName&gt; &lt;csw:Constraint version="1.1.0"&gt; &lt;ogc:Filter&gt; &lt;ogc:PropertyIsGreaterThan&gt; &lt;ogc:PropertyName&gt;dct:modified&lt;/ogc:PropertyName&gt; &lt;ogc:Literal&gt;2000-01-01&lt;/ogc:Literal&gt; &lt;/ogc:PropertyIsGreaterThan&gt; &lt;/ogc:Filter&gt; &lt;/csw:Constraint&gt; &lt;ogc:SortBy&gt; &lt;ogc:SortProperty&gt; &lt;ogc:PropertyName&gt;dc:title&lt;/ogc:PropertyName&gt; &lt;ogc:SortOrder&gt;ASC&lt;/ogc:SortOrder&gt; &lt;/ogc:SortProperty&gt; &lt;/ogc:SortBy&gt; &lt;/csw:Query&gt; &lt;/csw:GetRecords&gt;</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-581D58DF-DCDB-4558-A274-EE2ECB5E55D8">
+													<b>
+														<i>SOAP</i>
+													</b>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-E9BB2FE7-05D0-432E-8FCF-7304A6C77908"> &lt;SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema"&gt; &lt;SOAP-ENV:Body&gt; &lt;csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" version="2.0.2" service="CSW" resultType="results" startPosition="1" maxRecords="10"&gt; &lt;csw:Query typeNames="csw:Record" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"&gt; &lt;csw:ElementSetName&gt;full&lt;/csw:ElementSetName&gt; &lt;csw:Constraint version="1.1.0"&gt; &lt;ogc:Filter&gt; &lt;ogc:PropertyIsGreaterThan&gt; &lt;ogc:PropertyName&gt;dct:modified&lt;/ogc:PropertyName&gt; &lt;ogc:Literal&gt;2000-01-01&lt;/ogc:Literal&gt; &lt;/ogc:PropertyIsGreaterThan&gt; &lt;/ogc:Filter&gt; &lt;/csw:Constraint&gt; &lt;ogc:SortBy&gt; &lt;ogc:SortProperty&gt; &lt;ogc:PropertyName&gt;dc:title&lt;/ogc:PropertyName&gt; &lt;ogc:SortOrder&gt;ASC&lt;/ogc:SortOrder&gt; &lt;/ogc:SortProperty&gt; &lt;/ogc:SortBy&gt; &lt;/csw:Query&gt; &lt;/csw:GetRecords&gt; &lt;/SOAP-ENV:Body&gt; &lt;/SOAP-ENV:Envelope&gt;</p>
+											</td>
+										</tr>
+									</table><span class="table_desc"></span></div><div class="block_table" id="TABLE_27B6568ED31C4CAA8018861B7BC20FA7" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup><tr purpose="thead"><th class="th" purpose="th" rowspan="1" colspan="2">
+												<p id="GUID-93F97853-4A0C-449A-B577-0A443B808530">Envelope</p>
+											</th></tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-0F907FCE-AE00-4015-9381-E1FD91178299">
+													<b>
+														<i>KVP</i>
+													</b>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-E7649732-5D83-412A-9607-A10AE646E4AC">N/A</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-A5A2C04C-E3E9-4222-9830-D03B8EACD7A2">
+													<b>
+														<i>POST</i>
+													</b>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-20256B0E-B942-47CC-BA80-E79CA62FB038">&lt;csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" version="2.0.2" service="CSW" resultType="results" startPosition="1" maxRecords="10"&gt; &lt;csw:Query typeNames="csw:Record" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"&gt; &lt;csw:ElementSetName&gt;full&lt;/csw:ElementSetName&gt; &lt;csw:Constraint version="1.1.0"&gt; &lt;ogc:Filter&gt; &lt;ogc:BBOX&gt; &lt;ogc:PropertyName&gt;ows:BoundingBox&lt;/ogc:PropertyName&gt; &lt;gml:Envelope&gt; &lt;gml:lowerCorner&gt;-118.3 32.1&lt;/gml:lowerCorner&gt; &lt;gml:upperCorner&gt;-87.1 45.2&lt;/gml:upperCorner&gt; &lt;/gml:Envelope&gt; &lt;/ogc:BBOX&gt; &lt;/ogc:Filter&gt; &lt;/csw:Constraint&gt; &lt;ogc:SortBy&gt; &lt;ogc:SortProperty&gt; &lt;ogc:PropertyName&gt;dc:title&lt;/ogc:PropertyName&gt; &lt;ogc:SortOrder&gt;ASC&lt;/ogc:SortOrder&gt; &lt;/ogc:SortProperty&gt; &lt;/ogc:SortBy&gt; &lt;/csw:Query&gt; &lt;/csw:GetRecords</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-58E2CA7B-D25B-4636-806D-2D3170CD3F68">
+													<b>
+														<i>SOAP</i>
+													</b>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-8C1EEE47-029B-47BE-A518-7D343E6BAC2E"> &lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema"&gt; &lt;SOAP-ENV:Body&gt; &lt;csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" version="2.0.2" service="CSW" resultType="results" startPosition="1" maxRecords="10"&gt; &lt;csw:Query typeNames="csw:Record" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"&gt; &lt;csw:ElementSetName&gt;full&lt;/csw:ElementSetName&gt; &lt;csw:Constraint version="1.1.0"&gt; &lt;ogc:Filter&gt; &lt;ogc:BBOX&gt; &lt;ogc:PropertyName&gt;ows:BoundingBox&lt;/ogc:PropertyName&gt; &lt;gml:Envelope&gt; &lt;gml:lowerCorner&gt;-118.3 32.1&lt;/gml:lowerCorner&gt; &lt;gml:upperCorner&gt;-87.1 45.2&lt;/gml:upperCorner&gt; &lt;/gml:Envelope&gt; &lt;/ogc:BBOX&gt; &lt;/ogc:Filter&gt; &lt;/csw:Constraint&gt; &lt;ogc:SortBy&gt; &lt;ogc:SortProperty&gt; &lt;ogc:PropertyName&gt;dc:title&lt;/ogc:PropertyName&gt; &lt;ogc:SortOrder&gt;ASC&lt;/ogc:SortOrder&gt; &lt;/ogc:SortProperty&gt; &lt;/ogc:SortBy&gt; &lt;/csw:Query&gt; &lt;/csw:GetRecords&gt; &lt;/SOAP-ENV:Body&gt; &lt;/SOAP-ENV:Envelope&gt;</p>
+											</td>
+										</tr>
+									</table><span class="table_desc"></span></div></li>
+						<li purpose="li" id="LI_38637B16B5A7452493A5BBA24B6A40EA">
+							<b>GetRecordById</b>
+							<b></b>
+							<div class="block_table" id="TABLE_D0BBE79E62F7428286726E88E4C3E288" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-1B434011-7A3B-4A61-8BDA-56E209B7EB72">
+													<i>
+														<b>KVP</b>
+													</i>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-31092C27-6E96-4AD2-8264-1F7E53811603">?REQUEST=GetRecordById&amp;service=CSW&amp;version=2.0.2&amp;Id=B6A0EC8C-826D-11D8-BADF-080020ECC953</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-844BF2D8-81AB-439A-A26E-10C2A37020E4">
+													<i>
+														<b>POST</b>
+													</i>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-8DFE4CF7-9599-443B-9E9B-E3393350EF5B">&lt;&lt;csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" version="2.0.2" service="CSW"&gt; &lt;csw:Id&gt;B6A0EC8C-826D-11D8-BADF-080020ECC953&lt;/csw:Id&gt;&lt;/csw:GetRecordById&gt;</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-95026477-B765-4C1D-B286-0F9E18ECB856">
+													<i>
+														<b>SOAP</b>
+													</i>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-49B7ABD9-C9F4-4AB6-A048-87B3E538775E">&lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema"&gt; &lt;SOAP-ENV:Body&gt; &lt;csw:GetRecordById xmlns:csw=http://www.opengis.net/cat/csw/2.0.2 version="2.0.2" service="CSW"&gt; &lt;csw:Id&gt;B6A0EC8C-826D-11D8-BADF-080020ECC953&lt;/csw:Id&gt; &lt;/csw:GetRecordById&gt; &lt;/SOAP-ENV:Body&gt; &lt;/SOAP-ENV:Envelope&gt;</p>
+											</td>
+										</tr>
+									</table><span class="table_desc"></span></div>
+						</li>
+						<li purpose="li" id="LI_6E3B1D6E18474BF18AF40C76E48FB6F3">
+							<b>Transaction Insert:</b>
+							<b></b>
+							<div class="block_table" id="TABLE_8B51F08DFE294FF7BEB969484FFD3D38" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-82DE26EB-CB92-4905-AE9D-CB36297AB2D9">
+													<i>
+														<b>POST</b>
+													</i>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-EBC9E6C7-57D0-418C-ACB7-6D03049DBB74">&lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;csw:Transaction service="CSW" version="2.0.2" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" &gt; &lt;csw:Insert&gt; … metadata document is inserted here without xml prolog … &lt;/csw:Insert&gt; &lt;/csw:Transaction&gt;</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-27C88083-0EFD-424C-926D-8430FC43655D">
+													<i>
+														<b>SOAP</b>
+													</i>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-D0F2274C-DA2D-4C54-9AC9-9BDBE4C38337">&lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema"&gt; &lt;SOAP-ENV:Body&gt; &lt;csw:Transaction service="CSW" version="2.0.2" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" &gt; &lt;csw:Insert&gt; … metadata document is inserted here without xml prolog … &lt;/csw:Insert&gt; &lt;/csw:Transaction&gt; &lt;/SOAP-ENV:Body&gt; &lt;/SOAP-ENV:Envelope&gt;</p>
+											</td>
+										</tr>
+									</table><span class="table_desc"></span></div>
+						</li>
+						<li purpose="li" id="LI_72FC39C958844D2DA49FB7FC79AC031A"><b>Transaction Update:</b> The update request supports replacing entire documents only. <div class="block_table" id="TABLE_7F96A11E0ABA4B7BACB2622AE2E8475B" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-E036A89E-9845-4A01-841D-BF84415C4B54">
+													<i>
+														<b>POST</b>
+													</i>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-9438C440-EE79-402B-B32A-0334B7C2DE39">&lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;csw:Transaction service="CSW" version="2.0.2" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" &gt; &lt;csw:Update&gt; … metadata document is inserted here without xml prolog … &lt;/csw:Update&gt; &lt;/csw:Transaction&gt;</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-201D0F58-F74D-4C07-AA7D-51AB2BACB6CC">
+													<i>
+														<b>SOAP</b>
+													</i>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-2D582553-3323-46BA-9B9D-8BE7C828F8DC">&lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema"&gt; &lt;SOAP-ENV:Body&gt; &lt;csw:Transaction service="CSW" version="2.0.2" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" &gt; &lt;csw:Update&gt; … metadata document is inserted here without xml prolog … &lt;/csw:Update&gt; &lt;/csw:Transaction&gt; &lt;/SOAP-ENV:Body&gt; &lt;/SOAP-ENV:Envelope&gt;</p>
+											</td>
+										</tr>
+									</table><span class="table_desc"></span></div></li>
+						<li purpose="li" id="LI_6B1747491CAC41C3BC6444EB90A1D1AD"><b>Transaction Delete:</b> The delete request supports deleting entire documents only based on the identifier. The identifiers are returned in the GetRecords response. The workflow is to find records that match certain criteria using the GetRecords request and then delete the returned records based on the dc:identifier. <div class="block_table" id="TABLE_FDDDA768596242B989B02F01F6335ED1" purpose="block_table"><span class="table_title"></span><table class="table"><colgroup width="*"></colgroup><colgroup width="*"></colgroup>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-9183B07F-65E8-48ED-A400-523A30C41948">
+													<i>
+														<b>POST</b>
+													</i>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-5432B029-A5E3-4935-A9C9-E910D7D71898">&lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;csw:Transaction service="CSW" version="2.0.2" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://www.purl.org/dc/elements/1.1/" xmlns:ogc="http://www.opengis.net/ogc"&gt; &lt;csw:Delete&gt; &lt;csw:Constraint version="2.0.2"&gt; &lt;ogc:Filter&gt; &lt;ogc:PropertyIsEqualTo&gt; &lt;ogc:PropertyName&gt;dc:identifier&lt;/ogc:PropertyName&gt; &lt;ogc:Literal&gt;A0522EE9-8C45-4399-8B73-7CCFC2BB9F60&lt;/ogc:Literal&gt; &lt;/ogc:PropertyIsEqualTo&gt; &lt;/ogc:Filter&gt; &lt;/csw:Constraint&gt; &lt;/csw:Delete&gt; &lt;/csw:Transaction&gt;</p>
+											</td>
+										</tr>
+										<tr purpose="row">
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-D487D4F6-403B-4C40-AE56-6FCC4D105FB5">
+													<i>
+														<b>SOAP</b>
+													</i>
+												</p>
+											</td>
+											<td purpose="entry" rowspan="1" colspan="1">
+												<p id="GUID-2840D34D-80DA-406A-887F-912CCAF901C3">&lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema"&gt; &lt;SOAP-ENV:Body&gt; &lt;csw:Transaction service="CSW" version="2.0.2" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://www.purl.org/dc/elements/1.1/" xmlns:ogc="http://www.opengis.net/ogc"&gt; &lt;csw:Delete&gt; &lt;csw:Constraint version="2.0.2"&gt; &lt;ogc:Filter&gt; &lt;ogc:PropertyIsEqualTo&gt; &lt;ogc:PropertyName&gt;dc:identifier&lt;/ogc:PropertyName&gt; &lt;ogc:Literal&gt;A0522EE9-8C45-4399-8B73-7CCFC2BB9F60&lt;/ogc:Literal&gt; &lt;/ogc:PropertyIsEqualTo&gt; &lt;/ogc:Filter&gt; &lt;/csw:Constraint&gt; &lt;/csw:Delete&gt; &lt;/csw:Transaction&gt; &lt;/SOAP-ENV:Body&gt; &lt;/SOAP-ENV:Envelope&gt;</p>
+											</td>
+										</tr>
+									</table><span class="table_desc"></span></div></li>
+					</ol></p></div><div class="section2" id="GUID-BFA7B0C1-98C0-4708-8C67-2413AACA00E9" purpose="section2"><h3>Geoportal WSDL</h3><p id="GUID-81749702-EF88-46C6-A782-EE94BF02C363">The wsdl associated with the geoportal CS-W SOAP endpoints is based upon the OGC example located at <a target="_blank" class="xref" href="http://schemas.opengis.net/csw/2.0.2/examples/wsdl/2.0.2/" rel="http://schemas.opengis.net/csw/2.0.2/examples/wsdl/2.0.2/">http://schemas.opengis.net/csw/2.0.2/examples/wsdl/2.0.2/</a>. The geoportal wsdl files associated with its CS-W SOAP endpoints are located at http://&lt;host&gt;:&lt;port&gt;/geoportal/csw/service-wsdl.jsp, where &lt;host&gt; is the geoportal host server, and &lt;port&gt; is the port number. They are stored in the \\geoportal\csw directory, and are the following: <ul purpose="ul" id="UL_012DE182EE584B7CA72075207560B4C0">
+						<li purpose="li" id="LI_A35043B1B40145F5945682570486A8C2">http-binding.wsdl</li>
+						<li purpose="li" id="LI_B5944653CE5345E0934851E2BC875D99">kvp-binding.wsdl</li>
+						<li purpose="li" id="LI_6FB6908A61F74F7EA5E691153FB91966">responses.wsdl</li>
+						<li purpose="li" id="LI_051768F818A44BBDA6D639B574BD3264">service-wsdl.jsp</li>
+						<li purpose="li" id="LI_F73D39E0B0894E858DBC61F82FFAC8F4">soap-binding.wsdl</li>
+						<li purpose="li" id="LI_AB1B20348FCC4A6DBEA9C3FE8BF89AAF">xml-interfaces.wsdl</li>
+					</ul></p></div></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

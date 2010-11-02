@@ -1,0 +1,39 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Browse Tree With the Browse Tree, users can browse the Geoportal resource catalog. User access the browsing structure through a Browse tab in the user interface. The browsing structure that appears on this tab is fully customizable to suit the categorization needs of your organization. The steps necessary to customize the browse structure are described below.By default, the browse displays Content Type and ISO Topic Category.The structure of the browse tree is established through REST URLs in the browse-catalog.xml file. This file is located in the \\geoportal\WEB-INF\classes\gpt\search\browse folder. Each heading in the Browse user interface is established by an item section"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - 
+Browse Tree
+</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-8F405288-8FDC-46E7-87FD-1D66A4DC2238]--><body><div id="content"><div class="header"><h1>
+Browse Tree
+</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="GUID-2FF1D234-EB03-429B-BA0E-E0A032C51234" purpose="section1"><h2>
+Browse Tree
+</h2><p id="GUID-22FBBEE5-77D4-4A4D-BA4E-1F4F474EF44E">
+In the geoportal interface, users can browse the geoportal resource catalog.  User access the browsing structure through a <a class="xref" rel="00t0/00t000000047000000.htm" href="00t0/00t000000047000000.htm">Browse tab</a> in the user interface.  The browsing structure that appears on this tab is fully customizable to suit the categorization needs of your organization. The steps necessary to customize the browse structure are described below.</p><p id="GUID-9E543B0B-6781-43E7-B41B-7EFA9BF6D2BE">By default, the browse displays <span class="uicontrol">Content Type</span> and <span class="uicontrol">ISO Topic Category</span>.The structure of the browse tree is established through REST URLs in the <i>browse-catalog.xml</i> file. This file is located in the<i> \\geoportal\WEB-INF\classes\gpt\search\browse</i> folder. Each heading in the <span class="uicontrol">Browse</span> user interface is established by an item section in the <i>browse-catalog.xml</i> file. Within the item section there are two tags: <i>name</i>and <i>query</i>. The <i>query</i> tag establishes the parameter that will be appended to the REST URL. The <i>name</i> tag is the key that corresponds to the text specified in the <i>\\geoportal\WEB-INF\classes\gpt\resources\gpt.properties</i> file. The <i>gpt.properties</i> file holds the text that will display on the geoportal user interface. </p><p id="GUID-98D63F4C-678C-4E42-A089-0F38E4096891">When you modify browse categories, you will need to add or alter the <i>&lt;item&gt;</i> elements in the <i>browse-catalog.xml</i> file. For example, to filter by <i>Application</i>, the tags within the  <i>item</i> tags would read: <div class="codeblock" purpose="codeblock"><pre class="codeblockbody" id="GUID-8E861D0F-BF32-48D3-BF4B-2A1539D84EFD" purpose="codeblockbody">&lt;item&gt;
+&lt;name resourceKey="catalog.search.filterContentTypes.application"&gt;&lt;/name&gt;
+&lt;query&gt;contentType=application&lt;/query&gt;
+&lt;/item&gt;</pre>
+				</div>
+			</p><p id="GUID-281C33E3-3478-44D3-A2D5-4A81FBE1CCDE">To add a sub-heading to the above Live Data and Map Services heading, you would embed another <i>item</i> section. For example,  to filter Live Data and Map services by continent, add the following <i>items</i>:<div class="codeblock" purpose="codeblock"><pre class="codeblockbody" id="GUID-E2C747DB-1BF9-477B-81D2-9A3A70814C68" purpose="codeblockbody">&lt;item&gt;
+&lt;name resourceKey="catalog.search.filterContentTypes.liveData"&gt;&lt;/name&gt;
+&lt;query&gt;contentType=liveData&lt;/query&gt;
+&lt;item&gt;
+&lt;name resourceKey="catalog.search.filterContentTypes.liveData.nAmerica"&gt;&lt;/name&gt;																									
+&lt;query&gt;bbox=-169.3864,6.3096,-44.1136,82.8652&lt;/query&gt;																							
+&lt;/item&gt;
+&lt;item&gt;
+&lt;name resourceKey="catalog.search.filterContentTypes.liveData.sAmerica"&gt;&lt;/name&gt;																									
+&lt;query&gt;bbox=-118.6966,-56.9329,-2.9177,13.8209&lt;/query&gt;																							
+&lt;/item&gt;
+&lt;/item&gt;
+</pre></div><div class="notes" id="GUID-2C4743A3-5E1C-476C-A198-5CE7C4EA0B5D"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody"><p id="GUID-89EDD03A-B756-436D-97F4-D4C06109FE4C">In addition to adding these elements to the  <i>browse-catalog.xml</i> file, you also have to add text values that correspond to the <i>resourceKey</i>. For example, the <span class="usertext">North America</span> key would be added to the <i>gpt.properties</i> file, as shown below.<div class="codeblock" purpose="codeblock"><pre class="codeblockbody" id="GUID-E69B72C3-ECD9-421C-BA4D-7F2B8685E140" purpose="codeblockbody">catalog.search.filterContentTypes.liveData.nAmerica  = North America</pre></div></p></div></div></p></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

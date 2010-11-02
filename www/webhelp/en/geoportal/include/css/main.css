@@ -1,0 +1,194 @@
+@charset "utf-8";
+/* CSS Document */
+
+/***************************************
+	Core
+***************************************/
+body, html{
+	padding:				0px;
+	margin:					0px;	
+}
+
+body{
+	padding-top:			86px;
+	font-family:			Verdana,Arial,Helvetica,sans-serif;
+	font-size:				.8em;
+	line-height:			1.5em;
+	/*overflow:				hidden;*/
+}
+
+.noScript{
+	margin:					20px 0px 0px 30px;
+}
+
+/***************************************
+	LeftPanel
+***************************************/
+#leftPanel{
+	overflow:				auto;
+}
+
+#leftPanel div{
+	border-top: 			1px solid #DFF0F8;
+	clear:					left;
+}
+
+/***************************************
+	Tabs
+***************************************/
+.ui-tabs .ui-tabs-hide {
+     display: 				none;
+}
+
+.tabs{
+	list-style-image: 		none;
+	list-style-type: 		none;
+	list-style-position: 	outside;
+	margin:					0px;
+	padding:				0px 0px 0px 6px;
+	font-size:				1em;
+}
+
+.tabs li{
+	float:					left;
+	margin:					0px 0px 0px -2px;
+	min-width:				60px;
+}
+
+.tabs a,
+.tabs a span{
+	background:				transparent url('../images/tabs.png') no-repeat 0px 0px;
+	padding:				0px 10px;
+	display:				block;
+}
+
+.tabs a{
+	background-position:	100% -100px;
+	position:				relative;
+	top:					1px;
+	color:					#336699;
+	text-align:				center;
+	padding-left:			0px;
+	outline:				none;
+}
+
+.tabs a span{
+	padding-top:			7px;
+	background-position:	0px 0px;
+	height:					auto;
+	width:					auto;
+	min-height:				18px;
+	min-width:				60px;
+	padding-right:			0px;
+	padding-top:			6px;
+	line-height:			1em;
+}
+
+.ui-tabs-selected a,
+.ui-tabs-selected a span{
+	background:				transparent url('../images/tabs.png') no-repeat 0px -50px;
+}
+
+.tabs a:hover,
+.ui-tabs-selected a{
+	background-position:	100% -150px;
+	text-decoration:		none;
+	color:					#000000;
+}
+
+.ui-tabs-selected a{
+	cursor:					text;
+}
+
+.tabs a span:hover,
+.ui-tabs-selected a span{
+	background-position:	0px -50px;
+	padding-top:			7px;
+}
+
+
+/***************************************
+	Content
+***************************************/
+#contentWrapper{
+	/*height:					100%;*/
+	border-top:				1px solid #CFCFCF;
+}
+#rightPanel{
+	padding:				0px;
+	background:				#FFFFFF url('../images/circleLoader-large.gif') no-repeat 50% 40%;
+	height:					100%;
+	/*min-height:				600px;*/
+	overflow: 				auto;
+}
+#docWrapper{
+	padding:				10px 20px;
+	background-color:		#FFFFFF;
+	min-height:				80%;
+}
+
+#content{
+	background-color:		#FFFFFF;
+	height:					100%;
+}
+
+
+/***************************************
+	TOC
+***************************************/
+#tocWrapper{
+	/*width:					300px;
+	overflow:				auto;*/
+	white-space:			nowrap;
+	font-size:				.9em;
+	line-height:			1.4em;
+}
+
+.jQueryLazyTree{
+	margin-top:				0px;
+}
+
+.jQueryLazyTree ul.lazyTreeBranch{
+	margin-bottom:			0px;
+	margin-left:			0px;
+}
+
+.jQueryLazyTree li{
+	margin-bottom:			5px;
+	margin-top:				0px;
+}
+
+.jQueryLazyTree li a{
+	color: 					#21759B;
+	text-decoration:		none;
+}
+
+.jQueryLazyTree li a:hover{
+	color: 					#000000;
+	text-decoration:		underline;
+}
+ul.jQueryLazyTree{
+	margin: 				0px 0px 0px 0px;
+}	
+/***************************************
+	Splitter
+***************************************/
+.vsplitbar {
+	width: 					4px;
+	background: 			#DFF0F8 url('../js/splitter/v1.5.1/img/vgrabber.gif') no-repeat center center;
+	height:					100%;
+}
+
+/***************************************
+	General
+***************************************/
+.clear{
+	clear: 					both;
+	height:					1px;
+	line-height:			1px;
+}
+
+
+
+
+

@@ -1,0 +1,71 @@
+@charset "utf-8";
+/* CSS Document */
+
+/***************************************
+	TOC
+***************************************/
+
+.jQueryLazyTree{
+	margin-left:			0px;
+	padding-top:			0px;
+}
+
+.jQueryLazyTree li.root{
+	background: 			none;
+	margin-top:				0px;
+	padding-top:			0px;
+}
+
+.jQueryLazyTree ul.lazyTreeBranch{
+	margin:					0px;
+	width:					100%;
+}
+
+.jQueryLazyTree li{
+	margin-bottom: 0px;
+	padding-bottom: 3px;
+}
+
+.jQueryLazyTree li a.focused{
+	padding: 				0px;
+}
+
+/***************************************
+	TABS
+***************************************/
+.tabs a{
+	width:					100%;
+}
+
+.tabs a span{
+	height: 				18px;
+}
+
+.tabs a:hover{
+	background-position:	100% -100px;
+	text-decoration:		none;
+	color:					#000000;
+	cursor:					pointer;
+}
+
+.ui-tabs-selected a{
+	background-position:	100% -150px !important;
+	text-decoration:		none;
+	color:					#000000;
+	cursor:					pointer;
+}
+
+/***************************************
+	CONTENT
+***************************************/
+#rightPanel{
+	background-position: 	50% 225px;
+}
+
+#docWrapper{
+	height:					400px;
+}
+
+#contentWrapper{
+  margin-top:-20px;
+}

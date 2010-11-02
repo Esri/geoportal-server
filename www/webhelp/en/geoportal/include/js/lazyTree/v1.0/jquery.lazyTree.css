@@ -1,0 +1,65 @@
+
+ul.jQueryLazyTree{
+	padding:			0px;	
+}
+
+.jQueryLazyTree .root{
+	padding:				5px 5px 0px 10px;
+}
+
+.jQueryLazyTree .treeLoader{
+	min-width:			225px;
+	background:			transparent url(images/bar-loader.gif) no-repeat 0px 0px;
+}
+
+.jQueryLazyTree ul.lazyTreeBranch{
+	padding-left:		0px;
+	display:			none;
+	padding-top:		3px;
+}
+
+.jQueryLazyTree li{
+	list-style:			none;
+	padding-left:		25px;
+}
+
+.jQueryLazyTree li a:hover{
+	background-color: 		#DFF0F8;
+}
+
+.jQueryLazyTree li a.focused{
+	background-color:		#ebf8f1;
+	padding: 				2px;
+}
+
+.jQueryLazyTree li.branch{
+	background:			transparent url(images/folder.png) no-repeat 0px 0px;
+}
+
+.jQueryLazyTree li.branch.loading{
+	background:			transparent url(images/folder-loading.gif) no-repeat 0px 0px;
+}
+
+.jQueryLazyTree li.branch.expanded{
+	background:			transparent url(images/folder-open.png) no-repeat 0px 0px;
+}
+
+.jQueryLazyTree li.leaf{
+	background:			transparent url(images/document-text-image.png) no-repeat 0px 0px;
+}
+
+.jQueryLazyTree li.leaf.selected{
+	background:			#E2EDF4 url(images/document-text-image.png) no-repeat 0px 0px;
+}
+
+.jQueryLazyTree li.leaf.selected a.focused{
+	background-color:			#DFF0F8;
+}
+
+.jQueryLazyTree ul.error li{
+	background:			transparent url(images/exclamation-red.png) no-repeat 0px 0px;
+	color: 				#999999;
+}
+
+
+

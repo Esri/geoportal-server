@@ -1,0 +1,753 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="CSW Clients CSW Clients for ArcGIS The CSW Clients bring Geoportal discovery functionality into your ArcMap and ArcGIS Explorer applications. They enable searching OGC Catalog Service for the Web (CS-W) catalogs directly through ArcMap and ArcGIS Explorer. Once resources are returned, they can be viewed or downloaded. Additionally, if the resources are live services they can be added to the ArcMap document or ArcGIS Explorer Globe. In ArcMap, there are additional functionalities that allow users to preview the resource's spatial extent. To learn more about how the Geoportal  uses CS-W, please see Geoportal  Catalog Service. Information on installing, using, and customizing"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - CSW Clients</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-EC6A6862-364C-4225-B717-6E35CC0042B3]--><body><div id="content"><div class="header"><h1>CSW Clients</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="GUID-891359AA-34BE-47C3-B1FB-9A346510AE99" purpose="section1"><h2>CSW Clients for ArcGIS</h2><p id="GUID-E7A8579D-A248-4E14-BCE5-B47AED4B75EA">The CSW Clients bring geoportal discovery functionality into your ArcMap and ArcGIS Explorer applications. They enable searching <a target="_blank" class="xref" href="http://www.opengeospatial.org/standards/cat" rel="http://www.opengeospatial.org/standards/cat">OGC Catalog Service for the Web</a> (CS-W) catalogs directly through ArcMap and ArcGIS Explorer. Once resources are returned, they can be viewed or downloaded. Additionally, if the resources are live services they can be added to the ArcMap document or ArcGIS Explorer Globe. In ArcMap, there are additional functionalities that allow users to preview the resource's spatial extent. To learn more about how the Geoportal Server uses CS-W, please see  <a class="xref" rel="00t0/00t00000004m000000.htm" href="00t0/00t00000004m000000.htm">Geoportal Catalog Service</a>. Information on installing, using, and customizing the CSW Clients is found in the sections below. <div class="notes" id="GUID-416D1389-2534-487C-BEE7-EB8B3A679BD5"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody"><p id="GUID-FB3F72EC-0349-4C5B-98F7-0CC0B21A1E5B">The CSW Client for ArcGIS Explorer is compatible with ArcGIS Explorer version 1200.</p></div></div><ul purpose="ul" id="UL_BCA207B94B38453FAD9C527716A4FB25">
+					<li purpose="li" id="LI_8947C61EDB374077A6B4E1D453A38F47"><a class="xref" rel="00t0/00t00000001w000000.htm#GUID-2E896E58-A545-4E6E-A75E-A518E01D94D6" href="00t0/00t00000001w000000.htm#GUID-2E896E58-A545-4E6E-A75E-A518E01D94D6">Install the CSW Clients for ArcGIS</a>
+					</li>
+					<li purpose="li" id="LI_3D2B7E84AC3845CD81514F7B607EA529">
+						<a class="xref" rel="00t0/00t00000001w000000.htm#ESRI_SECTION2_254FD6F9AA2E499896CBA5A4CA23655C" href="00t0/00t00000001w000000.htm#ESRI_SECTION2_254FD6F9AA2E499896CBA5A4CA23655C">Use the CSW Clients for ArcGIS</a>
+					</li>
+					<li purpose="li" id="LI_D01805428D984E98BEA0FBF67DA7F8DB">
+						<a class="xref" rel="00t0/00t00000001w000000.htm#ESRI_SECTION2_818786EA5E8C4882A2729940D52A8A8C" href="00t0/00t00000001w000000.htm#ESRI_SECTION2_818786EA5E8C4882A2729940D52A8A8C">How the CSW Clients Work</a>
+					</li>
+					<li purpose="li" id="LI_4099CB62DB21404DA19C05C57B43C078">
+						<a class="xref" rel="00t0/00t00000001w000000.htm#ESRI_SECTION2_B5D827377BBF46B194CAB0DDD9CE2A12" href="00t0/00t00000001w000000.htm#ESRI_SECTION2_B5D827377BBF46B194CAB0DDD9CE2A12">How to Configure Additional Catalogs</a>
+					</li>
+					<li purpose="li" id="LI_DD47E2EB0A5D4C019DCA5A561F0AB33E">
+						<a class="xref" rel="00t0/00t00000001w000000.htm#ESRI_SECTION2_0491DFB3F9244F3C9A8DE36260716E78" href="00t0/00t00000001w000000.htm#ESRI_SECTION2_0491DFB3F9244F3C9A8DE36260716E78">How to Author and Add a New Profile</a>
+					</li>
+				</ul>
+			</p><div class="section2" id="GUID-2E896E58-A545-4E6E-A75E-A518E01D94D6" purpose="section2"><h3>Install the CSW Clients for ArcGIS</h3><p id="GUID-490231DE-C88F-48BF-AE01-8C8AA07A615C"><b>Steps to install</b><ol purpose="ol" id="OL_BAFB07EF61A84A348AFFCA7354DD916D">
+						<li purpose="li" id="LI_EE37EC919FF644B4B79039D9379249B2">Run the setup.exe for the CSW Clients.</li>
+						<li purpose="li" id="LI_C31845C155ED4A2BB3519477DFE58677">Follow the instructions in the setup wizard. The installer will give you the option of a complete or custom install. A custom install allows you to choose if you want to install the CSW Clients for both ArcMap and ArcGIS Explorer, or just one of the two.</li>
+						<li purpose="li" id="LI_CA4A55480E1F469EB9E78B36EE93D9FD">During installation, the installer checks for the
+presence of the ArcGIS .NET framework. If the .NET Framework is not
+found, the CSW Client for ArcGIS Desktop will not be installed.
+However, installation will continue for CSW Client for ArcGIS
+Explorer, and a dialog box will appear notifying you of the
+installation status.</li>
+					</ol></p><p id="GUID-0C3970A6-3F18-44C0-9AB3-A2309A0621A7"><b>Add the CSW Client to ArcMap</b><ol purpose="ol" id="OL_CAC933BDD3EF46199F7E8D5500FC5F24">
+						<li purpose="li" id="LI_8652808E36C84488874BA36673194E9B">Start ArcGIS Desktop. The CSW Client is used with the ArcMap component of ArcGIS Desktop.</li>
+						<li purpose="li" id="LI_CA2AF971747843E7AD6EF2B7B4C61F10">Click <span class="uicontrol">Customize <span class="greaterthan">&gt;</span> Customize Mode</span>. The <span class="wintitle">Customize</span> window appears.</li><li purpose="li" id="LI_D2EECE3CDD8C4508B514C3FD649CC047">Click the <span class="uicontrol">Commands</span> tab in the <span class="wintitle">Customize</span> window.</li>
+						<li purpose="li" id="LI_1C9464DD0C8E41DDA4D95483FA110B82">Scroll down through the list of Commands and select <span class="uicontrol">Geoportal</span>. The CSW Client icon <img src="00t0/GUID-F331435B-DD3C-4C4C-AE87-AD51EF2BCE2B-web.png"> will appear in the <span class="wintitle">Commands</span> window on the right.</li>
+						<li purpose="li" id="LI_E6D1CBC42BE24F7FB74F09566047C7DE">Drag the CSW Client icon to any empty space on any toolbar in ArcMap that you wish.</li>
+						<li purpose="li" id="LI_0CB2A241E4FD4AF58DBDA543257F58CB">Close the <span class="wintitle">Customize</span> window.</li>
+					</ol></p><p id="GUID-12BC4AA1-58AF-47F0-A2E9-E00F4E08E4C3"><b>Add the CSW Client to ArcGIS Explorer</b>
+					<ol purpose="ol" id="OL_C1FFD43582FA4588BF6C5213783EF1DF">
+						<li purpose="li" id="LI_49726E7B5502403ABB874E10DE098A47">Open the ArcGIS Explorer application.</li>
+						<li purpose="li" id="LI_4B67B2A234A542DE8B63FDB8F0C34877">At the top of the application, click on the ArcGIS Explorer button in the top left corner. A menu displays.</li><li purpose="li" id="LI_52AD107066C04D108CDF28104E1571EE">Click on the <span class="uicontrol">ArcGIS Explorer Options</span> button. The <span class="wintitle">ArcGIS Explorer Options</span> window appears.</li>
+						<li purpose="li" id="LI_28AAF84C96BF406EB3A36997835682AE">Click <span class="uicontrol">Resources</span> from the menu on the left. The screen to the right populates with several headings. Click the <span class="uicontrol">Add-Ins</span> button to the right of the <span class="uicontrol">Manage Add-Ins</span> heading.</li>
+						<li purpose="li" id="LI_701589382A8F46C7AABA1286C3C0C3F0">Another window opens where you can view and manage Add-Ins. Click the <span class="uicontrol">Add</span> button to the right of the window, and browse to the CSW Clients file named <i>CSWSearchDockWindow.eaz</i>.  The default installation location for this file is <i>C:\Program Files\ESRI\Geoportal\CSWClients </i>.</li>
+						<li purpose="li" id="LI_66884460FB7D4C8290FB7BA61101AA92">Click <span class="uicontrol">Open</span> to load the CSWSearchDockWindow.eaz add-in.</li>
+						<li purpose="li" id="LI_0DCD6B74FA4E4A8AA38B2B721943A0E6">When you close the<span class="wintitle"> Add-In</span> dialog, you may be prompted to restart your ArcGIS Explorer application. After it restarts, the CSW Client will always be available by default unless you choose to remove it from the Add-In's list.</li>
+						<li purpose="li" id="LI_BFABA9CD4838456FABDBD927A58EC9EE">Access the CSW Client by clicking the <span class="uicontrol">Add-In</span> tab at the top of the ArcGIS Explorer application.</li>
+					</ol></p><p id="GUID-CB2DA136-1AA3-416F-95D8-5731DC72D8B2"> The CSW Client is now ready to be used. Read the section below for  how to use the CSW Client, and  <a class="xref" rel="00t0/00t000000007000000.htm#LOGFILEOVERVIEW" href="00t0/00t000000007000000.htm#LOGFILEOVERVIEW">The CswClient.log file for the CSW Clients</a> for information about logging.</p></div><div class="section2" id="ESRI_SECTION2_254FD6F9AA2E499896CBA5A4CA23655C" purpose="section2"><h3>Use the CSW Clients for ArcGIS</h3><p id="GUID-500EF2A5-F490-4687-A14A-0B4B7F680755"> The CSW Clients are used the same way in both ArcMap and ArcGIS Explorer. How to search a catalog for resources, view metadata, download metadata, and add a resource to the map are described below. In ArcMap, click the CSW Client <img src="00t0/GUID-F331435B-DD3C-4C4C-AE87-AD51EF2BCE2B-web.png"> button to open the tool. In ArcGIS Explorer, select the <span class="uicontrol">Add-Ins</span> tab, and select <span class="uicontrol">CSW Client</span> to open the task.</p><p id="GUID-29A23D3F-6895-4108-B4E0-D9B930E2C921">
+					<b>Search a Catalog</b>
+				</p><p id="GUID-5BCBD3F9-4717-40B9-BEAD-D64AAF57BA20">To conduct a search:</p><p id="GUID-2A23D551-974F-4034-8FE4-F1553B2F1C27">
+					<ol purpose="ol" id="OL_90BB416F2642444CA395E8D7C6526EE9">
+						<li purpose="li" id="LI_D0D94618CA42450FB426D3C103E0F755">Click on the <span class="uicontrol">Find</span> tab.</li>
+						<li purpose="li" id="LI_6E4DD45082D842A8B275B03E6AF0A746">Type a term in the <span class="uicontrol">Find</span> text box. <div class="notes" id="GUID-5E10B3C5-C1FF-433C-B434-F187AF4CC712"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody"><p id="GUID-FB59065F-8F50-4C00-B1ED-7C350930F974">if you do not input search criteria, the maximum results that can be retrieved is 100.  If you attempt to retrieve more than 100, you will get a "no results found" message.</p></div></div>
+						</li>
+						<li purpose="li" id="LI_6B093B2E3AB94F858C224D0E25DE2B09">Choose one of the catalog services from the <span class="uicontrol">In
+Catalog</span> dropdown menu. To configure additional catalogs, see <a class="xref" rel="00t0/00t00000001w000000.htm#ESRI_SECTION2_B5D827377BBF46B194CAB0DDD9CE2A12" href="00t0/00t00000001w000000.htm#ESRI_SECTION2_B5D827377BBF46B194CAB0DDD9CE2A12">Configure Additional Catalogs and Profiles</a>.</li><li purpose="li" id="LI_9F5AFE43B99246E49DC0FC90479930B0">Enter parameters to further refine your search (optional). Search parameters are described below.
+<ul purpose="ul" id="UL_C17BA1004759487097CA595914747A10">
+								<li purpose="li" id="LI_5580F824821F4082B38F6D96A7E3062A">
+									<i>Live Data and Maps Only:</i>
+The search can be limited to live service resources by checking the <span class="uicontrol">Live Data and Maps Only</span> checkbox. Live services  can be added to the ArcMap or ArcGIS Explorer document as a layer. <div class="notes" id="GUID-745D3771-BB79-42AA-8570-2098752DAD22"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody"><p id="GUID-F713A960-9B90-42F4-B966-63F637565410">If you have not input a search term but you do check the <span class="uicontrol">Live Data and Maps Only</span> box, it is possible to retrieve more than 100 records because the search query is then populated with a search parameter, content type = live service.</p></div></div></li>
+								<li purpose="li" id="LI_40C0BA3772234E30BD0080B777EAA7F3">
+									<i>Maximum:</i>
+To limit the number of records returned in the search results,
+change the value in the <span class="uicontrol">Maximum</span> box. The limit is 500 when search parameters are input, and 100 for a search with no parameters.</li>
+								<li purpose="li" id="LI_6983515C6D6040B795294407EC69B22F">
+									<i>Use Current Extent (ArcMap only):</i>
+If an extent is already defined in the ArcMap document window, this
+box can be checked and the CSW Client will only retrieve results
+that fall into the defined extent. Some CSW service URLs do not
+enable extent requests, so this may affect the number of results
+returned.</li>
+							</ul><p id="GUID-339FFDD5-04D1-473A-A977-D2329D208A64">
+							</p>
+						</li><li purpose="li" id="LI_8E4EB320CBF04C62AA059C17F1B9C136"> Click the <span class="uicontrol">Find</span> button to execute the search. Results are returned in the <span class="uicontrol">Results</span> window. For each result resource returned, the <span class="uicontrol">Abstract</span> window will display the abstract information for the selected resource if abstract information is provided in its metadata. </li>
+					</ol>
+				</p><p id="GUID-4B1E6433-FCCD-463A-ABEF-C5009F501768">
+					<b>Use Search Results</b></p><p id="GUID-90D87E3B-A734-4385-B096-F5607383BEA0"> Notice the tools located above the <span class="wintitle">Results </span> window. There are seven buttons that display, representing functionality related to the search results. Each button's associated functionality is described below.<ul purpose="ul" id="UL_6C565214A70B4BCD9439C9E5387DF789">
+						<li purpose="li" id="LI_EC9C7E2ED4244D4DB6366DF3681DDFBC">The <span class="uicontrol">View Metadata</span>
+							<img src="00t0/GUID-703D00AB-9FBF-4C05-BF7B-29CE865AA512-web.png"> tool will open the resource's metadata  document as XML in a new window.</li>
+						<li purpose="li" id="LI_28F13C306B3443BF866429056A24EC5E">The <span class="uicontrol">Download Metadata</span>
+							<img src="00t0/GUID-2EEE3429-0640-4C97-A183-09C145EFC640-web.png"> tool allows the resource's metadata XML to be downloaded and saved.</li>
+						<li purpose="li" id="LI_B78EF8AA85134AF68CA78568087A9EC8">The <span class="uicontrol">Add to Map</span>
+							<img src="00t0/GUID-CF882F14-EDB6-47AA-8463-460A6BB286D4-web.png"> tool will add the service described by the resource to the map or globe as a new layer. This button will be grayed out unless the resource has a content type of "Live Data and Maps". If you click the Add to Map button and no data is added to the map, it is possible that the resource's metadata does not include service  information. In order to display the live service,  service connection information must be provided in the metadata xml for that resource.</li>
+						<li purpose="li" id="LI_CD1A9F905577428EA3AAD604F0DD6CB2">The next four buttons are related to the display of a resource's spatial footprint in the current map window. The extent shown in the footprint corresponds to the bounding box defined in the resource's metadata. <ul purpose="ul" id="UL_B38D6CDE735D441194AE3561AB360A85">
+								<li purpose="li" id="LI_47E9225F025444F58C20DB2D545FDB62">The <span class="uicontrol">Display Footprint</span> tool will show the extent of the selected resource overlaid on the map document.  </li>
+								<li purpose="li" id="LI_AFD26B51403447558C46633D0D78FD70">The <span class="uicontrol">Zoom to Footprint</span>
+									<img src="00t0/GUID-2EE05802-8048-4998-8279-44784F80C394-web.png"> tool will zoom to the extent of the selected resource. This is especially useful if the extent is a small region or the basemap uses a different projection.</li>
+								<li purpose="li" id="LI_E098BAE95A3142EC841AB7CCBD70F03D">The <span class="uicontrol">Show All Footprint</span>
+									<img src="00t0/GUID-FB6BEE07-27E4-4B01-872E-EBAE0FA4779B-web.png"> tool will add all the footprints in the <span class="wintitle">Results</span> window to the map at once. To hide them, click the same button again.</li>
+								<li purpose="li" id="LI_59AD5D128DD34F358BF846271A380B92">The <span class="uicontrol">Clear All Footprint</span>
+									<img src="00t0/GUID-EB6553DB-259A-4FE0-BD82-732E06BDFF39-web.png"> tool will remove all footprints that have been added to the map.</li>
+							</ul>
+						</li>
+					</ul> Use these tools to view resource metadata, download it, and add the service or its footprint to the map or globe.</p></div><div class="section2" id="ESRI_SECTION2_818786EA5E8C4882A2729940D52A8A8C" purpose="section2"><h3>How the CSW Clients Work</h3><p id="GUID-732794D1-F9DF-417F-B9BE-15586B0172EF"> The CSW Clients need three pieces of
+information in order to retrieve records from a catalog service for
+display in ArcMap or ArcGIS Explorer.</p><p id="GUID-391790C4-3E83-4723-91A4-A21888E9EE3C">
+					<ol purpose="ol" id="OL_2D171032F8444A55ABBA1C26AF672233">
+						<li purpose="li" id="LI_518F09A10F6F4AAAAEC9E06A4CF70196"><b>A GetCapabilities URL to the catalog</b>: This is input
+in the Catalog Service URL field on the Configure tab of the CSW
+Clients. The GetCapabilities URL provides the catalog endpoint to
+which the CSW Clients send the search request and from which they
+receive the response.</li>
+						<li purpose="li" id="LI_B67C553BF0834FCEBF25357A0E99C7CD"><b>Search criteria</b>: This is entered into the fields on
+the Find tab of the CSW Clients. Search criteria define what
+resources are returned by the CSW Clients. Search criteria act as
+filters, such as filtering by a search term, if data should be Live
+Data only, and the maximum number of search results returned.</li>
+						<li purpose="li" id="LI_C9F9B1C16CF941ADAE9C8C3AB57EBF54"><b>A catalog profile</b>: The catalog service's profile is
+selected from a dropdown menu on the Configure tab of the CSW
+Clients. The catalog profile designation indicates to the CSW
+Clients which profile the catalog service uses. The mapping between
+the catalog service and its profile is defined in a file called
+CSWCatalogs.xml. This file is updated each time a new catalog is
+configured with the CSW Clients Configure tab. The CSW Clients
+reference CSWCatalogs.xml to find out what profile the catalog
+uses.
+The list of available profiles is defined in another file,
+CSWProfiles.xml. The profile will indicate which xslt files will be
+used to formulate requests between the CSW Clients and the
+catalog.</li>
+					</ol>
+ The CSW Clients maintain a list of supported profiles in a file called CSWProfiles.xml. Navigate to the \\CSWClients\Data directory and open the CSWProfiles.xml file. Notice that for each profile in the list, there are three xslt files referenced: GetRecords_Request, GetRecords_Response, and GetRecordByID_Response. These three xslt's transform requests and responses to and from the catalog service for interaction with the ArcMap or ArcGIS Explorer interface. An excerpt from the CSWProfiles.xml file, showing the ArcGIS Server Geoportal Extension profile, is shown below.<pre class="lines" purpose="lines">
+&lt;?xml version="1.0" encoding="utf-8" ?&gt; 
+&lt;CSWProfiles&gt; 
+&lt;!-- OGCCORE ESRI GPT --&gt;
+ &lt;Profile&gt;
+ &lt;ID&gt;urn:ogc:CSW:2.0.2:HTTP:OGCCORE:ESRI:GPT&lt;/ID&gt; 
+&lt;Name&gt;ArcGIS Server Geoportal Extension&lt;/Name&gt;
+ &lt;CswNamespace&gt;http://www.opengis.net/cat/csw/2.0.2&lt;/CswNamespace&gt; 
+&lt;Description /&gt; 
+&lt;GetRecords&gt;
+ &lt;XSLTransformations&gt; 
+&lt;Request&gt;CSW_2.0.2_OGCCORE_ESRI_GPT_GetRecords_Request.xslt&lt;/Request&gt;
+ &lt;Response&gt;CSW_2.0.2_OGCCORE_ESRI_GPT_GetRecords_Response.xslt&lt;/Response&gt;
+ &lt;/XSLTransformations&gt;
+&lt;/GetRecords&gt;
+ &lt;GetRecordByID&gt; 
+&lt;RequestKVPs&gt;
+ &lt;![CDATA[service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;ElementSetName=full]]&gt; 
+&lt;/RequestKVPs&gt;
+ &lt;XSLTransformations&gt; 
+&lt;Response&gt;CSW_2.0.2_OGCCORE_ESRI_GPT_GetRecordByID_Response.xslt&lt;/Response&gt;
+ &lt;/XSLTransformations&gt; 
+&lt;/GetRecordByID&gt; 
+&lt;SupportSpatialQuery&gt;True&lt;/SupportSpatialQuery&gt;
+ &lt;SupportContentTypeQuery&gt;True&lt;/SupportContentTypeQuery&gt; 
+&lt;SupportSpatialBoundary&gt;True&lt;/SupportSpatialBoundary&gt; 
+&lt;/Profile&gt;
+</pre></p><p id="GUID-AD335464-0DB4-426C-8CA5-C310A70D946D">
+					<b>Flow of information using the
+xslt's</b></p><p id="GUID-D43D7972-0316-4453-8903-DB8A569EFADB">
+Conceptually, there are three spaces of interaction when using the
+CSW Clients: the CSW Clients user interface (UI), the CSW Clients
+translation activity, and the catalog service with which the CSW
+Clients interact. Interactions take place when the user initiates a
+search using the CSW Clients and when the user initiates
+communication with the catalog service using the CSW Clients' <span class="uicontrol">View
+Metadata</span>, <span class="uicontrol">Download Metadata</span>, <span class="uicontrol">Add to Map</span>, and <span class="uicontrol">View Footprint</span>
+buttons. The three diagrams below show how the UI, the CSW Clients
+translation activity, and the catalog service interact to carry out
+search and display of metadata information in ArcMap or ArcGIS
+Explorer.</p><p id="GUID-C419AF81-C174-4874-ADED-0E24D60E3374">
+					<ul purpose="ul" id="UL_7D477B19AC77420D8CEC28EA73040452">
+						<li purpose="li" id="LI_11005E3496DA4C0DB58A5636E5D6D35D">
+							<b>Initial Request to a Service</b>
+							<p id="GUID-CA47E129-395E-4C51-8C76-91927928B0A0">The initial communication flow for the CS-W request and response is
+shown in the diagram below, and an explanation of the numbered
+steps follows.
+
+<img src="00t0/GUID-A2729D4F-058E-46BF-A845-B6A17EC56836-web.png"><ol purpose="ol" id="OL_230E033F99A94E5FA0AE98323964510F">
+									<li purpose="li" id="LI_5A7A1A253BF04FFBABF69D5C09721251">When a user clicks the <span class="uicontrol">Find</span> button for the CSW
+Clients, the CSW Clients references the CSWCatalogs.xml file to
+find the corresponding profile for that catalog service. The
+corresponding profile determines which GetRecordsRequest,
+GetRecordsResponse, and GetRecordByID_Response files will be used.
+Then, the CSW Clients create a generic xml. The generic xml looks
+like this:<pre class="lines" purpose="lines">
+&lt;csw:GetRecords version="2.0.2" service="CSW"
+resultType="RESULTS" startPosition="1" maxRecords="10"
+xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"&gt;
+&lt;csw:Query typeNames="csw:Record"
+xmlns:ogc="http://www.opengis.net/ogc"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:gml="http://www.opengis.net/gml"&gt;
+&lt;csw:ElementSetName&gt;full&lt;/csw:ElementSetName&gt;
+&lt;csw:Constraint version="1.0.0"&gt;
+&lt;ogc:Filter xmlns="http://www.opengis.net/ogc"&gt;
+&lt;ogc:And&gt;
+&lt;ogc:PropertyIsLike wildCard="" escape=""
+singleChar=""&gt;
+&lt;ogc:PropertyName&gt;AnyText&lt;/ogc:PropertyName&gt;
+&lt;ogc:Literal&gt;wms&lt;/ogc:Literal&gt;
+&lt;/ogc:PropertyIsLike&gt;
+&lt;ogc:PropertyIsEqualTo&gt;
+&lt;ogc:PropertyName&gt;Format&lt;/ogc:PropertyName&gt;
+&lt;ogc:Literal&gt;liveData&lt;/ogc:Literal&gt;
+&lt;/ogc:PropertyIsEqualTo&gt;
+&lt;/ogc:And&gt;
+&lt;/ogc:Filter&gt;
+&lt;/csw:Constraint&gt;
+&lt;/csw:Query&gt;
+&lt;/csw:GetRecords&gt;
+</pre>
+Look closely at what information is being
+transferred in this piece of code. Each bit of information corresponds to what is input into the CSW
+Clients UI. In the GetRecords element, there is an
+attribute telling how many records should be retrieved -
+maxRecords, and in this example, ten records will be returned.
+There is an element defining the search term that is input -
+PropertyName AnyText, and in this example the search term is 'wms'.
+Then there is a parameter for retrieving the content type of the
+document, if available - PropertyName Format, and in this example,
+records to be retrieved should be liveData (the <span class="uicontrol">Live Data and Maps
+Only</span> checkbox in the UI).  <div class="notes" id="GUID-86A26D5F-FCFB-4217-A69E-77C5FAE3D665"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody"><p id="GUID-5BA20F0F-1D67-4B53-8FF4-4F460C7802C4">There can be
+additional parameters in this generic xml for spatial extent, ISO
+Topic Category, and Modified Date. The parameters for ISO Topic and
+Modified Date are for use within the geoportal web application alone, and do not
+need to be specified for use with the CSW Clients.</p></div></div></li><li purpose="li" id="LI_C69290D20E3D4965BF581B5E5D06546D"> The CSW Clients interpret the generic XML, and applies a transformation according to the GetRecords_Request.xslt that translates the generic XML into a CS-W GetRecordsRequest so the catalog service can interpret the search criteria.</li><li purpose="li" id="LI_A2E403143CC54154B8B5A4B9AC92096B">The transformed xml is passed as a GetRecordsRequest to the catalog service.</li><li purpose="li" id="LI_EEBA90FFB83B44CD8681A0121D64D960">The catalog service responds with a list of records that match the search criteria, formatted in CS-W syntax.</li><li purpose="li" id="LI_A632FDE1A3B24290A9B0DF8CF7493D5C">The CSW Client applies the GetRecords_Response.xslt to translate the catalog service response into resulting records for display by the CSW Client interface. Abstract, Footprint information for the Footprint buttons, and if the records are Live Data are also returned for each record.</li>
+								</ol>
+							</p>
+						</li><li purpose="li" id="LI_7C4D3F0C48EA46BBA99A28BE387C8CF6"><p id="GUID-1C516F5F-4E1C-4DC6-88E4-A392F5A72216">
+								<b>View Metadata and Download Metadata
+buttons</b>
+For the View Metadata and Download Data buttons, the CSW Clients do
+not need to apply stylesheets to interpret user input or display
+the catalog service's response. Instead, the CSW Clients use the
+catalog service's native GetRecordById requests and responses to
+retrieve the metadata. This communication flow is shown in the
+diagram below, and an explanation of the numbered steps
+follows.
+</p><img src="00t0/GUID-1F65442E-D358-4D9E-951F-F2CDD97E53F3-web.png">
+							<p id="GUID-D76F6982-0A08-48AA-85CF-FD78FE0C7116">
+								<ol purpose="ol" id="OL_3546F34B8B9E4FB49158F7D83BD39B6D">
+									<li purpose="li" id="LI_9AA19DB828824F21A91FC33525E8AB4D">When a user clicks the View Metadata or Download
+Data buttons, the CSW Clients request the full metadata document
+for the record using the catalog service's innate GetRecordById
+request defined in its GetCapabilities.</li>
+									<li purpose="li" id="LI_21A811BC18CA4F72B1AEBDE3E7192CAE">The catalog service responds with a GetRecordById
+response, and the full metadata is returned to the user
+interface.</li>
+								</ol>
+							</p>
+						</li><li purpose="li" id="LI_3FE9E317DECA40CBBC88E9150E9AE969"><p id="GUID-0571A367-59FD-49D0-B2B3-D9E559033579">
+								<b>Add to Map button</b>
+An additional transformation, called the
+GetRecordByID_Response.xslt, comes into play when the user clicks
+the Add to Map button. The communication flow is shown in the
+diagram below, and an explanation of the numbered steps
+follows.
+</p><img src="00t0/GUID-73685D1A-3D4C-4559-B1AC-BC0E58B6DC96-web.png">
+							<p id="GUID-14A391AB-4096-42F2-9C16-AE761387A673">
+								<ol purpose="ol" id="OL_4BD40E82EE114788B0AB0BE19EEEAA7A">
+									<li purpose="li" id="LI_B465EB866DC9447794D547AE44A0F3A0">When a user clicks the Add to Map or Add Footprints
+button, the CSW Clients retrieve the GetRecordByID response from
+the catalog service.</li>
+									<li purpose="li" id="LI_A9649A24670D455BB82A5B87A707E53E">The CSW Clients then apply the
+GetRecordByID_Response.xslt to the response to extract the URL that
+is used for the live service.</li>
+									<li purpose="li" id="LI_F5BFC0A572934FEFA25935BA1BED3925">The URL is then sent to the user interface for Add
+to Map, or the footprint of the metadata as defined by the envelope
+information in the metadata.</li>
+								</ol>
+							</p>
+						</li>
+					</ul>
+				</p></div><div class="section2" id="ESRI_SECTION2_B5D827377BBF46B194CAB0DDD9CE2A12" purpose="section2"><h3>How to Configure Additional Catalogs</h3><p id="GUID-4C17743A-9182-4FAB-9D52-AA0AD35B0B0A">The CSW Clients are preconfigured to search Geospatial OneStop -
+the <span class="uicontrol">GOS2 OGC Core</span> catalog in the search interface - by default.
+But if you want to search a different catalog service than
+Geospatial OneStop, it is possible by registering the catalog
+service in the CSW Clients' <span class="uicontrol">Configure</span> tab.</p><p id="GUID-E51FB42E-8798-4568-A6F3-562CD1F93A9C">
+					<ul purpose="ul" id="UL_5883995E132D403D8B6CA42EAB7DA20D">
+						<li purpose="li" id="LI_A9B2E30988A644F3AF7C9CEE8045743C">
+							<b>How to register a catalog service for use in the
+CSW Clients</b>
+							<p id="GUID-5F5A8086-79C5-4836-BBED-2C087F94B17A">
+								<ol purpose="ol" id="OL_5258028D8B9C487790ECAD1EA206FFE3">
+									<li purpose="li" id="LI_B8DCF9EE95DF417E8F80E0F1FD3F83FA">Start by clicking the <span class="uicontrol">Configure</span> tab.
+On this tab you will see three input fields and three buttons. You
+will enter information into these fields that define the connection
+to the catalog service and provide the name for the service in the
+user interface.</li>
+									<li purpose="li" id="LI_C93BF46E9538452BB533D5D14299E9C9">Click the <img src="00t0/GUID-BC6F55E5-70D4-4057-8DE9-178C20EC07F9-web.png">
+										<span class="uicontrol">New</span> button to clear the form for your
+new catalog service entry.</li>
+									<li purpose="li" id="LI_F979FA7C40AE4FCBA3707B8387DD48D4">In the <span class="uicontrol">Catalog Service URL</span> input box, type the
+GetCapabilities URL of the service you wish to add. If you are
+registering your geoportal 10 catalog service, the format for
+the URL will be similar to the following:<pre class="lines" purpose="lines">
+http://serverName/geoportal/csw/discovery?Request=GetCapabilities&amp;Service=CSW&amp;Version=2.0.2
+</pre></li>
+									<li purpose="li" id="LI_36CD31E8F7024CC68C8D21D1CCE5A0F3">In the <span class="uicontrol">Profile</span> drop-down list, specify the profile
+that the catalog service uses. It is sometimes possible to find
+this information by pasting the GetCapabilities URL in a web
+browser and reading the resulting response for clues. If you cannot
+determine the profile from looking at the GetCapabilities response,
+you may have to contact the catalog service's host organization and
+ask about the profile. If you are registering a geoportal 10
+catalog service, the profile will be the ArcGIS Server Geoportal
+Extension profile. If the catalog service uses a profile that is
+not in the default dropdown list, you can add the profile. See <a class="xref" rel="00t0/00t00000001w000000.htm#ESRI_SECTION2_0491DFB3F9244F3C9A8DE36260716E78" href="00t0/00t00000001w000000.htm#ESRI_SECTION2_0491DFB3F9244F3C9A8DE36260716E78">How to Author and Add a New Profile</a> for instructions.</li>
+									<li purpose="li" id="LI_BABC5C1B4B2F4505824E6B40711F0B76">Provide a display name for the catalog service by
+typing a name in the <span class="uicontrol">Display Name</span> field.</li>
+									<li purpose="li" id="LI_BC3E11C410A142368B39DEC36AF45721">Click the <img src="00t0/GUID-87B6A899-E0ED-497E-B148-411074523F5D-web.png"><span class="uicontrol">Save</span> button to add the new catalog to the
+catalog list.</li>
+									<li purpose="li" id="LI_52C00A3B783341A48CB88528B4B0054A">Now, activate the <span class="uicontrol">Find </span>tab. Your newly registered
+catalog service should appear in the <span class="uicontrol">In Catalog</span> drop-down
+list.</li>
+								</ol>
+							</p>
+						</li>
+						<li purpose="li" id="LI_A06B33EB94D9441B8C98B9B4FD698D4C">
+							<b>How to update an existing catalog service from
+the list</b>
+							<p id="GUID-87D37029-CDEF-4E4B-AF44-11D74A9316D2">
+								<ol purpose="ol" id="OL_67843275C8C146E3BF58D6ACCDCA0446">
+									<li purpose="li" id="LI_B0F4EDD93F5B4B5CA553C521B8FD0DF3">Click the <span class="uicontrol">Configure</span> tab.</li>
+									<li purpose="li" id="LI_472ECBCC4A614673B043BD9D98B1ADCA">Highlight the catalog service that is going to be
+updated in the <span class="uicontrol">Catalogs</span> list. The <span class="uicontrol">Catalog Service URL</span>, <span class="uicontrol">Profile</span>, and
+<span class="uicontrol">Display Name</span> will be loaded into the interface.</li>
+									<li purpose="li" id="LI_7CC12135287D43A8B65BEAEA268FA263">Make your changes to these fields.</li>
+									<li purpose="li" id="LI_81639125C3534D60AFC32625FF275B7B">Click the <img src="00t0/GUID-87B6A899-E0ED-497E-B148-411074523F5D-web.png"><span class="uicontrol">Save</span> button.</li>
+								</ol>
+							</p>
+						</li>
+						<li purpose="li" id="LI_CACF248BF2B34A55866FA5DD5BF1D2E7">
+							<b>How to delete an existing catalog service from
+the list</b>
+							<p id="GUID-B96DE2F4-8B7E-447D-B929-B531FF96C840">
+								<ol purpose="ol" id="OL_F6E178E011454C1BB96F63383E01485E">
+									<li purpose="li" id="LI_45AA049CF25440ECBC3AE794F2F9D2FA">Click the <span class="uicontrol">Configure</span> tab.</li>
+									<li purpose="li" id="LI_834F7E6A6F184FA89FE3A6D06F8A0632">Highlight the catalog service that you want to
+delete from the registered catalog list.</li>
+									<li purpose="li" id="LI_08769D74BA9A43F58A855CB8BEC72A3C">Click the <img src="00t0/GUID-68206A57-050B-4E28-8448-36F4B228DA7E-web.png"><span class="uicontrol">Delete</span> button.</li>
+									<li purpose="li" id="LI_A3EB8356FB5E4DABA4BF6B8213B83416">The system will display a confirmation dialog box.
+Click <span class="uicontrol">Yes</span> to confirm the delete.</li>
+								</ol>
+							</p>
+						</li>
+					</ul>
+				</p></div><div class="section2" id="ESRI_SECTION2_0491DFB3F9244F3C9A8DE36260716E78" purpose="section2"><h3>How to Author and Add a New Profile</h3><p id="GUID-16AFFA7D-DAEC-4BAD-8267-E76DCA4CB579">If you want to register a catalog service that does not use one of
+the profiles that the CSW Clients provide by default, then you will
+need to author the three xslt's used for retrieving the search
+results and extracting the URL used to add live data to the map.
+These three files were referenced in the <a class="xref" rel="00t0/00t00000001w000000.htm#ESRI_SECTION2_818786EA5E8C4882A2729940D52A8A8C" href="00t0/00t00000001w000000.htm#ESRI_SECTION2_818786EA5E8C4882A2729940D52A8A8C">How the CSW Clients Work</a> section.
+After authoring these three xslt files, you must reference them
+with a new profile entry in the CSWProfiles.xml file. The section
+below provides details about how to author each xslt, and then how
+to add the reference to the CSWProfiles.xml file. 
+
+
+<ul purpose="ul" id="UL_22A933AF14AA4C32A7656C1E00DD682A">
+						<li purpose="li" id="LI_883882047F3E4A82A8DE6BA0703BEE89">
+							<b>Author the GetRecords_Request.xslt</b>
+							<p id="GUID-20FCFCAA-1866-4451-A97D-9A80F69786E4">Remember that the CSW Clients apply a transformation that
+translates the generic XML from the CSW Clients user interface into
+a CS-W GetRecordsRequest that the catalog service can interpret.
+The code snippet below shows a generic GetRecords_Request.xslt with
+annotation in the commented sections describing details for
+important parts of the file. Copy this text into a text editor such
+as Notepad, and make the adjustments described in the
+comments.</p><pre class="lines" purpose="lines">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;xsl:stylesheet version="1.0"
+xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+&lt;xsl:output method="xml" indent="no" encoding="UTF-8"
+omit-xml-declaration="yes"/&gt;
+&lt;xsl:template match="/"&gt;
+&lt;xsl:element name="csw:GetRecords"
+use-attribute-sets="GetRecordsAttributes"
+xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+xmlns:ogc="http://www.opengis.net/ogc"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:gml="http://www.opengis.net/gml"&gt;
+&lt;csw:Query typeNames="csw:Record"&gt;
+&lt;csw:ElementSetName&gt;full&lt;/csw:ElementSetName&gt;
+&lt;csw:Constraint version="1.0.0"&gt;
+&lt;ogc:Filter xmlns="http://www.opengis.net/ogc"&gt;
+&lt;ogc:And&gt;
+
+&lt;!-- CSW Client must retrieve the following information to
+define the search the user specifies in the User Interface:
+'KeyWord' corresponds to the search term the user inputs,
+'LiveDataMap' corresponds to if the user specifies "Live Data and
+Maps Only", and 'Envelope' specifies the bounding box for a search
+based on the current extent of the ArcMap window. The 'tmpltDate'
+corresponds to searching a catalog via the geoportal, in the
+Additional Options, Modified Date search on the Search page.
+--&gt;
+&lt;!-- Key Word search --&gt;
+&lt;xsl:apply-templates select="/GetRecords/KeyWord"/&gt;
+&lt;!-- LiveDataOrMaps search --&gt;
+&lt;xsl:apply-templates select="/GetRecords/LiveDataMap"/&gt;
+&lt;!-- Envelope search, e.g. ogc:BBOX --&gt;
+&lt;xsl:apply-templates select="/GetRecords/Envelope"/&gt;
+&lt;!-- Date Range Search --&gt;
+&lt;xsl:call-template name="tmpltDate"/&gt;
+&lt;/ogc:And&gt;
+&lt;/ogc:Filter&gt;
+&lt;/csw:Constraint&gt;
+&lt;/csw:Query&gt;
+&lt;/xsl:element&gt;
+&lt;/xsl:template&gt;
+
+&lt;!-- key word search : This template is used to pass the search
+term to the catalog service. The PropertyName 'AnyText' is
+variable, depending on what your catalog service accepts. 'AnyText'
+will search all fields, irrespective of which XML element. If you
+wanted to search only the title or abstract, you could change this
+PropertyName parameter accordingly. The 'PropertyIsLike' elements
+(wildCard="" escape= "" singleChar="") are specific to the CSW
+specification your catalog service follows. --&gt;
+&lt;xsl:template match="/GetRecords/KeyWord"
+xmlns:ogc="http://www.opengis.net/ogc"&gt;
+&lt;xsl:if test="normalize-space(.)!=''"&gt;
+&lt;ogc:PropertyIsLike wildCard="" escape=""
+singleChar=""&gt;
+&lt;ogc:PropertyName&gt;AnyText&lt;/ogc:PropertyName&gt;
+&lt;ogc:Literal&gt;
+&lt;xsl:value-of select="."/&gt;
+&lt;/ogc:Literal&gt;
+&lt;/ogc:PropertyIsLike&gt;
+&lt;/xsl:if&gt;
+&lt;/xsl:template&gt;
+
+&lt;!-- LiveDataOrMaps search: This template is used to pass the
+requirement to retrieve only live data/map records from the catalog
+service. The PropertyName 'Format' depends on the parameter your
+catalog service accepts to define the type of resource the
+resulting record describes. The Literal element "liveData" can be
+changed to indicate the term your service may use to retrieve live
+data records.--&gt;
+&lt;xsl:template match="/GetRecords/LiveDataMap"
+xmlns:ogc="http://www.opengis.net/ogc"&gt;
+&lt;xsl:if test="translate(normalize-space(./text()),'true',
+'TRUE') ='TRUE'"&gt;
+&lt;ogc:PropertyIsEqualTo&gt;
+&lt;ogc:PropertyName&gt;Format&lt;/ogc:PropertyName&gt;
+&lt;ogc:Literal&gt;liveData&lt;/ogc:Literal&gt;
+&lt;/ogc:PropertyIsEqualTo&gt;
+&lt;/xsl:if&gt;
+&lt;/xsl:template&gt;
+
+&lt;!-- Envelope search: This template is used to define a bounding
+box for resulting records returned from the catalog service if the
+"Use Current Extent" option is selected (ArcMap CSW Client only).
+Resulting records must fall within this bounding box. Do not change
+the PropertyName, Box, or coordinates elements.--&gt;
+&lt;xsl:template match="/GetRecords/Envelope"
+xmlns:ogc="http://www.opengis.net/ogc"&gt;
+&lt;!-- generate BBOX query if minx, miny, maxx, maxy are provided
+--&gt;
+&lt;xsl:if test="./MinX and ./MinY and ./MaxX and ./MaxY"&gt;
+&lt;ogc:BBOX xmlns:gml="http://www.opengis.net/gml"&gt;
+&lt;ogc:PropertyName&gt;Geometry&lt;/ogc:PropertyName&gt;
+&lt;gml:Box
+srsName="http://www.opengis.net/gml/srs/epsg.xml#4326"&gt;
+&lt;gml:coordinates&gt;
+&lt;xsl:value-of select="MinX"/&gt;,&lt;xsl:value-of
+select="MinY"/&gt;,&lt;xsl:value-of
+select="MaxX"/&gt;,&lt;xsl:value-of select="MaxY"/&gt;
+&lt;/gml:coordinates&gt;
+&lt;/gml:Box&gt;
+&lt;/ogc:BBOX&gt;
+&lt;/xsl:if&gt;
+&lt;/xsl:template&gt;
+
+&lt;!-- tmpltDate: This template is used to define the date range
+for when resulting records returned from the catalog service were
+modified. This is only used for the geoportal search, and not the
+CSW Client search. This section needs to be included only if you
+want to apply your custom profile to the geoportal itself as well
+as the CSW Client (the custom profile would appear in the dropdown
+list of profiles when a publisher user registers a CSW repository).
+Do not change this section.--&gt;
+&lt;xsl:template name="tmpltDate"
+xmlns:ogc="http://www.opengis.net/ogc"&gt;
+&lt;xsl:if
+test="string-length(normalize-space(/GetRecords/FromDate/text()))
+&amp;gt; 0"&gt;
+&lt;ogc:PropertyIsGreaterThanOrEqualTo&gt;
+&lt;ogc:PropertyName&gt;Modified&lt;/ogc:PropertyName&gt;
+&lt;ogc:Literal&gt;&lt;xsl:value-of
+select="normalize-space(/GetRecords/FromDate/text())"/&gt;
+&lt;/ogc:Literal&gt;
+&lt;/ogc:PropertyIsGreaterThanOrEqualTo&gt;
+&lt;/xsl:if&gt;
+&lt;xsl:if
+test="string-length(normalize-space(/GetRecords/ToDate/text()))
+&amp;gt; 0"&gt;
+&lt;ogc:PropertyIsLessThanOrEqualTo&gt;
+&lt;ogc:PropertyName&gt;Modified&lt;/ogc:PropertyName&gt;
+&lt;ogc:Literal&gt;&lt;xsl:value-of
+select="normalize-space(/GetRecords/ToDate/text())"/&gt;&lt;/ogc:Literal&gt;
+
+&lt;/ogc:PropertyIsLessThanOrEqualTo&gt;
+&lt;/xsl:if&gt;
+&lt;/xsl:template&gt;
+&lt;xsl:attribute-set name="GetRecordsAttributes"&gt;
+&lt;xsl:attribute
+name="version"&gt;2.0.2&lt;/xsl:attribute&gt;
+&lt;xsl:attribute name="service"&gt;CSW&lt;/xsl:attribute&gt;
+&lt;xsl:attribute
+name="resultType"&gt;RESULTS&lt;/xsl:attribute&gt;
+&lt;xsl:attribute name="startPosition"&gt;
+&lt;xsl:value-of select="/GetRecords/StartPosition"/&gt;
+&lt;/xsl:attribute&gt;
+&lt;xsl:attribute name="maxRecords"&gt;
+&lt;xsl:value-of select="/GetRecords/MaxRecords"/&gt;
+&lt;/xsl:attribute&gt;
+&lt;/xsl:attribute-set&gt;
+&lt;/xsl:stylesheet&gt;
+</pre>
+When you have finished editing the text, save the file as
+'GetRecords_Request.xslt'.</li><li purpose="li" id="LI_8750B2C57AAB4946BC7789D98C8316D6">
+							<b>Author the GetRecords_Response.xslt</b>
+							<p id="GUID-AE22E7D5-BB11-44FF-B09B-63885E0FCA68">Remember that the CSW Clients apply a transformation that
+translates the catalog service response to the submitted search
+criteria into resulting records for display by the CSW Client
+interface. The code snippet below shows a generic
+GetRecords_Response.xslt with annotation in the commented sections
+describing details for important parts of the file. Copy this text
+into a text editor and make the adjustments described in the
+comments. Note that where specific metadata elements are referenced
+in select statements in this example, you need to verify the
+metadata schema that your catalog service uses and that the
+selected elements comply with that schema. For example, in the
+&lt;ID&gt; element below, the example shows that the <i>dc:identifier</i>
+element will be selected. This is correct if the catalog service's
+response is based on Dublin Core. But if your catalog service's
+response is based on ISO 19139, the &lt;ID&gt; element's select
+statement should be changed to
+<i>gmd:fileIdentifier/gco:CharacterString</i> instead.</p><pre class="lines" purpose="lines">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;xsl:stylesheet version="1.0"
+xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+xmlns:dct="http://purl.org/dc/terms/"
+xmlns:ows="http://www.opengis.net/ows"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+exclude-result-prefixes="csw dc dct ows"&gt;
+&lt;xsl:output method="xml" indent="no" encoding="UTF-8"
+omit-xml-declaration="yes" /&gt;
+&lt;xsl:template match="/"&gt;
+&lt;xsl:choose&gt;
+&lt;!-- if CSW response returns some exception, do the following
+--&gt;
+&lt;xsl:when test="/ows:ExceptionReport"&gt;
+&lt;exception&gt;
+&lt;exceptionText&gt;
+&lt;xsl:for-each
+select="/ows:ExceptionReport/ows:Exception"&gt;
+&lt;xsl:value-of select="ows:ExceptionText"/&gt;
+&lt;/xsl:for-each&gt;
+&lt;/exceptionText&gt;
+&lt;/exception&gt;
+&lt;/xsl:when&gt;
+&lt;xsl:otherwise&gt;
+&lt;Records&gt;
+&lt;xsl:attribute name="maxRecords"&gt;
+&lt;xsl:value-of
+select="/csw:GetRecordsResponse/csw:SearchResults/@numberOfRecordsMatched"/&gt;
+
+&lt;/xsl:attribute&gt;
+&lt;xsl:for-each
+select="/csw:GetRecordsResponse/csw:SearchResults/csw:Record |
+/csw:GetRecordsResponse/csw:SearchResults/csw:BriefRecord |
+/csw:GetRecordByIdResponse/csw:Record |
+/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord"&gt;
+
+&lt;Record&gt;
+&lt;ID&gt;
+&lt;xsl:choose&gt;
+&lt;xsl:when
+test="string-length(normalize-space(dc:identifier[@scheme='urn:x-esri:specification:ServiceType:ArcIMS:Metadata:DocID']/text()))
+&gt; 0"&gt;
+&lt;xsl:value-of
+select="normalize-space(dc:identifier[@scheme='urn:x-esri:specification:ServiceType:ArcIMS:Metadata:DocID'])"/&gt;
+
+&lt;/xsl:when&gt;
+&lt;xsl:otherwise&gt;
+&lt;xsl:value-of select="normalize-space(dc:identifier)"/&gt;
+&lt;/xsl:otherwise&gt;
+&lt;/xsl:choose&gt;
+&lt;/ID&gt;
+&lt;Title&gt;
+&lt;xsl:value-of select="dc:title"/&gt;
+&lt;/Title&gt;
+&lt;Abstract&gt;
+&lt;xsl:value-of select="dct:abstract"/&gt;
+&lt;/Abstract&gt;
+&lt;Type&gt;
+&lt;xsl:value-of select="dc:type"/&gt;
+&lt;/Type&gt;&lt;!--each profile could have a different type of
+bounding box. Some of have two, some have four. This one has four
+--&gt;
+&lt;LowerCorner&gt;
+&lt;xsl:value-of
+select="ows:WGS84BoundingBox/ows:LowerCorner"/&gt;
+&lt;/LowerCorner&gt;
+&lt;UpperCorner&gt;
+&lt;xsl:value-of
+select="ows:WGS84BoundingBox/ows:UpperCorner"/&gt;
+&lt;/UpperCorner&gt;
+&lt;MaxX&gt;
+&lt;xsl:value-of
+select="normalize-space(substring-before(ows:WGS84BoundingBox/ows:UpperCorner,
+' '))"/&gt;
+&lt;/MaxX&gt;
+&lt;MaxY&gt;
+&lt;xsl:value-of
+select="normalize-space(substring-after(ows:WGS84BoundingBox/ows:UpperCorner,
+' '))"/&gt;
+&lt;/MaxY&gt;
+&lt;MinX&gt;
+&lt;xsl:value-of
+select="normalize-space(substring-before(ows:WGS84BoundingBox/ows:LowerCorner,
+' '))"/&gt;
+&lt;/MinX&gt;
+&lt;MinY&gt;
+&lt;xsl:value-of
+select="normalize-space(substring-after(ows:WGS84BoundingBox/ows:LowerCorner,
+' '))"/&gt;
+&lt;/MinY&gt;
+&lt;ModifiedDate&gt;
+&lt;xsl:value-of select="./dct:modified"/&gt;
+&lt;/ModifiedDate&gt;
+&lt;!-- used to extract any urls in the document. It gets the urls
+and the scheme attribute (@scheme, which determines their type
+(type of url it is (thumbnail, website, server, contact, etc.
+urls)). We always choose the "server" url when we add to map.
+--&gt;
+&lt;References&gt;
+&lt;xsl:for-each select="./dct:references"&gt;
+&lt;xsl:value-of select="."/&gt;
+&lt;xsl:text&gt;&amp;#x2714;&lt;/xsl:text&gt;
+&lt;xsl:value-of select="@scheme"/&gt;
+&lt;xsl:text&gt;&amp;#x2715;&lt;/xsl:text&gt;
+&lt;/xsl:for-each&gt;
+&lt;/References&gt;
+&lt;!-- this extracts content type information. Can be used to
+highlight add to map button--&gt;
+&lt;Types&gt;
+&lt;xsl:for-each select="./dc:type"&gt;
+&lt;xsl:value-of select="."/&gt;
+&lt;xsl:text&gt;&amp;#x2714;&lt;/xsl:text&gt;
+&lt;xsl:value-of select="@scheme"/&gt;
+&lt;xsl:text&gt;&amp;#x2715;&lt;/xsl:text&gt;
+&lt;/xsl:for-each&gt;
+&lt;/Types&gt;
+&lt;/Record&gt;
+&lt;/xsl:for-each&gt;
+&lt;/Records&gt;
+&lt;/xsl:otherwise&gt;
+&lt;/xsl:choose&gt;
+&lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;
+</pre>When you have finished editing the text, save the file as
+'GetRecords_Response.xslt'.</li><li purpose="li" id="LI_960BDE19048E4236A75D1805F92BF422"><b>Author the GetRecordByID_Response.xslt</b>
+							<p id="GUID-B65217AC-30B3-452D-8BF2-AB6A983839B7">Remember that the CSW Clients apply the GetRecordByID_Response.xslt to a GetRecordsByID response from the catalog service only to extract the URL that is used to display a live service in the interface. The code snippet below shows a generic GetRecordsByID_Response.xslt. The important part of customizing this is to identify where in the CS-W response information about a live service would be found. This should be defined in the <i>&lt;xsl:template&gt;</i> section with select statements. The example shown below is for a Dublin Core catalog service, and we see that the xpath to the service information can be found at the <i>csw:record/dct:references</i> element. For examples that use ArcIMS CS-W connectors or ISO 19139-based connectors, open other GetRecordByID_Response xslt's within the \\CSWClients\Data folder and look for an example that is similar to the standard that your catalog service uses.</p><pre class="lines" purpose="lines">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt; 
+&lt;xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" exclude-result-prefixes="csw dct"&gt;
+ &lt;xsl:output method="text" indent="no" encoding="UTF-8"/&gt; 
+&lt;xsl:template match="/"&gt; 
+&lt;xsl:choose&gt;
+ &lt;xsl:when test="/ows:ExceptionReport"&gt;
+ &lt;exception&gt;
+ &lt;exceptionText&gt;
+ &lt;xsl:for-each select="/ows:ExceptionReport/ows:Exception"&gt;
+ &lt;xsl:value-of select="ows:ExceptionText"/&gt; 
+&lt;/xsl:for-each&gt; &lt;/exceptionText&gt;
+ &lt;/exception&gt;
+ &lt;/xsl:when&gt; 
+&lt;xsl:otherwise&gt;
+ &lt;xsl:apply-templates select="//csw:Record/dct:references"/&gt;
+ &lt;/xsl:otherwise&gt;
+ &lt;/xsl:choose&gt;
+ &lt;/xsl:template&gt;
+ &lt;xsl:template match="//csw:Record/dct:references"&gt; 
+&lt;xsl:value-of select="."/&gt;
+ &lt;xsl:text&gt;&amp;#x2714;&lt;/xsl:text&gt;
+ &lt;xsl:value-of select="@scheme"/&gt;
+ &lt;xsl:text&gt;&amp;#x2715;&lt;/xsl:text&gt;
+ &lt;/xsl:template&gt;
+ &lt;/xsl:stylesheet&gt;
+ </pre>When you have finished editing the text, save the file as 'GetRecordByID_Response.xslt'.</li><li purpose="li" id="LI_278B9809C4E64870888ACD3ABD20341A">
+							<b>Add your profile to the CSWProfiles.xml file</b>
+							<p id="GUID-174FCD58-197E-4CBA-98CE-DD840C3C1D4F">After you have authored the three xslt's, you need to reference them in the CSWProfiles.xml file. </p><ol purpose="ol" id="OL_7AA563716C6A44F989AB3E36C9B01912">
+								<li purpose="li" id="LI_5C9932FBBB33478BBE8F16A0092995BE">Decide on a prefix that will distinguish your xslt's from the others found in the \\CSWClients\Data directory. Change the names of your three xslt's to include this prefix. For example, <i>GetRecords_Request.xslt</i> becomes<i>MyOrganizationName_GetRecords_Request.xslt</i>.</li>
+								<li purpose="li" id="LI_EA0303563722433791A417BB561AA78D">Navigate to the \\CSWClients\Data folder and open the CSWProfiles.xml file in a text editor.</li>
+								<li purpose="li" id="LI_313E60CE71BF4B1FA71D92187C644E19">Copy the following text into an entry at the top of the file, just below the &lt;CSWProfiles&gt; tag. Update the commented sections to reference the name of your new profile and the three xslt's that you have authored.<pre class="lines" purpose="lines">
+&lt;?xml version="1.0" encoding="utf-8" ?&gt; 
+&lt;CSWProfiles&gt;
+ &lt;!-- insert the name of your profile here within comments --&gt;
+ &lt;Profile&gt;
+ &lt;!-- update the ID value with a unique urn value. Doesn't matter what it is as long as it is unique within this file --&gt; 
+ &lt;ID&gt;urn:ogc:CSW:2.0.2:HTTP:YourProfile &lt;/ID&gt; 
+&lt;!-- update the Name value with the name you want to display for your profile in the Profile drop-down on the Configure tab in the CSW Client user interface--&gt; 
+&lt;Name&gt; Unique name for display of Profile &lt;/Name&gt;
+&lt;!-- update the CswNamespace value with the namespace for your CSW service. For CSW 2.0.2 services, this will typically be http://www.opengis.net/cat/csw/2.0.2. For earlier CSW services, this may be http://www.opengis.net/cat/csw or another namespace --&gt; 
+ &lt;CswNamespace&gt; http://www.opengis.net/cat/csw/2.0.2 &lt;/CswNamespace&gt; 
+&lt;Description /&gt;
+ &lt;GetRecords&gt; 
+&lt;XSLTransformations&gt;
+&lt;!-- update with the name of your custom profile's GetRecords_Request.xslt file--&gt;
+ &lt;Request&gt;MyOrganizationName_GetRecords_Request.xslt &lt;/Request&gt;
+&lt;!-- update with the name of your custom profile's GetRecords_Response.xslt file--&gt;
+&lt;Response&gt;  MyOrganizationName_GetRecords_Response.xslt &lt;/Response&gt;
+ &lt;/XSLTransformations&gt;
+ &lt;/GetRecords&gt;
+ &lt;GetRecordByID&gt;
+ &lt;RequestKVPs&gt;
+ &lt;!-- update with syntax appropriate for issuing a GetRecordById request to the type catalog service to which you want to connect. In this example, the service would use CS-W 2.0.2 protocol and the full set of metadata record elements from each source record that should be presented in the response (ElementSetName) --&gt;
+ &lt;![CDATA[service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;ElementSetName=full]]&gt;
+ &lt;/RequestKVPs&gt; 
+&lt;XSLTransformations&gt; 
+ &lt;!-- update with the name of your custom profile's GetRecordByID_Response.xslt file--&gt; 
+&lt;Response&gt;MyOrganizationName_GetRecordByID_Response.xslt &lt;/Response&gt;
+ &lt;/XSLTransformations&gt;
+&lt;/GetRecordByID&gt;
+&lt;!-- update with True if the CS-W service supports returning queries defined by an extent--&gt; 
+&lt;SupportSpatialQuery&gt;True &lt;/SupportSpatialQuery&gt; 
+&lt;!-- update with True if the CS-W service supports returning the content type of a metadata record--&gt; 
+&lt;SupportContentTypeQuery&gt; True &lt;/SupportContentTypeQuery&gt; 
+&lt;!-- update with True if the CS-W service supports returning bounding box information --&gt;
+&lt;SupportSpatialBoundary&gt;  True &lt;/SupportSpatialBoundary&gt;
+ &lt;/Profile&gt;
+</pre></li><li purpose="li" id="LI_512D5DA8B3AE460AB9BA2EDF16C1250B">By default, when a user clicks the View Metadata button, the metadata XML is returned from the catalog service's GetRecordByID response without any styling applied. If you want to define the styling on the metadata document so it is easier to read, you can use the &lt;StyleResponse&gt; tag instead of the &lt;Response&gt; tag within the &lt;GetRecordByID&gt; section for your profile in the CSWProfiles.xml file. Do the following: <ol purpose="ol" id="OL_342925D9FED747088D232D579AFDF2DA">
+										<li purpose="li" id="LI_A2C46263932B4F1A823868AF37C52FC5">Author a stylesheet (.xsl) that will interpret and render the metadata returned from the GetRecordById response from the catalog service. Save the stylesheet in the same folder as your CSWProfiles.xml file.</li>
+										<li purpose="li" id="LI_4C80CD9F0ACA45EAA90DF37168DB2826">In the CSWProfiles.xml file, scroll to the section that defines the profile to which you want to apply the styling. Within that section, find the &lt;GetRecordByID&gt; element. Within the &lt;GetRecordByID&gt; element, find the &lt;XSLTransformations&gt; element.</li>
+										<li purpose="li" id="LI_C9C2C254EE8C4EBA8B3F7F2F0AE70ED4">Replace the &lt;Response&gt; element section with &lt;StyleResponse&gt;.</li>
+										<li purpose="li" id="LI_1E812FF66A9F401EA6613A35F3EA66CD">Within the &lt;StyleResponse&gt; open and closed tags, type the name of the stylesheet that you created to render the GetRecordByID response. An example is shown below:<pre class="lines" purpose="lines">
+&lt;GetRecordByID&gt;
+ &lt;RequestKVPs&gt;
+ &lt;![CDATA[service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;ElementSetName=full&amp;outputSchema=original]]&gt;
+ &lt;/RequestKVPs&gt;
+ &lt;XSLTransformations&gt; 
+&lt;StyleResponse&gt;Custom_Render.xsl&lt;/StyleResponse&gt; 
+&lt;/XSLTransformations&gt;
+ &lt;/GetRecordByID&gt;</pre></li>
+									</ol>
+								</li>
+								<li purpose="li" id="LI_17675355E13F450D8C4E43C32CC421FF">Save the CSWProfiles.xml file. The next time you open the CSW Clients in ArcMap or ArcGIS Explorer, you should see your profile listed.  </li>
+							</ol>
+						</li>
+					</ul>
+				</p></div></div>
+	<br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>

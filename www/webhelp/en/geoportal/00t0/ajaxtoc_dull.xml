@@ -1,0 +1,178 @@
+<?xml version="1.0"?><map id="GUID-8D9CA5B2-96BE-4495-BC45-F506A79A7CDF" maptitle="Geoportal Extension 10 Help" pubid="320" token="00t000000000000000" treeid="00t000000000000000" xml:lang="en">
+<topicref hrefguid="GUID-4DC5B209-4055-4D33-83F2-E4C8B67D2D7B.xml" navtitle="Welcome to the ArcGIS Server Geoportal Extension 10 Help" pubid="320" token="00t00000001z000000" tpcid="39" treeid="00t00000001z000000">
+</topicref>
+<topichead navtitle="User Help" token="000000022228000000" treeid="000000022228000000">
+<topichead navtitle="Introducing the Geoportal Extension" token="000000022229000000" treeid="000000022229000000">
+<topicref hrefguid="GUID-C8FA04E5-14B1-4E66-8E5D-EAAB6047A43D.xml" navtitle="What is the Geoportal Extension?" pubid="320" token="00t000000012000000" tpcid="22" treeid="00t000000012000000">
+</topicref>
+<topicref hrefguid="GUID-89690A19-778E-46D9-9B92-8042F9DFAAEB.xml" navtitle="What's New in the Geoportal Extension 10" pubid="320" token="00t00000001v000000" tpcid="37" treeid="00t00000001v000000">
+</topicref>
+</topichead>
+<topichead navtitle="Working with the Geoportal Extension" token="00000002222m000000" treeid="00000002222m000000">
+<topicref hrefguid="GUID-1428D205-0BDB-4DFE-808D-2CAE6C5B5C5A.xml" navtitle="User Functions and Roles" pubid="320" token="00t00000003w000000" tpcid="78" treeid="00t00000003w000000">
+</topicref>
+<topicref hrefguid="GUID-2F4A7A7D-17D8-43E2-A08B-D4650BB27125.xml" navtitle="How to Create an Account" pubid="320" token="00t00000002p000000" tpcid="52" treeid="00t00000002p000000">
+</topicref>
+<topicref hrefguid="GUID-EBCB3E3E-CA92-4CC5-923B-35AFF0A01D0E.xml" navtitle="How to Login and Manage my Password" pubid="320" token="00t000000023000000" tpcid="43" treeid="00t000000023000000">
+</topicref>
+<topicref hrefguid="GUID-D7881FC4-1E16-47B7-8499-317AE49038D1.xml" navtitle="How to Create and Manage My Profile" pubid="320" token="00t00000001t000000" tpcid="36" treeid="00t00000001t000000">
+</topicref>
+<topichead navtitle="Using Search" token="00000002222n000000" treeid="00000002222n000000">
+<topicref hrefguid="GUID-911F26AF-BB48-443A-9749-D801B20DEF07.xml" navtitle="How to Search for Resources" pubid="320" token="00t000000032000000" tpcid="62" treeid="00t000000032000000">
+</topicref>
+<topicref hrefguid="GUID-C298C098-4D87-4B70-BC1C-96EA3B4D3106.xml" navtitle="Using Lucene Search Text Queries" pubid="320" token="00t000000004000000" tpcid="4" treeid="00t000000004000000">
+</topicref>
+<topicref hrefguid="GUID-8875935B-64EB-4631-A6C3-C0187793D82B.xml" navtitle="How to Search with an Ontology Service" pubid="320" token="00t00000000p000000" tpcid="12" treeid="00t00000000p000000">
+</topicref>
+<topicref hrefguid="GUID-F1428B20-C625-4AC0-B5A6-F3D0AF0D3A48.xml" navtitle="Geoportal and OpenSearch" pubid="320" token="00t000000009000000" tpcid="9" treeid="00t000000009000000">
+</topicref>
+</topichead>
+<topicref hrefguid="GUID-C5DC2892-3195-4767-B716-ABE7387E4B76.xml" navtitle="How to Use Search Page Results" pubid="320" token="00t00000001p000000" tpcid="32" treeid="00t00000001p000000">
+</topicref>
+<topicref hrefguid="GUID-2A64F19A-C6FA-4DF5-8DAA-7CC3997B25C6.xml" navtitle="How to Browse for Resources" pubid="320" token="00t000000047000000" tpcid="87" treeid="00t000000047000000">
+</topicref>
+<topicref hrefguid="GUID-569EB40F-9EE2-4495-BC06-06ADC043F144.xml" navtitle="How to Leave a Resource Review" pubid="320" token="00t000000045000000" tpcid="85" treeid="00t000000045000000">
+</topicref>
+<topicref hrefguid="GUID-C9B08C19-D76A-419A-89A5-D2A98710917D.xml" navtitle="How to View Resource Relationships" pubid="320" token="00t000000048000000" tpcid="88" treeid="00t000000048000000">
+</topicref>
+<topicref hrefguid="GUID-8E1522FE-9E28-4C93-99CA-8D75EAE89D73.xml" navtitle="How to Publish Resources" pubid="320" token="00t00000000n000000" tpcid="11" treeid="00t00000000n000000">
+</topicref>
+<topicref hrefguid="GUID-FC12B1C4-226F-4E71-B0A1-9E0B73459D44.xml" navtitle="How to Manage and Edit Resources" pubid="320" token="00t00000001r000000" tpcid="34" treeid="00t00000001r000000">
+</topicref>
+<topicref hrefguid="GUID-BAF2877B-1E70-4D50-8498-BF34F6AB60E1.xml" navtitle="How to Restrict Access to Resources" pubid="320" token="00t00000000m000000" tpcid="10" treeid="00t00000000m000000">
+</topicref>
+<topicref hrefguid="GUID-A4A1ECC2-EA81-49E1-9764-503D7F4AC271.xml" navtitle="How to Use the Data Download Feature" pubid="320" token="00t00000002q000000" tpcid="53" treeid="00t00000002q000000">
+</topicref>
+<topicref hrefguid="GUID-3604F5CB-D07A-45BF-B64E-3C9FE5970235.xml" navtitle="How to Provide Feedback" pubid="320" token="00t000000013000000" tpcid="23" treeid="00t000000013000000">
+</topicref>
+<topichead navtitle="Using the REST API" token="00000002222p000000" treeid="00000002222p000000">
+<topicref hrefguid="GUID-2B304DC5-8B74-4297-93D1-61BE840E9307.xml" navtitle="Using the Geoportal REST API" pubid="320" token="00t000000030000000" tpcid="60" treeid="00t000000030000000">
+</topicref>
+<topicref hrefguid="GUID-936C6C5F-F789-4FD3-A499-10F7B4A1B482.xml" navtitle="REST API Syntax" pubid="320" token="00t000000029000000" tpcid="49" treeid="00t000000029000000">
+</topicref>
+</topichead>
+</topichead>
+<topichead navtitle="ESRI Geoportal Clients" token="00000002222q000000" treeid="00000002222q000000">
+<topicref hrefguid="GUID-217206FD-117A-4440-BF3E-FECF6A21E52C.xml" navtitle="Geoportal Clients for ArcGIS" pubid="320" token="00t00000002n000000" tpcid="51" treeid="00t00000002n000000">
+</topicref>
+<topichead navtitle="Geoportal Clients for ArcGIS Desktop" token="00000002222r000000" treeid="00000002222r000000">
+<topicref hrefguid="GUID-EC6A6862-364C-4225-B717-6E35CC0042B3.xml" navtitle="CSW Clients" pubid="320" token="00t00000001w000000" tpcid="38" treeid="00t00000001w000000">
+</topicref>
+<topicref hrefguid="GUID-D9F06817-AE1D-47D6-B185-C860E020F979.xml" navtitle="Publish Client" pubid="320" token="00t000000003000000" tpcid="3" treeid="00t000000003000000">
+</topicref>
+<topicref hrefguid="GUID-594EBCBA-0E20-4B0C-9D49-7D100719C201.xml" navtitle="WMC Client" pubid="320" token="00t00000000v000000" tpcid="17" treeid="00t00000000v000000">
+</topicref>
+</topichead>
+<topichead navtitle="Geoportal Widgets" token="00000002222s000000" treeid="00000002222s000000">
+<topicref hrefguid="GUID-48A84E2C-DFBA-4E3C-BF36-167AD5F98BD8.xml" navtitle="Geoportal Search Widget for HTML" pubid="320" token="00t00000000w000000" tpcid="18" treeid="00t00000000w000000">
+</topicref>
+<topicref hrefguid="GUID-A0F8508A-F8F1-4B4B-9C40-4EB8DA72C245.xml" navtitle="Geoportal Search Widget for Flex" pubid="320" token="00t00000002v000000" tpcid="57" treeid="00t00000002v000000">
+</topicref>
+<topicref hrefguid="GUID-2E856383-28EB-45F3-8B64-5135D24E60F4.xml" navtitle="Geoportal Search Widget for Silverlight" pubid="320" token="00t000000042000000" tpcid="82" treeid="00t000000042000000">
+</topicref>
+</topichead>
+</topichead>
+<topicref hrefguid="GUID-560EE514-6F28-49BB-A32C-57A805F9F539.xml" navtitle="Known Issues and Limitations" pubid="320" token="00t000000036000000" tpcid="66" treeid="00t000000036000000">
+</topicref>
+</topichead>
+<topichead navtitle="Developer Help" token="00000002222t000000" treeid="00000002222t000000">
+<topichead navtitle="Management Considerations" token="00000002222v000000" treeid="00000002222v000000">
+<topicref hrefguid="GUID-EA608E94-D2EE-42F2-BC87-9080C5E3EB6A.xml" navtitle="Management Considerations" pubid="320" token="00t00000000r000000" tpcid="14" treeid="00t00000000r000000">
+</topicref>
+</topichead>
+<topichead navtitle="Installation" token="00000002222w000000" treeid="00000002222w000000">
+<topicref hrefguid="GUID-3C695F5A-76A1-4B1A-98A5-FC1BDB996622.xml" navtitle="Preinstallation Requirements" pubid="320" token="00t000000041000000" tpcid="81" treeid="00t000000041000000">
+</topicref>
+<topicref hrefguid="GUID-D51841EE-633D-4A12-9431-DE19852A7FCD.xml" navtitle="Installation" pubid="320" token="00t000000039000000" tpcid="69" treeid="00t000000039000000">
+</topicref>
+<topicref hrefguid="GUID-336667B3-3AC3-4171-93B1-D0E7723DE7B3.xml" navtitle="Open Source Acknowledgements" pubid="320" token="00t000000020000000" tpcid="40" treeid="00t000000020000000">
+</topicref>
+<topicref hrefguid="GUID-7C3F4AF0-732D-4F16-B93A-BEEA7232505B.xml" navtitle="Post-Deployment Actions" pubid="320" token="00t000000002000000" tpcid="2" treeid="00t000000002000000">
+</topicref>
+</topichead>
+<topicref hrefguid="GUID-50E6DF99-3378-4741-A6A1-E44170643837.xml" navtitle="Security Concepts" pubid="320" token="00t000000011000000" tpcid="21" treeid="00t000000011000000">
+</topicref>
+<topichead navtitle="Components of the Geoportal Extension" token="00000002222z000000" treeid="00000002222z000000">
+<topicref hrefguid="GUID-B6504647-EFE0-4503-B8C0-93F2450FC85F.xml" navtitle="Components of the Geoportal Extension" pubid="320" token="00t00000004t000000" tpcid="96" treeid="00t00000004t000000">
+</topicref>
+<topicref hrefguid="GUID-38A4895A-A3E4-4BB6-8DE6-675EC24D572B.xml" navtitle="User Interface Components: Geoportal Extension Web Application" pubid="320" token="00t00000004s000000" tpcid="95" treeid="00t00000004s000000">
+</topicref>
+<topicref hrefguid="GUID-545E949E-677E-400E-BC15-DD5891993E88.xml" navtitle="Geoportal Web App File Organization" pubid="320" token="00t00000004r000000" tpcid="94" treeid="00t00000004r000000">
+</topicref>
+<topicref hrefguid="GUID-72B36C0A-9251-4D67-A73C-3429383A65FE.xml" navtitle="Identity Components: LDAP and Single Sign-On" pubid="320" token="00t00000004q000000" tpcid="93" treeid="00t00000004q000000">
+</topicref>
+<topicref hrefguid="GUID-F62CEF33-FB85-4565-9A6F-319A66AC8C1B.xml" navtitle="Publication Components" pubid="320" token="00t00000004w000000" tpcid="98" treeid="00t00000004w000000">
+</topicref>
+<topicref hrefguid="GUID-D15B6935-BCE6-40A8-90B2-936E74ADF856.xml" navtitle="Database Tables" pubid="320" token="00t00000004n000000" tpcid="91" treeid="00t00000004n000000">
+</topicref>
+<topicref hrefguid="GUID-E6CE6146-F6BF-41BE-9C62-24ACA4C484E9.xml" navtitle="Search Components" pubid="320" token="00t00000004v000000" tpcid="97" treeid="00t00000004v000000">
+</topicref>
+<topicref hrefguid="GUID-A7E93F4A-B34C-4A34-A5F8-0D46B0CC50DF.xml" navtitle="Catalog Service" pubid="320" token="00t00000004m000000" tpcid="90" treeid="00t00000004m000000">
+</topicref>
+<topicref hrefguid="GUID-359D0DDC-9D63-4630-BE66-7CA06000FDB3.xml" navtitle="Preview Function" pubid="320" token="00t00000004p000000" tpcid="92" treeid="00t00000004p000000">
+</topicref>
+</topichead>
+<topichead navtitle="Customizations" token="000000022230000000" treeid="000000022230000000">
+<topicref hrefguid="GUID-867DE357-4EED-4A86-8CD5-F3428D098D87.xml" navtitle="Customizations Overview" pubid="320" token="00t000000026000000" tpcid="46" treeid="00t000000026000000">
+</topicref>
+<topicref hrefguid="GUID-2DE8DD0E-C85E-48A4-82C1-0F314D8B1173.xml" navtitle="Search Map" pubid="320" token="00t00000001n000000" tpcid="31" treeid="00t00000001n000000">
+</topicref>
+<topicref hrefguid="GUID-A7F58A90-7DFB-458E-A773-85A89820AE58.xml" navtitle="Look and Feel of the User Interface" pubid="320" token="00t000000015000000" tpcid="25" treeid="00t000000015000000">
+</topicref>
+<topicref hrefguid="GUID-E53B5177-CBB9-4D32-8AD0-578EF7A1770F.xml" navtitle="DataDownload Tab" pubid="320" token="00t000000040000000" tpcid="80" treeid="00t000000040000000">
+</topicref>
+<topicref hrefguid="GUID-4CEB455A-F3AA-4E47-8EC3-11AE3A2CFEEE.xml" navtitle="Add Another Tab to the Geoportal Interface" pubid="320" token="00t000000006000000" tpcid="6" treeid="00t000000006000000">
+</topicref>
+<topicref hrefguid="GUID-E1CA9916-30FD-4153-8048-1CD9D086C3AB.xml" navtitle="Single Sign-On" pubid="320" token="00t000000037000000" tpcid="67" treeid="00t000000037000000">
+</topicref>
+<topicref hrefguid="GUID-F1B13C01-84BF-4A3D-B989-BEFCF9878604.xml" navtitle="Integrate with a Content Management System" pubid="320" token="00t00000002w000000" tpcid="58" treeid="00t00000002w000000">
+</topicref>
+<topicref hrefguid="GUID-B6E20C49-347F-46F8-BB6F-4E0C229669C5.xml" navtitle="Localization" pubid="320" token="00t000000019000000" tpcid="29" treeid="00t000000019000000">
+</topicref>
+<topicref hrefguid="GUID-8F405288-8FDC-46E7-87FD-1D66A4DC2238.xml" navtitle="Browse Tree" pubid="320" token="00t000000049000000" tpcid="89" treeid="00t000000049000000">
+</topicref>
+<topicref hrefguid="GUID-75AB98E9-AA19-419A-B706-FB0106C5C29F.xml" navtitle="Create Relationships between Resources" pubid="320" token="00t000000046000000" tpcid="86" treeid="00t000000046000000">
+</topicref>
+<topicref hrefguid="GUID-C2975670-143E-4E59-8354-1F04573F3DDE.xml" navtitle="Enable Search Using an Ontology Service" pubid="320" token="00t00000003v000000" tpcid="77" treeid="00t00000003v000000">
+</topicref>
+<topicref hrefguid="GUID-BD17F743-9779-4FC8-A75E-B5F4B6CE2D69.xml" navtitle="Add Custom Search Criteria" pubid="320" token="00t000000014000000" tpcid="24" treeid="00t000000014000000">
+</topicref>
+<topicref hrefguid="GUID-988F2114-1059-465C-8100-35B8E5A5A86F.xml" navtitle="Search Results 'Share' Link" pubid="320" token="00t000000008000000" tpcid="8" treeid="00t000000008000000">
+</topicref>
+<topicref hrefguid="GUID-5D1BD696-C8E8-4CBC-ABFF-DE84C5E062C6.xml" navtitle="Map LDAP Attributes on the Registration Page" pubid="320" token="00t00000002r000000" tpcid="54" treeid="00t00000002r000000">
+</topicref>
+<topichead navtitle="Custom Metadata Profiles" token="000000022231000000" treeid="000000022231000000">
+<topicref hrefguid="GUID-ABAD2CEB-58A5-4F0B-860B-515EAFEF1459.xml" navtitle="Custom Metadata Profiles Overview" pubid="320" token="00t000000018000000" tpcid="28" treeid="00t000000018000000">
+</topicref>
+<topicref hrefguid="GUID-6B6944C2-0BD7-4F8B-A3A6-3D353A5310A9.xml" navtitle="Standards Support" pubid="320" token="00t000000021000000" tpcid="41" treeid="00t000000021000000">
+</topicref>
+<topicref hrefguid="GUID-3FCA425C-A714-4131-8F87-4FA59E155E73.xml" navtitle="Orientation to the Create Metadata Page" pubid="320" token="00t000000005000000" tpcid="5" treeid="00t000000005000000">
+</topicref>
+<topicref hrefguid="GUID-44A4FBE2-D442-4210-ACFF-FBA0A726440D.xml" navtitle="Add a Custom Profile" pubid="320" token="00t000000022000000" tpcid="42" treeid="00t000000022000000">
+</topicref>
+<topicref hrefguid="GUID-74BB4ABD-180D-4745-AA7C-747DA1373EBB.xml" navtitle="Details of Lucene Indexing in the Geoportal" pubid="320" token="00t00000003n000000" tpcid="71" treeid="00t00000003n000000">
+</topicref>
+<topicref hrefguid="GUID-914C8745-8A16-4BC7-ADF1-B3C01AEB8F16.xml" navtitle="Index All Metadata Content" pubid="320" token="00t00000001m000000" tpcid="30" treeid="00t00000001m000000">
+</topicref>
+</topichead>
+<topicref hrefguid="GUID-1D28CC2B-5F5E-4DA2-857E-3CE6FF0FE169.xml" navtitle="Integrate a Map Viewer" pubid="320" token="00t00000000s000000" tpcid="15" treeid="00t00000000s000000">
+</topicref>
+<topicref hrefguid="GUID-738EE2FF-1A7E-4B5A-A196-D7DE3A8F34F9.xml" navtitle="ISO-Only Geoportal" pubid="320" token="00t00000003r000000" tpcid="74" treeid="00t00000003r000000">
+</topicref>
+<topicref hrefguid="GUID-B422FD4E-53E5-4F7D-9E16-08B167CE80C4.xml" navtitle="Integrate with con terra security solution" pubid="320" token="00t000000043000000" tpcid="83" treeid="00t000000043000000">
+</topicref>
+</topichead>
+<topichead navtitle="Common Problems and Solutions" token="000000022232000000" treeid="000000022232000000">
+<topicref hrefguid="GUID-3D374A92-C95D-4DED-978C-B6E606101BE9.xml" navtitle="Troubleshooting the Database" pubid="320" token="00t000000034000000" tpcid="64" treeid="00t000000034000000">
+</topicref>
+<topicref hrefguid="GUID-0C2C61A7-3048-4C3E-B620-5EDD213D0C0A.xml" navtitle="Error Messages in the Geoportal Web Application" pubid="320" token="00t00000000t000000" tpcid="16" treeid="00t00000000t000000">
+</topicref>
+<topicref hrefguid="GUID-135CCD90-3AF6-4627-9D93-0E43651B7C08.xml" navtitle="Connecting to a User Directory" pubid="320" token="00t00000000z000000" tpcid="19" treeid="00t00000000z000000">
+</topicref>
+</topichead>
+<topicref hrefguid="GUID-E3638966-E165-4266-9BFA-DB078AD0A0F3.xml" navtitle="Logging" pubid="320" token="00t000000007000000" tpcid="7" treeid="00t000000007000000">
+</topicref>
+<topicref hrefguid="GUID-6319C8A4-61CE-42E9-B33C-1ADA69A0C5C4.xml" navtitle="Getting Assistance with a Geoportal Implementation" pubid="320" token="00t000000017000000" tpcid="27" treeid="00t000000017000000">
+</topicref>
+</topichead>
+</map>

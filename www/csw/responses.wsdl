@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<wsdl:definitions targetNamespace="http://www.opengis.net/cat/csw/2.0.2/responses" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:ows="http://www.opengis.net/ows" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:documentation xmlns:dc="http://purl.org/dc/elements/1.1/">
+		<dc:date>2007-04-18</dc:date>
+		<dc:description>
+         This WSDL document defines the response messages and types
+         for the CWS.
+      </dc:description>
+	</wsdl:documentation>
+	<wsdl:types>
+          <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.opengis.net/cat/csw/2.0.2" version="2.0.2" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:include schemaLocation="http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd"/>
+<xsd:include schemaLocation="http://schemas.opengis.net/csw/2.0.2/CSW-publication.xsd"/>
+	     <xsd:import namespace="http://www.opengis.net/ows" schemaLocation="http://schemas.opengis.net/ows/1.0.0/owsExceptionReport.xsd"/>
+	  </xsd:schema>
+
+	</wsdl:types>
+	<wsdl:message name="ServiceExceptionReport">
+		<wsdl:part element="ows:ExceptionReport" name="Body"/>
+	</wsdl:message>
+	<wsdl:message name="GetCapabilitiesResponse">
+		<wsdl:part element="csw:Capabilities" name="Body"/>
+	</wsdl:message>
+	<wsdl:message name="DescribeRecordResponse">
+		<wsdl:part element="csw:DescribeRecordResponse" name="Body"/>
+	</wsdl:message>
+	<wsdl:message name="GetRecordsResponse">
+		<wsdl:part element="csw:GetRecordsResponse" name="Body"/>
+	</wsdl:message>
+	<wsdl:message name="GetRecordByIdResponse">
+		<wsdl:part element="csw:GetRecordByIdResponse" name="Body"/>
+	</wsdl:message>
+	<wsdl:message name="GetDomainResponse">
+		<wsdl:part element="csw:GetDomainResponse" name="Body"/>
+	</wsdl:message>
+	<wsdl:message name="HarvestResponse">
+		<wsdl:part element="csw:HarvestResponse" name="Body"/>
+	</wsdl:message>
+	<wsdl:message name="TransactionResponse">
+		<wsdl:part element="csw:TransactionResponse" name="Body"/>
+	</wsdl:message>
+</wsdl:definitions>

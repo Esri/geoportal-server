@@ -1,0 +1,278 @@
+﻿<html lang="en" xml:lang="en"><head>
+<META http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><META name="description" content="Add Custom Search Criteria Add Custom Search Criteria In the geoportal, it is possible to filter search results based on certain metadata elements. For example, you can retrieve documents with specific terms in the title by prefixing the search query in the Search field with title:searchTerm. This is enabled by the Lucene index, which classifies information in a metadata element with a heading by which a user would search. Search syntax is further discussed in Using Lucene Text Queries. It is also possible to add this customized element search as a search filter in the list of available search options shown in"><meta name="content-language" content="en"><link href="rsrc/htmlhelp.css" rel="stylesheet" type="text/css"><title>Geoportal Server - 
+Add Custom Search Criteria
+</title><script type="text/javascript" language="JavaScript">
+                    var pathL  = self.location.pathname.split ("/");
+                    var fname = pathL[pathL.length-1];
+                    var i = fname.lastIndexOf (".html");
+                    if (i>=0) {
+                    fname = fname.substring (0, i)
+                    } else {
+                    //??
+                    }
+                    self.location.replace ("../index.html#//" + fname);
+                </script></head><!--Publication GUID: [GUID-4DA02BE7-AD9D-4B8F-8F2F-03A1389F0D20]--><!--Topic GUID: [GUID-BD17F743-9779-4FC8-A75E-B5F4B6CE2D69]--><body><div id="content"><div class="header"><h1>
+Add Custom Search Criteria
+</h1><div id="breadcrumb"></div></div>
+		<div class="section1" id="GUID-4B7C6E5B-D016-4D60-9C46-C964006099A7" purpose="section1"><h2>
+Add Custom Search Criteria
+</h2><p id="GUID-D44635B9-83A4-4096-8231-6DE5BCBAB7DC">
+ In the geoportal, it is possible to filter search results based on certain metadata elements. For example, you can retrieve documents with specific terms in the title by prefixing the search query in the <span class="uicontrol">Search</span> field with <span class="usertext">title:searchTerm</span>. This is enabled by the Lucene index, which classifies information in a metadata element with a heading by which a user would search. Search syntax is further discussed in <a class="xref" rel="00t0/00t000000004000000.htm" href="00t0/00t000000004000000.htm">Using Lucene Text Queries</a>. </p><p id="GUID-8EFF97C4-CF96-493D-B005-E5AED3FADD80">It is also possible to add this customized element search as a search filter in the list of available search options shown in the <span class="uicontrol">Additional Options</span> dialog on the <span class="uicontrol">Search</span> page. This topic will first describe how to designate a specific element for search, and then how to add this search to the <span class="uicontrol">Additional Options</span> dialog as a custom search filter. <div class="notes" id="GUID-6B8EC65F-8350-45EC-9E18-42C5A1D6DAD9"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody"><p id="GUID-FEF0F914-3C60-4774-A99C-EA4A51526A31">When you add the customized search criteria, you can also search the custom field using <a class="xref" rel="00t0/00t000000004000000.htm" href="00t0/00t000000004000000.htm">lucene syntax</a> in the <a class="xref" rel="00t0/00t00000004m000000.htm" href="00t0/00t00000004m000000.htm">CS-W interface</a>. However, adding the custom field does not alter the geoportal's <a class="xref" rel="00t0/00t00000004m000000.htm" href="00t0/00t00000004m000000.htm">GetCapabilities</a> operation; the only properties explicitly listed in the geoportal's GetCapabilities are the spatial predicates (e.g., BBOX, Intersects, Within).
+</p></div></div></p></div>
+		<div class="section1" id="ESRI_SECTION1_0F487D4B9FC046E1BCC9F0604B119357" purpose="section1"><h2>
+Task 1: Designate a Specific Element for Search and Verify that it is Indexed</h2><p id="GUID-A0F10AD5-6BCE-4B1D-B05E-CC52E384D3F2">This section assumes that you have an initial understanding of
+the geoportal's <i>property-meanings.xml</i> file as described in <a class="xref" rel="00t0/00t00000003n000000.htm" href="00t0/00t00000003n000000.htm">details of Lucene indexing in the geoportal</a>. In this example, you will configure the geoportal
+to index an element from the INSPIRE metadata schema, as defined by
+the <i>inspire-iso-19115-definition.xml</i> file. <div class="notes" id="GUID-4178ED44-AF3F-4CC9-890F-47102A895BBE"><div class="tip"><img class="note_img" src="rsrc/tip.png" alt="Tip" title="Tip"><span>Tip:</span></div><div class="tipbody"><p id="GUID-E9F8A910-45CD-45DD-A647-AAB19F19A7CA">This
+customization does not require the Geoportal Server source code;
+however, you will be creating a new java class in this
+customization, so java programming knowledge is recommended. If you
+use an integrated development environment (IDE, such as Eclipse) to
+compile the new class, remember to import the <i>geoportal.war</i> file
+into your project as you develop.</p></div></div>
+			</p><div class="section2" id="ESRI_SECTION2_F303997654324D19B018108D6E1B3449" purpose="section2"><h3>Identify the element you want to be searchable from Additional Options.</h3><p id="GUID-1CF561BC-BAB5-4AA3-8E0C-D1992E18DDF6">Likely you already have in mind a metadata element that your organization would like to be searchable from the <span class="uicontrol">Additional Options</span> interface.  It is important to be able to locate this element in one or more metadata profiles your geoportal supports.  Verify that you can find the metadata element, either by locating it in the definition.xml files (found in the <i>\\geoportal\WEB-INF\classes\gpt\metadata</i> subfolders) or from a profile in the geoportal's metadata editor interface.    In this
+example, we will add a search filter for the <span class="uicontrol">Lineage</span> field of an ISO metadata
+document to the <span class="uicontrol">Additional Options</span>search interface. To see the <span class="uicontrol">Lineage</span> field in the geoportal metadata editor, launch the geoportal and log in as a publisher user or
+administrator. Then, click the <span class="uicontrol">Administration</span> tab, and then the <span class="uicontrol">Add</span> link. Select the  <span class="uicontrol">Use dedicated editor to create metadata manually</span>
+option, and then choose the <span class="uicontrol">INSPIRE (Data)</span> profile. Scroll through
+the form, and find the section titled <span class="uicontrol">Quality&amp;Validity</span>. In
+this section, you will see the  <span class="uicontrol">Lineage</span> metadata element. </p></div><div class="section2" id="ESRI_SECTION2_F4572A4611DF4D87BAB8AEEF62A2C752" purpose="section2"><h3>Determine if the chosen element is already indexed by default.</h3><p id="GUID-22791A22-9537-4DF8-943C-93428903607C">If the element that you want to search from the <span class="uicontrol">Additional Options</span> interface appears in one of the geoportal's default metadata editors, it is likely that this element is already indexed by default.  However, if you have created a custom metadata profile with new metadata parameters, or added new metadata elements to the default editors, then you may need to define the indexing for the element. Follow guidance in the <a class="xref" rel="00t0/00t00000003n000000.htm#ESRI_SECTION2_F4572A4611DF4D87BAB8AEEF62A2C752" href="00t0/00t00000003n000000.htm#ESRI_SECTION2_F4572A4611DF4D87BAB8AEEF62A2C752">Determine if the chosen element is already indexed by default</a> section in the <a class="xref" rel="00t0/00t00000003n000000.htm" href="00t0/00t00000003n000000.htm">Details of Lucene Indexing</a> topic.  After reading that section and carrying out recommendations for how the chosen element is indexed, you should be able to input
+a lucene query for your element in the search field on the geoportal
+<span class="uicontrol">Search</span> page and retrieve relevant results.</p></div></div><div class="section1" id="ESRI_SECTION1_B0BA25BD5A93476BA92F46B101D60721" purpose="section1"><h2>
+Task 2: Add the New Search Element to the Additional Options Dialog
+</h2><p id="GUID-5D5AB3E8-D8AF-4D09-A3F8-B75CDA42343A">In this task, you will prepare your search element for search and display in the <span class="uicontrol">Additional Options</span> dialog. Note that in this example, our new searchable element, <span class="uicontrol">lineage</span>, is a <span class="usertext">text</span> field. If your new element is a <span class="usertext">date</span> field or a <span class="usertext">multiselect</span> field, the steps below should be adapted to the type of the field.</p><div class="section2" id="ESRI_SECTION2_C89D2F7911564DE1B8CA8866D4638F0B" purpose="section2"><h3>Build a new class for the new search filter</h3><p id="GUID-F7F1B863-91B4-4068-8CB4-404B978D27DC">The geoportal compiled code already includes classes for the default search options seen in the <span class="uicontrol">Additional Options</span> dialog. To include your additional filter in the dialog, you will need to create a new class that provides information to the geoportal about your element. The new class must implement the <i>ISearchFilter</i> interface, or extend/implement one of the children of <i>ISearchFilter</i>. You can use any name for your new class, but if you want to follow the naming convention of the other search filter classes within the geoportal, the name of your class would be <span class="usertext">SearchFilter&lt;name_of_your_indexing_field&gt;.java</span>. The code shown below is an example of a class that could be used for adding our example <i>lineage</i> element. After you author and compile the new class, put the resulting class file into the <i>\\geoportal\WEB-INF\classes\gpt\search\</i> directory.<pre class="lines" purpose="lines">
+package gpt.search; 
+
+import com.esri.gpt.catalog.search.ISearchFilter; 
+import com.esri.gpt.catalog.search.SearchException;
+import com.esri.gpt.catalog.search.SearchParameterMap; 
+import com.esri.gpt.catalog.search.SearchParameterMap.Value;
+import com.esri.gpt.framework.util.Val;
+
+@SuppressWarnings("serial") 
+public class SearchFilterLineage implements ISearchFilter { 
+
+// key to be used to serialize class to a map 
+private static String KEY_LINEAGE = "lineage"; 
+
+// instance variable 
+private String lineage;
+
+// property (Can be used by jsf(advanced search page) 
+public String getLineage() { 
+return Val.chkStr(lineage);
+ } 
+
+// property (Can be used by jsf(advanced search page) 
+public void setLineage(String lineage) { 
+this.lineage = lineage; 
+} 
+
+// Serialize class instance into a map 
+public SearchParameterMap getParams() { 
+SearchParameterMap map = new SearchParameterMap(); 
+map.put(KEY_LINEAGE, map.new Value(this.getLineage(), ""));
+return map;
+}
+
+// The class may receive a new map for deserialization (e.g. saved searches 
+// can trigger this 
+public void setParams(SearchParameterMap parameterMap) throws SearchException { 
+Value val = parameterMap.get(KEY_LINEAGE);
+ this.setLineage(val.getParamValue()); 
+}
+
+// Deep comparison of filters 
+public boolean isEquals(Object obj) {
+if (obj instanceof SearchFilterLineage) { 
+return ((SearchFilterLineage) obj).getLineage().equals(this.getLineage()); 
+} 
+return false; 
+} 
+
+// This will be called by the clear button 
+public void reset() { 
+this.setLineage(""); 
+} 
+
+// Before search, validate will be called. An exception can be thrown 
+// that will stop the search and the error is displayed on the search page 
+public void validate() throws SearchException {
+if (this.getLineage().equals("this should throw an exception")) {
+throw new SearchException("this should throw an exception");
+} 
+} 
+}
+</pre></p></div><div class="section2" id="ESRI_SECTION2_D213131772FB46E4A76650021C2BA05F" purpose="section2"><h3>Store instances of your new class in
+the geoportal session variables</h3><p id="GUID-46EE8766-D766-4B56-9406-7533D6430EDB">Search parameters and their values are stored in session variables.
+These variables are created when a user loads the first web page of
+the site, and the variables then persist till the user closes the
+browser or does not create any web requests for a certain amount of
+time.
+The JavaServer Faces framework, upon which the Geoportal Server
+is built, has a configuration file where session variables are
+stored. This file is located in the <i>\\geoportal\WEB-INF</i> directory,
+and is called <i>gpt-faces-config.xml</i>. You will need to update this
+file in two places.<ul purpose="ul" id="UL_2C2BF788E36345FBBE2AF857C59D4FDC">
+						<li purpose="li" id="LI_52B3B0F920D54834BED1B945ECAA2D15">Under the section titled &lt;!-- Search Beans
+--&gt;, add the following new managed bean to store your new
+variables in the session. Note that in the example below, we
+reference our example Lineage element; you will need to edit this
+to match the element for which you are customizing the
+search:<pre class="lines" purpose="lines">
+&lt;!--managed bean for lineage search
+--&gt;
+&lt;managed-bean&gt;
+&lt;description&gt;Search Filter with lineage
+properties&lt;/description&gt;
+&lt;managed-bean-name&gt;SearchFilterLineage&lt;/managed-bean-name&gt;
+
+&lt;managed-bean-class&gt;gpt.search.SearchFilterLineage&lt;/managed-bean-class&gt;
+
+&lt;managed-bean-scope&gt;session&lt;/managed-bean-scope&gt;
+&lt;/managed-bean&gt;
+</pre></li>
+						<li purpose="li" id="LI_38196E04234842628B146D7CEA4038BC">In the managedProperty called miscelleniousFilters,
+you will need to make some edits. Verify that the value-class is
+set to com.esri.gpt.catalog.search.ISearchFilter. In the list of
+values, add a value that references your new managed bean. In the
+example below, we add the line
+&lt;value&gt;#{SearchFilterLineage}&lt;/value&gt;:<pre class="lines" purpose="lines">
+&lt;managed-property&gt;
+&lt;property-name&gt;miscelleniousFilters&lt;/property-name&gt;
+
+&lt;property-class&gt;
+com.esri.gpt.catalog.search.SearchFiltersList
+&lt;/property-class&gt;
+&lt;list-entries&gt;
+&lt;value-class&gt;
+com.esri.gpt.catalog.search.ISearchFilter
+&lt;/value-class&gt;
+&lt;value&gt;#{SearchFilterHarvestSites}&lt;/value&gt;
+&lt;value&gt;#{SearchFilterLineage}&lt;/value&gt;
+&lt;/list-entries&gt;
+&lt;/managed-property&gt;
+</pre></li>
+					</ul></p></div><div class="section2" id="ESRI_SECTION2_23C1307CB0C149268940968AD3DF5C30" purpose="section2"><h3>Override the Query Servlet Class</h3><p id="GUID-A7DBE5F6-B2DB-4EBE-B4DB-001CE3C68D41"> In order for your custom search to work from the search page, it must also work from the REST URL. The <i>RestQueryServlet</i> class is the controller for REST searches and should be overridden.  The code below is shown for creating the class that will override the <i>RestQueryServlet</i> class. Open up a text editor and copy the lines below into it. Save the file as  <i>CustomRestQueryServlet.java</i> .<div class="notes" id="GUID-96F8BED7-414C-4C35-8026-4BC1B8C92A3A"><div class="note"><img class="note_img" src="rsrc/note.png" alt="Note" title="Note"><span>Note:</span></div><div class="tipbody"><p id="GUID-CD33E8F0-1335-4E3F-B163-31691F2134E4">In this example, you see that <i>lineage</i> is the name of the rest queryable. You will need to update this for the element you want to search.</p></div></div><pre class="lines" purpose="lines">package gpt.search;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.esri.gpt.catalog.discovery.rest.RestQuery;
+import com.esri.gpt.catalog.discovery.rest.RestQueryParser;
+import com.esri.gpt.catalog.search.SearchCriteria;
+import com.esri.gpt.control.georss.RestQueryServlet;
+import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.util.Val;
+public class CustomRestQueryServlet extends RestQueryServlet {
+private static String REST_PARAM_KEY = "lineage";
+
+//Relate the rest queryable to the CSW queryables 
+protected RestQuery parseRequest(HttpServletRequest request, RequestContext context) {
+    RestQuery query = super.parseRequest(request, context);
+    RestQueryParser parser = new RestQueryParser(request,context,query);
+    // "lineage" will be the name of the rest queryable
+    parser.parsePropertyIsLike(REST_PARAM_KEY, "dc:lineage");
+    /** The below is shown as an example
+   parser.parseRepositoryId("rid");
+   parser.parseResponseFormat("f");
+   parser.parseResponseGeometry("geometryType");
+   parser.parseResponseStyle("style");
+   parser.parseResponseStyle("style");
+   parser.parseResponseStyle("style");
+   parser.parseStartRecord("start",1);
+   parser.parseMaxRecords("max",10);
+   parser.parsePropertyIsEqualTo("uuid","uuid");
+   parser.parsePropertyIsLike("searchText","anytext");
+
+parser.parsePropertyList("contentType","dc:type",",",true);
+parser.parsePropertyList("dataCategory","dc:subject",",",true);
+parser.parsePropertyRange("after","before","dct:modified");
+parser.parseSpatialClause("bbox","spatialRel","geometry");
+parser.parseSortables("orderBy");
+**/
+
+return query;
+}
+
+//Populate the searchCriteria with the rest queryable
+protected SearchCriteria toSearchCriteria(HttpServletRequest request, 
+RequestContext context, RestQuery query) {
+
+SearchCriteria criteria = super.toSearchCriteria(request, context, query);
+RestQueryParser parser = new RestQueryParser(request,context, query);
+
+String sLineage = Val.chkStr(parser.getRequestParameter(REST_PARAM_KEY));
+   if (sLineage.length() &gt; 0) {
+       SearchFilterLineage filterLineage = new SearchFilterLineage();
+       filterLineage.setLineage(sLineage);
+       criteria.getMiscelleniousFilters().add(filterLineage);
+    }
+    return criteria;
+ }
+ }</pre>
+				</p></div><div class="section2" id="ESRI_SECTION2_2B8FC6D8E7384A9FBBC4BD7D9FA596DA" purpose="section2"><h3>Update geoportal's web.xml to  point to your new queryServlet Class </h3><p id="GUID-374DC469-607B-4C53-B805-C5FE6BD54B03">Navigate to your <i>\\geoportal\WEB-INF</i> folder and open the <i>web.xml</i> file in a text editor. Add the following  <span class="usertext">&lt;servlet&gt;</span> reference to the list of servlets, then save the file.<pre class="lines" purpose="lines">&lt;servlet&gt;
+    &lt;servlet-name&gt;RestQueryServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;
+      com.esri.gpt.control.georss.RestQueryServlet
+      gpt.search.CustomRestQueryServlet
+    &lt;/servlet-class&gt;
+          &lt;init-param&gt;
+      &lt;param-name&gt;bundleBaseName&lt;/param-name&gt;
+      &lt;param-value&gt;gpt.resources.gpt&lt;/param-value&gt;
+    &lt;/init-param&gt;
+  &lt;load-on-startup&gt;6&lt;/load-on-startup&gt;
+&lt;/servlet&gt;</pre></p></div><div class="section2" id="ESRI_SECTION2_F7BEEC8E6E294238883C03796FDCEBD3" purpose="section2"><h3>Adapt the Additional Options web
+page</h3><p id="GUID-C9C81497-4302-4CEA-9F7B-F642515E3E35">The <i>criteria.jsp</i> file defines the pop-up interface for <span class="uicontrol">Additional
+Options</span> on the <span class="uicontrol">Search</span> page. Now that you've created the filter and
+done the underlying work to get it referenced in the geoportal, it is important to add the field
+to this search interface. Follow the steps below.<ol purpose="ol" id="OL_6B85E6D9F1F94FEDA8C9AC321EE61B02"><li purpose="li" id="LI_B2945631EE7F4122AF775CC6D46DB00E">Navigate to the <i>\\geoportal\catalog\search</i> directory
+and open the <i>criteria.jsp</i> file in a text editor.</li><li purpose="li" id="LI_1057F7B6F69F48F1B77257CEB03C546C">In the <i>criteria.jsp</i> file, find the section where the
+<i>Modified Date</i> search is defined. You will insert your custom search
+field code just below the whole   <i>&lt;%//modification date %&gt;</i>
+section. Note that the value defined for the <i>outputText id=scLbl</i>
+will be a string that will need to be referenced in the
+<i>gpt.properties</i> file. This string defines the label for your field
+in the <span class="uicontrol">Additional Options</span> interface.</li><li purpose="li" id="LI_5E044456DC1C453BAA03CCEBE61D032D">After the final <i>&lt;/h:panelGroup&gt;</i> tag in the
+modification date section, insert the following (substituting your element for the <i>lineage</i> one here):<pre class="lines" purpose="lines">
+&lt;% // lineage (added) %&gt;
+&lt;h:outputText id="txtClearHtml" escape="false"
+value="&lt;br/&gt;"/&gt;
+&lt;h:outputText escape="false" value="&lt;h3&gt;"/&gt;
+&lt;h:outputText id="scLblLineage"
+value="#{gptMsg['catalog.search.filterLineage.title']}" /&gt;
+&lt;h:outputText escape="false" value="&lt;/h3&gt;"/&gt;
+&lt;h:inputText id="scLineage"
+onchange="javascript:updateHiddenValue(this)"
+value="#{SearchFilterLineage.lineage}" maxlength="4000"
+styleClass="searchBox" /&gt;
+</pre></li><li purpose="li" id="LI_1A7EBAA448CB46C4B5FB5F2456FA98D6"> Near the end of the <i>criteria.jsp</i> file, there is a section that further defines the search options on the <span class="uicontrol">Additional Options</span> dialog. Add a value for your newly added search option, beneath the <i>h:inputHidden id="scSelThemeHidden"</i> tag in the list, as shown below. Note that the <i>id</i> for your <i>inputHidden</i> tag should be similar to the <i>id</i> in the <i>&lt;h:inputText&gt;</i> element in the first piece of code you added to this file. In our example for the <i>inputText</i> element, the <i>id</i> was <span class="usertext">scLineage</span>. In this h:<i>inputHidden element</i>, the <i>id</i> will be <span class="usertext">scLineageHidden</span>:<pre class="lines" purpose="lines">
+&lt;h:outputText escape="false" value="&lt;/div&gt;"/&gt; 
+&lt;h:inputHidden id="scSelSortHidden" value="#{SearchFilterSort.selectedSort}"/&gt; 
+&lt;h:inputHidden id="scDateToHidden" value="#{SearchFilterTemporal.dateModifiedTo}"/&gt; 
+&lt;h:inputHidden id="scDateFromHidden" value="#{SearchFilterTemporal.dateModifiedFrom}"/&gt; 
+&lt;h:inputHidden id="scSelContentHidden" value="#{SearchFilterContentTypes.selectedContentType}"/&gt; 
+&lt;h:inputHidden id="scSelThemeHidden" value="#{SearchFilterThemeTypes.selectedThemes}"&gt; 
+&lt;h:inputHidden id="scLineageHidden" value="#{SearchFilterLineage.lineage}"/&gt;
+</pre></li><li purpose="li" id="LI_A9E536495EFF4C9F995B9E9F2E7F565F">Scroll up in the <i>criteria.jsp</i> file to find the javascript function <i>scReadRestUrlParams()</i>. Add your metadata element's (<i>lineage</i>, in our example)
+parameters that will be appended to the generated REST URLs:<pre class="lines" purpose="lines">
+function scReadRestUrlParams() {
+  …
+  var scLineage = GptUtils.valChkStr(
+  dojo.byId('frmSearchCriteria:scLineageHidden').value);
+  if(scText != "") {
+restParams += "&amp;lineage=" + encodeURIComponent(scLineage);
+  }
+  … 
+  }</pre>
+						</li><li purpose="li" id="LI_075D713DBE4B41408D18D4F8DC2288B4">Save the criteria.jsp file.</li></ol></p></div><div class="section2" id="ESRI_SECTION2_A2432E52FC1E4442826169F2EE75A8F7" purpose="section2"><h3>Update gpt.properties with a label
+for your new search filter</h3><ol purpose="ol" id="OL_18184B80F6FF4E83A4BEAAE4FDC394D0"><li purpose="li" id="LI_A0FEBB54B94548C08AD5F5DF48FF7C9E">Navigate to the
+<i>\\geoportal\WEB-INF\classes\gpt\resources</i> directory and open the
+<i>gpt.properties</i> file in a text editor.</li><li purpose="li" id="LI_207CE6F210B04193B1E57FD36A5196BA">Search for the section where search filters are
+defined. Keys for search filters begin with the string
+"<i>catalog.search.filter…</i>"</li><li purpose="li" id="LI_6A3924D2589141C8A81ABC6B927D9864">Add a new value. This value should match the <i>scLbl</i>
+string you defined in your <i>h:outputText id=scLbl</i> element from the
+<i>criteria.jsp</i> file. In our example, we add the following:<pre class="lines" purpose="lines">
+catalog.search.filterLineage.title = Lineage
+</pre>
+					</li><li purpose="li" id="LI_49A7A49794864388BEF94D79C30DC780">Save the <i>gpt.properties</i> file.</li></ol><p id="GUID-320BEA68-DCF0-4F64-B8AD-5AB0799B7A93">   Restart the geoportal web application for your changes to take affect.  After completing Task 2, you should be able to launch the <span class="uicontrol">Additional Options</span> dialog and see a field for your new search filter. When you input text for that filter and click <span class="uicontrol">ok</span>, then click the <span class="uicontrol">search</span> button, results should contain your input text in that element of the metadata document.</p></div></div><br><div class="footer"> Copyright © 1995-2010 Esri. All rights reserved. </div></div></body></html>
