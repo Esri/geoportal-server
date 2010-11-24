@@ -32,7 +32,7 @@ function Run ()
 	{
 	echo "$(date)" >> grants.txt
 	echo  Running grants_oracle.sql ...   >> grants.txt
-	SQLPLUS /nolog @grants_oracle.sql $SYSUSER $SYSPWD $GEOPORTALUSER >>  grants.txt
+	sqlplus /nolog @grants_oracle.sql $SYSUSER $SYSPWD $GEOPORTALUSER >>  grants.txt
 	echo  ... All done.   >> grants.txt
 	sudo gedit grants.txt
 }
