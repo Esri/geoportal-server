@@ -27,7 +27,7 @@
                  request).getApplicationConfiguration().getInteractiveMap().getJsapiUrl();
     if ((tmp != null) && (tmp.trim().length() > 0)) {
       tmp = com.esri.gpt.framework.util.Val.escapeXmlForBrowser(tmp);
-      cl_jsapi = "<script type='text/javascript'>djConfig = {parseOnLoad: true};</script>";
+      cl_jsapi = "<script type='text/javascript'>djConfig = {parseOnLoad: true, locale: 'en'};</script>";
       cl_jsapi += "<script type='text/javascript' src='"+tmp+"'></script>";
     }
   }
