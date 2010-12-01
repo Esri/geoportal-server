@@ -17,14 +17,16 @@
 <%@taglib prefix="h" uri="http://java.sun.com/jsf/html"%>
 <%@taglib prefix="tiles" uri="http://struts.apache.org/tags-tiles"  %>
 <%@taglib uri="http://www.esri.com/tags-gpt" prefix="gpt" %>
+
+<gpt:jscriptVariable quoted="true" value="#{SearchFilterSpatial.mvsUrl}" variableName="mainGptMvsUrl" id="cmPlGptMvsUrl"/>
+
 <f:verbatim>
+
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 <link rel="search" type="application/opensearchdescription+xml" 
   title="<%=com.esri.gpt.framework.jsf.PageContext.extract().getResourceMessage("catalog.openSearch.shortName")%>"
   href="<%=request.getContextPath()%>/openSearchDescription" />
-
-<gpt:jscriptVariable quoted="true" value="#{SearchFilterSpatial.mvsUrl}" variableName="mainGptMvsUrl" id="cmPlGptMvsUrl"/>
 
 <script type="text/javascript">
 
