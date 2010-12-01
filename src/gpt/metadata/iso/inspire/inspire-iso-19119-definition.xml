@@ -18,7 +18,8 @@
         templateFile="gpt/metadata/iso/inspire/inspire-iso-19119-template.xml" 
         cswOutputSchema="http://www.isotc211.org/2005/gmd" 
         cswBriefXslt="gpt/metadata/iso/apiso-brief.xslt" 
-        cswSummaryXslt="gpt/metadata/iso/apiso-summary.xslt">        
+        cswSummaryXslt="gpt/metadata/iso/apiso-summary.xslt"
+        xsdLocation="http://schemas.opengis.net/iso/19139/20060504/gmd/gmd.xsd,http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd">
           
 	<!-- schema label -->
 	<label resourceKey="catalog.mdParam.schema.inspire.services"/>
@@ -30,7 +31,8 @@
 	<namespace prefix="srv" uri="http://www.isotc211.org/2005/srv"/>
 
 	<!-- schema interrogation -->
-	<interrogation count="count(/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification)*count(/gmd:MD_Metadata/gmd:metadataStandardName[gco:CharacterString='INSPIRE Metadata for Services'])"/>
+	<interrogation count="count(/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification)"/>
+  <!--<interrogation count="count(/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification)*count(/gmd:MD_Metadata/gmd:metadataStandardName[gco:CharacterString='INSPIRE Metadata for Services'])"/>-->
 
   <!-- indexables -->
   <indexables fileName="gpt/metadata/iso/apiso-indexables.xml"/>
@@ -231,7 +233,7 @@
     <parameter key="identification.datasetIdentifier">
       <label resourceKey="catalog.mdParam.inspire.identification.datasetIdentifier"/>
       <input type="text" size="50" editable="false" maxlength="2048" defaultValue="#{EditMetadataController.newUuid}"/>
-      <validation required="true"/>
+      <validation required="false"/>
       <content useSelectForUpdate="true"
                select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString"
                delete="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier"/>
@@ -594,7 +596,7 @@
   </section>
 
   <!-- envelope section -->
-  <section key="envelope" obligation="optional" open="false" >
+  <section key="envelope">
     <label resourceKey="catalog.mdParam.inspire.envelope.caption"/>
 
     <parameter key="envelope.west" meaning="envelope.west">
@@ -654,7 +656,7 @@
         <input type="text" size="20" maxlength="10"
                hintResourceKey="catalog.general.inputDateFormat"
                defaultValue="#{EditMetadataController.now}"/>
-        <validation required="true" valueType="date"/>
+        <validation required="false" valueType="date"/>
         <content useSelectForUpdate="true"
                  select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:begin/gml:TimeInstant/gml:timePosition"
                  delete="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:begin"/>
@@ -665,7 +667,7 @@
         <input type="text" size="20" maxlength="10"
                hintResourceKey="catalog.general.inputDateFormat"
                defaultValue="#{EditMetadataController.now}"/>
-        <validation required="true" valueType="date"/>
+        <validation required="false" valueType="date"/>
         <content useSelectForUpdate="true"
                  select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:end/gml:TimeInstant/gml:timePosition"
                  delete="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:end"/>
