@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <useProxy proxyUrl="">true</useProxy>
+  <!--<useProxy proxyUrl="http://example.server/geoportal/widgets/SilverlightExample/proxy.ashx?">true</useProxy>-->
+  <gptEndpoint url="rest/find/document?" name="Default Site"/>
+  <gptEndpoint url="rest/find/document?rid=ArcGIS.com" name="ArcGIS.com"/>
+  <gptEndpoint url="http://catalog.geodata.gov/geoportal/rest/find/document?isPartOf=geodata.gov" name="GOS http://www.geodata.gov"/>
+  <label name="lblViewMetadata" value="Metadata"/>
+  <label name="lblViewDetails" value="Details"/>
+  <label name="lblSearch" value="Search"/>
+  <label name="lblAddToMap" value="Add To Map"/>
+  <label name="lblConfigSearch" value="Configure Search"/>
+  <label name="lblSearchResults" value="Search Results"/>
+  <label name="lblLiveData" value="Live Data Maps"/>
+  <label name="lblOptAnywhere" value="Anywhere"/>
+  <label name="lblOptIntersect" value="Intersecting"/>
+  <label name="lblOptContains" value="Fully within"/>
+  <label name="msgSearching" value="Searching"/>
+  <label name="msgSearchSummary" value="{0} matching documents found"/>
+  <label name="lblShowMore" value="Show More"/>
+  <label name="lblErrorTitle" value="Error"/>
+  <label name="lblErrCantSearch" value="Error while performing search"/>
+  <label name="lblErrGeneral" value="Could not perform operation"/>
+  <label name="lblHelp" value="Help"/>
+  <searchTimeout>
+    90
+  </searchTimeout>
+  <addLayerTimeout>
+    90
+  </addLayerTimeout>
+  <iconSearch>
+    com/esri/solutions/flexviewer/assets/images/icons/i_searchtext.png
+  </iconSearch>
+  <iconResult>
+    com/esri/solutions/flexviewer/assets/images/icons/i_table.png
+  </iconResult>
+  <iconHelp>
+    com/esri/solutions/flexviewer/assets/images/icons/i_help.png
+  </iconHelp>
+  <zoomFactor>
+    3
+  </zoomFactor>
+  <urlHelp>
+    http://webhelp.esri.com/geoportal_extension/9.3.1/index.htm#flex_widget.htm
+  </urlHelp>
+  <regWebContext>
+    .*\/{2}[^\/]*\/[^\/]*
+  </regWebContext>
+  <linkParser id="default">
+    <regDetectEndpointListUrl>
+      .*rest\/repositories.*
+    </regDetectEndpointListUrl>
+    <regExtractExtSearchPrfx replaceDelimeter="|" delimeter="~">
+      repositories.*|find/document?rid={id}
+    </regExtractExtSearchPrfx>
+    <regDetectMapLinkProvider>
+      <![CDATA[.*command.addToMap.*|.*resources=map%3(A|a).*%40.*|.*livedata.*preview.page.*]]>
+    </regDetectMapLinkProvider>
+    <regExtractMapservice delimeter="~">
+      <![CDATA[.*resources=map%3(A|a).*%40~.*livedata.*preview.page.*url=~.*command=addToMap.*server=~&info=.*~&serviceType=.*~&resourceType=.*]]>
+    </regExtractMapservice>
+    <regExtractMapLinkType delimeter="~">
+      <![CDATA[.*resources=map%3A~%40.*~.*serviceType=~.*resourceType=~&info=.*]]>
+    </regExtractMapLinkType>
+    <regExcludeLinks>
+      <![CDATA[.*resources=map%3(A|a).*%40.*|.*preview.page.*|.*command.addToMap.*]]>
+    </regExcludeLinks>
+    <regLinkTypes>
+      <wms>
+        <regDetect>
+          <![CDATA[WMS|wms|.*service=wms.*|.*wmsserver.*|.*com.esri.wms.esrimap.*]]>
+        </regDetect>
+      </wms>
+      <agsRest>
+        <regDetect>
+          <![CDATA[.*rest\/services.*ap.erver.*]]>
+        </regDetect>
+      </agsRest>
+      <geoRss>
+        <regDetect>
+          georss
+        </regDetect>
+      </geoRss>
+      <arcIms>
+        <regDetect>
+          <![CDATA[aims|arcims|image|.*servlet.*com.esri.esrimap.Esrimap.*]]>
+        </regDetect>
+        <regExtractHost delimeter="~">
+          <![CDATA[\/[a-zA-Z|_|-]*$~\/servlet.*com.esri.esrimap.Esrimap.*~.*server=~&service=.*]]>
+        </regExtractHost>
+        <regExtractServiceName delimeter="~">
+          <![CDATA[.*\/~.*serviceName=~.*ServiceName=~.*service=~&serviceType=.*]]>
+        </regExtractServiceName>
+      </arcIms>
+    </regLinkTypes>
+  </linkParser>
+  <color id="mainBboxesPlain" fillColor="0xFF0000" fillAlpha="0.001" fillStyle="null" outlineColor="0xFF0000" outlineWidth="2" outlineAlpha="1" outlineStyle="solid"/>
+  <color id="mainBboxesHighlight" fillColor="0xFF0000" fillStyle="null" fillAlpha="0.001" outlineColor="0xFF0000" outlineWidth="5" outlineAlpha="1" outlineStyle="solid"/>
+</configuration>
