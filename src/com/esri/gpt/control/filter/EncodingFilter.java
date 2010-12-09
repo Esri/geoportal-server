@@ -65,6 +65,7 @@ public class EncodingFilter implements Filter {
                        ServletResponse response,
                        FilterChain chain)
     throws IOException, ServletException {
+    String homePage = "/catalog/main/home.page";
     try {
       LOGGER.finest("Entering encoding filter...");
       String sEncoding = request.getCharacterEncoding();
@@ -84,7 +85,6 @@ public class EncodingFilter implements Filter {
         
         String contextPath = httpRequest.getContextPath();
         String requestURI = Val.chkStr(httpRequest.getRequestURI());
-        String homePage = "/catalog/main/home.page";
         boolean bCheck = (requestURI.indexOf("home.page")  == -1) &&
         								 (requestURI.indexOf("browse.page")  == -1) &&
         								 (requestURI.indexOf("/resource/")  == -1) &&
@@ -107,7 +107,21 @@ public class EncodingFilter implements Filter {
     } catch (Throwable t) {
       LogUtil.getLogger().log(Level.SEVERE,"EncodingFilterException",t);
     }
-    chain.doFilter(request,response);
+
+    // JSF 2.0 throws exception when multiple browsers ar open displaying the
+    // same session, while user logging out. This happens in a registered filer.
+    try {
+      chain.doFilter(request,response);
+    } catch (Exception ex) {
+      if ((request instanceof HttpServletRequest) && (response instanceof HttpServletResponse)) {
+        HttpServletRequest httpRequest = (HttpServletRequest)request;
+        HttpServletResponse httpResponse = (HttpServletResponse)response;
+        String contextPath = httpRequest.getContextPath();
+        String requestURI = Val.chkStr(httpRequest.getRequestURI());
+        LOGGER.log(Level.FINEST, "Assuming session timeout, requestURI={0}", requestURI);
+        httpResponse.sendRedirect(contextPath+homePage);
+      }
+    }
   }
   
   /**
