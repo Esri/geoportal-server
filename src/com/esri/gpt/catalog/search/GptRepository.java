@@ -96,17 +96,20 @@ public SavedSearchCriterias getSavedList(User user) throws SearchException {
   ResultSet rs = null;
 
   try {
-    String sql = "SELECT UUID, NAME FROM " + SAVE_TABLE + " WHERE USERID = ?";
+    String sql = "SELECT UUID, NAME, CRITERIA FROM " + SAVE_TABLE + " WHERE USERID = ?";
     connection = this.getConnection();
     ps = connection.prepareStatement(sql);
     ps.setInt(1, user.getLocalID());
     rs = ps.executeQuery();
     String name = null;
     String id;
+    String sCriteria;
     while (rs.next()) {
       id = rs.getString(1);
       name = rs.getString(2);
+      sCriteria = rs.getString(3);
       SavedSearchCriteria sCrit = new SavedSearchCriteria(id, name, this);
+      sCrit.setCriteria(sCriteria);
       criteria.add(sCrit);
     }
   } catch (Exception e) {
@@ -191,6 +194,40 @@ public void save(SavedSearchCriteria savedCriteria) throws SearchException {
     pStmt.setString(n++, name);
     pStmt.setInt(n++, userId);
     pStmt.setString(n++, criteria.toDom2());
+    pStmt.executeUpdate();
+  } catch (Exception e) {
+    throw new SearchException(e);
+  } finally {
+    closeStatement(pStmt);
+  }
+
+}
+
+/**
+ * Saves the criteria
+ * 
+ * @param savedCriteria
+ *          Object with the search to be saved
+ * @throws SearchException
+ */
+public void save(String name, String restCriteria, User user) 
+  throws SearchException {
+
+  PreparedStatement pStmt = null;
+  Connection connection = null;
+  try {
+       
+    String uuid = UUID.randomUUID().toString();
+    String sql = " INSERT INTO " + SAVE_TABLE
+        + " (UUID, NAME, USERID, CRITERIA) " + " VALUES(?,?,?,?)";
+
+    connection = this.getConnection();
+    pStmt = connection.prepareStatement(sql);
+    int n = 1;
+    pStmt.setString(n++, uuid);
+    pStmt.setString(n++, name);
+    pStmt.setInt(n++, user.getLocalID());
+    pStmt.setString(n++, restCriteria);
     pStmt.executeUpdate();
   } catch (Exception e) {
     throw new SearchException(e);

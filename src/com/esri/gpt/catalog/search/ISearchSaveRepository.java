@@ -69,4 +69,14 @@ throws SearchException;
  */
 public SavedSearchCriterias getSavedList(User user)throws SearchException;
 
+/**
+ * Save.
+ * 
+ * @param name the name
+ * @param restCriteria the rest criteria
+ * @param user the user
+ * @throws SearchException the search exception
+ */
+public void save(String name, String restCriteria, User user) 
+  throws SearchException; 
 }

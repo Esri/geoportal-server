@@ -835,7 +835,7 @@
    */
   var _xhrSearch;
   var _lastSearch;
-  function scDoAjaxSearch() {
+  function scDoAjaxSearch(clear, searchUrl) {
   
     if(_xhrSearch) {
       try {
@@ -852,8 +852,16 @@
     if (typeof(scMap) != 'undefined') scMap.reposition();
     dojo.style(elLoadingGif, "visibility", "visible");
     
-    var urlToSearch = "<%=request.getContextPath()%>/rest/find/document?" +
-        scReadRestUrlParams();
+    var restUrlParams = scReadRestUrlParams();
+    if(typeof(clear) == 'boolean' && clear == true) {
+      restUrlParams = '';
+    }
+    if(typeof(searchUrl) == 'string') {
+      restUrlParams = searchUrl;
+    }
+    var urlToSearch = contextPath + "/rest/find/document?" +
+        restUrlParams;
+    
     if ( _csSearchTimeOut > 0) {
       urlToSearch += "&maxSearchTimeMilliSec=" + _csSearchTimeOut;
     }   
@@ -868,7 +876,14 @@
    
       url: urlToSearch,
   
-      load: function (data) {
+      load: dojo.hitch(this, function (data) {
+        if(typeof(clear) == 'boolean' && clear == true) {
+          window.location = contextPath + "/catalog/search/search.page";
+          return;
+        }
+        if(typeof(clear) == 'boolean' && clear == true) {
+          restUrlParams = '';
+        }
         if(typeof(data) != 'string' || data == null || data.length < 1 ||
           data.toLowerCase().indexOf("text/javascript") < 0) {
           throw new Error("No data recieved from server");
@@ -930,7 +945,7 @@
         aoiMaxY = parseInt(tmpAoiMaxY);
         aoiWkid = parseInt(tmpAoiWkid);
        
-      },
+      }),
       preventCache: true,
       error: function(args) {
         scInitTextFields();
@@ -1419,15 +1434,12 @@
 </h:outputLink>
 
 <h:outputText id="txtClearHtml" escape="false" value="<br/>"/>
-<h:commandLink id="btnDoReset" rendered="true" 
-               value="#{gptMsg['catalog.search.search.btnReset']}"
-               action="#{SearchController.getNavigationOutcome}"
-               actionListener="#{SearchController.processAction}">
-  <f:attribute name="#{SearchController.searchEvent.event}"
-               value="#{SearchController.searchEvent.eventResetSearch}" />
-</h:commandLink>
-
-
+<h:outputLink
+  value="#"
+  onclick="javascript:scDoAjaxSearch(true); return false;">
+  <h:outputText escape="false" 
+    value="#{gptMsg['catalog.search.search.btnReset']}" />
+</h:outputLink>
 
 <h:inputHidden id="_harvestSiteName"
                value="#{SearchFilterHarvestSites.selectedHarvestSiteName}" />

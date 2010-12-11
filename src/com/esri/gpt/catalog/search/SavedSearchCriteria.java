@@ -38,6 +38,10 @@ private String name;
 /** The user associated with criteria **/
 private User user;
 
+/** The xml or rest criteria **/
+private String criteria;
+
+
 // constructor =================================================================
 /**
  * Initiated by the class saving the criteria into the db.
@@ -71,6 +75,24 @@ public SavedSearchCriteria(String id, String name,
 
 
 // properties ==================================================================
+/**
+ * Gets the criteria. May be xml criteria or rest url criteria
+ * 
+ * @return the criteria (trimmed, never null)
+ */
+public String getCriteria() {
+  return Val.chkStr(criteria);
+}
+
+/**
+ * Sets the criteria.
+ * 
+ * @param criteria the new criteria
+ */
+public void setCriteria(String criteria) {
+  this.criteria = criteria;
+}
+
 /**
  * Gets the user.
  * 

@@ -370,4 +370,8 @@ public String getNavigationOutcome() {
   }
   return nav;
 }
+
+public String getDoSearch() {
+	return null;
+}
 }

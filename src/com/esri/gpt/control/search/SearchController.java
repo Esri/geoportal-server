@@ -197,6 +197,7 @@ public List<SelectItem> getSavedSearches() {
 /**
  * Gets the style attribute for the saved searches panel.
  * @return the style
+ * @deprecated since version 1
  */
 public String getSavedSearchesPanelStyle() {
   return savedSearchesPanelStyle;
@@ -204,6 +205,7 @@ public String getSavedSearchesPanelStyle() {
 /**
  * Sets the style attribute for the saved searches panel.
  * @param style the style
+ * @deprecated since version 1
  */
 public void setSavedSearchesPanelStyle(String style) {
   this.savedSearchesPanelStyle = Val.chkStr(style);
