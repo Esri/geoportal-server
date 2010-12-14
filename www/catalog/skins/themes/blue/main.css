@@ -695,11 +695,13 @@ ul#navigation li.selectedNav a {
 	border: 1px solid #22B300;
 	background: url(images/success.png) #B5E6A9 no-repeat 6px 6px;
 	padding: 5px 30px;
+    list-style-type: none;
 }
 .errorMessage {
 	border: 1px solid #EA6A31;
 	background: url(images/error.png) #F5C4A1 no-repeat 6px 6px;
 	padding: 5px 30px;
+    list-style-type: none;
 }
 
 /**
