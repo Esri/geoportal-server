@@ -229,7 +229,7 @@
 			<resourceConstraints>
 				<MD_LegalConstraints>
 					<accessConstraints>
-						<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" codeListValue=""/>
+						<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions">otherRestrictions</MD_RestrictionCode>
 					</accessConstraints>
 					<otherConstraints>
 						<gco:CharacterString/>

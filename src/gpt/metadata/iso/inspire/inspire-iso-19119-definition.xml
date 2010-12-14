@@ -193,7 +193,7 @@
     </parameter-->
 
     <!-- 2.2.4 - Resource Locator -->
-    <parameter key="identification.abstract">
+    <parameter key="identification.locator">
       <label resourceKey="catalog.mdParam.inspire.distribution.transferOptions.onLine.linkage"/>
       <input type="text"/>
       <validation required="false"/>
