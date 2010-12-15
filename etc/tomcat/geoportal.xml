@@ -1,12 +1,12 @@
-<!-- Context configuration file for the Geoportal Extension 10 Web App -->
+<!-- Context configuration file for the Geoportal Web App -->
 
 <Context docBase="<Geoportal 10 web app name>" path="/<Geoportal 10 web app name>" debug="0" reloadable="true" crossContext="true">
-          <Resource name="jdbc/gpt" auth="Container" type="javax.sql.DataSource"
-                 driverClassName="<jdbc driver name>"
-                 url="<jdbc connection string>"
-                 username="<Geoportal database user>"
-                 password="<Geoportal database user password>"
-                 maxActive="20"
-                 maxIdle="10"
-                 maxWait="-1" />
-         </Context>
+    <Resource name="jdbc/gpt" auth="Container" type="javax.sql.DataSource"
+              driverClassName="<jdbc driver name>"
+              url="<jdbc connection string>"
+              username="<Geoportal database user>"
+              password="<Geoportal database user password>"
+              maxActive="20"
+              maxIdle="10"
+              maxWait="-1" />
+</Context>
