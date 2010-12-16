@@ -6,5 +6,5 @@ Specification-Title: Geoportal Server
 Specification-Version: 0.0
 Specification-Vendor: ESRI
 Implementation-Title: Geoportal Server
-Implementation-Version: Build 1.0.9
+Implementation-Version: Build 1.0.10
 Implementation-Vendor: ESRI
