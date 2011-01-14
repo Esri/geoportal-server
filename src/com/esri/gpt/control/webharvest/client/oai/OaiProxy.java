@@ -18,6 +18,7 @@ import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.XmlHandler;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
+import com.esri.gpt.framework.xml.NodeListAdapter;
 import com.esri.gpt.framework.xml.XmlIoUtil;
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -64,8 +65,18 @@ public String read(String sourceUri) throws IOException {
     Node node = (Node) xPath.evaluate(
         "/OAI-PMH/GetRecord/record/metadata",
         doc, XPathConstants.NODE);
+    Node elementNode = null;
+    for (Node nd : new NodeListAdapter(node.getChildNodes())) {
+      if (nd.getNodeType()==Node.ELEMENT_NODE) {
+        elementNode = nd;
+        break;
+      }
+    }
+    if (elementNode==null) {
+      throw new IOException("Error extracting metadata from <metadata> node.");
+    }
     Document mdDoc = DomUtil.newDocument();
-    mdDoc.appendChild(mdDoc.importNode(node, true));
+    mdDoc.appendChild(mdDoc.importNode(elementNode, true));
     String mdText = XmlIoUtil.domToString(mdDoc);
     LOGGER.finer("Received metadata of source URI: \"" +sourceUri+ "\" through proxy: "+this);
     LOGGER.finest(mdText);
