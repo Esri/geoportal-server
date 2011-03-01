@@ -547,9 +547,7 @@ public class Schema extends Component {
     setCswBriefXslt(DomUtil.getAttributeValue(attributes, "cswBriefXslt"));
     setCswSummaryXslt(DomUtil.getAttributeValue(attributes, "cswSummaryXslt"));
     setToEsriXslt(DomUtil.getAttributeValue(attributes, "toEsriXslt"));
-    
-    // TODO: enable
-    //setXsdLocation(DomUtil.getAttributeValue(attributes, "xsdLocation"));
+    setXsdLocation(DomUtil.getAttributeValue(attributes, "xsdLocation"));
 
     // configure the label component
     setLabel(context.getFactory().newLabel(context, DomUtil.findFirst(node, "label")));
