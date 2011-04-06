@@ -15,6 +15,9 @@
 package com.esri.gpt.catalog.schema;
 import com.esri.gpt.catalog.discovery.PropertyMeaning;
 import com.esri.gpt.catalog.discovery.PropertyMeanings;
+import com.esri.gpt.catalog.gxe.GxeContext;
+import com.esri.gpt.catalog.gxe.GxeDefinition;
+import com.esri.gpt.catalog.gxe.GxeLoader;
 import com.esri.gpt.catalog.schema.indexable.IndexableContext;
 import com.esri.gpt.catalog.schema.indexable.Indexables;
 import com.esri.gpt.framework.geometry.Envelope;
@@ -28,6 +31,9 @@ import com.esri.gpt.framework.xml.XsltTemplates;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlOutputText;
 import javax.xml.parsers.ParserConfigurationException;
@@ -49,6 +55,7 @@ import org.xml.sax.SAXException;
 public class Schema extends Component {
   
   //  class variables =============================================================
+  private static Logger LOGGER = Logger.getLogger(Schema.class.getName());
   private static XsltTemplates XSLTTEMPLATES = new XsltTemplates();
 
   // instance variables ==========================================================
@@ -59,7 +66,8 @@ public class Schema extends Component {
   private String            _detailsXslt = "";
   private boolean           _editable = true;
   private EsriTags          _evaluatedEsriTags = null;
-  private Indexables         _indexables;
+  private GxeDefinition     _gxeEditorDefinition;
+  private Indexables        _indexables;
   private Interrogation     _interrogation;
   private Label             _label;
   private Meaning           _meaning;
@@ -108,6 +116,9 @@ public class Schema extends Component {
       }
       if (objectToDuplicate.getIndexables() != null) {
         setIndexables(new Indexables(objectToDuplicate.getIndexables()));
+      }
+      if (objectToDuplicate.getGxeEditorDefinition() != null) {
+        setGxeEditorDefinition(objectToDuplicate.getGxeEditorDefinition());
       }
       
     }
@@ -211,6 +222,21 @@ public class Schema extends Component {
    */
   public void setEditable(boolean editable) {
     _editable = editable;
+  }
+  
+  /**
+   * Gets the Geoportal XML editor definition (optional).
+   * @return the editor definition
+   */
+  public GxeDefinition getGxeEditorDefinition() {
+    return _gxeEditorDefinition;
+  }
+  /**
+   * Sets the Geoportal XML editor definition (optional).
+   * @param definition the editor definition
+   */
+  public void setGxeEditorDefinition(GxeDefinition definition) {
+    _gxeEditorDefinition = definition;
   }
   
   /**
@@ -569,12 +595,13 @@ public class Schema extends Component {
     }
     getSections().checkExclusiveOpenStatus();
     
-    // indexable properties
+    // indexable properties, XML editor settings
     NodeList nl = node.getChildNodes();
     for (int i=0;i<nl.getLength();i++) {
       Node nd = nl.item(i);
       if (nd.getNodeType() == Node.ELEMENT_NODE) {
         String nodeName = Val.chkStr(nd.getNodeName());
+        
         if (nodeName.equalsIgnoreCase("indexables")) {
           Indexables idxables = new Indexables();
           idxables.configure(context,nd,nd.getAttributes());
@@ -585,6 +612,24 @@ public class Schema extends Component {
               this.getIndexables().addSibling(idxables);
             }
           }
+          
+        } else if (nodeName.equalsIgnoreCase("editor")) { 
+          String sLoc = Val.chkStr(DomUtil.getAttributeValue(nd.getAttributes(),"fileName"));
+          if (sLoc.length() > 0) {
+            GxeDefinition gxeDefinition = new GxeDefinition();
+            gxeDefinition.setKey(this.getKey());
+            gxeDefinition.setFileLocation(sLoc);
+            this.setGxeEditorDefinition(gxeDefinition);
+            
+            GxeContext gxeContext = new GxeContext();
+            GxeLoader gxeLoader = new GxeLoader();
+            try {
+              gxeLoader.loadDefinition(gxeContext,gxeDefinition);
+            } catch (Exception e) {
+              LOGGER.log(Level.CONFIG,"Error loading GXE XML Editor definition.",e);
+            }
+          }
+     
         }
       }
     }
@@ -593,6 +638,7 @@ public class Schema extends Component {
         this.setIndexables(null);
       }
     }
+    
   }
 
   /**

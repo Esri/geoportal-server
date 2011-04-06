@@ -28,6 +28,7 @@ import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 
 /**
  * Provides functionality to view report.
@@ -83,6 +84,8 @@ public class ReportViewer {
 // instance variables ==========================================================
   /** request context */
   private RequestContext context;
+  /** message broker */
+  private MessageBroker msgBroker;
   /** event record to view its report */
   private HeRecord record;
   /** summary */
@@ -125,6 +128,29 @@ public class ReportViewer {
     this.context = context;
     this.summary.setRequestContext(context);
     this.details.setRequestContext(context);
+  }
+
+  /**
+   * Gets message broker.
+   * @return message broker.
+   */
+  public MessageBroker getMsgBroker() {
+    if (msgBroker!=null) {
+      return msgBroker;
+    } else {
+      MessageBroker mb = new MessageBroker();
+      mb.setBundleBaseName(MessageBroker.DEFAULT_BUNDLE_BASE_NAME);
+      return mb;
+    }
+  }
+
+  /**
+   * Sets message broker.
+   * @param msgBroker message broker
+   */
+  public void setMsgBroker(MessageBroker msgBroker) {
+    this.msgBroker = msgBroker;
+    this.summary.setMsgBroker(msgBroker);
   }
 
   /**
@@ -239,6 +265,8 @@ public class ReportViewer {
   public static class Summary extends HtmlOutputText implements ISection {
     /** request context */
     private RequestContext context;
+    /** message broker */
+    private MessageBroker msgBroker;
     /** event record to view its report */
     private HeRecord record;
 
@@ -256,6 +284,28 @@ public class ReportViewer {
      */
     public void setRecord(HeRecord record) {
       this.record = record;
+    }
+
+    /**
+     * Gets message broker.
+     * @return message broker.
+     */
+    public MessageBroker getMsgBroker() {
+      if (msgBroker!=null) {
+        return msgBroker;
+      } else {
+        MessageBroker mb = new MessageBroker();
+        mb.setBundleBaseName(MessageBroker.DEFAULT_BUNDLE_BASE_NAME);
+        return mb;
+      }
+    }
+
+    /**
+     * Sets message broker.
+     * @param msgBroker message broker
+     */
+    public void setMsgBroker(MessageBroker msgBroker) {
+      this.msgBroker = msgBroker;
     }
 
     @Override
@@ -280,7 +330,15 @@ public class ReportViewer {
     public void transform(Writer writer) throws Exception {
       if (context!=null && record!=null) {
         HeTransformReportRequest request = new HeTransformReportRequest(context, record);
-        request.execute(getSummaryTemplate(), writer, getParams());
+        try {
+          request.execute(getSummaryTemplate(), writer, getParams());
+        } catch (NullPointerException ex) {
+          String msg = getMsgBroker().retrieveMessage("catalog.harvest.manage.history.message.readingError");
+          writer.write(msg);
+        } catch (TransformerException ex) {
+          String msg = getMsgBroker().retrieveMessage("catalog.harvest.manage.history.message.readingError");
+          writer.write(msg);
+        }
       }
     }
 
@@ -360,7 +418,12 @@ public class ReportViewer {
     public void transform(Writer writer) throws Exception {
       if (context!=null && record!=null) {
         HeTransformReportRequest request = new HeTransformReportRequest(context, record);
-        request.execute(getDetailsTemplate(), writer, getParams());
+        try {
+          request.execute(getDetailsTemplate(), writer, getParams());
+        } catch (NullPointerException ex) {
+        } catch (TransformerException ex) {
+          
+        }
       }
     }
 

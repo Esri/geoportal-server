@@ -19,6 +19,7 @@
 
 <%
 String VER = "v1";
+String VER11 = "v1.1";
 %>
 
 <link rel="stylesheet" type="text/css" href="http://serverapi.arcgisonline.com/jsapi/arcgis/2.0/js/dojo/dijit/themes/tundra/tundra.css" />
@@ -36,5 +37,5 @@ String VER = "v1";
 <script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER+ "/Utils.js"%>"></script>
 <script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER+ "/livedata.js"%>"></script>
 <script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER+ "/gpt-asn.js"%>"></script>
-<script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER+ "/gpt-browse.js"%>"></script>
+<script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER11+ "/gpt-browse.js"%>"></script>
 

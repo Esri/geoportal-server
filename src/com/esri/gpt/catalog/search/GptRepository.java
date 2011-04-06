@@ -281,6 +281,9 @@ protected Connection getConnection() throws SearchException, SQLException {
  */
 @Override
 public RequestContext getRequestContext() {
+  if(super.getRequestContext() != null) {
+	  return super.getRequestContext();
+  }
   FacesContextBroker broker = new FacesContextBroker();
   RequestContext requestContext = broker.extractRequestContext();
   return requestContext;

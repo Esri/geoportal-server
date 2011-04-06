@@ -35,6 +35,9 @@
   <!-- indexables -->
   <indexables fileName="gpt/metadata/iso/apiso-indexables.xml"/>
   
+  <!-- Geoportal XML editor -->
+  <editor fileName="gpt/gxe/iso/iso19139/iso19139-dataset-editor.xml"/>
+  
   <!-- general section -->
   <section key="general">
     <label resourceKey="catalog.mdParam.general.caption"/>  

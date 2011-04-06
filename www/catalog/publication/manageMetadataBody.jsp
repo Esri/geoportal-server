@@ -18,22 +18,6 @@
 <%@ taglib prefix="h" uri="http://java.sun.com/jsf/html" %>
 <%@taglib uri="http://www.esri.com/tags-gpt" prefix="gpt" %>
 
-<%
-  String sdisuiteUpdateUrl = "";
-  String sdisuiteSamlToken = "";
-  com.esri.gpt.sdisuite.IntegrationContextFactory sdisuiteICF  = new com.esri.gpt.sdisuite.IntegrationContextFactory();
-  if (sdisuiteICF.isIntegrationEnabled()) {
-    com.esri.gpt.sdisuite.IntegrationContext sdisuiteIC = sdisuiteICF.newIntegrationContext();
-    if (sdisuiteIC != null) {
-      sdisuiteSamlToken = sdisuiteIC.getBase64EncodedToken(
-          com.esri.gpt.framework.context.RequestContext.extract(request).getUser());
-      if (sdisuiteSamlToken != null) {
-        sdisuiteUpdateUrl = com.esri.gpt.framework.util.Val.chkStr(sdisuiteICF.getSmartEditorStartWithUrl());
-      }
-    }
-  }
-%>
-
 <f:verbatim>
 
 <style type="text/css">
@@ -269,18 +253,24 @@ function mmdOnActionIconClicked(sAction,sUuid,sPublicationMethod) {
 
       } else if (sAction == "edit") {
         var elEditForm = mmdFindForm("mmdLaunchEditorForm");
-        <% if (sdisuiteUpdateUrl.length() > 0) { %>
-        if ((sPublicationMethod != null) && (sPublicationMethod == "seditor")) {
-          elEditForm = null;
-          var elSdiLaunch = document.getElementById("frm-sdisuite-launch-editor");
-          if (elSdiLaunch != null) {
-            elSdiLaunch.identifier.value = sUuid;
-            elSdiLaunch.samlticket.value = "<%=sdisuiteSamlToken%>";
-            elSdiLaunch.action = "<%=sdisuiteUpdateUrl%>";
-            elSdiLaunch.submit();
-          }
+        
+        try {
+	        if (sdisuite.smartEditorUpdate.length > 0) { 
+		        if ((sPublicationMethod != null) && (sPublicationMethod == "seditor")) {
+		          elEditForm = null;
+		          var elSdiLaunch = document.getElementById("frm-sdisuite-launch-editor");
+		          if (elSdiLaunch != null) {
+		            elSdiLaunch.identifier.value = sUuid;
+								elSdiLaunch.ticket.value = sdisuite.tkn;
+								elSdiLaunch.action = sdisuite.smartEditorUpdate;
+		            elSdiLaunch.submit();
+		          }
+		        }
+	        }
+        } catch(e){
+        	elEditForm = mmdFindForm("mmdLaunchEditorForm");
         }
-        <% } %>
+        
         if (elEditForm != null) {
           var elLaunch = document.getElementById(elEditForm.id+":mmdLaunch");
           var elUuid = document.getElementById(elEditForm.id+":mmdUuid");
@@ -1036,7 +1026,7 @@ $(document).ready(function(){
 <f:verbatim>
 	<form id="frm-sdisuite-launch-editor" name="frm-sdisuite-launch-editor" style="display:none"
 	  action="none.html" method="post" target="_blank">
-	  <input type="hidden" id="samlticket" name="samlticket" value=""/>
+	  <input type="hidden" id="ticket" name="ticket" value=""/>
 	  <input type="hidden" id="identifier" name="identifier" value=""/>
 	  <input type="hidden" id="base64" name="base64" value="true"/>
 	  <input type="hidden" id="request" name="request" value="update"/>

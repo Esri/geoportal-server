@@ -29,6 +29,7 @@ import javax.faces.model.SelectItem;
 import org.w3c.dom.Document;
 
 import com.esri.gpt.catalog.arcims.ImsMetadataAdminDao;
+import com.esri.gpt.catalog.gxe.GxeDefinition;
 import com.esri.gpt.catalog.management.MmdEnums;
 import com.esri.gpt.catalog.publication.EditorRequest;
 import com.esri.gpt.catalog.publication.ValidationRequest;
@@ -326,6 +327,16 @@ private void executeCreate(ActionEvent event, RequestContext context)
     Schema schema = document.prepareForCreate(context,sCreateSchemaKey);
     setOpenSchemaKey(schema.getKey());
     
+    // check for a defined GXE based Geoportal XML editor
+    GxeDefinition gxeDefinition = schema.getGxeEditorDefinition();
+    if (gxeDefinition != null) {
+      context.getServletRequest().setAttribute("gxeDefinitionKey",gxeDefinition.getKey());
+      context.getServletRequest().setAttribute("gxeDefinitionLocation",gxeDefinition.getFileLocation());
+      context.getServletRequest().setAttribute("gxeOpenDocumentId",this.getOpenDocumentUuid());
+      setNavigationOutcome("catalog.publication.gxeEditor");
+      return;
+    }
+    
     // build the sections panel group, navigate to the edit metadata page 
     UiContext uiContext = new UiContext();
     uiContext.setIsCreateDocument(true);
@@ -367,6 +378,16 @@ private void executeOpen(ActionEvent event, RequestContext context)
   MetadataDocument document = new MetadataDocument();
   Schema schema = document.prepareForEdit(context,publisher,sOpenDocumentUuid);
   setOpenSchemaKey(schema.getKey());
+  
+  // check for a defined GXE based Geoportal XML editor
+  GxeDefinition gxeDefinition = schema.getGxeEditorDefinition();
+  if (gxeDefinition != null) {
+    context.getServletRequest().setAttribute("gxeDefinitionKey",gxeDefinition.getKey());
+    context.getServletRequest().setAttribute("gxeDefinitionLocation",gxeDefinition.getFileLocation());
+    context.getServletRequest().setAttribute("gxeOpenDocumentId",this.getOpenDocumentUuid());
+    setNavigationOutcome("catalog.publication.gxeEditor");
+    return;
+  }
   
   // build the sections panel group
   UiContext uiContext = new UiContext();

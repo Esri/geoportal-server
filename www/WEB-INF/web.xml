@@ -274,6 +274,20 @@
     <servlet-name>OpenidConsumerServlet</servlet-name>
     <url-pattern>/openid</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>GxeServlet</servlet-name>
+    <servlet-class>com.esri.gpt.catalog.gxe.GxeServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GxeServlet</servlet-name>
+    <url-pattern>/gxe</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GxeServlet</servlet-name>
+    <url-pattern>/gxe/definition</url-pattern>
+  </servlet-mapping>
+  
   <session-config>
     <session-timeout>30</session-timeout>
   </session-config>

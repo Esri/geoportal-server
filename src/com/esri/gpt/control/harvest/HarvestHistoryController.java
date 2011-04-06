@@ -315,6 +315,7 @@ public String getViewReportView() {
     // start view preparation phase
     RequestContext context = onPrepareViewStarted();
     getReportViewer().setRequestContext(context);
+    getReportViewer().setMsgBroker(extractMessageBroker());
     getReportViewer().setRecord(new HeRecord(new HrRecord()));
 
     String uuid = context.getServletRequest().getParameter("uuid");

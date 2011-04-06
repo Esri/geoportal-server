@@ -14,17 +14,31 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<schema key="inspire-iso-19115" templateFile="gpt/metadata/iso/inspire/inspire-iso-19115-template.xml" cswOutputSchema="http://www.isotc211.org/2005/gmd" cswBriefXslt="gpt/metadata/iso/apiso-brief.xslt" cswSummaryXslt="gpt/metadata/iso/apiso-summary.xslt">
+<schema 
+	      key="inspire-iso-19115" 
+	      templateFile="gpt/metadata/iso/inspire/inspire-iso-19115-template.xml" 
+		    cswOutputSchema="http://www.isotc211.org/2005/gmd" 
+		    cswBriefXslt="gpt/metadata/iso/apiso-brief.xslt" 
+		    cswSummaryXslt="gpt/metadata/iso/apiso-summary.xslt"
+	      xsdLocation="http://www.isotc211.org/2005/gmd/metadataEntity.xsd">
+  	
 	<!-- schema label -->
 	<label resourceKey="catalog.mdParam.schema.inspire.coregeog"/>
+	
 	<!-- schema namespaces -->
 	<namespace prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
 	<namespace prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
 	<namespace prefix="gml" uri="http://www.opengis.net/gml"/>
+	
 	<!-- schema interrogation -->
-	<interrogation count="count(/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification)*(count(/gmd:MD_Metadata/gmd:metadataStandardName[gco:CharacterString='INSPIRE Metadata for Datasets'])+ count(/gmd:MD_Metadata/gmd:metadataStandardName[gco:CharacterString='ISO19115'])*count(/gmd:MD_Metadata/gmd:metadataStandardVersion[gco:CharacterString='2003/Cor.1:2006']))"/>
+	<interrogation count="count(/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification)"/>
+	
 	<!-- indexables -->
-	<indexables fileName="gpt/metadata/iso/apiso-indexables.xml"/>
+	<indexables fileName="gpt/metadata/iso/inspire/inspire-apiso-indexables.xml"/>
+	
+  <!-- Geopoprtal XML editor -->
+  <editor fileName="gpt/gxe/iso/iso19139/profiles/inspire/inspire-iso19139-dataset-editor.xml"/>
+	
 	<!-- general section -->
 	<section key="general">
 		<label resourceKey="catalog.mdParam.inspire.general.caption"/>
@@ -527,7 +541,7 @@
 			<parameter key="conformity.creation.degree">
 				<label resourceKey="catalog.mdParam.inspire.conformity.degree"/>
 				<input type="selectOneMenu" defaultValue=""/>
-				<validation required="true"/>
+				<validation required="false"/>
 				<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass/gco:Boolean" delete="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass/gco:Boolean">
 					<codes>
 						<code key="true" resourceKey="catalog.mdParam.inspire.conformity.degree.conformant"/>

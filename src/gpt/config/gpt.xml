@@ -97,13 +97,13 @@
 			<parameter key="assertion.comment.maxLength" value="2048"/>
 		      
 			<!-- Map Viewer configuration. Optional. You can use the following section to integrate a map viewer with your geoportal, according to the  Integrate a Map Viewer webhelp documentation at http://help.arcgis.com/en/geoportal_extension/10.0/help/index.html#/Integrate_a_Map_Viewer/00t00000000s000000/.  Below is the flex map viewer configuration. 
-			- url = Url of the Flex viewer 
+			- url = Url of the Flex viewer. {contextPath}  parameter will be replaced with the application server contextpath
 			- className: class name of the map viewer instance, e.g., for Flex example is com.esri.gpt.catalog.search.MapViewerFlex. NOTE: The 	
 				MapViewerFlex must be in the same domain and port in order for layering of resources to work -->
 			<!--   
 			<mapViewer>
 			 <instance 
-			  url="" 
+			  url="{contextPath}/viewer/index.jsp" 
 			  className="com.esri.gpt.catalog.search.MapViewerFlex">
 			  <parameter key="width" value="1000"/>
 			  <parameter key="height" value="700"/>
@@ -409,3 +409,4 @@
     </scheduler>
 
 </gptConfig>
+

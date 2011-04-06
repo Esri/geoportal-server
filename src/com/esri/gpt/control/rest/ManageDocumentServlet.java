@@ -38,6 +38,8 @@ import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.BaseServlet;
 import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.jsf.FacesContextBroker;
+import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.security.credentials.Credentials;
 import com.esri.gpt.framework.security.credentials.CredentialsDeniedException;
 import com.esri.gpt.framework.security.identity.NotAuthorizedException;
@@ -49,6 +51,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -72,6 +75,8 @@ import javax.servlet.http.HttpServletResponse;
  *   <li>PUT - publishes an XML document to the catalog
  *     <ul>
  *       <li>the XML must be supplied within the body of the HTTP request.</li>
+ *       <li>URL parameter publicationMethod is accepted, values are upload,editor,other</li>
+ *       <li>URL parameter asDraft=true is accepted</li>
  *       <li>if no document provided, that means this is resource registration request.</li>
  *       <li>returns HTTP 200 when a document is replaced</li>
  *       <li>returns HTTP 201 when a document is created</li>
@@ -212,7 +217,7 @@ public class ManageDocumentServlet extends BaseServlet {
       uuid = dao.findUuid(id);
     }
     
-    // throw an excetpion if the document uuid was not located
+    // throw an exception if the document uuid was not located
     if (force && ((uuid == null) || (uuid.length() == 0))) {
       throw new ServletException("404: Document not found.");
     }
@@ -344,11 +349,63 @@ public class ManageDocumentServlet extends BaseServlet {
       String sRealm = this.getRealm(context);
       response.setHeader("WWW-Authenticate","Basic realm=\""+sRealm+"\"");
       response.sendError(HttpServletResponse.SC_UNAUTHORIZED); 
+    } catch (ValidationException e) {
+      String sMsg = e.toString();
+      if (sMsg.contains("XSD violation.")) {
+        sMsg = "XSD violation.";
+      } else if (sMsg.contains("Invalid metadata document.")) {
+        sMsg = "Invalid metadata document.";
+      } else {
+        sMsg = "Invalid metadata document.";
+      }
+      String json = Val.chkStr(request.getParameter("errorsAsJson"));
+      if (json.length()>0) {
+        FacesContextBroker fcb = new FacesContextBroker(request, response);
+        MessageBroker msgBroker = fcb.extractMessageBroker();
+        
+        ArrayList<String> validationMessages = new ArrayList<String>();
+        e.getValidationErrors().buildMessages(msgBroker, validationMessages, true);
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append(json).append(" = {\r\n");
+        sb.append("message: \"").append(Val.escapeStrForJson(sMsg)).append("\",\r\n");
+        sb.append("code: 409,\r\n");
+        sb.append("errors: [\r\n");
+        for (int i=0; i<validationMessages.size(); i++) {
+          if (i>0) {
+            sb.append(",\r\n");
+          }
+          sb.append("\"").append(Val.escapeStrForJson(validationMessages.get(i))).append("\"");
+        }
+        if (validationMessages.size()>0) {
+          sb.append("\r\n");
+        }
+        sb.append("]}");
+        
+        LOGGER.log(Level.SEVERE, sb.toString());
+        response.getWriter().print(sb.toString());
+      } else {
+        response.sendError(409,sMsg);
+      }
     } catch (ServletException e) {
       String sMsg = e.getMessage();
       int nCode = Val.chkInt(sMsg.substring(0,3),500);
       sMsg = Val.chkStr(sMsg.substring(4));
-      response.sendError(nCode,sMsg);
+      String json = Val.chkStr(request.getParameter("errorsAsJson"));
+      if (json.length()>0) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(json).append(" = {\r\n");
+        sb.append("message: \"").append(Val.escapeStrForJson(sMsg)).append("\",\r\n");
+        sb.append("code: ").append(nCode).append(",\r\n");
+        sb.append("errors: [\r\n");
+        sb.append("\"").append(Val.escapeStrForJson(sMsg)).append("\"");
+        sb.append("]}");
+        
+        LOGGER.log(Level.SEVERE, sb.toString());
+        response.getWriter().print(sb.toString());
+      } else {
+        response.sendError(nCode,sMsg);
+      }
     } catch (Throwable t) {
       String sMsg = t.toString();
       if (sMsg.contains("The document is owned by another user:")) {
@@ -440,22 +497,37 @@ public class ManageDocumentServlet extends BaseServlet {
       if (xml.length() > 0) {
         PublicationRequest pubRequest = new PublicationRequest(context,publisher,xml);
         PublicationRecord pubRecord = pubRequest.getPublicationRecord();
+        
         pubRecord.setPublicationMethod(MmdEnums.PublicationMethod.upload.toString());
+        String pubMethod = Val.chkStr(request.getParameter("publicationMethod"));
+        if (pubMethod.length() > 0) {
+          try {
+            pubMethod = MmdEnums.PublicationMethod.valueOf(Val.chkStr(pubMethod)).toString();
+            pubRecord.setPublicationMethod(pubMethod);
+          } catch (IllegalArgumentException ex) {
+          }
+        }
+        
+        String asDraft = Val.chkStr(request.getParameter("asDraft"));
+        if (asDraft.equals("true")) {
+          pubRecord.setApprovalStatus(MmdEnums.ApprovalStatus.draft.toString());
+        }
+        
         this.determineSourceUri(request,context,pubRequest);
         try {
           pubRequest.publish();
           if (!pubRecord.getWasDocumentReplaced()) {
             response.setStatus(HttpServletResponse.SC_CREATED);
           }
-        } catch (ValidationException e) {
-          String sMsg = e.toString();
-          if (sMsg.contains("XSD violation.")) {
-            throw new ServletException("409: XSD violation.");
-          } else if (sMsg.contains("Invalid metadata document.")) {
-            throw new ServletException("409: Document failed to validate.");
-          } else {
-            throw new ServletException("409: Document failed to validate.");
-          }
+//        } catch (ValidationException e) {
+//          String sMsg = e.toString();
+//          if (sMsg.contains("XSD violation.")) {
+//            throw new ServletException("409: XSD violation.");
+//          } else if (sMsg.contains("Invalid metadata document.")) {
+//            throw new ServletException("409: Document failed to validate.");
+//          } else {
+//            throw new ServletException("409: Document failed to validate.");
+//          }
         } catch (SchemaException e) {
           String sMsg = e.toString();
           if (sMsg.contains("Unrecognized metadata schema.")) {

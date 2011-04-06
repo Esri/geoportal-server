@@ -124,7 +124,7 @@ function handleSavedSearchError(args) {
   dojo.query("#savedSearcherrorMessage").empty();
   var elLoadingGif = dojo.byId("frmSearchCriteria:savedSearchLoadingGif");
   dojo.style(elLoadingGif, "visibility", "hidden");
-  debugger;
+  
   if(args == null) {
     return;
   }

@@ -41,6 +41,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 
+import com.esri.gpt.catalog.search.GptRepository;
 import com.esri.gpt.catalog.search.ISearchFilter;
 import com.esri.gpt.catalog.search.ISearchSaveRepository;
 import com.esri.gpt.catalog.search.RestUrlBuilder;
@@ -142,6 +143,9 @@ private void putSavedSearches(HttpServletRequest request,
   
   ISearchSaveRepository saveRpstry = 
     SearchSaveRpstryFactory.getSearchSaveRepository();
+  if(saveRpstry instanceof GptRepository) {
+	  ((GptRepository) saveRpstry).setRequestContext(context);
+  }
     
   SavedSearchCriterias savedSearchCriterias = 
     saveRpstry.getSavedList(context.getUser());
@@ -203,6 +207,9 @@ throws IOException, SearchException, JSONException {
   }
   ISearchSaveRepository saveRpstry = 
     SearchSaveRpstryFactory.getSearchSaveRepository();
+  if(saveRpstry instanceof GptRepository) {
+	  ((GptRepository) saveRpstry).setRequestContext(context);
+  }
   saveRpstry.delete(id, context.getUser());
   writeSavedSearches(request, response, context);
   
@@ -241,6 +248,9 @@ private void writeSavedSearches(HttpServletRequest request,
 
   ISearchSaveRepository saveRpstry = 
     SearchSaveRpstryFactory.getSearchSaveRepository();
+  if(saveRpstry instanceof GptRepository) {
+	  ((GptRepository) saveRpstry).setRequestContext(context);
+  }
   SavedSearchCriterias savedCriterias = 
     saveRpstry.getSavedList(context.getUser());
   JSONArray resultsArray = new JSONArray();

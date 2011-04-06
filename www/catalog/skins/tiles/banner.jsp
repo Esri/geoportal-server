@@ -40,6 +40,13 @@
 		onclick="javascript:mainOpenPageHelp()">
 		<h:outputText value="#{gptMsg['catalog.help.menuCaption']}" />
 	</h:outputLink>
+	
+	 <h:commandLink id="identityMyLicenses"
+      action="catalog.sdisuite.myLicenses"
+      styleClass="#{PageContext.menuStyleMap['catalog.identity.myLicenses']}"
+      rendered="#{not PageContext.roleMap['anonymous'] and not empty SdiSuiteIntegrationFactory.integrationEnabled and not empty SdiSuiteIntegrationFactory.licensesUrl}">
+        <h:outputText value="#{gptMsg['catalog.sdisuite.licenses.menuCaption']}"/>
+  </h:commandLink>
 
 	<h:commandLink id="identityMyProfile" 
 		action="catalog.identity.myProfile" 

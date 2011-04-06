@@ -403,7 +403,7 @@
         <property-name>miscelleniousFilters</property-name>
     	<property-class>com.esri.gpt.catalog.search.SearchFiltersList</property-class>
     	<list-entries>
-    		<value-class>com.esri.gpt.catalog.search.SearchFilterHarvestSites</value-class>
+    		<value-class>com.esri.gpt.catalog.search.ISearchFilter</value-class>
     		<value>#{SearchFilterHarvestSites}</value>
     	</list-entries>
     </managed-property>
@@ -568,6 +568,10 @@
       <to-view-id>/catalog/publication/editMetadata.jsp</to-view-id>
     </navigation-case>
     <navigation-case>
+      <from-outcome>catalog.publication.gxeEditor</from-outcome>
+      <to-view-id>/catalog/publication/gxeEditor.jsp</to-view-id>
+    </navigation-case>
+    <navigation-case>
       <from-outcome>catalog.publication.manageMetadata</from-outcome>
       <to-view-id>/catalog/publication/manageMetadata.jsp</to-view-id>
       <!-- <redirect/> -->
@@ -608,21 +612,26 @@
     </navigation-case>
     
     <!-- sdi.suite pages -->
-    <navigation-case>
-      <from-outcome>catalog.sdisuite.securityManager</from-outcome>
-      <to-view-id>/catalog/tc/securityManager.jsp</to-view-id>
-      <redirect/>
-    </navigation-case>
-    <navigation-case>
-      <from-outcome>catalog.sdisuite.serviceMonitor</from-outcome>
-      <to-view-id>/catalog/tc/serviceMonitor.jsp</to-view-id>
-      <redirect/>
-    </navigation-case>
-    <navigation-case>
-      <from-outcome>catalog.sdisuite.smartEditor</from-outcome>
-      <to-view-id>/catalog/tc/smartEditor.jsp</to-view-id>
-      <redirect/>
-    </navigation-case>
+      <navigation-case>
+          <from-outcome>catalog.sdisuite.securityManager</from-outcome>
+          <to-view-id>/catalog/tc/securityManager.jsp</to-view-id>
+          <redirect/>
+      </navigation-case>
+      <navigation-case>
+          <from-outcome>catalog.sdisuite.serviceMonitor</from-outcome>
+          <to-view-id>/catalog/tc/serviceMonitor.jsp</to-view-id>
+          <redirect/>
+      </navigation-case>
+      <navigation-case>
+          <from-outcome>catalog.sdisuite.smartEditor</from-outcome>
+          <to-view-id>/catalog/tc/smartEditor.jsp</to-view-id>
+          <redirect/>
+      </navigation-case>
+      <navigation-case>
+          <from-outcome>catalog.sdisuite.myLicenses</from-outcome>
+          <to-view-id>/catalog/tc/myLicenses.jsp</to-view-id>
+          <redirect/>
+      </navigation-case>
     
   </navigation-rule>
   

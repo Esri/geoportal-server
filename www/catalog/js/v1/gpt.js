@@ -406,7 +406,7 @@ dojo.declare("GptMapToolbar", null, {
   initialize: function(config, gptMap) {
     this._gptMap = gptMap;
     this._activeToolName = config.mapToolName;
-    this._agsToolbar = new esri.toolbars.Draw(gptMap.getAgsMap());
+    this._agsToolbar = new esri.toolbars.Draw(gptMap.getAgsMap(),{showTooltips: false});
     this._toolImages = new Array();
     dojo.connect(this._gptMap,"onMapLoaded",this,"onMapLoaded");
     dojo.connect(this._agsToolbar,"onDrawEnd",this,"onDrawEnd");

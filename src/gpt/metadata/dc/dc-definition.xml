@@ -32,6 +32,9 @@
   <!-- indexables -->
   <indexables fileName="gpt/metadata/dc/dc-indexables.xml"/>
   
+  <!-- Geoportal XML editor -->
+  <!-- <editor fileName="gpt/gxe/dc/dc-editor.xml"/>  -->
+  
   <!-- identification section -->
   <section key="identification">
     <label resourceKey="catalog.mdParam.identification.caption"/>

@@ -35,7 +35,11 @@
   <!--<interrogation count="count(/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification)*count(/gmd:MD_Metadata/gmd:metadataStandardName[gco:CharacterString='INSPIRE Metadata for Services'])"/>-->
 
   <!-- indexables -->
-  <indexables fileName="gpt/metadata/iso/apiso-indexables.xml"/>
+  <indexables fileName="gpt/metadata/iso/inspire/inspire-apiso-indexables.xml"/>
+  
+  <!-- Geoportal XML editor -->
+  <editor fileName="gpt/gxe/iso/iso19139/profiles/inspire/inspire-iso19139-service-editor.xml"/>
+
 
   <!-- general section -->
   <section key="general">
@@ -595,8 +599,11 @@
 
   </section>
 
-  <!-- envelope section -->
-  <section key="envelope">
+  <!-- envelope section -->  
+  <section key="envelope" obligation="optional" 
+    select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:geographicElement"
+    delete="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:geographicElement">
+  
     <label resourceKey="catalog.mdParam.inspire.envelope.caption"/>
 
     <parameter key="envelope.west" meaning="envelope.west">
@@ -780,7 +787,7 @@
 			<parameter key="conformity.creation.degree">
 				<label resourceKey="catalog.mdParam.inspire.conformity.degree"/>
 				<input type="selectOneMenu" defaultValue=""/>
-				<validation required="true"/>
+				<validation required="false"/>
 				<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass/gco:Boolean" delete="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass/gco:Boolean">
 					<codes>
 						<code key="true" resourceKey="catalog.mdParam.inspire.conformity.degree.conformant"/>

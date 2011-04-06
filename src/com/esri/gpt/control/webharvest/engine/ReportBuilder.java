@@ -34,16 +34,16 @@ import java.util.Date;
 class ReportBuilder implements Statistics {
 private static final String DETAILS_OPENING_TAG = "<publishDetails>";
 private static final String DETAILS_CLOSING_TAG = "</publishDetails>";
-private int DETAILS_OPENING_TAG_LENGTH;
-private int DETAILS_CLOSING_TAG_LENGTH;
-
-{
-  try {
-    DETAILS_OPENING_TAG_LENGTH = DETAILS_OPENING_TAG.getBytes("UTF-8").length;
-    DETAILS_CLOSING_TAG_LENGTH = DETAILS_CLOSING_TAG.getBytes("UTF-8").length;
-  } catch (UnsupportedEncodingException ex) {
-  }
-}
+//private int DETAILS_OPENING_TAG_LENGTH;
+//private int DETAILS_CLOSING_TAG_LENGTH;
+//
+//{
+//  try {
+//    DETAILS_OPENING_TAG_LENGTH = DETAILS_OPENING_TAG.getBytes("UTF-8").length;
+//    DETAILS_CLOSING_TAG_LENGTH = DETAILS_CLOSING_TAG.getBytes("UTF-8").length;
+//  } catch (UnsupportedEncodingException ex) {
+//  }
+//}
 
 /** record separator */
 public static final String RECORD_SEPARATOR = "\u001E";
@@ -254,14 +254,18 @@ public ReportStream createReportStream() throws IOException {
   byte [] headerB = header.getBytes("UTF-8");
   byte [] statictsicsB = statictsics.getBytes("UTF-8");
   byte [] footerB = footer.getBytes("UTF-8");
+  byte [] detailsOpeningB = DETAILS_OPENING_TAG.getBytes("UTF-8");
+  byte [] detailsClosingB = DETAILS_CLOSING_TAG.getBytes("UTF-8");
 
-  final int maxBytes = Integer.MAX_VALUE - (headerB.length + statictsicsB.length + footerB.length + DETAILS_OPENING_TAG_LENGTH + DETAILS_CLOSING_TAG_LENGTH);
-  final long length = headerB.length + statictsicsB.length + getReportRecordsLength(maxBytes) + footerB.length;
+  final int maxBytes = Integer.MAX_VALUE - (headerB.length + statictsicsB.length + footerB.length + detailsOpeningB.length + detailsClosingB.length);
+  final long length = headerB.length + statictsicsB.length + getReportRecordsLength(maxBytes) + footerB.length + detailsOpeningB.length + detailsClosingB.length;
 
   final InputStream[] streams = new InputStream[]{
     new ByteArrayInputStream(headerB),
     new ByteArrayInputStream(statictsicsB),
+    new ByteArrayInputStream(detailsOpeningB),
     new ReportRecordsInputStream(reader, maxBytes),
+    new ByteArrayInputStream(detailsClosingB),
     new ByteArrayInputStream(footerB)
   };
 
@@ -420,36 +424,19 @@ public int read() throws IOException {
       // no more records, close and destroy reader
       reader.close();
       reader = null;
-      // if no current string it means there were no records at all, so just
-      // exit with end of stream code
-      if (currentString==null) {
-        return -1;
-      }
-      // otherwise, if there is any current string, at least one record has been
-      // read, so provide published details closing tag
-      currentString = DETAILS_CLOSING_TAG;
+      currentString = null;
+      return -1;
     } else {
       String snippet = record.toXmlSnippet();
       int snippetLength = snippet.getBytes("UTF-8").length;
       if (snippetLength + readBytes>= maxBytes) {
         reader.close();
         reader = null;
-        if (currentString == null) {
-          currentString = DETAILS_OPENING_TAG + DETAILS_CLOSING_TAG;
-        } else {
-          currentString = DETAILS_CLOSING_TAG;
-        }
+        currentString = null;
+        return -1;
       } else {
         readBytes += snippetLength;
-        // at least one more record so add it.
-        if (currentString == null) {
-          // if no current string it means there were no records at all, so provide
-          // published details opening tag and add snippet
-          currentString = DETAILS_OPENING_TAG + snippet;
-        } else {
-          // otherwise just add snippet
-          currentString = snippet;
-        }
+        currentString = snippet;
       }
     }
     // always reset current index since it's a new string

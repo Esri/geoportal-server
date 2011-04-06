@@ -21,10 +21,15 @@
     
   <schema fileName="gpt/metadata/dc/dc-definition.xml"/>
   <schema fileName="gpt/metadata/fgdc/fgdc-definition.xml"/>
-  <schema fileName="gpt/metadata/iso/inspire/inspire-iso-19115-definition.xml"/>
-  <schema fileName="gpt/metadata/iso/inspire/inspire-iso-19119-definition.xml"/>
+  
   <schema fileName="gpt/metadata/iso/nap/nap-iso-19115-definition.xml"/>
   <schema fileName="gpt/metadata/iso/nap/nap-iso-19119-definition.xml"/>
+  
+  <!--  NOTE: Only one of INSPIRE or standard ISO should be enabled -->  
+  <!-- 
+  <schema fileName="gpt/metadata/iso/inspire/inspire-iso-19115-definition.xml"/>
+  <schema fileName="gpt/metadata/iso/inspire/inspire-iso-19119-definition.xml"/>
+  -->
   <schema fileName="gpt/metadata/iso/iso-19115-definition.xml"/>
   <schema fileName="gpt/metadata/iso/iso-19119-definition.xml"/>
   

@@ -17,7 +17,10 @@ package com.esri.gpt.catalog.harvest.history;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.sql.IClobMutator;
 import com.esri.gpt.framework.sql.ManagedConnection;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -63,7 +66,24 @@ public class HeUpdateReportRequest extends HeRequest {
 
       st = con.prepareStatement(sbSql.toString());
       int n = 1;
-      cm.setStream(st, n++, report, length);
+      
+      // TODO: In rare cases setStream doesn't work correctly - looks like stream 
+      // is being cut and not flushed entirelly, thus making problems with reading
+      // the report. 
+      // In this case old good 'set' is being used until further investigation
+      //cm.setStream(st, n++, report, length);
+      String sReport = "";
+      try {
+        sReport = convertReportIntoString(report);
+      } catch (IOException ex) {
+      } finally {
+        try {
+          report.close();
+        } catch (IOException ex) {}
+      }
+      
+      cm.set(st, n++, sReport);
+      
       st.setString(n++, record.getUuid());
 
       st.executeUpdate();
@@ -72,5 +92,15 @@ public class HeUpdateReportRequest extends HeRequest {
       closeStatement(st);
     }
 
+  }
+  
+  private String convertReportIntoString(InputStream in) throws IOException {
+    StringBuilder sb = new StringBuilder();
+    Reader reader = new InputStreamReader(in,"UTF-8");
+    int ch = 0;
+    while ( (ch=reader.read())>=0) {
+      sb.append((char)ch);
+    }
+    return sb.toString();
   }
 }

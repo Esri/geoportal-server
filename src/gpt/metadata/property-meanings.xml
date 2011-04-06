@@ -282,6 +282,10 @@
 
  <property-meaning name="apiso.ConditionApplyingToAccessAndUse" valueType="String" comparisonType="keyword">
     <apiso name="apiso:ConditionApplyingToAccessAndUse"/>
-  </property-meaning>    
+  </property-meaning>  
+  
+  <property-meaning name="apiso.inspireSpatialDataThemes" valueType="String" comparisonType="keyword">
+    <apiso name="apiso:inspireSpatialDataThemes"/>
+  </property-meaning>  
         
 </property-meanings>
