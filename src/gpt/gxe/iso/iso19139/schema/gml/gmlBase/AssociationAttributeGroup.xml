@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:attributeGroup xmlns:g="http://www.esri.com/geoportal/gxe"
+                  xmlns:h="http://www.esri.com/geoportal/gxe/html"
+                  g:extends="$base/core/xml/Element.xml">
+
+  <g:body>
+
+    <!--
+    <xs:attributeGroup ref="xlink:simpleLink"/>
+    -->
+
+    <g:attribute g:targetNS="" g:targetName="nilReason" g:valueType="xs:string"
+     g:extends="$base/core/xml/Attribute.xml"/>
+    
+    <g:attribute g:targetNS="" g:targetName="remoteSchema" g:valueType="xs:anyURI"
+     g:extends="$base/core/xml/Attribute.xml"/>
+
+  </g:body>
+
+</g:attributeGroup>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gmd:CI_Date" 
+           g:extends="$base/schema/gmd/citation/CI_Date_Type.xml"> 
+</g:element>

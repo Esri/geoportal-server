@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.SV_CoupledResource" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/AbstractObject_Type.xml">
+  <g:body>
+    <g:element g:targetName="srv:operationName"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
+
+    <g:element g:targetName="srv:identifier"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
+
+    <g:import g:src="$base/schema/gco/basicTypes/ScopedName.xml"  minOccurs="0" maxOccurs="1"/>
+  </g:body>
+</g:element>

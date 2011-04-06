@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:extends="$base/schema/gml/temporal/TimePrimitivePropertyType.xml">
+  <g:body>
+
+    <!-- TODO recursion through TimePrimitivePropertyType->AbstractTimePrimitive -->
+    <g:attribute g:targetNS="" g:targetName="relativePosition" g:valueType="xs:string"
+      g:label="i18n:catalog.iso19139.gml.temporal.RelatedTimeType.relativePosition"
+      g:extends="$base/core/xml/Attribute.xml" g:rendered="true"/>
+
+  </g:body>
+</g:element>

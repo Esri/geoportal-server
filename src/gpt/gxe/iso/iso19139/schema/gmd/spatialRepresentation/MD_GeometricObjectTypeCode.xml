@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gmd:MD_GeometricObjectTypeCode" 
+           g:i18nBase="catalog.iso19139.MD_GeometricObjectTypeCode" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/CodeListValue_Type.xml">
+  <g:body>
+   
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeSpace.xml" 
+      g:value="ISOTC211/19115"/>
+       
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeList.xml"
+      g:value="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_GeometricObjectTypeCode"/>
+     
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeListValue.xml">
+      <g:body>
+        <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+          <g:options>
+            <g:option g:label="" g:value="" />
+            <g:option g:label="$i18nBase.complex" g:value="complex" />
+            <g:option g:label="$i18nBase.composite" g:value="composite"/>
+            <g:option g:label="$i18nBase.curve" g:value="curve"/>
+            <g:option g:label="$i18nBase.point" g:value="point"/>
+            <g:option g:label="$i18nBase.solid" g:value="solid"/>
+            <g:option g:label="$i18nBase.surface" g:value="surface"/>
+          </g:options>
+        </g:input>
+      </g:body>          
+    </g:attribute>     
+     
+  </g:body> 
+</g:element>

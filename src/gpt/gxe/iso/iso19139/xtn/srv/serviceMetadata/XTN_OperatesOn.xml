@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!--  simplified operates on srv:SV_ServiceIdentification/srv:operatesOn -->      
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="srv:operatesOn" g:minOccurs="0" g:maxOccurs="unbounded"
+           g:label="$i18n.catalog.iso19139.SV_ServiceIdentification.operatesOn"
+           g:useExclusiveDisplay="false" g:preferOpen="true"
+           g:extends="$base/xtn/ui/UI_Element.xml"> 
+  <g:body>
+  
+    <g:attribute g:targetNS="" g:targetName="uuidref" 
+      h:tag="div" g:jsClass="gxe.control.Attribute">
+      <g:input g:overridable="true" g:extends="$base/core/ui/InputText.xml"/>
+    </g:attribute>
+      
+  </g:body>
+</g:element>

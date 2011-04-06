@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:extends="$base/schema/gml/temporal/AbstractTimeObjectType.xml"
+           g:abstract="true">
+  <g:body>
+
+    <!-- TODO (recursion through RelatedTimeType)
+    <g:element g:targetName="gmd:relatedTime" minOccurs="0" maxOccurs="unbounded"
+      g:extends="$base/schema/gml/temporal/RelatedTimeType.xml">
+    </g:element>
+    -->
+
+  </g:body>
+</g:element>

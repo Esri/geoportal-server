@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Identification/Keywords tab -->      
+<h:div xmlns:g="http://www.esri.com/geoportal/gxe" 
+       xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+       h:tag="div" 
+       g:label="$i18n.catalog.iso19139.MD_Metadata.section.identification.descriptiveKeywords">
+       
+	<g:element g:targetName="gmd:descriptiveKeywords" g:minOccurs="0" g:maxOccurs="unbounded"
+	  g:label="$i18n.catalog.iso19139.AbstractMD_Identification.descriptiveKeywords"
+	  g:extends="$base/schema/gmd/identification/MD_Keywords_PropertyType.xml"/>	
+	  
+</h:div>

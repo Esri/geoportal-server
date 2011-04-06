@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- provides a choice: MD_Constraints|MD_LegalConstraints|MD_SecurityConstraints -->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:extends="$base/schema/gco/gcoBase/ObjectReference_PropertyType.xml">       
+  <g:body>
+    
+    <g:elementChoice g:minOccurs="0" g:extends="$base/xtn/ui/UI_ElementChoice.xml">
+      <g:body>
+        <g:element g:extends="$base/schema/gmd/constraints/MD_Constraints.xml"/>
+        <g:element g:extends="$base/schema/gmd/constraints/MD_LegalConstraints.xml"/>
+        <g:element g:extends="$base/schema/gmd/constraints/MD_SecurityConstraints.xml"/>
+      </g:body>
+    </g:elementChoice>
+          
+  </g:body>
+</g:element>

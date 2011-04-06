@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- resource identification point of contact gmd:pointOfContact -->
+ <g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+            xmlns:h="http://www.esri.com/geoportal/gxe/html"
+            g:targetName="gmd:pointOfContact" g:minOccurs="1" g:maxOccurs="unbounded"
+            g:label="$i18n.catalog.iso19139.AbstractMD_Identification.pointOfContact"
+            g:extends="$base/xtn/gmd/citation/XTN_Metadata_Contact.xml"/>

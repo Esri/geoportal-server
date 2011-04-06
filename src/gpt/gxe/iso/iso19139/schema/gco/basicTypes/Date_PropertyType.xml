@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:extends="$base/schema/gco/xtn/Wrapped_BasicPropertyType.xml">       
+  <g:body>
+  
+    <!-- MODIFIED - the container below mirrors the original XSD structure -->
+    <g:container g:rendered="$editor.isOriginalMode">
+    
+	    <g:elementChoice g:minOccurs="0" g:extends="$base/xtn/ui/UI_ElementChoice.xml">
+	      <g:body>
+	        <g:element g:extensible="false" g:extends="$base/schema/gco/basicTypes/Date.xml"/>
+	        <g:element g:extensible="false" g:extends="$base/schema/gco/basicTypes/DateTime.xml"/>
+	      </g:body>
+	    </g:elementChoice>
+	    
+	  </g:container>
+	  
+	  <!-- MODIFIED - the container below produces a simplified structure -->
+    <g:container g:rendered="$editor.isSimplifiedMode">
+      <!--  TODO need to implement a g:alternateTargetName grab values from gco:DateTime -->
+      <g:element g:minOccurs="$parent" g:extends="$base/schema/gco/basicTypes/Date.xml"/>
+    </g:container>
+  </g:body>
+</g:element>

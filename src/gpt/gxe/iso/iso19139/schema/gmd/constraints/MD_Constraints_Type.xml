@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:label="$i18n.catalog.iso19139.MD_Constraints" 
+           g:extends="$base/schema/gco/gcoBase/AbstractObject_Type.xml">
+  <g:body>
+
+    <g:element g:targetName="gmd:useLimitation" g:minOccurs="0" g:maxOccurs="unbounded"
+      g:label="$i18n.catalog.iso19139.MD_Constraints.useLimitation" 
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
+
+  </g:body>
+</g:element>

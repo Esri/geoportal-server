@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gml:StringOrRefType"
+           g:extends="$base/xtn/ui/UI_Wrapped_Element.xml">
+  <g:body>
+    <g:import g:src="$base/schema/gml/gmlBase/AssociationAttributeGroup.xml"/>
+  </g:body>
+</g:element>

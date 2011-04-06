@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- simplified resource identifier info gmd:identifier -->
+ <g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+            xmlns:h="http://www.esri.com/geoportal/gxe/html"
+            g:targetName="gmd:identifier" g:minOccurs="1" g:maxOccurs="unbounded"
+            g:extends="gpt/gxe/iso/iso19139/xtn/gmd/identification/XTN_ResourceIdentifier.xml"/>
+

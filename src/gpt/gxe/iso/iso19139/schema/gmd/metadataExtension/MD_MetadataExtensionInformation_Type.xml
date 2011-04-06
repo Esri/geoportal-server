@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.MD_MetadataExtensionInformation" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/AbstractObject_Type.xml">
+  <g:annotation>
+    <g:documentation>Information describing metadata extensions.</g:documentation>
+  </g:annotation>
+  <g:body>
+  
+    <g:element g:targetName="gmd:extensionOnLineResource" g:minOccurs="0" g:maxOccurs="1"
+      g:extends="$base/schema/gmd/citation/CI_OnlineResource_PropertyType.xml"/>
+      
+    <g:element g:targetName="gmd:extendedElementInformation" g:minOccurs="0" g:maxOccurs="unbounded"
+      g:extends="$base/schema/gmd/metadataExtension/MD_ExtendedElementInformation_PropertyType.xml"/>
+    
+  </g:body>
+</g:element>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.SV_ServiceSpecification" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/AbstractObject_Type.xml">
+  <g:body>
+    <g:element g:targetName="srv:name"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
+
+    <g:element g:targetName="srv:opModel"
+      g:extends="$base/schema/srv/serviceModel/SV_OperationModel_PropertyType.xml"/>
+
+    <!-- TODO: recurrection
+    <g:element g:targetName="srv:typeSpec"
+      g:extends="$base/schema/srv/serviceModel/SV_PlatformNeutralServiceSpecification_PropertyType.xml"/>
+    -->
+
+    <g:element g:targetName="srv:theSV_Interface"  maxOccurs="unbounded"
+      g:extends="$base/schema/srv/serviceModel/SV_Interface_PropertyType.xml"/>
+  </g:body>
+</g:element>

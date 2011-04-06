@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:minOccurs="0" g:maxOccurs="1"
+           g:extends="$base/xtn/ui/UI_ObjectReference_PropertyType.xml">
+  <g:body>
+    <g:attribute g:extends="$base/schema/gco/gcoBase/nilReason.xml"/>
+    <g:element g:minOccurs="0" g:extends="$base/schema/srv/serviceModel/SV_OperationModel.xml"/>
+  </g:body>
+</g:element>

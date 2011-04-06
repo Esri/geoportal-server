@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>         
+<h:ul xmlns:g="http://www.esri.com/geoportal/gxe"
+      xmlns:h="http://www.esri.com/geoportal/gxe/html"
+      h:tag="ul" h:class="gxeSelectMany" 
+      g:jsClass="gxe.control.InputSelectMany">
+  <g:options g:overridable="true"/>
+</h:ul>

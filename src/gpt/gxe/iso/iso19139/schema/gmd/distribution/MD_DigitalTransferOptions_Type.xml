@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.MD_DigitalTransferOptions" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/AbstractObject_Type.xml">
+  <g:annotation>
+    <g:documentation>Technical means and media by which a dataset is obtained from the distributor</g:documentation>
+  </g:annotation>
+  <g:body>
+  
+    <g:element g:targetName="gmd:unitsOfDistribution" g:minOccurs="0" g:maxOccurs="1"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
+      
+    <g:element g:targetName="gmd:transferSize" g:minOccurs="0" g:maxOccurs="1"
+      g:extends="$base/schema/gco/basicTypes/Real_PropertyType.xml"/>
+      
+    <g:element g:targetName="gmd:onLine" g:minOccurs="0" g:maxOccurs="unbounded"
+      g:extends="$base/schema/gmd/citation/CI_OnlineResource_PropertyType.xml"/>
+      
+    <g:element g:targetName="gmd:offLine" g:minOccurs="0" g:maxOccurs="1"
+      g:extends="$base/schema/gmd/distribution/MD_Medium_PropertyType.xml"/>
+    
+  </g:body>
+</g:element>

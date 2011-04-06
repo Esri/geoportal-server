@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:extends="$base/core/xml/Element.xml">
+  <g:body>
+
+    <g:element g:extends="$base/schema/gml/gmlBase/MetaDataProperty.xml" minOccurs="0" maxOccurs="unbounded"/>
+    <g:element g:extends="$base/schema/gml/gmlBase/description.xml" minOccurs="0"/>
+    <g:element g:extends="$base/schema/gml/gmlBase/descriptionReference.xml" minOccurs="0"/>
+    <g:element g:extends="$base/schema/gml/gmlBase/identifier.xml" minOccurs="0"/>
+    <g:element g:extends="$base/schema/gml/gmlBase/name.xml" minOccurs="0" maxOccurs="unbounded"/>
+
+  </g:body>
+</g:element>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:extends="$base/core/xml/Element.xml">
+  <g:body>
+
+    <g:element g:extends="$base/schema/gml/temporal/AbstractTimePrimitive.xml" minOccurs="0"/>
+
+    <g:import g:src="$base/schema/gml/gmlBase/AssociationAttributeGroup.xml"/>
+    <g:import g:src="$base/schema/gml/gmlBase/OwnershipAttributeGroup.xml"/>
+
+  </g:body>
+</g:element>

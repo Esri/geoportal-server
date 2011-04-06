@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!-- simplified lineage (Service) (gmd:lineage/gmd:LI_Lineage/gmd:statement 
+      changed to g:minOccurs="0" -->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:minOccurs="0" g:extends="$base/xtn/gmd/dataQuality/XTN_Lineage.xml"/>
+

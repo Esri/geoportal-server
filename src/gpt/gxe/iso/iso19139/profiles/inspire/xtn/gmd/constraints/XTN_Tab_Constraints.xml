@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  INSPIRE Identification Constraints tab (gmd:resourceConstraints) --> 
+<h:div xmlns:g="http://www.esri.com/geoportal/gxe" 
+       xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+       h:tag="div" 
+       g:label="$i18n.catalog.iso19139.MD_Metadata.section.identification.resourceConstraints">
+
+  <!-- NOTE: g:matchTopElements does not support full XPath expressions -->
+
+  <!-- gmd:resourceConstraints/gmd:MD_Constraints -->
+  <g:element g:targetName="gmd:resourceConstraints" g:minOccurs="1" g:maxOccurs="1"
+    h:tag="div" g:jsClass="gxe.control.Element">
+    <g:matchTopElements> 
+      <g:match g:qPath="gmd:MD_Constraints" g:qMode="must"/>
+    </g:matchTopElements>
+    <g:element g:targetName="gmd:MD_Constraints" g:minOccurs="1" g:maxOccurs="1"
+      g:i18nBase="catalog.iso19139.MD_Constraints" g:label="$i18nBase"
+      g:extends="$base/xtn/ui/UI_Element.xml">
+      <g:body>
+      
+        <!-- use limitation -->
+        <g:element g:targetName="gmd:useLimitation" g:minOccurs="1" g:maxOccurs="unbounded"
+          g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml">
+          <g:body>
+            <g:element>
+              <g:body>
+                <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+                  <g:options g:i18nBase="catalog.mdParam.inspire.constraints.accesAndUse">
+                    <g:option g:label="" g:value="" />
+                    <g:option g:value="no conditions apply" 
+                      g:label="$i18nBase.noCondition"/>
+                    <g:option g:value="conditions unknown" 
+                      g:label="$i18nBase.unknownCondition"/>    
+                    <g:option g:value="_other_" 
+                      g:label="$i18n.catalog.mdParam.inspire.constraints.contitions.free.label" 
+                      g:isOther="true"/>        
+                  </g:options>
+                </g:input>
+              </g:body>
+            </g:element>
+          </g:body>   
+        </g:element>
+        
+      </g:body>
+    </g:element>
+  </g:element>
+  
+  <!-- gmd:resourceConstraints/gmd:MD_MD_LegalConstraints -->
+  <g:element g:targetName="gmd:resourceConstraints" g:minOccurs="1" g:maxOccurs="1"
+    h:tag="div" g:jsClass="gxe.control.Element">
+    <g:matchTopElements> 
+      <g:match g:qPath="gmd:MD_LegalConstraints" g:qMode="must"/>
+    </g:matchTopElements>    
+    <g:element g:targetName="gmd:MD_LegalConstraints" g:minOccurs="1" g:maxOccurs="1"
+      g:i18nBase="catalog.iso19139.MD_LegalConstraints" g:label="$i18nBase"
+      g:extends="$base/xtn/ui/UI_Element.xml">
+      <g:body>
+      
+	      <!-- fixed access constraint -->
+	      <g:element g:targetName="gmd:accessConstraints" g:minOccurs="1" g:maxOccurs="1"
+	        g:extends="$base/xtn/ui/UI_Element.xml">
+	        <g:body>
+	          <g:element g:targetName="gmd:MD_RestrictionCode"
+	            g:i18nBase="catalog.iso19139.MD_RestrictionCode"
+	            g:extends="$base/schema/gco/gcoBase/CodeListValue_Type.xml">
+						  <g:body>
+						    <g:attribute g:extends="$base/schema/gco/gcoBase/codeSpace.xml"
+						      g:value="ISOTC211/19115"/>
+						    <g:attribute g:extends="$base/schema/gco/gcoBase/codeList.xml"
+						      g:value="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_RestrictionCode"/>
+						    <g:attribute g:extends="$base/schema/gco/gcoBase/codeListValue.xml">
+						      <g:body>
+						        <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+						          <g:options>
+						            <g:option g:label="$i18nBase.otherRestrictions" g:value="otherRestrictions"/>
+						          </g:options>
+						        </g:input>
+						      </g:body>
+						    </g:attribute>
+						  </g:body>
+	          </g:element>
+	        </g:body>
+	      </g:element>
+	            
+	      <!-- other legal constraints -->
+		    <g:element g:targetName="gmd:otherConstraints" g:minOccurs="1" g:maxOccurs="unbounded"
+		      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml">
+		      <g:body>
+		        <g:element>
+		          <g:body>
+		            <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+		              <g:options g:i18nBase="catalog.mdParam.inspire.constraints.publicAccess">
+		                <g:option g:label="" g:value="" />
+		                <g:option g:value="no limitations" 
+		                  g:label="$i18nBase.noLimitations"/>
+		                <g:option g:value="(a) the confidentiality of the proceedings of public authorities,where such confidentiality is provided for by law;" 
+		                  g:label="$i18nBase.confidentialityOfProceedings"/>
+		                <g:option g:value="(b) international relations, public security or national defence;" 
+		                  g:label="$i18nBase.internationalRelations"/>
+		                <g:option g:value="(c) the course of justice, the ability of any person to receive a fair trial or the ability of a public authority to conduct an enquiry of a criminal or disciplinary nature;" 
+		                  g:label="$i18nBase.courseOfJustice"/>
+		                <g:option g:value="(d) the confidentiality of commercial or industrial information, where such confidentiality is provided for by national or Community   law to protect a legitimate economic interest, including the public interest in maintaining statistical confidentiality and tax secrecy;" 
+		                  g:label="$i18nBase.confidentialityOfCommercial"/>
+		                <g:option g:value="(e) intellectual property rights;" 
+		                  g:label="$i18nBase.intellectualProperty"/>
+		                <g:option g:value="(f) the confidentiality of personal data and/or files relating to a natural person where that person has not consented to the disclosure of the information to the public, where such confidentiality is provided for by national or Community law;" 
+		                  g:label="$i18nBase.confidentialityOfPersonalData"/>
+		                <g:option g:value="(g) the interests or protection of any person who supplied the information requested on a voluntary basis without being under, or capable of being put under, a legal obligation to do so, unless that person has consented to the release of the information concerned;" 
+		                  g:label="$i18nBase.interestsOrProtection"/>
+		                <g:option g:value="(h) the protection of the environment to which such information relates, such as the location of rare species." 
+		                  g:label="$i18nBase.protectionOfEnvironment"/>
+		                <g:option g:value="_other_" 
+		                  g:label="$i18n.catalog.mdParam.inspire.constraints.contitions.free.label" 
+		                  g:isOther="true"/>
+		              </g:options>
+		            </g:input>
+		          </g:body>
+		        </g:element>
+		      </g:body>       
+		    </g:element>
+		    
+      </g:body>
+    </g:element>
+  </g:element>
+  
+</h:div>     
+

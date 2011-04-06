@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:extends="$base/xtn/ui/UI_Wrapped_Basic_PropertyType.xml">
+  <g:body>    
+    <g:attribute g:extends="$base/schema/gco/gcoBase/nilReason.xml"/>
+  </g:body>   
+</g:element>

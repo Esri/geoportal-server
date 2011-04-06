@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:extends="$base/xtn/ui/UI_Wrapped_ElementTextOnly.xml"> 
+  <!-- <xs:union memberTypes="xs:date xs:gYearMonth xs:gYear"/> -->
+  <g:body>
+    <g:input h:size="30" g:tip="$i18n.catalog.general.inputDateFormat"
+      g:extends="$base/core/ui/InputText.xml"/>
+  </g:body>
+</g:element>

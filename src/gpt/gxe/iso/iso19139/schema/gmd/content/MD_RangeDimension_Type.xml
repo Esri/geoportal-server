@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.MD_RangeDimension" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/AbstractObject_Type.xml">
+  <g:body>
+
+    <g:element g:targetName="gmd:sequenceIdentifier" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/MemberName_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:descriptor" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
+
+  </g:body>
+</g:element>

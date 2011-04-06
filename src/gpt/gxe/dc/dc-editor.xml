@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>         
+<g:editor xmlns:g="http://www.esri.com/geoportal/gxe"
+          xmlns:h="http://www.esri.com/geoportal/gxe/html"
+          g:extends="gpt/gxe/editor.xml">    
+          
+  <g:rootElement g:overridable="true" g:extends="$base/RDF-dc.xml"/>
+  
+</g:editor>

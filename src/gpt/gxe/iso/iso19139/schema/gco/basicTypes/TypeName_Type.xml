@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.TypeName" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/AbstractObject_Type.xml">
+  <g:annotation>
+    <g:documentation>A TypeName is a LocalName that references either a recordType or object type in some form of schema. The stored value "aName" is the returned value for the "aName()" operation. This is the types name.  - For parsing from types (or objects) the parsible name normally uses a "." navigation separator, so that it is of the form  [class].[member].[memberOfMember]. ...)</g:documentation>
+  </g:annotation>
+  <g:body>
+  
+    <g:element g:targetName="gco:aName" g:minOccurs="1" g:maxOccurs="1"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
+    
+  </g:body>
+</g:element>

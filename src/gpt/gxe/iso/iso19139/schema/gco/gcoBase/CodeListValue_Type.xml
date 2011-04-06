@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:extends="$base/xtn/ui/UI_CodeListValue_Type.xml"
+           g:isIsoCLV="true">    
+  <g:body>
+    <!-- 
+    <g:attribute g:targetNS="" g:targetName="codeSpace" g:use="optional" g:valueType="xs:anyURI"/>
+    <g:attribute g:targetNS="" g:targetName="codeList" g:use="required" g:valueType="xs:anyURI"/>
+    <g:attribute g:targetNS="" g:targetName="codeListValue" g:use="required" g:valueType="xs:anyURI"/>
+    -->
+  </g:body>
+</g:element>

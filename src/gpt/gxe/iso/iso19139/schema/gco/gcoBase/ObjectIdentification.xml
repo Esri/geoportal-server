@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>         
+<g:attributeGroup xmlns:g="http://www.esri.com/geoportal/gxe" 
+                  xmlns:h="http://www.esri.com/geoportal/gxe/html">
+  
+  <g:attribute g:targetNS="" g:targetName="id" g:valueType="xs:ID"
+    g:label="i18n:catalog.iso19139.gco.ObjectIdentification.id"
+    g:extends="$base/xtn/ui/UI_Expert_Attribute.xml"/>
+    
+  <g:attribute g:targetNS="" g:targetName="uuid" 
+    g:label="i18n:catalog.iso19139.gco.ObjectIdentification.uuid"
+    g:extends="$base/xtn/ui/UI_Expert_Attribute.xml"/>
+  
+</g:attributeGroup>

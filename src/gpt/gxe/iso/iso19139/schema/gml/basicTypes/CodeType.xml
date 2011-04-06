@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gml:CodeType"
+           g:extends="$base/xtn/ui/UI_Wrapped_Element.xml">
+  <g:body>
+
+    <g:attribute g:targetNS="" g:targetName="codeSpace" g:valueType="xs:string"
+      g:label="i18n:catalog.iso19139.gco.ObjectIdentification.codeSpace"
+      g:extends="$base/core/xml/Attribute.xml" g:rendered="true"/>
+
+  </g:body>
+</g:element>

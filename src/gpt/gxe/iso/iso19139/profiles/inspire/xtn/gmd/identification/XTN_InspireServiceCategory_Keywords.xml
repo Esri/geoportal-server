@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- INSPIRE service category keywords (gmd:descriptiveKeywords) --> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+           h:class=""
+           g:targetName="gmd:descriptiveKeywords" g:minOccurs="1" g:maxOccurs="1"
+           g:extends="$base/xtn/ui/UI_Element.xml">
+  <g:header g:rendered="false"/>
+  <g:body>
+	  <g:element g:targetName="gmd:MD_Keywords" g:minOccurs="0" g:maxOccurs="1"
+	    h:tag="div" g:jsClass="gxe.control.Element">
+	    
+	    <!-- keyword selection -->
+	    <g:element g:targetName="gmd:keyword" g:minOccurs="1" g:maxOccurs="unbounded"
+	      g:label="$i18n.catalog.mdParam.inspire.keyword.isoServiceCategory"
+	      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml">
+	      <g:body>
+	        <g:element g:isIsoWMVL="true">
+	          <g:body>
+	            <g:input g:extends="$base/core/ui/InputSelectMany.xml">
+	              <g:options g:i18nBase="catalog.mdParam.inspire.identification.servicetype">
+				          <g:option g:value="humanInteractionService"
+				            g:label="$i18nBase.humanInteractionService"/>
+				          <g:option g:value="humanCatalogueViewer"
+				            g:label="$i18nBase.humanCatalogueViewer"/>
+				          <g:option g:value="humanGeographicViewer"
+				            g:label="$i18nBase.humanGeographicViewer"/>
+				          <g:option g:value="humanGeographicSpreadsheetViewer"
+				            g:label="$i18nBase.humanGeographicSpreadsheetViewer"/>
+				          <g:option g:value="humanServiceEditor"
+				            g:label="$i18nBase.humanServiceEditor"/>
+				          <g:option g:value="humanChainDefinitionEditor"
+				            g:label="$i18nBase.humanChainDefinitionEditor"/>
+				          <g:option g:value="humanWorkflowEnactmentManager"
+				            g:label="$i18nBase.humanWorkflowEnactmentManager"/>
+				          <g:option g:value="humanGeographicFeatureEditor"
+				            g:label="$i18nBase.humanGeographicFeatureEditor"/>
+				          <g:option g:value="humanGeographicSymbolEditor"
+				            g:label="$i18nBase.humanGeographicSymbolEditor"/>
+				          <g:option g:value="humanFeatureGeneralizationEditor"
+				            g:label="$i18nBase.humanFeatureGeneralizationEditor"/>
+				          <g:option g:value="humanGeographicDataStructureViewer"
+				            g:label="$i18nBase.humanGeographicDataStructureViewer"/>
+				          <g:option g:value="infoManagementService"
+				            g:label="$i18nBase.infoManagementService"/>
+				          <g:option g:value="infoFeatureAccessService"
+				            g:label="$i18nBase.infoFeatureAccessService"/>
+				          <g:option g:value="infoMapAccessService"
+				            g:label="$i18nBase.infoMapAccessService"/>
+				          <g:option g:value="infoCoverageAccessService"
+				            g:label="$i18nBase.infoCoverageAccessService"/>
+				          <g:option g:value="infoSensorDescriptionService"
+				            g:label="$i18nBase.infoSensorDescriptionService"/>
+				          <g:option g:value="infoProductAccessService"
+				            g:label="$i18nBase.infoProductAccessService"/>
+				          <g:option g:value="infoFeatureTypeService"
+				            g:label="$i18nBase.infoFeatureTypeService"/>
+				          <g:option g:value="infoCatalogueService"
+				            g:label="$i18nBase.infoCatalogueService"/>
+				          <g:option g:value="infoRegistryService"
+				            g:label="$i18nBase.infoRegistryService"/>
+				          <g:option g:value="infoGazetteerService"
+				            g:label="$i18nBase.infoGazetteerService"/>
+				          <g:option g:value="infoOrderHandlingService"
+				            g:label="$i18nBase.infoOrderHandlingService"/>
+				          <g:option g:value="infoStandingOrderService"
+				            g:label="$i18nBase.infoStandingOrderService"/>
+				          <g:option g:value="taskManagementService"
+				            g:label="$i18nBase.taskManagementService"/>
+				          <g:option g:value="chainDefinitionService"
+				            g:label="$i18nBase.chainDefinitionService"/>
+				          <g:option g:value="workflowEnactmentService"
+				            g:label="$i18nBase.workflowEnactmentService"/>
+				          <g:option g:value="subscriptionService"
+				            g:label="$i18nBase.subscriptionService"/>
+				          <g:option g:value="spatialProcessingService"
+				            g:label="$i18nBase.spatialProcessingService"/>
+				          <g:option g:value="spatialCoordinateConversionService"
+				            g:label="$i18nBase.spatialCoordinateConversionService"/>
+				          <g:option g:value="spatialCoordinateTransformationService"
+				            g:label="$i18nBase.spatialCoordinateTransformationService"/>
+				          <g:option g:value="spatialCoverageVectorConversionService"
+				            g:label="$i18nBase.spatialCoverageVectorConversionService"/>
+				          <g:option g:value="spatialImageCoordinateConversionService"
+				            g:label="$i18nBase.spatialImageCoordinateConversionService"/>
+				          <g:option g:value="spatialRectificationService"
+				            g:label="$i18nBase.spatialRectificationService"/>
+				          <g:option g:value="spatialOrthorectificationService"
+				            g:label="$i18nBase.spatialOrthorectificationService"/>
+				          <g:option g:value="spatialSensorGeometryModelAdjustmentService"
+				            g:label="$i18nBase.spatialSensorGeometryModelAdjustmentService"/>
+				          <g:option g:value="spatialImageGeometryModelConversionService"
+				            g:label="$i18nBase.spatialImageGeometryModelConversionService"/>
+				          <g:option g:value="spatialSubsettingService"
+				            g:label="$i18nBase.spatialSubsettingService"/>
+				          <g:option g:value="spatialSamplingService"
+				            g:label="$i18nBase.spatialSamplingService"/>
+				          <g:option g:value="spatialTilingChangeService"
+				            g:label="$i18nBase.spatialTilingChangeService"/>
+				          <g:option g:value="spatialDimensionMeasurementService"
+				            g:label="$i18nBase.spatialDimensionMeasurementService"/>
+				          <g:option g:value="spatialFeatureManipulationService"
+				            g:label="$i18nBase.spatialFeatureManipulationService"/>
+				          <g:option g:value="spatialFeatureMatchingService"
+				            g:label="$i18nBase.spatialFeatureMatchingService"/>
+				          <g:option g:value="spatialFeatureGeneralizationService"
+				            g:label="$i18nBase.spatialFeatureGeneralizationService"/>
+				          <g:option g:value="spatialRouteDeterminationService"
+				            g:label="$i18nBase.spatialRouteDeterminationService"/>
+				          <g:option g:value="spatialPositioningService"
+				            g:label="$i18nBase.spatialPositioningService"/>
+				          <g:option g:value="spatialProximityAnalysisService"
+				            g:label="$i18nBase.spatialProximityAnalysisService"/>
+				          <g:option g:value="thematicProcessingService"
+				            g:label="$i18nBase.thematicProcessingService"/>
+				          <g:option g:value="thematicGoparameterCalculationService"
+				            g:label="$i18nBase.thematicGoparameterCalculationService"/>
+				          <g:option g:value="thematicClassificationService"
+				            g:label="$i18nBase.thematicClassificationService"/>
+				          <g:option g:value="thematicFeatureGeneralizationService"
+				            g:label="$i18nBase.thematicFeatureGeneralizationService"/>
+				          <g:option g:value="thematicSubsettingService"
+				            g:label="$i18nBase.thematicSubsettingService"/>
+				          <g:option g:value="thematicSpatialCountingService"
+				            g:label="$i18nBase.thematicSpatialCountingService"/>
+				          <g:option g:value="thematicChangeDetectionService"
+				            g:label="$i18nBase.thematicChangeDetectionService"/>
+				          <g:option g:value="thematicGeographicInformationExtractionService"
+				            g:label="$i18nBase.thematicGeographicInformationExtractionService"/>
+				          <g:option g:value="thematicImageProcessingService"
+				            g:label="$i18nBase.thematicImageProcessingService"/>
+				          <g:option g:value="thematicReducedResolutionGenerationService"
+				            g:label="$i18nBase.thematicReducedResolutionGenerationService"/>
+				          <g:option g:value="thematicImageManipulationService"
+				            g:label="$i18nBase.thematicImageManipulationService"/>
+				          <g:option g:value="thematicImageUnderstandingService"
+				            g:label="$i18nBase.thematicImageUnderstandingService"/>
+				          <g:option g:value="thematicImageSynthesisService"
+				            g:label="$i18nBase.thematicImageSynthesisService"/>
+				          <g:option g:value="thematicMultibandImageManipulationService"
+				            g:label="$i18nBase.thematicMultibandImageManipulationService"/>
+				          <g:option g:value="thematicObjectDetectionService"
+				            g:label="$i18nBase.thematicObjectDetectionService"/>
+				          <g:option g:value="thematicGeoparsingService"
+				            g:label="$i18nBase.thematicGeoparsingService"/>
+				          <g:option g:value="thematicGeocodingService"
+				            g:label="$i18nBase.thematicGeocodingService"/>
+				          <g:option g:value="temporalProcessingService"
+				            g:label="$i18nBase.temporalProcessingService"/>
+				          <g:option g:value="temporalReferenceSystemTransformationService"
+				            g:label="$i18nBase.temporalReferenceSystemTransformationService"/>
+				          <g:option g:value="temporalSubsettingService"
+				            g:label="$i18nBase.temporalSubsettingService"/>
+				          <g:option g:value="temporalSamplingService"
+				            g:label="$i18nBase.temporalSamplingService"/>
+				          <g:option g:value="temporalProximityAnalysisService"
+				            g:label="$i18nBase.temporalProximityAnalysisService"/>
+				          <g:option g:value="metadataProcessingService"
+				            g:label="$i18nBase.metadataProcessingService"/>
+				          <g:option g:value="metadataStatisticalCalculationService"
+				            g:label="$i18nBase.metadataStatisticalCalculationService"/>
+				          <g:option g:value="metadataGeographicAnnotationService"
+				            g:label="$i18nBase.metadataGeographicAnnotationService"/>
+				          <g:option g:value="comService"
+				            g:label="$i18nBase.comService"/>
+				          <g:option g:value="comEncodingService"
+				            g:label="$i18nBase.comEncodingService"/>
+				          <g:option g:value="comTransferService"
+				            g:label="$i18nBase.comTransferService"/>
+				          <g:option g:value="comGeographicCompressionService"
+				            g:label="$i18nBase.comGeographicCompressionService"/>
+				          <g:option g:value="comGeographicFormatConversionService"
+				            g:label="$i18nBase.comGeographicFormatConversionService"/>
+				          <g:option g:value="comMessagingService"
+				            g:label="$i18nBase.comMessagingService"/>
+				          <g:option g:value="comRemoteFileAndExecutableManagement"
+				            g:label="$i18nBase.comRemoteFileAndExecutableManagement"/>
+		            </g:options>
+		          </g:input>
+		        </g:body>
+		      </g:element>
+		    </g:body> 
+	    </g:element>
+	    
+	    <!-- ISO 19119 service taxonomy -->
+	    <g:element g:targetName="gmd:thesaurusName" 
+	      h:tag="div" h:class="gxeDisplayNone" g:jsClass="gxe.control.Element">
+	      <g:element g:targetName="gmd:CI_Citation" h:tag="div" g:jsClass="gxe.control.Element">
+	        <g:element g:targetName="gmd:title" h:tag="div" g:jsClass="gxe.control.Element">
+	          <g:element g:targetName="gco:CharacterString" h:tag="div" g:jsClass="gxe.control.Element"
+	            g:fixedValue="ISO 19119 service taxonomy">
+	            <g:input g:extends="$base/core/ui/InputText.xml"/>
+	          </g:element>
+	        </g:element>
+	        <g:element g:targetName="gmd:date" h:tag="div" g:jsClass="gxe.control.Element">
+	          <g:element g:targetName="gmd:CI_Date" h:tag="div" g:jsClass="gxe.control.Element">
+	            <g:element g:targetName="gmd:date" h:tag="div" g:jsClass="gxe.control.Element"> 
+	             <g:element g:targetName="gco:Date" h:tag="div" g:jsClass="gxe.control.Element"
+	               g:fixedValue="2003">
+	               <g:input g:extends="$base/core/ui/InputText.xml"/>
+	             </g:element>
+	           </g:element>
+	            <g:element g:targetName="gmd:dateType" h:tag="div" g:jsClass="gxe.control.Element">
+	             <g:element g:targetName="gmd:CI_DateTypeCode" h:tag="div" g:jsClass="gxe.control.Element"
+	               g:fixedValue="publication">
+	               <g:input g:extends="$base/core/ui/InputText.xml"/>
+	               <g:attribute g:targetNS="" g:targetName="codeList" h:tag="div" g:jsClass="gxe.control.Attribute"
+	                 g:fixedValue="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode">
+	                 <g:input g:extends="$base/core/ui/InputText.xml"/>
+	               </g:attribute>
+	               <g:attribute g:targetNS="" g:targetName="codeListValue" h:tag="div" g:jsClass="gxe.control.Attribute"
+	                 g:fixedValue="publication">
+	                 <g:input g:extends="$base/core/ui/InputText.xml"/>
+	               </g:attribute>
+	             </g:element>
+	           </g:element>
+	          </g:element>
+	        </g:element>
+	      </g:element> 
+	    </g:element>
+	  
+	  </g:element>
+	</g:body>
+</g:element>
+  
+      
+

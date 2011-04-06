@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:section xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           h:tag="div" h:class="gxeSection"
+           g:jsClass="gxe.control.Section">
+   
+  <g:header g:extensible="true" h:tag="div" h:class="gxeSectionHeader" 
+    g:jsClass="gxe.control.SectionHeader"> 
+    
+    <g:label g:extensible="true" h:tag="label" h:class="gxeSectionCaption" 
+      g:jsClass="gxe.control.TargetLabel"/>
+      
+  </g:header>    
+  
+  <g:body g:extensible="true" h:tag="div" h:class="gxeSectionBody"
+    g:jsClass="gxe.control.SectionBody"/>
+
+</g:section>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gco:ScopedName"
+           g:extends="$base/schema/gco/basicTypes/AbstractGenericName.xml"/> 

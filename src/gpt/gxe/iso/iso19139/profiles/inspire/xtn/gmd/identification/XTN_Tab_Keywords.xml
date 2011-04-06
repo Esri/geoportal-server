@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  INSPIRE Identification keywords tab (gmd:descriptiveKeywords) --> 
+<h:div xmlns:g="http://www.esri.com/geoportal/gxe" 
+       xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+       h:tag="div" 
+       g:label="$i18n.catalog.iso19139.MD_Metadata.section.identification.descriptiveKeywords">
+	<g:tabs g:extends="$base/xtn/ui/UI_Tabs.xml">
+		<g:body>
+		
+		  <!-- NOTE: g:matchTopElements does not support full XPath expressions -->
+		 
+		  <!-- INSPIRE data theme --> 
+		  <h:div g:label="$i18n.catalog.mdParam.inspire.keyword.dataTheme.label"> 
+		    <g:element 
+		      g:extends="$base/xtn/gmd/identification/XTN_InspireDataTheme_Keywords.xml">
+		      <g:matchTopElements> 
+		        <g:match
+              g:qPath="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"
+              g:qValue="GEMET - INSPIRE themes, version 1.0"
+              g:qMode="must"/>
+          </g:matchTopElements>
+		    </g:element>
+		  </h:div> 
+		  
+		  <!-- GEMET Concept --> 
+		  <h:div g:label="$i18n.catalog.mdParam.inspire.keyword.gemet.concept"> 
+		    <g:element 
+		      g:extends="$base/xtn/gmd/identification/XTN_GemetConcept_Keywords.xml">
+		      <g:matchTopElements> 
+		        <g:match
+              g:qPath="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"
+              g:qValue="GEMET - Concepts, version 2.4"
+              g:qMode="must"/>
+          </g:matchTopElements>
+		    </g:element>
+		  </h:div>   
+		   
+		  <!-- Other keywords -->
+		  <h:div g:label="$i18n.catalog.iso19139.MD_Metadata.section.identification.otherKeywords"> 
+		    <g:element g:targetName="gmd:descriptiveKeywords" g:minOccurs="0" g:maxOccurs="unbounded"
+		      g:label="$i18n.catalog.iso19139.AbstractMD_Identification.descriptiveKeywords"
+		      g:extends="$base/schema/gmd/identification/MD_Keywords_PropertyType.xml">
+          <g:matchTopElements>
+            <g:match
+              g:qPath="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"
+              g:qValue="GEMET - INSPIRE themes, version 1.0"
+              g:qMode="mustNot"/>
+			      <g:match 
+			        g:qPath="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"
+			        g:qValue="GEMET - Concepts, version 2.4"
+			        g:qMode="mustNot"/>
+            <g:match 
+              g:qPath="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"
+              g:qValue="ISO 19119 service taxonomy"
+              g:qMode="mustNot"/>
+			    </g:matchTopElements>		      
+		    </g:element>
+		  </h:div>    
+		    
+		</g:body>
+	</g:tabs>
+</h:div>     
+

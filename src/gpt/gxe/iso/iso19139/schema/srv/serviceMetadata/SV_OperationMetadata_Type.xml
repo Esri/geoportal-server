@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.SV_OperationMetadata" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/AbstractObject_Type.xml">
+  <g:body>
+    <g:element g:targetName="srv:operationName"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
+
+    <g:element g:targetName="srv:DCP" g:maxOccurs="unbounded"
+      g:extends="$base/schema/srv/serviceMetadata/DCPList_PropertyType.xml"/>
+
+    <g:element g:targetName="srv:operationDescription" g:minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
+
+    <g:element g:targetName="srv:invocationName" g:minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
+
+    <g:element g:targetName="srv:parameters" g:minOccurs="0" g:maxOccurs="unbounded"
+      g:extends="$base/schema/srv/serviceMetadata/SV_Parameter_PropertyType.xml"/>
+
+    <g:element g:targetName="srv:connectPoint" g:minOccurs="1" g:maxOccurs="unbounded"
+      g:extends="$base/schema/gmd/citation/CI_OnlineResource_PropertyType.xml"/>
+
+    <!-- TODO: recurrection to itself
+    <g:element g:targetName="srv:dependsOn" g:minOccurs="0" g:maxOccurs="unbounded"
+      g:extends="$base/schema/srv/serviceModel/SV_OperationMetadata_PropertyType.xml"/>
+    -->
+  </g:body>
+</g:element>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- Simplified version of MD_ScopeCode_PproperyType
+     a g:targetName must be supplied when extending -->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:extends="$base/schema/gco/xtn/Wrapped_CodePropertyType.xml">
+  <g:body>
+		<g:element g:targetName="gmd:MD_ScopeCode" 
+		  g:i18nBase="catalog.iso19139.MD_ScopeCode" g:label="$i18nBase"
+		  g:extends="$base/schema/gco/gcoBase/CodeListValue_Type.xml">
+		  <g:body>
+		   
+		    <g:attribute g:extends="$base/schema/gco/gcoBase/codeSpace.xml" 
+		      g:value="ISOTC211/19115"/>
+		       
+		    <g:attribute g:extends="$base/schema/gco/gcoBase/codeList.xml"
+		      g:value="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode"/>
+		     
+		    <g:attribute g:extends="$base/schema/gco/gcoBase/codeListValue.xml">
+		      <g:body>
+		        <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+		          <g:options g:extends="$base/xtn/gmd/maintenance/XTN_ScopeCode_Options.xml"/>
+		        </g:input>
+		      </g:body>          
+		    </g:attribute>     
+		     
+		  </g:body> 
+		</g:element>
+	</g:body> 
+</g:element>

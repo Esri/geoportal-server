@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- gmd:MD_Metadata/gmd:fileIdentifier -->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gmd:fileIdentifier" g:minOccurs="1" g:maxOccurs="1"
+           g:preferOpen="true" g:label="$i18n.catalog.iso19139.MD_Metadata.fileIdentifier"
+           g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml">
+  <g:body>
+    <g:element g:value="#{EditMetadataController.newUuid}">
+      <g:body><g:input g:extends="$base/core/ui/InputText.xml" h:readonly="readonly"/></g:body>
+    </g:element>
+  </g:body>
+</g:element>

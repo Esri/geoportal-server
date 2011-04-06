@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           h:class="gxeWrappedElement"
+           g:extensible="true" g:extends="$base/xtn/ui/UI_ElementTextOnly.xml">
+  <g:header g:rendered="$editor.isExpertMode"/> 
+</g:element>
+
+

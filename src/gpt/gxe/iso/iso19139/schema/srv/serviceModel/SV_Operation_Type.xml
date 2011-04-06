@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.SV_Operation" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/AbstractObject_Type.xml">
+  <g:body>
+
+    <g:element g:targetName="srv:operationName"
+      g:extends="$base/schema/gco/basicTypes/MemberName_PropertyType.xml"/>
+
+    <g:element g:targetName="srv:dependsOn" minOccurs="0" maxOccurs="unbounded"
+      g:extends="$base/schema/srv/serviceModel/SV_OperationModel_PropertyType.xml"/>
+
+    <g:element g:targetName="srv:parameter"
+      g:extends="$base/schema/srv/serviceMetadata/SV_Parameter_PropertyType.xml"/>
+  </g:body>
+</g:element>

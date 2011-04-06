@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:extends="$base/core/xml/Element.xml"
+           g:abstract="true">
+  <g:body>
+
+    <g:import g:src="$base/schema/gml/gmlBase/StandardObjectProperties.xml"/>
+
+    <g:attribute g:targetNS="" g:targetName="id" g:use="optional" g:valueType="xs:ID"
+      g:label="i18n:catalog.iso19139.gco.ObjectIdentification.id"
+      g:extends="$base/core/xml/Attribute.xml" g:rendered="false"/>
+      
+  </g:body>
+</g:element>

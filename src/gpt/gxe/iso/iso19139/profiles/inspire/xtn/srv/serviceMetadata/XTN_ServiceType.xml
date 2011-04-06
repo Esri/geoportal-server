@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!--  provides a service type domain srv:SV_ServiceIdentification/srv:serviceType -->      
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="srv:serviceType" g:minOccurs="1" g:maxOccurs="1"
+           g:label="$i18n.catalog.iso19139.SV_ServiceIdentification.serviceType"
+           g:extends="$base/xtn/ui/UI_Element.xml"> 
+  <g:body>
+    <g:element g:targetName="gco:LocalName" g:minOccurs="1" g:maxOccurs="1"
+      h:tag="div" g:jsClass="gxe.control.Element">
+      <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+        <g:options g:i18nBase="catalog.mdParam.inspire.identification">
+          <g:option g:label="" g:value=""/>
+          <g:option g:value="discovery" g:label="$i18nBase.discovery"/>
+          <g:option g:value="view" g:label="$i18nBase.view"/>
+          <g:option g:value="download" g:label="$i18nBase.download"/>
+          <g:option g:value="transformation" g:label="$i18nBase.transformation"/>
+          <g:option g:value="invoke" g:label="$i18nBase.invoke"/>
+          <g:option g:value="other" g:label="$i18nBase.other"/>
+        </g:options>
+      </g:input>
+    </g:element>
+  </g:body>
+</g:element>

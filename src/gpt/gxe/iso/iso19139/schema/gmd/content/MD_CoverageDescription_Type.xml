@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.MD_CoverageDescription" g:label="$i18nBase"
+           g:extends="$base/schema/gmd/content/AbstractMD_ContentInformation_Type.xml">
+  <g:body>
+    <g:element g:targetName="gmd:attributeDescription" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/RecordType_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:contentType"
+      g:extends="$base/schema/gmd/content/MD_CoverageContentTypeCode_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:dimension" g:label="$i18n.catalog.iso19139.MD_CoverageDescription.dimension" minOccurs="0" maxOccurs="unbounded"
+      g:extends="$base/schema/gco/gcoBase/ObjectReference_PropertyType.xml">
+        <g:body>
+          <g:elementChoice g:minOccurs="0" g:extends="$base/xtn/ui/UI_ElementChoice.xml">
+            <g:body>
+              <g:import g:src="$base/schema/gmd/content/MD_RangeDimension.xml"/>
+              <g:import g:src="$base/schema/gmd/content/MD_Band.xml"/>
+            </g:body>
+          </g:elementChoice>
+        </g:body>
+    </g:element>
+  </g:body>
+</g:element>

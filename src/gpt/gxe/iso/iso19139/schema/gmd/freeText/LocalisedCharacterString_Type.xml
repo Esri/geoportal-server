@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.LocalisedCharacterString" g:label="$i18nBase"
+           g:extends="$base/core/xml/Element.xml">
+  <g:body>
+  
+	  <g:attribute g:targetNS="" g:targetName="id" g:use="optional" g:valueType="xs:ID"
+	    g:extends="$base/core/xml/Attribute.xml"/>
+	    
+    <g:attribute g:targetNS="" g:targetName="locale" g:use="optional" g:valueType="xs:anyURI"
+      g:extends="$base/core/xml/Attribute.xml"/>
+      
+    <g:textNode g:label="$i18nBase.textNode"
+      g:extends="$base/core/xml/TextNode.xml"/>
+
+  </g:body>
+</g:element>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- gmd:language -->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gmd:language" g:minOccurs="0" g:maxOccurs="1"
+           g:preferOpen="true" g:label="$i18n.catalog.iso19139.MD_Metadata.language"
+           g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml">
+  <g:body>
+    <g:element g:value="en"/>
+  </g:body>
+</g:element>

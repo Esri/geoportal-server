@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:attribute xmlns:g="http://www.esri.com/geoportal/gxe" 
+             xmlns:h="http://www.esri.com/geoportal/gxe/html"
+             g:jsClass="gxe.control.Attribute"
+             g:extends="$base/core/ui/Section.xml">
+  <g:body>
+    <g:input g:overridable="true" g:extends="$base/core/ui/InputText.xml"/>
+  </g:body> 
+</g:attribute>

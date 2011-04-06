@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.SV_ServiceIdentification" g:label="$i18nBase"
+           g:extends="$base/schema/gmd/identification/AbstractMD_Identification_Type.xml">
+  <g:body>
+    <g:tabs g:extends="$base/core/ui/Tabs.xml">
+      <g:body>
+        <g:element g:targetName="srv:serviceType"
+          g:extends="$base/schema/gco/basicTypes/GenericName_PropertyType.xml"/>
+
+        <g:element g:targetName="srv:serviceTypeVersion" minOccurs="0" maxOccurs="unbounded"
+          g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
+
+        <g:element g:targetName="srv:accessProperties" minOccurs="0"
+          g:extends="$base/schema/gmd/distribution/MD_StandardOrderProcess_PropertyType.xml"/>
+
+        <g:element g:targetName="srv:restrictions" minOccurs="0"
+          g:extends="$base/schema/gco/gcoBase/ObjectReference_PropertyType.xml">
+            <g:body>
+              <g:elementChoice g:minOccurs="0" g:extends="$base/xtn/ui/UI_ElementChoice.xml">
+                <g:body>
+                  <g:import g:src="$base/schema/gmd/constraints/MD_Constraints.xml"/>
+                  <g:import g:src="$base/schema/gmd/constraints/MD_LegalConstraints.xml"/>
+                  <g:import g:src="$base/schema/gmd/constraints/MD_SecurityConstraints.xml"/>
+                </g:body>
+              </g:elementChoice>
+            </g:body>
+        </g:element>
+
+        <g:element g:targetName="srv:keywords" g:minOccurs="0" g:maxOccurs="unbounded"
+           g:extends="$base/schema/gmd/identification/MD_Keywords_PropertyType.xml"/>
+
+        <g:element g:targetName="srv:extent" g:minOccurs="0" g:maxOccurs="unbounded"
+          g:extends="$base/schema/gmd/extent/EX_Extent_PropertyType.xml"/>
+
+        <g:element g:targetName="srv:coupledResource" minOccurs="0" maxOccurs="unbounded"
+          g:extends="$base/schema/srv/serviceMetadata/SV_CoupledResource_PropertyType.xml"/>
+
+        <g:element g:targetName="srv:couplingType"
+          g:extends="$base/schema/srv/serviceMetadata/SV_CouplingType_PropertyType.xml"/>
+
+        <g:element g:targetName="srv:containsOperations" maxOccurs="unbounded"
+          g:extends="$base/schema/srv/serviceMetadata/SV_OperationMetadata_PropertyType.xml"/>
+
+        <g:element g:targetName="srv:operatesOn" minOccurs="0" maxOccurs="unbounded"
+          g:extends="$base/schema/gmd/identification/MD_DataIdentification_PropertyType.xml"/>
+      </g:body>
+    </g:tabs>
+  </g:body>
+</g:element>

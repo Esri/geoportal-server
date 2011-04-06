@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!-- simplified conformance report 
+     (gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult -->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:minOccurs="1" g:maxOccurs="unbounded"           
+           g:extends="gpt/gxe/iso/iso19139/xtn/gmd/dataQuality/XTN_ConformanceReport.xml"/>
+ 

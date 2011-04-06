@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>         
+<g:attributeGroup xmlns:g="http://www.esri.com/geoportal/gxe" 
+                  xmlns:h="http://www.esri.com/geoportal/gxe/html">
+ 
+  <!-- 
+  TODO
+  
+  <xs:attributeGroup name="ObjectReference">
+    <xs:attributeGroup ref="xlink:simpleLink"/>
+    <xs:attribute name="uuidref" type="xs:string"/>
+  </xs:attributeGroup>
+   -->
+  
+  <g:attribute g:targetNS="" g:targetName="uuidref"
+    g:label="i18n:catalog.iso19139.gco.ObjectReference.uuidref"
+    g:extends="$base/xtn/ui/UI_Expert_Attribute.xml"/>
+  
+</g:attributeGroup>

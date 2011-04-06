@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gco:AbstractGenericName"
+           g:extends="$base/xtn/ui/UI_Wrapped_Element.xml">
+  <g:body>
+  
+    <!--  the xsd references gml:CodeType which has a codeSpace attribute -->
+    <g:attribute g:targetNS="" g:targetName="codeSpace"
+      g:use="optional" g:valueType="xs:anyURI"
+      g:label="$i18n.catalog.iso19139.gco.CodeListValue.codeSpace" 
+      g:extends="$base/core/xml/Attribute.xml"/>  
+      
+    <g:textNode g:extends="$base/core/xml/TextNode.xml"/>
+    
+  </g:body>     
+</g:element> 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.StandardObjectProperties.descriptionReference"
+           g:label="$i18nBase"
+           g:targetName="gml:descriptionReference"
+           g:extends="$base/schema/gml/gmlBase/ReferenceType.xml">
+</g:element>

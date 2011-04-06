@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="srv:SV_CouplingType"
+           g:i18nBase="catalog.iso19139.SV_CouplingType" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/CodeListValue_Type.xml">
+  <g:body>
+
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeSpace.xml"
+      g:value="ISOTC211/19115"/>
+
+    <!-- TODO: find the right one -->
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeList.xml"
+      g:value="http://schemas.opengis.net/iso19119/couplingType"/>
+
+    <!-- TODO: are those correct values? Taken from http://projects.oucs.ox.ac.uk/TEIISO/samples/19119/Amendment_-_PDF.pdf -->
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeListValue.xml">
+      <g:body>
+        <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+          <g:options>
+            <g:option g:label="" g:value="" />
+            <g:option g:label="$i18nBase.loose" g:value="loose" />
+            <g:option g:label="$i18nBase.mixed" g:value="mixed" />
+            <g:option g:label="$i18nBase.tight" g:value="tight" g:selected="true"/>
+          </g:options>
+        </g:input>
+      </g:body>
+    </g:attribute>
+
+  </g:body>
+</g:element>

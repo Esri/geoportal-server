@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.SV_Interface" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/AbstractObject_Type.xml">
+  <g:body>
+    <g:element g:targetName="srv:typeName"
+      g:extends="$base/schema/gco/basicTypes/TypeName_PropertyType.xml"/>
+
+    <!-- TODO: recurrection with SV_Port_Type
+    <g:element g:targetName="srv:theSV_Port"
+      g:extends="$base/schema/srv/serviceModel/SV_Port_PropertyType.xml"/>
+    -->
+
+    <g:element g:targetName="srv:operation"
+      g:extends="$base/schema/srv/serviceModel/SV_Operation_PropertyType.xml"/>
+  </g:body>
+</g:element>

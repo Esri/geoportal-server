@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:extends="$base/schema/gco/gcoBase/AbstractObject_Type.xml">
+  <g:annotation>
+    <g:documentation>Digital mechanism used to represent spatial information</g:documentation>
+  </g:annotation>
+</g:element>

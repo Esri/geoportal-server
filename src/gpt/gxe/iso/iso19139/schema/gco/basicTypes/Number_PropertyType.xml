@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:extends="$base/core/xml/Element.xml">       
+  <g:body>
+    <g:attribute g:extends="$base/schema/gco/gcoBase/nilReason.xml"/>
+    <g:elementChoice g:minOccurs="0" g:extends="$base/core/xml/ElementChoice.xml">
+      <g:body>
+        <g:element g:extends="$base/schema/gco/basicTypes/Real.xml"/>
+        <g:element g:extends="$base/schema/gco/basicTypes/Decimal.xml"/>
+        <g:element g:extends="$base/schema/gco/basicTypes/Integer.xml"/>
+      </g:body>
+    </g:elementChoice>
+  </g:body>
+</g:element>
