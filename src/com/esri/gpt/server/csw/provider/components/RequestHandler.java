@@ -320,11 +320,11 @@ public class RequestHandler {
       if (exception instanceof OwsException) {
         OwsException ows = (OwsException)exception;
         LOGGER.finer("Invalid CSW request: "+exception.getMessage());
-        opResponse.setResponseXml(ows.getReport());
+        opResponse.setResponseXml(ows.getReport(context));
       } else {
         OwsException ows = new OwsException(exception);
         LOGGER.log(Level.WARNING,exception.toString(),exception);
-        opResponse.setResponseXml(ows.getReport());
+        opResponse.setResponseXml(ows.getReport(context));
       }
     }
     

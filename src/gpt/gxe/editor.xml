@@ -4,6 +4,9 @@
           g:extensible="true">
   
     <g:context g:extensible="true">
+    
+      <g:i18n g:key="dialog.ok">$i18n.catalog.general.dialog.ok</g:i18n>   
+      <g:i18n g:key="dialog.cancel">$i18n.catalog.general.dialog.cancel</g:i18n>
  
       <g:i18n g:key="button.clearMessages">$i18n.catalog.gxe.general.button.clearMessages</g:i18n>   
       <g:i18n g:key="button.repeatSection">$i18n.catalog.gxe.general.button.repeatSection</g:i18n>

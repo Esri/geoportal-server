@@ -16,8 +16,20 @@
 <% // previewBody.jsp - preview page (JSF body) %>
 <%@taglib prefix="f" uri="http://java.sun.com/jsf/core"%>
 <%@taglib prefix="h" uri="http://java.sun.com/jsf/html"%>
+<%@page import="java.net.URL"%>
 <%@page import="com.esri.gpt.framework.util.Val" %>
 <%@page import="com.esri.gpt.control.livedata.LiveDataController" %>
+
+<%!
+private String makeSafeUrl(String infoUrl) {
+  try {
+    new URL(infoUrl);
+    return infoUrl;
+  } catch (Exception ex) {
+    return "";
+  }
+}
+%>
 
 <%-- Url's section --%>
 <h:panelGrid styleClass="section previewUrlsSection" columns="2">
@@ -31,13 +43,13 @@
 <f:verbatim>
 <% if (LiveDataController.getCurrentInstance().getInfoUrl().length() > 0) {%>
 <div class="section previewMapSection">
-  <iframe src="<%=Val.escapeXmlForBrowser(LiveDataController.getCurrentInstance().getEmbededUrl())%>"
+  <iframe src="<%=makeSafeUrl(Val.escapeXmlForBrowser(LiveDataController.getCurrentInstance().getEmbededUrl()))%>"
           style="<%=LiveDataController.getCurrentInstance().getFrameStyle()%>"
           frameborder="0" scrolling="no"></iframe>
 </div>
 <%} else {%>
 <div class="section previewMapSectionWide">
-  <iframe src="<%=Val.escapeXmlForBrowser(LiveDataController.getCurrentInstance().getEmbededUrl())%>"
+  <iframe src="<%=makeSafeUrl(Val.escapeXmlForBrowser(LiveDataController.getCurrentInstance().getEmbededUrl()))%>"
           style="<%=LiveDataController.getCurrentInstance().getFrameStyleWide()%>"
           frameborder="0" scrolling="no"></iframe>
 </div>
@@ -48,7 +60,7 @@
 <f:verbatim>
 <% if (LiveDataController.getCurrentInstance().getInfoUrl().length() > 0) {%>
 <div class="section previewInfoSection">
-  <iframe src="<%=Val.escapeXmlForBrowser(LiveDataController.getCurrentInstance().getInfoUrl())%>" 
+  <iframe src="<%=makeSafeUrl(Val.escapeXmlForBrowser(LiveDataController.getCurrentInstance().getInfoUrl()))%>" 
           class="previewInfoFrame"
           frameborder="0" ></iframe>
 </div>

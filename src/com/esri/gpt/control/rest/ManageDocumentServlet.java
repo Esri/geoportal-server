@@ -45,6 +45,7 @@ import com.esri.gpt.framework.security.credentials.CredentialsDeniedException;
 import com.esri.gpt.framework.security.identity.NotAuthorizedException;
 import com.esri.gpt.framework.security.principal.Publisher;
 import com.esri.gpt.framework.util.EnumerationAdapter;
+import com.esri.gpt.framework.util.UuidUtil;
 import com.esri.gpt.framework.util.Val;
 
 import java.io.IOException;
@@ -215,6 +216,12 @@ public class ManageDocumentServlet extends BaseServlet {
     if (id.length() > 0) {
       ImsMetadataAdminDao dao = new ImsMetadataAdminDao(context);
       uuid = dao.findUuid(id);
+      if (!force && ((uuid == null) || (uuid.length() == 0))) {
+        String tmpId = UuidUtil.addCurlies(id);
+        if (tmpId.length() == 38) {
+          uuid = tmpId;
+        }
+      }
     }
     
     // throw an exception if the document uuid was not located

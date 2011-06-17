@@ -13,6 +13,12 @@
  * limitations under the License.
  */
 package com.esri.gpt.server.csw.provider.components;
+import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+
+import com.esri.gpt.framework.util.LogUtil;
 import com.esri.gpt.framework.util.Val;
 
 /**
@@ -22,6 +28,9 @@ import com.esri.gpt.framework.util.Val;
 public class OwsException extends RuntimeException {
   
   /** class variables ========================================================= */
+  
+  /** Default resource bundle that should be looked at **/
+  public static final String DEFAULT_BUNDLE_BASE_NAME = "gpt.resources.csw";
   
   /** "InvalidFormat" - Request specifies a Format not offered by this server.*/
   public static final String OWSCODE_InvalidFormat = "InvalidFormat";
@@ -141,8 +150,20 @@ public class OwsException extends RuntimeException {
   /**
    * Creation an OWS ExceptionReport string (XML).
    * @return the exception report string
+   * @deprecated replaced by {@link #getReport(OperationContext)}
    */
   public String getReport() {
+    return this.getReport(null);
+  }
+  
+  /**
+   * Creation an OWS ExceptionReport string (XML).
+   * @param context the operation context
+   * @return the exception report string
+   */
+  public String getReport(OperationContext context) {
+    
+    // start the exception report
     String version = "1.2.0";
     String xmlns = "http://www.opengis.net/ows";
     StringBuffer sb = new StringBuffer();
@@ -155,7 +176,64 @@ public class OwsException extends RuntimeException {
     if ((this.locator != null) && (this.locator.length() > 0)) {
       sb.append(" locator=\"").append(Val.escapeXml(this.locator)).append("\"");
     }
-    sb.append(">\r\n<ExceptionText>");
+    sb.append(">");
+    
+    // determine the localized exception text
+    String localizedText = null;
+    try {
+      if (context != null) {
+        CapabilityOptions cOptions = context.getRequestOptions().getCapabilityOptions();
+        String requestedLang = Val.chkStr(cOptions.getLanguageCode());
+        String responseLang = Val.chkStr(cOptions.getResponseLanguageCode());
+        if ((responseLang.length() == 0) && (requestedLang.length() > 0)) {
+          responseLang = requestedLang;
+        }
+          
+        // make the resource bundle
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        if (loader == null) {
+          loader = ClassLoader.getSystemClassLoader();
+        }
+        
+        String base = DEFAULT_BUNDLE_BASE_NAME;
+        Locale locale = null;
+        ResourceBundle bundle = null;
+        if (responseLang.length() > 0) {
+          locale = new Locale(responseLang);
+          bundle = ResourceBundle.getBundle(base,locale,loader);
+        } else {
+          locale = new Locale("");
+          bundle = ResourceBundle.getBundle(base,locale,loader);
+        }
+        
+        // build the localized exception text`
+        String sCodeMsg = Val.chkStr(bundle.getString("catalog.csw.exceptionCode."+this.code));
+        if (sCodeMsg.length() > 0) {
+          localizedText = sCodeMsg;
+          if ((this.locator != null) && (this.locator.length() > 0)) {
+            String sFormat = Val.chkStr(bundle.getString("catalog.csw.exceptionText.format"));
+            if (sFormat.length() > 0) {
+              String[] formatParams = new String[]{sCodeMsg,this.locator};
+              localizedText = MessageFormat.format(sFormat,formatParams);
+            }
+          }
+        }        
+
+      }
+    } catch (Throwable t) {
+      String sMsg = "An error occured while generating localized text for an OWSException report.";
+      LogUtil.getLogger().log(Level.SEVERE,sMsg,t);
+    }
+    
+    // add the localized exception text
+    if ((localizedText != null) && (localizedText.length() > 0)) {
+      sb.append("\r\n<ExceptionText>");
+      sb.append("\r\n").append(Val.escapeXml(localizedText));
+      sb.append("\r\n</ExceptionText>");
+    }
+    
+    // add the non-localized exception text
+    sb.append("\r\n<ExceptionText>");
     String txt = Val.chkStr(this.text);
     if (txt.startsWith("<![CDATA[")) {
       sb.append("\r\n").append(txt);
@@ -163,6 +241,7 @@ public class OwsException extends RuntimeException {
       sb.append("\r\n").append(Val.escapeXml(txt));
     }
     sb.append("\r\n</ExceptionText>");
+    
     sb.append("\r\n</Exception>");
     sb.append("\r\n</ExceptionReport>");
     return sb.toString();

@@ -24,6 +24,7 @@ import com.esri.gpt.catalog.discovery.SpatialClause;
 import com.esri.gpt.catalog.discovery.LogicalClause.LogicalAnd;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.util.Val;
+import com.esri.gpt.server.csw.provider.components.CapabilityOptions;
 import com.esri.gpt.server.csw.provider.components.CswConstants;
 import com.esri.gpt.server.csw.provider.components.CswNamespaces;
 import com.esri.gpt.server.csw.provider.components.IFilterParser;
@@ -49,11 +50,15 @@ public class QueryFilterParser extends DiscoveryAdapter implements IFilterParser
   /** The Logger. */
   private static Logger LOGGER = Logger.getLogger(QueryFilterParser.class.getName());
   
+  /** instance variables ====================================================== */
+  private OperationContext opContext;
+  
   /** constructors ============================================================ */
   
   /** Default constructor */
   public QueryFilterParser(OperationContext context) {
     super(context);
+    this.opContext = context;
   }
   
   /** methods ================================================================= */
@@ -313,6 +318,21 @@ public class QueryFilterParser extends DiscoveryAdapter implements IFilterParser
         like.setSingleChar(xpath.evaluate("@singleChar", parent));
         like.setWildCard(xpath.evaluate("@wildCard", parent));
       }
+      
+      // initialize the language code, (INSPIRE requirement but generally applicable)
+      // INSPIRE requirement, specify the language for exceptions in this manner 
+      // doesn't seem to be a good approach
+      if ((this.opContext != null) && (propertyClause instanceof PropertyClause.PropertyIsEqualTo)) {
+        if (discoverable.getMeaning().getName().equals("apiso.Language")) {
+          if ((sLiteral != null) && (sLiteral.length() > 0)) {
+            CapabilityOptions cOptions = this.opContext.getRequestOptions().getCapabilityOptions();
+            if (cOptions.getLanguageCode() == null) {
+              cOptions.setLanguageCode(sLiteral);
+            }
+          }
+        }
+      }
+      
     }
 
     // add the clause

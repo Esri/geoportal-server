@@ -137,7 +137,7 @@ public class XmlElement extends XmlNode {
    * Gets a child attribute value
    * @param namespaceURI the namespace URI
    * @param name the attribute name
-   * @param the associated value (can be null);
+   * @return the associated value (can be null);
    */
   public String getAttributeValue(String namespaceURI, String name) {
     if (this.getAttributes() != null) {

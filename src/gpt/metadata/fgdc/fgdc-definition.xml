@@ -17,13 +17,16 @@
 <schema key="fgdc" templateFile="gpt/metadata/fgdc/fgdc-template.xml">
 
 <!-- schema label -->
-<label resourceKey="catalog.mdParam.schema.fgdc.bestpractice"/>
+<label resourceKey="catalog.mdParam.schema.fgdc"/>
   
 <!-- schema interrogation -->
 <interrogation count="count(/metadata/idinfo/citation/*[name()='citeinfo']) * (not(count(/metadata/Esri)))"/>
 
 <!-- indexables -->
 <indexables fileName="gpt/metadata/fgdc/fgdc-indexables.xml"/>
+
+<!-- Geoportal XML editor -->
+<editor fileName="gpt/gxe/fgdc/fgdc-editor.xml"/>
   
 <!-- START FGDC MINIMUM -->
 <!-- SECTION: Identification Information -->
@@ -71,7 +74,7 @@
         <input type="text" size="20" maxlength="10" 
            hintResourceKey="catalog.general.inputDateFormat"
            defaultValue="#{EditMetadataController.now}"/>
-        <validation required="true" valueType="date"/>
+        <validation required="true" valueType="string"/>
         <content useSelectForUpdate="true"
             select="/metadata/idinfo/citation/citeinfo/pubdate" deleteIfEmpty="false"/>
     </parameter>
@@ -119,7 +122,7 @@
         <parameter key="identification.timePeriod.singDate.caleDate">
             <label resourceKey="fgdc.timePeriod.singDate.caleDate"/>
             <input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat"/>
-            <validation required="true" valueType="date"/>
+            <validation required="true" valueType="string"/>
             <content useSelectForUpdate="true" select="/metadata/idinfo/timeperd/timeinfo/sngdate/caldate" deleteIfEmpty="false" />
         </parameter>
     </section>
@@ -129,25 +132,25 @@
         <parameter key="identification.timePeriod.multDate1.singDate.caleDate">
             <label resourceKey="fgdc.timePeriod.singDate.caleDate"/>
             <input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat"/>
-            <validation required="true" valueType="date"/>
+            <validation required="true" valueType="string"/>
             <content useSelectForUpdate="true" select="/metadata/idinfo/timeperd/timeinfo/mdattim/sngdate[1]/caldate" deleteIfEmpty="false" />
         </parameter>
         <parameter key="identification.timePeriod.multDate2.singDate.caleDate">
             <label resourceKey="fgdc.timePeriod.singDate.caleDate"/>
             <input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat"/>
-            <validation required="true" valueType="date"/>
+            <validation required="true" valueType="string"/>
             <content useSelectForUpdate="true" select="/metadata/idinfo/timeperd/timeinfo/mdattim/sngdate[2]/caldate" deleteIfEmpty="false"/>
         </parameter>
         <parameter key="identification.timePeriod.multDate3.singDate.caleDate">
             <label resourceKey="fgdc.timePeriod.singDate.caleDate"/>
             <input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat"/>
-            <validation required="false" valueType="date"/>
+            <validation required="false" valueType="string"/>
             <content useSelectForUpdate="true" select="/metadata/idinfo/timeperd/timeinfo/mdattim/sngdate[3]/caldate" deleteIfEmpty="false"/>
         </parameter>
         <parameter key="identification.timePeriod.multDate4.singDate.caleDate">
             <label resourceKey="fgdc.timePeriod.singDate.caleDate"/>
             <input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat"/>
-            <validation required="false" valueType="date"/>
+            <validation required="false" valueType="string"/>
             <content useSelectForUpdate="true" select="/metadata/idinfo/timeperd/timeinfo/mdattim/sngdate[4]/caldate" deleteIfEmpty="false"/>
         </parameter>
     </section>            
@@ -158,7 +161,7 @@
           <label resourceKey="fgdc.timePeriod.beginDate"/>
           <input type="text" size="20" maxlength="10" 
              hintResourceKey="catalog.general.inputDateFormat"/>
-          <validation required="true" valueType="date"/>
+          <validation required="true" valueType="string"/>
           <content useSelectForUpdate="true"
                select="/metadata/idinfo/timeperd/timeinfo/rngdates/begdate" deleteIfEmpty="false" />
         </parameter>
@@ -166,7 +169,7 @@
           <label resourceKey="fgdc.timePeriod.endDate"/>
           <input type="text" size="20" maxlength="10" 
              hintResourceKey="catalog.general.inputDateFormat"/>
-          <validation required="true" valueType="date"/>
+          <validation required="true" valueType="string"/>
           <content useSelectForUpdate="true"
                select="/metadata/idinfo/timeperd/timeinfo/rngdates/enddate" deleteIfEmpty="false"/>
         </parameter>
@@ -274,7 +277,7 @@
         <parameter key="identification.contactinfo.cntorgp.cntorg"> 
             <label resourceKey="fgdc.standard.organization"/>
             <input type="text" maxlength="4000" defaultValue=""/>
-            <validation required="true"/>
+            <validation required="false"/>
             <content useSelectForUpdate="true"
                select="/metadata/idinfo/ptcontac/cntinfo/cntorgp/cntorg" deleteIfEmpty="false"/>
         </parameter>
@@ -307,7 +310,7 @@
         <parameter key="identification.contactinfo.cntaddress.address"> 
             <label resourceKey="fgdc.standard.address.address"/>
             <input type="text" maxlength="4000" defaultValue=""/>
-            <validation required="true"/>
+            <validation required="false"/>
             <content useSelectForUpdate="true"
                select="/metadata/idinfo/ptcontac/cntinfo/cntaddr/address" deleteIfEmpty="false"/>
         </parameter>        
@@ -588,7 +591,7 @@
         <parameter key="dataQualInfo.posiAccu.horiPosiAccu.horiPosiAccuRepo" >
             <label resourceKey="fgdc.dataQualInfo.posiAccu.horiPosiAccu.horiPosiAccuRepo"/>
             <input type="text" maxlength="4000" defaultValue=""/>
-            <validation required="true"/>
+            <validation required="false"/>
             <content useSelectForUpdate="true" select="/metadata/dataqual/posacc/horizpa/horizpar" deleteIfEmpty="false"/>              
         </parameter>
         <!-- *** QUESTION *** : HOW TO DEAL WITH 1:N in this case -->
@@ -715,7 +718,7 @@
             <parameter key="spatRefeInfo.horiCoorSystDefi.geog.latiReso"> 
               <label resourceKey="fgdc.spatRefeInfo.horiCoorSystDefi.geog.latiReso"/>
               <input type="text" size="24" maxlength="24" defaultValue="" />
-              <validation required="true" valueType="double"/>
+              <validation required="false" valueType="double"/>
               <content useSelectForUpdate="true"
                    select="/metadata/spref/horizsys/geograph/latres" deleteIfEmpty="false"/> 
             </parameter>            
@@ -723,7 +726,7 @@
             <parameter key="spatRefeInfo.horiCoorSystDefi.geog.longReso"> 
               <label resourceKey="fgdc.spatRefeInfo.horiCoorSystDefi.geog.longReso"/>
               <input type="text" size="24" maxlength="24" defaultValue="" />
-              <validation required="true" valueType="double"/>
+              <validation required="false" valueType="double"/>
               <content useSelectForUpdate="true"
                    select="/metadata/spref/horizsys/geograph/longres" deleteIfEmpty="false"/> 
             </parameter>    
@@ -731,7 +734,7 @@
             <parameter key="spatRefeInfo.horiCoorSystDefi.geog.geogCoorUnit">
               <label resourceKey="fgdc.spatRefeInfo.horiCoorSystDefi.geog.geogCoorUnit"/>
               <input type="selectOneMenu" size="30"/>
-              <validation required="true"/>
+              <validation required="false"/>
               <content useSelectForUpdate="true"
                    select="/metadata/spref/horizsys/geograph/geogunit" deleteIfEmpty="false">
                   <codes>
@@ -836,7 +839,7 @@
         <parameter key="metadataref.distInfo.contactinfo.contorgp.cntorg"> 
             <label resourceKey="fgdc.standard.organization"/>
             <input type="text" maxlength="4000" defaultValue=""/>
-            <validation required="true"/>
+            <validation required="false"/>
             <content useSelectForUpdate="true"
                select="/metadata/distinfo/distrib/cntinfo/cntorgp/cntorg" deleteIfEmpty="false"/>
         </parameter>
@@ -871,7 +874,7 @@
             <parameter key="metadataref.distInfo.contactinfo.cntaddress.address"> 
                 <label resourceKey="fgdc.standard.address.address"/>
                 <input type="text" maxlength="4000" defaultValue=""/>
-                <validation required="true"/>
+                <validation required="false"/>
                 <content useSelectForUpdate="true"
                     select="/metadata/distinfo/distrib/cntinfo/cntaddr/address" deleteIfEmpty="false"/>
             </parameter>        
@@ -964,7 +967,7 @@
         <parameter key="metadataref.contactinfo.cntorgp.cntorg"> 
             <label resourceKey="fgdc.standard.organization"/>            
             <input type="text" maxlength="4000" defaultValue="#{EditMetadataController.userProfile['organization'].value}"/>
-            <validation required="true"/>
+            <validation required="false"/>
             <content useSelectForUpdate="true"
                select="/metadata/metainfo/metc/cntinfo/cntorgp/cntorg" deleteIfEmpty="false"/>
         </parameter>
@@ -972,7 +975,7 @@
         <parameter key="metadataref.contactinfo.cntorgp.cntper"> 
             <label resourceKey="fgdc.standard.contactPerson"/>
             <input type="text" maxlength="4000" defaultValue="#{EditMetadataController.userProfile['firstName'].value} #{EditMetadataController.userProfile['lastName'].value}"/>
-            <validation required="true"/>
+            <validation required="false"/>
             <content useSelectForUpdate="true"
                select="/metadata/metainfo/metc/cntinfo/cntorgp/cntper" deleteIfEmpty="false"/>
         </parameter>
@@ -997,7 +1000,7 @@
             <parameter key="metadataref.contactinfo.cntaddress.address"> 
                 <label resourceKey="fgdc.standard.address.address"/>
                 <input type="text" maxlength="4000" defaultValue="#{EditMetadataController.userProfile['street'].value}"/>
-                <validation required="true"/>
+                <validation required="false"/>
                 <content useSelectForUpdate="true"
                    select="/metadata/metainfo/metc/cntinfo/cntaddr/address" deleteIfEmpty="false"/>
             </parameter>        

@@ -39,8 +39,11 @@ public class CswNamespaces {
   /** URI GML - "http://www.opengis.net/gml" */
   public static final String URI_GML = "http://www.opengis.net/gml";
   
-  /** URI INSPIRE_DS - "http://inspire.europa.eu/networkservice/discovery" */
-  public static final String URI_INSPIRE_DS = "http://inspire.europa.eu/networkservice/discovery";
+  /** URI INSPIRE_COMMON - "http://inspire.ec.europa.eu/schemas/common/1.0" */
+  public static final String URI_INSPIRE_COMMON = "http://inspire.ec.europa.eu/schemas/common/1.0";
+  
+  /** URI INSPIRE_DS - "http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" */
+  public static final String URI_INSPIRE_DS = "http://inspire.ec.europa.eu/schemas/inspire_ds/1.0";
   
   /** URI OGC - "http://www.opengis.net/ogc" */
   public static final String URI_OGC = "http://www.opengis.net/ogc";
@@ -91,6 +94,7 @@ public class CswNamespaces {
     namespaces.add("dc", URI_DC);
     namespaces.add("dct",URI_DCT);
     namespaces.add("gml",URI_GML);
+    namespaces.add("inspire_common",URI_INSPIRE_COMMON);
     namespaces.add("inspire_ds",URI_INSPIRE_DS);
     namespaces.add("ogc",URI_OGC);
     namespaces.add("ows",URI_OWS);

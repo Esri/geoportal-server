@@ -32,7 +32,7 @@ import com.esri.gpt.framework.resource.query.QueryBuilder;
 import com.esri.gpt.framework.security.principal.Publisher;
 
 /**
- * ArcGIS query builder.
+ * ArcGIS server query builder.
  */
 public class ArcGISQueryBuilder implements QueryBuilder {
 /** capabilities */

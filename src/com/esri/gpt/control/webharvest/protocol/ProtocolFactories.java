@@ -16,6 +16,7 @@ package com.esri.gpt.control.webharvest.protocol;
 
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocol.ProtocolType;
 import com.esri.gpt.control.webharvest.client.arcgis.ArcGISProtocol;
+import com.esri.gpt.control.webharvest.protocol.factories.AgpProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.ArcGISProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.ArcImsProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.CswProtocolFactory;
@@ -57,11 +58,12 @@ public void initDefault() {
   put(ProtocolType.WAF.name()   , new WafProtocolFactory());
   put(ProtocolType.RES.name()   , new ResourceProtocolFactory());
   put(ArcGISProtocol.NAME       , new ArcGISProtocolFactory());
+  put(ProtocolType.AGP.name()   , new AgpProtocolFactory());
 }
 
 /**
  * Parses protocol.
- * @param xmlString protocl as XML string
+ * @param xmlString protocol as XML string
  * @return protocol
  * @throws ProtocolException if error parsing protocol
  */

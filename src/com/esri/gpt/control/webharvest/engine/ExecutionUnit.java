@@ -58,7 +58,7 @@ public ExecutionUnit(HrRecord repository, Criteria criteria, QueryBuilder queryB
   this.repository = repository;
   this.criteria = criteria;
   this.queryBuilder = queryBuilder;
-  this.cleanup = ProtocolInvoker.getUpdateContent(repository.getProtocol());
+  this.cleanup = ProtocolInvoker.getUpdateContent(repository.getProtocol()) && criteria.getFromDate()==null;
 }
 
 /**

@@ -22,7 +22,7 @@ import com.esri.gpt.framework.resource.query.QueryBuilder;
 import com.esri.gpt.framework.util.Val;
 
 /**
- * ArcGIS protocol.
+ * ArcGIS server protocol.
  */
 public class ArcGISProtocol implements Protocol {
 

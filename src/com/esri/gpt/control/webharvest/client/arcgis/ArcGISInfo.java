@@ -19,7 +19,7 @@ import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
 import com.esri.gpt.framework.util.Val;
 
 /**
- * ArcGIS info.
+ * ArcGIS server info.
  */
 class ArcGISInfo {
 /** REST url */

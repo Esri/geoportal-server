@@ -175,7 +175,10 @@ WAF("WAF"),
 /** CSW */
 CSW("CSW"),
 /** Resource */
-RES("RES");
+RES("RES"),
+/* ArcGIS Portal */
+/* NOTE! This is EXPERIMENTAL feature. It might be removed at any time in the future. */
+AGP("AGP");
 /** protocol id */
 private String _id;
 

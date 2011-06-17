@@ -143,20 +143,21 @@ public class GetCapabilitiesResponse implements IResponseGenerator {
     }
     
     // check for a supplied language code (INSPIRE)
-    String exprLang = "/csw:Capabilities/ows:ExtendedCapabilities/inspire_ds:Languages/inspire_ds:Language";
+    String requestedLang = Val.chkStr(cOptions.getLanguageCode());
+    String exprLang = "/csw:Capabilities/ows:OperationsMetadata/inspire_ds:ExtendedCapabilities/inspire_common:SupportedLanguages/inspire_common:SupportedLanguage/inspire_common:Language";
+    String exprDef = "/csw:Capabilities/ows:OperationsMetadata/inspire_ds:ExtendedCapabilities/inspire_common:SupportedLanguages/inspire_common:DefaultLanguage/inspire_common:Language";
+    String exprCur = "/csw:Capabilities/ows:OperationsMetadata/inspire_ds:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language";
     NodeList nlLang = (NodeList)xpath.evaluate(exprLang,dom,XPathConstants.NODESET);
-    if ((nlLang!= null) && (nlLang.getLength() > 0)) {
-      String requestedLang = Val.chkStr(cOptions.getLanguageCode());
-      String exprDef = "/csw:Capabilities/ows:ExtendedCapabilities/inspire_ds:Languages/inspire_ds:Language[@default='true']";
-      String exprCur = "/csw:Capabilities/ows:ExtendedCapabilities/inspire_ds:CurrentLanguage";
-      Node ndDefLang = (Node)xpath.evaluate(exprDef,dom,XPathConstants.NODE);
-      Node ndCurLang = (Node)xpath.evaluate(exprCur,dom,XPathConstants.NODE);
-      if ((ndDefLang != null) && (ndCurLang != null)) {
-        String sDefLang = Val.chkStr(ndDefLang.getTextContent());
-        String sCurLang = Val.chkStr(ndCurLang.getTextContent());
-        String sRespLang = sDefLang;
-        if (sRespLang.length() == 0) sRespLang = sCurLang;
-        if ((requestedLang.length() > 0) && !requestedLang.equalsIgnoreCase(sRespLang)) {
+    Node ndDefLang = (Node)xpath.evaluate(exprDef,dom,XPathConstants.NODE);
+    Node ndCurLang = (Node)xpath.evaluate(exprCur,dom,XPathConstants.NODE);
+    if ((ndDefLang != null) && (ndCurLang != null)) {
+      String sDefLang = Val.chkStr(ndDefLang.getTextContent());
+      String sCurLang = Val.chkStr(ndCurLang.getTextContent());
+      String sRespLang = sDefLang;
+      if (sRespLang.length() == 0) sRespLang = sCurLang;
+      
+      if ((requestedLang.length() > 0) && !requestedLang.equalsIgnoreCase(sRespLang)) {
+        if ((nlLang!= null) && (nlLang.getLength() > 0)) {
           for (int i=0; i<nlLang.getLength(); i++) {
             Node ndLang = nlLang.item(i);
             String sLang = Val.chkStr(ndLang.getTextContent());
@@ -166,46 +167,47 @@ public class GetCapabilitiesResponse implements IResponseGenerator {
             }
           }
         }
-        if (sRespLang.length() > 0) {
-          
-          // update the current response language
-          if (!sRespLang.equalsIgnoreCase(sCurLang)) {
-            ndCurLang.setTextContent(sRespLang);
-          }
-          
-          // remove nodes not associated with the response language
-          NodeList nlLangRefs = (NodeList)xpath.evaluate("//@xml:lang",dom,XPathConstants.NODESET);
-          ArrayList<Node> remove = new ArrayList<Node>();
-          ArrayList<Attr> removeAttr = new ArrayList<Attr>();
-          for (int i=0;i<nlLangRefs.getLength();i++) {
-            Node node = nlLangRefs.item(i);
-            if (node instanceof Attr) {
-              String sLang = Val.chkStr(node.getTextContent());
-              if (sRespLang.equalsIgnoreCase(sLang)) {
-                removeAttr.add((Attr)node);
-              } else {
-                Node ndToRemode = ((Attr)node).getOwnerElement();
-                remove.add(ndToRemode);
-              }
-            } 
-          }
-          for (Node node: remove) {
-            try {
-              node.getParentNode().removeChild(node);
-            } catch (Exception e) {
-              LOGGER.warning("Unable to remove non-requested language node, reason= "+e.toString());
+      }
+      if (sRespLang.length() > 0) {
+        cOptions.setResponseLanguageCode(sRespLang);
+        
+        // update the current response language
+        if (!sRespLang.equalsIgnoreCase(sCurLang)) {
+          ndCurLang.setTextContent(sRespLang);
+        }
+        
+        // remove nodes not associated with the response language
+        NodeList nlLangRefs = (NodeList)xpath.evaluate("//@xml:lang",dom,XPathConstants.NODESET);
+        ArrayList<Node> remove = new ArrayList<Node>();
+        ArrayList<Attr> removeAttr = new ArrayList<Attr>();
+        for (int i=0;i<nlLangRefs.getLength();i++) {
+          Node node = nlLangRefs.item(i);
+          if (node instanceof Attr) {
+            String sLang = Val.chkStr(node.getTextContent());
+            if (sRespLang.equalsIgnoreCase(sLang)) {
+              removeAttr.add((Attr)node);
+            } else {
+              Node ndToRemode = ((Attr)node).getOwnerElement();
+              remove.add(ndToRemode);
             }
+          } 
+        }
+        for (Node node: remove) {
+          try {
+            node.getParentNode().removeChild(node);
+          } catch (Exception e) {
+            LOGGER.warning("Unable to remove non-requested language node, reason= "+e.toString());
           }
-          for (Attr attr: removeAttr) {
-            try {
-              attr.getOwnerElement().removeAttributeNode(attr);
-            } catch (Exception e) {
-              LOGGER.warning("Unable to remove xml:lang sttribute, reason= "+e.toString());
-            }
+        }
+        for (Attr attr: removeAttr) {
+          try {
+            attr.getOwnerElement().removeAttributeNode(attr);
+          } catch (Exception e) {
+            LOGGER.warning("Unable to remove xml:lang sttribute, reason= "+e.toString());
           }
-          
         }
       }
+      
     }
              
     // set the response string

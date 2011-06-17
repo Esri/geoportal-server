@@ -25,10 +25,10 @@
     com.esri.gpt.framework.util.Val.chkStr((String)request.getAttribute("gxeDefinitionLocation"));
   String gxeOpenDocumentId = 
     com.esri.gpt.framework.util.Val.chkStr((String)request.getAttribute("gxeOpenDocumentId"));
+  String gxeNewDocumentId = com.esri.gpt.framework.util.UuidUtil.makeUuid();
   
   String gxeLabelSave = gxeMsgBroker.retrieveMessage("catalog.publication.editMetadata.button.submit");
   String gxeLabelSaveDraft = gxeMsgBroker.retrieveMessage("catalog.publication.editMetadata.button.saveAsDraft");
-  String gxeLabelSaving = "Saving...";
   String gxeLabelReq = gxeMsgBroker.retrieveMessage("catalog.general.requiredFieldNote");
 %>
 
@@ -46,7 +46,7 @@
 </script>
 
 <script type="text/javascript" src="<%=request.getContextPath()%>/catalog/js/v1.1/gemet.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/catalog/js/v1.1/gxe.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/catalog/js/v1.1.1/gxe.js"></script>
 
 <% // prompt %>
 <h:outputText escape="false" styleClass="prompt" rendered="false"
@@ -61,6 +61,7 @@
     dojo.addOnLoad(function() {
       gxeContext.contextPath = "<%=request.getContextPath()%>";
       gxeContext.gptMapConfig = gptMapConfig;
+      gxeContext.newDocumentId = "<%=gxeNewDocumentId%>";
       var sKey = "<%=gxeDefinitionKey%>";
       var sLocation = "<%=gxeDefinitionLocation%>";
       var sDocumentId = "<%=gxeOpenDocumentId%>";

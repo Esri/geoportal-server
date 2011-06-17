@@ -234,6 +234,7 @@ function selectSection(section) {
   enableSection("oai", section=="oai");
   enableSection("waf", section=="waf");
   enableSection("csw", section=="csw");
+  enableSection("agp", section=="agp");
 
   if (section=="arcgis") {
     dojo.byId("harvestCreate:hostUrlLabel").innerHTML = dojo.byId("restUrlLabelValue").value;
@@ -506,6 +507,8 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <h:selectOneMenu styleClass="csw" value="#{HarvestController.editor.attrs['profile']}" id="cswProfile">
 <f:selectItems value="#{HarvestController.editor.allProfiles}"/>
 </h:selectOneMenu>
+
+<%-- ArcGIS Portal specific properties -------------------------------------------------%>
 
 <%-- End of the panel --%>
 </h:panelGrid>

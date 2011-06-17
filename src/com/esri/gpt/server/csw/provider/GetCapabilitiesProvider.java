@@ -89,7 +89,8 @@ public class GetCapabilitiesProvider implements IOperationProvider {
     String[] parsed;
     ISupportedValues supported;
     
-    // service and version are parsed by the parent RequestHandler
+    // service and version and language code are parsed by the parent RequestHandler,
+    // the language code is initialized within the associated IProviderFactory
                 
     // output format
     locator = "acceptFormats";
@@ -116,15 +117,6 @@ public class GetCapabilitiesProvider implements IOperationProvider {
       supported = new SupportedValues(
           "ServiceIdentification,ServiceProvider,OperationsMetadata,Filter_Capabilities",",");
       cOptions.setSections(vHelper.validateValues(supported,locator,parsed,false));
-    }
-    
-    // language code
-    parsed = pHelper.getParameterValues(request,"language");
-    if ((parsed != null) && (parsed.length) > 0) {
-      String tmp = Val.chkStr(parsed[0]);
-      if (tmp.length() > 0) {
-        cOptions.setLanguageCode(tmp);
-      }
     }
     
     // execute

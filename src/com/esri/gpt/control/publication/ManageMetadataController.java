@@ -71,6 +71,9 @@ private static final ProtocolDef [] protocolDefs = {
   new ProtocolDef("oai", "catalog.harvest.manage.edit.protocol.oai", false),
   new ProtocolDef("waf", "catalog.harvest.manage.edit.protocol.waf", false),
   new ProtocolDef("csw", "catalog.harvest.manage.edit.protocol.csw", false),
+  /* NOTE! This is EXPERIMENTAL feature. It might be removed at any time in the future.
+  new ProtocolDef("agp", "catalog.harvest.manage.edit.protocol.agp", false),
+   */
 };
 
 // constructors ================================================================

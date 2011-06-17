@@ -93,6 +93,7 @@ public class HrCompleteUpdateRequest extends HrRequest {
 
     boolean hostUrlChanged = true;
     boolean titleChanged = true;
+    boolean findableChanged = true;
 
     boolean creating = !UuidUtil.isUuid(record.getUuid());
     if (!creating) {
@@ -112,6 +113,9 @@ public class HrCompleteUpdateRequest extends HrRequest {
         if (record.getName().equals(oldRecord.getName())) {
           titleChanged = false;
         }
+        if (record.getFindable()==oldRecord.getFindable()) {
+          findableChanged = false;
+        }
       }
     }
 
@@ -126,7 +130,7 @@ public class HrCompleteUpdateRequest extends HrRequest {
     Native nativeResource = null;
 
     // check if either host URL or title has changed
-    if (hostUrlChanged || titleChanged) {
+    if (hostUrlChanged || titleChanged || (findableChanged && record.getFindable())) {
       record.setUpdateDate(new Date());
       // if hot URL or title has changed than proceed with generation of the
       // native resource

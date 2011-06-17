@@ -127,7 +127,7 @@ e.g. <schema key="fgdc" templateFile="gpt/metadata/fgdc-template.xml" editable="
                 valid values: title|fileIdentifier|abstract|esriDocID|
                               envelope.east|envelope.north|envelope.south|envelope.west|
                               thumbnail.binary|thumbnail.url
-      visible = Determines if the parameter should be displayed.
+      visible = Determines if the parameter should be displayed. Note that visible="false" can only be used if type="text" on the <input> component for the parameter.
                 Optional, default=true, valid values: true|false
                 
     e.g. <parameter key="identification.title" visible="true" meaning="title"> 
@@ -144,7 +144,7 @@ e.g. <schema key="fgdc" templateFile="gpt/metadata/fgdc-template.xml" editable="
 
       <!--
       The input component associated with the parameter. (optional)
-        type            = The type of input component.
+        type            = The type of input component. Note that only when type="text" can visible="false" be used on the parent <parameter> element.
                           Optional, default=text, 
                           valid values: text|textArea|delimitedTextArea|textArray|map|
                                         selectOneMenu|selectManyCheckbox|selectWithOther|

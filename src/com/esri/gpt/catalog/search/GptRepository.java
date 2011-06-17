@@ -206,8 +206,10 @@ public void save(SavedSearchCriteria savedCriteria) throws SearchException {
 /**
  * Saves the criteria
  * 
- * @param savedCriteria
+ * @param name name
+ * @param restCriteria
  *          Object with the search to be saved
+ * @param user user
  * @throws SearchException
  */
 public void save(String name, String restCriteria, User user) 

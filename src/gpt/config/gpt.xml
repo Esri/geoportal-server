@@ -14,7 +14,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<gptConfig version="1.0.0">
+<gptConfig version="1.1.1">
 
     <databaseReference name="gpt" jndiName="jdbc/gpt"/>
     
@@ -48,7 +48,7 @@
 		- locatorSingleFieldParameter: field for the GeocodeServer service upon which locations can be searched -->
 		
     <interactiveMap
-        jsapiUrl="http://serverapi.arcgisonline.com/jsapi/arcgis/?v=2.0"
+        jsapiUrl="http://serverapi.arcgisonline.com/jsapi/arcgis/?v=2.2"
         mapServiceUrl="REST_API_URL_to_MapService"
         mapServiceType="dynamic_or_tiled" 
         geometryServiceUrl="http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer"
@@ -67,7 +67,7 @@
 				http://help.arcgis.com/en/geoportal_extension/10.0/help/index.html#/Enable_Search_Using_an_Ontology_Service/00t00000003v000000/ -->
 			
 			<lucene
-				indexLocation="lucene_index_location"
+				indexLocation=""
 				writeLockTimeout="60000"
 				useNativeFSLockFactory="true"
 				analyzerClassName="org.apache.lucene.analysis.standard.StandardAnalyzer">
@@ -83,6 +83,7 @@
 			  - assertion.index.location: path to the folder that will hold the indexed comments and ratings. NOTE: This assertion.index.location should 
 		        not be the same location as the lucene\indexLocation value. These indexes should not be deleted and should be on a file backup/restore 
 		        plan. 
+            ex) c:/geoportal/lucene_assertion_index_location/catalog1
 			  - assertion.index.allowNonLocalResourceIds: if true, comments and ratings can be made about resources that do not exist in the local 
 				catalog.
 			  - assertion.rating.enabled: allow users to rate resources.
@@ -90,7 +91,7 @@
 			  - assertion.comment.maxLength: maximum characters allowed for one comment.	-->
 		
 			<parameter key="assertion.index.enabled" value="true"/>
-			<parameter key="assertion.index.location" value="lucene_assertion_index_location"/>
+			<parameter key="assertion.index.location" value=""/>
 			<parameter key="assertion.index.allowNonLocalResourceIds" value="false"/>
 			<parameter key="assertion.rating.enabled" value="true"/>
 			<parameter key="assertion.comment.enabled" value="true"/>

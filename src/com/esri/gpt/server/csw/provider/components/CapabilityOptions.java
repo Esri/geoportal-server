@@ -23,6 +23,7 @@ public class CapabilityOptions {
   /** instance variables ====================================================== */
   private String    capabilitiesLocation;
   private String    languageCode;
+  private String    responseLanguageCode;
   private StringSet sections = new StringSet();
   
   /** constructors ============================================================ */
@@ -62,6 +63,21 @@ public class CapabilityOptions {
    */
   public void setLanguageCode(String languageCode) {
     this.languageCode = languageCode;
+  }
+  
+  /**
+   * Gets the response language code.
+   * @return the language code 
+   */
+  public String getResponseLanguageCode() {
+    return this.responseLanguageCode;
+  }
+  /**
+   * Sets the response language code.
+   * @param languageCode the language code
+   */
+  public void setResponseLanguageCode(String languageCode) {
+    this.responseLanguageCode = languageCode;
   }
   
   /**

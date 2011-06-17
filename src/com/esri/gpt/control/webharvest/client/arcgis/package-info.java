@@ -14,7 +14,7 @@
  */
 
 /**
- * ArcGIS protocol related classes.
+ * ArcGIS server protocol related classes.
  */
 package com.esri.gpt.control.webharvest.client.arcgis;
 

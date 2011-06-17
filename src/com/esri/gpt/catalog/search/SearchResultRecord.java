@@ -195,6 +195,49 @@ public class SearchResultRecord extends Record {
   }
   
   /**
+   * Gets the resource links as map.
+   *
+   ** <br/Example:<br/>
+   * Rendered="#{record.resourceLinksAsMap['metadata']}".  For the map
+   * string, look at ResourceLink static strings with prefix TAG
+   * 
+   * @return the resource links as map
+   */
+  public Map<String, String> getResourceLinksAsMap() {
+	  Map<String, String> m = new HashMap<String, String>();
+	  ResourceLinks rLinks = this.getResourceLinks();
+	  if(rLinks == null) {
+		  return m;
+	  }
+	  if(rLinks.getUrlsByTag() != null) {
+		  m = this.getResourceLinks().getUrlsByTag();
+	  }
+	  return m;
+  }
+  
+  /**
+   * Gets the resource links as map.
+   * 
+   * Short cut for #{record.resourceLinksAsMap['ResourceLink.TAG_DETAILS']}
+   * in searchResults.jsp
+   *
+   * @return the resource links as map
+   */
+  public String getViewMetadataUrl() {
+	  String url = "";
+	  Map<String, String> m = new HashMap<String, String>();
+	  ResourceLinks rLinks = this.getResourceLinks();
+	  if(rLinks == null) {
+		  return "";
+	  }
+	  if(rLinks.getUrlsByTag() != null) {
+		  m = this.getResourceLinks().getUrlsByTag();
+		  url = m.get(ResourceLink.TAG_DETAILS);
+	  }
+	  return Val.chkStr(url);
+  }
+  
+  /**
    * Gets the resource links.
    * @return the links
    */

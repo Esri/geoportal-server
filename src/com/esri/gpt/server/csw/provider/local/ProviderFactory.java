@@ -276,6 +276,20 @@ public class ProviderFactory implements IProviderFactory {
     // make and return the request handler
     RequestHandler handler = new RequestHandler();
     handler.setOperationContext(context);
+    
+    // initialize the language code (INSPIRE requirement but generally applicable)
+    if (request != null) {
+      ParseHelper pHelper = new ParseHelper();
+      String[] parsed = pHelper.getParameterValues(request,"language");
+      if ((parsed != null) && (parsed.length) > 0) {
+        String tmp = Val.chkStr(parsed[0]);
+        if (tmp.length() > 0) {
+          CapabilityOptions cOptions = context.getRequestOptions().getCapabilityOptions();
+          cOptions.setLanguageCode(tmp);
+        }
+      }
+    }
+    
     return handler;
   }
      

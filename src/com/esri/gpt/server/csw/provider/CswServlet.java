@@ -117,11 +117,12 @@ public class CswServlet extends BaseServlet {
     LOGGER.fine("Executing CSW provider request....");
     String cswResponse = "";
     String mimeType = "application/xml";
+    RequestHandler handler = null;
     OperationResponse opResponse = null;
     try {
       String cswRequest = readInputCharacters(request);
       LOGGER.finer("cswRequest:\n"+cswRequest);
-      RequestHandler handler = this.makeRequestHandler(request,response,context);
+      handler = this.makeRequestHandler(request,response,context);
       if (cswRequest.length() > 0) {
         opResponse = handler.handleXML(cswRequest);
       } else {
@@ -136,7 +137,11 @@ public class CswServlet extends BaseServlet {
       }
  
     } catch (Exception e) {
-      cswResponse = handleException(e);
+      OperationContext opContext = null;
+      if (handler != null) {
+        opContext = handler.getOperationContext();
+      }
+      cswResponse = handleException(opContext,e);
     }
     
     // write the response
@@ -151,18 +156,30 @@ public class CswServlet extends BaseServlet {
    * @param e the exception
    * @return the exception report string
    * @throws throws Exception if an authorization related exception occurs
+   * @deprecated replaced by {@link #handleException(OperationContext,Exception)}
    */
   protected String handleException(Exception e) throws Exception {
+    return this.handleException(null,e);
+  }
+  
+  /**
+   * Creation an ExceptionReport response when an exception is encountered.
+   * @param context the operation context
+   * @param e the exception
+   * @return the exception report string
+   * @throws throws Exception if an authorization related exception occurs
+   */
+  protected String handleException(OperationContext context, Exception e) throws Exception {
     if (e instanceof NotAuthorizedException) {
       throw e;
     } else if (e instanceof OwsException) {
       OwsException ows = (OwsException)e;
       LOGGER.finer("Invalid CSW request: "+e.getMessage());
-      return ows.getReport();
+      return ows.getReport(context);
     } else {
       OwsException ows = new OwsException(e);
       LOGGER.log(Level.WARNING,e.toString(),e);
-      return ows.getReport();
+      return ows.getReport(context);
     }
   }
     

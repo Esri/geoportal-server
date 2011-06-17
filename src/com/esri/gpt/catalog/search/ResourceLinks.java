@@ -70,7 +70,7 @@ public class ResourceLinks extends ArrayList<ResourceLink> {
    * based upon a supplied tag (as key).
    * <br/>Th map aids in JSF page usage.
    * <br/Example:<br/>
-   * rendered="#{record.resourceLinks.urlsByTag['website']}"
+   * rendered="#{record.resourceLinksAsMap['website']}"
    * @return the map interface (urls keys by tag)
    */
   public Map<String,String> getUrlsByTag() {
