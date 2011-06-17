@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Time Period Information 
+		timeinfo
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect09.xsd
+		http://www.fgdc.gov/metadata/csdgm/09.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="timeinfo"
+	g:i18nBase="catalog.fgdc.timeinfo" g:label="$i18nBase" 
+	g:extends="$base/core/xml/Element.xml">
+	<g:body>
+		<g:elementChoice g:extends="$base/core/xml/ElementChoice.xml">
+			<g:body>
+
+				<!-- single date -->
+				<g:element g:targetName="sngdate" h:tag="div" g:jsClass="gxe.control.Element">
+				
+					<!-- date -->
+					<g:element g:targetName="caldate" g:extends="$base/schema/FGDCdate.xml"
+					  g:alternateValues="Unknown">
+						<g:body>
+						  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+						    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='Unknown';_o.fireInputChanged();"
+						    >$i18n.catalog.fgdc.general.unknown</h:a>
+						</g:body>
+					</g:element>
+					
+					<!-- time -->
+					<g:element g:targetName="time" g:minOccurs="0"
+						g:extends="$base/schema/FGDCtime.xml"
+						g:alternateValues="Unknown">
+						<g:body>
+						  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+						    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='Unknown';_o.fireInputChanged();"
+						    >$i18n.catalog.fgdc.general.unknown</h:a>
+						</g:body>
+					</g:element>
+				</g:element>
+
+				<!-- multiple dates -->
+				<g:element g:targetName="mdattim" h:tag="div" g:jsClass="gxe.control.Element">
+					<g:element g:targetName="sngdate" g:minOccurs="2" g:maxOccurs="unbounded" 
+						g:label="$i18n.catalog.fgdc.timeinfo.mdattim"
+						g:extends="$base/core/xml/Element.xml">
+						<g:body>
+						
+							<!-- date -->
+							<g:element g:targetName="caldate" 
+								g:extends="$base/schema/FGDCdate.xml"
+								g:alternateValues="Unknown">
+								<g:body>
+								  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+								    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='Unknown';_o.fireInputChanged();"
+								    >$i18n.catalog.fgdc.general.unknown</h:a>
+								</g:body>
+							</g:element>
+							
+							<!-- time -->
+							<g:element g:targetName="time" g:minOccurs="0"
+								g:extends="$base/schema/FGDCtime.xml"
+								g:alternateValues="Unknown">
+								<g:body>
+								  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+								    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='Unknown';_o.fireInputChanged();"
+								    >$i18n.catalog.fgdc.general.unknown</h:a>
+								</g:body>
+							</g:element>
+							
+						</g:body>
+					</g:element>
+				</g:element>
+
+				<!-- date range -->
+				<g:element g:targetName="rngdates" h:tag="div" g:jsClass="gxe.control.Element">
+				
+					<!-- Beginning Date -->
+					<g:element g:targetName="begdate" g:extends="$base/schema/FGDCdate.xml"
+						g:alternateValues="Unknown">
+						<g:body>
+						  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+						    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='Unknown';_o.fireInputChanged();"
+						    >$i18n.catalog.fgdc.general.unknown</h:a>
+						</g:body>
+					</g:element>
+					
+					<!-- Beginning Time -->
+					<g:element g:targetName="begtime" g:minOccurs="0"
+						g:extends="$base/schema/FGDCtime.xml"
+						g:alternateValues="Unknown">
+						<g:body>
+						  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+						    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='Unknown';_o.fireInputChanged();"
+						    >$i18n.catalog.fgdc.general.unknown</h:a>
+						</g:body>
+					</g:element>
+										
+					<!-- Ending Date -->
+					<g:element g:targetName="enddate" g:extends="$base/schema/FGDCdate.xml"
+						g:alternateValues="Unknown,Present">
+						<g:body>
+						  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+						    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='Unknown';_o.fireInputChanged();"
+						    >$i18n.catalog.fgdc.general.unknown</h:a>
+						  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+						    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='Present';_o.fireInputChanged();"
+						    >$i18n.catalog.fgdc.general.date.present</h:a>
+						</g:body>
+					</g:element>
+					
+					<!-- Ending Time -->
+					<g:element g:targetName="endtime" g:minOccurs="0"
+						g:extends="$base/schema/FGDCtime.xml"
+						g:alternateValues="Unknown">
+						<g:body>
+						  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+						    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='Unknown';_o.fireInputChanged();"
+						    >$i18n.catalog.fgdc.general.unknown</h:a>
+						</g:body>
+					</g:element>
+					
+				</g:element>
+
+			</g:body>
+		</g:elementChoice>
+	</g:body>
+</g:element>

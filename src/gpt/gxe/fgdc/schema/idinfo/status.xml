@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Status 
+		status (/metadata/idinfo/status) 
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect01.xsd
+		http://www.fgdc.gov/metadata/csdgm/01.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="status"
+	g:i18nBase="catalog.fgdc.idinfo.status" g:label="$i18nBase"
+	g:extends="$base/core/xml/Element.xml">
+	<g:body>
+
+		<!-- Progress -->
+		<g:element g:targetName="progress" g:extends="$base/core/xml/ElementTextOnly.xml">
+			<g:body>
+				<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+					<g:options g:i18nBase="catalog.fgdc.idinfo.status.progress.option">
+						<g:option g:value="" g:label=""/>
+						<g:option g:value="Complete" g:label="$i18nBase.complete"/>
+						<g:option g:value="In work" g:label="$i18nBase.inWork"/>
+						<g:option g:value="Planned" g:label="$i18nBase.planned"/>
+					</g:options>
+				</g:input>
+			</g:body>
+		</g:element>
+
+		<!-- Maintenance and Update Frequency -->
+		<g:element g:targetName="update" g:extends="$base/core/xml/ElementTextOnly.xml">
+			<g:body>
+				<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+					<g:options g:i18nBase="catalog.fgdc.idinfo.status.update.option">
+						<g:option g:value="" g:label=""/>
+						<g:option g:value="Continually" g:label="$i18nBase.continual"/>
+						<g:option g:value="Daily" g:label="$i18nBase.daily"/>
+						<g:option g:value="Weekly" g:label="$i18nBase.weekly"/>
+						<g:option g:value="Monthly" g:label="$i18nBase.monthly"/>
+						<g:option g:value="Annually" g:label="$i18nBase.annually"/>
+						<g:option g:value="Unknown" g:label="$i18nBase.unknown"/>
+						<g:option g:value="As needed" g:label="$i18nBase.asNeeded"/>
+						<g:option g:value="Irregular" g:label="$i18nBase.irregular"/>
+						<g:option g:value="None planned" g:label="$i18nBase.nonePlanned"/>
+						<g:option g:value="_other_" g:label="$i18n.catalog.mdCode.other"
+							g:isOther="true"/>
+					</g:options>
+				</g:input>
+			</g:body>
+		</g:element>
+
+	</g:body>
+</g:element>

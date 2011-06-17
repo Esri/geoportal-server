@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Bounding Coordinates 
+		bounding (/metadata/idinfo/spdom/bounding) 
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect01.xsd
+		http://www.fgdc.gov/metadata/csdgm/01.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="bounding"
+	g:i18nBase="catalog.fgdc.idinfo.spdom.bounding" g:label="$i18nBase"
+	g:extends="$base/core/xml/Element.xml">
+	<g:body h:gxeMapPart="envelope_container">
+		<h:table h:class="gxeMapEnvelopeTable">
+			<h:tbody>
+				<h:tr>
+
+					<h:td>
+
+						<!-- West Bounding Longitude -->
+						<g:element g:targetName="westbc" g:valueType="xs:double"
+							g:extends="$base/core/xml/ElementTextOnly.xml">
+							<g:body>
+								<g:input h:size="24" h:gxeMapPart="envelope_west"
+									g:value="-180" g:tip="$i18n.catalog.general.inputLongitudeFormat"
+									g:extends="$base/core/ui/InputText.xml"/>
+							</g:body>
+						</g:element>
+
+						<!-- East Bounding Longitude -->
+						<g:element g:targetName="eastbc" g:valueType="xs:double"
+							g:extends="$base/core/xml/ElementTextOnly.xml">
+							<g:body>
+								<g:input h:size="24" h:gxeMapPart="envelope_east"
+									g:value="180" g:tip="$i18n.catalog.general.inputLongitudeFormat"
+									g:extends="$base/core/ui/InputText.xml"/>
+							</g:body>
+						</g:element>
+
+						<!-- North Bounding Latitude -->
+						<g:element g:targetName="northbc" g:valueType="xs:double"
+							g:extends="$base/core/xml/ElementTextOnly.xml">
+							<g:body>
+								<g:input h:size="24" h:gxeMapPart="envelope_north"
+									g:value="90" g:tip="$i18n.catalog.general.inputLatitudeFormat"
+									g:extends="$base/core/ui/InputText.xml"/>
+							</g:body>
+						</g:element>
+
+						<!-- South Bounding Latitude -->
+						<g:element g:targetName="southbc" g:valueType="xs:double"
+							g:extends="$base/core/xml/ElementTextOnly.xml">
+							<g:body>
+								<g:input h:size="24" h:gxeMapPart="envelope_south"
+									g:value="-90" g:tip="$i18n.catalog.general.inputLatitudeFormat"
+									g:extends="$base/core/ui/InputText.xml"/>
+							</g:body>
+						</g:element>
+
+					</h:td>
+
+					<!-- map control -->
+					<h:td>
+						<h:div h:class="gxeMap" g:jsClass="gxe.control.Map"/>
+					</h:td>
+
+				</h:tr>
+			</h:tbody>
+		</h:table>
+	</g:body>
+</g:element>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Entity and Attribute Information 
+		eainfo (/metadata/eainfo)
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect05.xsd
+		http://www.fgdc.gov/metadata/csdgm/05.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="eainfo"
+	g:i18nBase="catalog.fgdc.eainfo" g:label="$i18nBase" 
+	g:extends="$base/core/xml/Element.xml">
+	<g:body>
+	
+		<!-- Overview Description -->
+		<g:element g:targetName="overview" g:maxOccurs="unbounded" 
+			g:i18nBase="catalog.fgdc.eainfo.overview" g:label="$i18nBase" 
+			g:extends="$base/core/xml/Element.xml">
+			<g:body>
+			
+				<!-- Entity and Attribute Overview -->
+				<g:element g:targetName="eaover"
+					g:extends="$base/core/xml/ElementTextOnly.xml">
+					<g:body>
+						<g:input g:extends="$base/core/ui/InputTextArea.xml"/>
+					</g:body>
+				</g:element>
+				
+				<!-- Entity and Attribute Detail Citation -->
+				<g:element g:targetName="eadetcit" g:maxOccurs="unbounded"
+					g:extends="$base/core/xml/ElementTextOnly.xml">
+					<g:body>
+						<g:input g:extends="$base/core/ui/InputTextArea.xml"/>
+					</g:body>
+				</g:element>
+				
+			</g:body>
+		</g:element>			
+		
+	</g:body>
+</g:element>
+

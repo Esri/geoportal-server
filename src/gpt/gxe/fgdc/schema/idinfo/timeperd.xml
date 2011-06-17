@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Time Period of Content
+		timeperd (/metadata/idinfo/timeperd) 
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect01.xsd
+		http://www.fgdc.gov/metadata/csdgm/01.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="timeperd"
+	g:i18nBase="catalog.fgdc.idinfo.timeperd" g:label="$i18nBase"
+	g:extends="$base/core/xml/Element.xml">
+	<g:body>
+
+		<!-- Time Period Information -->
+		<g:element g:extends="$base/schema/timeinfo/timeinfo.xml"/>
+
+		<!-- Currentness Reference -->
+		<g:element g:targetName="current" 
+			g:extends="$base/core/xml/ElementTextOnly.xml">
+			<g:body>
+				<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+					<g:options g:i18nBase="catalog.fgdc.idinfo.timeperd.current.option">
+						<g:option g:value="" g:label=""/>
+						<g:option g:value="ground condition" g:label="$i18nBase.groundCondition"/>
+						<g:option g:value="publication date" g:label="$i18nBase.publicationDate"/>
+						<g:option g:value="_other_" g:label="$i18n.catalog.mdCode.other"
+							g:isOther="true"/>
+					</g:options>
+				</g:input>
+			</g:body>
+		</g:element>
+
+	</g:body>
+</g:element>

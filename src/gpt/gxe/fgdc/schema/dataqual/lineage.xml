@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Lineage 
+		(lineage, /metadata/dataqual/lineage) 
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect02.xsd
+		http://www.fgdc.gov/metadata/csdgm/02.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="lineage"
+	g:i18nBase="catalog.fgdc.dataqual.lineage" g:label="$i18nBase"
+	g:extends="$base/core/xml/Element.xml">
+	<g:body>
+		<g:tabs g:extends="$base/core/ui/Tabs.xml">
+			<g:body>
+
+				<!-- Source Information -->
+				<g:element g:targetName="srcinfo" g:minOccurs="0"
+					g:maxOccurs="unbounded" g:extends="$base/schema/dataqual/srcinfo.xml"/>
+
+				<!-- Process Step -->
+				<g:element g:targetName="procstep" g:maxOccurs="unbounded"
+					g:extends="$base/schema/dataqual/procstep.xml"/>
+
+			</g:body>
+		</g:tabs>
+	</g:body>
+</g:element>
+
+

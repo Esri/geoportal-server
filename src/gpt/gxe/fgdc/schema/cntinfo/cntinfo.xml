@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Contact Information
+		cntinfo
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect10.xsd
+		http://www.fgdc.gov/metadata/csdgm/10.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="cntinfo"
+	g:i18nBase="catalog.fgdc.cntinfo" g:label="$i18nBase" 
+	g:extends="$base/core/xml/Element.xml">
+	<g:body>
+		<g:tabs g:extends="$base/core/ui/Tabs.xml">
+			<g:body>
+
+				<!-- primary (organization vs person) -->
+				<h:div g:label="$i18n.catalog.fgdc.cntinfo.section.primary">
+					<g:elementChoice g:extends="$base/core/xml/ElementChoice.xml">
+						<g:body>
+							<g:element g:targetName="cntorgp" h:tag="div"
+								g:jsClass="gxe.control.Element" g:i18nBase="catalog.fgdc.cntorgp"
+								g:label="$i18nBase">
+								<g:element g:targetName="cntorg"
+									g:extends="$base/core/xml/ElementTextOnly.xml"/>
+								<g:element g:targetName="cntper" g:minOccurs="0"
+									g:extends="$base/core/xml/ElementTextOnly.xml"/>
+							</g:element>
+							<g:element g:targetName="cntperp" h:tag="div"
+								g:jsClass="gxe.control.Element" g:i18nBase="catalog.fgdc.cntperp"
+								g:label="$i18nBase">
+								<g:element g:targetName="cntper"
+									g:extends="$base/core/xml/ElementTextOnly.xml"/>
+								<g:element g:targetName="cntorg" g:minOccurs="0"
+									g:extends="$base/core/xml/ElementTextOnly.xml"/>
+							</g:element>
+						</g:body>
+					</g:elementChoice>
+				</h:div>
+
+				<!-- position -->
+				<h:div g:label="$i18n.catalog.fgdc.cntinfo.section.position">
+					<g:element g:targetName="cntpos" g:minOccurs="0"
+						g:extends="$base/core/xml/ElementTextOnly.xml"/>
+				</h:div>
+
+				<!-- address -->
+				<h:div g:label="$i18n.catalog.fgdc.cntinfo.section.address">
+					<g:element g:targetName="cntaddr" g:maxOccurs="unbounded"
+						g:i18nBase="catalog.fgdc.cntaddr" g:label="$i18nBase"
+						g:extends="$base/core/xml/Element.xml">
+						<g:body>
+
+							<g:element g:targetName="addrtype"
+								g:extends="$base/core/xml/ElementTextOnly.xml">
+								<g:body>
+									<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+										<g:options g:i18nBase="catalog.fgdc.cntaddr.addrtype">
+											<g:option g:value="mailing" g:label="$i18nBase.mailing"/>
+											<g:option g:value="physical" g:label="$i18nBase.physical"/>
+											<g:option g:value="mailing and physical" g:label="$i18nBase.mailingAndPhysical"/>
+											<g:option g:value="_other_" g:label="$i18n.catalog.mdCode.other" g:isOther="true"/>
+										</g:options>
+									</g:input>
+								</g:body>
+							</g:element>
+
+							<g:element g:targetName="address" g:minOccurs="0" g:maxOccurs="unbounded" 
+								g:preferOpen="true" g:extends="$base/core/xml/ElementTextOnly.xml"/>
+							<g:element g:targetName="city"
+								g:extends="$base/core/xml/ElementTextOnly.xml"/>
+							<g:element g:targetName="state"
+								g:extends="$base/core/xml/ElementTextOnly.xml"/>
+							<g:element g:targetName="postal"
+								g:extends="$base/core/xml/ElementTextOnly.xml"/>
+							<g:element g:targetName="country" g:minOccurs="0"
+								g:extends="$base/core/xml/ElementTextOnly.xml"/>
+								
+						</g:body>
+					</g:element>
+				</h:div>
+
+				<!-- phone and email -->
+				<h:div g:label="$i18n.catalog.fgdc.cntinfo.section.phoneAndEmail">
+					<g:element g:targetName="cntvoice" g:maxOccurs="unbounded"
+						g:extends="$base/core/xml/ElementTextOnly.xml"/>
+					<g:element g:targetName="cnttdd" g:minOccurs="0" g:maxOccurs="unbounded"
+						g:extends="$base/core/xml/ElementTextOnly.xml"/>
+					<g:element g:targetName="cntfax" g:minOccurs="0" g:maxOccurs="unbounded"
+						g:extends="$base/core/xml/ElementTextOnly.xml"/>
+					<g:element g:targetName="cntemail" g:minOccurs="0" g:maxOccurs="unbounded" 
+						g:preferOpen="true" g:extends="$base/core/xml/ElementTextOnly.xml"/>
+				</h:div>
+
+				<!-- hours and instructions -->
+				<h:div g:label="$i18n.catalog.fgdc.cntinfo.section.hoursAndInstructions">
+					<g:element g:targetName="hours" g:minOccurs="0"
+						g:extends="$base/core/xml/ElementTextOnly.xml"/>
+					<g:element g:targetName="cntinst" g:minOccurs="0"
+						g:extends="$base/core/xml/ElementTextOnly.xml">
+						<g:body>
+							<g:input g:extends="$base/core/ui/InputTextArea.xml"/>
+						</g:body>
+					</g:element>
+				</h:div>
+
+			</g:body>
+		</g:tabs>
+	</g:body>
+</g:element>
