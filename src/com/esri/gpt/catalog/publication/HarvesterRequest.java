@@ -17,6 +17,7 @@ package com.esri.gpt.catalog.publication;
 import com.esri.gpt.catalog.management.MmdEnums;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.security.principal.Publisher;
+import com.esri.gpt.framework.util.Val;
 
 /**
  * Publishes harvested metadata.
@@ -47,6 +48,9 @@ public HarvesterRequest(RequestContext requestContext,
   getPublicationRecord().setSourceUri(sourceUri);
   getPublicationRecord().setSourceFileName(sourceUri);
   getPublicationRecord().setAutoApprove(true);
+  
+  String sUpdateIndex = Val.chkStr(requestContext.getApplicationConfiguration().getCatalogConfiguration().getParameters().getValue("webharvester.updateindex"));
+  setUpdateIndex(Val.chkBool(sUpdateIndex, true));
 }
 
 // properties ==================================================================

@@ -20,13 +20,7 @@ import com.esri.gpt.framework.resource.common.CommonPublishable;
 import com.esri.gpt.framework.resource.common.UrlUri;
 import com.esri.gpt.framework.util.ResourceXml;
 import com.esri.gpt.framework.util.Val;
-import com.esri.gpt.server.csw.client.CswCatalog;
-import com.esri.gpt.server.csw.client.CswSearchCriteria;
-import com.esri.gpt.server.csw.client.CswSearchRequest;
-import com.esri.gpt.server.csw.client.CswSearchResponse;
-import com.esri.gpt.server.csw.client.InvalidOperationException;
-import com.esri.gpt.server.csw.client.NullReferenceException;
-
+import com.esri.gpt.server.csw.client.*;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.logging.Logger;
@@ -113,14 +107,22 @@ public String toString() {
 }
 
 /**
+ * Destroys proxy.
+ */
+public void destroy() {
+  info.destroy();
+}
+/**
  * Native implementation.
  */
 private class NativeImpl extends CommonPublishable implements Native {
 
+    @Override
   public SourceUri getSourceUri() {
     return new UrlUri(info.getUrl());
   }
 
+    @Override
   public String getContent() throws IOException {
     ResourceXml resourceXml = new ResourceXml();
     return resourceXml.makeResourceXmlFromResponse(info.getUrl());

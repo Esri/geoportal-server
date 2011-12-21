@@ -15,7 +15,14 @@
 package com.esri.gpt.control.webharvest.engine;
 
 import com.esri.gpt.catalog.management.MmdEnums.ApprovalStatus;
+import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.ApplicationConfiguration;
+import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.util.Val;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,6 +37,8 @@ protected final TaskQueue taskQueue;
 protected volatile boolean dropped;
 /** ended flag */
 protected volatile boolean ended;
+/** to skip */
+protected Set<String> toSkip;
 
 /**
  * Creates instance of the worker.
@@ -77,15 +86,18 @@ public boolean isEnded() {
   return ended;
 }
 
+@Override
 protected void execute() {
   do {
     dropped = false;
 
     try {
       // get next available task
-      ExecutionUnit nextUnit = next();
+      ExecutionUnit nextUnit = !suspended? next(): null;
       if (nextUnit != null) {
-        if (ApprovalStatus.isPubliclyVisible(nextUnit.getRepository().getApprovalStatus().name()) && nextUnit.getRepository().getSynchronizable()) {
+        if ( ApprovalStatus.isPubliclyVisible(nextUnit.getRepository().getApprovalStatus().name()) 
+                && nextUnit.getRepository().getSynchronizable()
+                && !isToSkip(nextUnit.getRepository().getUuid())) {
           // create executor and start harvesting
           Executor exe = newExecutor(nextUnit);
           setExecutor(exe);
@@ -94,11 +106,20 @@ protected void execute() {
           complete(nextUnit.getRepository().getUuid());
         }
       } else {
-        // wait for another task
-        synchronized (taskQueue) {
-          try {
-            taskQueue.wait(60000); // wait a minute and try again
-          } catch (InterruptedException ex) {
+        if (isSuspendedWithAck()) {
+          synchronized (this) {
+            try {
+              wait();
+            } catch (InterruptedException ex) {
+            }
+          }
+        } else {
+          // wait for another task
+          synchronized (taskQueue) {
+            try {
+              taskQueue.wait(60000); // wait a minute and try again
+            } catch (InterruptedException ex) {
+            }
           }
         }
       }
@@ -133,6 +154,11 @@ private Executor newExecutor(ExecutionUnit unit) {
     protected boolean isShutdown() {
       return Worker.this.isShutdown();
     }
+
+    @Override
+    protected boolean isSuspended() {
+      return Worker.this.isSuspended();
+    }
   };
 }
 
@@ -165,4 +191,44 @@ private ExecutionUnit next() {
   }
 }
 
+protected boolean isToSkip(String uuid) {
+  if (toSkip==null) {
+    toSkip = getSitesToSkip();
+  }
+  return toSkip!=null? toSkip.contains(uuid): false;
+}
+
+protected Set<String> getSitesToSkip() {
+  ApplicationContext appCtx = ApplicationContext.getInstance();
+  ApplicationConfiguration appCfg = appCtx.getConfiguration();
+  StringAttributeMap parameters = appCfg.getCatalogConfiguration().getParameters();
+  String skip = Val.chkStr(parameters.getValue("webharvester.skip"));
+  
+  TreeSet<String> set = new TreeSet<String>();
+  set.addAll(Arrays.asList(skip.split(",")));
+  return set;
+}
+
+@Override
+public void safeResume() {
+  synchronized (taskQueue) {
+    super.safeResume();
+    taskQueue.notifyAll();
+  }
+}
+
+@Override
+public void safeSuspend() {
+  synchronized (taskQueue) {
+    super.safeSuspend();
+    taskQueue.notifyAll();
+  }
+}
+
+private boolean isSuspendedWithAck() {
+  if (isSuspended()) {
+    Logger.getLogger(Worker.class.getCanonicalName()).log(Level.INFO, "[SYNCHRONIZER] Worker {0} acknowledged suspension", workerThread.getId() );
+  }
+  return isSuspended();
+}
 }

@@ -340,34 +340,40 @@
         rows.unshift(obj);
       }
     }
-
+    
+    function scGetHarvesterSitesHandler(data) {
+    	 if(typeof(data) == 'undefined' || data == null) {
+    		 data = "";
+    	 }
+    	 _scSearchSites = dojo.eval("[{" + data + "}]");
+        if(typeof(_scSearchSites.length) != 'undefined'
+          && _scSearchSites.length == 1) {
+          _scSearchSites = _scSearchSites[0];
+          
+        }
+        if(typeof(_scSearchSites.rows) == 'undefined') {
+          _scSearchSites.rows = new Array();
+        }
+        scAddLocalSites();
+        
+    }
+    
     // Gets the harvest sites via ajax
-    var triedAddSitesFromError  = false;
+    var triedAddSitesFromError  = false; 
     function scGetHarvestSites() {
       var url = contextPath + '/rest/repositories?protocol=csw';
       var nTimeout = parseInt(_csDistributedSearchTimeoutMillisecs);
       if(nTimeout == NaN) {
         nTimeout = -1;
       }
+      if(GptUtils.valChkBool(_csAllowDistributedSearch) == false) {
+    	  scGetHarvesterSitesHandler("");
+    	  return;
+      }
       dojo.xhrGet ({
       
         url: url,
-    
-        load: function (data) {
-          
-          _scSearchSites = dojo.eval("[{" + data + "}]");
-          if(typeof(_scSearchSites.length) != 'undefined'
-            && _scSearchSites.length == 1) {
-            _scSearchSites = _scSearchSites[0];
-            
-          }
-          if(typeof(_scSearchSites.rows) == 'undefined') {
-            _scSearchSites.rows = new Array();
-          }
-          scAddLocalSites();
-          
-        },
-        
+        load: scGetHarvesterSitesHandler,
         timeout: nTimeout,
         preventCache: true,
         error: function (data) {
@@ -503,10 +509,12 @@
       // TM: Changing to populate other div
       //var elDiv = document.getElementById('divHarvestingSitesBodyList');
       var elDiv = document.getElementById('cntDistributedSearchesConfig');
-      elTable.style.verticalAlign = "top";
-      elTable.style.overflow = "auto";
-//      elTable.className = "noneSelectedResultRow ";
-      elDiv.appendChild(elTable);
+      if(typeof(elDiv) != 'undefined' && elDiv != null) {
+        elTable.style.verticalAlign = "top";
+	      elTable.style.overflow = "auto";
+	//      elTable.className = "noneSelectedResultRow ";
+	      elDiv.appendChild(elTable);
+      }
    
     }
 
@@ -834,7 +842,7 @@
   /* Does an ajax search and injects the results into the page
    */
   var _xhrSearch;
-  var _lastSearch;
+  var _lastSearch = "";
   function scDoAjaxSearch(clear, searchUrl) {
   
     if(_xhrSearch) {
@@ -909,6 +917,7 @@
         if(jScripts == null) {
           throw new Error("No data recieved from server");
         }
+        
         for( var i = 0; i < jScripts.length; i++) {
           jScript = jScripts[i];
           jScript = jScript.replace(/\/\* Comp.*var/gi, "");
@@ -1089,10 +1098,18 @@
   function scInitDistrPane() {
   
     if(GptUtils.valChkBool(_csAllowDistributedSearch) == false) {
-      dojo.style("djtCntDistributedSearches",
+    	if(dojo.byId("djtCntDistributedSearches") != null) {
+        dojo.style("djtCntDistributedSearches",
+           {visibility:"hidden", display:"none"});
+      }
+    	if(dojo.byId("djtCntDistributedSearchesImg") != null) {
+        dojo.style("djtCntDistributedSearchesImg",
           {visibility:"hidden", display:"none"});
-      dojo.style("djtCntDistributedSearchesImg",
-          {visibility:"hidden", display:"none"});
+    	}
+    	if(dojo.byId("frmSearchCriteria:_pngCtypeRemote") != null) {
+        dojo.style("frmSearchCriteria:_pngCtypeRemote",
+              {visibility:"hidden", display:"none"});
+    	}
       return;
     }
     if(typeof(_scSearchSites) == 'undefined'|| typeof(_scSearchSites) == 'string'
@@ -1488,7 +1505,6 @@
     <f:verbatim>
       <div id="locatorCandidates" class="locatorCandidates"></div>
          <div id="interactiveMap" 
-             border: 1px solid #000000;
              dojotype="dijit.layout.ContentPane"
              style="width:360px; height:220px; cursor:pointer; border: 1px solid #000000;">
         </div>

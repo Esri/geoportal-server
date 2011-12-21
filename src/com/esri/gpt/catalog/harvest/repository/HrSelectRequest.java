@@ -153,25 +153,37 @@ public void execute() throws SQLException {
     sbSql.append(",A.SEND_NOTIFICATION,A.PROTOCOL,H.LAST_HARVEST_DATE");
     sbSql.append(",A.FINDABLE,A.SEARCHABLE,A.SYNCHRONIZABLE,A.APPROVALSTATUS,A.LASTSYNCDATE");
 
-    sbSql.append(",(SELECT COUNT(*) FROM " + getHarvestingJobTableName() + " HJ");
-    sbSql.append(" WHERE HJ.HARVEST_ID=A.DOCUUID");
-    sbSql.append(" AND UPPER(HJ.JOB_STATUS)='"
-        + HjRecord.JobStatus.Submited.name().toUpperCase() + "') ");
+      sbSql.append(",(SELECT COUNT(*) FROM " + getHarvestingJobTableName() + " HJ");
+      sbSql.append(" WHERE HJ.HARVEST_ID=A.DOCUUID");
+      if (getIsDbCaseSensitive(this.getRequestContext())) {
+        sbSql.append(" AND UPPER(HJ.JOB_STATUS)='" + HjRecord.JobStatus.Submited.name().toUpperCase() + "') ");
+      } else {
+        sbSql.append(" AND HJ.JOB_STATUS='" + HjRecord.JobStatus.Submited.name().toUpperCase() + "') ");
+      }
 
-    sbSql.append(",(SELECT COUNT(*) FROM " + getHarvestingJobTableName() + " HJ");
-    sbSql.append(" WHERE HJ.HARVEST_ID=A.DOCUUID");
-    sbSql.append(" AND UPPER(HJ.JOB_STATUS)='"
-        + HjRecord.JobStatus.Running.name().toUpperCase() + "') ");
+      sbSql.append(",(SELECT COUNT(*) FROM " + getHarvestingJobTableName() + " HJ");
+      sbSql.append(" WHERE HJ.HARVEST_ID=A.DOCUUID");
+      if (getIsDbCaseSensitive(this.getRequestContext())) {
+        sbSql.append(" AND UPPER(HJ.JOB_STATUS)='" + HjRecord.JobStatus.Running.name().toUpperCase() + "') ");
+      } else {
+        sbSql.append(" AND HJ.JOB_STATUS='" + HjRecord.JobStatus.Running.name().toUpperCase() + "') ");
+      }
 
-    sbSql.append(",(SELECT COUNT(*) FROM " + getHarvestingJobTableName() + " HJ");
-    sbSql.append(" WHERE HJ.HARVEST_ID=A.DOCUUID");
-    sbSql.append(" AND UPPER(HJ.JOB_STATUS)='"
-        + HjRecord.JobStatus.Completed.name().toUpperCase() + "') ");
+      sbSql.append(",(SELECT COUNT(*) FROM " + getHarvestingJobTableName() + " HJ");
+      sbSql.append(" WHERE HJ.HARVEST_ID=A.DOCUUID");
+      if (getIsDbCaseSensitive(this.getRequestContext())) {
+        sbSql.append(" AND UPPER(HJ.JOB_STATUS)='" + HjRecord.JobStatus.Completed.name().toUpperCase() + "') ");
+      } else {
+        sbSql.append(" AND HJ.JOB_STATUS='" + HjRecord.JobStatus.Completed.name().toUpperCase() + "') ");
+      }
 
-    sbSql.append(",(SELECT COUNT(*) FROM " + getHarvestingJobTableName() + " HJ");
-    sbSql.append(" WHERE HJ.HARVEST_ID=A.DOCUUID");
-    sbSql.append(" AND UPPER(HJ.JOB_STATUS)='"
-        + HjRecord.JobStatus.Canceled.name().toUpperCase() + "') ");
+      sbSql.append(",(SELECT COUNT(*) FROM " + getHarvestingJobTableName() + " HJ");
+      sbSql.append(" WHERE HJ.HARVEST_ID=A.DOCUUID");
+      if (getIsDbCaseSensitive(this.getRequestContext())) {
+        sbSql.append(" AND UPPER(HJ.JOB_STATUS)='" + HjRecord.JobStatus.Canceled.name().toUpperCase() + "') ");
+      } else {
+        sbSql.append(" AND HJ.JOB_STATUS='" + HjRecord.JobStatus.Canceled.name().toUpperCase() + "') ");
+      }
 
     sbCount.append("SELECT COUNT(A.DOCUUID)");
 
@@ -226,29 +238,41 @@ public void execute() throws SQLException {
         UuidUtil.addCurlies(
         UuidUtil.removeCurlies(getQueryCriteria().getUuid().toUpperCase()));
     if (sHarvestUuid.length() > 0) {
-      sHarvestUuid =
-          appendValueFilter(sbWhere, "UPPER(A.DOCUUID)", sHarvestUuid, false);
+      if (getIsDbCaseSensitive(this.getRequestContext())) {
+        sHarvestUuid = appendValueFilter(sbWhere, "UPPER(A.DOCUUID)", sHarvestUuid, false);
+      } else {
+        sHarvestUuid = appendValueFilter(sbWhere, "A.DOCUUID", sHarvestUuid, false);
+      }
     }
 
     // repository name
     String sName = criteria.getName().toUpperCase();
     if (sName.length() > 0) {
-      sName = appendValueFilter(sbWhere, "UPPER(A.TITLE)", sName, true);
+      if (getIsDbCaseSensitive(this.getRequestContext())) {
+        sName = appendValueFilter(sbWhere, "UPPER(A.TITLE)", sName, true);
+      } else {
+        sName = appendValueFilter(sbWhere, "A.TITLE", sName, true);
+      }
     }
 
     // host name
     String sHostUrl = criteria.getHost().toUpperCase();
     if (sHostUrl.length() > 0) {
-      sHostUrl =
-          appendValueFilter(sbWhere, "UPPER(A.HOST_URL)", sHostUrl, true);
+      if (getIsDbCaseSensitive(this.getRequestContext())) {
+        sHostUrl = appendValueFilter(sbWhere, "UPPER(A.HOST_URL)", sHostUrl, true);
+      } else {
+        sHostUrl = appendValueFilter(sbWhere, "A.HOST_URL", sHostUrl, true);
+      }
     }
 
     // protocol type
     String sProtocolType = criteria.getProtocolTypeAsString().toUpperCase();
     if (criteria.getProtocolType() != HarvestProtocol.ProtocolType.None) {
-      sProtocolType =
-          appendValueFilter(sbWhere, "UPPER(A.PROTOCOL_TYPE)",
-          sProtocolType, false);
+      if (getIsDbCaseSensitive(this.getRequestContext())) {
+        sProtocolType = appendValueFilter(sbWhere, "UPPER(A.PROTOCOL_TYPE)", sProtocolType, false);
+      } else {
+        sProtocolType = appendValueFilter(sbWhere, "A.PROTOCOL_TYPE", sProtocolType, false);
+      }
     }
 
     // update date range

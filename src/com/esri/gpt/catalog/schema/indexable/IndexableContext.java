@@ -166,8 +166,8 @@ public class IndexableContext {
   /**
    * Resolves any inconsistencies associated with 
    * @param schema the schema being evaluated
-   * @param esriTags the evaluated ESRI tags (/metadata/Esri)
    * @param dom the metadata document
+   * @param esriTags the evaluated ESRI tags (/metadata/Esri)
    */
   public void resolve(Schema schema, Document dom, EsriTags esriTags) {
     
@@ -246,8 +246,46 @@ public class IndexableContext {
       }
     }
     
+    // try to determine the resource url
+    String sResourceUrl = Val.chkStr(this.getFirstStoreableString(Meaning.MEANINGTYPE_RESOURCE_URL));
+    if ((sResourceUrl == null) || (sResourceUrl.length() == 0)) {
+      IStoreable storeable = this.getStoreables().get("resource.check.urls");
+      if (storeable != null) {
+        Object[] values = storeable.getValues();
+        if ((values != null) && (values.length > 0)) {
+          ResourceIdentifier ri = ensureResourceIdentifier();
+          for (Object value: values) {
+            if ((value != null) && (value instanceof String)) {
+              String sValue = Val.chkStr((String)value);
+              if (sValue.length() > 0) {
+                sValue = Val.chkStr(this.resolveResourceUrl(schema,dom,esriTags,sValue));
+              }
+              if (sValue.length() > 0) {
+                String aimsct = Val.chkStr(ri.guessArcIMSContentTypeFromUrl(sValue));
+                if (aimsct.length() > 0) {
+                  String sResUrl = sValue;
+                  PropertyMeaning meaning2 = this.getPropertyMeanings().get(Meaning.MEANINGTYPE_RESOURCE_URL);
+                  IStoreable storeable2 = this.getStoreables().get(Meaning.MEANINGTYPE_RESOURCE_URL);
+                  if ((meaning2 != null) && (storeable2 != null)) {
+                    storeable2.setValue(sResUrl);
+                  } else if (meaning2 != null) {
+                    this.addStoreableValue(meaning2,sResUrl);
+                  }
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+        
     // classify the ArcIMS content type from the resource URL
     String aimsContentType = Val.chkStr(this.getFirstStoreableValue(Meaning.MEANINGTYPE_CONTENTTYPE));
+    if (aimsContentType.length() > 0) {
+      ResourceIdentifier ri = ensureResourceIdentifier();
+      aimsContentType = Val.chkStr(ri.guessArcIMSContentTypeFromResourceType(aimsContentType));
+    }
     if (aimsContentType.length() == 0) {
       PropertyMeaning meaning = this.getPropertyMeanings().get(Meaning.MEANINGTYPE_CONTENTTYPE);
       IStoreable storeable = this.getStoreables().get(Meaning.MEANINGTYPE_RESOURCE_URL);
@@ -271,6 +309,81 @@ public class IndexableContext {
       }
     }
     
+  }
+  
+  /**
+   * Resolves any inconsistencies associated with the resource URL. 
+   * @param schema the schema being evaluated
+   * @param dom the metadata document
+   * @param esriTags the evaluated ESRI tags (/metadata/Esri)
+   * @param url the url to check
+   * @return the resolved URL
+   */
+  private String resolveResourceUrl(Schema schema, Document dom, EsriTags esriTags, String url) {
+    String sUrl = Val.chkStr(url);
+    String sUrlLc = sUrl.toLowerCase();
+    if (sUrlLc.startsWith("server=http")) {
+      String[] tokens = sUrlLc.split(";");
+      String sServer = "";
+      String sService = "";
+      String sServiceType = "";
+      for (String token: tokens) {
+        String s = Val.chkStr(token).toLowerCase();
+        if (s.startsWith("server=http")) {
+          sServer = Val.chkStr(token).substring(7);
+        } else if (s.startsWith("service=")) {
+          sService = Val.chkStr(token).substring(8);
+        } else if (s.startsWith("servicename=")) {
+          sService = Val.chkStr(token).substring(12);
+        } else if (s.equals("servicetype=image")) {
+          sServiceType = "image";
+        } else if (s.equals("servicetype=feature")) {
+          sServiceType = "feature";
+        }
+      }
+      if ((sServer.length() > 0) && (sService.length() > 0) && (sServiceType.length() > 0)) {
+        String sEsrimap = "servlet/com.esri.esrimap.Esrimap";
+        String sResourceUrl = "";
+        if (sServer.indexOf(sEsrimap) == -1) { 
+          if ((sServer.indexOf("?") == -1) && (sServer.indexOf("&") == -1)) {
+            if (!sServer.endsWith("/")) sServer += "/";
+            if (sService.length() > 0) sResourceUrl = sServer+sEsrimap+"?ServiceName="+sService;
+          }
+        } else {
+          if ((sServer.indexOf("?") == -1) && (sServer.indexOf("&") == -1)) {
+            if (!sServer.endsWith("/")) sServer += "/";
+            if (sService.length() > 0) sResourceUrl = sServer+"?ServiceName="+sService;
+          } else if (sServer.indexOf("ServiceName=") == -1) {
+            if (sServer.indexOf("?") == -1) {
+              if (!sServer.endsWith("/")) sServer += "/";
+              sResourceUrl = sServer+"?ServiceName="+sService;
+            } else {
+              sResourceUrl = sServer+"&ServiceName="+sService;
+            }
+          }
+        }
+        if (sResourceUrl.length() > 0) {
+          if (sServiceType.equalsIgnoreCase("image")) {
+          } else if (sServiceType.equalsIgnoreCase("feature")) {
+            //sResourceUrl = "";
+          } else if (sServiceType.equalsIgnoreCase("metadata")) {
+            //sResourceUrl = "";
+          }
+        }
+        return sResourceUrl;
+        
+      } else {
+        sServer = Val.chkStr(sUrl).substring(7);
+        if (sServer.endsWith("/com.esri.wms.Esrimap")) {
+          sServer += "?service=WMS&request=GetCapabilities";
+        }
+        return sServer;
+      }
+      
+    } else if (sUrl.endsWith("/com.esri.wms.Esrimap")) {
+      return sUrl+"?service=WMS&request=GetCapabilities";  
+    }
+    return url;
   }
   
 }

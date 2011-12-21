@@ -26,6 +26,7 @@ import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.Configuration;
 import com.esri.gpt.framework.context.ConfigurationException;
 import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.util.LogUtil;
 import com.esri.gpt.framework.util.Val;
 
@@ -47,6 +48,10 @@ private StringAttributeMap _parameters = new StringAttributeMap();
 private SearchConfig       _searchConfig;
 private String             _tablePrefix = "GPT_";
 private TocCollection      _tocCollection = null;
+
+private int                connectionTimeOut = HttpClientRequest.DEFAULT_CONNECTION_TIMEOUT;
+private int                responseTimeOut   = HttpClientRequest.DEFAULT_RESPONSE_TIMEOUT;      
+
 // constructors ================================================================
 /** Default constructor. */
 public CatalogConfiguration() {
@@ -270,6 +275,48 @@ public String getUserTableName() {
   return getTablePrefix() + "USER";
 }
 
+/**
+ * Gets the connection time out in milliseconds.
+ * 
+ * @return the connection time out (always >= 0)
+ */
+public int getConnectionTimeOutMs() {
+  if(connectionTimeOut < 0) {
+    connectionTimeOut = 0;
+  }
+  return connectionTimeOut;
+}
+
+/**
+ * Sets the connection time out in milliseconds.
+ * 
+ * @param connectionTimeOut the new connection time out
+ */
+public void setConnectionTimeMs(int connectionTimeOut) {
+  this.connectionTimeOut = connectionTimeOut;
+}
+
+/**
+ * Gets the response time out in milliseconds
+ * 
+ * @return the response time out (always >= 0)
+ */
+public int getResponseTimeOutMs() {
+  if(responseTimeOut < 0) {
+    responseTimeOut = 0;
+  }
+  return responseTimeOut;
+}
+
+/**
+ * Sets the response time out in milliseconds.
+ * 
+ * @param responseTimeOut the new response time out
+ */
+public void setResponseTimeOutMs(int responseTimeOut) {
+  this.responseTimeOut = responseTimeOut;
+}
+
 // methods =====================================================================
 /**
  * Makes a catalog index adapter.
@@ -283,6 +330,7 @@ public CatalogIndexAdapter makeCatalogIndexAdapter(RequestContext context) {
     return null;
   }
 }
+   
 
 /**
  * Instantiates a new discovery query adapter.

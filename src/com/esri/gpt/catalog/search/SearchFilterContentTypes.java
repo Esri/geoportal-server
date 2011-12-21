@@ -73,7 +73,7 @@ public void setSelectedContentType(String selectedContentType) {
   try{
     SearchEngineCSW.AimsContentTypes.valueOf(selectedContentType);
   } catch(IllegalArgumentException e){
-    LOG.log(Level.WARNING, "selectedContentType = "
+    LOG.log(Level.FINER, "selectedContentType = "
         +selectedContentType +"is not an an arcIMS content type");
   }
   this.selectedContentType = selectedContentType;

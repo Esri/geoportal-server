@@ -193,12 +193,14 @@ public class ProviderFactory implements IProviderFactory {
       
       // Transaction
     } else if (operationName.equals("Transaction")) { 
+      if (!svcProps.getAllowTransactions()) {
+        throw new OwsException("transactions are not allowed at this end-point.");
+      }
       TransactionProvider tp = new TransactionProvider();
       opProvider = tp;
       
       values = new SupportedValues("1.0.0,1.1.0",",");
       parameters.add(new SupportedParameter(CswConstants.Parameter_ConstraintVersion,values));
-      
     }
         
     return opProvider;

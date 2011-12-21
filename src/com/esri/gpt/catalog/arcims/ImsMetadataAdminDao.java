@@ -15,23 +15,23 @@
 package com.esri.gpt.catalog.arcims;
 import com.esri.gpt.catalog.context.CatalogIndexAdapter;
 import com.esri.gpt.catalog.context.CatalogIndexException;
+import com.esri.gpt.catalog.lucene.RemoteIndexer;
+import com.esri.gpt.catalog.management.CollectionDao;
 import com.esri.gpt.catalog.management.MmdEnums;
 import com.esri.gpt.catalog.management.MmdQueryCriteria;
 import com.esri.gpt.catalog.publication.PublicationRecord;
 import com.esri.gpt.catalog.schema.Schema;
+import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.security.principal.Publisher;
 import com.esri.gpt.framework.sql.BaseDao;
+import com.esri.gpt.framework.sql.IClobMutator;
 import com.esri.gpt.framework.sql.ManagedConnection;
 import com.esri.gpt.framework.util.LogUtil;
 import com.esri.gpt.framework.util.Val;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -51,6 +51,7 @@ public static final int SYNCSTATUS_UNSYNCHRONIZED = 0;
 // instance variables ==========================================================
 private CswRemoteRepository cswRemoteRepository;
 private boolean hadUnalteredDraftDocuments = false;
+private boolean updateIndex = true;
 
 // constructors ================================================================
 
@@ -68,6 +69,14 @@ public ImsMetadataAdminDao(RequestContext requestContext) {
   cswRemoteRepository = new CswRemoteRepository(requestContext);
 }
 
+public boolean getUpdateIndex() {
+  return updateIndex;
+}
+
+public void setUpdateIndex(boolean updateIndex) {
+  this.updateIndex = updateIndex;
+}
+
 // properties ==================================================================
 
 /**
@@ -75,7 +84,7 @@ public ImsMetadataAdminDao(RequestContext requestContext) {
  * @return the the catalog index adapter (null if none)
  */
 private CatalogIndexAdapter getCatalogIndexAdapter() {
-  return getRequestContext().getCatalogConfiguration().makeCatalogIndexAdapter(getRequestContext());
+  return getUpdateIndex()? getRequestContext().getCatalogConfiguration().makeCatalogIndexAdapter(getRequestContext()): null;
 }
 
 
@@ -115,6 +124,7 @@ public boolean hadUnalteredDraftDocuments() {
  */
 public int countReferencedRecords() throws SQLException {
   PreparedStatement st = null;
+  ResultSet rs = null;
   int recdCount = 0;
   try {
     Connection con = returnConnection().getJdbcConnection();
@@ -125,11 +135,12 @@ public int countReferencedRecords() throws SQLException {
     sbSql.append(" WHERE (A.DOCUUID = B.DOCUUID)");
     logExpression(sbSql.toString());
     st = con.prepareStatement(sbSql.toString());
-    ResultSet rs = st.executeQuery();    
+    rs = st.executeQuery();    
     if (rs.next()){
       recdCount = rs.getInt(1);
     }
   } finally {
+    closeResultSet(rs);
     closeStatement(st);
   }
   return recdCount;
@@ -144,6 +155,7 @@ public int countReferencedRecords() throws SQLException {
 public int countUnreferencedRecords() 
   throws SQLException {
   PreparedStatement st = null;
+  ResultSet rs = null;
   try {
     StringBuilder sbSql = new StringBuilder();
     sbSql.append("SELECT count(*) FROM ").append(getResourceDataTableName());
@@ -152,13 +164,14 @@ public int countUnreferencedRecords()
     logExpression(sbSql.toString());
     Connection con = returnConnection().getJdbcConnection();
     st = con.prepareStatement(sbSql.toString());
-    ResultSet rs = st.executeQuery();
+    rs = st.executeQuery();
     int nCount = 0;
     if (rs.next()) {
       nCount = rs.getInt(1); 
     }
     return nCount;
   } finally {
+    closeResultSet(rs);
     closeStatement(st);
   }
 }
@@ -203,7 +216,8 @@ public int deleteRecord(String uuid)
     if (rs.next()) {
       cancelTask = rs.getInt(1)>0;
     }
-
+    
+    closeStatement(st);
     sSql = "DELETE FROM "+getResourceTableName()+" WHERE DOCUUID=?";
     logExpression(sSql);
     st = con.prepareStatement(sSql);
@@ -216,6 +230,16 @@ public int deleteRecord(String uuid)
     st = con.prepareStatement(sSql);
     st.setString(1,uuid);
     st.executeUpdate();
+    
+    CollectionDao colDao = new CollectionDao(this.getRequestContext());
+    if (colDao.getUseCollections()) {
+      closeStatement(st);
+      sSql = "DELETE FROM "+colDao.getCollectionMemberTableName()+" WHERE DOCUUID=?";
+      logExpression(sSql);
+      st = con.prepareStatement(sSql);
+      st.setString(1,uuid);
+      st.executeUpdate();
+    }
 
     con.commit();
   } catch (SQLException ex) {
@@ -264,72 +288,70 @@ public int deleteRecord(Publisher publisher, MmdQueryCriteria criteria) throws E
   }
 
   PreparedStatement st = null;
+  // establish the connection
+  ManagedConnection mc = returnConnection();
+  Connection con = mc.getJdbcConnection();
+
+  DatabaseMetaData dmt = con.getMetaData();
+  String database = dmt.getDatabaseProductName().toLowerCase();
+  
+  boolean autoCommit = con.getAutoCommit();
+  con.setAutoCommit(false);
 
   try {
-    // establish the connection
-    ManagedConnection mc = returnConnection();
-    Connection con = mc.getJdbcConnection();
 
+    // create WHERE phrase
+    StringBuilder sbWhere = new StringBuilder();
+    Map<String,Object> args = criteria.appendWherePhrase(null, sbWhere, publisher);
+    
+    // delete data
+    StringBuilder sbData = new StringBuilder();
+    if (database.contains("mysql")) {
+      sbData.append(" DELETE ").append(getResourceDataTableName()).append(" FROM ").append(getResourceDataTableName());
+      sbData.append(" LEFT JOIN ").append(getResourceTableName());
+      sbData.append(" ON ").append(getResourceDataTableName()).append(".ID=").append(getResourceTableName()).append(".ID WHERE ").append(getResourceTableName()).append(".ID in (");
+      sbData.append(" SELECT ID FROM ").append(getResourceTableName()).append(" ");
+      if (sbWhere.length() > 0) {
+        sbData.append(" WHERE ").append(sbWhere.toString());
+      }
+      sbData.append(")");
+    } else {
+      sbData.append(" DELETE FROM ").append(getResourceDataTableName());
+      sbData.append(" WHERE ").append(getResourceDataTableName()).append(".ID in (");
+      sbData.append(" SELECT ID FROM ").append(getResourceTableName()).append(" ");
+      if (sbWhere.length() > 0) {
+        sbData.append(" WHERE ").append(sbWhere.toString());
+      }
+      sbData.append(")");
+    }
+    
+    st = con.prepareStatement(sbData.toString());
+    criteria.applyArgs(st, 1, args);
+    logExpression(sbData.toString());
+    st.executeUpdate();
+
+    // delete records
     StringBuilder sbSql = new StringBuilder();
     sbSql.append("DELETE FROM ").append(getResourceTableName()).append(" ");
-
-    StringBuilder sbWhere = new StringBuilder();
-
-    Map<String,Object> args = criteria.appendWherePhrase(null, sbWhere, publisher);
-
-    // append the where clause expressions
     if (sbWhere.length() > 0) {
       sbSql.append(" WHERE ").append(sbWhere.toString());
     }
-
-    // prepare the statements
+    closeStatement(st);
     st = con.prepareStatement(sbSql.toString());
-
-    int n = 1;
-    criteria.applyArgs(st, n, args);
-
-    // query the count
+    criteria.applyArgs(st, 1, args);
     logExpression(sbSql.toString());
-
     nRows = st.executeUpdate();
 
-    cleanupDataTable(con);
+    con.commit();
+  } catch (Exception ex) {
+    con.rollback();
+    throw ex;
   } finally {
     closeStatement(st);
+    con.setAutoCommit(autoCommit);
   }
 
   return nRows;
-}
-
-/**
- * Cleans GPT_RESOURCE_DATA table.
- * It removes all the orphaned records (not having corresponding GPT_RESOURCE records).
- * This is an SQL statement run on database:<br/><br/>
- * <div style="border-style: solid; border-width: thin; border-color: #A4A4A4; background-color: #F5F6CE"><code>
- * <pre>
- * DELETE FROM GPT_RESOURCE_DATA WHERE DOCUUID IN (SELECT A.DOCUUID FROM GPT_RESOURCE_DATA A LEFT JOIN GPT_RESOURCE B ON A.DOCUUID=B.DOCUUID WHERE B.DOCUUID IS NULL) * </pre>
- * </div>
- * @param con
- * @throws SQLException
- */
-private int cleanupDataTable(Connection con) throws SQLException {
-   PreparedStatement st = null;
-
-   StringBuilder sbSql = new StringBuilder();
-    sbSql.append("DELETE FROM ")
-      .append(getResourceDataTableName())
-      .append(" WHERE DOCUUID IN (SELECT A.DOCUUID FROM ")
-      .append(getResourceDataTableName())
-      .append(" A LEFT JOIN ")
-      .append(getResourceTableName())
-      .append(" B ON A.DOCUUID=B.DOCUUID WHERE B.DOCUUID IS NULL)");
-
-    try {
-      st = con.prepareStatement(sbSql.toString());
-      return st.executeUpdate();
-    } finally {
-      closeStatement(st);
-    }
 }
 
 /**
@@ -579,7 +601,11 @@ public String findExistingSourceUri(String uuid) throws SQLException {
       Connection con = returnConnection().getJdbcConnection();
       StringBuilder sbSql = new StringBuilder();
       sbSql.append("SELECT SOURCEURI FROM ").append(getResourceTableName());
-      sbSql.append(" WHERE UPPER(DOCUUID)=?");
+      if (getIsDbCaseSensitive(this.getRequestContext())) {
+        sbSql.append(" WHERE UPPER(DOCUUID)=?");
+      } else {
+        sbSql.append(" WHERE DOCUUID=?");
+      }
       logExpression(sbSql.toString());
       st = con.prepareStatement(sbSql.toString());
       st.setString(1,uuid.toUpperCase());
@@ -616,7 +642,11 @@ private String findExistingUuidFromField(String field, String value)
       Connection con = returnConnection().getJdbcConnection();
       StringBuilder sbSql = new StringBuilder();
       sbSql.append("SELECT DOCUUID FROM ").append(getResourceTableName());
-      sbSql.append(" WHERE UPPER(").append(field).append(")=?");
+      if (getIsDbCaseSensitive(this.getRequestContext())) {
+        sbSql.append(" WHERE UPPER(").append(field).append(")=?");
+      } else {
+        sbSql.append(" WHERE ").append(field).append("=?");
+      }
       logExpression(sbSql.toString());
       st = con.prepareStatement(sbSql.toString());
       st.setString(1,value.toUpperCase());
@@ -816,7 +846,12 @@ public String queryOwnerDN(String uuid) throws SQLException {
     if (sOwnerName.length() > 0) {
       Connection con = returnConnection().getJdbcConnection();
       String sUserTable = getRequestContext().getCatalogConfiguration().getUserTableName();
-      String sSql = "SELECT DN FROM "+sUserTable+" WHERE UPPER(USERNAME) = ?";
+      String sSql = null;
+      if (getIsDbCaseSensitive(this.getRequestContext())) {
+        sSql = "SELECT DN FROM "+sUserTable+" WHERE UPPER(USERNAME) = ?";
+      } else {
+        sSql = "SELECT DN FROM "+sUserTable+" WHERE USERNAME = ?";
+      }
       logExpression(sSql);
       st = con.prepareStatement(sSql);
       st.setString(1,sOwnerName.toUpperCase());
@@ -904,8 +939,14 @@ public StringSet querySiteUuid(String siteUuid) throws SQLException {
   StringSet uuids = new StringSet(false,true,true);
   try {
     Connection con = returnConnection().getJdbcConnection();
-    String sSql = "SELECT DOCUUID FROM "+getResourceTableName()+
-                  " WHERE SITEUUID=? AND UPPER(PUBMETHOD)=?";
+    String sSql = null;
+    if (getIsDbCaseSensitive(this.getRequestContext())) {
+      sSql = "SELECT DOCUUID FROM "+getResourceTableName()+
+             " WHERE SITEUUID=? AND UPPER(PUBMETHOD)=?";
+    } else {
+      sSql = "SELECT DOCUUID FROM "+getResourceTableName()+
+             " WHERE SITEUUID=? AND PUBMETHOD=?";
+    }
     logExpression(sSql);
     st = con.prepareStatement(sSql);
     st.setString(1,siteUuid);
@@ -948,6 +989,36 @@ public StringSet readUuidsForSynchronization(int maxUuids) throws SQLException {
   }
   if (uuids.size() > 0) onRecordsSynchronized(uuids);
   return uuids;
+}
+
+/**
+ * Reads the XML associated with a document uuid.
+ * @param docUuid the document uuid
+ * @return the XML string (empty string if not found)
+ * @throws SQLException if a database exception occurs
+ */
+public String readXml(String docUuid) throws SQLException {
+  String sXml = "";
+  PreparedStatement st = null;
+  try {  
+    docUuid = Val.chkStr(docUuid);
+    if (docUuid.length() > 0) {
+      String sSql = "SELECT XML FROM "+getResourceDataTableName()+" WHERE DOCUUID=?";
+      logExpression(sSql);
+      ManagedConnection mc = returnConnection();
+      Connection con = mc.getJdbcConnection();
+      IClobMutator cm = mc.getClobMutator();
+      st = con.prepareStatement(sSql);
+      st.setString(1,docUuid);
+      ResultSet rs = st.executeQuery();
+      if (rs.next()) {
+        return Val.chkStr(cm.get(rs,1));
+      }
+    }
+  } finally {
+    closeStatement(st);
+  }
+  return sXml;
 }
 
 /**
@@ -1057,14 +1128,25 @@ public int updateAcl(Publisher publisher, StringSet uuids, String acl)
   // publish the record to the index if approved
   CatalogIndexAdapter indexAdapter = getCatalogIndexAdapter();
   if (indexAdapter != null) {
-    for (String uuid: uuids) {
-      String sStatus = queryApprovalStatus(uuid);
-      if (MmdEnums.ApprovalStatus.isPubliclyVisible(sStatus)) {
-        String xml = indexAdapter.publishDocument(uuid,publisher);
-        
-        //if (cswRemoteRepository.isActive()) {
-        //  cswRemoteRepository.onRecordUpdated(xml);
-        //}
+    StringAttributeMap params = this.getRequestContext().getCatalogConfiguration().getParameters();
+    String param = Val.chkStr(params.getValue("lucene.useRemoteWriter"));
+    boolean bUseRemoteWriter = param.equalsIgnoreCase("true");
+    param = Val.chkStr(params.getValue("lucene.useLocalWriter"));
+    boolean bUseLocalWriter = !param.equalsIgnoreCase("false");
+    if (bUseRemoteWriter) {
+      RemoteIndexer remoteIndexer = new RemoteIndexer();
+      remoteIndexer.send(this.getRequestContext(),"publish",
+          uuids.toArray(new String[0]));
+    } 
+    if (bUseLocalWriter) {
+      for (String uuid: uuids) {
+        String sStatus = queryApprovalStatus(uuid);
+        if (MmdEnums.ApprovalStatus.isPubliclyVisible(sStatus)) {
+          String xml = indexAdapter.publishDocument(uuid,publisher);
+          //if (cswRemoteRepository.isActive()) {
+          //  cswRemoteRepository.onRecordUpdated(xml);
+          //}
+        }
       }
     }
   }  
@@ -1146,25 +1228,39 @@ public int updateApprovalStatus(Publisher publisher,
   CatalogIndexAdapter indexAdapter = getCatalogIndexAdapter();
   if ((indexAdapter != null) && (uuids.size() > 0)) {
     if (MmdEnums.ApprovalStatus.isPubliclyVisible(approvalStatus.toString())) {
-      boolean bHadException = false;
-      for (String uuid: uuids) {
-        try {
-          boolean indexAllowed = queryIndexEnabled(uuid);
-          if (indexAllowed) {
-            String xml = indexAdapter.publishDocument(uuid,publisher);
-
-            if (cswRemoteRepository.isActive()) {
-              cswRemoteRepository.onRecordUpdated(xml);
+      
+      StringAttributeMap params = this.getRequestContext().getCatalogConfiguration().getParameters();
+      String param = Val.chkStr(params.getValue("lucene.useRemoteWriter"));
+      boolean bUseRemoteWriter = param.equalsIgnoreCase("true");
+      param = Val.chkStr(params.getValue("lucene.useLocalWriter"));
+      boolean bUseLocalWriter = !param.equalsIgnoreCase("false");
+      if (bUseRemoteWriter) {
+        RemoteIndexer remoteIndexer = new RemoteIndexer();
+        remoteIndexer.send(this.getRequestContext(),"publish",
+            uuids.toArray(new String[0]));
+      } 
+      if (bUseLocalWriter) {
+        boolean bHadException = false;
+        for (String uuid: uuids) {
+          try {
+            boolean indexAllowed = queryIndexEnabled(uuid);
+            if (indexAllowed) {
+              String xml = indexAdapter.publishDocument(uuid,publisher);
+  
+              if (cswRemoteRepository.isActive()) {
+                cswRemoteRepository.onRecordUpdated(xml);
+              }
             }
+          } catch (CatalogIndexException e) {
+            bHadException = true;
+            LogUtil.getLogger().log(Level.SEVERE,"Error publishing document to index.",e);
           }
-        } catch (CatalogIndexException e) {
-          bHadException = true;
-          LogUtil.getLogger().log(Level.SEVERE,"Error publishing document to index.",e);
+        }
+        if (bHadException) {
+          throw new CatalogIndexException("Error publishing document to index.");
         }
       }
-      if (bHadException) {
-        throw new CatalogIndexException("Error publishing document to index.");
-      }
+      
     } else {
       indexAdapter.deleteDocuments(uuids.toArray(new String[0]));
       

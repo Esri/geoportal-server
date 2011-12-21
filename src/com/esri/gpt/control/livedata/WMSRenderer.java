@@ -23,8 +23,14 @@ package com.esri.gpt.control.livedata;
 
   protected abstract String getUrl();
 
+  @Override
   protected String newLayerDeclaration() {
-    return "new esri.layers.WMSLayer(\"" +getUrl()+ "\",\"" +getProxyUrl()+ "\",widget.getGeometryServiceUrl())";
+    return "new esri.gpt.layers.WMSLayer(\"" +getUrl()+ "\",\"" +getProxyUrl()+ "\",geometryService)";
+  }
+
+  @Override
+  protected String initializeNewLayer() {
+    return "node.liveDataMap.addLayer(node.liveDataLayer);";
   }
 
   @Override

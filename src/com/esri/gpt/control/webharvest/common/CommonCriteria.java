@@ -42,7 +42,7 @@ import org.w3c.dom.NodeList;
 public class CommonCriteria implements Criteria {
 
 private static final Logger LOGGER = Logger.getLogger(CommonCriteria.class.getCanonicalName());
-private static final SimpleDateFormat DF = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
+private static final SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 private Integer maxRecords;
 private String searchText;
 private Date fromDate;

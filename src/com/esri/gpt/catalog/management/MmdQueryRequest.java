@@ -18,6 +18,7 @@ import com.esri.gpt.catalog.context.CatalogConfiguration;
 import com.esri.gpt.catalog.harvest.repository.HrRecord.HarvestFrequency;
 import com.esri.gpt.catalog.harvest.repository.HrRecord.RecentJobStatus;
 import com.esri.gpt.catalog.management.MmdEnums.PublicationMethod;
+import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.RoleMap;
 import com.esri.gpt.framework.request.PageCursor;
@@ -38,6 +39,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.naming.NamingException;
@@ -53,11 +55,14 @@ public class MmdQueryRequest extends MmdRequest {
 // class variables =============================================================
 
 // instance variables ==========================================================
-private ImsMetadataAdminDao adminDao;
-private String tblImsUser;
+private ImsMetadataAdminDao     adminDao;
+private Groups                  allGroups = null;
+private boolean                 enableEditForAllPubMethods = false;
+private boolean                 isGptAdministrator;
+private String                  tblImsUser;
 private HashMap<String, String> hmEditablePublishers = new HashMap<String, String>();
-private Groups allGroups = null;
-private boolean isGptAdministrator;
+
+
 // constructors ================================================================
 /**
  * Construct a metadata management query request.
@@ -87,6 +92,8 @@ public void execute() throws SQLException, IdentityException, NamingException,
   // intitalize
   PreparedStatement st = null;
   PreparedStatement stCount = null;
+  PreparedStatement stUser = null;
+  PreparedStatement stCol = null;
   MmdQueryCriteria criteria = getQueryCriteria();
   MmdRecords records = getQueryResult().getRecords();
   PageCursor pageCursor = getQueryResult().getPageCursor();
@@ -108,39 +115,65 @@ public void execute() throws SQLException, IdentityException, NamingException,
 
   isGptAdministrator = new RoleMap(getRequestContext().getUser()).get("gptAdministrator");
   
-  // determine if we are in ArcIMS metadata server proxy mode
-
   try {
 
     // establish the connection
     ManagedConnection mc = returnConnection();
     Connection con = mc.getJdbcConnection();
+    
+    // determine if the database is case sensitive
+    StringAttributeMap params = getRequestContext().getCatalogConfiguration().getParameters();
+    String s = Val.chkStr(params.getValue("database.isCaseSensitive"));
+    boolean isDbCaseSensitive = !s.equalsIgnoreCase("false");
+    
+    s = Val.chkStr(params.getValue("catalog.enableEditForAllPubMethods"));
+    this.enableEditForAllPubMethods = s.equalsIgnoreCase("true");
+    
+    // determine if collections are being used
+    List<String[]> collections = null;
+    CollectionDao colDao = new CollectionDao(getRequestContext());
+    boolean hasCollections = false;
+    boolean useCollections = colDao.getUseCollections();
+    String sColMemberTable = colDao.getCollectionMemberTableName();
+    String sqlCol = "SELECT COLUUID FROM "+sColMemberTable+
+                    " WHERE DOCUUID=?";
+    if (useCollections) {
+      collections = colDao.queryCollections();
+      hasCollections = (collections.size() > 0);
+    }
+    
+    // username query
+    String sqlUser = "SELECT USERNAME FROM "+tblImsUser+" WHERE USERID=?";
 
     // start the SQL expression
     StringBuilder sbSql = new StringBuilder();
     StringBuilder sbCount = new StringBuilder();
     StringBuilder sbFrom = new StringBuilder();
     StringBuilder sbWhere = new StringBuilder();
-    sbSql.append("SELECT A.TITLE,A.DOCUUID,A.SITEUUID,C.USERNAME");
+    sbSql.append("SELECT A.TITLE,A.DOCUUID,A.SITEUUID,A.OWNER");
     sbSql.append(",A.APPROVALSTATUS,A.PUBMETHOD,A.UPDATEDATE,A.ACL");
     sbSql.append(",A.ID,A.HOST_URL,A.FREQUENCY,A.SEND_NOTIFICATION,A.PROTOCOL");
     sbSql.append(",A.FINDABLE,A.SEARCHABLE,A.SYNCHRONIZABLE");
     sbCount.append("SELECT COUNT(*)");
 
     // append from clause
-    sbFrom.append(" FROM ").append(tblImsUser).append(" C");
-    sbFrom.append(",").append(getResourceTableName()).append(" A");
+    sbFrom.append(" FROM ").append(getResourceTableName()).append(" A");
     sbSql.append(sbFrom);
     sbCount.append(sbFrom);
 
     // build the where clause
-    if (sbWhere.length()>0) {
-      sbWhere.append(" AND");
+    Map<String,Object> args = criteria.appendWherePhrase(
+        getRequestContext(),"A",sbWhere,getPublisher());
+
+    // collection filter
+    String sColUuid = Val.chkStr(criteria.getCollectionUuid());
+    if (useCollections && hasCollections && (sColUuid.length() > 0)) {
+      String sub = "SELECT DOCUUID FROM "+sColMemberTable+
+                   " WHERE COLUUID=?";
+      if (sbWhere.length() > 0) sbWhere.append(" AND ");
+      sbWhere.append("(A.DOCUUID IN ("+sub+"))");
     }
-    sbWhere.append(" (A.OWNER = C.USERID)");
-
-    Map<String,Object> args = criteria.appendWherePhrase("A", sbWhere, getPublisher());
-
+    
     // append the where clause expressions
     if (sbWhere.length() > 0) {
       sbSql.append(" WHERE ").append(sbWhere.toString());
@@ -151,11 +184,13 @@ public void execute() throws SQLException, IdentityException, NamingException,
     String sSortColumn = criteria.getSortOption().getColumnKey();
     String sSortDir = criteria.getSortOption().getDirection().toString();
     if (sSortColumn.equalsIgnoreCase("title")) {
-      sSortColumn = "UPPER(A.TITLE)";
+      if (isDbCaseSensitive) {
+        sSortColumn = "UPPER(A.TITLE)";
+      } else {
+        sSortColumn = "A.TITLE";
+      }
     } else if (sSortColumn.equalsIgnoreCase("uuid")) {
       sSortColumn = "A.DOCUUID";
-    } else if (sSortColumn.equalsIgnoreCase("owner")) {
-      sSortColumn = "UPPER(C.USERNAME)";
     } else if (sSortColumn.equalsIgnoreCase("status")) {
       sSortColumn = "A.APPROVALSTATUS";
     } else if (sSortColumn.equalsIgnoreCase("method")) {
@@ -179,12 +214,22 @@ public void execute() throws SQLException, IdentityException, NamingException,
     // prepare the statements
     st = con.prepareStatement(sbSql.toString());
     stCount = con.prepareStatement(sbCount.toString());
-
+    stUser = con.prepareStatement(sqlUser);
     int n = 1;
     criteria.applyArgs(st, n, args);
-    criteria.applyArgs(stCount, n, args);
+    n = criteria.applyArgs(stCount, n, args);
+    if (useCollections && hasCollections) {
+      stCol = con.prepareStatement(sqlCol);
+      if (sColUuid.length() > 0) {
+        st.setString(n,sColUuid);
+        stCount.setString(n,sColUuid);
+        n++;
+      }
+    }
 
     // query the count
+    //System.err.println(sbCount.toString());
+    //System.err.println(sbSql.toString());
     logExpression(sbCount.toString());
     ResultSet rsCount = stCount.executeQuery();
     if (rsCount.next()) {
@@ -219,8 +264,41 @@ public void execute() throws SQLException, IdentityException, NamingException,
         if (nCounter >= nStartRecord) {
           MmdRecord record = new MmdRecord();
           records.add(record);
-
-          readRecord(rs, record);
+          
+          // find the username of the owner
+          int nUserid = rs.getInt(4);
+          String sUsername = "";
+          stUser.clearParameters();
+          stUser.setInt(1,nUserid);
+          ResultSet rs2 = stUser.executeQuery();
+          if (rs2.next()) sUsername = Val.chkStr(rs2.getString(1));
+          if (sUsername.length() == 0) sUsername = ""+nUserid;
+          rs2.close();
+          
+          // determine collection membership
+          StringBuilder sbCol = new StringBuilder();
+          if (useCollections && hasCollections) {
+            String sDocUuid = rs.getString(2);
+            stCol.clearParameters();
+            stCol.setString(1,sDocUuid);
+            ResultSet rs3 = stCol.executeQuery();
+            while (rs3.next()) {
+              String sCUuid = rs3.getString(1);
+              for (String[] col: collections) {
+                if (sCUuid.equals(col[0])) {
+                  if (sbCol.length()> 0) sbCol.append(",");
+                  sbCol.append(col[1]);
+                  break;
+                }
+              }
+            }
+            rs3.close();
+            if (sbCol.length() > 0) {
+              record.setCollectionMembership(sbCol.toString());
+            }
+          }
+          
+          readRecord(rs,record,sUsername);
 
           // break if we hit the max value for the cursor
           if (records.size() >= nRecsPerPage) {
@@ -249,6 +327,8 @@ public void execute() throws SQLException, IdentityException, NamingException,
   } finally {
     closeStatement(st);
     closeStatement(stCount);
+    closeStatement(stUser);
+    closeStatement(stCol);
   }
 }
 
@@ -345,12 +425,13 @@ private String readImsOwnerName(Connection con) throws SQLException {
  * Reads record data.
  * @param rs result set to read from
  * @param record record to write to
+ * @param ownername the username of the record owner
  * @throws SQLException if accessing database fails
  * @throws ParserConfigurationException if unable to reach parser configuration
  * @throws IOException if unable to perform IO operation
  * @throws SAXException if unable to parse XML data
  */
-private void readRecord(ResultSet rs, MmdRecord record) throws SQLException, ParserConfigurationException, IOException, SAXException {
+private void readRecord(ResultSet rs, MmdRecord record, String ownername) throws SQLException, ParserConfigurationException, IOException, SAXException {
   int n = 1;
 
   // set the title and uuid
@@ -362,7 +443,8 @@ private void readRecord(ResultSet rs, MmdRecord record) throws SQLException, Par
   }
 
   // set the owner, approval status and publication method
-  record.setOwnerName(rs.getString(n++));
+  //record.setOwnerName(rs.getString(n++));
+  n++; record.setOwnerName(ownername);
   record.setApprovalStatus(rs.getString(n++));
   record.setPublicationMethod(rs.getString(n++));
 
@@ -400,11 +482,12 @@ private void readRecord(ResultSet rs, MmdRecord record) throws SQLException, Par
   // set the editable status
   boolean isEditor = record.getPublicationMethod().equalsIgnoreCase(PublicationMethod.editor.name());
   boolean isSEditor = record.getPublicationMethod().equalsIgnoreCase(PublicationMethod.seditor.name());
+
   boolean isProtocol = record.getProtocol()!=null;
   boolean isOwner = hmEditablePublishers.containsKey(record.getOwnerName().toLowerCase());
   record.setCanEdit(
-    (isEditor || isSEditor || isProtocol) &&
-    ( isOwner || (isProtocol && isGptAdministrator))
+    (this.enableEditForAllPubMethods || isEditor || isSEditor || isProtocol) &&
+    (isOwner || (isProtocol && isGptAdministrator))
   );
 
   // TODO remove as this is a temporary fix

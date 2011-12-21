@@ -138,7 +138,11 @@ private HjRecord read(Connection con) throws SQLException {
     sbSql.append(sbFrom);
 
     // create where clause
-    sbWhere.append("UPPER(A.HARVEST_ID)=?");
+    if (getIsDbCaseSensitive(this.getRequestContext())) {
+      sbWhere.append("UPPER(A.HARVEST_ID)=?");
+    } else {
+      sbWhere.append("A.HARVEST_ID=?");
+    }
 
     // append the where clause expressions
     sbSql.append(" WHERE ").append(sbWhere.toString());

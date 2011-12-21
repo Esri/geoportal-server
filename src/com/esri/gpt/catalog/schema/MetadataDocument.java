@@ -13,34 +13,42 @@
  * limitations under the License.
  */
 package com.esri.gpt.catalog.schema;
-import com.esri.gpt.catalog.arcims.GetDocumentRequest;
-import com.esri.gpt.catalog.arcims.ImsServiceException;
-import com.esri.gpt.catalog.management.MmdEnums;
-import com.esri.gpt.catalog.publication.PublicationRecord;
-import com.esri.gpt.catalog.publication.PublicationRequest;
-import com.esri.gpt.framework.context.RequestContext;
-import com.esri.gpt.framework.security.codec.Base64;
-import com.esri.gpt.framework.security.principal.Publisher;
-import com.esri.gpt.framework.util.Val;
-import com.esri.gpt.framework.xml.DomUtil;
-import com.esri.gpt.framework.xml.XsltTemplate;
-import com.esri.gpt.framework.xml.XsltTemplates;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import com.esri.gpt.catalog.arcims.GetDocumentRequest;
+import com.esri.gpt.catalog.arcims.ImsServiceException;
+import com.esri.gpt.catalog.management.MmdEnums;
+import com.esri.gpt.catalog.publication.PublicationRecord;
+import com.esri.gpt.catalog.publication.PublicationRequest;
+import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.jsf.MessageBroker;
+import com.esri.gpt.framework.security.codec.Base64;
+import com.esri.gpt.framework.security.principal.Publisher;
+import com.esri.gpt.framework.util.Val;
+import com.esri.gpt.framework.xml.DomUtil;
+import com.esri.gpt.framework.xml.XmlIoUtil;
+import com.esri.gpt.framework.xml.XsltTemplate;
+import com.esri.gpt.framework.xml.XsltTemplates;
 
 /**
  * Provides functionality to connect a Schema with a metadata document.
@@ -112,6 +120,11 @@ public class MetadataDocument {
           StreamResult result = new StreamResult(writer);             
           HashMap<String,String> params = new HashMap<String,String>();   
           params.put("currentDate", getDateTime());
+          params.put("sourceUrlUuid", 
+              "{" + 
+              UUID.nameUUIDFromBytes(
+                  this._sourceUri.toLowerCase().toString().getBytes())
+                    .toString().toUpperCase() + "}");
           params.put("sourceUrl", this._sourceUri.toLowerCase().contains("?f=json")?this._sourceUri.substring(0,this._sourceUri.indexOf("?")):this._sourceUri);
           if(this._sourceUri != null){
             String[] s = this._sourceUri.split("&");
@@ -333,6 +346,9 @@ public class MetadataDocument {
       if (schema.getXsdLocation().length() > 0) {
         XsdValidator xsdv = new XsdValidator();
         xsdv.validate(schema,sXml);
+      } if (schema.getSchematronXslt().length() > 0) {
+        SchematronValidator sv = new SchematronValidator();
+        sv.validate(schema,sXml);
       }
     } else {
       schema.ensureMinimals();
@@ -406,9 +422,59 @@ public class MetadataDocument {
    * @param xsltPath the path to the details XSLT for the schema
    * @return the HTML fragment
    * @throws TransformerException
+   * @deprecated Instead use transformDetails(String xml, String xsltPath,Locale locale)
    */
   public String transformDetails(String xml, String xsltPath) throws TransformerException {
-    return this.transform(xml,xsltPath);
+	XsltTemplate template = this.getCompiledTemplate(xsltPath);	
+	return template.transform(xml);
+  }
+ 
+  /**
+   * Transforms an metadata document XML to an HTML fragment suitable for display within the
+   * Metadata Details page. 
+   * @param xml the document xml to transform
+   * @param detailsXslPath the path to the details XSLT for the schema
+   * @param mb the message broker
+   * @return the HTML fragment
+   * @throws TransformerException
+   * @throws IOException 
+   * @throws SAXException 
+   * @throws ParserConfigurationException 
+   * @throws XPathExpressionException 
+   */
+  public String transformDetails(String xml, String detailsXslPath,MessageBroker mb) throws TransformerException, IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+	Document detailsXml = DomUtil.makeDomFromResourcePath(detailsXslPath,true);
+	Namespaces namespaces = new Namespaces();
+    namespaces.add("xsl","http://www.w3.org/1999/XSL/Transform");	    
+	NamespaceContextImpl ns = new NamespaceContextImpl(namespaces);
+	XPath xpath = XPathFactory.newInstance().newXPath();
+	xpath.setNamespaceContext(ns);
+	Node root = (Node) xpath.evaluate("/xsl:stylesheet", detailsXml, XPathConstants.NODE);		
+	if(root != null){	
+	  NodeList nlTemplates = (NodeList) xpath.evaluate("//xsl:template", root, XPathConstants.NODESET);
+	  if(nlTemplates != null){	
+		for (int j = 0; j < nlTemplates.getLength(); j++) {
+		  Node ndTemplate = nlTemplates.item(j); 
+		  if (ndTemplate != null) {
+		    NodeList nlWhen = (NodeList) xpath.evaluate("//xsl:when", ndTemplate, XPathConstants.NODESET);
+		    if (nlWhen != null) {
+			  for (int i = 0; i < nlWhen.getLength(); i++) {
+			    Node ndWhen = nlWhen.item(i);        
+			    String key = Val.chkStr(ndWhen.getTextContent());
+			    if(key.startsWith("i18n.catalog.")){            	            	 
+			      String value = Val.escapeXml(mb.retrieveMessage(key.replace("i18n.", "")));
+			      ndWhen.setTextContent(value);
+			    }
+			  }
+		    }
+		  }
+		 }
+	   }
+	}
+           
+	XsltTemplate xsl = new XsltTemplate();
+	String result =  xsl.transform(XmlIoUtil.domToString(detailsXml), xml, null);
+    return result;
   }
 
 }

@@ -15,6 +15,7 @@
 package com.esri.gpt.control.georss;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -56,7 +57,11 @@ import com.esri.gpt.framework.util.Val;
  * Servlet end-point for rest based catalog query requests.
  */
 public class RestQueryServlet extends BaseServlet {
-        
+
+  public final static String EXTRA_REST_ARGS_MAP = "EXTRA_REST_ARGS_MAP";
+  public final static String PARAM_KEY_SHOW_THUMBNAIL = "showThumbnail";
+  public final static String PARAM_KEY_SHOW_RELATIVE_URLS = "showRelativeUrl";
+  public final static String PARAM_KEY_IS_JSFREQUEST = "isJsfRequest";      
   /** constructors ============================================================ */
   
   /** Default constructor. */
@@ -72,12 +77,29 @@ public class RestQueryServlet extends BaseServlet {
    * @throws Exception if an exception occurs
    */
   @Override
-  protected void execute(HttpServletRequest request, 
+protected void execute(HttpServletRequest request, 
                          HttpServletResponse response,
                          RequestContext context)
     throws Exception {
     getLogger().finer("Handling rest query string="+request.getQueryString());
     MessageBroker msgBroker = new FacesContextBroker(request,response).extractMessageBroker();
+    
+    // extra params
+    Map<String,String> extraMap = new HashMap<String,String>();
+    extraMap.put(PARAM_KEY_SHOW_THUMBNAIL, 
+    		request.getParameter(PARAM_KEY_SHOW_THUMBNAIL));
+    extraMap.put(PARAM_KEY_SHOW_RELATIVE_URLS, 
+    		request.getParameter(PARAM_KEY_SHOW_RELATIVE_URLS));
+    extraMap.put(PARAM_KEY_IS_JSFREQUEST, 
+    		request.getParameter(PARAM_KEY_IS_JSFREQUEST));
+    context.getObjectMap().put(EXTRA_REST_ARGS_MAP, extraMap);
+    if(request.getScheme().toLowerCase().equals("https")
+    		&& extraMap.get(PARAM_KEY_SHOW_THUMBNAIL) == null) {
+    	String agent = request.getHeader("user-agent");
+      if (agent != null && agent.toLowerCase().indexOf("msie") > -1) {
+      	extraMap.put(PARAM_KEY_SHOW_THUMBNAIL, "false");
+      }
+    }
     
     // parse the query
     RestQuery query = null;
@@ -90,29 +112,51 @@ public class RestQueryServlet extends BaseServlet {
     
        
     // establish the response content type, print writer and feed writer
-    this.setResponseContentType(request,response,query);
-    PrintWriter printWriter = response.getWriter();
-    FeedWriter feedWriter = makeFeedWriter(request,context,printWriter,msgBroker,query);
-    
+    ResponseFormat format = getResponseFormat(request, query);
+    String sFormat = getRequestParameter(request,"f");
+    FeedWriter2 feedWriter2 = WriterFactory.createWriter(
+        sFormat, msgBroker, query, request, response, context);
+    FeedWriter feedWriter = null;
+    PrintWriter printWriter = null;
+    if(feedWriter2 != null) {
+      feedWriter = (FeedWriter) feedWriter2;
+    } else {
+      this.setResponseContentType(request,response,query);
+      printWriter = response.getWriter();
+      feedWriter = makeFeedWriter(request,context,printWriter,msgBroker,query);
+    }
     // execute the query, write the response
-    try {
+  try {
       SearchResult result = executeQuery1(request,context,msgBroker,query);
-      if(feedWriter instanceof HtmlAdvancedWriter) {
+      if(feedWriter instanceof FeedWriter2) {
+        ((FeedWriter2)feedWriter).write(result);
+      } else if(feedWriter instanceof HtmlAdvancedWriter) {
         ((HtmlAdvancedWriter)feedWriter).write(result);
       } else  {
         feedWriter.write(result.getRecords());
       }
-    } catch (Exception e) {
-      getLogger().log(Level.SEVERE,"Error executing query.",e); 
-      //feedWriter.write(new SearchResultRecords());
+  } catch (Exception e) {
+  	getLogger().log(Level.SEVERE, "Error executing query.", e);
+    if (feedWriter instanceof FeedWriter2) {
+      ((FeedWriter2) feedWriter).writeError(e);
+    } else {
+      
+      // feedWriter.write(new SearchResultRecords());
       String msg = Val.chkStr(e.getMessage());
-      if (msg.length() == 0) msg = e.toString();
+      if (msg.length() == 0)
+        msg = e.toString();
       printWriter = null;
-      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,msg);
-    } finally {
-      try {if (printWriter != null) printWriter.flush();} catch (Exception ef) {}
+      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, msg);
+    }
+  } finally {
+    try {
+      if (printWriter != null && (feedWriter instanceof FeedWriter2) == false)
+        printWriter.flush();
+    } catch (Exception ef) {
+      getLogger().log(Level.INFO,"Error while flushing printwriter",ef);
     }
   }
+}
   
   /**
    * Execute Query that returns a SearchResult object (SearchResult as
@@ -136,10 +180,26 @@ public class RestQueryServlet extends BaseServlet {
     SearchResult result = new SearchResult();
     String rid = Val.chkStr(query.getRepositoryId());
     ResponseFormat format = getResponseFormat(request,query);
-    if(format == ResponseFormat.searchpageresults) {
-       context.setViewerExecutesJavascript(true);
-     } else {
-       context.setViewerExecutesJavascript(false);;
+
+    boolean isJavascriptEnabled =  
+      Val.chkBool(request.getParameter("isJavascriptEnabled"), false);
+    if(format.toString().toLowerCase().startsWith("searchpage") || 
+        isJavascriptEnabled == true ) {
+    
+			if (format.toString().toLowerCase().startsWith("searchpage")) {
+				@SuppressWarnings("unchecked")
+				Map<String, String> extraArgs = (Map<String, String>) context
+				    .getObjectMap().get(EXTRA_REST_ARGS_MAP);
+				if (extraArgs != null) {
+					if(extraArgs.get(PARAM_KEY_SHOW_RELATIVE_URLS) == null) {
+					  extraArgs.put(PARAM_KEY_SHOW_RELATIVE_URLS, "true");
+					}
+					extraArgs.put(PARAM_KEY_IS_JSFREQUEST, "true");
+				}
+			}
+      context.setViewerExecutesJavascript(true);
+    } else {
+      context.setViewerExecutesJavascript(false);;
     }
     ResourceLinkBuilder rBuild = ResourceLinkBuilder.newBuilder(context, 
         request, messageBroker);
@@ -454,6 +514,12 @@ public class RestQueryServlet extends BaseServlet {
     parser.parsePropertyRange("after","before","dct:modified");
     parser.parseSpatialClause("bbox","spatialRel","geometry");
     parser.parseSortables("orderBy");
+    
+    //parser.parsePropertyRange("validAfter","validBefore","dct:valid"); // date valid
+    parser.parsePropertyIsEqualTo("publisher","dc:publisher"); // publisher
+    parser.parsePropertyIsEqualTo("source","dc:source"); // harvesting id (uuid)
+    parser.parsePropertyIsEqualTo("isPartOf","dct:isPartOf"); // collection subset
+    //parser.parsePropertyList("hasFormat","dct:hasFormat",",",true);
     
     return query;
   }

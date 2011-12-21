@@ -13,7 +13,11 @@
  * limitations under the License.
  */
 package com.esri.gpt.framework.http;
+import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.util.KmlUtil;
+import com.esri.gpt.framework.util.Val;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -80,16 +84,66 @@ public class CharacterHandler extends ContentHandler {
   @Override
   public void readResponse(HttpClientRequest request, InputStream responseStream) 
     throws IOException {  
+    
     InputStreamReader ir = null;
     String ct = request.getResponseInfo().getContentType();
     boolean kmz = (ct != null) && (ct.toLowerCase().indexOf("application/vnd.google-earth.kmz") != -1);
     if (kmz) {
       ir = new InputStreamReader(KmlUtil.extractKmlStream(responseStream),this.determineEncoding(request));
+      long nChars = this.executeIO(ir,this.getWriter());
+      request.getResponseInfo().setCharactersRead(nChars);
+      
     } else {
-      ir = new InputStreamReader(responseStream,this.determineEncoding(request));
+      
+      // some sites do not return a response body charset encoding within the
+      // HTTP response header, for XML responses - peek for the XML encoding
+      boolean peekForXmlEncoding = false;
+      String encoding = request.getResponseInfo().getContentEncoding();
+      if ((encoding == null) || (encoding.length() == 0)) {
+        String lct = Val.chkStr(ct).toLowerCase();
+        if (lct.endsWith("/xml") || lct.endsWith("+xml")) {          
+          StringAttributeMap params = ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getParameters();
+          String param = params.getValue("HttpClientRequest.allowPeekForXmlEncoding");
+          peekForXmlEncoding = !Val.chkStr(param).equalsIgnoreCase("false");
+        }
+      }
+      
+      if (!peekForXmlEncoding) {
+        ir = new InputStreamReader(responseStream,this.determineEncoding(request));
+        long nChars = this.executeIO(ir,this.getWriter());
+        request.getResponseInfo().setCharactersRead(nChars);
+      } else {
+        
+        // peak for the encoding
+        ByteArrayHandler byteHandler = new ByteArrayHandler();
+        long nBytes = this.executeIO(responseStream,byteHandler.getOutputStream());
+        if (nBytes > 0) {
+          byte[] bytes = byteHandler.getContent();
+          String chars = new String(bytes,"UTF-8");
+          chars = Val.removeBOM(Val.chkStr(chars));
+          if (chars.startsWith("<?xml")) {
+            int nIdx1 = chars.indexOf(" encoding=");
+            int nIdx2 = chars.indexOf("?>");
+            if ((nIdx1 != -1) && (nIdx2 != -1) && (nIdx2 > nIdx1)) {
+              String tmp = Val.chkStr(chars.substring(nIdx1+10,nIdx2));
+              if (tmp.length() > 2) {
+                tmp = Val.chkStr(tmp.substring(1,tmp.length()-1));
+                if (tmp.length() > 0) {
+                  try {
+                    String encoding2 = tmp;
+                    String chars2 = new String(bytes,encoding2);
+                    chars = chars2;
+                  } catch (IOException etmp) {}
+                }
+              }
+            }
+          }
+          
+          this.getWriter().write(chars);
+          request.getResponseInfo().setCharactersRead(chars.length());
+        }
+      }
     }
-    long nChars = this.executeIO(ir,this.getWriter());
-    request.getResponseInfo().setCharactersRead(nChars);
   }
   
 }

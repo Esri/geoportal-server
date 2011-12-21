@@ -24,6 +24,8 @@ import com.esri.gpt.framework.resource.query.QueryBuilder;
 import com.esri.gpt.framework.util.UuidUtil;
 import com.esri.gpt.framework.util.Val;
 import java.sql.Timestamp;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Represents a metadata record associated with a manage metadata request.
@@ -35,6 +37,7 @@ public class MmdRecord extends Record {
   private String _approvalStatus = "";
   private String _approvalStatusMsg = "";
   private boolean _canEdit = false;
+  private String _collectionMembership = "";
   private String _formattedUpdateDate = "";
   private String _ownerName = "";
   private String _publicationMethod;
@@ -62,6 +65,8 @@ public class MmdRecord extends Record {
   private boolean searchable;
   /** synchronizable */
   private boolean synchronizable;
+  
+  private Map<String, Object> _objectMap = new LinkedHashMap<String, Object>();
 
 // constructors ================================================================
   /** Default constructor. */
@@ -70,6 +75,19 @@ public class MmdRecord extends Record {
   }
 
 // properties ==================================================================
+ 
+  /**
+  * Gets the object map.
+  *
+  * @return the object map (never null)
+  */
+  public Map<String, Object> getObjectMap() {
+    if(_objectMap == null) {
+      _objectMap = new LinkedHashMap<String, Object>();
+    }
+    return _objectMap;
+  }
+  
   /**
    * Gets the approval status.
    * @return the approval status
@@ -117,6 +135,21 @@ public class MmdRecord extends Record {
    */
   protected void setCanEdit(boolean canEdit) {
     _canEdit = canEdit;
+  }
+  
+  /**
+   * Gets the collection membership string.
+   * @return the collection membership 
+   */
+  public String getCollectionMembership() {
+    return _collectionMembership;
+  }
+  /**
+   * Sets the collection membership string.
+   * @param membership the collection membership
+   */
+  public void setCollectionMembership(String membership) {
+    _collectionMembership = Val.chkStr(membership);
   }
 
   /**

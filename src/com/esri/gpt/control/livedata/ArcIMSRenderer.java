@@ -22,8 +22,15 @@ package com.esri.gpt.control.livedata;
   protected abstract String getProxyUrl();
   protected abstract String getUrl();
 
+  @Override
   protected String newLayerDeclaration() {
-    return "new esri.layers.ArcIMSLayer(\"" +getUrl()+ "\",\"" +getProxyUrl()+ "\",widget.getGeometryServiceUrl())";
+    return "new esri.gpt.layers.ArcIMSLayer(\"" +getUrl()+ "\",\"" +getProxyUrl()+ "\",widget.getGeometryServiceUrl())";
+  }
+
+  @Override
+  protected String initializeNewLayer() {
+    return "var extent = " +createExtentDef()+ ";" +
+           "node.liveDataMap.setExtent(extent);";
   }
 
   @Override

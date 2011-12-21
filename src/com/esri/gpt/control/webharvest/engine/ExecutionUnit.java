@@ -15,58 +15,72 @@
 package com.esri.gpt.control.webharvest.engine;
 
 import com.esri.gpt.catalog.harvest.repository.HrRecord;
+import com.esri.gpt.control.webharvest.IterationContext;
+import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
 import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
 import com.esri.gpt.framework.security.principal.Publisher;
+import com.esri.gpt.framework.util.Val;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Execution unit.
  */
-class ExecutionUnit {
+public abstract class ExecutionUnit {
 
-/** repository */
-private HrRecord repository;
-/** criteria */
-private Criteria criteria;
+/** task */
+private Task task;  
 /** query  builder */
 private QueryBuilder queryBuilder;
 /** cleanup flag */
 private boolean cleanup;
-/** report builder */
-private ReportBuilder rp;
-/** collection of source URI's */
-private SourceUriArray sourceUris;
 /** publisher */
 private Publisher publisher;
+/** attributes */
+private Map<String,Object> attributes = new HashMap<String,Object>();
+/** restrictions */
+private Set<String> restrictions = new HashSet<String>();
 
 /**
  * Creates instance of the execution unit.
- * @param repository repository
- * @param criteria criteria
- * @param queryBuilder query builder
+ * @param task task
  */
-public ExecutionUnit(HrRecord repository, Criteria criteria, QueryBuilder queryBuilder) {
-  if (repository == null)
-    throw new IllegalArgumentException("No repository provided.");
-  if (criteria == null)
-    throw new IllegalArgumentException("No criteria provided.");
-  if (queryBuilder == null)
-    throw new IllegalArgumentException("No query builder provided.");
-  this.repository = repository;
-  this.criteria = criteria;
-  this.queryBuilder = queryBuilder;
-  this.cleanup = ProtocolInvoker.getUpdateContent(repository.getProtocol()) && criteria.getFromDate()==null;
+public ExecutionUnit(Task task) {
+  if (task == null)
+    throw new IllegalArgumentException("No task provided.");
+  this.task = task;
+  this.cleanup = ProtocolInvoker.getUpdateContent(task.getResource().getProtocol()) && task.getCriteria().getFromDate()==null;
+  this.queryBuilder = task.getResource().newQueryBuilder(new IterationContext() {
+      @Override
+      public void onIterationException(Exception ex) {
+        ExecutionUnit.this.onIteratonException(ex);
+      }
+  });
+  if (this.queryBuilder == null) {
+    throw new IllegalArgumentException("No query builder can be created.");
+  }
+  Protocol protocol = task.getResource().getProtocol();
+  if (protocol!=null) {
+    String r = Val.chkStr(protocol.getAttributeMap().getValue("restrictions"));
+    String [] ar = r.split(",");
+    restrictions.addAll(Arrays.asList(ar));
+  }
 }
 
+protected abstract void onIteratonException(Exception ex);
 /**
  * Gets query.
  * @return query
  */
 public Query getQuery() {
-  return queryBuilder.newQuery(criteria);
+  return queryBuilder.newQuery(task.getCriteria());
 }
 
 /**
@@ -82,7 +96,7 @@ public Publishable getNative() {
  * @return criteria
  */
 public Criteria getCriteria() {
-  return criteria;
+  return task.getCriteria();
 }
 
 /**
@@ -90,7 +104,7 @@ public Criteria getCriteria() {
  * @return repository
  */
 public HrRecord getRepository() {
-  return repository;
+  return task.getResource();
 }
 
 /**
@@ -110,38 +124,6 @@ public void setCleanupFlag(boolean cleanup) {
 }
 
 /**
- * Sets report builder.
- * @param rp report builder
- */
-public void setReportBuilder(ReportBuilder rp) {
-  this.rp = rp;
-}
-
-/**
- * Gets report builder.
- * @return report builder
- */
-public ReportBuilder getReportBuilder() {
-  return this.rp;
-}
-
-/**
- * Gets collection of source URI's.
- * @return collection of source URI's
- */
-public SourceUriArray getSourceUris() {
-  return sourceUris;
-}
-
-/**
- * Sets collection of source URI's.
- * @param sourceUris collection of source URI's
- */
-public void setSourceUris(SourceUriArray sourceUris) {
-  this.sourceUris = sourceUris;
-}
-
-/**
  * Gets publisher.
  * @return publisher
  */
@@ -157,8 +139,34 @@ public void setPublisher(Publisher publisher) {
   this.publisher = publisher;
 }
 
+/**
+ * Sets attribute.
+ * @param name name
+ * @param value value
+ */
+public void setAttribute(String name, Object value) {
+  attributes.put(name, value);
+}
+
+/**
+ * Gets attribute.
+ * @param name name
+ * @return value
+ */
+public Object getAttribute(String name) {
+  return attributes.get(name);
+}
+
+/**
+ * Gets restrictions.
+ * @return restrictions
+ */
+public Set<String> getRestrictions() {
+  return restrictions;
+}
+
 @Override
 public String toString() {
-  return "{ uuid: " +repository.getUuid()+ ", protocol: " + repository.getProtocol().getKind()+", criteria: "+criteria+"}";
+  return "{ uuid: " +getRepository().getUuid()+ ", protocol: " + getRepository().getProtocol().getKind()+", criteria: "+getCriteria()+"}";
 }
 }

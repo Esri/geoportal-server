@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.catalog.lucene;
 import com.esri.gpt.catalog.context.CatalogIndexException;
+import com.esri.gpt.catalog.management.CollectionDao;
 import com.esri.gpt.catalog.schema.MetadataDocument;
 import com.esri.gpt.catalog.schema.Schema;
 import com.esri.gpt.catalog.schema.SchemaException;
@@ -33,6 +34,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,6 +43,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.document.MapFieldSelector;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermDocs;
 import org.apache.lucene.index.TermEnum;
@@ -57,6 +60,9 @@ public class LuceneIndexSynchronizer {
   
   /** The Logger. */
   private static Logger LOGGER = Logger.getLogger(LuceneIndexSynchronizer.class.getName());
+  
+  /** Running status. */
+  public static volatile boolean RUNNING = false;
   
   /** instance variables ====================================================== */
   private LuceneIndexAdapter     adapter;
@@ -75,6 +81,7 @@ public class LuceneIndexSynchronizer {
   private HashMap<String,String> synchedUuidCache = new HashMap<String,String>();
   private StringAttributeMap     taskParams;
   private boolean                wasInterrupted = false;
+  private IndexWriter            writer;
   
   /** constructors ============================================================ */
 
@@ -122,6 +129,15 @@ public class LuceneIndexSynchronizer {
         }
       } catch (Exception ef) {
         LOGGER.log(Level.WARNING,"IndexSearcher failed to close.",ef);
+      }
+      try {
+        if ((this.adapter != null) && (this.writer != null)) {
+          this.adapter.closeWriter(this.writer);
+        }
+      } catch (Exception ef) {
+        LOGGER.log(Level.WARNING,"IndexWriter failed to close.",ef);
+      } finally {
+        this.writer = null;
       }
       try {
         if (this.context != null) {
@@ -327,6 +343,11 @@ public class LuceneIndexSynchronizer {
    */
   public void syncronize() {
     LOGGER.info("Synchronization run started..."); 
+    if (RUNNING) {
+      LOGGER.log(Level.INFO,"Synchronization run aborted, reason: already running.");
+      return;
+    }
+    RUNNING = true;
     Lock backgroundLock = null;
     try {
       
@@ -337,17 +358,25 @@ public class LuceneIndexSynchronizer {
       this.startMillis = System.currentTimeMillis();
       StringAttributeMap catParams = this.context.getCatalogConfiguration().getParameters();
       
-      // initiaize index
+      // initialize index
+      this.context.getObjectMap().put("lucene.useRemoteWriter",false);
       this.adapter = new LuceneIndexAdapter(context);
       if (this.adapter == null) {
         LOGGER.severe("A valid CatalogIndexAdapter cound not be initialized.");
       }
       this.adapter.touch(); // ensures that a proper directory structure exists
       if (this.checkInterrupted()) return;
-      backgroundLock = this.adapter.obtainBackgroundLock();
+      if (!this.adapter.getUsingSingleWriter()) {
+        backgroundLock = this.adapter.obtainBackgroundLock();
+      }
       this.searcher = this.adapter.newSearcher();
       this.reader = this.searcher.getIndexReader();
       if (this.checkInterrupted()) return;
+      
+      if (this.adapter.getUsingSingleWriter()) {
+        this.writer = this.adapter.newWriter();
+        this.adapter.setAutoCommitSingleWriter(false);
+      }
       
       // initialize database
       ManagedConnection mc = this.context.getConnectionBroker().returnConnection("");
@@ -367,9 +396,19 @@ public class LuceneIndexSynchronizer {
       // purge the index if required
       if (countInfo.numIndexableDocs == 0) {
         if (countInfo.numIndexedDocs > 0) {
-          numDeleted = countInfo.numIndexedDocs;
-          this.closeAll();
-          this.adapter.purgeIndex();
+          String p = Val.chkStr(catParams.getValue(
+              "lucene.synchronizer.allowFullIndexPurge"));
+          boolean bAllowFullIndexPurge = p.equalsIgnoreCase("true");
+          if (bAllowFullIndexPurge) {
+            numDeleted = countInfo.numIndexedDocs;
+            this.closeAll();
+            this.adapter.purgeIndex();
+          } else {
+            this.closeAll();
+            LOGGER.severe("The database contains no indexable documents," +
+          		" the Lucene index contains "+countInfo.numIndexedDocs+
+          		" indexed documents. A manual purge of the index is recommended.");
+          }
         }
       } else {
         
@@ -439,6 +478,7 @@ public class LuceneIndexSynchronizer {
       if (this.wasInterrupted) {
         LOGGER.info("Synchronization run was interrupted."); 
       }
+      RUNNING = false;
     }
   }
     
@@ -453,6 +493,7 @@ public class LuceneIndexSynchronizer {
     throws IOException, SQLException, CatalogIndexException {
     LOGGER.fine("Checking database records...");
     PreparedStatement st = null;
+    PreparedStatement stCol = null;
     TermDocs termDocs = null;
     try {
      
@@ -460,17 +501,30 @@ public class LuceneIndexSynchronizer {
       MetadataAcl acl = new MetadataAcl(this.context);
       boolean bCheckAcl = !acl.isPolicyUnrestricted();
       
+      // determine if collections are being used
+      List<String[]> collections = null;
+      CollectionDao colDao = new CollectionDao(this.context);
+      boolean hasCollections = false;
+      boolean useCollections = colDao.getUseCollections();
+      String sColMemberTable = colDao.getCollectionMemberTableName();
+      String sqlCol = "SELECT COLUUID FROM "+sColMemberTable+" WHERE DOCUUID=?";
+      if (useCollections) {
+        collections = colDao.queryCollections();
+        hasCollections = (collections.size() > 0);
+      }
+      
       // initialize index related variables
       boolean bCheckIndex = (info.numOriginallyIndexed > 0);
       String fldUuid = Storeables.FIELD_UUID;
       String fldModified = Storeables.FIELD_DATEMODIFIED;
       String fldAcl = Storeables.FIELD_ACL;
-      FieldSelector selector = new MapFieldSelector(new String[]{fldModified,fldAcl});
-      if (bCheckAcl) {
-        selector = new MapFieldSelector(new String[]{fldModified,fldAcl});
-      } else {
-        selector = new MapFieldSelector(new String[]{fldModified});
-      }
+      
+      ArrayList<String> alFields = new ArrayList<String>();
+      alFields.add(fldModified);
+      if (bCheckAcl) alFields.add(fldAcl);
+      if (useCollections) alFields.add("isPartOf");
+      FieldSelector selector = new MapFieldSelector(alFields.toArray(new String[0]));
+      
       Term termUuid = new Term(fldUuid);
       if (bCheckIndex) {
         termDocs = this.reader.termDocs();
@@ -494,6 +548,10 @@ public class LuceneIndexSynchronizer {
       st = con.prepareStatement(sql);
       ResultSet rs = st.executeQuery();
       if (this.checkInterrupted()) return;
+      if (useCollections && hasCollections) {
+        stCol = con.prepareStatement(sqlCol);
+      }
+      
       while (rs.next()) {
         
         info.numProcessed++;
@@ -613,6 +671,53 @@ public class LuceneIndexSynchronizer {
                   info.aclMillis += (System.currentTimeMillis() - tAclStartMillis);
                 }
                 
+                // check collection membership
+                if (!bRequiresUpdate && useCollections) {
+                  long tColStartMillis = System.currentTimeMillis();
+                  bRequiresUpdate = true;
+                  
+                  ArrayList<String> colDb = new ArrayList<String>();
+                  if (useCollections && hasCollections) {
+                    stCol.clearParameters();
+                    stCol.setString(1,uuid);
+                    ResultSet rsCol = stCol.executeQuery();
+                    while (rsCol.next()) {
+                      String sCUuid = rsCol.getString(1);
+                      for (String[] col: collections) {
+                        if (sCUuid.equals(col[0])) {  
+                          colDb.add(col[1]);
+                          break;
+                        }
+                      }
+                    }
+                    rsCol.close();
+                  }
+                  
+                  ArrayList<String> colIdx = new ArrayList<String>();
+                  Field[] colFields = doc.getFields("isPartOf");
+                  if ((colFields != null) && (colFields.length > 0)) {
+                    for (Field colField: colFields) {
+                      colIdx.add(colField.stringValue());
+                    }
+                  }
+                  if (colDb.size() == colIdx.size()) {
+                    int nMatched = 0;
+                    if (colDb.size() > 0) {
+                      for (String s1: colDb) {
+                        for (String s2: colIdx) {
+                          if (s1.equalsIgnoreCase(s2)) {
+                            nMatched++;
+                            break;
+                          }
+                        }
+                      }
+                    }
+                    bRequiresUpdate = (nMatched != colDb.size());
+                  }
+                  if (bRequiresUpdate) info.numWithInconsistentColMembership++;
+                  info.colMillis += (System.currentTimeMillis() - tColStartMillis);
+                 }
+                
               }
             }
           }
@@ -655,7 +760,7 @@ public class LuceneIndexSynchronizer {
         // log a status message if the feedback threshold was reached
         if (this.checkInterrupted()) return;
         if ((System.currentTimeMillis() - info.loopStartMillis) >= this.feedbackMillis) {
-          LOGGER.fine(info.getLoopMessage());
+          LOGGER.info(info.getLoopMessage());
         }
        
       }
@@ -667,9 +772,10 @@ public class LuceneIndexSynchronizer {
         info.numDocsDeleted += delUuids.size();
       }
       
-      LOGGER.fine(info.getStepMessage());
+      LOGGER.info(info.getStepMessage());
     } finally {
       try {if (st != null) st.close();} catch (Exception ef) {}
+      try {if (stCol != null) stCol.close();} catch (Exception ef) {}
       try {if (termDocs != null) termDocs.close();} catch (Exception ef) {}
     }
   }
@@ -718,7 +824,7 @@ public class LuceneIndexSynchronizer {
           chkUuids.clear();
           if (this.checkInterrupted()) return;
           if ((System.currentTimeMillis() - info.loopStartMillis) >= this.feedbackMillis) {
-            LOGGER.fine(info.getLoopMessage());
+            LOGGER.info(info.getLoopMessage());
           }
         }
         
@@ -726,7 +832,7 @@ public class LuceneIndexSynchronizer {
         if (info.loopCount >= info.loopThreshold) {
           if (this.checkInterrupted()) return;
           if ((System.currentTimeMillis() - info.loopStartMillis) >= this.feedbackMillis) {
-            LOGGER.fine(info.getLoopMessage());
+            LOGGER.info(info.getLoopMessage());
           }
         }
         
@@ -745,7 +851,7 @@ public class LuceneIndexSynchronizer {
         if (this.checkInterrupted()) return;
       }
       
-      LOGGER.fine(info.getStepMessage());
+      LOGGER.info(info.getStepMessage());
     } finally {
       try {if (termEnum != null) termEnum.close();} catch (Exception ef) {}
     }
@@ -779,6 +885,7 @@ public class LuceneIndexSynchronizer {
   /** Stores information collected while walking the database. */
   class WalkDatabaseInfo {
     protected long aclMillis = 0;
+    protected long colMillis = 0;
     protected int  loopThreshold = 1000;
     protected int  loopCount = 0;
     protected long loopStartMillis = 0;
@@ -794,6 +901,7 @@ public class LuceneIndexSynchronizer {
     protected int  numRequiringDelete = 0;
     protected int  numRequiringUpdate = 0;
     protected int  numWithInconsistentAcls = 0;
+    protected int  numWithInconsistentColMembership = 0;
     protected int  numWithInconsistentDates = 0;
     protected long startMillis = 0;
         
@@ -832,6 +940,7 @@ public class LuceneIndexSynchronizer {
     protected String getStepMessage() {
       double dSec = (System.currentTimeMillis() - this.startMillis) / 1000.0;
       double dAclSec = this.aclMillis / 1000.0;
+      double dColSec = this.colMillis / 1000.0;
       StringBuffer msg = new StringBuffer();
       msg.append("Step walkDatabase: "); 
       msg.append("\n databaseCount=").append(this.numDatabaseDocs);
@@ -843,21 +952,32 @@ public class LuceneIndexSynchronizer {
       msg.append(" nonIndexableFound=").append(this.numNonIndexableFound); 
       msg.append("\n inconsistentDates=").append(this.numWithInconsistentDates);
       msg.append(" inconsistentAcls=").append(this.numWithInconsistentAcls);
+      msg.append(" inconsistentColMembership=").append(this.numWithInconsistentColMembership);
       msg.append("\n requiringUpdate=").append(this.numRequiringUpdate);
       msg.append(" requiringDelete=").append(this.numRequiringDelete);
       msg.append(" docsUpdated=").append(this.numDocsUpdated);
       msg.append(" docsDeleted=").append(this.numDocsDeleted);
+      
       msg.append("\n stepRuntime: ");
       msg.append(Math.round(dSec / 60.0 * 100.0) / 100.0).append(" minutes");
       if (dSec <= 600) {
         msg.append(", ").append(Math.round(dSec * 100.0) / 100.0).append(" seconds");
       }
+      
       msg.append(" (aclSubTime: ");
       msg.append(Math.round(dAclSec / 60.0 * 100.0) / 100.0).append(" minutes");
       if (dAclSec <= 600) {
         msg.append(", ").append(Math.round(dAclSec * 100.0) / 100.0).append(" seconds");
       }
       msg.append(")");
+      
+      msg.append(" (colMembershipSubTime: ");
+      msg.append(Math.round(dColSec / 60.0 * 100.0) / 100.0).append(" minutes");
+      if (dColSec <= 600) {
+        msg.append(", ").append(Math.round(dColSec * 100.0) / 100.0).append(" seconds");
+      }
+      msg.append(")");
+      
       return msg.toString();
     }
   }

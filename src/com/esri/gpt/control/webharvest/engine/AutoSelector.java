@@ -37,6 +37,8 @@ private Thread workerThread;
 private volatile boolean shutdown;
 /** autoselect frequency */
 private long autoSelectFrequency;
+/** suspended */
+private volatile boolean suspended;
 
 /**
  * Creates instance of auto selector.
@@ -46,50 +48,54 @@ public AutoSelector(long autoSelectFrequency) {
   this.autoSelectFrequency = autoSelectFrequency;
 }
 
+@Override
 public void run() {
   workerThread = Thread.currentThread();
   LOGGER.info("[SYNCHRONIZER] AutoSelector activated.");
 
   do {
-    LOGGER.finer("[SYNCHRONIZER] AutoSelector entered run mode.");
-
     long duration = autoSelectFrequency;
+    if (!suspended) {
+      LOGGER.finer("[SYNCHRONIZER] AutoSelector entered run mode.");
 
-    try {
-      HrRecords records = selectRecords();
+      try {
+        HrRecords records = selectRecords();
 
-      // selecting all records with harvest date due now
-      HrRecords recordsDueNow = records.findHarvestDue();
-      LOGGER.finer("[SYNCHRONIZER] AutoSelector selected " + recordsDueNow.size() + " records with harvest date due now.");
+        // selecting all records with harvest date due now
+        HrRecords recordsDueNow = records.findHarvestDue();
+        LOGGER.log(Level.FINER, "[SYNCHRONIZER] AutoSelector selected {0} records with harvest date due now.", recordsDueNow.size());
 
-      // process all with harvest date due now
-      for (HrRecord r : recordsDueNow) {
-        if (shutdown)
-          break;
-        // this is it; do something in overriden method
-        onSelect(r);
+        // process all with harvest date due now
+        for (HrRecord r : recordsDueNow) {
+          if (shutdown || suspended) break;
+          // this is it; do something in overriden method
+          onSelect(r);
+        }
+
+        // get the one record with the closes due date but not due yet
+        HrRecord nextDue = records.findNextDue();
+
+        // caluclate duration in milliseconds
+        duration = nextDue != null ? nextDue.getNextHarvestDate().getTime() - (new Date()).getTime() : autoSelectFrequency;
+      } catch (SQLException ex) {
+        LOGGER.log(Level.SEVERE, "[SYNCHRONIZER] Error selecting harvesting sites for harvest.", ex);
       }
-
-      // get the one record with the closes due date but not due yet
-      HrRecord nextDue = records.findNextDue();
-
-      // caluclate duration in milliseconds
-      duration = nextDue != null ? nextDue.getNextHarvestDate().getTime() - (new Date()).getTime() : autoSelectFrequency;
-    } catch (SQLException ex) {
-      LOGGER.log(Level.SEVERE, "[SYNCHRONIZER] Error selecting harvesting sites for harvest.", ex);
     }
 
-    if (shutdown)
-      break;
-
-    TimePeriod period = new TimePeriod();
-    period.setValue(duration);
+    if (shutdown) break;
     
-    LOGGER.finer("[SYNCHRONIZER] AutoSelector enters wait mode for " + period);
     // wait for calculated duration or until interrupted
     synchronized (this) {
       try {
-        this.wait(duration);
+        if (isSuspendedWithAck()) {
+          LOGGER.finer("[SYNCHRONIZER] AutoSelector suspended mode");
+          wait();
+        } else {
+          TimePeriod period = new TimePeriod();
+          period.setValue(duration);
+          LOGGER.log(Level.FINER, "[SYNCHRONIZER] AutoSelector enters wait mode for {0}", period);
+          wait(duration);
+        }
       } catch (InterruptedException ex) {
         if (shutdown)
           break;
@@ -140,5 +146,32 @@ private HrRecords selectRecords() throws SQLException {
   } finally {
     context.onExecutionPhaseCompleted();
   }
+}
+
+public synchronized void safeSuspend() {
+  if (!suspended) {
+    LOGGER.info("[SYNCHRONIZER] Suspending AutoSelector");
+    suspended = true;
+    notify();
+  } else {
+    LOGGER.info("[SYNCHRONIZER] AutoSelector already suspended");
+  }
+}
+
+public synchronized void safeResume() {
+  if (suspended) {
+    LOGGER.info("[SYNCHRONIZER] Resuming AutoSelector");
+    suspended = false;
+    notify();
+  } else {
+    LOGGER.info("[SYNCHRONIZER] AutoSelector already resumed");
+  }
+}
+
+private boolean isSuspendedWithAck() {
+  if (suspended) {
+    LOGGER.info("[SYNCHRONIZER] AutoSelector acknowledged suspension");
+  }
+  return suspended;
 }
 }

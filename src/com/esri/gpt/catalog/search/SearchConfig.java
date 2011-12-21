@@ -25,6 +25,8 @@ import java.util.logging.Logger;
 
 import javax.xml.transform.TransformerConfigurationException;
 
+import org.w3c.dom.Node;
+
 import com.esri.gpt.framework.context.Configuration;
 import com.esri.gpt.framework.context.ConfigurationException;
 import com.esri.gpt.framework.context.RequestContext;
@@ -81,7 +83,6 @@ private XsltTemplate gptToCswXsltTemplate;
 /** The GPT to CSW XSLT relative file path *. */
 private String gptToCswXsltPath;
 
-
 /** The results per page. */
 private String resultsPerPage;
 
@@ -131,6 +132,10 @@ private SearchGptXslProfiles gptXslProfiles = new SearchGptXslProfiles();
 /** The jsf suffix. */
 private String jsfSuffix;
 
+private Node searchConfigNode;
+
+
+
 // constructor =================================================================
 /**
  * Instantiates a new search configuration.
@@ -159,6 +164,23 @@ public void setAllowExternalSearch(boolean allowExternalSearch) {
   this.allowExternalSearch = allowExternalSearch;
 }
 
+/**
+ * Gets the search config node.
+ *
+ * @return the search config node
+ */
+public Node getSearchConfigNode() {
+  return searchConfigNode;
+}
+
+/**
+ * Sets the search config node.
+ *
+ * @param searchConfigNode the new search config node
+ */
+public void setSearchConfigNode(Node searchConfigNode) {
+  this.searchConfigNode = searchConfigNode;
+}
 /**
  * Gets the time out.
  * 

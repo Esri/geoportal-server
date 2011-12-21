@@ -302,7 +302,7 @@ public String getRecordsAsJSON() {
  * @return the envelope[]
  */
 private Envelope[] internationalDatelineSplit(Envelope envelope) {
-  if(envelope.getMaxX() > envelope.getMinX()) {
+  if(envelope.getMaxX() >= envelope.getMinX()) {
     return new Envelope[]{envelope};
   }
   Envelope leftEnvelope = new Envelope();

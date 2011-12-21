@@ -258,4 +258,38 @@ throws TransformerException, TransformerConfigurationException {
   transformer.transform(source,result);
   return result;
 }
+
+/**
+* Transforms an xml document using the parameters specified.
+* @param xsl the xsl transformation string
+* @param xml document to be transformed
+* @param mapParams parameters to be used for transformation (can be null)
+* @return resulting xml document
+* @throws TransformerException if an exception occurs during transformation
+* @throws TransformerConfigurationException if a configuration exception occurs
+*/
+@SuppressWarnings("unchecked")
+public String transform(String xsl, String xml, Map mapParams)
+  throws TransformerException, TransformerConfigurationException {
+  
+  StringReader xslReader = new StringReader(xsl);
+  TransformerFactory factory = TransformerFactory.newInstance();
+  Templates templates = factory.newTemplates(new StreamSource(xslReader));
+  Transformer transformer = templates.newTransformer();
+  if (mapParams != null) {
+    for (Iterator it = mapParams.entrySet().iterator();it.hasNext();) {
+      Map.Entry entry = (Map.Entry)it.next();
+      transformer.setParameter(entry.getKey().toString(),entry.getValue().toString());
+    }
+  }
+  
+  StringReader reader = new StringReader(xml);
+  StringWriter writer = new StringWriter();
+  StreamSource source = new StreamSource(reader);
+  Result result = new StreamResult(writer);
+  transformer.transform(source,result);
+ 
+  return writer.toString();
+}
+
 }

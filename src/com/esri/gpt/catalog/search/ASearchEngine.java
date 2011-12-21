@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 
 import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.http.CredentialProvider;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.request.IRequest;
 import com.esri.gpt.framework.request.PageCursor;
@@ -50,6 +51,8 @@ private static final String ATTRIBUTE_TIMEOUT_RESPONSE = "responseTimeout";
 
 /** The Constant ATTRIBUTE_ABSTRACT_KEY. */
 private static final String ATTRIBUTE_ABSTRACT_KEY    = "";
+
+public static final String SEARCH_CREDENTIAL_MAP =  "SEARCH_CREDENTIAL_MAP";
 
 /** class logger *. */
 private static final Logger LOG = 
@@ -228,6 +231,19 @@ public void setKey(String key) throws SearchException{
 public UsernamePasswordCredentials getCredentials() {
   if(credentials == null) {
     credentials = new UsernamePasswordCredentials();
+	  Map<String, CredentialProvider> credMap = 
+		  (Map<String, CredentialProvider>) 
+		    this.getRequestContext().extractFromSession(
+			  ASearchEngine.SEARCH_CREDENTIAL_MAP);
+	  if(credMap != null) {
+		  CredentialProvider credProvider = (CredentialProvider) 
+		    credMap.get(this.getKey());
+		  if(credProvider != null) {
+			  credentials.setUsername(credProvider.getUsername());
+			  credentials.setPassword(credProvider.getPassword());
+		  }
+	  }
+    
   }
   return credentials;
 }

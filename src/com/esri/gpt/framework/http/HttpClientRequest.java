@@ -13,6 +13,9 @@
  * limitations under the License.
  */
 package com.esri.gpt.framework.http;
+import com.esri.gpt.catalog.context.CatalogConfiguration;
+import com.esri.gpt.framework.context.ApplicationContext;
+import com.esri.gpt.framework.util.TimePeriod;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -64,8 +67,9 @@ import java.util.zip.GZIPInputStream;
  * based comminication.
  */
 public class HttpClientRequest {
-  
   /** class variables ========================================================= */
+  public static final int DEFAULT_CONNECTION_TIMEOUT = 2 * 60 * 1000; // two minutes
+  public static final int DEFAULT_RESPONSE_TIMEOUT   = 2 * 60 * 1000; // two minutes
   
   /** The Logger. */
   private static Logger LOGGER = Logger.getLogger(HttpClientRequest.class.getName());
@@ -73,6 +77,7 @@ public class HttpClientRequest {
   // methods GET PUT POST DELETE HEAD OPTIONS TRACE
   
   /** instance variables ====================================================== */
+  private HttpClient         batchHttpClient;
   private CredentialProvider credentialProvider;
   private ContentHandler     contentHandler;
   private ContentProvider    contentProvider;
@@ -81,21 +86,37 @@ public class HttpClientRequest {
   private Map<String,String> requestHeaders = new LinkedHashMap<String,String>();
   private ResponseInfo       responseInfo = new ResponseInfo();
   private String             url;
-  private int                connectionTimeOut;
-  private int                responseTimeOut;              
+  private int                connectionTimeOut = DEFAULT_CONNECTION_TIMEOUT;
+  private int                responseTimeOut   = DEFAULT_RESPONSE_TIMEOUT;              
   private int                retries = -1;
+  
   /** constructors ============================================================ */
   
-  
-
- 
-
   /** Default constructor. */
   public HttpClientRequest() {
     this.setCredentialProvider(CredentialProvider.getThreadLocalInstance());
+    this.setConnectionTimeMs(getCatalogConfiguration().getConnectionTimeOutMs());
+    this.setResponseTimeOutMs(getCatalogConfiguration().getResponseTimeOutMs());
   }
   
   /** properties **************************************************************/
+  
+  /**
+   * Gets the underlying Apache HttpClient to be used for batch requests 
+   * to the same server.
+   * @return the batch client
+   */
+  public HttpClient getBatchHttpClient() {
+    return this.batchHttpClient;
+  }
+  /**
+   * Sets the underlying Apache HttpClient to be used for batch requests 
+   * to the same server.
+   * @param batchHttpClient the batch client
+   */
+  public void setBatchHttpClient(HttpClient batchHttpClient) {
+    this.batchHttpClient = batchHttpClient;
+  }
    
   /**
    * Gets the connection time out in milliseconds.
@@ -474,6 +495,7 @@ public class HttpClientRequest {
    */
   private void determineResponseInfo(HttpMethodBase method) {
     this.getResponseInfo().setResponseMessage(method.getStatusText());
+    this.getResponseInfo().setResponseHeaders(method.getResponseHeaders());
     Header contentTypeHeader = method.getResponseHeader("Content-Type");
     if (contentTypeHeader != null) {
       HeaderElement values[] = contentTypeHeader.getElements();
@@ -507,8 +529,16 @@ public class HttpClientRequest {
     try {
       log.append("HTTP Client Request\n").append(this.getUrl());
       
+      // make the Apache HTTPClient
+      HttpClient client = this.batchHttpClient;
+      if (client == null) {
+        client = new HttpClient();
+        boolean alwaysClose = Val.chkBool(Val.chkStr(ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getParameters().getValue("httpClient.alwaysClose")), false); 
+        if (alwaysClose) {
+          client.setHttpConnectionManager(new SimpleHttpConnectionManager(true));
+        }
+      }
       
-      HttpClient client = new HttpClient();
       
       // setting timeout info
       client.getHttpConnectionManager().getParams().setConnectionTimeout(
@@ -586,9 +616,11 @@ public class HttpClientRequest {
            
       // handle the response
       if (this.getContentHandler() != null) {
-        responseStream = getResponseStream(method);
-        if (responseStream != null) {
-          this.getContentHandler().readResponse(this,responseStream);
+        if (getContentHandler().onBeforeReadResponse(this)) {
+          responseStream = getResponseStream(method);
+          if (responseStream != null) {
+            this.getContentHandler().readResponse(this,responseStream);
+          }
         }
  
         // log thre response content
@@ -671,7 +703,14 @@ public class HttpClientRequest {
     this.execute();
     return Val.removeBOM(handler.getContent());
   }
-    
+
+  /**
+   * Gets catalog configuration.
+   * @return catalog configuration
+   */
+  private CatalogConfiguration getCatalogConfiguration() {
+    return ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration();
+  }
   /** inner classes =========================================================== */
  
   /** The enumeration of upported HTTP method names. */

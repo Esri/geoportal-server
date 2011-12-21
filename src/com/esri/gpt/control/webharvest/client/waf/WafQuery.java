@@ -21,6 +21,7 @@ import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
 import java.util.HashSet;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -59,12 +60,20 @@ public WafQuery(IterationContext context, WafInfo info, WafProxy proxy, Criteria
   this.criteria = criteria;
 }
 
+@Override
 public Result execute() {
-  LOGGER.finer("Executing query: " + this);
-  WafFolder rootFolder = new WafFolderQuick(context, info, proxy, new HashSet<String>(), info.getUrl(), criteria);
-  Result r = new CommonResult(new LimitedLengthResourcesAdapter(rootFolder,criteria.getMaxRecords()));
-
-  LOGGER.finer("Completed query execution: " + this);
+  LOGGER.log(Level.FINER, "Executing query: {0}", this);
+  final DestroyableResource rootFolder = info.getUrl().toLowerCase().startsWith("ftp://") || info.getUrl().toLowerCase().startsWith("ftps://")?
+          new FtpRootFolder(context, info, criteria):
+          new WafFolderQuick(context, info, proxy, new HashSet<String>(), info.getUrl(), criteria);
+  Result r = new CommonResult(new LimitedLengthResourcesAdapter(rootFolder,criteria.getMaxRecords())) {
+      @Override
+      public void destroy() {
+        rootFolder.destroy();
+        info.destroy();
+      }
+  };
+  LOGGER.log(Level.FINER, "Completed query execution: {0}", this);
   return r;
 }
 

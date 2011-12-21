@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 /**
  * Single WAF folder.
  */
-abstract class WafFolder implements Resource {
+abstract class WafFolder implements DestroyableResource {
 
 /** logger */
 protected static final Logger LOGGER = Logger.getLogger(WafFolder.class.getCanonicalName());
@@ -55,6 +55,10 @@ public WafFolder(IterationContext context, WafInfo info, WafProxy proxy, String 
   this.proxy = proxy;
   this.url = Val.chkStr(url);
   this.criteria = criteria;
+}
+
+@Override
+public void destroy() {
 }
 
 @Override
@@ -89,7 +93,12 @@ public boolean hasNext() {
   if (!noMore && iterator == null) {
     loadFolderContent();
   }
-  return !noMore && iterator != null ? iterator.hasNext() : false;
+  boolean hasMore =  !noMore && iterator != null ? iterator.hasNext() : false;
+  if (!hasMore) {
+    noMore = true;
+    iterator = null;
+  }
+  return hasMore;
 }
 
 @Override
@@ -112,6 +121,7 @@ private void loadFolderContent() {
     StringHandler sh = new StringHandler();
     cr.setContentHandler(sh);
     cr.setCredentialProvider(info.newCredentialProvider());
+    cr.setBatchHttpClient(info.getBatchHttpClient());
     cr.execute();
     
     iterator = parseResonse(sh.getContent()).iterator();
@@ -119,6 +129,7 @@ private void loadFolderContent() {
     LOGGER.log(Level.FINER, "Loading folder content of {0} completed.", url);
   } catch (Exception ex) {
     noMore = true;
+    iterator = null;
     context.onIterationException(ex);
   }
 }

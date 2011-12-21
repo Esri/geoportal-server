@@ -17,26 +17,57 @@ package com.esri.gpt.control.webharvest.client.waf;
 import com.esri.gpt.framework.resource.api.SourceUri;
 import com.esri.gpt.framework.resource.common.CommonPublishable;
 import com.esri.gpt.framework.resource.common.UrlUri;
+import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * WAF file.
  */
 class WafFile extends CommonPublishable {
-
 private UrlUri uri;
 private WafProxy proxy;
+private WafProxy.Content content;
+private IOException storedException;
 
 public WafFile(WafProxy proxy, String url) {
   this.proxy = proxy;
   this.uri = new UrlUri(url);
 }
 
+@Override
 public SourceUri getSourceUri() {
   return uri;
 }
 
+@Override
 public String getContent() throws IOException {
-  return proxy.read(getSourceUri().asString());
+  // rethrow stored exception which occured during getUpdateDate()
+  if (storedException!=null) {
+    throw storedException;
+  }
+  if (content==null) {
+    content = proxy.readContent(getSourceUri().asString());
+  }
+  String metadata = "";
+  if (content!=null) {
+    metadata = Val.chkStr(content.getText());
+    content = null;
+  }
+  return metadata;
+}
+
+@Override
+public Date getUpdateDate() {
+  try {
+    if (content==null) {
+      content = proxy.readContent(getSourceUri().asString());
+    }
+  } catch (IOException ex) {
+    // store that exception here because getUpdateDate can not throw any exception by interface
+    // instead getContent() would rethrow this exception
+    storedException = ex;
+  }
+  return content!=null? content.getLastModifedDate(): null;
 }
 }

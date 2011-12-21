@@ -34,18 +34,23 @@ import org.w3c.dom.NodeList;
 
 import com.esri.gpt.catalog.arcims.ImsService;
 import com.esri.gpt.catalog.context.CatalogConfiguration;
+import com.esri.gpt.catalog.lucene.LuceneIndexObserver;
+import com.esri.gpt.catalog.lucene.LuceneIndexObserverInfo;
 import com.esri.gpt.catalog.lucene.ParserAdaptorInfo;
 import com.esri.gpt.catalog.lucene.ParserAdaptorInfos;
 import com.esri.gpt.catalog.search.MapViewerConfigs;
 import com.esri.gpt.catalog.search.SearchConfig;
 import com.esri.gpt.control.download.DownloadConfiguration;
 import com.esri.gpt.control.download.ItemInfo;
+import com.esri.gpt.control.webharvest.engine.DataProcessorFactory;
 import com.esri.gpt.control.webharvest.engine.HarvesterConfiguration;
+import com.esri.gpt.control.webharvest.engine.LocalDataProcessorFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactories;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInitializer;
 import com.esri.gpt.framework.collection.StringAttribute;
 import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.mail.MailConfiguration;
 import com.esri.gpt.framework.scheduler.ThreadSchedulerConfiguration;
 import com.esri.gpt.framework.security.codec.PC1_Encryptor;
@@ -71,6 +76,7 @@ import com.esri.gpt.framework.util.TimePeriod;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.NodeListAdapter;
+import java.util.List;
 
 /**
  * Application configuration loader.
@@ -128,7 +134,7 @@ public void load(ApplicationConfiguration appConfig) throws Exception {
     loadCatalog(appConfig, dom, root);
     loadScheduler(appConfig, dom, root);
     loadDownloadData(appConfig, dom, root);
-    loadHarvesterConfiguration(appConfig);
+    loadHarvesterConfiguration(appConfig, dom, root);
     loadProtocolFactories(appConfig, dom, root);
 
 
@@ -210,12 +216,21 @@ private void loadCatalog(ApplicationConfiguration appConfig, Document dom,
 
     // additional parameters
     populateParameters(cfg.getParameters(), ndCat);
+    
+    // parse http timeouts
+    String connectionTimeout = cfg.getParameters().getValue("httpClientRequest.connectionTimeout");
+    String responseTimeout   = cfg.getParameters().getValue("httpClientRequest.responseTimeout");
+    
+    // set http timeouts
+    cfg.setConnectionTimeMs((int)parsePeriod(connectionTimeout, HttpClientRequest.DEFAULT_CONNECTION_TIMEOUT).getValue());
+    cfg.setResponseTimeOutMs((int)parsePeriod(responseTimeout , HttpClientRequest.DEFAULT_RESPONSE_TIMEOUT).getValue());
   }
 
   // search configuration
   Node ndSearch = (Node) xpath.evaluate("catalog/search", root,
       XPathConstants.NODE);
   SearchConfig sCfg = appConfig.getCatalogConfiguration().getSearchConfig();
+  sCfg.setSearchConfigNode(ndSearch);
   if (ndSearch != null) {
     sCfg.setResultsReviewsShown(
         Val.chkStr(xpath.evaluate("@searchResultsReviewsShown", ndSearch)));
@@ -355,6 +370,23 @@ private void loadCatalog(ApplicationConfiguration appConfig, Document dom,
     }
 
     cfg.getLuceneConfig().setParserProxies(infos.createParserProxies());
+    
+    NodeList ndObservers = (NodeList) xpath.evaluate("observer", ndLucene, XPathConstants.NODESET);
+    for (Node ndObserver: new NodeListAdapter(ndObservers)) {
+      LuceneIndexObserverInfo info = new LuceneIndexObserverInfo();
+      info.setClassName(Val.chkStr(xpath.evaluate("@className", ndObserver)));
+      NodeList ndListProps = (NodeList) xpath.evaluate("attribute", ndObserver, XPathConstants.NODESET);
+      for (Node ndAttribute: new NodeListAdapter(ndListProps)) {
+        String key = xpath.evaluate("@key", ndAttribute);
+        String value = xpath.evaluate("@value", ndAttribute);
+        info.getAttributes().set(key, value);
+      }
+      LuceneIndexObserver observer = info.createObserver();
+      if (observer!=null) {
+        cfg.getLuceneConfig().getObservers().add(observer);
+      }
+    }
+    
   }
 
   loadMetadataAccessPolicyConfiguration(appConfig, root);
@@ -712,6 +744,10 @@ private void loadInteractiveMap(ApplicationConfiguration appConfig,
       xpath.evaluate("interactiveMap/@locatorUrl", root));
   appConfig.getInteractiveMap().setLocatorSingleFieldParameter(
       xpath.evaluate("interactiveMap/@locatorSingleFieldParameter", root));
+  appConfig.getInteractiveMap().setMapVisibleLayers(
+      xpath.evaluate("interactiveMap/@mapVisibleLayers", root));
+  appConfig.getInteractiveMap().setMapInitialExtent(
+      xpath.evaluate("interactiveMap/@mapInitialExtent", root));
 }
 
 /**
@@ -827,6 +863,7 @@ private void loadDownloadData(ApplicationConfiguration appConfig, Document dom,
     cfg.setTaskUrl(xpath.evaluate("@taskUrl", ndDownload));
     cfg.setMapServiceUrl(xpath.evaluate("@mapServiceUrl", ndDownload));
     cfg.setMapServiceType(xpath.evaluate("@mapServiceType", ndDownload));
+    cfg.setMapInitialExtent(xpath.evaluate("@mapInitialExtent", ndDownload));
 
     // load projections
     NodeList ndProjections = (NodeList) xpath.evaluate(
@@ -882,11 +919,12 @@ private void loadDownloadData(ApplicationConfiguration appConfig, Document dom,
  * Loads harvester configuration.
  * @param appConfig application configuration
  */
-private void loadHarvesterConfiguration(ApplicationConfiguration appConfig) {
+private void loadHarvesterConfiguration(ApplicationConfiguration appConfig, Document dom, Node root) throws XPathExpressionException {
   StringAttributeMap parameters = appConfig.getCatalogConfiguration().getParameters();
   HarvesterConfiguration cfg = appConfig.getHarvesterConfiguration();
 
   String active = Val.chkStr(parameters.getValue("webharvester.active"));
+  String suspended = Val.chkStr(parameters.getValue("webharvester.suspended"));
   String queueEnabled = Val.chkStr(parameters.getValue("webharvester.queueEnabled"));
   String poolsize = Val.chkStr(parameters.getValue("webharvester.poolSize"));
   String autoselectfrequency = Val.chkStr(parameters.getValue("webharvester.autoSelectFrequency"));
@@ -904,6 +942,12 @@ private void loadHarvesterConfiguration(ApplicationConfiguration appConfig) {
   } else {
     cfg.setActive(false);
     cfg.setQueueEnabled(false);
+  }
+
+  if (Val.chkBool(suspended, false)) {
+    cfg.setSuspended(true);
+  } else {
+    cfg.setSuspended(false);
   }
 
   if (queueEnabled.length()>0) {
@@ -1003,7 +1047,48 @@ private void loadHarvesterConfiguration(ApplicationConfiguration appConfig) {
     logger.log(Level.INFO, "[SYNCHRONIZER] Missing \"webharvester.resource.autoApprove\" parameter. Default {0} will be used instead.", HarvesterConfiguration.RESOURCE_AUTOAPPROVE);
     cfg.setResourceAutoApprove(HarvesterConfiguration.RESOURCE_AUTOAPPROVE);
   }
+  
+  // load data processor factories
+  XPath xpath = XPathFactory.newInstance().newXPath();
+  
+  // add local data processor factory by default
+  cfg.getDataProcessorFactories().add(new LocalDataProcessorFactory());
 
+  // get root of webharvester configuration
+  Node ndWebHarvester = (Node) xpath.evaluate("webharvester", root, XPathConstants.NODE);
+  if (ndWebHarvester!=null) {
+    // create and initialize data processor for each netry in configuration
+    NodeList ndDataProcessorFactories = (NodeList) xpath.evaluate("dataProcessorFactory", ndWebHarvester, XPathConstants.NODESET);
+    for (Node ndDataProcessorFactory : new NodeListAdapter(ndDataProcessorFactories)) {
+      String className = Val.chkStr((String) xpath.evaluate("@className", ndDataProcessorFactory, XPathConstants.STRING));
+      String name = Val.chkStr((String) xpath.evaluate("@name", ndDataProcessorFactory, XPathConstants.STRING));
+      boolean enabled = Val.chkBool(Val.chkStr((String) xpath.evaluate("@enabled", ndDataProcessorFactory, XPathConstants.STRING)), true);
+      if (enabled) {
+        try {
+          Class factoryClass = Class.forName(className);
+          DataProcessorFactory processorFactory = (DataProcessorFactory) factoryClass.newInstance();
+          processorFactory.setName(name);
+          processorFactory.init(ndDataProcessorFactory);
+          cfg.getDataProcessorFactories().add(processorFactory);
+        } catch (Exception ex) {
+          getLogger().log(Level.SEVERE, "Error creating processor factory: "+className, ex);
+        }
+      } else {
+        if (LocalDataProcessorFactory.class.getCanonicalName().equals(className)) {
+          removeDataProcessorFactory(cfg.getDataProcessorFactories(), className);
+        }
+      }
+    }
+  }
+}
+
+private void removeDataProcessorFactory(List<DataProcessorFactory> factories, String factoryClassName) {
+  for (DataProcessorFactory factory : factories) {
+    if (factory.getClass().getCanonicalName().equals(factoryClassName)) {
+      factories.remove(factory);
+      break;
+    }
+  }
 }
 
 /**
@@ -1016,13 +1101,20 @@ private void loadProtocolFactories(ApplicationConfiguration appConfig, Document 
 
   Node ndProtocols = (Node) xpath.evaluate("protocols", root, XPathConstants.NODE);
   if (ndProtocols!=null) {
+    // check 'default' attribute of the 'protcols' node; if present and true than initialize default factories
+    boolean defaultValue = Val.chkBool((String) xpath.evaluate("@default", ndProtocols, XPathConstants.STRING),false);
+    if (defaultValue) {
+        factories.initDefault();
+    }
+    
+    // initilaize explicit protocol factories
     NodeList lstProtocol = (NodeList) xpath.evaluate("protocol", ndProtocols, XPathConstants.NODESET);
     for (Node ndProto : new NodeListAdapter(lstProtocol)) {
       String factoryClass = (String) xpath.evaluate("@factoryClass", ndProto, XPathConstants.STRING);
       try {
         Class fc = Class.forName(factoryClass);
         ProtocolFactory factory = (ProtocolFactory) fc.newInstance();
-        ProtocolInitializer.init(null, ndProto);
+        ProtocolInitializer.init(factory, ndProto);
         factories.put(factory.getName(), factory);
       } catch (Exception ex) {
         getLogger().log(Level.WARNING, "Error loading protocol: "+factoryClass, ex);
@@ -1055,6 +1147,24 @@ private void populateParameters(StringAttributeMap parameters, Node parent)
     if (sKey.length() > 0) {
       parameters.add(new StringAttribute(sKey, sValue));
     }
+  }
+}
+  
+/**
+ * Safely parses time period giving default value if time period can not be parsed.
+ * @param periodDef period definition to parse
+ * @param defaultValue default value if period definition cannot be parsed
+ * @return time period
+ */
+private TimePeriod parsePeriod(String periodDef, long defaultValue) {
+  try {
+    periodDef = Val.chkStr(periodDef);
+    if (periodDef.isEmpty()) {
+      return new TimePeriod(defaultValue);
+    }
+    return TimePeriod.parseValue(periodDef);
+  } catch (IllegalArgumentException ex) {
+    return new TimePeriod(defaultValue);
   }
 }
 }

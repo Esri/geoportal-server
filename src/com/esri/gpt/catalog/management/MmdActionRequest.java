@@ -25,6 +25,8 @@ import com.esri.gpt.framework.request.ActionResult;
 import com.esri.gpt.framework.security.metadata.MetadataAcl;
 import com.esri.gpt.framework.security.principal.Groups;
 import com.esri.gpt.framework.security.principal.Publisher;
+import com.esri.gpt.framework.util.Val;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -39,6 +41,8 @@ import java.util.ArrayList;
  * <li>setReviewed = Set as Reviewed</li>
  * <li>transfer = Transfer Ownership</li>
  * <li>delete = Delete</li>
+ * <li>shareWith = Share with a collection</li>
+ * <li>dontShareWith = Don't share with a collection</li>
  */
 public class MmdActionRequest extends MmdRequest {
 
@@ -148,6 +152,13 @@ public void execute() throws Exception {
     executeAssignAcl(adminDao, uuids, groups, acl);
     // }
   }
+  
+  // check collection sharing (isPartOf)
+  if (sAction.equalsIgnoreCase("shareWith") || sAction.equalsIgnoreCase("dontShareWith") ) {
+    String colUuid = Val.chkStr(getActionCriteria().getSharingCollectionUuid());
+    this.executeAssignCollection(sAction,colUuid,uuids);
+  }
+  
 }
 
 /**
@@ -201,6 +212,29 @@ public void execute(MmdQueryCriteria queryCriteria) throws Exception {
   }
 
   getActionResult().setNumberOfRecordsModified(nRows);
+}
+
+/**
+ * Share or unshare with a collection.
+ * @param option the option ("shareWith" or "dontShareWith")
+ * @param colUuid the collection UUID
+ * @param uuids the set of document UUID's
+ * @throws SQLException if a database exception occurs
+ * @throws CatalogIndexException if a document indexing exception occurs
+ */
+private void executeAssignCollection(String option, String colUuid, StringSet uuids) 
+  throws SQLException, CatalogIndexException {
+  ActionResult result = getActionResult();
+  if (colUuid.length() > 0) {
+    CollectionDao colDao = new CollectionDao(this.getRequestContext());
+    if (option.equalsIgnoreCase("shareWith")) {
+      int nMod = colDao.addMembers(getPublisher(),uuids,colUuid);
+      result.setNumberOfRecordsModified(nMod);
+    } else if (option.equalsIgnoreCase("dontShareWith")) {
+      int nMod = colDao.removeMembers(getPublisher(),uuids,colUuid);
+      result.setNumberOfRecordsModified(nMod);
+    }
+  }
 }
 
 /**

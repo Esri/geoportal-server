@@ -14,7 +14,7 @@
 	      <g:body>
 	      
           <!-- Citation tab -->
-          <h:div g:extends="$base/xtn/gmd/identification/XTN_Tab_IdentificationCitation.xml"/>
+          <h:div g:extends="$base/xtn/gmd/identification/XTN_Tab_IdentificationCitation_Service.xml"/>
        
           <!-- Abstract tab -->
           <h:div g:label="$i18n.catalog.iso19139.MD_Metadata.section.identification.abstract">

@@ -14,27 +14,21 @@
  */
 package com.esri.gpt.server.csw.client;
 
+import com.esri.gpt.framework.search.DcList;
+import com.esri.gpt.framework.search.SearchXslProfile;
+import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
-
-import org.apache.axis.utils.XMLUtils;
 import org.xml.sax.SAXException;
 
-import com.esri.gpt.catalog.search.SearchException;
-import com.esri.gpt.framework.search.DcList;
-import com.esri.gpt.framework.search.SearchXslProfile;
-import com.esri.gpt.framework.util.Val;
-
-
+ 
 
 /**
  * The Class CswProfile.  Hold the class statically if you intend to use
@@ -108,7 +102,6 @@ public CswProfile(String id, String name, String description, String kvp,
 }
 
 // properties ==================================================================
-
 
 // methods =====================================================================
 
@@ -209,6 +202,51 @@ public String generateCSWGetRecordsRequest(CswSearchCriteria search)
 }
 
 /**
+ * Read a CSW metadata response for search engine local.  
+ * Will populate record referenceList and record metadataResourceUrl
+ * The CSW metadata response is read. The CSw record is updated with the
+ * metadata
+ * 
+ * @param response the response
+ * @param record the record
+ * 
+ * @throws TransformerException the transformer exception
+ * 
+ */
+public void readCSWGetMetadataByIDResponseLocal(String response, CswRecord record)
+    throws TransformerException {
+  String metadataxslt = this.getMetadataxslt();
+  if (metadataxslt == null || metadataxslt.equals("")) {
+    record.setFullMetadata(Utils.chkStr(response));
+  } else {
+ 
+    LOG.finer("Transforming GetRecordByID intermidiate xml to GetRecordById " +
+    		"Native");
+    
+    String result = this.getMetadataXsltObj().transform(Utils.chkStr(response));
+        
+    String xmlUrl = null;
+    String dctReferences = result;
+    LOG.finer("Native GetRecordBYID from transform = " + dctReferences);
+    DcList lstDctReferences = new DcList(dctReferences);
+    
+    Iterator<DcList.Value> iter = lstDctReferences.iterator();
+    while(iter.hasNext()) {
+      DcList.Value value = iter.next();
+      if(value.getValue().toLowerCase().endsWith(".xml") 
+          || value.getScheme().equals(SCHEME_METADATA_DOCUMENT)) {
+        xmlUrl = value.getValue();
+      }
+    }
+    record.setReferences(lstDctReferences);
+    LOG.finer("URL to view full metadata document found = " + xmlUrl);
+    record.setMetadataResourceURL(xmlUrl);
+  }
+
+}
+
+
+/**
  * Read a CSW metadata response.  Will populate record referenceList and record metadataResourceUrl
  * The CSW metadata response is read. The CSw record is updated with the
  * metadata
@@ -220,7 +258,7 @@ public String generateCSWGetRecordsRequest(CswSearchCriteria search)
  * @throws IOException Exception while reading 
  * 
  */
-public void readCSWGetMetadataByIDResponse(String recordByIdResponse, CswRecord record)
+public void readCSWGetMetadataByIDResponse(CswClient cswClient, String recordByIdResponse, CswRecord record)
     throws TransformerException, IOException {
   String metadataxslt = this.getMetadataxslt();
   if (metadataxslt == null || metadataxslt.equals("")) {
@@ -253,7 +291,6 @@ public void readCSWGetMetadataByIDResponse(String recordByIdResponse, CswRecord 
     // used
     String indirectUrlXml = null;
     if(!Val.chkStr(record.getMetadataResourceURL()).equals("")) {
-      CswClient cswClient = new CswClient();
       InputStream istRealDoc = cswClient.submitHttpRequest("GET", 
           Utils.chkStr(record.getMetadataResourceURL()), "", "", "");
       indirectUrlXml = Val.chkStr(Utils.getInputString2(istRealDoc));

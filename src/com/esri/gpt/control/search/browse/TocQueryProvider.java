@@ -81,8 +81,8 @@ public class TocQueryProvider {
             for (String value: values) {
               value = Val.chkStr(value);
               if (value.length() > 0) {
-                if (sbQuery.length() > 0) sbQuery.append(" ");
-                sbQuery.append("+").append(toField).append(":");
+                if (sbQuery.length() > 0) sbQuery.append(" OR ");
+                sbQuery.append(toField).append(":");
                 sbQuery.append("\"").append(value).append("\"");
               }
             }

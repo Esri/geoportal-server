@@ -29,9 +29,9 @@
   // read the XML string associated with the UUID
   if (sUuid.length() > 0) {
     try {
-      sXml = readXml(request,sUuid);
+      sXml = readXml(request,sUuid,bAsAttachment);
       if (sXml.length() == 0) {
-        sErr = "Download Failed.";
+        //sErr = "Download Failed.";
       }
     } catch (Exception e) {
       sErr = "Download Failed.";
@@ -73,7 +73,7 @@
 <%!
 
 // read the XML string associated with the UUID
-private String readXml(HttpServletRequest request, String uuid) throws Exception {
+private String readXml(HttpServletRequest request, String uuid, boolean bAsAttachment) throws Exception {
   String sXml = "";
   RequestContext context = null;
   try {
@@ -81,6 +81,14 @@ private String readXml(HttpServletRequest request, String uuid) throws Exception
     Publisher publisher = new Publisher(context);
     MetadataDocument mdDoc = new MetadataDocument();
     sXml = mdDoc.prepareForDownload(context,publisher,uuid);
+    
+    com.esri.gpt.framework.collection.StringAttributeMap params = context.getCatalogConfiguration().getParameters();
+    String s = Val.chkStr(params.getValue("Administration.viewMetadata.stripStyleSheets"));
+    boolean bStripStyleSheets = s.equalsIgnoreCase("true");
+    if (!bAsAttachment && bStripStyleSheets) {
+      //sXml = sXml.replaceAll("<\\?xml\\-stylesheet.*\\?>|<\\!DOCTYPE.*>","");
+      sXml = sXml.replaceAll("<\\?xml\\-stylesheet.+?>|<\\!DOCTYPE.+?>","");
+    }
   } finally {
     if (context != null) {
       context.onExecutionPhaseCompleted();

@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.control.webharvest.client.oai;
 
+import com.esri.gpt.control.webharvest.common.CommonInfo;
 import com.esri.gpt.framework.http.CredentialProvider;
 import com.esri.gpt.framework.util.Val;
 import java.text.SimpleDateFormat;
@@ -22,7 +23,7 @@ import java.util.Date;
 /**
  * OAI service info.
  */
-class OaiInfo {
+class OaiInfo extends CommonInfo {
 /** Date format. */
 private static final SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
 /** Verify string. */

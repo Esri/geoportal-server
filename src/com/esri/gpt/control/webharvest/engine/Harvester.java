@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.management.MBeanServer;
@@ -98,6 +99,7 @@ public class Harvester implements HarvesterMBean {
     super.finalize();
   }
 
+  @Override
   public void startup() {
     if (!getRunning()) {
       init();
@@ -118,12 +120,13 @@ public class Harvester implements HarvesterMBean {
       LOGGER.info("[SYNCHRONIZER] Initializing synchronizer engine.");
       this.taskQueue = new TaskQueue();
       this.pool = new Pool(
-        new DataProcessor(messageBroker, cfg.getBaseContextPath(), listenerArray),
+        new DataProcessorDispatcher(createDataProcessors(messageBroker, cfg.getBaseContextPath(), listenerArray)),
         taskQueue, cfg.getPoolSize());
 
       if (cfg.getAutoSelectFrequency() > 0) {
         this.autoSelector = new AutoSelector(cfg.getAutoSelectFrequency()) {
 
+          @Override
           protected void onSelect(HrRecord resource) {
             if (ProtocolInvoker.getUpdateContent(resource.getProtocol())) {
               RequestContext context = RequestContext.extract(null);
@@ -167,6 +170,7 @@ public class Harvester implements HarvesterMBean {
     resetRunning();
   }
 
+  @Override
   public boolean getRunning() {
     return pool != null && taskQueue != null;
   }
@@ -174,6 +178,7 @@ public class Harvester implements HarvesterMBean {
   /**
    * Shuts down harvesting engine.
    */
+  @Override
   public void shutdown() {
     if (getRunning()) {
       LOGGER.info("[SYNCHRONIZER] Shutting down synchronizer.");
@@ -192,11 +197,13 @@ public class Harvester implements HarvesterMBean {
     }
   }
 
+  @Override
   public void setPoolSize(int size) {
     if (pool != null)
       pool.resize(size);
   }
 
+  @Override
   public int getPoolSize() {
     return pool != null ? pool.size() : 0;
   }
@@ -226,7 +233,8 @@ public class Harvester implements HarvesterMBean {
    */
   public Statistics getStatistics(String uuid) {
     ExecutionUnit unit = pool != null ? pool.getExecutionUnitFor(uuid) : null;
-    return unit != null ? unit.getReportBuilder() : null;
+    ExecutionUnitHelper helper = new ExecutionUnitHelper(unit);
+    return helper.getReportBuilder();
   }
 
   /**
@@ -257,7 +265,7 @@ public class Harvester implements HarvesterMBean {
       }
       criteria.setFromDate(fromDate);
       submitted = !isExecutingLocally(resource.getUuid()) && (taskQueue != null ? taskQueue.add(context, resource, criteria) : false);
-      LOGGER.finer("[SYNCHRONIZER] Submitted resource: " + resource.getUuid() + " (" + resource.getName() + ")");
+      LOGGER.log(Level.FINER, "[SYNCHRONIZER] Submitted resource: {0} ({1})", new Object[]{resource.getUuid(), resource.getName()});
     }
     return submitted;
   }
@@ -283,7 +291,7 @@ public class Harvester implements HarvesterMBean {
       submitted = pool != null && taskQueue != null ? !pool.isExecuting(resource.getUuid()) && taskQueue.register(context, resource, criteria) : false;
       if (submitted)
         pool.span(resource, criteria);
-      LOGGER.finer("[SYNCHRONIZER] Submitted resource: " + resource.getUuid() + " (" + resource.getName() + ")");
+      LOGGER.log(Level.FINER, "[SYNCHRONIZER] Submitted resource: {0} ({1})", new Object[]{resource.getUuid(), resource.getName()});
     }
     return submitted;
   }
@@ -295,7 +303,7 @@ public class Harvester implements HarvesterMBean {
    * @return <code>true</code> if has been canceled properly
    */
   public boolean cancel(RequestContext context, String uuid) {
-    LOGGER.finer("[SYNCHRONIZER] Canceled resource: " + uuid);
+    LOGGER.log(Level.FINER, "[SYNCHRONIZER] Canceled resource: {0}", uuid);
     // drop resource already being harvested
     boolean dropped = pool != null? pool.drop(uuid): false;
     // withdraw from the queue
@@ -413,6 +421,7 @@ public class Harvester implements HarvesterMBean {
      * Called on start of harvesting ofthe specific repository.
      * @param repository repository
      */
+    @Override
     public void onHarvestStart(HrRecord repository) {
       for (Harvester.Listener l : this) {
         l.onHarvestStart(repository);
@@ -423,6 +432,7 @@ public class Harvester implements HarvesterMBean {
      * Called on end of harvesting ofthe specific repository.
      * @param repository repository
      */
+    @Override
     public void onHarvestEnd(HrRecord repository) {
       for (Harvester.Listener l : this) {
         l.onHarvestEnd(repository);
@@ -436,6 +446,7 @@ public class Harvester implements HarvesterMBean {
      * @param uuid metadata UUID
      * @param metadata metadata full text
      */
+    @Override
     public void onHarvestMetadata(HrRecord repository, SourceUri sourceUri, String metadata) {
       for (Harvester.Listener l : this) {
         l.onHarvestMetadata(repository, sourceUri, metadata);
@@ -449,6 +460,7 @@ public class Harvester implements HarvesterMBean {
      * @param uuid metadata UUID
      * @param metadata metadata full text
      */
+    @Override
     public void onPublishMetadata(HrRecord repository, SourceUri sourceUri, String uuid, String metadata) {
       for (Harvester.Listener l : this) {
         l.onPublishMetadata(repository, sourceUri, uuid, metadata);
@@ -460,6 +472,7 @@ public class Harvester implements HarvesterMBean {
      * @param repository repository
      * @param sourceUri metadata source URI
      */
+    @Override
     public void onIterationException(HrRecord repository, Exception ex) {
       for (Harvester.Listener l : this) {
         l.onIterationException(repository, ex);
@@ -471,6 +484,7 @@ public class Harvester implements HarvesterMBean {
      * @param repository repository
      * @param sourceUri metadata source URI
      */
+    @Override
     public void onHarvestException(HrRecord repository, SourceUri sourceUri, Exception ex) {
       for (Harvester.Listener l : this) {
         l.onHarvestException(repository, sourceUri, ex);
@@ -483,10 +497,45 @@ public class Harvester implements HarvesterMBean {
      * @param sourceUri metadata source URI
      * @param metadata metadata full text
      */
+    @Override
     public void onPublishException(HrRecord repository, SourceUri sourceUri, String metadata, Exception ex) {
       for (Harvester.Listener l : this) {
         l.onPublishException(repository, sourceUri, metadata, ex);
       }
     }
+  }
+  
+  public void safeSuspend() {
+    LOGGER.info("[SYNCHRONIZER] Suspending harvester");
+    if (pool!=null) {
+      pool.safeSuspend();
+    }
+    if (watchDog!=null) {
+      watchDog.safeSuspend();
+    }
+    if (autoSelector!=null) {
+      autoSelector.safeSuspend();
+    }
+  }
+  
+  public void safeResume() {
+    LOGGER.info("[SYNCHRONIZER] Resuming harvester");
+    if (autoSelector!=null) {
+      autoSelector.safeResume();
+    }
+    if (watchDog!=null) {
+      watchDog.safeResume();
+    }
+    if (pool!=null) {
+      pool.safeResume();
+    }
+  }
+  
+  private List<DataProcessor> createDataProcessors(MessageBroker messageBroker, String baseContextPath, Harvester.Listener listener) {
+    List<DataProcessor> processors = new ArrayList<DataProcessor>();
+    for (DataProcessorFactory factory : cfg.getDataProcessorFactories()) {
+      processors.add(factory.newProcessor(messageBroker, baseContextPath, listener));
+    }
+    return processors;
   }
 }

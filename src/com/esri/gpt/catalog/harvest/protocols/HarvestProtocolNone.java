@@ -14,8 +14,6 @@
  */
 package com.esri.gpt.catalog.harvest.protocols;
 
-import com.esri.gpt.catalog.harvest.clients.HRClient;
-import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidProtocolException;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
@@ -26,64 +24,30 @@ import com.esri.gpt.framework.resource.query.QueryBuilder;
 public class HarvestProtocolNone extends HarvestProtocol {
 
 // class variables =============================================================
-
 // instance variables ==========================================================
-
 // constructors ================================================================
-
 // properties ==================================================================
-/**
- * Gets protocol type.
- * @return protocol type
- */
-public final ProtocolType getType() {
-  return ProtocolType.None;
-}
+  /**
+   * Gets protocol type.
+   * @return protocol type
+   * @deprecated 
+   */
+  @Override
+  @Deprecated
+  public final ProtocolType getType() {
+    return ProtocolType.None;
+  }
+
+  @Override
+  public String getKind() {
+    return "None";
+  }
 
 // methods =====================================================================
-/**
- * Gets all the attributes.
- * @return attributes as attribute map (always empty)
- */
-protected StringAttributeMap extractAttributeMap() {
-  return new StringAttributeMap();
-}
 
-/**
- * Gets all the attributes.
- * @return attributes as attribute map (always empty)
- */
-public StringAttributeMap getAttributeMap() {
-  return new StringAttributeMap();
-}
-
-/**
- * Sets all the attributes.
- * @param attributeMap attributes as attribute map (ignored)
- */
-protected void applyAttributeMap(StringAttributeMap attributeMap) {
-}
-
-/**
- * Sets all the attributes.
- * @param attributeMap attributes as attribute map (ignored)
- */
-public void setAttributeMap(StringAttributeMap attributeMap) {
-}
-
-/**
- * Gets harvest client.
- * @return <code>null</code> value
- */
-@Override
-public HRClient getClient(String hostUrl) 
-  throws HRInvalidProtocolException {
-  throw new HRInvalidProtocolException(
-    HRInvalidProtocolException.ProtocolElement.protocol,
-    "Unable to create harvest repository client for the protocol.");
-}
-
-public QueryBuilder newQueryBuilder(IterationContext context, String url) {
-  return null;
-}
+  @Override
+  public QueryBuilder newQueryBuilder(IterationContext context, String url) {
+    // there is no query builder here
+    return null;
+  }
 }

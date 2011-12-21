@@ -14,23 +14,14 @@
  */
 package com.esri.gpt.control.webharvest.client.csw;
 
-import com.esri.gpt.framework.isodate.IsoDateFormat;
 import com.esri.gpt.control.webharvest.IterationContext;
-import com.esri.gpt.framework.util.ReadOnlyIterator;
+import com.esri.gpt.framework.isodate.IsoDateFormat;
 import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.query.Criteria;
-import com.esri.gpt.framework.util.Val;
-import com.esri.gpt.server.csw.client.CswRecords;
-import com.esri.gpt.server.csw.client.CswSearchCriteria;
-import com.esri.gpt.server.csw.client.CswSearchRequest;
-import com.esri.gpt.server.csw.client.CswSearchResponse;
-import com.esri.gpt.server.csw.client.Envelope;
-import com.esri.gpt.server.csw.client.NullReferenceException;
-
+import com.esri.gpt.framework.util.ReadOnlyIterator;
+import com.esri.gpt.server.csw.client.*;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
@@ -66,6 +57,7 @@ public CswFolders(IterationContext context, CswProxy proxy, Criteria criteria) {
   this.criteria = criteria;
 }
 
+@Override
 public Iterator<Resource> iterator() {
   return new CswFolderIterator();
 }
@@ -81,6 +73,7 @@ private ArrayList<Resource> nextCswrecords = null;
 /** no more records*/
 private boolean noMore;
 
+@Override
 public boolean hasNext() {
   if (!noMore && nextCswrecords == null) {
     if (criteria!=null && criteria.getMaxRecords()!=null && nextStartRecord>criteria.getMaxRecords()) {
@@ -97,6 +90,7 @@ public boolean hasNext() {
   return !noMore;
 }
 
+@Override
 public Resource next() {
   if (!hasNext()) {
     throw new NoSuchElementException();
@@ -104,6 +98,7 @@ public Resource next() {
   final Iterable<Resource> records = nextCswrecords;
   nextCswrecords = null;
   return new Resource() {
+    @Override
     public Iterable<Resource> getNodes() {
       return records;
     }

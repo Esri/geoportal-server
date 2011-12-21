@@ -7,7 +7,7 @@
 	xmlns:h="http://www.esri.com/geoportal/gxe/html">
 
 	<!-- metadata standard name -->
-	<g:element g:targetName="metstdn" g:value="FGDC Content Standards for Digital Geospatial" 
+	<g:element g:targetName="metstdn" g:value="FGDC Content Standard for Digital Geospatial Metadata" 
 		g:label="$i18n.catalog.fgdc.metainfo.metstdn"
 		g:extends="$base/core/xml/ElementTextOnly.xml">
 		<g:body>

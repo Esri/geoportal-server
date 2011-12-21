@@ -349,7 +349,7 @@ public String getRendererType() {
 
 @Override
 public void release() {
-  LOG.info("Releasing variables");
+  LOG.finer("Releasing variables");
   this.action = null;
   this.actionListener = null;
   this.cssPrefix = null;
@@ -378,7 +378,7 @@ public void release() {
 @Override
 protected void setProperties(UIComponent component) {
   super.setProperties(component);
-  LOG.info("Setting UIComponent properties");
+  LOG.finer("Setting UIComponent properties");
       
   tagSupport.setActionBind(
       component, UIPagination.ComponentMapKeys.action.name(),

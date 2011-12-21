@@ -16,8 +16,6 @@ package com.esri.gpt.catalog.harvest.protocols;
 
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
-import com.esri.gpt.catalog.harvest.clients.HRCSWClient;
-import com.esri.gpt.catalog.harvest.clients.HRClient;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.csw.CswQueryBuilder;
 import com.esri.gpt.framework.collection.StringAttributeMap;
@@ -30,100 +28,76 @@ import com.esri.gpt.framework.util.Val;
 public class HarvestProtocolCsw extends AbstractHTTPHarvestProtocol {
 
 // class variables =============================================================
-/** Default profile */  
-private static String DEFAULT_PROFILE = "";
-static {
-  ApplicationContext appCtx = ApplicationContext.getInstance();
-  ApplicationConfiguration appCfg = appCtx.getConfiguration();
-  DEFAULT_PROFILE = appCfg.getCatalogConfiguration().getSearchConfig().getCswProfile();
-}
+  /** Default profile */
+  private static String DEFAULT_PROFILE = "";
+
+  static {
+    ApplicationContext appCtx = ApplicationContext.getInstance();
+    ApplicationConfiguration appCfg = appCtx.getConfiguration();
+    DEFAULT_PROFILE = appCfg.getCatalogConfiguration().getSearchConfig().getCswProfile();
+  }
 // instance variables ==========================================================
-/** CSW profile. */
-private String _profile = DEFAULT_PROFILE;
+  /** CSW profile. */
+  private String _profile = DEFAULT_PROFILE;
 
 // constructors ================================================================
-
 // properties ==================================================================
-/**
- * Gets profile.
- * @return profile
- */
-public String getProfile() {
-  return _profile;
-}
+  /**
+   * Gets profile.
+   * @return profile
+   */
+  public String getProfile() {
+    return _profile;
+  }
 
-/**
- * Sets profile.
- * @param profile profile
- */
-public void setProfile(String profile) {
-  _profile = Val.chkStr(profile);
-}
+  /**
+   * Sets profile.
+   * @param profile profile
+   */
+  public void setProfile(String profile) {
+    _profile = Val.chkStr(profile);
+  }
 
-/**
- * Gets protocol type.
- * @return protocol type
- */
-public final ProtocolType getType() {
-  return ProtocolType.CSW;
-}
+  /**
+   * Gets protocol type.
+   * @return protocol type
+   * @deprecated 
+   */
+  @Override
+  @Deprecated
+  public final ProtocolType getType() {
+    return ProtocolType.CSW;
+  }
+
+  @Override
+  public String getKind() {
+    return "CSW";
+  }
 
 // methods =====================================================================
-/**
- * Gets all the attributes.
- * @return attributes as attribute map
- */
-@Override
-protected StringAttributeMap extractAttributeMap() {
-  StringAttributeMap properties = super.extractAttributeMap();
 
-  properties.set("profile", getProfile());
+  /**
+   * Gets all the attributes.
+   * @return attributes as attribute map
+   */
+  @Override
+  public StringAttributeMap getAttributeMap() {
+    StringAttributeMap properties = new StringAttributeMap();
+    properties.set("profile", getProfile());
+    return properties;
+  }
 
-  return properties;
-}
-/**
- * Gets all the attributes.
- * @return attributes as attribute map
- */
-@Override
-public StringAttributeMap getAttributeMap() {
-  StringAttributeMap properties = super.getAttributeMap();
+  /**
+   * Sets all the attributes.
+   * @param attributeMap attributes as attribute map
+   */
+  @Override
+  public void setAttributeMap(StringAttributeMap attributeMap) {
+    setProfile(chckAttr(attributeMap.get("profile")));
+  }
 
-  properties.set("profile", getProfile());
-
-  return properties;
-}
-
-/**
- * Sets all the attributes.
- * @param attributeMap attributes as attribute map
- */
-@Override
-protected void applyAttributeMap(StringAttributeMap attributeMap) {
-  super.applyAttributeMap(attributeMap);
-  setProfile(chckAttr(attributeMap.get("profile")));
-}
-
-/**
- * Sets all the attributes.
- * @param attributeMap attributes as attribute map
- */
-@Override
-public void setAttributeMap(StringAttributeMap attributeMap) {
-  super.setAttributeMap(attributeMap);
-  setProfile(chckAttr(attributeMap.get("profile")));
-}
-
-/**
- * Gets harvest client.
- * @return harvest client
- */
-@Override
-public HRClient getClient(String hostUrl) {
-  return new HRCSWClient(hostUrl, getProfile());
-}
-
-public QueryBuilder newQueryBuilder(IterationContext context, String url) {
-  return new CswQueryBuilder(context, this, url);
-}
+  @Override
+  public QueryBuilder newQueryBuilder(IterationContext context, String url) {
+    return new CswQueryBuilder(context, this, url);
+  }
 }

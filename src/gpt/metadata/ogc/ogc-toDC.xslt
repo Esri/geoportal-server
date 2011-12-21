@@ -176,6 +176,9 @@
 				</xsl:for-each>
 				<!-- WMS bounding box -->
 				<xsl:choose>
+					<xsl:when test="//wms:EX_GeographicBoundingBox">
+						<xsl:call-template name="WMS_EX_GeographicBoundingBox"/>				
+					</xsl:when>
 					<xsl:when test="//wms:LatLonBoundingBox |
 									  //LatLonBoundingBox |
 									  //LatLonBoundingBox | 	
@@ -183,9 +186,6 @@
 									  ">
 						<xsl:call-template name="WMS_BoundingBox"/>
 					</xsl:when>			
-					<xsl:when test="//wms:EX_GeographicBoundingBox">
-						<xsl:call-template name="WMS_EX_GeographicBoundingBox"/>				
-					</xsl:when>
 				
 				<!-- WCS / WFS / SPS bounding box -->
 					<xsl:when test=" //ows:LowerCorner | //ows11:LowerCorner | //gml:LowerCorner | //gml:pos[1] | //gml:coord[1] | //gml:lowerCorner | //gml:Envelope[@srsName='EPSG:4326'] ">
@@ -347,20 +347,6 @@
 	</xsl:template>
 	<xsl:template name="WMS_EX_GeographicBoundingBox">
 		<ows:WGS84BoundingBox xsl:exclude-result-prefixes="wps100 swe myorg tml sml sps sos10 wfs wcs wcs11 wcs111 csw csw202 gml">		
-			<xsl:choose>	
-		<xsl:when test="/wms:WMS_Capabilities/@version = '1.3.0' or /WMS_Capabilities/@version = '1.3.0' or /wms:WMT_MS_Capabilities/@version = '1.3.0' or /WMT_MS_Capabilities/@version = '1.3.0' " >
-			<ows:LowerCorner>
-				<xsl:call-template name="getSouthBound"/>
-				<xsl:value-of select="' '"/>
-				<xsl:call-template name="getWestBound"/>
-			</ows:LowerCorner>
-			<ows:UpperCorner>
-				<xsl:call-template name="getNorthBound"/>
-				<xsl:value-of select="' '"/>
-				<xsl:call-template name="getEastBound"/>
-			</ows:UpperCorner>
-		</xsl:when>		
-		<xsl:otherwise>
 		 <ows:LowerCorner>
 				<xsl:call-template name="getWestBound"/>
 				<xsl:value-of select="' '"/>
@@ -370,9 +356,7 @@
 				<xsl:call-template name="getEastBound"/>
 				<xsl:value-of select="' '"/>
 				<xsl:call-template name="getNorthBound"/>
-			</ows:UpperCorner>
-		</xsl:otherwise>
-		</xsl:choose>					
+			</ows:UpperCorner>			
 		</ows:WGS84BoundingBox>
 	</xsl:template>
 	<xsl:template name="getMinx">

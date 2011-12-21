@@ -21,6 +21,7 @@ import com.esri.gpt.catalog.harvest.repository.HrHarvestRequest;
 import com.esri.gpt.catalog.harvest.repository.HrResult;
 import java.util.ArrayList;
 
+import com.esri.gpt.catalog.management.CollectionDao;
 import com.esri.gpt.catalog.management.MmdActionCriteria;
 import com.esri.gpt.catalog.management.MmdActionRequest;
 import com.esri.gpt.catalog.management.MmdActionResult;
@@ -40,6 +41,7 @@ import com.esri.gpt.framework.security.identity.NotAuthorizedException;
 import com.esri.gpt.framework.security.identity.local.SimpleIdentityAdapter;
 import com.esri.gpt.framework.security.principal.Publisher;
 import com.esri.gpt.framework.util.Val;
+import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.collection.StringSet;
 
 import javax.faces.component.UIComponent;
@@ -55,13 +57,16 @@ public class ManageMetadataController extends BaseActionListener {
 // class variables =============================================================
 
 // instance variables ==========================================================
-private MmdCriteria          _criteria;
-private PageCursorPanel      _pageCursorPanel;
-private MmdResult            _result;
-private SelectablePublishers _selectablePublishers;
+private MmdCriteria           _criteria;
+private PageCursorPanel       _pageCursorPanel;
+private MmdResult             _result;
+private SelectableCollections _selectableCollections;
+private SelectablePublishers  _selectablePublishers;
 private SelectableGroups      _candidateGroups;
-private MetadataAccessPolicy _metadataAccessPolicyConfig;
-private MmdQueryCriteria     _queryCriteriaForAction = new MmdQueryCriteria();
+private MetadataAccessPolicy  _metadataAccessPolicyConfig;
+private MmdQueryCriteria      _queryCriteriaForAction = new MmdQueryCriteria();
+private boolean               _useCollections = false;
+
 /** protocol definitions */
 private static final ProtocolDef [] protocolDefs = {
   new ProtocolDef("", "catalog.harvest.manage.edit.protocol.any", false),
@@ -71,6 +76,7 @@ private static final ProtocolDef [] protocolDefs = {
   new ProtocolDef("oai", "catalog.harvest.manage.edit.protocol.oai", false),
   new ProtocolDef("waf", "catalog.harvest.manage.edit.protocol.waf", false),
   new ProtocolDef("csw", "catalog.harvest.manage.edit.protocol.csw", false),
+  new ProtocolDef("thredds", "catalog.harvest.manage.edit.protocol.thredds", false),
   /* NOTE! This is EXPERIMENTAL feature. It might be removed at any time in the future.
   new ProtocolDef("agp", "catalog.harvest.manage.edit.protocol.agp", false),
    */
@@ -82,11 +88,11 @@ public ManageMetadataController() {
   super();
   setResult(new MmdResult());
 
-  // initialize the selectable publishers
-  _selectablePublishers = new SelectablePublishers();
 
-  //initial the candidate groups
+  // initialize the selectablables
+  _selectablePublishers = new SelectablePublishers();
   _candidateGroups = new SelectableGroups();
+  _selectableCollections = new SelectableCollections();
 
   // initialize the page cursor panel
   String sExpression = "#{ManageMetadataController.processAction}";
@@ -143,6 +149,17 @@ public MmdActionCriteria getActionCriteria() {
  */
 private MmdActionResult getActionResult() {
   return getResult().getActionResult();
+}
+
+/**
+ * Determine if apply to all is allowable.
+ * @return <code>true</code> if apply to all is allowable
+ */
+public boolean getAllowApplyToAll() {
+  RequestContext context = this.getContextBroker().extractRequestContext();
+  StringAttributeMap params = context.getCatalogConfiguration().getParameters();
+  String s = Val.chkStr(params.getValue("catalog.admin.allowApplyToAll"));
+  return !s.equalsIgnoreCase("false");
 }
 
 /**
@@ -233,11 +250,29 @@ private void setResult(MmdResult result) {
 }
 
 /**
+ * Gets list of selectable collections.
+ * @return the list of selectable collections
+ */
+public SelectableCollections getSelectableCollections() {
+  return _selectableCollections;
+}
+
+/**
  * Gets list of selectable publishers.
  * @return the list of selectable publishers
  */
 public SelectablePublishers getSelectablePublishers() {
   return _selectablePublishers;
+}
+
+/**
+ * Determine if collections are in use.
+ * @return <code>true</code> if collections are in use
+ */
+public boolean getUseCollections() {
+  RequestContext context = this.getContextBroker().extractRequestContext();
+  CollectionDao colDao = new CollectionDao(context);
+  return colDao.getUseCollections();
 }
 
 /**
@@ -359,6 +394,10 @@ private void executeSearch(ActionEvent event, RequestContext context,
   MmdQueryRequest request;
   request = new MmdQueryRequest(context, publisher, getCriteria(), getResult());
   request.execute();
+  
+  // determine if collections are in use
+  CollectionDao colDao = new CollectionDao(context);
+  boolean useCollections = colDao.getUseCollections();
 
   // set the resource messages for the results
   String sMsg;
@@ -374,6 +413,16 @@ private void executeSearch(ActionEvent event, RequestContext context,
     sValue = record.getPublicationMethod();
     sMsg = msgBroker.retrieveMessage("catalog.publication.manageMetadata.method."+sValue);
     record.setPublicationMethodMsg(sMsg);
+    
+    // collection membership
+    if (useCollections) {
+      sValue = Val.chkStr(record.getCollectionMembership());
+      if (sValue.length() > 0) {
+        Object[] p = new String[]{sValue};
+        sMsg = msgBroker.retrieveMessage("catalog.publication.manageMetadata.sharing.collection.popup",p);
+        record.setCollectionMembership(sMsg);
+      }
+    }
   }
 }
 
@@ -468,8 +517,14 @@ private void executeFind(ActionEvent event, RequestContext context, MmdActionCri
 @Override
 protected void onPrepareView(final RequestContext context) throws Exception {
 
+  CollectionDao colDao = new CollectionDao(context);
+  this._useCollections = colDao.getUseCollections();
+  if (this._useCollections) {
+    this.prepareCollections(context);
+  }
+  
   // build the selectable list of publishers
-  getSelectablePublishers().build(context, true);
+  getSelectablePublishers().build(context,true);
   prepareAccessPolicyConfig(context);
   prepareGroups(context);
   prepareActionCriteria(context);
@@ -486,6 +541,11 @@ private void prepareAccessPolicyConfig(RequestContext context) throws Exception 
       _metadataAccessPolicyConfig.setAccessToGroupDN("protected");
     }
   }
+}
+
+private void prepareCollections(RequestContext context) throws Exception {
+  if (false) return;
+  this.getSelectableCollections().buildAll(context);
 }
 
 private void prepareGroups(RequestContext context) throws Exception {

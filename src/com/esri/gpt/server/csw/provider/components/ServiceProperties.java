@@ -24,6 +24,7 @@ import com.esri.gpt.framework.util.Val;
 public class ServiceProperties {
   
   /** instance variables ====================================================== */
+  private boolean             allowTransactions = true;
   private Map<String,Object>  additionalProperties = new HashMap<String,Object>();
   private String              cswSubContextPath;
   private String              httpContextPath;
@@ -54,6 +55,21 @@ public class ServiceProperties {
    */
   public void setAdditionalProperties(Map<String,Object> additionalProperties) {
     this.additionalProperties = additionalProperties;
+  }
+  
+  /**
+   * Gets the status indicating if transactions are allowed at this end-point.
+   * @return true if transactions are allowed
+   */
+  public boolean getAllowTransactions() {
+    return this.allowTransactions;
+  }
+  /**
+   * Sets the status indicating if transactions are allowed at this end-point.
+   * @param allowTransactions true transactions are allowed
+   */
+  public void setAllowTransactions(boolean allowTransactions) {
+    this.allowTransactions = allowTransactions;
   }
   
   /**

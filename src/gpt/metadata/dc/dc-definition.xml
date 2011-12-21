@@ -50,7 +50,7 @@
 
     <parameter key="identification.title"> 
       <label resourceKey="catalog.mdParam.identification.title"/>
-      <input type="text" maxlength="4000" defaultValue="Untitled"/>
+      <input type="text" maxlength="4000"/>
       <validation required="true"/>
       <content useSelectForUpdate="true"
                select="/rdf:RDF/rdf:Description/dc:title"/>

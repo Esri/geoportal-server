@@ -287,6 +287,23 @@
     <servlet-name>GxeServlet</servlet-name>
     <url-pattern>/gxe/definition</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GxeServlet</servlet-name>
+    <url-pattern>/gxe/details</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GxeServlet</servlet-name>
+    <url-pattern>/gxe/types</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>SingleIndexingServlet</servlet-name>
+    <servlet-class>com.esri.gpt.catalog.lucene.SingleIndexingServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SingleIndexingServlet</servlet-name>
+    <url-pattern>/indexer</url-pattern>
+  </servlet-mapping>
   
   <session-config>
     <session-timeout>30</session-timeout>

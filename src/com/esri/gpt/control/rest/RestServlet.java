@@ -17,6 +17,7 @@ package com.esri.gpt.control.rest;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -37,7 +38,9 @@ import com.esri.gpt.catalog.search.SearchResultRecords;
 import com.esri.gpt.control.georss.JsonFeedWriter;
 import com.esri.gpt.control.georss.KmlFeedWriter;
 import com.esri.gpt.control.georss.RecordSnippetWriter;
+import com.esri.gpt.control.georss.RestQueryServlet;
 import com.esri.gpt.control.georss.KmlFeedWriter.KmlSignatureProvider;
+import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.BaseServlet;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
@@ -98,6 +101,23 @@ protected void execute(HttpServletRequest request,
   Format format = extractFormat(request);
   setContentType(response,format);
   PrintWriter writer = response.getWriter();
+  
+  // extra params
+  Map<String,String> extraMap = new HashMap<String,String>();
+  extraMap.put(RestQueryServlet.PARAM_KEY_SHOW_THUMBNAIL, 
+      request.getParameter(RestQueryServlet.PARAM_KEY_SHOW_THUMBNAIL));
+  extraMap.put(RestQueryServlet.PARAM_KEY_SHOW_RELATIVE_URLS, 
+      request.getParameter(RestQueryServlet.PARAM_KEY_SHOW_RELATIVE_URLS));
+  extraMap.put(RestQueryServlet.PARAM_KEY_IS_JSFREQUEST, 
+      request.getParameter(RestQueryServlet.PARAM_KEY_IS_JSFREQUEST));
+  context.getObjectMap().put(RestQueryServlet.EXTRA_REST_ARGS_MAP, extraMap);
+  if(request.getScheme().toLowerCase().equals("https")
+      && extraMap.get(RestQueryServlet.PARAM_KEY_SHOW_THUMBNAIL) == null) {
+    String agent = request.getHeader("user-agent");
+    if (agent != null && agent.toLowerCase().indexOf("msie") > -1) {
+      extraMap.put(RestQueryServlet.PARAM_KEY_SHOW_THUMBNAIL, "false");
+    }
+  }
 
   try {
 
@@ -145,7 +165,7 @@ protected void execute(HttpServletRequest request,
       default:
       case xml: {
           String sMetadata = dao.getMetadataAsText(id);
-          printXml(writer, sMetadata);
+          printXml(context, writer, sMetadata);
         }
         break;
     }
@@ -153,7 +173,8 @@ protected void execute(HttpServletRequest request,
   } catch (Exception ex) {
 
     response.setContentType("text/plain;charset=UTF-8");
-    writer.println("Error getting metadata: " + ex.getMessage());
+    String s = "Unable to return the document associated with the supplied identifier.";
+    writer.println(s);
     LogUtil.getLogger().log(Level.SEVERE, "Error getting metadata", ex);
 
   } finally {
@@ -266,8 +287,17 @@ private void printHtmlFragment(MessageBroker msgBroker,
  * @throws SearchException if extracting document failed
  * @throws SchemaException if parsing document failed
  */
-private void printXml(PrintWriter writer, String sMetadata)
+private void printXml(RequestContext context, PrintWriter writer, String sMetadata)
   throws SearchException, SchemaException {
+  
+  StringAttributeMap params = context.getCatalogConfiguration().getParameters();
+  String s = Val.chkStr(params.getValue("RestServlet.printXml.stripStyleSheets"));
+  boolean bStripStyleSheets = s.equalsIgnoreCase("true");
+  if (bStripStyleSheets) {
+    //sMetadata = sMetadata.replaceAll("<\\?xml\\-stylesheet.*\\?>|<\\!DOCTYPE.*>","");
+    sMetadata = sMetadata.replaceAll("<\\?xml\\-stylesheet.+?>|<\\!DOCTYPE.+?>","");
+  }
+  
   MetadataDocument document = new MetadataDocument();
   String sXml = document.prepareForFullViewing(sMetadata);
   writer.write(sXml);

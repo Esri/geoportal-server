@@ -31,6 +31,12 @@ public static final String REASONCODE_PARAMETER_ISINVALID = "parameterIsInvalid"
 /** Reason code parameter is required = "parameterIsRequired" */
 public static final String REASONCODE_PARAMETER_ISREQUIRED = "parameterIsRequired";
 
+/** Reason code Schematron exception = "schematronException" */
+public static final String REASONCODE_SCHEMATRON_EXCEPTION = "schematronException";
+
+/** Reason code Schematron rule violation = "schematronViolation" */
+public static final String REASONCODE_SCHEMATRON_VIOLATION = "schematronViolation";
+
 /** Reason code title is required = "titleIsRequired" */
 public static final String REASONCODE_TITLE_ISREQUIRED = "titleIsRequired";
 
@@ -44,6 +50,8 @@ public static final String REASONCODE_XSD_ISINVALID = "xsdIsInvalid";
 public static final String REASONCODE_XSD_VIOLATION = "xsdViolation";
   
 // instance variables ==========================================================
+protected String  location;
+
 private String    _message = "";
 private Parameter _parameter;
 private String    _reasonCode = ValidationError.REASONCODE_PARAMETER_ISINVALID;
@@ -146,6 +154,10 @@ public void setReasonCode(String reasonCode) {
     _reasonCode = ValidationError.REASONCODE_PARAMETER_ISREQUIRED;
   } else if (reasonCode.equalsIgnoreCase(ValidationError.REASONCODE_PARAMETER_ISINVALID)) {
     _reasonCode = ValidationError.REASONCODE_PARAMETER_ISINVALID;
+  } else if (reasonCode.equalsIgnoreCase(ValidationError.REASONCODE_SCHEMATRON_EXCEPTION)) {
+    _reasonCode = ValidationError.REASONCODE_SCHEMATRON_EXCEPTION;
+  } else if (reasonCode.equalsIgnoreCase(ValidationError.REASONCODE_SCHEMATRON_VIOLATION)) {
+    _reasonCode = ValidationError.REASONCODE_SCHEMATRON_VIOLATION;
   } else if (reasonCode.equalsIgnoreCase(ValidationError.REASONCODE_TITLE_ISREQUIRED)) {
     _reasonCode = ValidationError.REASONCODE_TITLE_ISREQUIRED;
   } else if (reasonCode.equalsIgnoreCase(ValidationError.REASONCODE_XML_ISINVALID)) {

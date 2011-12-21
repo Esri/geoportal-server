@@ -78,6 +78,8 @@
   gptMapConfig.locatorURL = "<%=imConfig.getLocatorUrl()%>";
   gptMapConfig.locatorSingleFieldParameter = "<%=imConfig.getLocatorSingleFieldParameter()%>";
   gptMapConfig.locatorGraphicURL = "<%=request.getContextPath()%>/catalog/images/pushpin_red.gif";
+  gptMapConfig.mapVisibleLayers = "<%=imConfig.getMapVisibleLayers()%>";
+  gptMapConfig.mapInitialExtent = "<%=imConfig.getMapInitialExtent()%>";
 </script>
 
 <f:verbatim>
@@ -123,6 +125,7 @@ dojo.declare("SearchMap", null, {
     config.locatorInputId = "frmSearchCriteria:mapInput-locate";
     config.locatorCandidatesId = "locatorCandidates";
     esriConfig.defaults.io.proxyUrl = "<%=request.getContextPath()%>/catalog/download/proxy.jsp";
+    esri.config.defaults.io.proxyUrl = "<%=request.getContextPath()%>/catalog/download/proxy.jsp";
 
     this._gptMap = new GptMap();
     dojo.connect(this._gptMap,"onMapLoaded",this,"onMapLoaded");
@@ -153,6 +156,16 @@ dojo.declare("SearchMap", null, {
       if (agsMap != null) {
         dojo.connect(agsMap,"onMouseMove",this, "onMouseMove");
         dojo.connect(agsMap,"onMouseOut",this, "onMouseOut");
+      }
+      if (gptMapConfig.mapServiceType=="openstreet" || gptMapConfig.mapServiceType=="wmts") {
+        var slider = dojo.byId("interactiveMap_zoom_slider");
+        if (slider!=null) {
+          if (dojo.isIE) {
+            slider.style.height="120px";
+          } else {
+            slider.style.height="170px";
+          }
+        }
       }
     }
   },
@@ -197,13 +210,25 @@ dojo.declare("SearchMap", null, {
             symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_NULL,
                      new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID,
                      new dojo.Color([255,0,0]), 2), new dojo.Color([255,255,0,0.1]));
-            graphic.setSymbol(symbol);
+            
             graphic.gptSRTag = "frmSearchCriteria:mdRecords:"+aRecordIDs[iRecord]+":_metadataMainRecordTable";
-
-		        if (invalidRing) {
+            
+             if(pts[3].x == pts[2].x  && pts[3].y == pts[2].y) {
+              symbol = new esri.symbol.SimpleMarkerSymbol(
+                  esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE, 8, 
+                  new esri.symbol.SimpleLineSymbol(
+                      esri.symbol.SimpleLineSymbol.STYLE_SOLID, 
+                      new dojo.Color([255,0,0]), 1), 
+                      new dojo.Color([255,255,0,0.1]));
+              graphic.setGeometry(pts[3]);
+              graphic.gptArea = 0;
+              graphic.setSymbol(symbol);
+            } else if (invalidRing) {
 		          graphic.setGeometry(null);
 		          graphic.gptArea = 0;
+		          graphic.setSymbol(symbol);
 		        } else {
+		        	graphic.setSymbol(symbol);
 		          poly = new esri.geometry.Polygon(pts[0].spatialReference);
               // this has been added to adjust to the JS API 1.5 requirement to
               // have all rings as closed polygons (last point is equal to the first)
@@ -243,10 +268,23 @@ dojo.declare("SearchMap", null, {
       for (i=0, n=aGfx.length; i<n; i++) {
         graphic = aGfx[i];
         if ( graphic.geometry!=null && graphic.gptSRTag != null && graphic.gptSRTag == sTag) {
-          symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_NULL,
+        	if(graphic.symbol instanceof esri.symbol.MarkerSymbol)
+          {
+        		symbol = new esri.symbol.SimpleMarkerSymbol(
+                        esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE, 8, 
+                        new esri.symbol.SimpleLineSymbol(
+                            esri.symbol.SimpleLineSymbol.STYLE_SOLID, 
+                            new dojo.Color([255,0,0]), 1), 
+                            new dojo.Color([255,255,0,0.3]));
+        		if (bHighlight) 
+        			symbol.color = new dojo.Color([255,255,0,0.9]);
+        	} else {
+            symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_NULL,
                    new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID,
                    new dojo.Color([255,0,0]), 2), new dojo.Color([255,255,0,0.3]));
-          if (bHighlight) symbol.style = esri.symbol.SimpleFillSymbol.STYLE_SOLID;
+            if (bHighlight) symbol.style = 
+            	esri.symbol.SimpleFillSymbol.STYLE_SOLID;
+        	}
           graphic.setSymbol(symbol);
         }
       }
@@ -263,8 +301,8 @@ dojo.declare("SearchMap", null, {
 	  if (lMinY < -90)   {lMinY = -90;}
 	  if (lMaxY < lMinY) {tmp = lMaxY; lMaxY = lMinY; lMinY = tmp;}
 	  if (lMaxX < lMinX) {lMaxX = 180; lMinX = -180;}
-	  if (lMaxX > 180 )  {lMaxX = 180;}
-	  if(lMinX < -180 )  {lMinX = -180;}
+	  if (lMaxX > 179.99 )  {lMaxX = 179.99;}
+	  if (lMinX < -179.99 )  {lMinX = -179.99;}
 	  return new esri.geometry.Extent(lMinX,lMinY,lMaxX,lMaxY,new esri.SpatialReference({wkid:4326}));
 	},
 	
@@ -322,24 +360,51 @@ dojo.declare("SearchMap", null, {
     }
   },
 
-  onMouseMove: function(event) {
-    var agsMap = null, bFound = false;
-    var aGfx, i, n, graphic, geometry, symbol, rec, recClass, fillStyle, fillColor;
-    if (this._gptMap != null) agsMap = this._gptMap.getAgsMap();
-    if ((agsMap != null) && (agsMap.graphics != null) && (agsMap.graphics.graphics != null)) {
-      aGfx = agsMap.graphics.graphics;
-      var validEnvs = new Array();
-      var validEnvsIndx = new Array();
-      for (i=aGfx.length-1;i>=0; i--) {
-        graphic = aGfx[i];
-        geometry = graphic.geometry;
-        if (graphic.geometry!=null && graphic.gptSRTag != null && event && 
-          event.mapPoint && geometry!=null && geometry.contains(event.mapPoint)) {
-           validEnvs[graphic.gptSRTag] = "done";
-           validEnvsIndx[validEnvsIndx.length] = graphic.gptSRTag;
-           
-        }
-      }   
+  pointToExtent: function(
+	      /*esri.Map*/ map, 
+	      /*esri.geometry.Point (in map coords)*/ point) {
+	    toleranceInPixel = 10;
+	    //calculate map coords represented per pixel
+	    var pixelWidth = map.extent.getWidth() / map.width;
+	    //calculate map coords for tolerance in pixel
+	    var toleraceInMapCoords = toleranceInPixel * pixelWidth;
+	    //calculate & return computed extent
+	    return new esri.geometry.Extent( point.x - toleraceInMapCoords,
+	                                     point.y - toleraceInMapCoords,
+	                                     point.x + toleraceInMapCoords,
+	                                     point.y + toleraceInMapCoords,
+	                                     map.spatialReference ); 
+	  }, onMouseMove: function(event) {
+	    var agsMap = null, bFound = false;
+	    var aGfx, i, n, graphic, geometry, symbol, rec, recClass, fillStyle, fillColor;
+	    if (this._gptMap != null) agsMap = this._gptMap.getAgsMap();
+	    if ((agsMap != null) && (agsMap.graphics != null) && (agsMap.graphics.graphics != null)) {
+	      aGfx = agsMap.graphics.graphics;
+	      var validEnvs = new Array();
+	      var validEnvsIndx = new Array();
+	      for (i=aGfx.length-1;i>=0; i--) {
+	        graphic = aGfx[i];
+	        geometry = graphic.geometry;
+	        var tmpGraphic = {};
+	        if(graphic.geometry instanceof esri.geometry.Point) {
+	          tmpGraphic.geometry = this.pointToExtent(agsMap, graphic.geometry)
+	          tmpGraphic.gptSRTag = graphic.gptSRTag;
+	        }
+	        if(graphic.geometry!=null && graphic.gptSRTag != null && event && 
+	          event.mapPoint && geometry!=null) {
+	        	 var geomInScope = false;
+	        	 if(geometry instanceof esri.geometry.Point) {
+	        		 geomInScope = (this.pointToExtent(agsMap, event.mapPoint))
+	        		   .contains(geometry);
+	        	 } else {
+	        		 geomInScope = geometry.contains(event.mapPoint);
+	        	 }
+	        	 if(geomInScope == true) {
+	             validEnvs[graphic.gptSRTag] = "done";
+	             validEnvsIndx[validEnvsIndx.length] = graphic.gptSRTag;
+	        	 }
+	        }
+	      }
       for (i=aGfx.length-1;i>=0; i--) {
         graphic = aGfx[i];
         if (graphic.geometry!=null && graphic.gptSRTag != null) {
@@ -347,6 +412,7 @@ dojo.declare("SearchMap", null, {
           geometry = graphic.geometry;
           fillStyle = esri.symbol.SimpleFillSymbol.STYLE_NULL;
           fillColor = new dojo.Color([255,255,0,0.3]);
+          var highlight = false;
           if (validEnvs[graphic.gptSRTag] != null) {
             
             if (!bFound || graphic.gptSRTag == validEnvsIndx[0]  ) {
@@ -354,13 +420,33 @@ dojo.declare("SearchMap", null, {
               recClass= "selectedResultRow";
             } else {
               recClass= "selectedResultRowLight";
+              highlight = true;
             }
             bFound = true;
           }
-          symbol = new esri.symbol.SimpleFillSymbol(fillStyle,
+          if(graphic.geometry instanceof esri.geometry.Point) {
+        	  if(  recClass.indexOf("selected") == 0) {
+        		  symbol = new esri.symbol.SimpleMarkerSymbol(
+                          esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE, 8, 
+                          new esri.symbol.SimpleLineSymbol(
+                              esri.symbol.SimpleLineSymbol.STYLE_SOLID, 
+                              new dojo.Color([255,0,0]), 1), 
+                              new dojo.Color([255,255,0,0.9]));
+        	  } else {
+        	    symbol = new esri.symbol.SimpleMarkerSymbol(
+                      esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE, 8, 
+                      new esri.symbol.SimpleLineSymbol(
+                          esri.symbol.SimpleLineSymbol.STYLE_SOLID, 
+                          new dojo.Color([255,0,0]), 1), 
+                          new dojo.Color([255,255,0,0.1]));
+        	  }
+        	  graphic.setSymbol(symbol);
+          } else {
+            symbol = new esri.symbol.SimpleFillSymbol(fillStyle,
                    new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID,
                    new dojo.Color([255,0,0]), 2), fillColor);
-          graphic.setSymbol(symbol);
+            graphic.setSymbol(symbol);
+          }
           rec = document.getElementById(graphic.gptSRTag);
           if (rec != null) rec.className = recClass;
         }
@@ -420,14 +506,29 @@ dojo.declare("SearchMap", null, {
 
 
   zoomAnywhere: function zoomAnywhere() {
-    if (this._gptMap != null) this._gptMap.zoomToDefault();
+    if (this._gptMap != null) {
+      if (this._gptMap._initialExtent!=null) {
+        this._gptMap.zoomToInitial();
+      } else {
+        this._gptMap.zoomToDefault();
+      }
+    }
   },
 
   zoomToFootPrint: function(rowIndex) {
     var oBBox,extent;
-    if ((this._gptMap != null) && (typeof(jsMetadata) != 'undefined') && (typeof(jsMetadata.records[rowIndex]) != 'undefined')) {
+    if ((this._gptMap != null) && (typeof(jsMetadata) != 'undefined') 
+    		&& (typeof(jsMetadata.records[rowIndex]) != 'undefined')) {
       oBBox = jsMetadata.records[rowIndex].enclosingEnvelope;
       extent = this.getProcessedExtent(oBBox);
+      if(extent.xmin == extent.xmax && extent.ymin == extent.ymax) {
+    	  // This is a point
+    	  extent.xmin = extent.xmin - 0.005;
+    	  extent.xmax = extent.xmax + 0.005;
+    	  extent.ymin = extent.ymin - 0.005;
+        extent.ymax = extent.ymax + 0.005;
+    	  //extent = extent.expand(2);
+      }
       this._gptMap.zoomToGCSExtent(extent,true);
     }
   },

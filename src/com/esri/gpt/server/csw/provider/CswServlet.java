@@ -25,6 +25,7 @@ import com.esri.gpt.server.csw.provider.components.OwsException;
 import com.esri.gpt.server.csw.provider.components.RequestHandler;
 import com.esri.gpt.server.csw.provider.local.ProviderFactory;
 
+import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletConfig;
@@ -44,8 +45,9 @@ public class CswServlet extends BaseServlet {
   private static Logger LOGGER = Logger.getLogger(CswServlet.class.getName());
   
   /** instance variables ====================================================== */
-  private String cswSubContextPath;
-  private String resourceFilePrefix;
+  private boolean allowTransactions = true;
+  private String  cswSubContextPath;
+  private String  resourceFilePrefix;
       
   /** methods ================================================================= */
   
@@ -61,6 +63,8 @@ public class CswServlet extends BaseServlet {
     super.init(config);
     this.cswSubContextPath = config.getInitParameter("cswSubContextPath");
     this.resourceFilePrefix = config.getInitParameter("resourceFilePrefix");
+    String s = Val.chkStr(config.getInitParameter("allowTransactions"));
+    this.allowTransactions = !s.equalsIgnoreCase("false");
   }
      
   /**
@@ -80,6 +84,14 @@ public class CswServlet extends BaseServlet {
     String sParamsLC = Val.chkStr(request.getQueryString());
     if (sParamsLC.indexOf("getxml=") != -1) {
       sGetXmlUuid = Val.chkStr(request.getParameter("getxml"));
+      
+      // try to decode uuids that have been mistakenly double encoded by an external client
+      if (sGetXmlUuid.startsWith("%7B")) {
+        try {
+          String s = java.net.URLDecoder.decode(sGetXmlUuid,"UTF-8");
+          sGetXmlUuid = Val.chkStr(s);
+        } catch (UnsupportedEncodingException ue) {}
+      }
     }
     
     // return the full xml if requested
@@ -196,6 +208,9 @@ public class CswServlet extends BaseServlet {
     IProviderFactory factory = new ProviderFactory();
     RequestHandler handler = factory.makeRequestHandler(
         request,context,this.cswSubContextPath,this.resourceFilePrefix);
+    if (handler != null) {
+      handler.getOperationContext().getServiceProperties().setAllowTransactions(this.allowTransactions);
+    }
     return handler;
   }
   

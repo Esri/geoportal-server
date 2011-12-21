@@ -37,6 +37,12 @@ import java.io.Writer;
   protected abstract int getMapHeightAdjustment();
 
   /**
+   * Initializes new layer.
+   * @return initializes new layer
+   */
+  protected String initializeNewLayer() { return ""; }
+  
+  /**
    * Finalizes live data layer.
    * @return layer finalization code
    */
@@ -56,6 +62,7 @@ import java.io.Writer;
     return true;
   }
 
+  @Override
   public void render(Writer writer) throws IOException {
     String newLayer = newLayerDeclaration();
     boolean isNewLayer = newLayer.length()>0;
@@ -64,51 +71,99 @@ import java.io.Writer;
     pwriter.println("{");
     pwriter.println("init: function(widget){");
     pwriter.println(
-      "    var node = widget.getPlaceholder();"+
-      "    var style = widget.getMapStyle();"+
-      "    var styles = style.split(\";\");" +
-      "    for (var i=0; i<styles.length; i++) {" +
-      "       if (styles[i].indexOf(\"height\")>=0) {" +
-      "          var helm = styles[i].split(\":\");" +
-      "          if (helm.length==2) {" +
-      "             var height = parseInt(helm[1]);" +
-      "             height = height + (" +getMapHeightAdjustment()+ ");" +
-      "             styles[i] = \"height: \" + height + \"px\";" +
-      "          }" +
-      "       }" +
-      "       if (styles[i].indexOf(\"width\")>=0) {" +
-      "          var welm = styles[i].split(\":\");" +
-      "          if (welm.length==2) {" +
-      "             var width = parseInt(welm[1]);" +
-      "             width -= 2;" +
-      "             styles[i] = \"width: \" + width + \"px\";" +
-      "          }" +
-      "       }" +
-      "    }" +
+      "    var node = widget.getPlaceholder();\r\n"+
+      "    var style = widget.getMapStyle();\r\n"+
+      "    var geometryService = widget.getGeometryServiceUrl();\r\n"+
+      "    var mapService = widget.getMapServiceUrl();\r\n"+
+      "    var mapVisibleLayers = widget.getMapVisibleLayers();\r\n"+
+      "    var mapInitialExtent = widget.getMapInitialExtent();\r\n"+
+      "    var styles = style.split(\";\");\r\n" +
+      "    for (var i=0; i<styles.length; i++) {\r\n" +
+      "       if (styles[i].indexOf(\"height\")>=0) {\r\n" +
+      "          var helm = styles[i].split(\":\");\r\n" +
+      "          if (helm.length==2) {\r\n" +
+      "             var height = parseInt(helm[1]);\r\n" +
+      "             height = height + (" +getMapHeightAdjustment()+ ");\r\n" +
+      "             styles[i] = \"height: \" + height + \"px\";\r\n" +
+      "          }\r\n" +
+      "       }\r\n" +
+      "       if (styles[i].indexOf(\"width\")>=0) {\r\n" +
+      "          var welm = styles[i].split(\":\");\r\n" +
+      "          if (welm.length==2) {\r\n" +
+      "             var width = parseInt(welm[1]);\r\n" +
+      "             width -= 2;\r\n" +
+      "             styles[i] = \"width: \" + width + \"px\";\r\n" +
+      "          }\r\n" +
+      "       }\r\n" +
+      "    }\r\n" +
       "    style = styles.join(\";\");"
     );
     pwriter.print("node.innerHTML =\"");
     writeToolbarNode(pwriter,isNewLayer);
     writeMapNode(pwriter);
     pwriter.println("\";");
-    pwriter.println("node.geometryService = (widget.getGeometryServiceUrl()!=null && widget.getGeometryServiceUrl().length>0)? new esri.tasks.GeometryService(widget.getGeometryServiceUrl()): null;");
+    pwriter.println("node.geometryService = (geometryService!=null && geometryService.length>0)? new esri.tasks.GeometryService(geometryService): null;");
     pwriter.println("node.liveDataMap = new esri.Map(widget.getMapId());");
     pwriter.println("dojo.connect(window,\"onresize\",node.liveDataMap,\"reposition\");");
     if (generateBaseMap()) {
-      pwriter.println("node.baseMapLayer = new esri.layers.ArcGISDynamicMapServiceLayer(widget.getMapServiceUrl());");
-      pwriter.println("node.baseMapLayer.setImageFormat(\"jpg\");");
+      pwriter.println("if (widget.getMapServiceType()==\"openstreet\") {");
+      pwriter.println("  node.baseMapLayer = new esri.layers.OpenStreetMapLayer();");
+      pwriter.println("} else if (widget.getMapServiceType()==\"dynamic\") {");
+      pwriter.println("  node.baseMapLayer = new esri.layers.ArcGISDynamicMapServiceLayer(mapService);");
+      pwriter.println("  node.baseMapLayer.setImageFormat(\"jpg\");");
+      pwriter.println("} else if (widget.getMapServiceType()==\"tiled\") {");
+      pwriter.println("  node.baseMapLayer = new esri.layers.ArcGISTiledMapServiceLayer(mapService);");
+      pwriter.println("} else if (widget.getMapServiceType()==\"wms\") {");
+      pwriter.println("  node.baseMapLayer = new esri.layers.WMSLayer(mapService);");
+      pwriter.println("  if (esri.version < 2.4) {");
+      pwriter.println("    node.baseMapLayer.extent = new esri.geometry.Extent({\"xmin\":-180,\"ymin\":-90,\"xmax\":180,\"ymax\":90,\"spatialReference\":{\"wkid\":4326}});");
+      pwriter.println("  }");
+      pwriter.println("  node.baseMapLayer.setVisibleLayers(eval(mapVisibleLayers));");
+      pwriter.println("  node.baseMapLayer.setImageFormat(\"png\");");
+      pwriter.println("} else if (widget.getMapServiceType()==\"wmts\") {");
+      pwriter.println("    var layerInfo = new esri.layers.WMTSLayerInfo({");
+      pwriter.println("        identifier: \"world\",");
+      pwriter.println("        tileMatrixSet: \"EPSG:4326\",");
+      pwriter.println("        format: \"png\"");
+      pwriter.println("    });");
+      pwriter.println("    var options = {");
+      pwriter.println("      serviceMode: \"KVP\",");
+      pwriter.println("      layerInfo: layerInfo");
+      pwriter.println("    };");
+      pwriter.println("  node.baseMapLayer = new esri.layers.WMTSLayer(mapService,options);");
+      pwriter.println("}");
       pwriter.println("node.liveDataMap.addLayer(node.baseMapLayer);");
+      pwriter.println("if (widget.getMapServiceType() == \"openstreet\") {");
+      pwriter.println("    dojo.create(\"div\",{\"class\": \"openstreetmapPreview\", innerHTML: \"Map data © OpenStreetMap contributors, CC-BY-SA\"},\"gpt_LiveData_0-preview_layers\",\"last\");");
+      pwriter.println("}");
+      pwriter.println("dojo.query(\".logo-med\").style(\"bottom\",\"40px\");");
     }
     if (isNewLayer) {
       pwriter.println("node.liveDataLayer = " + newLayer + ";");
       pwriter.println(finalizeNewLayer());
+      pwriter.println("if (widget.getMapServiceType()==\"openstreet\") {");
+      pwriter.println(initializeNewLayer());
+      pwriter.println("}");
       String extentDef = createExtentDef();
       if (!generateBaseMap()) {
         pwriter.println("node.liveDataMap.addLayer(node.liveDataLayer);");
       }
-      if (extentDef!=null) {
-        pwriter.println("dojo.connect(node.liveDataMap,\"onLoad\",null,function(map) {gpt.LiveData.setExtent(node.liveDataMap," +extentDef+ ",node.geometryService);});");
-      }
+      pwriter.println("dojo.connect(node.liveDataMap,\"onLoad\",null,function(map) {\r\n"
+                    + "  var extentDef = " + (extentDef!=null? extentDef: "null") + ";\r\n"
+                    + "  var initialExtent = null;\r\n" 
+                    + "  if (mapInitialExtent!=null && mapInitialExtent.length>0) {\r\n"
+                    + "    try {\r\n"
+                    + "      initialExtent = eval(\"new esri.geometry.Extent({\"+mapInitialExtent+\"})\");\r\n"
+                    + "    } catch (err) {\r\n"
+                    + "      initialExtent = null;\r\n"
+                    + "    }\r\n"
+                    + "  }\r\n"
+                    + "  if (initialExtent!=null) {\r\n"
+                    + "    gpt.LiveData.setExtent(node.liveDataMap,initialExtent,node.geometryService);\r\n"
+                    + "  } else if (extentDef!=null) {\r\n"
+                    + "    gpt.LiveData.setExtent(node.liveDataMap,extentDef,node.geometryService);\r\n"
+                    + "  }"
+                    + "});");
     }
     pwriter.println("node.navToolbar = new esri.toolbars.Navigation(node.liveDataMap);");
     pwriter.println("dojo.connect(dojo.byId(\"zoomfullext-hook\"),\"onclick\",null,function(event) { gpt.LiveData.setExtent(node.liveDataMap,new esri.geometry.Extent({xmin: -90, ymin: -180, xmax: 90, ymax: 180, spatialReference: {wkid: 4326}}),node.geometryService); });");

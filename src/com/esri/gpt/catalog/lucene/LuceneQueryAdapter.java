@@ -213,6 +213,9 @@ public class LuceneQueryAdapter extends DiscoveryQueryAdapter {
         filter = new AclFilter(Storeables.FIELD_ACL,aclValues);
       }
       
+      // isPartOf filter
+      filter = IsPartOfFilter.make(reqContext,filter);
+      
       // make the schema filter
       if (cswQueryOptions != null) {
         String schemaName = Val.chkStr(cswQueryOptions.getSchemaFilter());

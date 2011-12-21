@@ -33,10 +33,11 @@ public class TocItem {
   /** instance variables ====================================================== */
   private List<TocItem> children = new ArrayList<TocItem>();
   private boolean       isValid = true;
+  private String        id;
   private String        name;
   private String        query;
   private String        resourceKey;
-  private String        type;
+  private String        type;  
   
   /** constructors ============================================================ */
   
@@ -62,6 +63,22 @@ public class TocItem {
   }
   
   /**
+   * Gets the id.
+   * @return the id
+   */  
+  public String getId() {
+	return id;
+  }
+
+  /**
+   * Sets the id.
+   * @param id the id
+   */
+  public void setId(String id) {
+	this.id = id;
+  }
+
+/**
    * Gets the name.
    * @return the name
    */
@@ -218,6 +235,8 @@ public class TocItem {
           hadName = (Val.chkStr(this.getName()).length() > 0);
         } else if (nodeName.equalsIgnoreCase("type")) {
           this.setType(ndChild.getTextContent());
+        } else if (nodeName.equalsIgnoreCase("id")) {
+            this.setId(ndChild.getTextContent());
         }
       }
     }
@@ -279,11 +298,18 @@ public class TocItem {
     String line;
     boolean hc = this.hasChildren();
     
+    String sId = Val.chkStr(this.getId());
     String sName = Val.chkStr(this.getName());
     String sType = Val.chkStr(this.getType());
     String sQuery = Val.chkStr(this.getQuery());
     
     writer.println(pfx+"{");
+    
+    if (sId.length() > 0) {
+        line = pfx2+"\"id\": \""+Val.escapeStrForJson(sId)+"\"";
+        if (hc || (sName.length() > 0) || (sType.length() > 0) || (sQuery.length() > 0)) line +=",";
+        writer.println(line);
+    }
     
     if (sName.length() > 0) {
       line = pfx2+"\"name\": \""+Val.escapeStrForJson(sName)+"\"";
@@ -331,11 +357,15 @@ public class TocItem {
     for (int i=0;i<2*depth;i++) pfx += " ";
     String pfx2 = pfx+"  ";
     
+    String sId = Val.chkStr(this.getId());
     String sName = Val.chkStr(this.getName());
     String sType = Val.chkStr(this.getType());
     String sQuery = Val.chkStr(this.getQuery());
     
     writer.println(pfx+"<item>");
+    if (sId.length() > 0) {
+        writer.println(pfx2+"<id>"+Val.escapeXml(sId)+"</id>");
+      }
     if (sName.length() > 0) {
       writer.println(pfx2+"<name>"+Val.escapeXml(sName)+"</name>");
     }

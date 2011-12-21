@@ -14,10 +14,12 @@
  */
 package com.esri.gpt.control.search;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -32,7 +34,11 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
+
+import org.xml.sax.SAXException;
 
 import com.esri.gpt.catalog.schema.MetadataDocument;
 import com.esri.gpt.catalog.schema.Schema;
@@ -53,6 +59,7 @@ import com.esri.gpt.catalog.search.SearchFilterHarvestSites;
 import com.esri.gpt.catalog.search.SearchFilterPagination;
 import com.esri.gpt.catalog.search.SearchResult;
 import com.esri.gpt.catalog.search.SearchSaveRpstryFactory;
+import com.esri.gpt.control.georss.RestQueryServlet;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.BaseActionListener;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
@@ -482,6 +489,22 @@ throws AbortProcessingException, Exception {
 
   }*/else if (eventType.equals(SearchEvents.Event.EVENT_EXECUTE_SEARCH.name())) {
     LOG.fine("Initiating new search");
+    
+    // extra params
+    Map<String,String> extraMap = new HashMap<String,String>();
+    context.getObjectMap().put(RestQueryServlet.EXTRA_REST_ARGS_MAP, extraMap);
+    if (extraMap.get(RestQueryServlet.PARAM_KEY_SHOW_RELATIVE_URLS) == null) {
+      extraMap.put(RestQueryServlet.PARAM_KEY_SHOW_RELATIVE_URLS, "true");
+    }
+    extraMap.put(RestQueryServlet.PARAM_KEY_IS_JSFREQUEST, "true");
+    if (request.getScheme().toLowerCase().equals("https")
+        && extraMap.get(RestQueryServlet.PARAM_KEY_SHOW_THUMBNAIL) == null) {
+      String agent = request.getHeader("user-agent");
+      if (agent != null && agent.toLowerCase().indexOf("msie") > -1) {
+        extraMap.put(RestQueryServlet.PARAM_KEY_SHOW_THUMBNAIL, "false");
+      }
+    }
+    
     this.getSearchResult().reset();
     doSearch(1, true);
   } else if(eventType.equals(SearchEvents.Event.EVENT_REDOSEARCH.name())) {
@@ -804,9 +827,13 @@ throws SearchException {
  * 
  * @throws SearchException the search exception
  * @throws SchemaException if an exception occurs while evaluating the schema
+ * @throws SAXException if a SAX exception occurs while styling details page
+ * @throws ParserConfigurationException if parser cofiguration exception occurs while loading details style page
+ * @throws IOException if I/O exception occurs which reading details style page
+ * @throws XPathExpressionException 
  */
 private void doViewMetadataDetails(RequestContext context, String uuid, String catalogUri) 
-  throws SearchException, SchemaException {
+  throws SearchException, SchemaException, XPathExpressionException, IOException, ParserConfigurationException, SAXException {
   if (detailsPanelGroup != null) {
     detailsPanelGroup.getChildren().clear();
   }
@@ -827,7 +854,8 @@ private void doViewMetadataDetails(RequestContext context, String uuid, String c
     String htmlFragment = "";
     if (schema.getDetailsXslt().length() > 0) {
        try {
-        htmlFragment = Val.chkStr(document.transformDetails(metadataXml,schema.getDetailsXslt()));
+    	   	MessageBroker broker = this.extractMessageBroker();
+            htmlFragment = Val.chkStr(document.transformDetails(metadataXml,schema.getDetailsXslt(),broker));
       } catch (TransformerException e) {
         htmlFragment = "";
         LOG.log(Level.SEVERE,"Cannot transform metadata details: "+schema.getDetailsXslt(),e);

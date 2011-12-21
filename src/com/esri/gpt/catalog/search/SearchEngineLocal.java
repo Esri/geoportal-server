@@ -17,9 +17,11 @@ import com.esri.gpt.catalog.discovery.DiscoveryException;
 import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.MessageBroker;
+import com.esri.gpt.framework.search.DcList;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.server.csw.client.CswRecord;
 import com.esri.gpt.server.csw.client.CswRecords;
+import com.esri.gpt.server.csw.client.Utils;
 import com.esri.gpt.server.csw.provider.components.IOriginalXmlProvider;
 import com.esri.gpt.server.csw.provider.components.OperationContext;
 import com.esri.gpt.server.csw.provider.components.OperationResponse;
@@ -119,10 +121,10 @@ public class SearchEngineLocal extends SearchEngineCSW {
     }
     
     // parse the GetRecordsById response
-    if (record != null) {
+    if (record != null) { 
       record.setId(uuid);
       try {
-        getCswProfile().readCSWGetMetadataByIDResponse(cswResponse, record);
+        getCswProfile().readCSWGetMetadataByIDResponseLocal(cswResponse, record);
       } catch (Exception e) {
         throw new SearchException("Error parsing GetRecordById: "+e.getMessage(),e);
       }

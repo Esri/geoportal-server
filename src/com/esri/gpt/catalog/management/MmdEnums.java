@@ -20,6 +20,8 @@ import com.esri.gpt.framework.util.Val;
  */
 public class MmdEnums {
   
+public static String INCOMING_STATUS = "INCOMING_STATUS";
+  
 /**
  * An enumeration describing a metadata record's approval status.
  */
@@ -38,7 +40,23 @@ public enum ApprovalStatus {
   /** Document was disapproved. */
   disapproved,
   /** Document is a draft*/
-  draft;
+  draft,
+  /** Document action is pending add from thunderdome **/
+  pending_approved,
+  /** Document action is pending delete from thunderdome **/
+  pending_delete,
+  
+  pending_posted,
+  
+  pending_incomplete,
+  
+  pending_reviewed,
+  
+  pending_disapproved,
+  
+  pending_draft,
+  
+  remotely_deleted;
 
   /**
    * Checks the value of a String to determine the corresponding enum.

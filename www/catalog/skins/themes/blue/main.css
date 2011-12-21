@@ -1616,8 +1616,18 @@ table.gxeMapEnvelopeTable {
   display: none;
 }
 
+.openstreetmap {
+  position: absolute;
+  bottom: 0px;
+  right: 45px;
+  color: grey;
+  font-size: xx-small;
+}
 
-
-
-
-
+.openstreetmapPreview {
+  position: absolute;
+  bottom: 40px;
+  right: 75px;
+  color: grey;
+  font-size: xx-small;
+}

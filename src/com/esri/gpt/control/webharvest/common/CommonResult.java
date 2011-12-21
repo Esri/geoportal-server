@@ -41,8 +41,13 @@ public CommonResult(Resource resource) {
   this(Arrays.asList(new Resource[] {resource}));
 }
 
+@Override
 public Iterable<Resource> getResources() {
   return resources;
+}
+
+@Override
+public void destroy() {
 }
 
 }

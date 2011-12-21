@@ -14,13 +14,15 @@
  */
 package com.esri.gpt.control.webharvest.client.waf;
 
+import com.esri.gpt.control.webharvest.common.CommonInfo;
 import com.esri.gpt.framework.http.CredentialProvider;
 import com.esri.gpt.framework.util.Val;
 
 /**
  * WAF service info.
  */
-class WafInfo {
+class WafInfo extends CommonInfo {
+
 /** url */
 private String url;
 /** user name */

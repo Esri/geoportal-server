@@ -100,8 +100,11 @@ private HjRecord readNext(Connection con) throws SQLException {
     sbSql.append(sbFrom);
     
     // create where clause
-    sbWhere.append("UPPER(A.JOB_STATUS)='").append(HjRecord.JobStatus.Submited.name().toUpperCase()).append(
-      "'");
+    if (getIsDbCaseSensitive(this.getRequestContext())) {
+      sbWhere.append("UPPER(A.JOB_STATUS)='").append(HjRecord.JobStatus.Submited.name().toUpperCase()).append("'");
+    } else {
+      sbWhere.append("A.JOB_STATUS='").append(HjRecord.JobStatus.Submited.name().toUpperCase()).append("'");
+    }
     
     // append the where clause expressions
     if (sbWhere.length() > 0) {
@@ -178,7 +181,11 @@ private boolean markAsRunning(Connection con, HjRecord record)
     if (serviceId.length()>0) {
       sbStmt.append(",SERVICE_ID=?");
     }
-    sbStmt.append(" WHERE HARVEST_ID=? AND UPPER(JOB_STATUS)=?");
+    if (getIsDbCaseSensitive(this.getRequestContext())) {
+      sbStmt.append(" WHERE HARVEST_ID=? AND UPPER(JOB_STATUS)=?");
+    } else {
+      sbStmt.append(" WHERE HARVEST_ID=? AND JOB_STATUS=?");
+    }
 
     st = con.prepareStatement(sbStmt.toString());
 

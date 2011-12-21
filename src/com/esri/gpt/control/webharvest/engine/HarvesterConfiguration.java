@@ -17,6 +17,8 @@ package com.esri.gpt.control.webharvest.engine;
 import com.esri.gpt.framework.context.Configuration;
 import com.esri.gpt.framework.util.TimePeriod;
 import com.esri.gpt.framework.util.Val;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Harvester configuration.
@@ -37,6 +39,8 @@ public static final long MAX_REP_ERRORS = 5000;
 public static final boolean RESOURCE_AUTOAPPROVE = false;
 /** active/inactive flag */
 private boolean active;
+/** suspended flag */
+private boolean suspended;
 /** queue enabled */
 private boolean queueEnabled;
 /** initial worker threads pool size */
@@ -53,6 +57,8 @@ private long maxRepRecords = MAX_REP_RECORDS;
 private long maxRepErrors = MAX_REP_ERRORS;
 /** resource auto approve */
 private boolean resourceAutoApprove = RESOURCE_AUTOAPPROVE;
+/** list of data processor factories */
+private List<DataProcessorFactory> dataProcessorFactories = new ArrayList<DataProcessorFactory>();
 
 /**
  * Gets 'active' flag
@@ -68,6 +74,22 @@ public boolean getActive() {
  */
 public void setActive(boolean active) {
   this.active = active;
+}
+
+/**
+ * Gets 'suspended' flag.
+ * @return <code>true</code> if suspended
+ */
+public boolean getSuspended() {
+  return suspended;
+}
+
+/**
+ * Sets 'suspended' flag.
+ * @return <code>true</code> to mark as suspended
+ */
+public void setSuspended(boolean suspended) {
+  this.suspended = suspended;
 }
 
 /**
@@ -212,6 +234,22 @@ public boolean getResourceAutoApprove() {
  */
 public void setResourceAutoApprove(boolean resourceAutoApprove) {
   this.resourceAutoApprove = resourceAutoApprove;
+}
+
+/**
+ * Gets data processor factories.
+ * @return data processor factories
+ */
+public List<DataProcessorFactory> getDataProcessorFactories() {
+  return dataProcessorFactories;
+}
+
+/**
+ * Sets data processor factories.
+ * @param dataProcessorFactories data processor factories
+ */
+public void setDataProcessorFactories(List<DataProcessorFactory> dataProcessorFactories) {
+  this.dataProcessorFactories = dataProcessorFactories!=null? dataProcessorFactories: new ArrayList<DataProcessorFactory>();
 }
 
 /**

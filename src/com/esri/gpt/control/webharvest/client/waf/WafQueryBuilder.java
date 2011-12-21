@@ -22,6 +22,7 @@ import com.esri.gpt.framework.resource.query.Capabilities;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -51,17 +52,20 @@ public WafQueryBuilder(IterationContext context, HarvestProtocolWaf protocol, St
   this.info = new WafInfo(url, protocol.getUserName(), protocol.getUserPassword());
 }
 
+@Override
 public Capabilities getCapabilities() {
   return capabilities;
 }
 
+@Override
 public Query newQuery(Criteria crt) {
-  WafProxy proxy = new WafProxy(info);
+  WafProxy proxy = new WafProxy(info, crt);
   Query q = new WafQuery(context, info, proxy, crt);
-  LOGGER.finer("Query created: " + q);
+  LOGGER.log(Level.FINER, "Query created: {0}", q);
   return q;
 }
 
+@Override
 public Native getNativeResource() {
   return null;
 }

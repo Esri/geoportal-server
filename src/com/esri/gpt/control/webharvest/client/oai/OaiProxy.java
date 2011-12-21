@@ -59,6 +59,7 @@ public String read(String sourceUri) throws IOException {
     XmlHandler sh = new XmlHandler(false);
     cr.setContentHandler(sh);
     cr.setCredentialProvider(info.newCredentialProvider());
+    cr.setBatchHttpClient(info.getBatchHttpClient());
     cr.execute();
     Document doc = sh.getDocument();
     XPath xPath = XPathFactory.newInstance().newXPath();

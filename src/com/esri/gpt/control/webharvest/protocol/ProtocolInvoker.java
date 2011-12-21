@@ -19,6 +19,9 @@ import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidProtocolExceptio
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Invokes various methods on protocol through Reflection.
@@ -35,7 +38,9 @@ public class ProtocolInvoker {
    * @param url resource URL
    * @throws IllegalArgumentException if invalid protocol definition
    * @throws IOException if error connection resource
+   * @deprecated 
    */
+  @Deprecated
   public static void ping(Protocol protocol, String url) throws Exception {
     try {
       Method mt = protocol.getClass().getMethod("ping", String.class);
@@ -128,6 +133,35 @@ public class ProtocolInvoker {
    */
   public static void setLockTitle(Protocol protocol, boolean lockTitle) {
     protocol.setFlags(setFlag(protocol.getFlags(), LOCK_TITLE_FLAG, lockTitle));
+  }
+  
+  /**
+   * Gets protocol destinations.
+   * @param protocol protocol
+   * @return list of protocol destinations or <code>null</code>
+   */
+  public static List<String> getDestinations(Protocol protocol) {
+    try {
+      Method mt = protocol.getClass().getMethod("getDestinations");
+      return (List<String>)mt.invoke(protocol);
+    } catch (Exception ex) {
+      Logger.getLogger(ProtocolInvoker.class.getCanonicalName()).log(Level.WARNING,"Error getting protocol destinations", ex);
+      return null;
+    }
+  }
+  
+  /**
+   * Sets protocol destinations.
+   * @param protocol protocol
+   * @param destinations list of protocol destinations or <code>null</code>
+   */
+  public static void setDestinations(Protocol protocol, List<String> destinations) {
+    try {
+      Method mt = protocol.getClass().getMethod("setDestinations", List.class);
+      mt.invoke(protocol, destinations);
+    } catch (Exception ex) {
+      Logger.getLogger(ProtocolInvoker.class.getCanonicalName()).log(Level.WARNING,"Error setting protocol destinations", ex);
+    }
   }
 
   /**

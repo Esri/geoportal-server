@@ -17,11 +17,15 @@ package com.esri.gpt.control.webharvest.engine;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
 import com.esri.gpt.framework.util.UuidUtil;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Worker base.
  */
 abstract class WorkerBase implements Runnable {
+/** logger */
+private static final Logger LOGGER = Logger.getLogger(WorkerBase.class.getCanonicalName());
 /** data processor */
 protected final DataProcessor dataProcessor;
 /** executor */
@@ -30,6 +34,8 @@ protected Executor executor;
 protected volatile boolean shutdown;
 /** worker thread */
 protected Thread workerThread;
+/** suspended */
+protected volatile boolean suspended;
 
 /**
  * Creates instance of the worker.
@@ -90,16 +96,12 @@ public synchronized void shutdown() {
  * @return execution unit
  */
 protected ExecutionUnit newExecutionUnit(final Task task) {
-  if (task==null)
-    throw new IllegalArgumentException("No task provided.");
-  IterationContext ic = new IterationContext() {
-    public void onIterationException(Exception ex) {
-      dataProcessor.onIterationException(task, ex);
+  ExecutionUnit unit = new ExecutionUnit(task) {
+    @Override
+    protected void onIteratonException(Exception ex) {
+      dataProcessor.onIterationException(this, ex);
     }
   };
-  QueryBuilder queryBuilder = task.getResource().newQueryBuilder(ic);
-  if (queryBuilder==null) return null;
-  ExecutionUnit unit = new ExecutionUnit(task.getResource(), task.getCriteria(), queryBuilder);
   return unit;
 }
 
@@ -115,4 +117,37 @@ protected synchronized void setExecutor(Executor executor) {
  * Executes worker tasks.
  */
 protected abstract void execute();
+
+public synchronized void safeSuspend() {
+  if (workerThread!=null) {
+    if (!suspended) {
+      LOGGER.log(Level.INFO, "[SYNCHRONIZER] Suspending Worker thread: {0}", workerThread.getId());
+      suspended = true;
+      notify();
+      workerThread.interrupt();
+    } else {
+      LOGGER.log(Level.INFO, "[SYNCHRONIZER] Worker thread already suspended: {0}", workerThread.getId());
+    }
+  }
+}
+
+public synchronized void safeResume() {
+  if (workerThread!=null) {
+    if (suspended) {
+      LOGGER.log(Level.INFO, "[SYNCHRONIZER] Resuming Worker thread: {0}", workerThread.getId());
+      suspended = false;
+      workerThread.interrupt();
+    } else {
+      LOGGER.log(Level.INFO, "[SYNCHRONIZER] Worker thread already resumed: {0}", workerThread.getId());
+    }
+  }
+}
+
+/**
+ * Gets suspended flag.
+ * @return suspended flag
+ */
+public boolean isSuspended() {
+  return suspended;
+}
 }

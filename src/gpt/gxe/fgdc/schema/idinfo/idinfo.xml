@@ -79,7 +79,7 @@
 				<h:div g:label="$i18n.catalog.fgdc.idinfo.section.ptcontac">
 					<g:element g:targetName="ptcontac" h:tag="div"
 						g:jsClass="gxe.control.Element">
-						<g:element g:targetName="cntinfo" h:class=""
+						<g:element g:targetName="cntinfo" h:class="" g:minOccurs="0"
 							g:label="$i18n.catalog.fgdc.idinfo.ptcontac" g:extends="$base/schema/cntinfo/cntinfo.xml"/>
 					</g:element>
 				</h:div>

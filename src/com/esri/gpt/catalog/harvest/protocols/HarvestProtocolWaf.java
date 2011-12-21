@@ -14,10 +14,9 @@
  */
 package com.esri.gpt.catalog.harvest.protocols;
 
-import com.esri.gpt.catalog.harvest.clients.HRClient;
-import com.esri.gpt.catalog.harvest.clients.HRWAFClient;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.waf.WafQueryBuilder;
+import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
 
 /**
@@ -26,33 +25,56 @@ import com.esri.gpt.framework.resource.query.QueryBuilder;
 public class HarvestProtocolWaf extends AbstractHTTPHarvestProtocol {
 
 // class variables =============================================================
-
 // instance variables ==========================================================
-  
 // constructors ================================================================
-
 // properties ==================================================================
+  /**
+   * Gets protocol type.
+   * @return protocol type
+   * @deprecated 
+   */
+  @Override
+  @Deprecated
+  public final ProtocolType getType() {
+    return ProtocolType.WAF;
+  }
 
-/**
- * Gets protocol type.
- * @return protocol type
- */
-public final ProtocolType getType() {
-  return ProtocolType.WAF;
-}
+  @Override
+  public String getKind() {
+    return "WAF";
+  }
 
 // methods =====================================================================
+  @Override
+  public QueryBuilder newQueryBuilder(IterationContext context, String url) {
+    return new WafQueryBuilder(context, this, url);
+  }
 
-/**
- * Gets harvest client.
- * @return harvest client
- */
-public HRClient getClient(final String hostUrl) {
-  return new HRWAFClient(hostUrl, getUserName(), getUserPassword());
-}
+  @Override
+  public StringAttributeMap getAttributeMap() {
+    StringAttributeMap properties = new StringAttributeMap();
+    properties.set("waf.username", getUserName());
+    properties.set("waf.password", getUserPassword());
+    return properties;
+  }
 
-public QueryBuilder newQueryBuilder(IterationContext context, String url) {
-  return new WafQueryBuilder(context, this, url);
-}
+  @Override
+  public void setAttributeMap(StringAttributeMap attributeMap) {
+    setUserName(chckAttr(attributeMap.get("waf.username")));
+    setUserPassword(chckAttr(attributeMap.get("waf.password")));
+  }
 
+  @Override
+  public void applyAttributeMap(StringAttributeMap attributeMap) {
+    setUserName(decryptString(chckAttr(attributeMap.get("username"))));
+    setUserPassword(decryptString(chckAttr(attributeMap.get("password"))));
+  }
+
+  @Override
+  public StringAttributeMap extractAttributeMap() {
+    StringAttributeMap properties = new StringAttributeMap();
+    properties.set("username", encryptString(getUserName()));
+    properties.set("password", encryptString(getUserPassword()));
+    return properties;
+  }
 }

@@ -14,17 +14,17 @@
  */
 package com.esri.gpt.control.webharvest.client.csw;
 
+import com.esri.gpt.control.webharvest.common.CommonInfo;
 import com.esri.gpt.framework.http.CredentialProvider;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.server.csw.client.CswCatalog;
 import com.esri.gpt.server.csw.client.CswProfiles;
-
 import java.io.IOException;
 
 /**
  * CSW service info.
  */
-class CswInfo {
+class CswInfo extends CommonInfo {
 
 /** CSW profiles */
 private CswProfiles cswProfiles;
@@ -83,6 +83,7 @@ public CswCatalog newCatalog() throws IOException {
 
   cswCatalog.setProfile(getProfile());
   cswCatalog.setUrl(getUrl());
+  cswCatalog.setBatchHttpClient(getBatchHttpClient());
 
   return cswCatalog;
 }

@@ -46,6 +46,9 @@ public class Storeables implements IStoreables {
   /** Document SCHEMA = "sys.schema", e.g. http://www.isotc211.org/2005/gmd */
   public static final String FIELD_SCHEMA = "sys.schema";
   
+  /** Document SCHEMA = "sys.schema.key", e.g. fgdc */
+  public static final String FIELD_SCHEMA_KEY = "sys.schema.key";
+  
   /** Document SITEUUID, parent site uuid = "sys.siteuuid" */
   public static final String FIELD_SITEUUID = "sys.siteuuid";
   

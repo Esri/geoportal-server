@@ -14,6 +14,8 @@
  */
 package com.esri.gpt.catalog.management;
 
+import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.request.QueryCriteria;
 import com.esri.gpt.framework.request.SortOption;
@@ -45,6 +47,7 @@ public class MmdQueryCriteria extends QueryCriteria {
   private static final Logger LOGGER = Logger.getLogger(MmdQueryCriteria.class.getCanonicalName());
 // instance variables ==========================================================
   private String _approvalStatus;
+  private String _collectionUuid = "";
   private DateRange _dateRange;
   private String _owner = "";
   private String _pubMethod;
@@ -78,6 +81,7 @@ public class MmdQueryCriteria extends QueryCriteria {
            getTitle().length()==0 &&
            getUuid().length()==0 &&
            getSiteUuid().length()==0 &&
+           getCollectionUuid().length()==0 &&
            getProtocolType().length()==0;
   }
 
@@ -113,6 +117,9 @@ public class MmdQueryCriteria extends QueryCriteria {
     if (getSiteUuid().length()>0) {
       sb.append("<SiteUuid>").append(Val.escapeXml(getSiteUuid())).append("</SiteUuid>");
     }
+    if (getCollectionUuid().length()>0) {
+      sb.append("<CollectionUuid>").append(Val.escapeXml(getCollectionUuid())).append("</CollectionUuid>");
+    }
     if (getProtocolType().length()>0) {
       sb.append("<ProtocolType>").append(Val.escapeXml(getProtocolType())).append("</ProtocolType>");
     }
@@ -140,6 +147,7 @@ public class MmdQueryCriteria extends QueryCriteria {
       setTitle((String) xPath.evaluate("/MmdQueryCriteria/Title", doc, XPathConstants.STRING));
       setUuid((String) xPath.evaluate("/MmdQueryCriteria/Uuid", doc, XPathConstants.STRING));
       setSiteUuid((String) xPath.evaluate("/MmdQueryCriteria/SiteUuid", doc, XPathConstants.STRING));
+      setCollectionUuid((String) xPath.evaluate("/MmdQueryCriteria/CollectionUuid", doc, XPathConstants.STRING));
       setProtocolType((String) xPath.evaluate("/MmdQueryCriteria/ProtocolType", doc, XPathConstants.STRING));
 
     } catch (Exception ex) {
@@ -181,6 +189,7 @@ public class MmdQueryCriteria extends QueryCriteria {
     _uuid = "";
     _siteUuid = "";
     _protocolType = "";
+    _collectionUuid = "";
     setDateRange(new DateRange());
     getSortOption().setColumnKey("updatedate");
     getSortOption().setDirection(SortOption.SortDirection.desc);
@@ -205,6 +214,22 @@ public class MmdQueryCriteria extends QueryCriteria {
     } catch (IllegalArgumentException ex) {
       _approvalStatus = MmdEnums.ApprovalStatus.any.toString();
     }
+  }
+  
+  /**
+   * Gets the collection UUID.
+   * @return the collection UUID
+   */
+  public String getCollectionUuid() {
+    return _collectionUuid;
+  }
+
+  /**
+   * Sets the collection UUID.
+   * @param colUuid the collection UUID
+   */
+  public void setCollectionUuid(String colUuid) {
+    this._collectionUuid = UuidUtil.addCurlies(colUuid);
   }
 
   /**
@@ -325,7 +350,8 @@ public class MmdQueryCriteria extends QueryCriteria {
   }
 
 
-// methods =====================================================================
+  // methods =====================================================================
+  
   /**
    * Appends WHERE phrase.
    * @param tableAlias alias of the table or <code>null</code> if no alias
@@ -334,16 +360,38 @@ public class MmdQueryCriteria extends QueryCriteria {
    * @return map of arguments to apply to the statement through {@link #applyArgs} method
    */
   public Map<String,Object> appendWherePhrase(String tableAlias, StringBuilder wherePhrase, Publisher publisher) {
+    return this.appendWherePhrase(null,tableAlias,wherePhrase,publisher);
+  }
+  
+  /**
+   * Appends WHERE phrase.
+   * @param context the active request context
+   * @param tableAlias alias of the table or <code>null</code> if no alias
+   * @param wherePhrase where phrase holder where the phrase will be appended
+   * @param publisher publisher which executes query
+   * @return map of arguments to apply to the statement through {@link #applyArgs} method
+   */
+  public Map<String,Object> appendWherePhrase(RequestContext context, String tableAlias, StringBuilder wherePhrase, Publisher publisher) {
 
     TreeMap<String,Object> args = new TreeMap<String,Object>();
-
     tableAlias = (tableAlias!=null? tableAlias+".": "");
 
+    // determine if the database is case sensitive
+    StringAttributeMap params  = ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getParameters();
+    String s = Val.chkStr(params.getValue("database.isCaseSensitive"));
+    boolean isDbCaseSensitive = !s.equalsIgnoreCase("false");
+    
     // document title
-    String sTitle = getTitle().toUpperCase();
+    String sTitle = getTitle();
     if (sTitle.length() > 0) {
-      sTitle = appendValueFilter(wherePhrase, "UPPER(" +tableAlias+ "TITLE)", sTitle, true);
-      args.put("sTitle", sTitle.toUpperCase());
+      boolean bForceLike = false;
+      if (isDbCaseSensitive) {
+        sTitle = appendValueFilter(wherePhrase, "UPPER(" +tableAlias+ "TITLE)",sTitle,bForceLike);
+        args.put("sTitle", sTitle.toUpperCase());
+      } else {
+        sTitle = appendValueFilter(wherePhrase,tableAlias+"TITLE",sTitle,bForceLike);
+        args.put("sTitle", sTitle);
+      }
     }
 
     // document UUID
@@ -352,28 +400,41 @@ public class MmdQueryCriteria extends QueryCriteria {
       // search executed against GPT_ADMIN (B) table, because GPT_META (A) might
       // have DOCUUID as 'uniqueidentifier' type in case of SQL server, and that
       // doesn't work well with UUID with curlies.
-      sDocUuid = appendValueFilter(wherePhrase, "UPPER(" +tableAlias+ "DOCUUID)", sDocUuid, true);
-      args.put("sDocUuid", sDocUuid.toUpperCase());
+
+      //sDocUuid = appendValueFilter(wherePhrase, "UPPER(" +tableAlias+ "DOCUUID)", sDocUuid, true);
+      //args.put("sDocUuid", sDocUuid.toUpperCase());
+      
+      sDocUuid = appendValueFilter(wherePhrase, tableAlias+ "DOCUUID", sDocUuid, false);
+      args.put("sDocUuid", sDocUuid);
     }
 
     // site UUID
     String sSiteUuid = getSiteUuid();
     if (sSiteUuid.length() > 0) {
-      sSiteUuid = appendValueFilter(wherePhrase, "UPPER(" +tableAlias+ "SITEUUID)", sSiteUuid, true);
-      wherePhrase.append(" AND UPPER(").append(tableAlias).append("DOCUUID) <> UPPER(").append(tableAlias).append("SITEUUID) ");
-      args.put("sSiteUuid", sSiteUuid.toUpperCase());
+      //sSiteUuid = appendValueFilter(wherePhrase, "UPPER(" +tableAlias+ "SITEUUID)", sSiteUuid, true);
+      //wherePhrase.append(" AND UPPER(").append(tableAlias).append("DOCUUID) <> UPPER(").append(tableAlias).append("SITEUUID) ");
+      //args.put("sSiteUuid", sSiteUuid.toUpperCase());
+      
+      sSiteUuid = appendValueFilter(wherePhrase,tableAlias+"SITEUUID",sSiteUuid,false);
+      wherePhrase.append(" AND ").append(tableAlias).append("DOCUUID <> ").append(tableAlias).append("SITEUUID ");
+      args.put("sSiteUuid", sSiteUuid);
     }
 
     // document owner
     Publisher owner = null;
     if (getOwner().length()>0) {
-      RequestContext context = RequestContext.extract(null);
+      RequestContext context2 = null;
       try {
-        owner = new Publisher(context, getOwner());
+        if (context != null) {
+          owner = new Publisher(context, getOwner());
+        } else {
+          context2 = RequestContext.extract(null);
+          owner = new Publisher(context2, getOwner());
+        }
       } catch (Exception ex) {
         LOGGER.log(Level.FINER, "Error creating publisher", ex);
       } finally {
-        context.onExecutionPhaseCompleted();
+        if (context2 != null) context2.onExecutionPhaseCompleted();
       }
     } else {
       if (publisher!=null && !publisher.getIsAdministrator()) {
@@ -387,8 +448,7 @@ public class MmdQueryCriteria extends QueryCriteria {
 
     // approval status
     String sStatus = getApprovalStatus();
-    if ((sStatus.length() > 0)
-        && !sStatus.equals(MmdEnums.ApprovalStatus.any.toString())) {
+    if ((sStatus.length() > 0) && !sStatus.equals(MmdEnums.ApprovalStatus.any.toString())) {
       if (sStatus.equals(MmdEnums.ApprovalStatus.posted.toString())) {
         String sExpr = "" +tableAlias+ "APPROVALSTATUS = ? OR " +tableAlias+ "APPROVALSTATUS IS NULL";
         appendExpression(wherePhrase, sExpr);
@@ -400,8 +460,13 @@ public class MmdQueryCriteria extends QueryCriteria {
 
     String sProtocolType = getProtocolType();
     if (sProtocolType.length()>0) {
-      sProtocolType = appendValueFilter(wherePhrase, "UPPER(" +tableAlias+ "PROTOCOL_TYPE)", sProtocolType, false);
-      args.put("sProtocolType", sProtocolType.toUpperCase());
+      if (isDbCaseSensitive) {
+        sProtocolType = appendValueFilter(wherePhrase, "UPPER(" +tableAlias+ "PROTOCOL_TYPE)", sProtocolType, false);
+        args.put("sProtocolType", sProtocolType.toUpperCase());
+      } else {
+        sProtocolType = appendValueFilter(wherePhrase,tableAlias+"PROTOCOL_TYPE",sProtocolType, false);
+        args.put("sProtocolType", sProtocolType);
+      }
     }
 
     // date range
@@ -439,7 +504,7 @@ public class MmdQueryCriteria extends QueryCriteria {
    * @param args map of arguments obtained through {@link #appendWherePhrase} method
    * @throws SQLException if arguments application fails
    */
-  public void applyArgs(PreparedStatement st, int n, Map<String,Object> args) throws SQLException {
+  public int applyArgs(PreparedStatement st, int n, Map<String,Object> args) throws SQLException {
 
     // document title
     String sTitle = Val.chkStr(args.get("sTitle")!=null? args.get("sTitle").toString(): null);
@@ -503,6 +568,7 @@ public class MmdQueryCriteria extends QueryCriteria {
       st.setString(n, sPubMethod);
       n++;
     }
+    return n;
   }
   
 /**

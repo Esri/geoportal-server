@@ -226,7 +226,11 @@ class ImsMetadataProxyDao extends BaseDao {
         closeStatement(st);
 
         if (nRows > 0) {
-          st = con.prepareStatement("SELECT id FROM "+sTable+" WHERE UPPER(docuuid)=?");
+          if (getIsDbCaseSensitive(this.getRequestContext())) {
+            st = con.prepareStatement("SELECT id FROM "+sTable+" WHERE UPPER(docuuid)=?");
+          } else {
+            st = con.prepareStatement("SELECT id FROM "+sTable+" WHERE docuuid=?");
+          }
           st.setString(1, sUuid.toUpperCase());
           rs = st.executeQuery();
           rs.next();
@@ -343,7 +347,11 @@ class ImsMetadataProxyDao extends BaseDao {
         Connection con = returnConnection().getJdbcConnection();
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT USERID FROM ").append(table);
-        sql.append(" WHERE UPPER(USERNAME)=?");
+        if (getIsDbCaseSensitive(this.getRequestContext())) {
+          sql.append(" WHERE UPPER(USERNAME)=?");
+        } else {
+          sql.append(" WHERE USERNAME=?");
+        }
         logExpression(sql.toString());
         st = con.prepareStatement(sql.toString());
         st.setString(1,username.toUpperCase());

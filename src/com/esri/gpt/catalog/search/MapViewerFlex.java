@@ -14,7 +14,9 @@
  */
 package com.esri.gpt.catalog.search;
 
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -25,80 +27,89 @@ import java.util.regex.PatternSyntaxException;
 import javax.mail.Quota.Resource;
 
 import org.apache.commons.collections.SetUtils;
+import org.apache.commons.io.IOUtils;
 
 import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.util.ResourcePath;
 import com.esri.gpt.framework.util.Val;
 
-
-
 /**
- * The Class MapViewerFlex.  Understands what the Flex viewer can view
- * and calls the Flex Viewer when appropriate.
+ * The Class MapViewerFlex. Understands what the Flex viewer can view and calls
+ * the Flex Viewer when appropriate.
  */
 public class MapViewerFlex implements IMapViewer {
-// class variables =============================================================
+// class variables
+// =============================================================
 /** The class logger LOG. */
-private final Logger LOG = Logger.getLogger(
-    MapViewerFlex.class.getCanonicalName());
+private final static Logger       LOG     = Logger.getLogger(MapViewerFlex.class
+                                       .getCanonicalName());
+private static String      JSCRIPT = null;
 
-/** Javascript That executes **/
-private final String JSCRIPT = 
-    "javascript:try {"
-  + "var _mapFlexViewer = window.open('', '{windowTitle}', "
-  + "     'width={width},height={height},outerWidth={width},outerHeight={height},resizable,scrollbars,location=0');"
-  + "if ( typeof (_mapFlexViewer) == 'undefined' " +
-  		"|| typeof(_mapFlexViewer.addResource) == 'undefined' ) { "
-  + "  _mapFlexViewer = window.open('{mapAndResourceUrl}', '{windowTitle}', "
-  + "     'width={width},height={height},outerWidth={width},outerHeight={height},resizable,scrollbars,location=0');"
-  + "  _mapFlexViewer.window_handle = self;"
-  + "  _mapFlexViewer.window_handle.closed = false;"
-  + "} else if (true == true){" // true == true trick used later
-  + " _mapFlexViewer.addResource('{title}', '{jsResourceUrl}'); "
-  + "}} catch(err){ " 
-  + "  var _mapFlexViewer = window.open('{mapAndResourceUrl}', '{windowTitle}', "
-  + "     'width={outerwidth},height={height},outerWidth={width},outerHeight={height},resizable,scrollbars,location=0');"
-  + "}"
-  + "_mapFlexViewer.focus();";
-
-
-// instance variables ==========================================================
+// instance variables
+// ==========================================================
 /** The map viewer configs. */
-private MapViewerConfigs _mapViewerConfigs;
+private MapViewerConfigs   _mapViewerConfigs;
 
 /** The resource uri. */
-private String _resourceUri;
+private String             _resourceUri;
 
 /** The hint service type. */
-private String _hintServiceType;
+private String             _hintServiceType;
 
 /** The search result record. */
 private SearchResultRecord _searchResultRecord;
 
 /** The request context. */
-private RequestContext _requestContext;
+private RequestContext     _requestContext;
 
-// properties ==================================================================
+
+// constructors ===============================================================
+static {
+  InputStream is = null;
+  try {
+    ResourcePath resourcePath = new ResourcePath();
+    URL url = resourcePath
+        .makeUrl("com/esri/gpt/catalog/search/MapViewerFlex.js");
+    is = url.openStream();
+    JSCRIPT = ("javascript:" + IOUtils.toString(is)).replace("\n", "");
+    
+  } catch (Throwable e) {
+    LOG.log(Level.WARNING, "Could not configure map viewer", e);
+  } finally {
+    IOUtils.closeQuietly(is);
+  }
+}
+
+public MapViewerFlex() {
+  
+}
+
+// properties
+// ==================================================================
 
 /**
  * Sets the map viewer configs.
  * 
- * @param mapViewerConfigs the map viewer configs
+ * @param mapViewerConfigs
+ *          the map viewer configs
  */
 public void setMapViewerConfigs(MapViewerConfigs mapViewerConfigs) {
   this._mapViewerConfigs = mapViewerConfigs;
-  
+
 }
 
 /**
  * Sets the resource uri.
  * 
- * @param resourceUri the resource uri
- * @param hintServiceType the hint service type
+ * @param resourceUri
+ *          the resource uri
+ * @param hintServiceType
+ *          the hint service type
  */
 public void setResourceUri(String resourceUri, String hintServiceType) {
   this._resourceUri = resourceUri;
   this._hintServiceType = hintServiceType;
-  
+
 }
 
 /**
@@ -110,22 +121,22 @@ private String getHintServiceType() {
   return Val.chkStr(this._hintServiceType);
 }
 
-
 /**
  * Sets the search result record.
  * 
- * @param searchResultRecord the search result record
+ * @param searchResultRecord
+ *          the search result record
  */
 public void setSearchResultRecord(SearchResultRecord searchResultRecord) {
   this._searchResultRecord = searchResultRecord;
-  
+
 }
 
 /**
  * Gets the search result record.
  * 
  * @return the search result record
- * @return The search result record.  Could be null.
+ * @return The search result record. Could be null.
  */
 private SearchResultRecord getSearchResultRecord() {
   return this._searchResultRecord;
@@ -134,10 +145,11 @@ private SearchResultRecord getSearchResultRecord() {
 /**
  * Sets the request context.
  * 
- * @param context the context
+ * @param context
+ *          the context
  */
 public void setRequestContext(RequestContext context) {
- this._requestContext = context;  
+  this._requestContext = context;
 }
 
 /**
@@ -164,7 +176,7 @@ public String getResourceUri() {
  * @return the url can be jscript
  */
 public boolean getUrlCanBeJscript() {
-  if(this.getRequestContext() == null) {
+  if (this.getRequestContext() == null) {
     return false;
   }
   return this.getRequestContext().getViewerExecutesJavascript();
@@ -176,7 +188,7 @@ public boolean getUrlCanBeJscript() {
  * @return the map viewer config (never null)
  */
 private MapViewerConfigs getMapViewerConfig() {
-  if(this._mapViewerConfigs == null) {
+  if (this._mapViewerConfigs == null) {
     return new MapViewerConfigs();
   }
   return this._mapViewerConfigs;
@@ -188,7 +200,7 @@ private MapViewerConfigs getMapViewerConfig() {
  * @return the window height (trimmed, never null)
  */
 private String getWindowHeight() {
- 
+
   int height = Val.chkInt(
       this.getMapViewerConfig().getParameters().get("height"), 400);
   return String.valueOf(height);
@@ -212,9 +224,18 @@ private String getWindowWidth() {
  */
 private String getWindowTitle() {
   String value = this.getMapViewerConfig().getParameters().get("title");
-  if(value == null || "".equals(value)) {
-    value="Map";
+  if (value == null || "".equals(value)) {
+    try {
+      value = this.getRequestContext().getServletRequest()
+          .getServerName();
+    
+    } catch (Throwable e) {
+      LOG.log(Level.WARNING, "Could not get server name from request context. "
+          + "using  window name = Map");
+      value = "Map";
+    }
   }
+  value = value.replaceAll("[^\\w]*", "A");
   return Val.chkStr(value);
 }
 
@@ -225,52 +246,59 @@ private String getWindowTitle() {
  */
 private String getRegexCanConsumeUrl() {
   String value = this.getMapViewerConfig().getParameters()
-    .get("regexCanConsumeUrl");
+      .get("regexCanConsumeUrl");
   return Val.chkStr(value);
 }
 
-// methods =====================================================================
+// methods
+// =====================================================================
 
 /**
  * Reads the add to map url
+ * 
  * @return the url (possibly none)
  */
 public String readAddToMapUrl() {
   String url = this._mapViewerConfigs.getUrl();
- 
-  if(!url.contains("?")) {
+
+  if (!url.contains("?")) {
     url = url + "?";
   }
-  if(url.contains("=")) {
+  if (url.contains("=")) {
     url += "&";
   }
   try {
     String title = "";
-    if(this.getSearchResultRecord() != null) {
+    if (this.getSearchResultRecord() != null) {
       title = this.getSearchResultRecord().getTitle();
       title = title.replaceAll("'", "\\\\'");
     }
-    String resourceValue = URLEncoder.encode(
-      this.getHintServiceType().toLowerCase() + ":" + 
-      this._resourceUri, "UTF-8");
+    String resourceValue = URLEncoder.encode(this.getHintServiceType()
+        .toLowerCase() + ":" + this._resourceUri, "UTF-8");
     url += "title=" + URLEncoder.encode(title, "UTF-8");
-            
-    if(this.getUrlCanBeJscript())  {
-      
-      url = JSCRIPT.replace("{mapAndResourceUrl}", url + 
-          "&resource=" + resourceValue);
-      url = url.replace("{jsResourceUrl}",  
+
+    if (this.getUrlCanBeJscript() && JSCRIPT != null) {
+
+      url = JSCRIPT.replace("{mapAndResourceUrl}", url + "&resource="
+          + resourceValue);
+      url = url.replace("{jsResourceUrl}",
           URLDecoder.decode(resourceValue, "UTF-8"));
       url = url.replace("{width}", getWindowWidth());
       url = url.replace("{height}", getWindowHeight());
       url = url.replace("{windowTitle}", getWindowTitle());
-      
-      
+
       url = url.replace("{title}", title);
-      /*url = "javascript:GptUtils.popUp('" + url + "',"
-      + "GptMapViewer.TITLE," + "GptMapViewer.dimensions.WIDTH,"
-      + "GptMapViewer.dimensions.HEIGHT);";*/
+      /*
+       * url = "javascript:GptUtils.popUp('" + url + "'," +
+       * "GptMapViewer.TITLE," + "GptMapViewer.dimensions.WIDTH," +
+       * "GptMapViewer.dimensions.HEIGHT);";
+       */
+      //url = url.replace("%", "123456789");
     } else {
+      if(this.getUrlCanBeJscript() && JSCRIPT == null) { 
+         LOG.warning("Could not create javascript based add to map because " +
+         		" of prior initialization errors"); 
+      }
       url += "&resource=" + resourceValue;
     }
   } catch (UnsupportedEncodingException e) {
@@ -280,8 +308,6 @@ public String readAddToMapUrl() {
   return url;
 }
 
-
-
 /**
  * If resource can be handled
  * 
@@ -290,84 +316,73 @@ public String readAddToMapUrl() {
 public boolean canHandleResource() {
   String hintServiceType = this.getHintServiceType();
   String resourceUri = this.getResourceUri();
-  
-  if(hintServiceType == null ||resourceUri == null) {
-    LOG.finer("Could NOT handle resrouceuri = "+ resourceUri + ", hint = " 
+
+  if (hintServiceType == null || resourceUri == null) {
+    LOG.finer("Could NOT handle resrouceuri = " + resourceUri + ", hint = "
         + _hintServiceType);
     return false;
   }
-  if(hintServiceType.equalsIgnoreCase(
-      ResourceLinkBuilder.ServiceType.WMS.name()) || 
-      hintServiceType.equalsIgnoreCase(
-          ResourceLinkBuilder.ServiceType.AIMS.name())) {
-    LOG.finer("Could handle resrouceuri "+ resourceUri);
+  if (hintServiceType.equalsIgnoreCase(ResourceLinkBuilder.ServiceType.WMS
+      .name())
+      || hintServiceType.equalsIgnoreCase(ResourceLinkBuilder.ServiceType.AIMS
+          .name())) {
+    LOG.finer("Could handle resrouceuri " + resourceUri);
     return true;
-    
+
   }
-  if(hintServiceType.equalsIgnoreCase(
-      ResourceLinkBuilder.ServiceType.AGS.name())) {
-    if(resourceUri.toLowerCase().contains("/rest") && 
-        resourceUri.toLowerCase().contains("/mapserver")) {
+  if (hintServiceType.equalsIgnoreCase(ResourceLinkBuilder.ServiceType.AGS
+      .name())) {
+    if (resourceUri.toLowerCase().contains("/rest")
+        && resourceUri.toLowerCase().contains("/mapserver")) {
       this._hintServiceType = "agsrest";
       return true;
     }
-    LOG.finer("Could handle resrouceuri "+ _resourceUri);
+    LOG.finer("Could handle resrouceuri " + _resourceUri);
   }
-  if(!this.getRegexCanConsumeUrl().equals("")) {
-    try{
-      if(resourceUri.matches(this.getRegexCanConsumeUrl())) {
+  if (!this.getRegexCanConsumeUrl().equals("")) {
+    try {
+      if (resourceUri.matches(this.getRegexCanConsumeUrl())) {
         return true;
       }
     } catch (PatternSyntaxException e) {
-      LOG.log(Level.WARNING, "Regex not specified correctly " + 
-          this.getRegexCanConsumeUrl() , e);
+      LOG.log(Level.WARNING,
+          "Regex not specified correctly " + this.getRegexCanConsumeUrl(), e);
     }
-    LOG.finer("Could handle resrouceuri with configured regex "+ _resourceUri);
+    LOG.finer("Could handle resrouceuri with configured regex " + _resourceUri);
   }
-  LOG.finer("Could NOT handle resrouceuri = "+ _resourceUri + ", hint = " 
+  LOG.finer("Could NOT handle resrouceuri = " + _resourceUri + ", hint = "
       + _hintServiceType);
-  
+
   return false;
 }
 
-/** 
+/**
  * Returns "" if javascript allowed or returns "_blank"
  * 
- *@return link target
+ * @return link target
  */
 public String readTarget() {
-  if(this.getUrlCanBeJscript() == true) {
+  if (this.getUrlCanBeJscript() == true) {
     return "";
   }
   return "_blank";
 }
 
-/** 
+/**
  * Reads url to open the default map viewer
  * 
- *@return The default map viewer url
+ * @return The default map viewer url 
  */
 public String readOpenDefaultMapViewerUrl() {
   String url = this._mapViewerConfigs.getUrl();
   url = JSCRIPT.replace("{mapAndResourceUrl}", url);
-  url = url.replace("{jsResourceUrl}",  "");
+  url = url.replace("{jsResourceUrl}", "");
   url = url.replace("{width}", getWindowWidth());
   url = url.replace("{height}", getWindowHeight());
   url = url.replace("{windowTitle}", getWindowTitle());
- 
+
   url = url.replaceAll("true == true", "true == false");
   return url;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 }

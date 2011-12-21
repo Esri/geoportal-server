@@ -14,31 +14,22 @@
  */
 package com.esri.gpt.server.csw.client;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
-
 import com.esri.gpt.framework.http.ContentProvider;
 import com.esri.gpt.framework.http.CredentialProvider;
 import com.esri.gpt.framework.http.HttpClientRequest;
-import com.esri.gpt.framework.http.StringProvider;
 import com.esri.gpt.framework.http.HttpClientRequest.MethodName;
+import com.esri.gpt.framework.http.StringProvider;
 import com.esri.gpt.framework.util.Val;
+import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.apache.commons.httpclient.HttpClient;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 /**
  * CswClient class is used to submit CSW search request.
@@ -64,6 +55,7 @@ private int connectTimeout = DEFAULT_REQUEST_TIMEOUT;
 private int readTimeOut = DEFAULT_REQUEST_TIMEOUT;
 
 // constructor =================================================================
+private HttpClient batchHttpClient;
 /**
  * use static variable to be thread safe 
  * (FROM C# CODE: MAY BE REMOVED LATER)
@@ -78,6 +70,15 @@ public CswClient() {
 }
 
 // properties ==================================================================
+
+public void setBatchHttpClient(HttpClient batchHttpClient) {
+  this.batchHttpClient = batchHttpClient;
+}
+
+public HttpClient getBatchHttpClient() {
+  return batchHttpClient;
+}
+
 /**
  * Gets the timeout.
  * 
@@ -209,6 +210,7 @@ public InputStream submitHttpRequest(String method, String urlString,
   urlString = urlString.replaceAll(" ", "");
 
   HttpClientRequest client = HttpClientRequest.newRequest();
+  client.setBatchHttpClient(getBatchHttpClient());
   client.setUrl(urlString);
   client.setRetries(1);
   

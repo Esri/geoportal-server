@@ -231,6 +231,13 @@ public class ResourceIdentifier {
       imsContentType = "downloadableData";
     } else if (url.endsWith(".lpk") || url.endsWith(".pkinfo") || url.endsWith(".e00")) {
       imsContentType = "downloadableData";
+    } else if (url.startsWith("ftp://") || url.startsWith("ftps://")) {
+      imsContentType = "downloadableData";
+    } else if (url.endsWith(".gz") || url.endsWith(".tgz") || url.endsWith(".tar") ||
+               url.endsWith(".rar") || url.endsWith(".dbf") || url.endsWith(".shp") ||
+               url.endsWith(".xls") || url.endsWith(".txt") || url.endsWith(".dwg") || 
+               url.endsWith(".dxf") || url.endsWith(".dgn")) {
+      imsContentType = "downloadableData";
     } else if (url.endsWith(".mxd")) {
       imsContentType = "liveData";
     } else if (url.endsWith(".kml") || url.endsWith(".kmz")

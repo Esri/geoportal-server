@@ -44,27 +44,27 @@ public void doTag() throws JspException {
     
     out.println("function DatePickerConfig() {");
 
-    out.println("var _dpClearText       = \"Erase\"");
-    out.println("var _dpClearStatus     = \"Erase and return\"");
-    out.println("var _dpCloseText       = \"Close\"");
-    out.println("var _dpCloseStatus     = \"Close without change\"");
-    out.println("var _dpPrevText        = \"&lt;Prev\"");
-    out.println("var _dpPrevStatus      = \"Show the previous month\"");
-    out.println("var _dpNextText        = \"Next&gt;\"");
-    out.println("var _dpNextStatus      = \"Show the next month\"");
-    out.println("var _dpCurrentText     = \"Today\"");
-    out.println("var _dpCurrentStatus   = \"Show the current month\"");
-    out.println("var _dpMonthNames      = \"['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']\"");
-    out.println("var _dpMonthStatus     = \"Show a different month\"");
-    out.println("var _dpYearStatus      = \"Show a different year\"");
-    out.println("var _dpWeakHeader      = \"Wk\"");
-    out.println("var _dpWeakStatus      = \"Week of the year\"");
-    out.println("var _dpDayNames        = \"['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']\"");
-    out.println("var _dpDayNamesShort   = \"['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']\"");
-    out.println("var _dpDayNamesMin     = \"['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']\"");
-    out.println("var _dpDayStatus       = \"Set DD as first week day\"");
-    out.println("var _dpDateStatus      = \"Select DD, M d\"");
-    out.println("var _dpInitStatus      = \"Select a date\"");
+    out.println("_dpClearText       : \"Erase\";");
+    out.println("_dpClearStatus     : \"Erase and return\";");
+    out.println("_dpCloseText       : \"Close\";");
+    out.println("_dpCloseStatus     : \"Close without change\";");
+    out.println("_dpPrevText        : \"&lt;Prev\";");
+    out.println("_dpPrevStatus      : \"Show the previous month\";");
+    out.println("_dpNextText        : \"Next&gt;\";");
+    out.println("_dpNextStatus      : \"Show the next month\";");
+    out.println("_dpCurrentText     : \"Today\";");
+    out.println("_dpCurrentStatus   : \"Show the current month\";");
+    out.println("_dpMonthNames      : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];");
+    out.println("_dpMonthStatus     : \"Show a different month\";");
+    out.println("_dpYearStatus      : \"Show a different year\";");
+    out.println("_dpWeakHeader      : \"Wk\";");
+    out.println("_dpWeakStatus      : \"Week of the year\";");
+    out.println("_dpDayNames        : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];");
+    out.println("_dpDayNamesShort   : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];");
+    out.println("_dpDayNamesMin     : ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];");
+    out.println("_dpDayStatus       : \"Set DD as first week day\";");
+    out.println("_dpDateStatus      : \"Select DD, M d\";");
+    out.println("_dpInitStatus      : \"Select a date\";");
     
     out.println("this.initialize = function initialize() {");
     
@@ -72,31 +72,31 @@ public void doTag() throws JspException {
     if (gptMsgO!=null && gptMsgO instanceof java.util.Map) {
       java.util.Map<String,String> gptMsg = (java.util.Map<String,String>)gptMsgO;
       
-    out.println("_dpClearText       = '" + gptMsg.get("catalog.general.datepicker.clearText") + "'");
-    out.println("_dpClearStatus     = '" + gptMsg.get("catalog.general.datepicker.clearStatus") + "'");
-    out.println("_dpCloseText       = '" + gptMsg.get("catalog.general.datepicker.closeText") + "'");
-    out.println("_dpCloseStatus     = '" + gptMsg.get("catalog.general.datepicker.closeStatus") + "'");
-    out.println("_dpPrevText        = '" + gptMsg.get("catalog.general.datepicker.prevText") + "'");
-    out.println("_dpPrevStatus      = '" + gptMsg.get("catalog.general.datepicker.prevStatus") + "'");
-    out.println("_dpNextText        = '" + gptMsg.get("catalog.general.datepicker.nextText") + "'");
-    out.println("_dpNextStatus      = '" + gptMsg.get("catalog.general.datepicker.nextStatus") + "'");
-    out.println("_dpCurrentText     = '" + gptMsg.get("catalog.general.datepicker.currentText") + "'");
-    out.println("_dpCurrentStatus   = '" + gptMsg.get("catalog.general.datepicker.currentStatus") + "'");
-    out.println("_dpMonthNames      = "  + gptMsg.get("catalog.general.datepicker.monthNames"));
-    out.println("_dpMonthStatus     = '" + gptMsg.get("catalog.general.datepicker.monthStatus") + "'");
-    out.println("_dpYearStatus      = '" + gptMsg.get("catalog.general.datepicker.yearStatus") + "'");
-    out.println("_dpWeakHeader      = '" + gptMsg.get("catalog.general.datepicker.weakHeader") + "'");
-    out.println("_dpWeakStatus      = '" + gptMsg.get("catalog.general.datepicker.weakStatus") + "'");
-    out.println("_dpDayNames        = "  + gptMsg.get("catalog.general.datepicker.dayNames"));
-    out.println("_dpDayNamesShort   = "  + gptMsg.get("catalog.general.datepicker.dayNamesShort"));
-    out.println("_dpDayNamesMin     = "  + gptMsg.get("catalog.general.datepicker.dayNamesMin"));
-    out.println("_dpDayStatus       = '" + gptMsg.get("catalog.general.datepicker.dayStatus") + "'");
-    out.println("_dpDateStatus      = '" + gptMsg.get("catalog.general.datepicker.dateStatus") + "'");
-    out.println("_dpInitStatus      = '" + gptMsg.get("catalog.general.datepicker.initStatus") + "'");
+    out.println("this._dpClearText       = \"" + gptMsg.get("catalog.general.datepicker.clearText") + "\";");
+    out.println("this._dpClearStatus     = \"" + gptMsg.get("catalog.general.datepicker.clearStatus") + "\";");
+    out.println("this._dpCloseText       = \"" + gptMsg.get("catalog.general.datepicker.closeText") + "\";");
+    out.println("this._dpCloseStatus     = \"" + gptMsg.get("catalog.general.datepicker.closeStatus") + "\";");
+    out.println("this._dpPrevText        = \"" + gptMsg.get("catalog.general.datepicker.prevText") + "\";");
+    out.println("this._dpPrevStatus      = \"" + gptMsg.get("catalog.general.datepicker.prevStatus") + "\";");
+    out.println("this._dpNextText        = \"" + gptMsg.get("catalog.general.datepicker.nextText") + "\";");
+    out.println("this._dpNextStatus      = \"" + gptMsg.get("catalog.general.datepicker.nextStatus") + "\";");
+    out.println("this._dpCurrentText     = \"" + gptMsg.get("catalog.general.datepicker.currentText") + "\";");
+    out.println("this._dpCurrentStatus   = \"" + gptMsg.get("catalog.general.datepicker.currentStatus") + "\";");
+    out.println("this._dpMonthNames      = " + gptMsg.get("catalog.general.datepicker.monthNames") + ";");
+    out.println("this._dpMonthStatus     = \"" + gptMsg.get("catalog.general.datepicker.monthStatus") + "\";");
+    out.println("this._dpYearStatus      = \"" + gptMsg.get("catalog.general.datepicker.yearStatus") + "\";");
+    out.println("this._dpWeakHeader      = \"" + gptMsg.get("catalog.general.datepicker.weakHeader") + "\";");
+    out.println("this._dpWeakStatus      = \"" + gptMsg.get("catalog.general.datepicker.weakStatus") + "\";");
+    out.println("this._dpDayNames        = " + gptMsg.get("catalog.general.datepicker.dayNames") + ";");
+    out.println("this._dpDayNamesShort   = " + gptMsg.get("catalog.general.datepicker.dayNamesShort") + ";");
+    out.println("this._dpDayNamesMin     = " + gptMsg.get("catalog.general.datepicker.dayNamesMin") + ";");
+    out.println("this._dpDayStatus       = \"" + gptMsg.get("catalog.general.datepicker.dayStatus") + "\";");
+    out.println("this._dpDateStatus      = \"" + gptMsg.get("catalog.general.datepicker.dateStatus") + "\";");
+    out.println("this._dpInitStatus      = \"" + gptMsg.get("catalog.general.datepicker.initStatus") + "\";");
       
     }
     
-    out.println("}");
+    out.println("};");
     
     out.println("this.options = function options() {");
     out.println("return { dateFormat:     'yy-mm-dd',");
@@ -123,7 +123,7 @@ public void doTag() throws JspException {
     out.println("dateStatus:     this._dpDateStatus,");
     out.println("initStatus:     this._dpInitStatus");
     out.println("};");
-    out.println("}");
+    out.println("};");
 
     out.println("this.attach = function attach(node) {");
     out.println("var target = $(\"#\"+node.replace(/\\:/,'\\\\:'));");

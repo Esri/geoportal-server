@@ -327,7 +327,7 @@ public class TableCommandLinkTag extends UIComponentTag {
   protected void setProperties(UIComponent component) {
     super.setProperties(component);
 
-    LOG.info("Setting UIComponent properties");
+    LOG.finer("Setting UIComponent properties");
 
     tagSupport.setActionBind(component, "action", action);
     tagSupport.setPropMethodBind(component, "actionListener", actionListener);

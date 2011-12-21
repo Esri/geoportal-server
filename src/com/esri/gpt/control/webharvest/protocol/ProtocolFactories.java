@@ -14,19 +14,20 @@
  */
 package com.esri.gpt.control.webharvest.protocol;
 
-import com.esri.gpt.catalog.harvest.protocols.HarvestProtocol.ProtocolType;
-import com.esri.gpt.control.webharvest.client.arcgis.ArcGISProtocol;
 import com.esri.gpt.control.webharvest.protocol.factories.AgpProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.ArcGISProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.ArcImsProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.CswProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.OaiProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.ResourceProtocolFactory;
+import com.esri.gpt.control.webharvest.protocol.factories.ThreddsProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.WafProtocolFactory;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.xml.parsers.ParserConfigurationException;
@@ -52,13 +53,14 @@ public ProtocolFactories() {
  * Initializes collection with default protocol factories.
  */
 public void initDefault() {
-  put(ProtocolType.ArcIms.name(), new ArcImsProtocolFactory());
-  put(ProtocolType.CSW.name()   , new CswProtocolFactory());
-  put(ProtocolType.OAI.name()   , new OaiProtocolFactory());
-  put(ProtocolType.WAF.name()   , new WafProtocolFactory());
-  put(ProtocolType.RES.name()   , new ResourceProtocolFactory());
-  put(ArcGISProtocol.NAME       , new ArcGISProtocolFactory());
-  put(ProtocolType.AGP.name()   , new AgpProtocolFactory());
+  put("ArcIms" , new ArcImsProtocolFactory());
+  put("CSW"    , new CswProtocolFactory());
+  put("OAI"    , new OaiProtocolFactory());
+  put("WAF"    , new WafProtocolFactory());
+  put("RES"    , new ResourceProtocolFactory());
+  put("ARCGIS" , new ArcGISProtocolFactory());
+  put("AGP"    , new AgpProtocolFactory());
+  put("THREDDS", new ThreddsProtocolFactory());
 }
 
 /**
@@ -73,6 +75,7 @@ public Protocol parseProtocol(String xmlString) {
 
     String protocolName = "";
     long flags = 0;
+    List<String> vDest = null;
     StringAttributeMap properties = new StringAttributeMap();
     NodeList protocolNL = doc.getElementsByTagName("protocol");
 
@@ -86,6 +89,10 @@ public Protocol parseProtocol(String xmlString) {
 
       Node flagsN = attributes.getNamedItem("flags");
       flags = flagsN!=null? Val.chkLong(Val.chkStr(flagsN.getNodeValue()), 0): 0;
+      
+      Node destinationsN = attributes.getNamedItem("destinations");
+      String sDest = destinationsN!=null? Val.chkStr(destinationsN.getNodeValue()): null;
+      vDest = sDest!=null? Arrays.asList(sDest.split(",")): null;
 
       NodeList propertiesNL = protocolN.getChildNodes();
       for (int i = 0; i < propertiesNL.getLength(); i++) {
@@ -103,7 +110,8 @@ public Protocol parseProtocol(String xmlString) {
 
     Protocol protocol = protocolFactory.newProtocol();
     protocol.setFlags(flags);
-    protocol.setAttributeMap(properties);
+    protocol.applyAttributeMap(properties);
+    ProtocolInvoker.setDestinations(protocol, vDest);
 
     return protocol;
   } catch (ParserConfigurationException ex) {
@@ -119,7 +127,7 @@ public Protocol parseProtocol(String xmlString) {
 public String toString() {
   StringBuilder sb = new StringBuilder(getClass().getName()).append(" (\r\n");
   for (Map.Entry<String, ProtocolFactory> e : this.entrySet()) {
-    sb.append("protocol: name=\"" +e.getKey()+ "\", factoryClass=\"" +e.getValue().getClass().getCanonicalName()+ "\"\r\n");
+    sb.append("protocol: name=\"").append(e.getKey()).append("\", factoryClass=\"").append(e.getValue().getClass().getCanonicalName()).append("\"\r\n");
   }
   sb.append(") ===== end ").append(getClass().getName());
   return sb.toString();

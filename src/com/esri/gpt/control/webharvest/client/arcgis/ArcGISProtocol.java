@@ -14,90 +14,57 @@
  */
 package com.esri.gpt.control.webharvest.client.arcgis;
 
+import com.esri.gpt.catalog.harvest.protocols.AbstractHTTPHarvestProtocol;
 import com.esri.gpt.control.webharvest.IterationContext;
-import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.framework.collection.StringAttribute;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
 import com.esri.gpt.framework.util.Val;
+import java.util.regex.Pattern;
 
 /**
  * ArcGIS server protocol.
  */
-public class ArcGISProtocol implements Protocol {
+public class ArcGISProtocol extends AbstractHTTPHarvestProtocol {
 
   /** name of the protocol */
   public static final String NAME = "ARCGIS";
   /** secondary URL tag name */
   public static final String SOAP_URL = "secondaryUrl";
-  /** User name if required to login. */
-  private String _userName = "";
-  /** User password if required to login. */
-  private String _userPassword = "";
 
   /** flags to carry over */
   private long flags;
   /** SOAP url */
   private String soapUrl = "";
 
+  @Override
   public String getKind() {
     return NAME;
   }
 
+  @Override
   public long getFlags() {
     return flags;
   }
 
+  @Override
   public void setFlags(long flags) {
     this.flags = flags;
   }
 
-  /**
-   * Gets user name.
-   * @return user name
-   */
-  public String getUserName() {
-    return _userName;
-  }
-
-  /**
-   * Sets user name.
-   * @param userName user name
-   */
-  public void setUserName(String userName) {
-    _userName = Val.chkStr(userName);
-  }
-
-  /**
-   * Gets user password.
-   * @return user password
-   */
-  public String getUserPassword() {
-    return _userPassword;
-  }
-
-  /**
-   * Sets user password.
-   * @param userPassword user password
-   */
-  public void setUserPassword(String userPassword) {
-    _userPassword = Val.chkStr(userPassword);
-  }
-
+  @Override
   public StringAttributeMap getAttributeMap() {
     StringAttributeMap attributes = new StringAttributeMap();
     attributes.add(new StringAttribute(SOAP_URL, soapUrl));
-    attributes.add(new StringAttribute("username", _userName));
-    attributes.add(new StringAttribute("password", _userPassword));
     return attributes;
   }
 
+  @Override
   public void setAttributeMap(StringAttributeMap attributeMap) {
     soapUrl = Val.chkStr(attributeMap.getValue(SOAP_URL));
-    setUserName(chckAttr(attributeMap.get("username")));
-    setUserPassword(chckAttr(attributeMap.get("password")));
   }
 
+  @Override
   public QueryBuilder newQueryBuilder(IterationContext context, String url) {
     return new ArcGISQueryBuilder(context, this, url, soapUrl);
   }
@@ -118,12 +85,8 @@ public class ArcGISProtocol implements Protocol {
     this.soapUrl = Val.chkStr(value);
   }
 
-  /**
-   * Checks attribute.
-   * @param attribute attributes
-   * @return attribute value
-   */
-  protected String chckAttr(StringAttribute attribute) {
-    return attribute != null ? attribute.getValue() : "";
+  @Override
+  public ProtocolType getType() {
+    return null;
   }
 }

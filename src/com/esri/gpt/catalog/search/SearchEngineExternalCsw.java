@@ -212,8 +212,15 @@ protected CswRecord getMetadata(String uuid) throws SearchException {
     CswClient client = this.getCswClient();
     //client.setReadTimeout(SearchConfig.getConfiguredInstance().getTimeOut());
     request.setCswClient(client);
-    record = request.getRecordById(this.getGetMetadataRecordUrl(), 
+    String username = Val.chkStr(this.getCredentials().getUsername());
+    String password = Val.chkStr(this.getCredentials().getPassword());
+    if("".equals(username)) {
+      record = request.getRecordById(this.getGetMetadataRecordUrl(), 
         uuid, profile);
+    } else  {
+      record = request.getRecordById(this.getGetMetadataRecordUrl(), 
+          uuid, profile, username, password);
+    }
     
   } catch (SearchException e) {
     exc  = e;

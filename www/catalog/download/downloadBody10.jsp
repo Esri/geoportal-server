@@ -55,6 +55,7 @@
     gptMapConfig.locatorURL = "<%=imConfig.getLocatorUrl()%>";
     gptMapConfig.locatorSingleFieldParameter = "<%=imConfig.getLocatorSingleFieldParameter()%>";
     gptMapConfig.locatorGraphicURL = "<%=request.getContextPath()%>/catalog/images/pushpin_red.gif";
+    gptMapConfig.mapInitialExtent = "<%=dloadConfig.getMapInitialExtent()%>";
   </script>
 
   <script type="text/javascript">
@@ -101,6 +102,16 @@
         dojo.connect(_gptDraw, "onDrawEnd", this, "onSaveClipArea");
       }
 
+      this.zoomToInitial = function zoomToInitial() {
+        if (_gptMap != null) {
+          if (_gptMap._initialExtent!=null) {
+            _gptMap.zoomToInitial();
+          } else {
+            _gptMap.zoomToDefault();
+          }
+        }
+      }
+
       this.onLocatorKeyPress = function onLocatorKeyPress(e) {
         if (!e) e = window.event;
         if (e) {
@@ -136,6 +147,8 @@
       }
 
       this.onMapServiceLayerLoaded = function onMapServiceLayerLoaded() {
+        this.zoomToInitial();
+        
         var layers = _gptMap.getAgsMap().getLayer(_gptMap.getAgsMap().layerIds).layerInfos;
         var s = [];
         var preSelLayers = document.getElementById("preSelLayers").value;

@@ -16,29 +16,11 @@ package com.esri.gpt.server.csw.client;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
-import org.apache.commons.io.IOUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.apache.commons.httpclient.HttpClient;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Maintains information of CSW Catalog
@@ -84,6 +66,8 @@ private int responseTimeoutMs;
 /** The connection timeout ms. */
 private int connectionTimeoutMs;
 
+private HttpClient batchHttpClient;
+
 
 
 /**
@@ -104,6 +88,26 @@ public CswCatalog(String url, String name, CswProfile profile) {
   this.id = this.url;
   this.name = name;
   this.profile = profile;
+}
+
+/**
+  * Gets the underlying Apache HttpClient to be used for batch requests to the
+  * same server.
+  *
+  * @return the batch client
+  */
+public HttpClient getBatchHttpClient() {
+  return this.batchHttpClient;
+}
+
+/**
+  * Sets the underlying Apache HttpClient to be used for batch requests to the
+  * same server.
+  *
+  * @param batchHttpClient the batch client
+  */
+public void setBatchHttpClient(HttpClient batchHttpClient) {
+  this.batchHttpClient = batchHttpClient;
 }
 
 /**
@@ -178,6 +182,7 @@ private CswCatalogCapabilities executeGetCapabilitiesWithSAX()
   CswClient client = new CswClient();
   client.setConnectTimeout(this.getConnectionTimeoutMs());
   client.setReadTimeout(this.getResponseTimeoutMs());
+  client.setBatchHttpClient(getBatchHttpClient());
   // Execute submission and parsing into response element
   InputStream responseStream = client.submitHttpRequest("GET", url, "");
  

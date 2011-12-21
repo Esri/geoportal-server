@@ -27,4 +27,8 @@ public interface Result {
  * @return resources
  */
 Iterable<Resource> getResources();
+/**
+ * Destroys result.
+ */
+void destroy();
 }

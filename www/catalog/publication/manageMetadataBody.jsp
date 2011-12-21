@@ -177,6 +177,13 @@ function mmdOnActionChanged(elSelect) {
     if (elTransfer) elTransfer.style.display = sDisplay;
     if (elTransferLabel) elTransferLabel.style.display = sDisplay;
 
+    sId = elSelect.form.id+":mmdSharingPanel";
+    sDisplay = "none";
+    if ((sOpt == "shareWith") || (sOpt == "dontShareWith")) {
+      sDisplay = "inline";
+    }
+    var elSharingPanel = document.getElementById(sId);
+    if (elSharingPanel) elSharingPanel.style.display = sDisplay;
 
     var sFormId = elSelect.form.id+":mmdAcl";
     var sFormIdToggle = elSelect.form.id+":mmdAclToggle";
@@ -480,6 +487,19 @@ function mmdClearAclSelection(){
       itemLabel="#{gptMsg['catalog.publication.manageMetadata.owner.any']}"/>
     <f:selectItems value="#{ManageMetadataController.selectablePublishers.items}"/>
   </h:selectOneMenu>
+  
+  <% // collection %>
+  <h:outputLabel for="mmdCollection"
+    rendered="#{ManageMetadataController.useCollections}"
+    value="#{gptMsg['catalog.publication.manageMetadata.label.collection']}"/>
+  <h:selectOneMenu id="mmdCollection"
+    rendered="#{ManageMetadataController.useCollections}"
+    value="#{ManageMetadataController.queryCriteria.collectionUuid}">
+    <f:selectItem
+      itemValue=""
+      itemLabel="#{gptMsg['catalog.publication.manageMetadata.collection.any']}"/>
+    <f:selectItems value="#{ManageMetadataController.selectableCollections.items}"/>
+  </h:selectOneMenu>
 
   <% // approval status  and publication method%>
   <h:outputLabel for="mmdStatus"
@@ -600,7 +620,8 @@ function mmdClearAclSelection(){
       itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.delete']}"/>
     <f:selectItem
        itemValue="assignAcl"
-       itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.acl']}" itemDisabled="#{ManageMetadataController.metadataAccessPolicyConfig.policyUnrestricted}"/>
+       itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.acl']}" 
+       itemDisabled="#{ManageMetadataController.metadataAccessPolicyConfig.policyUnrestricted}"/>
   </h:selectOneMenu>
 
   <% // action to perform - administrator %>
@@ -632,8 +653,17 @@ function mmdClearAclSelection(){
       itemValue="delete"
       itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.delete']}"/>
     <f:selectItem
+      itemValue="shareWith"
+      itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.shareWith']}" 
+      itemDisabled="#{not ManageMetadataController.useCollections}"/>
+    <f:selectItem
+      itemValue="dontShareWith"
+      itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.dontShareWith']}" 
+      itemDisabled="#{not ManageMetadataController.useCollections}"/>
+    <f:selectItem
       itemValue="assignAcl"
-      itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.acl']}" itemDisabled="#{ManageMetadataController.metadataAccessPolicyConfig.policyUnrestricted}"/>
+      itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.acl']}" 
+      itemDisabled="#{ManageMetadataController.metadataAccessPolicyConfig.policyUnrestricted}"/>
   </h:selectOneMenu>
 
   <% // transfer to owner %>
@@ -647,6 +677,20 @@ function mmdClearAclSelection(){
       itemLabel="#{gptMsg['catalog.publication.manageMetadata.prompt.transfer']}"/>
     <f:selectItems value="#{ManageMetadataController.selectablePublishers.items}"/>
   </h:selectOneMenu>
+    
+  <% // collection sharing (isPartOf)  %>
+  <h:panelGroup id="mmdSharingPanel"
+    rendered="#{ManageMetadataController.useCollections}">
+	  <h:outputLabel id="mmdSharingLabel" for="mmdSharingCollectionUuid"
+	    value="#{gptMsg['catalog.publication.manageMetadata.sharing.collection.label']}"/>
+	  <h:selectOneMenu id="mmdSharingCollectionUuid"
+	    value="#{ManageMetadataController.actionCriteria.sharingCollectionUuid}">
+	    <f:selectItem 
+	      itemValue=""
+	      itemLabel="#{gptMsg['catalog.publication.manageMetadata.sharing.collection.prompt']}"/>
+	    <f:selectItems value="#{ManageMetadataController.selectableCollections.items}"/>
+	  </h:selectOneMenu>
+  </h:panelGroup>
 
   <% // assign access level  %>
   <h:panelGroup>
@@ -700,12 +744,13 @@ function mmdClearAclSelection(){
 
 </h:panelGrid>
 
+<% // apply to all %>
 <h:panelGrid
   columns="2"
   summary="#{gptMsg['catalog.general.designOnly']}"
   styleClass="formTable"
   columnClasses="formLabelColumn,formInputColumn"
-  rendered="#{PageContext.roleMap['gptAdministrator'] and not ManageMetadataController.queryCriteria.isEmpty and ManageMetadataController.queryResult.hasRecords}">
+  rendered="#{PageContext.roleMap['gptAdministrator'] and ManageMetadataController.allowApplyToAll and not ManageMetadataController.queryCriteria.isEmpty and ManageMetadataController.queryResult.hasRecords}">
     <h:outputLabel for="mmdApplyToAll" value="#{gptMsg['catalog.publication.manageMetadata.button.applyToAll']}"/>
     <h:selectBooleanCheckbox id="mmdApplyToAll" value="false"/>
 </h:panelGrid>
@@ -833,14 +878,8 @@ function mmdClearAclSelection(){
   <% // document owner %>
   <h:column>
     <f:facet name="header">
-      <h:commandLink
-        styleClass="#{ManageMetadataController.queryCriteria.sortOption.styleMap['owner']}"
-        value="#{gptMsg['catalog.publication.manageMetadata.header.owner']}"
-        actionListener="#{ManageMetadataController.processAction}">
-        <f:attribute name="command" value="sort"/>
-        <f:attribute name="column" value="owner"/>
-        <f:attribute name="defaultDirection" value="asc"/>
-      </h:commandLink>
+      <h:outputText
+        value="#{gptMsg['catalog.publication.manageMetadata.header.owner']}" />
     </f:facet>
     <h:outputText value="#{record.ownerName}"/>
   </h:column>
@@ -857,7 +896,12 @@ function mmdClearAclSelection(){
         <f:attribute name="defaultDirection" value="asc"/>
       </h:commandLink>
     </f:facet>
-    <h:outputText value="#{record.approvalStatusMsg}"/>
+    <h:outputText value="#{record.approvalStatusMsg}"
+      rendered="#{empty record.collectionMembership}"/>
+    <h:outputText value="#{record.approvalStatusMsg}"
+      title="#{record.collectionMembership}"
+      style="cursor:help;"
+      rendered="#{not empty record.collectionMembership}"/>
   </h:column>
 
   <% // publication method %>

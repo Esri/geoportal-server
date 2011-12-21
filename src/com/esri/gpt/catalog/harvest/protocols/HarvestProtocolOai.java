@@ -14,8 +14,6 @@
  */
 package com.esri.gpt.catalog.harvest.protocols;
 
-import com.esri.gpt.catalog.harvest.clients.HRClient;
-import com.esri.gpt.catalog.harvest.clients.HROAIClient;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.oai.OaiQueryBuilder;
 import com.esri.gpt.framework.collection.StringAttributeMap;
@@ -28,122 +26,90 @@ import com.esri.gpt.framework.util.Val;
 public class HarvestProtocolOai extends AbstractHTTPHarvestProtocol {
 
 // class variables =============================================================
-
 // instance variables ==========================================================
-
-/** OAI set name. */  
-private String _set = "";
-/** OAI prefix. */
-private String _prefix = "";
+  /** OAI set name. */
+  private String _set = "";
+  /** OAI prefix. */
+  private String _prefix = "";
 
 // constructors ================================================================
-
 // properties ==================================================================
+  /**
+   * Gets set.
+   * @return set
+   */
+  public String getSet() {
+    return _set;
+  }
 
-/**
- * Gets set.
- * @return set
- */
-public String getSet() {
-  return _set;
-}
+  /**
+   * Sets set.
+   * @param set set
+   */
+  public void setSet(String set) {
+    _set = Val.chkStr(set);
+  }
 
-/**
- * Sets set.
- * @param set set
- */
-public void setSet(String set) {
-  _set = Val.chkStr(set);
-}
+  /**
+   * Gets prefix.
+   * @return prefix
+   */
+  public String getPrefix() {
+    return _prefix;
+  }
 
-/**
- * Gets prefix.
- * @return prefix
- */
-public String getPrefix() {
-  return _prefix;
-}
+  /**
+   * Sets prefix.
+   * @param prefix prefix
+   */
+  public void setPrefix(String prefix) {
+    _prefix = Val.chkStr(prefix);
+  }
 
-/**
- * Sets prefix.
- * @param prefix prefix
- */
-public void setPrefix(String prefix) {
-  _prefix = Val.chkStr(prefix);
-}
+  /**
+   * Gets protocol type.
+   * @return protocol type
+   * @deprecated
+   */
+  @Override
+  @Deprecated
+  public final ProtocolType getType() {
+    return ProtocolType.OAI;
+  }
 
-/**
- * Gets protocol type.
- * @return protocol type
- */
-public final ProtocolType getType() { 
-  return ProtocolType.OAI; 
-}
+  @Override
+  public String getKind() {
+    return "OAI";
+  }
 
 // methods =====================================================================
 
-/**
- * Gets all the attributes.
- * @return attributes as attribute map
- */
-@Override
-protected StringAttributeMap extractAttributeMap() {
-  StringAttributeMap properties = super.extractAttributeMap();
-  
-  properties.set("set", _set);
-  properties.set("prefix", _prefix);
+  /**
+   * Gets all the attributes.
+   * @return attributes as attribute map
+   */
+  @Override
+  public StringAttributeMap getAttributeMap() {
+    StringAttributeMap properties = new StringAttributeMap();
 
-  return properties;
-}
+    properties.set("set", getSet());
+    properties.set("prefix", getPrefix());
 
-/**
- * Gets all the attributes.
- * @return attributes as attribute map
- */
-@Override
-public StringAttributeMap getAttributeMap() {
-  StringAttributeMap properties = super.getAttributeMap();
+    return properties;
+  }
 
-  properties.set("set", _set);
-  properties.set("prefix", _prefix);
+  /**
+   * Sets all the attributes.
+   * @param attributeMap attributes as attribute map
+   */
+  @Override
+  public void setAttributeMap(StringAttributeMap attributeMap) {
+    setSet(chckAttr(attributeMap.get("set")));
+    setPrefix(chckAttr(attributeMap.get("prefix")));
+  }
 
-  return properties;
-}
-
-/**
- * Sets all the attributes.
- * @param attributeMap attributes as attribute map
- */
-@Override
-protected void applyAttributeMap(StringAttributeMap attributeMap) {
-  super.applyAttributeMap(attributeMap);
-  setSet(chckAttr(attributeMap.get("set")));
-  setPrefix(chckAttr(attributeMap.get("prefix")));
-}
-
-/**
- * Sets all the attributes.
- * @param attributeMap attributes as attribute map
- */
-@Override
-public void setAttributeMap(StringAttributeMap attributeMap) {
-  super.setAttributeMap(attributeMap);
-  setSet(chckAttr(attributeMap.get("set")));
-  setPrefix(chckAttr(attributeMap.get("prefix")));
-}
-
-/**
- * Gets harvest client.
- * @return harvest client
- */
-@Override
-public HRClient getClient(String hostUrl) {
-  return new HROAIClient(hostUrl, getPrefix(), getSet());
-}
-
-
-public QueryBuilder newQueryBuilder(IterationContext context, String url) {
-  return new OaiQueryBuilder(context, this, url);
-}
-
+  @Override
+  public QueryBuilder newQueryBuilder(IterationContext context, String url) {
+    return new OaiQueryBuilder(context, this, url);
+  }
 }

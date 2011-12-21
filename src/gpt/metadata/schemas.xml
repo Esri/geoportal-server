@@ -25,6 +25,13 @@
   <schema fileName="gpt/metadata/iso/nap/nap-iso-19115-definition.xml"/>
   <schema fileName="gpt/metadata/iso/nap/nap-iso-19119-definition.xml"/>
   
+  <!-- UK GEMINI 2.1 
+    GEMINI document interrogation rules are based upon
+    gmd:metadataStandardVersion[gco:CharacterString='UK GEMINI 2.1']
+  -->
+  <schema fileName="gpt/metadata/iso/gemini/gemini-iso-19115-definition.xml"/>
+  <schema fileName="gpt/metadata/iso/gemini/gemini-iso-19119-definition.xml"/>
+  
   <!--  NOTE: Only one of INSPIRE or standard ISO should be enabled -->  
   <!-- 
   <schema fileName="gpt/metadata/iso/inspire/inspire-iso-19115-definition.xml"/>
@@ -32,6 +39,8 @@
   -->
   <schema fileName="gpt/metadata/iso/iso-19115-definition.xml"/>
   <schema fileName="gpt/metadata/iso/iso-19119-definition.xml"/>
+
+  <schema fileName="gpt/metadata/iso/iso-19115-2-definition.xml"/>
   
   <schema fileName="gpt/metadata/ogc/ogc-definition.xml"/> 
   <schema fileName="gpt/metadata/ogc/cswRecord-definition.xml"/>

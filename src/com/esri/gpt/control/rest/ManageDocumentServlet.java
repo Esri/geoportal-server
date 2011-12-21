@@ -415,12 +415,25 @@ public class ManageDocumentServlet extends BaseServlet {
       }
     } catch (Throwable t) {
       String sMsg = t.toString();
-      if (sMsg.contains("The document is owned by another user:")) {
+      String json = Val.chkStr(request.getParameter("errorsAsJson"));
+      if (json.length()>0) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(json).append(" = {\r\n");
+        sb.append("message: \"").append(Val.escapeStrForJson(sMsg)).append("\",\r\n");
+        sb.append("code: ").append(500).append(",\r\n");
+        sb.append("errors: [\r\n");
+        sb.append("\"").append(Val.escapeStrForJson(sMsg)).append("\"");
+        sb.append("]}");
+        
+        LOGGER.log(Level.SEVERE, sb.toString());
+        response.getWriter().print(sb.toString());
+      } else if (sMsg.contains("The document is owned by another user:")) {
         response.sendError(HttpServletResponse.SC_FORBIDDEN,"The document is owned by another user.");
       } else {
         String sErr = "Exception occured while processing servlet request.";
         getLogger().log(Level.SEVERE,sErr,t);
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+            sMsg + sErr);
       }
     } finally {
       if (context != null) context.onExecutionPhaseCompleted();

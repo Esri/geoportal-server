@@ -22,6 +22,7 @@ import com.esri.gpt.framework.resource.query.Capabilities;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -54,20 +55,23 @@ public ArcImsQueryBuilder(IterationContext context, HarvestProtocolArcIms protoc
     throw new IllegalArgumentException("invalid protocol.");
   }
   this.context = context;
-  this.info = new ArcImsInfo(url, protocol.getServiceName(), protocol.getKind(), protocol.getUserName(), protocol.getUserPassword());
+  this.info = new ArcImsInfo(url, protocol.getServiceName(), protocol.getRootFolder(), protocol.getUserName(), protocol.getUserPassword());
   this.proxy = new ArcImsProxy(info);
 }
 
+@Override
 public Capabilities getCapabilities() {
   return capabilities;
 }
 
+@Override
 public Query newQuery(Criteria crt) {
   Query q = new ArcImsQuery(context, info, proxy, crt);
-  LOGGER.finer("Query created: " + q);
+  LOGGER.log(Level.FINER, "Query created: {0}", q);
   return q;
 }
 
+@Override
 public Native getNativeResource() {
   return null;
 }

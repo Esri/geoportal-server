@@ -73,6 +73,7 @@ public class Schema extends Component {
   private Meaning           _meaning;
   private Namespaces        _namespaces;
   private PropertyMeanings  _propertyMeanings = new PropertyMeanings();
+  private String            _schematronXslt = "";
   private Sections          _sections;
   private String            _templateFile = "";
   private String            _toEsriXslt = "";
@@ -110,6 +111,7 @@ public class Schema extends Component {
       setMeaning(new Meaning(this._propertyMeanings));
       setNamespaces(new Namespaces(objectToDuplicate.getNamespaces()));
       setInterrogation(objectToDuplicate.getInterrogation().duplicate());
+      setSchematronXslt(objectToDuplicate.getSchematronXslt());
       setSections(new Sections(objectToDuplicate.getSections(), null));
       if (objectToDuplicate.getLabel() != null) {
         setLabel(objectToDuplicate.getLabel().duplicate());
@@ -333,6 +335,27 @@ public class Schema extends Component {
    */
   protected void setPropertyMeanings(PropertyMeanings meanings) {
     this._propertyMeanings = meanings;
+  }
+  
+  /**
+   * Gets the XSLT (file path) used to perform Schematron validation.
+   * <p/>
+   * If supplied, the metadata document will be validated prior to publication.
+   * <br/>The XSLT must produce an SVRL document (Schematron Validation Report Language). 
+   * @return the file path to the XSLT
+   */
+  public String getSchematronXslt() {
+    return this._schematronXslt;
+  }
+  /**
+   * Sets the XSLT (file path) used to perform Schematron validation.
+   * <p/>
+   * If supplied, the metadata document will be validated prior to publication.
+   * <br/>The XSLT must produce an SVRL document (Schematron Validation Report Language). 
+   * @param xslt the file path to the XSLT
+   */
+  public void setSchematronXslt(String xslt) {
+    this._schematronXslt = Val.chkStr(xslt);
   }
 
   /**
@@ -574,6 +597,7 @@ public class Schema extends Component {
     setCswSummaryXslt(DomUtil.getAttributeValue(attributes, "cswSummaryXslt"));
     setToEsriXslt(DomUtil.getAttributeValue(attributes, "toEsriXslt"));
     setXsdLocation(DomUtil.getAttributeValue(attributes, "xsdLocation"));
+    setSchematronXslt(DomUtil.getAttributeValue(attributes, "schematronXslt"));
 
     // configure the label component
     setLabel(context.getFactory().newLabel(context, DomUtil.findFirst(node, "label")));
@@ -744,6 +768,9 @@ public class Schema extends Component {
     }
     if (getXsdLocation().length() > 0) {
       sb.append(" xsdLocation=\"").append(getXsdLocation()).append("\"");
+    }
+    if (getSchematronXslt().length() > 0) {
+      sb.append(" schematronXslt=\"").append(getSchematronXslt()).append("\"");
     }
     if (getLabel() != null) {
       sb.append("\n").append(getLabel());

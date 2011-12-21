@@ -16,14 +16,17 @@
 -->
 <tree>	
   <label>name</label>
-  <identifier>name</identifier>
+  <identifier>id</identifier>
   <item>
+    <id>0</id>
     <name resourceKey="catalog.browse.toc.browseResource"></name>
 		<item>
+		  <id>1</id>
 			<name resourceKey="catalog.resource.relationships.toc.operates-On">Operates On</name>
 	    <query>urn:esri:geoportal:browse:resourceRelationship:apiso.OperatesOn-apiso.ResourceIdentifier</query>
 		</item>	
 		<item>
+		  <id>2</id>
 			<name resourceKey="catalog.resource.relationships.toc.used-By"></name>  
 	    <query>urn:esri:geoportal:browse:resourceRelationship:apiso.ResourceIdentifier-apiso.OperatesOn</query>		
 		</item>	

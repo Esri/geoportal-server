@@ -14,6 +14,8 @@
  */
 package com.esri.gpt.framework.http;
 
+import org.apache.commons.httpclient.Header;
+
 /**
  * Contains basic information about an HTTP response.
  */
@@ -28,6 +30,7 @@ public class ResponseInfo {
   private String defaultEncoding = "UTF-8"; // "ISO-8859-1"
   private int    responseCode = -1;
   private String responseMessage;
+  private Header [] responseHeaders = new Header[]{};
   
   /** constructors ============================================================ */
   
@@ -156,6 +159,36 @@ public class ResponseInfo {
    */
   public void setResponseMessage(String message) {
     this.responseMessage = message;
+  }
+
+  /**
+   * Gets responseHeaders.
+   * @return responseHeaders
+   */
+  public Header[] getResponseHeaders() {
+    return responseHeaders;
+  }
+
+  /**
+   * Sets responseHeaders.
+   * @param responseHeaders responseHeaders
+   */
+  public void setResponseHeaders(Header[] headers) {
+    this.responseHeaders = headers!=null? headers: new Header[]{};
+  }
+  
+  /**
+   * Gets response header by name.
+   * @param name header name
+   * @return response header or <code>null</code> if specified header not found
+   */
+  public Header getResponseHeader(String name) {
+    for (Header header : getResponseHeaders()) {
+      if (header.getName().equals(name)) {
+        return header;
+      }
+    }
+    return null;
   }
   
   /** methods ================================================================= */

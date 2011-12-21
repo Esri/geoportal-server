@@ -29,6 +29,15 @@ public abstract class ContentHandler extends ContentBase {
   /** methods ================================================================= */
   
   /**
+   * Called before response is being read.
+   * @param request HTTP client request
+   * @return <code>true</code> to continue reading response
+   */
+  public boolean onBeforeReadResponse(HttpClientRequest request) {
+    return true;
+  }
+  
+  /**
    * Handle the content associated with an HTTP response body.
    * @param request the HTTP request that was executed
    * @param responseStream the stream associated with the HTTP response body

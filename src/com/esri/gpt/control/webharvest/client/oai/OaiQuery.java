@@ -53,9 +53,15 @@ public OaiQuery(IterationContext context, OaiInfo info, OaiProxy proxy, Criteria
   this.criteria = criteria;
 }
 
+  @Override
 public Result execute()  {
   LOGGER.finer("Executing query: "+this);
-  Result r = new CommonResult(new OaiFolders(context, info, proxy, criteria));
+  Result r = new CommonResult(new OaiFolders(context, info, proxy, criteria)) {
+    @Override
+    public void destroy() {
+      info.destroy();
+    }
+  };
   LOGGER.finer("Completed query execution: "+this);
   return r;
 }

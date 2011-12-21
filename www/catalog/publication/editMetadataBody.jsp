@@ -28,6 +28,7 @@
   gptMapConfig.locatorURL = "<%=imConfig.getLocatorUrl()%>";
   gptMapConfig.locatorSingleFieldParameter = "<%=imConfig.getLocatorSingleFieldParameter()%>";
   gptMapConfig.locatorGraphicURL = "<%=request.getContextPath()%>/catalog/images/pushpin_red.gif";
+  gptMapConfig.mapVisibleLayers = "<%=imConfig.getMapVisibleLayers()%>";
 </script>
 
 <h:form id="mdEditor" styleClass="mdEditor">

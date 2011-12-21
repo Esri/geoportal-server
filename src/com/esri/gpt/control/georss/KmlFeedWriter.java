@@ -215,9 +215,14 @@ protected void writeDirectTag(String name, String value) {
  * @param envelope envelope
  */
 private void writePoint(Envelope envelope) {
-  _writer.print("<Point>");
-  _writer.print(getValidCenterX(envelope) + "," + getValidCenterY(envelope));
-  _writer.println("</Point>");
+  _writer.print("<Point><coordinates>");
+  if(envelope.getMinX() == envelope.getMaxX() && 
+		  envelope.getMinY() == envelope.getMaxY()) {
+	_writer.print(envelope.getMinX() + "," + envelope.getMinY() + ",0");  
+  } else {
+    _writer.print(getValidCenterX(envelope) + "," + getValidCenterY(envelope));
+  }
+  _writer.println("</coordinates></Point>");
 }
 
 /**
@@ -225,6 +230,11 @@ private void writePoint(Envelope envelope) {
  * @param envelope envelope
  */
 private void writePolygon(Envelope envelope) {
+  if(envelope.getMinX() == envelope.getMaxX() && 
+		  envelope.getMinY() == envelope.getMaxY()) {
+	writePoint(envelope);
+	return;
+  }
   _writer.println("<Polygon>");
   writeTag("extrude", "0");
   writeTag("altitudeMode", "clampToGround");

@@ -38,7 +38,7 @@
     <!-- Title -->    
     <parameter key="identification.title"> 
         <label resourceKey="fgdc.identification.title"/>
-        <input type="text" maxlength="4000" defaultValue="Untitled"/>
+        <input type="text" maxlength="4000"/>
         <validation required="true"/>
         <content useSelectForUpdate="true"
             select="/metadata/idinfo/citation/citeinfo/title" deleteIfEmpty="false"/>

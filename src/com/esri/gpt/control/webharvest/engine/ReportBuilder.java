@@ -21,7 +21,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -80,7 +79,7 @@ private RecordWriter writer;
 private volatile Date startTime;
 /** end time */
 private volatile Date endTime;
-
+  
 /**
  * Creates instance of the builder.
  * @param directory temporary file directory
@@ -125,6 +124,7 @@ public ReportBuilder(Integer maxDocToHarvest, Long maxRepRecords, Long maxRepErr
   this(System.getProperty("java.io.tmpdir")+SUBFOLDER, maxDocToHarvest, maxRepRecords, maxRepErrors);
 }
 
+  @Override
 public synchronized Date getStartTime() {
   return startTime;
 }
@@ -137,6 +137,7 @@ public synchronized void setStartTime(Date startTime) {
   this.startTime = startTime;
 }
 
+  @Override
 public synchronized Date getEndTime() {
   return endTime;
 }
@@ -149,11 +150,13 @@ public synchronized void setEndTime(Date endTime) {
   this.endTime = endTime;
 }
 
+  @Override
 public synchronized long getDuration() {
   if (getStartTime()==null) return 0;
   return (getEndTime()!=null? getEndTime(): new Date()).getTime() - getStartTime().getTime();
 }
 
+  @Override
 public synchronized double getPerformance() {
 
   double harvestedCount = getHarvestedCount();
@@ -194,22 +197,27 @@ public void createUnpublishedEntry(String sourceUri, Collection<String> errors) 
   this.createEntry(sourceUri, true, false, false, errors);
 }
 
+  @Override
 public synchronized long getHarvestedCount() {
   return this.harvested;
 }
 
+  @Override
 public synchronized long getValidatedCount() {
   return this.validated;
 }
 
+  @Override
 public synchronized long getAddedCount() {
   return this.added;
 }
 
+  @Override
 public synchronized long getModifiedCount() {
   return this.updated;
 }
 
+  @Override
 public long getPublishedCount() {
   return getAddedCount() + getModifiedCount();
 }
@@ -283,6 +291,19 @@ public ReportStream createReportStream() throws IOException {
       return read();
     }
 
+    @Override
+    public void close() throws IOException {
+      if (streams!=null) {
+        for (InputStream is: streams) {
+          if (is!=null) {
+            try {
+              is.close();
+            } catch (IOException ex) {}
+          }
+        }
+      }
+    }
+
     private InputStream getCurrentStream() {
       if (currentStream==null) {
         streamIndex++;
@@ -295,16 +316,29 @@ public ReportStream createReportStream() throws IOException {
   };
 
   ReportStream reportStream = new ReportStream() {
+      @Override
       public InputStream getStream() {
         return inputStream;
       }
 
+      @Override
       public long getLength() {
         return length;
       }
   };
 
   return reportStream;
+}
+
+/**
+ * Deletes temporary file as no needed anymore.
+ */
+public void cleanup() {
+  close();
+  if (storage!=null) {
+    storage.delete();
+    storage = null;
+  }
 }
 
 /**

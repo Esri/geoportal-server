@@ -153,7 +153,16 @@ private String makeAxlRequest() {
     sb.append(" maxy=\"" +getBBox().getMaxY()+ "\"");
     sb.append(" spatialoperator=\"" +getSpatialOperator()+ "\"");
     sb.append("/>");
+  } else {
+    sb.append("\r\n<ENVELOPE");
+    sb.append(" minx=\"-180\"");
+    sb.append(" miny=\"-90\"");
+    sb.append(" maxx=\"180\"");
+    sb.append(" maxy=\"90\"");
+    sb.append(" spatialoperator=\"overlaps\"");
+    sb.append("/>");
   }
+  
   if (getFullText()!=null && getFullText().length>0) {
     for (String word : getFullText()) {
       word = Val.chkStr(word);
@@ -214,6 +223,7 @@ public void execute() throws ImsServiceException {
           document, XPathConstants.NODESET);
 
         for (int i=0; i<nodeList.getLength(); i++) {
+          if (Thread.currentThread().isInterrupted()) break;
           if (getMaxRec()>0 && getUuids().size()>=getMaxRec()) break;
           Node node = nodeList.item(i);
           String docid   = (String) xPath.evaluate("@docid", node, XPathConstants.STRING);

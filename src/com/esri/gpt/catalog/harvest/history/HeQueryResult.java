@@ -73,7 +73,7 @@ public String getProtocolTypeAsString() {
  * @param name protocol type name
  */
 public void setProtocolTypeAsString(String name) {
-  _protocolType = Val.chkStr(_protocolType);
+  _protocolType = Val.chkStr(name);
 }
 
 /**

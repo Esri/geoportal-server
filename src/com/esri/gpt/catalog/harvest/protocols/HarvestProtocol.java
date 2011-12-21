@@ -21,11 +21,16 @@ import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.control.webharvest.protocol.ProtocolSerializer;
 import com.esri.gpt.framework.collection.StringAttribute;
 import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.ApplicationConfiguration;
+import com.esri.gpt.framework.context.ApplicationContext;
+import com.esri.gpt.framework.security.codec.PC1_Encryptor;
 import com.esri.gpt.framework.util.LogUtil;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 /**
  * Generic harvesting protocol.
@@ -34,184 +39,267 @@ import java.util.logging.Level;
 public abstract class HarvestProtocol implements Protocol, Serializable {
 
 // class variables =============================================================
+  private static final Pattern PATTERN = Pattern.compile("(\\p{Digit}{1,3}\\-)*\\p{Digit}{1,3}");
 // instance variables ==========================================================
-private long flags;
+  private long flags;
+  /** destinations */
+  private List<String> destinations;
 // constructors ================================================================
 // properties ==================================================================
-
-/**
- * Checks if <i>ping</i> operation is supported.
- * @return <code>true</code> if <i>ping</i> operation is supported
- * @see HRClient#ping
- */
-public boolean getPingSupported() {
-  try {
-    return getClient(null).isPingSupported();
-  } catch (HRInvalidProtocolException ex) {
-    return false;
+  
+  /**
+   * Sets destinations.
+   * @param destinations destinations
+   */
+  public void setDestinations(List<String> destinations) {
+    this.destinations = destinations;
   }
-}
+  
+  /**
+   * Gets destinations.
+   * @return destinations
+   */
+  public List<String> getDestinations() {
+    return destinations;
+  }
+
+  /**
+   * Checks if <i>ping</i> operation is supported.
+   * @return <code>true</code> if <i>ping</i> operation is supported
+   * @see HRClient#ping
+   */
+  public boolean getPingSupported() {
+    return true;
+  }
 
 // methods =====================================================================
+  /**
+   * Gets protocol type.
+   * @return protocol type
+   * @deprecated 
+   */
+  @Deprecated
+  public abstract ProtocolType getType();
 
-/**
- * Gets protocol type.
- * @return protocol type
- */
-public abstract ProtocolType getType();
-
-@Override
-public String getKind() {
-  return getType().name();
-}
-
-/**
- * Gets client associated with particular protocol.
- * @param hostUrl host URL
- * @return instance of the harvest repository client
- * @throws HRInvalidProtocolException if unable to create client for 
- * the protocol
- */
-public abstract HRClient getClient(String hostUrl)
-    throws HRInvalidProtocolException;
-
-/**
- * Checks connection to the specific server.
- * @param url server URL 
- * @throws HRInvalidProtocolException when protocol attributes are invalid
- * @throws HRConnectionException if connecting remote repository failed
- */
-public final void checkConnection(String url)
-    throws HRInvalidProtocolException, HRConnectionException {
-  getClient(url).ping();
-}
-
-/**
- * Pings resource.
- * @param url resource URL
- * @throws IllegalArgumentException if invalid protocol definition
- * @throws IOException if error connection resource
- */
-public final void ping(String url) throws Exception {
-  try {
-    checkConnection(url);
-  } catch (HRInvalidProtocolException ex) {
-    throw new Exception("Invalid protocol definition", ex);
-  } catch (HRConnectionException ex) {
-    throw new Exception("Protocol connection exception", ex);
-  }
-}
-
-/**
- * Creates xml string representation of the protocol.
- * @return xml string representation of the protocol
- */
-public String toXmlString() {
-  return ProtocolSerializer.toXmlString(this);
-}
-
-/**
- * Gets string representation of the protocol.
- * @return string representation of the protocol
- */
-@Override
-public String toString() {
-  StringBuilder sb = new StringBuilder();
-
-  sb.append(getType().toString());
-  for (String key : extractAttributeMap().keySet()) {
-    StringAttribute value = extractAttributeMap().get(key);
-    sb.append(" ").append(key).append(":").append(value.getValue());
+  @Override
+  public String getKind() {
+    return getType().name();
   }
 
-  return sb.toString();
-}
+  /**
+   * Gets client associated with particular protocol.
+   * @param hostUrl host URL
+   * @return instance of the harvest repository client
+   * @throws HRInvalidProtocolException if unable to create client for 
+   * the protocol
+   * @deprecated
+   */
+  @Deprecated
+  public HRClient getClient(String hostUrl)
+      throws HRInvalidProtocolException {
+    return null;
+  }
 
-/**
- * Gets all the attributes.
- * @return attributes as attribute map
- */
-protected abstract StringAttributeMap extractAttributeMap();
-
-/**
- * Sets all the attributes.
- * @param attributeMap attributes as attribute map
- */
-protected abstract void applyAttributeMap(StringAttributeMap attributeMap);
-
-/**
- * Checks attribute.
- * @param attribute attributes
- * @return attribute value
- */
-protected String chckAttr(StringAttribute attribute) {
-  return attribute != null ? attribute.getValue() : "";
-}
-
-@Override
-public long getFlags() {
-  return flags;
-}
-
-@Override
-public void setFlags(long flags) {
-  this.flags = flags;
-}
-
-// custom types ================================================================
-/**
- * Protocol type.
- */
-public enum ProtocolType {
-
-/** No protocol defined. */
-None("None"),
-/** ESRI Metadata Services */
-ArcIms("ESRI MS"),
-/** OAI */
-OAI("OAI"),
-/** WAF */
-WAF("WAF"),
-/** CSW */
-CSW("CSW"),
-/** Resource */
-RES("RES"),
-/* ArcGIS Portal */
-/* NOTE! This is EXPERIMENTAL feature. It might be removed at any time in the future. */
-AGP("AGP");
-/** protocol id */
-private String _id;
-
-/**
- * Creates instance of the enum element.
- * @param id protocol id
- */
-ProtocolType(String id) {
-  _id = id;
-}
-
-/**
- * Gets id of the protocol.
- * @return id of the protocol
- */
-public String getId() {
-  return _id;
-}
-
-/**
- * Checks type.
- * @param name type name
- * @return type or <code>Type.None</code> if type unrecognized
- */
-public static ProtocolType checkValueOf(String name) {
-  name = Val.chkStr(name);
-  for (ProtocolType t : values()) {
-    if (t.name().equalsIgnoreCase(name) || t.getId().equalsIgnoreCase(name)) {
-      return t;
+  /**
+   * Checks connection to the specific server.
+   * @param url server URL 
+   * @throws HRInvalidProtocolException when protocol attributes are invalid
+   * @throws HRConnectionException if connecting remote repository failed
+   * @deprecated 
+   */
+  @Deprecated
+  public final void checkConnection(String url)
+      throws HRInvalidProtocolException, HRConnectionException {
+    HRClient client = getClient(url);
+    if (client != null) {
+      client.ping();
     }
   }
-  LogUtil.getLogger().log(Level.SEVERE, "Error parsing ProtocolType value: {0}", name);
-  return None;
-}
-}
+
+  /**
+   * Pings resource.
+   * @param url resource URL
+   * @throws IllegalArgumentException if invalid protocol definition
+   * @throws IOException if error connection resource
+   * @deprecated
+   */
+  @Deprecated
+  public final void ping(String url) throws Exception {
+    try {
+      checkConnection(url);
+    } catch (HRInvalidProtocolException ex) {
+      throw new Exception("Invalid protocol definition", ex);
+    } catch (HRConnectionException ex) {
+      throw new Exception("Protocol connection exception", ex);
+    }
+  }
+
+  /**
+   * Creates xml string representation of the protocol.
+   * @return xml string representation of the protocol
+   */
+  public String toXmlString() {
+    return ProtocolSerializer.toXmlString(this);
+  }
+
+  /**
+   * Gets string representation of the protocol.
+   * @return string representation of the protocol
+   */
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+
+    sb.append(getKind());
+    for (String key : extractAttributeMap().keySet()) {
+      StringAttribute value = extractAttributeMap().get(key);
+      sb.append(" ").append(key).append(":").append(value.getValue());
+    }
+
+    return sb.toString();
+  }
+
+  /**
+   * Checks attribute.
+   * @param attribute attributes
+   * @return attribute value
+   */
+  protected String chckAttr(StringAttribute attribute) {
+    return attribute != null ? attribute.getValue() : "";
+  }
+
+  @Override
+  public long getFlags() {
+    return flags;
+  }
+
+  @Override
+  public void setFlags(long flags) {
+    this.flags = flags;
+  }
+
+  @Override
+  public StringAttributeMap getAttributeMap() {
+    return new StringAttributeMap();
+  }
+
+  @Override
+  public void setAttributeMap(StringAttributeMap attributeMap) {
+  }
+
+  @Override
+  public StringAttributeMap extractAttributeMap() {
+    // default implementationis to do exactly what getAttributeMap() does
+    return getAttributeMap();
+  }
+
+  @Override
+  public void applyAttributeMap(StringAttributeMap attributeMap) {
+    // default implementation is to do exatly what setAttributeMap() does
+    setAttributeMap(attributeMap);
+  }
+
+  /**
+   * Decrypts string.
+   * @param s string to decrypt
+   * @return decrypted string
+   */
+  protected String decryptString(String s) {
+    s = Val.chkStr(s);
+    if (PATTERN.matcher(s).matches()) {
+      String sEncKey = getEncKey();
+      if (sEncKey.length() > 0 && s.length() > 0) {
+        try {
+          s = PC1_Encryptor.decrypt(sEncKey, s);
+        } catch (IllegalArgumentException ex) {
+        }
+      }
+    }
+    return s;
+  }
+
+  /**
+   * Encrypts string.
+   * @param s string to encrypt
+   * @return encrypted string
+   */
+  protected String encryptString(String s) {
+    s = Val.chkStr(s);
+    if (!s.isEmpty()) {
+      String sEncKey = getEncKey();
+      if (sEncKey.length() > 0) {
+        s = PC1_Encryptor.encrypt(sEncKey, s);
+      }
+    }
+    return s;
+  }
+
+  /**
+   * Gets encryption key.
+   * @return encryption key
+   */
+  private String getEncKey() {
+    ApplicationContext appCtx = ApplicationContext.getInstance();
+    ApplicationConfiguration appCfg = appCtx.getConfiguration();
+    return appCfg.getIdentityConfiguration().getEncKey();
+  }
+
+// custom types ================================================================
+  /**
+   * Protocol type.
+   * @deprecated 
+   */
+  @Deprecated
+  public enum ProtocolType {
+
+    /** No protocol defined. */
+    None("None"),
+    /** ESRI Metadata Services */
+    ArcIms("ESRI MS"),
+    /** OAI */
+    OAI("OAI"),
+    /** WAF */
+    WAF("WAF"),
+    /** CSW */
+    CSW("CSW"),
+    /** Resource */
+    RES("RES"),
+    /* ArcGIS Portal */
+    /* NOTE! This is EXPERIMENTAL feature. It might be removed at any time in the future. */
+    AGP("AGP");
+    /** protocol id */
+    private String _id;
+
+    /**
+     * Creates instance of the enum element.
+     * @param id protocol id
+     */
+    ProtocolType(String id) {
+      _id = id;
+    }
+
+    /**
+     * Gets id of the protocol.
+     * @return id of the protocol
+     */
+    public String getId() {
+      return _id;
+    }
+
+    /**
+     * Checks type.
+     * @param name type name
+     * @return type or <code>Type.None</code> if type unrecognized
+     */
+    public static ProtocolType checkValueOf(String name) {
+      name = Val.chkStr(name);
+      for (ProtocolType t : values()) {
+        if (t.name().equalsIgnoreCase(name) || t.getId().equalsIgnoreCase(name)) {
+          return t;
+        }
+      }
+      LogUtil.getLogger().log(Level.SEVERE, "Error parsing ProtocolType value: {0}", name);
+      return None;
+    }
+  }
 }

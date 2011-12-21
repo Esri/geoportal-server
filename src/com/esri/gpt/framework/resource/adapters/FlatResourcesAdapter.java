@@ -44,6 +44,7 @@ public FlatResourcesAdapter(Resource resource) {
   this(Arrays.asList(new Resource[]{resource}));
 }
 
+@Override
 public Iterator<Resource> iterator() {
   return new FlatResourcesIterator();
 }
@@ -62,11 +63,15 @@ private LinkedList<Iterator<Resource>> stack = new LinkedList<Iterator<Resource>
   }
 }
 
+@Override
 public boolean hasNext() {
   if (stack.size()==0) return false;
-  return true;
+  if (stack.getLast().hasNext()) return true;
+  stack.removeLast();
+  return hasNext();
 }
 
+@Override
 public Resource next() {
   if (!hasNext()) {
     throw new NoSuchElementException("No more resources.");

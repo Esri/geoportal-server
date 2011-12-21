@@ -29,6 +29,7 @@ public class LuceneConfig {
   private boolean                  useNativeFSLockFactory = false;
   private int                      writeLockTimeout = 0;
   private boolean                  useConstantScoreQuery;
+  private LuceneIndexObserverArray observers = new LuceneIndexObserverArray();
 
   /** constructors ============================================================ */
 
@@ -147,6 +148,23 @@ public class LuceneConfig {
   public void setMaxClauseCount(int maxClauseCount) {
     BooleanQuery.setMaxClauseCount(maxClauseCount);
   }
+  
+  /**
+   * Gets observers.
+   * @return observers
+   */
+  public LuceneIndexObserverArray getObservers() {
+    return observers;
+  }
+  
+  /**
+   * Sets observers.
+   * @param observers observers.
+   */
+  public void setObservers(LuceneIndexObserverArray observers) {
+    this.observers = observers!=null? observers: new LuceneIndexObserverArray();
+  }
+  
   /** methods ================================================================= */
   
   /**

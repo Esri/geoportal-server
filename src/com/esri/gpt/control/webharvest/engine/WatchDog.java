@@ -43,6 +43,8 @@ private Thread workerThread;
 private volatile boolean shutdown;
 /** autoselect frequency */
 private long watchDogFrequency;
+/** suspended */
+private volatile boolean suspended;
 
 /**
  * Creates instance of the watch-dog.
@@ -56,49 +58,54 @@ public void run() {
   workerThread = Thread.currentThread();
   LOGGER.info("[SYNCHRONIZER] Watch-dog activated.");
   do {
-    LOGGER.finer("[SYNCHRONIZER] Watch-dog entered run mode.");
+    if (!suspended) {
+      LOGGER.finer("[SYNCHRONIZER] Watch-dog entered run mode.");
 
-    String[] uuids = getCurrentlyHarvesterResourceUuids();
-    String[] canceledUuids = new String[]{};
+      String[] uuids = getCurrentlyHarvesterResourceUuids();
+      String[] canceledUuids = new String[]{};
 
-    try {
-      ArrayList<String> uuidsToCancel = new ArrayList<String>();
-      HjRecords records = selectAll(uuids);
+      try {
+        ArrayList<String> uuidsToCancel = new ArrayList<String>();
+        HjRecords records = selectAll(uuids);
 
-      for (HjRecord r : records) {
-        if (r.getStatus() == JobStatus.Canceled) {
-          uuidsToCancel.add(r.getHarvestSite().getUuid());
+        for (HjRecord r : records) {
+          if (r.getStatus() == JobStatus.Canceled) {
+            uuidsToCancel.add(r.getHarvestSite().getUuid());
+          }
         }
+
+        canceledUuids = uuidsToCancel.toArray(new String[uuidsToCancel.size()]);
+
+        if (uuidsToCancel.size() > 0) {
+          LOGGER.finer("[SYNCHRONIZER] Watch-dog loaded tasks to drop for resources: " + uuidsToCancel.toString());
+        } else {
+          LOGGER.finer("[SYNCHRONIZER] Watch-dog loaded no tasks to drop.");
+        }
+
+        cancelByResourceUuids(canceledUuids);
+
+        if (canceledUuids.length > 0) {
+          withdrawAll(canceledUuids);
+        }
+      } catch (SQLException ex) {
+        LOGGER.log(Level.SEVERE, "[SYNCHRONIZER] Error loading tasks for Watch-dog.", ex);
       }
-
-      canceledUuids = uuidsToCancel.toArray(new String[uuidsToCancel.size()]);
-
-      if (uuidsToCancel.size() > 0) {
-        LOGGER.finer("[SYNCHRONIZER] Watch-dog loaded tasks to drop for resources: " + uuidsToCancel.toString());
-      } else {
-        LOGGER.finer("[SYNCHRONIZER] Watch-dog loaded no tasks to drop.");
-      }
-
-      cancelByResourceUuids(canceledUuids);
-
-      if (canceledUuids.length > 0) {
-        withdrawAll(canceledUuids);
-      }
-    } catch (SQLException ex) {
-      LOGGER.log(Level.SEVERE, "[SYNCHRONIZER] Error loading tasks for Watch-dog.", ex);
     }
 
-    if (shutdown)
-      break;
+    if (shutdown) break;
 
-    TimePeriod period = new TimePeriod();
-    period.setValue(watchDogFrequency);
-
-    LOGGER.finer("[SYNCHRONIZER] Watch-dog enters wait mode for " + period);
     // wait for calculated duration or until interrupted
     synchronized (this) {
       try {
-        this.wait(watchDogFrequency);
+        if (isSuspendedWithAck()) {
+          LOGGER.finer("[SYNCHRONIZER] Watch-dog suspended mode");
+          wait();
+        } else {
+          TimePeriod period = new TimePeriod();
+          period.setValue(watchDogFrequency);
+          LOGGER.finer("[SYNCHRONIZER] Watch-dog enters wait mode for " + period);
+          wait(watchDogFrequency);
+        }
       } catch (InterruptedException ex) {
         if (shutdown)
           break;
@@ -163,4 +170,30 @@ private void withdrawAll(String[] uuids) throws SQLException {
   }
 }
 
+public synchronized void safeSuspend() {
+  if (!suspended) {
+    LOGGER.info("[SYNCHRONIZER] Suspending Watch-Dog");
+    suspended = true;
+    notify();
+  } else {
+    LOGGER.info("[SYNCHRONIZER] Watch-Dog already suspended");
+  }
+}
+
+public synchronized void safeResume() {
+  if (suspended) {
+    LOGGER.info("[SYNCHRONIZER] Resuming Watch-Dog");
+    suspended = false;
+    notify();
+  } else {
+    LOGGER.info("[SYNCHRONIZER] Watch-Dog already resumed");
+  }
+}
+
+private boolean isSuspendedWithAck() {
+  if (suspended) {
+    LOGGER.info("[SYNCHRONIZER] Watch-Dog acknowledged suspension");
+  }
+  return suspended;
+}
 }

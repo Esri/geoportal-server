@@ -108,6 +108,16 @@ private void buildMessages(MessageBroker messageBroker,
       appender.append(error.getMessage());
     } else if (sCode.equals(ValidationError.REASONCODE_XSD_VIOLATION)) {
       appender.append(error.getMessage());
+    } else if (sCode.equals(ValidationError.REASONCODE_SCHEMATRON_EXCEPTION)) {
+      appender.appendDirect(error.getMessage());
+    } else if (sCode.equals(ValidationError.REASONCODE_SCHEMATRON_VIOLATION)) {
+      appender.appendDirect(error.getMessage());
+      if (includeXpath) {
+        String sLocation = Val.chkStr(error.location);
+        if (sLocation.length() > 0) {
+          appender.appendDirect("... "+sLocation);
+        }
+      }
     } else {
       
       String sMsg = "???";

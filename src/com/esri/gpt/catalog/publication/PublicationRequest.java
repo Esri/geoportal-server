@@ -18,10 +18,13 @@ import com.esri.gpt.catalog.arcims.ImsServiceException;
 import com.esri.gpt.catalog.arcims.PutMetadataInfo;
 import com.esri.gpt.catalog.arcims.PutMetadataRequest;
 import com.esri.gpt.catalog.context.CatalogIndexException;
+import com.esri.gpt.catalog.management.MmdEnums;
+import com.esri.gpt.catalog.management.MmdEnums.ApprovalStatus;
 import com.esri.gpt.catalog.schema.MetadataDocument;
 import com.esri.gpt.catalog.schema.Schema;
 import com.esri.gpt.catalog.schema.SchemaException;
 import com.esri.gpt.catalog.schema.Schemas;
+import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.security.principal.Publisher;
 import com.esri.gpt.framework.sql.IClobMutator;
@@ -46,6 +49,7 @@ private boolean           _hasMetadataServer = false;
 private Publisher         _publisher;
 private PublicationRecord _record = new PublicationRecord();
 private RequestContext    _requestContext;
+private boolean           _updateIndex = true;
 
 // constructors ================================================================
   
@@ -64,6 +68,23 @@ public PublicationRequest(RequestContext requestContext,
   setRequestContext(requestContext);
   setPublisher(publisher);
   getPublicationRecord().setSourceXml(sourceXml);
+  
+  // check for auto-approval (only applies to new records)
+  if (requestContext != null) {
+    StringAttributeMap params = requestContext.getCatalogConfiguration().getParameters();
+    String sAuto = Val.chkStr(params.getValue("publicationRequest.autoApprove"));
+    if (sAuto.toLowerCase().equals("true")) {
+      this.getPublicationRecord().setAutoApprove(true);
+    }
+  }
+}
+
+public boolean getUpdateIndex() {
+  return _updateIndex;
+}
+
+public void setUpdateIndex(boolean _updateIndex) {
+  this._updateIndex = _updateIndex;
 }
 
 // properties ==================================================================
@@ -357,6 +378,10 @@ private void sendPublicationRequest(Schema schema)
   //putInfo.setServiceType(schema.getMeaning().getResourceType());
   
   // send the request to ArcIMS, determine if the document was replaced
+  if(this._record != null ) {
+    this.getRequestContext().getObjectMap().put(MmdEnums.INCOMING_STATUS, 
+        this._record.getApprovalStatus());
+  }
   imsRequest.executePut(putInfo);
   String sReplaced = PutMetadataRequest.ACTION_STATUS_REPLACED;
   boolean bReplaced = imsRequest.getActionStatus().equals(sReplaced);
@@ -370,6 +395,7 @@ private void sendPublicationRequest(Schema schema)
   
   // update the administrative table
   ImsMetadataAdminDao imsDao = new ImsMetadataAdminDao(getRequestContext());
+  imsDao.setUpdateIndex(getUpdateIndex());
   imsDao.updateRecord(schema,getPublicationRecord());
 }
 

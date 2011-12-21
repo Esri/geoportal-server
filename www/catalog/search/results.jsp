@@ -102,11 +102,18 @@ if(typeof(contextPath) == 'undefined' || contextPath == "") {
   var contextPath = "<%=request.getContextPath()%>";
 }
 
+
+function getCsv(url) {
+	url = url.replace("f=pjson", "f=csv");
+	window.open(url);
+
+}
+
 /**
 Connects to the reviews endpoint and 
 **/
 function rsInsertReviews() {
-  
+	
   if(typeof(jsMetadata) == 'undefined' || jsMetadata == null || 
      typeof(jsMetadata.records) == 'undefined' || jsMetadata.records == null) {
      return;
@@ -123,7 +130,9 @@ function rsInsertReviews() {
       rsInsertRecordReview(record, index);
     }
   );
+
 }
+
 
 /**
 Gets one record and inserts the review on the particular record
@@ -452,7 +461,7 @@ function rsInsertReviewsHandler(data) {
 					<h:panelGroup>
 					  <h:graphicImage id="_imgRecordThumbnail" rendered="#{not empty record.thumbnailLink.url}"
                value="#{record.thumbnailLink.url}" width="64" height="64" styleClass="resultsThumbnail" />
-            <h:outputText id="_txtAbstract" styleClass="resultsContent" value="#{record.abstract}" />
+            <h:outputText id="_txtAbstract" styleClass="resultsContent" value="#{record['abstract']}" />
 				  </h:panelGroup>
 				    
 				  <% // Resource links %>
@@ -467,6 +476,7 @@ function rsInsertReviewsHandler(data) {
                 styleClass="resultsLink" onclick="javascript:return srZoomTo(#{dTable.dataTable.rowIndex});">
                 <h:outputText id="_txtZoomTo" value="#{gptMsg['catalog.search.searchResult.zoomTo']}" />
               </h:outputLink>
+          
               <f:verbatim><span style="padding-left: 15px;"></span></f:verbatim>
               <h:outputLink id="lnkReviewIcon" title="" target="_blank" 
                 style="visibility: hidden; display: none;" 
@@ -519,6 +529,9 @@ function rsInsertReviewsHandler(data) {
   </h:outputLink>
   <h:outputLink id="srRestJSON" target="_blank" value="#{SearchController.restSearchRequestUrlJson}" styleClass="resultsLinkRestApi">
     <h:outputText value="JSON"/>
+  </h:outputLink>
+  <h:outputLink id="srRestCSV" target="_blank" value="javascript:void(0);"onclick="javascript:getCsv('#{SearchController.restSearchRequestUrlJson}'); return false;" styleClass="resultsLinkRestApi">
+    <h:outputText value="CSV"/>
   </h:outputLink>
 </h:panelGroup>
 

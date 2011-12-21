@@ -16,12 +16,13 @@ package com.esri.gpt.control.webharvest.protocol;
 
 import com.esri.gpt.framework.collection.StringAttribute;
 import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.util.Val;
+import java.util.List;
 
 /**
  * Protocol serializer.
  */
 public class ProtocolSerializer {
-
 /**
  * Creates xml string representation of the protocol.
  * @param protocol protocol
@@ -32,9 +33,10 @@ public static String toXmlString(Protocol protocol) {
 
   sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
   if (protocol!=null) {
-    sb.append("<protocol type=\"" + protocol.getKind() + "\" flags=\"" +protocol.getFlags()+ "\">");
+    String sDest = getDestinations(protocol);
+    sb.append("<protocol type=\"").append(protocol.getKind()).append("\" flags=\"").append(protocol.getFlags()).append(sDest!=null? " destinations=\"" +sDest+ "\"": "").append("\">");
 
-    StringAttributeMap attributes = protocol.getAttributeMap();
+    StringAttributeMap attributes = protocol.extractAttributeMap();
     for (String key : attributes.keySet()) {
       StringAttribute value = attributes.get(key);
       sb.append("<").append(key).append(">").append(value.getValue()).
@@ -47,6 +49,30 @@ public static String toXmlString(Protocol protocol) {
   }
 
   return sb.toString();
+}
+
+/**
+ * Gets destinations as string.
+ * @param protocol protocol
+ * @return destinations or <code>null</code> if no destinations
+ */
+private static String getDestinations(Protocol protocol) {
+    List<String> destinations = ProtocolInvoker.getDestinations(protocol);
+    String sDest = null;
+    if (destinations!=null) {
+      StringBuilder sbDest = new StringBuilder();
+      for (String dest : destinations) {
+        dest = Val.chkStr(dest);
+        if (dest.length()>0) {
+          if (sbDest.length()>0) {
+            sbDest.append(",");
+          }
+          sbDest.append(dest);
+        }
+        sDest = sbDest.toString();
+      }
+    }
+    return sDest;
 }
 
 }

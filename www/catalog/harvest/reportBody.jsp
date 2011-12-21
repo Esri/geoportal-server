@@ -62,7 +62,7 @@ value="#{gptMsg['catalog.harvest.manage.history.repositoryUrl']}"/>
 <h:outputText
 value="#{gptMsg['catalog.harvest.manage.history.repositoryProtocol']}"/>
 <h:outputText 
-value="#{HarvestHistoryController.result.queryResult.protocolIdAsString}"/>
+value="#{HarvestHistoryController.result.queryResult.protocolTypeAsString}"/>
 
 <h:outputText
 value="#{gptMsg['catalog.harvest.manage.history.reportUuid']}"/>

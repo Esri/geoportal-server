@@ -74,6 +74,11 @@ private Executor newExecutor(ExecutionUnit unit) {
     protected boolean isShutdown() {
       return OneTimeWorker.this.isShutdown();
     }
+
+    @Override
+    protected boolean isSuspended() {
+      return OneTimeWorker.this.isSuspended();
+    }
   };
 }
 

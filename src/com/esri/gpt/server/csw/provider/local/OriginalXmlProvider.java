@@ -46,7 +46,11 @@ public class OriginalXmlProvider implements IOriginalXmlProvider {
     // if a file-identifier was passed, determine it's associated uuid
     ImsMetadataAdminDao dao = new ImsMetadataAdminDao(reqContext);
     String docUuid = dao.findUuid(id);
-    if (docUuid.length() > 0) id = docUuid;
+    if (docUuid.length() > 0) {
+      id = docUuid;
+    } else {
+      return "";
+    }
 
     // ensure access to the document
     MetadataAcl acl = new MetadataAcl(reqContext);
@@ -56,10 +60,7 @@ public class OriginalXmlProvider implements IOriginalXmlProvider {
     }
 
     // read and return the xml
-    MetadataDocument mdDoc = new MetadataDocument();
-    String xml = mdDoc.prepareForDownload(
-        reqContext,Publisher.makeSystemAdministrator(reqContext),id);
-    return xml;
+    return dao.readXml(id);
   }
 
 }

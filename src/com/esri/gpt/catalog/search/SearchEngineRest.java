@@ -15,6 +15,7 @@
 package com.esri.gpt.catalog.search;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -26,21 +27,28 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 
+import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+
 import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.http.CredentialProvider;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.search.SearchXslProfile;
 import com.esri.gpt.framework.search.SearchXslRecord;
+import com.esri.gpt.framework.util.ResourcePath;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.XmlIoUtil;
@@ -66,7 +74,8 @@ public final static String DELIMETER_KV = "\u2714";
 /** Xsl Param opensearch URL **/
 private static final String XSL_PARAM_OPENSEARCH_URL = "searchQueryUrl";
 
-
+/** The Constant JSFBEAN_SEARCH_CONTROLLER. */
+private static final String JSFBEAN_SEARCH_CONTROLLER = "SearchController";
 
 // instance variables ==========================================================
 /** The search xsl req res. */
@@ -329,24 +338,77 @@ public void doSearch() throws SearchException {
           url.toExternalForm());
     clientRequest.setConnectionTimeMs(getConnectionTimeoutMs());
     clientRequest.setResponseTimeOutMs(getResponseTimeoutMs());
+    
+    Map map = (Map) 
+      this.getRequestContext().extractFromSession(SEARCH_CREDENTIAL_MAP);
+    if(map != null) {
+      CredentialProvider credProvider = (CredentialProvider) 
+    	  map.get(this.getKey());
+      if(credProvider  != null) {
+        clientRequest.setCredentialProvider(credProvider);
+      }
+    }        
+    
     clientRequest.execute();
     String response = clientRequest.readResponseAsCharacters();
+    InputStream is = null;
     try {
-      String xml = XmlIoUtil.jsonToXml(response, "gptJsonXml");
-      parseResponse(xml); 
+      SearchXslProfile profile = this.readXslProfile();
+      String js = Val.chkStr(profile.getResponsexslt());
+      //String js = Val.chkStr(this.getFactoryAttributes().get("searchResponseJsT"));
+      String xml = null;
+      if(js.toLowerCase().endsWith(".js")) {
+    	  try {
+	    	  ResourcePath rPath = new ResourcePath();
+	    	  URL fileUrl = rPath.makeUrl(js);
+	    	  is = fileUrl.openStream();
+	    	  String jsTransFile = IOUtils.toString(is, "UTF-8");
+	    	  jsTransFile = "var jsGptInput =" + response + ";" + jsTransFile;
+	    	  HttpServletRequest servletRequest = (HttpServletRequest)
+	            this.getRequestContext().getServletRequest();
+	    	  if(servletRequest != null) {
+	    	    jsTransFile = "var jsGptQueryString = '" 
+	    	    	+ servletRequest.getQueryString() + "';" + jsTransFile;	    		  
+	    	  }
+	    	  jsTransFile = "var jsGptEndpointSearchQuery = '" + 
+	    	    url.toExternalForm() + "';" + jsTransFile;
+	    	  ScriptEngineManager manager = new ScriptEngineManager();
+	    	  ScriptEngine engine = manager.getEngineByName("JavaScript");
+	    	  //manager.put("jsGptInput", response);
+	          Object obj = engine.eval(jsTransFile);
+	          xml = obj.toString();
+	    	  parseResponse(xml);// has to work before the finally. dont move
+    	  } catch (Exception e) {
+    	    throw new SearchException(e.getMessage() + ":" + 
+    	    		"Error when doing transformation from javascript", e);
+    	  } 
+      } else {
+        xml = XmlIoUtil.jsonToXml(response, "gptJsonXml");
+        parseResponse(xml);
+      }
+      
       checkPagination();
+    } catch(SearchException e) { 
+      throw e;
     } catch (Exception e) {
       parseResponse(response);
       checkPagination();
+    } finally {
+    	if(is != null) {
+    		  IOUtils.closeQuietly(is);
+    		}
     }
        
   } catch (MalformedURLException e) {
     ex = e;
   } catch (IOException e) {
     ex = e;
-  } 
+  } finally {
+	
+  }
   if(ex != null) {
-    throw new SearchException("Could not perform search", ex);
+    throw new SearchException(ex.getMessage() + ": Could not perform search",
+    		ex);
   }
 }
 
@@ -367,6 +429,18 @@ public void parseResponse(String xml) throws SearchException {
     this.getRequestDefinition().getResult().setMaxQueryHits(
         searchResult.getMaxQueryHits());
     SearchResultRecords records = searchResult.getRecords();
+    
+    HttpServletRequest servletRequest = (HttpServletRequest)
+      this.getRequestContext().getServletRequest();
+	if (servletRequest != null) {
+		String queryString = Val
+				.chkStr(servletRequest.getQueryString());
+		if (records.size() > searchResult.getPageCursor()
+						.getRecordsPerPage()) {
+			// must be one of those endpoints that do not have a number
+			
+		}
+	}
     Iterator iter = records.iterator();
     while(iter.hasNext()) {
       

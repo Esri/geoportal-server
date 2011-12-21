@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.server.csw.provider.components;
 import com.esri.gpt.framework.collection.StringSet;
+import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.XmlIoUtil;
@@ -21,6 +22,8 @@ import com.esri.gpt.framework.xml.XmlIoUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -62,6 +65,20 @@ public class GetCapabilitiesResponse implements IResponseGenerator {
     String httpContextPath = Val.chkStr(svcProps.getHttpContextPath());
     String cswBaseUrl = Val.chkStr(svcProps.getCswBaseURL());
     String cswSoapUrl = "";
+    
+    // check for https protocol
+    if (httpContextPath.length() > 0) {
+      RequestContext reqContext = context.getRequestContext();
+      if ((reqContext != null) && (reqContext.getServletRequest() != null) &&
+          (reqContext.getServletRequest() instanceof HttpServletRequest)) {
+        HttpServletRequest httpReq = (HttpServletRequest)reqContext.getServletRequest();
+        StringBuffer requestURL = httpReq.getRequestURL();
+        String s = requestURL.toString().toLowerCase();
+        if (s.startsWith("https://") && httpContextPath.toLowerCase().startsWith("http:")) {
+          httpContextPath = "https"+httpContextPath.substring(4);
+        }
+      }
+    }
     
     // load the resource document
     String loc = cOptions.getCapabilitiesLocation();

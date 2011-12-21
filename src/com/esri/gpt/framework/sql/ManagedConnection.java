@@ -186,6 +186,10 @@ public IClobMutator getClobMutator() throws SQLException {
   if (database.contains("db2")) {
     return new StdClobMutator();
   }
+
+  if (database.contains("mysql")) {
+    return new StdClobMutator();
+  }
   
   return new StdClobMutator();
 }

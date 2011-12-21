@@ -222,8 +222,9 @@ public class RecordSnippetWriter {
   private void writeTitle(SearchResultRecord record) {
     String sUuid = Val.chkStr(record.getUuid());
     String sTitle = Val.chkStr(record.getTitle());
-  
-    _writer.println("<div class=\"" + TITLE_STYLE_CLASS + "\">");
+    
+    String sNodeId = Val.escapeXmlForBrowser(sUuid);
+    _writer.println("<div id=\""+sNodeId+"\" class=\"" + TITLE_STYLE_CLASS + "\">");
     
     // content type icon
     ResourceLink icon = record.getResourceLinks().getIcon();
@@ -311,7 +312,11 @@ public class RecordSnippetWriter {
     url = Val.chkStr(url);
     text = Val.chkStr(text);
     if (url.length() > 0) {
-      _writer.print("<A HREF=\"");
+      if(url.startsWith("javascript:")) {
+        _writer.print("<A href=\"javascript:void(0)\" onclick=\"");
+      } else {
+        _writer.print("<A HREF=\"");
+      }
       _writer.print(Val.escapeXmlForBrowser(url));
       _writer.print("\" target=\"" + _target.toHtmlValue() + "\">");
       _writer.print(Val.escapeXmlForBrowser(text));

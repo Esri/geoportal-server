@@ -29,6 +29,8 @@ private String _taskUrl = "";
 private String _mapServiceUrl = "";
 /** map service type */
 private String _mapServiceType = "";
+/** map initial extent */
+private String _mapInitialExtent = "";
 /** projection info */
 private ArrayList<ItemInfo> _projectionInfo = new ArrayList<ItemInfo>();
 /** output format info */
@@ -134,6 +136,14 @@ public void setRasterFormatInfo(ArrayList<ItemInfo> rasterFormatInfo) {
   this._rasterFormatInfo = rasterFormatInfo;
 }
 
+public String getMapInitialExtent() {
+  return _mapInitialExtent;
+}
+
+public void setMapInitialExtent(String mapInitialExtent) {
+  this._mapInitialExtent = Val.chkStr(mapInitialExtent);
+}
+
 /**
  * Returns the string representation of the object.
  * @return the string
@@ -143,6 +153,8 @@ public String toString() {
   StringBuffer sb = new StringBuffer(getClass().getName()).append(" (\n");
   sb.append(" taskUrl=\"").append(getTaskUrl()).append("\"\n");
   sb.append(" mapServiceUrl=\"").append(getMapServiceUrl()).append("\"\n");
+  sb.append(" mapServiceType=\"").append(getMapServiceType()).append("\"\n");
+  sb.append(" mapInitialExtent=\"").append(getMapInitialExtent()).append("\"\n");
   sb.append(" projections=(\r\n");
   for (ItemInfo ii : getProjectionInfo()) {
     sb.append("  "+ii.toString()+"\r\n");

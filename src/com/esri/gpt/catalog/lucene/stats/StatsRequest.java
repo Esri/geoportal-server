@@ -16,6 +16,7 @@ package com.esri.gpt.catalog.lucene.stats;
 import com.esri.gpt.catalog.context.CatalogConfiguration;
 import com.esri.gpt.catalog.discovery.PropertyMeanings;
 import com.esri.gpt.catalog.lucene.AclFilter;
+import com.esri.gpt.catalog.lucene.IsPartOfFilter;
 import com.esri.gpt.catalog.lucene.Storeable;
 import com.esri.gpt.catalog.lucene.Storeables;
 import com.esri.gpt.framework.context.RequestContext;
@@ -31,6 +32,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.search.Filter;
 import org.apache.lucene.util.OpenBitSet;
 
 /**
@@ -200,10 +202,14 @@ public class StatsRequest {
     MetadataAcl acl = new MetadataAcl(this.requestContext);
     AuthenticationStatus auth = this.requestContext.getUser().getAuthenticationStatus();
     boolean bAdmin = auth.getAuthenticatedRoles().hasRole("gptAdministrator");
+    Filter filter = null;
     if (!bAdmin && !acl.isPolicyUnrestricted()) {
       String[] aclValues = acl.makeUserAcl();
-      AclFilter aclFilter = new AclFilter(Storeables.FIELD_ACL,aclValues);
-      this.documentFilterBitSet = (OpenBitSet)aclFilter.getDocIdSet(reader);
+      filter = new AclFilter(Storeables.FIELD_ACL,aclValues);
+    }
+    filter = IsPartOfFilter.make(this.getRequestContext(),filter);
+    if (filter != null) {
+      this.documentFilterBitSet = (OpenBitSet)filter.getDocIdSet(reader);
     }
   }
   

@@ -51,6 +51,14 @@
     rendered="#{SelfCareController.hasUserAttribute['lastName']}"
     value="#{SelfCareController.activeUserAttributes['lastName'].value}"/>
     
+ <% // display name %>
+  <h:outputLabel for="displayName" 
+    rendered="#{SelfCareController.hasUserAttribute['displayName']}"
+    value="#{gptMsg['catalog.identity.profile.label.displayName']}"/>
+  <h:inputText id="displayName" size="30" styleClass="authenticationInput" maxlength="128" 
+    rendered="#{SelfCareController.hasUserAttribute['displayName']}"
+    value="#{SelfCareController.activeUserAttributes['displayName'].value}"/>  
+    
   <% // organization %>
   <h:outputLabel for="organization"
     rendered="#{SelfCareController.hasUserAttribute['organization']}"

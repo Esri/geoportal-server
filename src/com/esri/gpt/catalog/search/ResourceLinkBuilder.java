@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletRequest;
@@ -27,7 +28,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.esri.gpt.catalog.context.CatalogConfiguration;
 import com.esri.gpt.catalog.search.SearchEngineCSW.Scheme;
+import com.esri.gpt.control.georss.RestQueryServlet;
 import com.esri.gpt.framework.collection.StringAttribute;
+import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.ApplicationConfiguration;
+import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.ConfigurationException;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.MessageBroker;
@@ -35,6 +40,8 @@ import com.esri.gpt.framework.search.DcList;
 import com.esri.gpt.framework.search.SearchXslRecord;
 import com.esri.gpt.framework.util.LogUtil;
 import com.esri.gpt.framework.util.Val;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Builds the collection of bind-able links associated with a document or resource. 
@@ -80,7 +87,48 @@ public ResourceLinkBuilder() {
  * @return the base context path
  */
 protected String getBaseContextPath() {
-  return this.baseContextPath;
+	
+	String path = this.getRelativePath();
+	if(path == null) {
+		path = this.baseContextPath;
+	}
+  return path;
+}
+
+/**
+ * Gets the relative path.
+ * 
+ * @return the relative path
+ */
+private String getRelativePath() {
+
+	try {
+		@SuppressWarnings("unchecked")
+		Map<String, String> extraArgsMap = (Map<String, String>) this
+		    .getRequestContext().getObjectMap()
+		    .get(RestQueryServlet.EXTRA_REST_ARGS_MAP);
+		if (extraArgsMap == null) {
+			return null;
+		}
+		Object obj = extraArgsMap
+		    .get(RestQueryServlet.PARAM_KEY_SHOW_RELATIVE_URLS);
+		if (obj == null) {
+			return null;
+		}
+		boolean showRel = Val.chkBool(obj.toString(), false);
+		if (showRel == false) {
+			return null;
+		}
+		if (Val.chkStr(this.baseContextPath).equals("")) {
+			return null;
+		}
+		String tmpContextPath = this.baseContextPath.replaceAll("/$", "");
+		tmpContextPath = tmpContextPath.replaceAll(".*/", "/");
+		return tmpContextPath;
+	} catch (Throwable e) {
+		LOG.log(Level.FINER, "", e);
+	}
+	return null;
 }
 
 /**
@@ -302,6 +350,9 @@ protected void buildAGSLinks(SearchXslRecord xRecord, SearchResultRecord record)
         (restUrl.toLowerCase().endsWith("/mapserver")
         || restUrl.toLowerCase().endsWith("/imageserver"))) {
       url = restUrl + "/kml/mapImage.kmz";
+      if (restUrl.toLowerCase().endsWith("/imageserver")) {
+        url = restUrl + "/kml/image.kmz";
+      }     
       resourceKey = "catalog.rest.addToGlobeKml";
       link = this.makeLink(url, ResourceLink.TAG_AGSKML, resourceKey);
       record.getResourceLinks().add(link);
@@ -329,6 +380,30 @@ protected void buildAGSLinks(SearchXslRecord xRecord, SearchResultRecord record)
   }
 }
 
+
+/**
+ * Checks if is request jsf and relative.
+ *
+ * @return true, if is request jsf and relative
+ */
+private boolean isRequestJsfAndRelative() {
+	try {
+		@SuppressWarnings("unchecked")
+    Map<String, String> extraMap =
+			(Map<String, String>)this.getRequestContext().getObjectMap().get(
+				RestQueryServlet.EXTRA_REST_ARGS_MAP);
+		boolean isJsfReq = 
+			Val.chkBool(extraMap.get(
+					RestQueryServlet.PARAM_KEY_IS_JSFREQUEST).toString(), false);
+		boolean isShowRelUrls = 
+			Val.chkBool(extraMap.get(
+					RestQueryServlet.PARAM_KEY_SHOW_RELATIVE_URLS).toString(), false);
+		return isShowRelUrls && isJsfReq;
+	} catch (Throwable e) {
+		LOG.log(Level.FINER, "This error is no big deal", e);
+	}
+	return false;
+}
 /**
  * Builds the link associated with the content type icon.
  * @param xRecord the underlying CSW record
@@ -363,7 +438,13 @@ protected void buildContentTypeLink(SearchXslRecord xRecord,
 
   record.setContentType(contentType);
   if (contentType.length() > 0) {
-    String url = this.getBaseContextPath() + this.imagePath + "/ContentType_"
+  	String tmpBaseContextPath = this.getBaseContextPath();
+  	if(isRequestJsfAndRelative() == true) {
+  		// caution! contextpath is put automatically by jsf when we put relative
+  		// url
+  		tmpBaseContextPath = "";
+  	}
+    String url = tmpBaseContextPath + this.imagePath + "/ContentType_"
         + contentType + ".png";
     String resourceKey = "catalog.search.filterContentTypes." + contentType;
     ResourceLink link = this.makeLink(url, ResourceLink.TAG_CONTENTTYPE,
@@ -478,7 +559,7 @@ protected void buildOpenLink(SearchXslRecord xRecord, SearchResultRecord record)
   }
   record.getResourceLinks().add(link);
   
-  this.makeAddToMapFromFactory(resourceUrl, null, resourceKey, record);
+  //this.makeAddToMapFromFactory(resourceUrl, null, resourceKey, record);
   
   
 }
@@ -504,6 +585,19 @@ protected void buildPreviewLink(SearchXslRecord xRecord, SearchResultRecord reco
     return;
   } else if (tmp.indexOf("?getxml=") != -1) {
     return;
+  }
+  
+  String sFilter = Val.chkStr(ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getParameters().getValue("resourceLinkBuilder.preview.filter"));
+  if (sFilter.length()>0) {
+    try {
+      Pattern pattern = Pattern.compile(sFilter, Pattern.CASE_INSENSITIVE);
+      Matcher matcher = pattern.matcher(resourceUrl);
+      if (matcher.matches()) {
+        return;
+      }
+    } catch (Exception ex) {
+      
+    }
   }
 
   // possibly we should reset AGS rest services to their home URL??
@@ -535,7 +629,7 @@ protected void buildPreviewLink(SearchXslRecord xRecord, SearchResultRecord reco
       ResourceLink.TAG_PREVIEW_PARAM_INFO, true);
   if (id.length() > 0 && showInfo == true ) {
     String infoUrl = this.getBaseContextPath() + this.metadataPath
-        + "?f=html&id=" + encodeUrlParam(id);
+        + "?f=html&showRelativeUrl=true&id=" + encodeUrlParam(id);
     if (record.isExternal() && rid.length() > 0) {
       infoUrl += "&rid=" + encodeUrlParam(rid);
     }
@@ -552,12 +646,27 @@ protected void buildPreviewLink(SearchXslRecord xRecord, SearchResultRecord reco
   record.getResourceLinks().add(link);
 }
 
+private boolean showThumbnail() {
+	@SuppressWarnings("unchecked")
+  Map<String, String> extraArgsMap = (Map<String, String>)
+	this.getRequestContext().getObjectMap().get(
+			RestQueryServlet.EXTRA_REST_ARGS_MAP);
+	if(extraArgsMap == null) {
+		return true;
+	}
+	return Val.chkBool(extraArgsMap.get(RestQueryServlet.PARAM_KEY_SHOW_THUMBNAIL), 
+			true);
+
+}
 /**
  * Builds the link associated with the thumbnail.
  * @param xRecord the underlying CSW record
  * @param record the search result record
  */
 protected void buildThumbnailLink(SearchXslRecord xRecord, SearchResultRecord record) {
+	if(this.showThumbnail() == false) {
+		return;
+	}
   String url = "";
   DcList references = xRecord.getReferences();
   List<String> schemeVals = references.get(Scheme.THUMBNAIL_FGDC.getUrn());
@@ -581,6 +690,7 @@ protected void buildThumbnailLink(SearchXslRecord xRecord, SearchResultRecord re
   }
   url = Val.chkStr(url);
 
+  url = this.checkUrl(url);
   if (url.length() > 0) {
     String resourceKey = "catalog.rest.thumbNail";
     ResourceLink link = this.makeLink(url, ResourceLink.TAG_THUMBNAIL,
@@ -609,6 +719,7 @@ protected void buildWebsiteLink(SearchXslRecord xRecord, SearchResultRecord reco
   }
 
   String resourceKey = "catalog.rest.webSite";
+  url = this.checkUrl(url);
   if (url.length() > 0) {
     if (url.startsWith("www."))
       url = "http://" + url;
@@ -639,13 +750,37 @@ protected void buildCustomLinks(SearchXslRecord xRecord,
     Iterator<String> iter2 = list.iterator();
     while(iter2.hasNext()) {
       String url = iter2.next();
-      ResourceLink link = this.makeLink(url, ResourceLink.TAG_CUSTOM, label);
-      record.getResourceLinks().add(link);
-      makeAddToMapFromFactory(url, null, label, record);
+      url = this.checkUrl(url);
+      if (url.length() > 0) {
+        ResourceLink link = this.makeLink(url, ResourceLink.TAG_CUSTOM, label);
+        record.getResourceLinks().add(link);
+        makeAddToMapFromFactory(url, null, label, record);
+      }
     }
   }
- 
 }
+
+/**
+ * Checks a url the url to check
+ * <br/>Only urls beginning with www. http:// https:// ftp:// ftps:// will be returned.
+ * @param urlToCheck the urlToCheck
+ * @return the checked url (zero length if invalid)
+ */
+protected String checkUrl(String urlToCheck) {
+  urlToCheck = Val.chkStr(urlToCheck);
+  String url = urlToCheck.toLowerCase();
+  if (url.startsWith("www.")) {
+    return "http://"+urlToCheck;
+  } else {
+    if (url.startsWith("http://") || url.startsWith("https://") ||
+        url.startsWith("ftp://") || url.startsWith("ftps://")) {
+      return urlToCheck;
+    } 
+  }
+  return "";
+}
+
+
 /**
  * Determines the primary resource URL associated with the resultant record.
  * <br/>The primary resource URL is associated with the resource that the
@@ -742,9 +877,12 @@ protected void determineResourceUrl(SearchXslRecord xRecord,
   }
 
   // update the record
-  record.setResourceUrl(resourceUrl);
-  record.setService(serviceName);
-  record.setServiceType(serviceType);
+  resourceUrl = this.checkUrl(resourceUrl);
+  if (resourceUrl.length() > 0) {
+    record.setResourceUrl(resourceUrl);
+    record.setService(serviceName);
+    record.setServiceType(serviceType);
+  }
 
 }
 

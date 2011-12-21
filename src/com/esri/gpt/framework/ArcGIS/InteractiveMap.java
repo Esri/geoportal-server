@@ -29,6 +29,8 @@ private String _locatorSingleFieldParameter = "";
 private String _locatorUrl = "";
 private String _mapServiceType = "";
 private String _mapServiceUrl = "";
+private String _mapVisibleLayers = "[]";
+private String _mapInitialExtent = "";
 
 /** Default constructor. */
 public InteractiveMap() {}
@@ -108,6 +110,22 @@ public String getMapServiceType() {
 }
 
 /**
+ * Gets map visible layers (WMS only)
+ * @return visible layers
+ */
+public String getMapVisibleLayers() {
+  return _mapVisibleLayers;
+}
+
+/**
+ * Sets map visible layers (WMS only)
+ * @param mapVisibleLayers visible layers
+ */
+public void setMapVisibleLayers(String mapVisibleLayers) {
+  this._mapVisibleLayers = Val.chkStr(mapVisibleLayers, "[]");
+}
+
+/**
  * Sets map service type.
  * @param type the map service type
  */
@@ -117,6 +135,12 @@ public void setMapServiceType(String type) {
     _mapServiceType = "dynamic";
   } else if (type.equalsIgnoreCase("tiled")) {
     _mapServiceType = "tiled";
+  } else if (type.equalsIgnoreCase("openstreet")) {
+    _mapServiceType = "openstreet";
+  } else if (type.equalsIgnoreCase("wms")) {
+    _mapServiceType = "wms";
+  } else if (type.equalsIgnoreCase("wmts")) {
+    _mapServiceType = "wmts";
   } else {
     _mapServiceType = "";
   }
@@ -138,6 +162,14 @@ public void setMapServiceUrl(String url) {
   _mapServiceUrl = Val.chkStr(url);
 }
 
+public String getMapInitialExtent() {
+  return _mapInitialExtent;
+}
+
+public void setMapInitialExtent(String mapInitialExtent) {
+  this._mapInitialExtent = Val.chkStr(mapInitialExtent);
+}
+
 // methods =====================================================================
 /**
  * Returns the string representation of the object.
@@ -149,6 +181,8 @@ public String toString() {
   sb.append(" jsapiUrl=\"").append(getJsapiUrl()).append("\"\n");
   sb.append(" mapServiceUrl=\"").append(getMapServiceUrl()).append("\"\n");
   sb.append(" mapServiceType=\"").append(getMapServiceType()).append("\"\n");
+  sb.append(" mapVisibleLayers=\"").append(getMapVisibleLayers()).append("\"\n");
+  sb.append(" mapInitialExtent=\"").append(getMapInitialExtent()).append("\"\n");
   sb.append(" geometryServiceUrl=\"").append(getGeometryServiceUrl()).append("\"\n");
   sb.append(" locatorUrl=\"").append(getLocatorUrl()).append("\"\n");
   sb.append(") ===== end ").append(getClass().getName());

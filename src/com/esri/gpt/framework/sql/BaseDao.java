@@ -18,9 +18,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 
+import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.util.LogUtil;
+import com.esri.gpt.framework.util.Val;
 
 /**
  * Super-class for a database access object.
@@ -145,6 +147,18 @@ public static void closeResultSet(ResultSet rs) {
       LogUtil.getLogger().log(Level.SEVERE,"Error closing result set.",t);
     }
   }
+}
+
+/**
+ * Determine if the database is case sensitive.
+ * @param context the active request context
+ * @param true if the database is case sensitive
+ */
+public static boolean getIsDbCaseSensitive(RequestContext context) {
+  if (context == null) return true;
+  StringAttributeMap params  = context.getCatalogConfiguration().getParameters();
+  String s = Val.chkStr(params.getValue("database.isCaseSensitive"));
+  return !s.equalsIgnoreCase("false");
 }
 
 /**

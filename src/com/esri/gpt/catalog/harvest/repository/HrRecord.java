@@ -89,6 +89,10 @@ private ApprovalStatus approvalStatus = ApprovalStatus.defaultValue();
 /** last sync date */
 private Date lastSyncDate;
 
+private boolean searchRequiresLogin;
+
+
+
 // constructors ================================================================
 // properties ==================================================================
 /**
@@ -144,6 +148,25 @@ public int getOwnerId() {
  */
 public void setOwnerId(int ownerId) {
   _ownerId = ownerId;
+}
+
+
+/**
+ * Gets the search requires login.
+ * NOTE: custom for NGA
+ * @return the search requires login
+ */
+public boolean getSearchRequiresLogin() {
+	return searchRequiresLogin;
+}
+
+/**
+ * Sets the search requires login.
+ * NOTE: custom for NGA
+ * @param searchRequiresLogin the new search requires login
+ */
+public void setSearchRequiresLogin(boolean searchRequiresLogin) {
+	this.searchRequiresLogin = searchRequiresLogin;
 }
 
 /**

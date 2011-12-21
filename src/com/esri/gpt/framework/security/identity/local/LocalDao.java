@@ -77,7 +77,11 @@ private boolean doesUsernameExist(Connection con, String username)
   try {
     StringBuffer sbSql = new StringBuffer();
     sbSql.append("SELECT USERNAME FROM ").append(getUserTableName());
-    sbSql.append(" WHERE UPPER(USERNAME)=?");
+    if (getIsDbCaseSensitive(this.getRequestContext())) {
+      sbSql.append(" WHERE UPPER(USERNAME)=?");
+    } else {
+      sbSql.append(" WHERE USERNAME=?");
+    }
     logExpression(sbSql.toString());
     st = con.prepareStatement(sbSql.toString());
     st.setString(1,username.toUpperCase());
@@ -118,6 +122,13 @@ public void ensureReferenceToRemoteUser(User user)
           (sUsername.length() > 64) ||
            doesUsernameExist(con,sUsername)) {
         String sMsg = "A valid userid was not auto-generated for remote user: "+sDn;
+        if (sUsername.length() == 0) {
+          sMsg += " The identity store username is empty.";
+        } else if (sUsername.length() > 64) {
+          sMsg += " The username is greater than 64 characters.";
+        } else {
+          sMsg += " This username already exists with a different DN.";
+        }
         throw new IdentityException(sMsg);
       }
       insertUser(con,sDn,sUsername);
@@ -185,8 +196,13 @@ private int readUserByDN(Connection con, User user)
     }
     
     // query for the distinguished name reference within the local users table 
-    String sSql = "SELECT USERID,USERNAME FROM "+getUserTableName()+
-                  " WHERE UPPER(DN)=?";
+    String sSql = null;
+    if (getIsDbCaseSensitive(this.getRequestContext())) {
+      sSql = "SELECT USERID,USERNAME FROM "+getUserTableName()+" WHERE UPPER(DN)=?";
+    } else {
+      sSql = "SELECT USERID,USERNAME FROM "+getUserTableName()+" WHERE DN=?";
+    }
+
     logExpression(sSql);
     st = con.prepareStatement(sSql);
     st.setString(1,user.getDistinguishedName().toUpperCase());

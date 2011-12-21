@@ -73,6 +73,10 @@ Root element for the schema.
   xsdLocation     = Sets the location of the XML Schema Definition file for the 
                     metadata standard. If supplied, documents will be validated against 
                     the XSD prior to publication.
+  schematronXslt  = The relative path to an XSLT that will be used to validate documents
+                    of this type. If supplied, the XSLT must produce an SVRL document 
+                    (Schematron Validation Report Language).
+                    Optional.
                  
 e.g. <schema key="fgdc" templateFile="gpt/metadata/fgdc-template.xml" editable="true">
 -->

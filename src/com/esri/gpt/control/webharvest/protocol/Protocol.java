@@ -28,15 +28,25 @@ public interface Protocol {
    */
   String getKind();
   /**
-   * Gets protocol attributes map.
+   * Gets protocol attributes map. Used to exchange attributes with the form.
    * @return attributes map
    */
   StringAttributeMap getAttributeMap();
   /**
-   * Sets protocol attributes map
+   * Sets protocol attributes map. Used to exchange attributes with the form.
    * @param attributeMap attributes map
    */
   void setAttributeMap(StringAttributeMap attributeMap);
+  /**
+   * Extracts protocol attributes map. Used saving (typically encrypts user name/password).
+   * @return attributes map
+   */
+  StringAttributeMap extractAttributeMap();
+  /**
+   * Applies protocol attributes map. Used loading (typically decrypts user name/password).
+   * @param attributeMap attributes map
+   */
+  void applyAttributeMap(StringAttributeMap attributeMap);
   /**
    * Gets flag set.
    * @return flags set

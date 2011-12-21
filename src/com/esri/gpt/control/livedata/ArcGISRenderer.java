@@ -23,6 +23,7 @@ package com.esri.gpt.control.livedata;
 
   protected abstract boolean isImageService();
 
+  @Override
   protected String newLayerDeclaration() {
     if (isImageService()) {
       return "new esri.layers.ArcGISImageServiceLayer(\"" +getUrl()+ "\")";

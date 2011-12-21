@@ -56,9 +56,15 @@ public CswQuery(IterationContext context, CswProxy proxy, Criteria criteria) {
   this.criteria = criteria;
 }
 
+  @Override
 public Result execute() {
   LOGGER.finer("Executing query: " + this);
-  Result r = new CommonResult(new JoinResourcesAdapter(new NativeIterable(), new CswFolders(context, proxy, criteria)));
+  Result r = new CommonResult(new JoinResourcesAdapter(new NativeIterable(), new CswFolders(context, proxy, criteria))) {
+    @Override
+    public void destroy() {
+      proxy.destroy();
+    }
+  };
   LOGGER.finer("Completed query execution: " + this);
   return r;
 }
@@ -73,6 +79,7 @@ public String toString() {
  */
 private class NativeIterable implements Iterable<Resource> {
 
+    @Override
   public Iterator<Resource> iterator() {
     return new NativeIterator();
   }

@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.framework.context;
 
+import com.esri.gpt.catalog.lucene.LuceneIndexAdapter;
 import com.esri.gpt.control.webharvest.engine.Harvester;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.scheduler.ThreadScheduler;
@@ -61,6 +62,9 @@ public void init() throws ServletException {
     LogUtil.getLogger().info("Initializing ApplicationContext...");
     // initialize applciation context
     ApplicationContext appCtx = ApplicationContext.getInstance();
+    
+    // inform the Lucene index adapter
+    LuceneIndexAdapter.onContextInit(appCtx);
 
     //// create harvester engine
     // create message broker
@@ -90,6 +94,10 @@ public void destroy() {
   ApplicationContext appCtx = ApplicationContext.getInstance();
   appCtx.getHarvestingEngine().shutdown();
   shutdown();
+  
+  // inform the Lucene index adapter
+  LuceneIndexAdapter.onContextDestroy(appCtx);
+  
   super.destroy();
 }
 

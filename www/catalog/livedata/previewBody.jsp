@@ -20,13 +20,23 @@
 <%@page import="com.esri.gpt.framework.util.Val" %>
 <%@page import="com.esri.gpt.control.livedata.LiveDataController" %>
 
+<%
+  String prvContextPath = com.esri.gpt.framework.util.Val.chkStr(request.getContextPath());
+%>
 <%!
-private String makeSafeUrl(String infoUrl) {
+private String makeSafeUrl(String contextPath, String infoUrl) {
   try {
     new URL(infoUrl);
     return infoUrl;
   } catch (Exception ex) {
-    return "";
+    try {
+      if (infoUrl.startsWith(contextPath)) {
+        return infoUrl;
+      }
+      return "";
+    } catch (Exception ex2) {
+      return "";
+    }
   }
 }
 %>
@@ -43,15 +53,17 @@ private String makeSafeUrl(String infoUrl) {
 <f:verbatim>
 <% if (LiveDataController.getCurrentInstance().getInfoUrl().length() > 0) {%>
 <div class="section previewMapSection">
-  <iframe src="<%=makeSafeUrl(Val.escapeXmlForBrowser(LiveDataController.getCurrentInstance().getEmbededUrl()))%>"
+  <iframe src="<%=makeSafeUrl(prvContextPath,Val.escapeXmlForBrowser(LiveDataController.getCurrentInstance().getEmbededUrl()))%>"
           style="<%=LiveDataController.getCurrentInstance().getFrameStyle()%>"
-          frameborder="0" scrolling="no"></iframe>
+          frameborder="0" scrolling="no"
+          id="mapFrame"></iframe>
 </div>
 <%} else {%>
 <div class="section previewMapSectionWide">
-  <iframe src="<%=makeSafeUrl(Val.escapeXmlForBrowser(LiveDataController.getCurrentInstance().getEmbededUrl()))%>"
+  <iframe src="<%=makeSafeUrl(prvContextPath,Val.escapeXmlForBrowser(LiveDataController.getCurrentInstance().getEmbededUrl()))%>"
           style="<%=LiveDataController.getCurrentInstance().getFrameStyleWide()%>"
-          frameborder="0" scrolling="no"></iframe>
+          frameborder="0" scrolling="no"
+          id="mapFrame"></iframe>
 </div>
 <%}%>
 </f:verbatim>
@@ -60,9 +72,10 @@ private String makeSafeUrl(String infoUrl) {
 <f:verbatim>
 <% if (LiveDataController.getCurrentInstance().getInfoUrl().length() > 0) {%>
 <div class="section previewInfoSection">
-  <iframe src="<%=makeSafeUrl(Val.escapeXmlForBrowser(LiveDataController.getCurrentInstance().getInfoUrl()))%>" 
+  <iframe src="<%=makeSafeUrl(prvContextPath,Val.escapeXmlForBrowser(LiveDataController.getCurrentInstance().getInfoUrl()))%>" 
           class="previewInfoFrame"
-          frameborder="0" ></iframe>
+          frameborder="0" 
+          id="infoFrame"></iframe>
 </div>
 <%}%>
 </f:verbatim>

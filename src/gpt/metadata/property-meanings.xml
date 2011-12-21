@@ -73,6 +73,9 @@
     <dc name="dct:references" scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Server"/>
   </property-meaning>
   
+  <property-meaning name="resource.check.urls" valueType="String" comparisonType="terms">
+  </property-meaning> 
+  
   <property-meaning name="thumbnail.url" meaningType="thumbnailurl" valueType="String" comparisonType="value">
     <dc name="dct:references" scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Thumbnail"/>
   </property-meaning>
@@ -94,6 +97,30 @@
   <property-meaning name="relation" valueType="String" comparisonType="keyword">
     <dc name="dc:relation" aliases="relation"/>
   </property-meaning> 
+  
+  <property-meaning name="publisher" valueType="String" comparisonType="terms">
+    <dc name="dc:publisher" />
+  </property-meaning>
+  
+  <property-meaning name="contributor" valueType="String" comparisonType="keyword">
+    <dc name="dc:contributor" aliases="contributor,affiliation"/>
+  </property-meaning>
+  
+  <property-meaning name="isPartOf" valueType="String" comparisonType="keyword">
+    <dc name="dct:isPartOf" aliases=""/>
+  </property-meaning>
+  
+  <property-meaning name="dateValidStart" valueType="Timestamp" comparisonType="value">
+    <dc name="dct:valid" aliases="valid"/>
+  </property-meaning> 
+  
+  <property-meaning name="hasFormat" valueType="String" comparisonType="keyword">
+    <dc name="dct:hasFormat" aliases="hasFormat"/>
+  </property-meaning>
+  
+  <property-meaning name="accessRights" valueType="String" comparisonType="keyword">
+    <dc name="dct:accessRights" aliases="accessRights"/>
+  </property-meaning>
     
   <!-- ================================================================================= -->
       
@@ -120,6 +147,7 @@
         <meaning-names>dateModified,abstract</meaning-names>
         <meaning-names>resource.url,website.url,thumbnail.url,xml.url</meaning-names>
         <meaning-names>geometry,date,relation</meaning-names>
+        <meaning-names>sys.siteuuid,isPartOf</meaning-names>
       </dc>
     </full>    
     
@@ -287,5 +315,19 @@
   <property-meaning name="apiso.inspireSpatialDataThemes" valueType="String" comparisonType="keyword">
     <apiso name="apiso:inspireSpatialDataThemes"/>
   </property-meaning>  
+  
+  <!-- FGDC properties --> 
+    
+  <property-meaning name="fgdc.begdate" valueType="Timestamp" comparisonType="value">
+  </property-meaning>
+  
+  <property-meaning name="fgdc.enddate" valueType="Timestamp" comparisonType="value">
+  </property-meaning>
+  
+  <property-meaning name="fgdc.sngdate" valueType="Timestamp" comparisonType="value">
+  </property-meaning>
+  
+  <property-meaning name="fgdc.multidate" valueType="Timestamp" comparisonType="value">
+  </property-meaning>
         
 </property-meanings>

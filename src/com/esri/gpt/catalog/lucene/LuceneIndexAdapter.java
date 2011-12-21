@@ -18,12 +18,14 @@ import com.esri.gpt.catalog.context.CatalogIndexAdapter;
 import com.esri.gpt.catalog.context.CatalogIndexException;
 import com.esri.gpt.catalog.discovery.IStoreable;
 import com.esri.gpt.catalog.discovery.PropertyMeanings;
+import com.esri.gpt.catalog.management.CollectionDao;
 import com.esri.gpt.catalog.schema.Meaning;
 import com.esri.gpt.catalog.schema.MetadataDocument;
 import com.esri.gpt.catalog.schema.Schema;
 import com.esri.gpt.catalog.schema.indexable.Indexables;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.collection.StringSet;
+import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.security.metadata.MetadataAcl;
 import com.esri.gpt.framework.util.Val;
@@ -37,6 +39,7 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -78,14 +81,26 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
   /** Hold NativeFSLockFactory objects statically within the JVM */
   private static final Map<String,NativeFSLockFactory> NATIVEFSLOCKFACTORIES = 
     new HashMap<String,NativeFSLockFactory>();
+  
+  /** Single referenced searcher. */
+  private static ReferencedSearcher REFERENCED_SEARCHER = null;
 
-  /** Hold IndxeSearcher objects statically within the JVM */
+  /** Hold IndexSearcher objects statically within the JVM */
   private static final Map<String,IndexSearcher> SEARCHERS = new HashMap<String,IndexSearcher>();
-    
+  
+  /** Single index writer. */
+  private static IndexWriter SINGLE_WRITER = null;
+  private static boolean SINGLE_WRITER_WASDESTROYED = false;
+  
   /** instance variables ====================================================== */
+  private boolean      autoCommitSingleWriter = true;
   private LuceneConfig luceneConfig;
+  private String       remoteWriterUrl;
+  private boolean      useLocalWriter = true;
+  private boolean      useRemoteWriter = false;
   private boolean      useSingleSearcher = false;
-    
+  private boolean      useSingleWriter = false;
+  
   /** constructors ============================================================ */
   
   /**
@@ -107,10 +122,43 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
     StringAttributeMap params = requestContext.getCatalogConfiguration().getParameters();
     String param = Val.chkStr(params.getValue("lucene.useSingleSearcher"));
     this.useSingleSearcher = param.equalsIgnoreCase("true");
+    param = Val.chkStr(params.getValue("lucene.useSingleWriter"));
+    this.useSingleWriter = param.equalsIgnoreCase("true");
+    param = Val.chkStr(params.getValue("lucene.useLocalWriter"));
+    this.useLocalWriter = !param.equalsIgnoreCase("false");
+    param = Val.chkStr(params.getValue("lucene.useRemoteWriter"));
+    this.useRemoteWriter = param.equalsIgnoreCase("true");
+    this.remoteWriterUrl = Val.chkStr(params.getValue("lucene.remoteWriterUrl"));
+
+  
+    // check for a use remote writer override
+    Boolean bUseRemoteWriter = (Boolean)requestContext.getObjectMap().get("lucene.useRemoteWriter");
+    if (bUseRemoteWriter != null) {
+      this.useRemoteWriter = bUseRemoteWriter.booleanValue();
+    }    
+  
   }
   
   /** properties ============================================================== */
     
+  
+  /**
+   * Indicates if publish or delete operations should auto-commit when a 
+   * single IndexWriter approach is being used.
+   * @return true if publish or delete operations should auto-commit
+   */
+  public boolean getAutoCommitSingleWriter() {
+    return this.autoCommitSingleWriter;
+  }
+  /**
+   * Indicates if publish or delete operations should auto-commit when a 
+   * single IndexWriter approach is being used.
+   * @param autoCommit true if publish or delete operations should auto-commit
+   */
+  public void setAutoCommitSingleWriter(boolean autoCommit) {
+    this.autoCommitSingleWriter = autoCommit;
+  }
+  
   /**
    * Gets the logger.
    * @return the logger
@@ -128,6 +176,22 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
     return this.luceneConfig;
   }
   
+  /**
+   * Gets configured observers.
+   * @return observers
+   */
+  protected LuceneIndexObserverArray getObservers() {
+    return this.luceneConfig.getObservers();
+  }
+  
+  /**
+   * Indicates whether or not a single IndexWriter approach is being used.
+   * @return true if a single IndexWriter approach is being used
+   */
+  public boolean getUsingSingleWriter() {
+    return this.useSingleWriter;
+  }
+  
   /** methods ================================================================= */
   
   /**
@@ -140,6 +204,9 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
         getLogger().finer("Closing Lucene IndexSearcher...");
         searcher.getIndexReader().close();
         searcher.close();
+      } else if ((searcher != null) && this.useSingleSearcher) {
+        getLogger().finer("Releasing Lucene IndexSearcher...");
+        REFERENCED_SEARCHER.release(searcher);
       }
     } catch (Throwable t) {
       getLogger().log(Level.WARNING,"IndexSearcher failed to close.",t);
@@ -151,6 +218,32 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
    * @param writer the writer to close.
    */
   protected void closeWriter(IndexWriter writer) {
+    
+    if (this.useSingleWriter) {
+      try {
+        if (writer != null) {
+          getLogger().finer("Committing Lucene IndexWriter...");
+          writer.commit();
+        }
+      } catch (CorruptIndexException e) {
+        getLogger().log(Level.SEVERE,"Error on IndexWriter.commit",e);
+      } catch (IOException e) {
+        getLogger().log(Level.SEVERE,"Error on IndexWriter.commit",e);
+      } catch (OutOfMemoryError e) {
+        getLogger().log(Level.SEVERE,"Error on IndexWriter.commit",e);
+        try {
+          writer.close();
+        } catch (CorruptIndexException e1) {
+          getLogger().log(Level.SEVERE,"Error on IndexWriter.commit",e);
+        } catch (IOException e1) {
+          getLogger().log(Level.SEVERE,"Error on IndexWriter.commit",e);
+        } finally {
+          SINGLE_WRITER = null;
+        }
+      }
+      return;
+    }
+    
     try {
       if (writer != null) {
         getLogger().finer("Closing Lucene IndexWriter...");
@@ -200,15 +293,15 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
    */
   @Override
   public int countDocuments() throws CatalogIndexException { 
-    IndexWriter writer = null;
+    IndexSearcher searcher = null;
     try {
-      writer = newWriter();
-      return writer.maxDoc();
+      searcher = newSearcher();
+      return searcher.maxDoc();
     } catch (Exception e) {
       String sMsg = "Error accessing index:\n "+Val.chkStr(e.getMessage());
       throw new CatalogIndexException(sMsg,e);
     } finally {
-      closeWriter(writer);
+      closeSearcher(searcher);
     }
   }
   
@@ -218,8 +311,14 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
    * @throws CatalogIndexException if an exception occurs  
    */
   @Override
-  public void deleteDocuments(String[] uuids) 
-    throws CatalogIndexException {
+  public void deleteDocuments(String[] uuids) throws CatalogIndexException {
+    
+    if (this.useRemoteWriter) {
+      RemoteIndexer remoteIndexer = new RemoteIndexer();
+      remoteIndexer.send(this.getRequestContext(),"delete",uuids);
+    }
+    if (!this.useLocalWriter) return;
+    
     IndexWriter writer = null;
     try {
       if ((uuids != null) && (uuids.length > 0)) {
@@ -240,16 +339,22 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
           }
           Term[] aTerms = alTerms.toArray(new Term[0]);
           writer = newWriter();
+          this.getObservers().onDocumentDelete(uuids);
           writer.deleteDocuments(aTerms);
-          
-          // writer.optimize(); // optimization was moved to a scheduled thread - LuceneIndexOptimizer
+          this.getObservers().onDocumentDeleted(uuids);
         }
       }
     } catch (Exception e) {
       String sMsg = "Error deleting document(s):\n "+Val.chkStr(e.getMessage());
       throw new CatalogIndexException(sMsg,e);
     } finally {
-      closeWriter(writer);
+      if (this.useSingleSearcher) {
+        if (this.getAutoCommitSingleWriter()) {
+          closeWriter(writer);
+        }
+      } else {
+        closeWriter(writer);
+      }
     }
   }
   
@@ -340,7 +445,20 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
       IndexReader reader = IndexReader.open(this.newDirectory(),true);
       searcher = new IndexSearcher(reader);
     } else {
+      
+      if (REFERENCED_SEARCHER == null) {
+        REFERENCED_SEARCHER = new ReferencedSearcher(this.newDirectory());
+        return REFERENCED_SEARCHER.get();
+      } else {
+        try {
+          REFERENCED_SEARCHER.checkForReopen();
+        } catch (InterruptedException e) {
+          throw new IOException("Interrupted while opening single searcher.",e);
+        }
+        return REFERENCED_SEARCHER.get();
+      }
     
+      /*
       File fDir = new File(this.luceneConfig.getIndexLocation());
       String path = fDir.getCanonicalPath();
       synchronized (SEARCHERS) {
@@ -364,6 +482,10 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
           SEARCHERS.put(path,searcher);
         } 
       }
+      */
+      
+      
+      
     }
     return searcher;
   }
@@ -406,6 +528,12 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
    */
   private IndexWriter newWriter(boolean forCompleteRebuild) 
     throws CorruptIndexException, LockObtainFailedException, IOException {
+    
+    if (!this.useLocalWriter) {
+      throw new IOException("This instance is not using a local writer.");
+    }
+    if (this.useSingleWriter) return this.getSingleWriter(forCompleteRebuild);
+    
     File f = new File(this.luceneConfig.getIndexLocation());
     getLogger().log(Level.FINER, "Creating Lucene IndexWriter for: {0}", f.getAbsolutePath());
     IndexWriter.MaxFieldLength mfl = IndexWriter.MaxFieldLength.UNLIMITED;
@@ -414,6 +542,43 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
     } else {
       return new IndexWriter(this.newDirectory(),this.newAnalyzer(),true,mfl);
     }
+  }
+  
+  /**
+   * Gets the single writer instance.
+   * @param forCompleteRebuild true if index will be completely rebuilt
+   * @return the writer
+   * @throws CorruptIndexException if the index is corrupt 
+   * @throws LockObtainFailedException if another writer has this index 
+   *         open (write.lock could not be obtained) 
+   * @throws IOException if the directory cannot be read/written to, 
+   *         or if it does not exist and create is false or if there is any 
+   *         other low-level IO error
+   */
+  private synchronized IndexWriter getSingleWriter(boolean forCompleteRebuild) 
+    throws CorruptIndexException, LockObtainFailedException, IOException {
+    if (SINGLE_WRITER_WASDESTROYED) {
+      throw new IOException("The single IndexWriter instance was destroyed.");
+    }
+    if (SINGLE_WRITER != null) return SINGLE_WRITER;
+    
+    File f = new File(this.luceneConfig.getIndexLocation());
+    getLogger().log(Level.FINER, "Creating Lucene IndexWriter for: {0}", f.getAbsolutePath());
+    IndexWriter.MaxFieldLength mfl = IndexWriter.MaxFieldLength.UNLIMITED;
+    Directory directory = this.newDirectory();
+    
+    if (IndexWriter.isLocked(directory)) {
+      IndexWriter.unlock(directory);
+    }
+    
+    if (!forCompleteRebuild) {
+      IndexWriter tmp = new IndexWriter(directory,this.newAnalyzer(),mfl);
+      SINGLE_WRITER = tmp;
+    } else {
+      IndexWriter tmp =  new IndexWriter(directory,this.newAnalyzer(),true,mfl);
+      SINGLE_WRITER = tmp;
+    }
+    return SINGLE_WRITER;
   }
   
   /**
@@ -467,6 +632,57 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
     }
   }
 
+  /**
+   * Fired when the servlet context is shutting down.
+   * @param context the application context
+   */
+  public static synchronized void onContextDestroy(ApplicationContext context) {
+    SINGLE_WRITER_WASDESTROYED = true;
+    
+    if (SINGLE_WRITER != null) {
+      try {
+        IndexWriter tmp = SINGLE_WRITER;
+        SINGLE_WRITER = null;
+        if (tmp != null) {
+          tmp.close();
+        }
+      } catch (Exception e) {
+        LOGGER.log(Level.SEVERE,"Error while closing single IndexWriter on destroy.",e);
+      }
+    }
+    
+    if (REFERENCED_SEARCHER != null) {
+      try {
+        REFERENCED_SEARCHER.close();
+      } catch (Exception e) {
+        LOGGER.log(Level.SEVERE,"Error while closing single IndexReader on destroy.",e);
+      }
+    }
+    
+  }
+  
+  /**
+   * Fired when the servlet context is starting up.
+   * @param context the application context
+   */
+  public static synchronized void onContextInit(ApplicationContext context) {
+    StringAttributeMap params = context.getConfiguration().getCatalogConfiguration().getParameters();
+    String param = Val.chkStr(params.getValue("lucene.useLocalWriter"));
+    boolean bUseLocalWriter = !param.equalsIgnoreCase("false");
+    
+    if (bUseLocalWriter) {
+      RequestContext reqCtx = null; 
+      try {
+        reqCtx = RequestContext.extract(null);
+        LuceneIndexAdapter adapter = new LuceneIndexAdapter(reqCtx);
+        adapter.touch();
+      } catch (Exception e) {
+        LOGGER.log(Level.SEVERE,"Error while touching IndexWriter on init.",e);
+      } finally {
+        if (reqCtx != null) reqCtx.onExecutionPhaseCompleted();
+      }
+    }
+  }
     
   @Override
   public void publishDocument(String uuid, 
@@ -479,9 +695,33 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
       throw new IllegalArgumentException("The supplied document UUID was empty.");
     } 
     
+    if (this.useRemoteWriter) {
+      RemoteIndexer remoteIndexer = new RemoteIndexer();
+      remoteIndexer.send(this.getRequestContext(),"publish",uuid);
+    }
+    if (!this.useLocalWriter) return;
+    
     IndexWriter writer = null;
     PreparedStatement st = null;
+    PreparedStatement stCol = null;
     try {
+      
+      // determine if the XML should always be stored within the index
+      StringAttributeMap params  = this.getRequestContext().getCatalogConfiguration().getParameters();
+      String s = Val.chkStr(params.getValue("lucene.alwaysStoreXmlInIndex"));
+      boolean alwaysStoreXmlInIndex = !s.equalsIgnoreCase("false");
+      
+      // determine if collections are being used
+      List<String[]> collections = null;
+      CollectionDao colDao = new CollectionDao(this.getRequestContext());
+      boolean hasCollections = false;
+      boolean useCollections = colDao.getUseCollections();
+      String sColMemberTable = colDao.getCollectionMemberTableName();
+      String sqlCol = "SELECT COLUUID FROM "+sColMemberTable+" WHERE DOCUUID=?";
+      if (useCollections) {
+        collections = colDao.queryCollections();
+        hasCollections = (collections.size() > 0);
+      }
       
       // determine the storeables
       Document document = new Document();    
@@ -493,6 +733,7 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
         storeables = (Storeables)indexables.getIndexableContext().getStoreables();
       }
       if (storeables == null) {
+        useCollections = false;
         meanings= schema.getMeaning().getPropertyMeanings();
         storeables = (Storeables)schema.getMeaning().getStoreables();
       }
@@ -524,12 +765,18 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
       storeables.ensure(meanings,Storeables.FIELD_DATEMODIFIED).setValue(updateDate);
       storeables.add(aclProp);
       
+      String fldName = null;
+      Field fld = null;
+      
       // document XML
       String xml = Val.chkStr(schema.getActiveDocumentXml());
-      String fldName = Storeables.FIELD_XML;
-      LOGGER.log(Level.FINER, "Appending field: {0}", fldName);
-      Field fld = new Field(fldName,xml,Field.Store.YES,Field.Index.NO,Field.TermVector.NO);
-      document.add(fld);
+      String testBrief = Val.chkStr(schema.getCswBriefXslt());
+      if (alwaysStoreXmlInIndex || (testBrief.length() > 0)) {
+        fldName = Storeables.FIELD_XML;
+        LOGGER.log(Level.FINER, "Appending field: {0}", fldName);
+        fld = new Field(fldName,xml,Field.Store.YES,Field.Index.NO,Field.TermVector.NO);
+        document.add(fld);
+      }
       
       // add additional indexable fields based upon the SQL database record
       boolean bReadDB = true;
@@ -575,11 +822,49 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
         } 
         st.close();
         st = null;
+        
+        // determine collection membership
+        if (useCollections && hasCollections) {
+          ArrayList<String> alCol = new ArrayList<String>();
+          stCol = con.prepareStatement(sqlCol);
+          stCol.setString(1,uuid);
+          ResultSet rsCol = stCol.executeQuery();
+          while (rsCol.next()) {
+            String sCUuid = rsCol.getString(1);
+            for (String[] col: collections) {
+              if (sCUuid.equals(col[0])) {  
+                alCol.add(col[1]);
+                break;
+              }
+            }
+          }
+          stCol.close();
+          stCol = null;
+          if (alCol.size() > 0) {
+            fldName = "isPartOf";
+            Storeable storeable = (Storeable)storeables.ensure(meanings,fldName);
+            if (storeable == null) {
+              // TODO: add a warning message to the log
+            } else {
+              indexables.getIndexableContext().addStorableValues(
+                meanings.get(fldName),alCol.toArray(new String[0]));
+            }
+          }
+        }
       }
 
       for (IStoreable ist: storeables.collection()) {
         Storeable storeable = (Storeable)ist;
         storeable.appendForWrite(document);
+      }
+      
+      // schema key
+      String schemaKey = Val.chkStr(schema.getKey());
+      if (schemaKey.length() > 0) {
+        fldName = Storeables.FIELD_SCHEMA_KEY;
+        LOGGER.log(Level.FINER, "Appending field: {0} ={1}", new Object[]{fldName,schemaKey});
+        fld = new Field(fldName,schemaKey,Field.Store.YES,Field.Index.NOT_ANALYZED,Field.TermVector.NO);
+        document.add(fld);
       }
       
       // cswOutputSchema, cswBriefXml, cswSummaryXml
@@ -619,20 +904,29 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
       
       // write the document (use update to replace an existing document),
       Term term = new Term(Storeables.FIELD_UUID,uuid);
+      this.getObservers().onDocumentUpdate(document,uuid);
       if (batchWriter != null) {
         batchWriter.updateDocument(term,document);
       } else {
         writer = newWriter();
         writer.updateDocument(term,document);
       }
+      this.getObservers().onDocumentUpdated(document,uuid);
+      
     } catch (Exception e) {
       String sMsg = "Error indexing document:\n "+Val.chkStr(e.getMessage());
       throw new CatalogIndexException(sMsg,e);
     } finally {
       try {if (st != null) st.close();} catch (Exception ef) {}
-      closeWriter(writer);
+      try {if (stCol != null) stCol.close();} catch (Exception ef) {}
+      if (this.useSingleSearcher) {
+        if (this.getAutoCommitSingleWriter()) {
+          closeWriter(writer);
+        }
+      } else {
+        closeWriter(writer);
+      }
     }
-    
   }
   
   /**
@@ -641,6 +935,7 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
    */
   @Override
   public void purgeIndex() throws CatalogIndexException {
+    if (!this.useLocalWriter) return;
     IndexWriter writer = null;
     try {
       getLogger().info("Emptying Lucene index...");
@@ -771,6 +1066,7 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
    * @throws CatalogIndexException if an exception occurs
    */
   public void touch() throws CatalogIndexException { 
+    if (!this.useLocalWriter) return;
     IndexWriter writer = null;
     try {
       writer = newWriter();

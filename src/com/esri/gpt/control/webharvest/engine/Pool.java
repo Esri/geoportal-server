@@ -181,4 +181,22 @@ public ExecutionUnit [] getAllExecutedUnits() {
   }
   return executedUnits.toArray(new ExecutionUnit[executedUnits.size()]);
 }
+
+public synchronized void safeSuspend() {
+  for (WorkerBase w: workers) {
+    w.safeSuspend();
+  }
+  for (WorkerBase w: adHoc) {
+    w.safeSuspend();
+  }
+}
+
+public synchronized void safeResume() {
+  for (WorkerBase w: workers) {
+    w.safeResume();
+  }
+  for (WorkerBase w: adHoc) {
+    w.safeResume();
+  }
+}
 }

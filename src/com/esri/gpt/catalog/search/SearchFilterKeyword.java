@@ -131,7 +131,7 @@ public String getSelectedSearchOption() {
  */
 public void setSelectedSearchOption(String selectedSearchOption) {
   if (LOG.isLoggable(Level.INFO)) {
-    LOG.info("selected search option " + selectedSearchOption);
+    LOG.finer("selected search option " + selectedSearchOption);
   }
   
   this._selectedSearchOption = Val.chkStr(selectedSearchOption);

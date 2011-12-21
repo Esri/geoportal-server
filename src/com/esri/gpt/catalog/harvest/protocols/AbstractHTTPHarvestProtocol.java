@@ -14,11 +14,8 @@
  */
 package com.esri.gpt.catalog.harvest.protocols;
 
-import com.esri.gpt.framework.collection.StringAttributeMap;
-import com.esri.gpt.framework.context.ApplicationConfiguration;
-import com.esri.gpt.framework.context.ApplicationContext;
-import com.esri.gpt.framework.security.codec.PC1_Encryptor;
 import com.esri.gpt.framework.util.Val;
+import java.util.List;
 
 /**
  * Abstract HTTP-based harvest protocol
@@ -26,128 +23,45 @@ import com.esri.gpt.framework.util.Val;
 public abstract class AbstractHTTPHarvestProtocol extends HarvestProtocol {
 
 // class variables =============================================================
-
 // instance variables ==========================================================
-/** User name if required to login. */
-private String _userName = "";
-/** User password if required to login. */
-private String _userPassword = "";
+  /** User name if required to login. */
+  private String _userName = "";
+  /** User password if required to login. */
+  private String _userPassword = "";
 // constructors ================================================================
 
 // properties ==================================================================
-/**
- * Gets user name.
- * @return user name
- */
-public String getUserName() {
-  return _userName;
-}
+  
+  /**
+   * Gets user name.
+   * @return user name
+   */
+  public String getUserName() {
+    return _userName;
+  }
 
-/**
- * Sets user name.
- * @param userName user name
- */
-public void setUserName(String userName) {
-  _userName = Val.chkStr(userName);
-}
+  /**
+   * Sets user name.
+   * @param userName user name
+   */
+  public void setUserName(String userName) {
+    _userName = Val.chkStr(userName);
+  }
 
-/**
- * Gets user password.
- * @return user password
- */
-public String getUserPassword() {
-  return _userPassword;
-}
+  /**
+   * Gets user password.
+   * @return user password
+   */
+  public String getUserPassword() {
+    return _userPassword;
+  }
 
-/**
- * Sets user password.
- * @param userPassword user password
- */
-public void setUserPassword(String userPassword) {
-  _userPassword = Val.chkStr(userPassword);
-}
+  /**
+   * Sets user password.
+   * @param userPassword user password
+   */
+  public void setUserPassword(String userPassword) {
+    _userPassword = Val.chkStr(userPassword);
+  }
 // methods =====================================================================
-/**
- * Gets all the attributes.
- * @return attributes as attribute map
- */
-protected StringAttributeMap extractAttributeMap() {
-  StringAttributeMap properties = new StringAttributeMap();
-
-  properties.set("username", encryptString(_userName));
-  properties.set("password", encryptString(_userPassword));
-
-  return properties;
-}
-
-/**
- * Gets all the attributes.
- * @return attributes as attribute map
- */
-public StringAttributeMap getAttributeMap() {
-  StringAttributeMap properties = new StringAttributeMap();
-
-  properties.set("username", _userName);
-  properties.set("password", _userPassword);
-
-  return properties;
-}
-
-/**
- * Sets all the attributes.
- * @param attributeMap attributes as attribute map
- */
-protected void applyAttributeMap(StringAttributeMap attributeMap) {
-  setUserName(decryptString(chckAttr(attributeMap.get("username"))));
-  setUserPassword(decryptString(chckAttr(attributeMap.get("password"))));
-}
-
-/**
- * Sets all the attributes.
- * @param attributeMap attributes as attribute map
- */
-public void setAttributeMap(StringAttributeMap attributeMap) {
-  setUserName(chckAttr(attributeMap.get("username")));
-  setUserPassword(chckAttr(attributeMap.get("password")));
-}
-
-/**
- * Decrypts string.
- * @param s string to decrypt
- * @return decrypted string
- */
-private String decryptString(String s) {
-  s = Val.chkStr(s);
-  String sEncKey = getEncKey();
-  if (sEncKey.length()>0 && s.length()>0) {
-    try {
-      s = PC1_Encryptor.decrypt(sEncKey, s);
-    } catch (IllegalArgumentException ex) {
-      
-    }
-  }
-  return s;
-}
-/**
- * Encrypts string.
- * @param s string to encrypt
- * @return encrypted string
- */
-private String encryptString(String s) {
-  s = Val.chkStr(s);
-  String sEncKey = getEncKey();
-  if (sEncKey.length()>0) {
-    s = PC1_Encryptor.encrypt(sEncKey, s);
-  }
-  return s;
-}
-/**
- * Gets encryption key.
- * @return encryption key
- */
-private String getEncKey() {
-  ApplicationContext appCtx = ApplicationContext.getInstance();
-  ApplicationConfiguration appCfg = appCtx.getConfiguration();
-  return appCfg.getIdentityConfiguration().getEncKey();
-}
 }

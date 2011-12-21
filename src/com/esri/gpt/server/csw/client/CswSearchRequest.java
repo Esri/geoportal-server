@@ -14,19 +14,13 @@
  */
 package com.esri.gpt.server.csw.client;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
-
 import org.xml.sax.SAXException;
 
 /**
@@ -59,7 +53,7 @@ public CswSearchRequest(CswCatalog catalog, String searchText) {
   this.criteria.setSearchText(searchText);
   // create csw client
   this.cswClient = new CswClient();
-  this.response = new CswSearchResponse();
+  this.response  = new CswSearchResponse();
 }
 
 /**
@@ -71,6 +65,7 @@ public CswCatalog getCatalog() {
 
 public void setCatalog(CswCatalog catalog) {
   this.catalog = catalog;
+  this.cswClient.setBatchHttpClient(catalog.getBatchHttpClient());
 }
 
 public CswSearchCriteria getCriteria() {
@@ -165,6 +160,7 @@ public CswRecord getRecordById(String requestURL, String DocID,
 
   if (cswClient == null) {
     cswClient = new CswClient();
+    cswClient.setBatchHttpClient(catalog.getBatchHttpClient());
   }
 
   BufferedInputStream bStream = null;
@@ -218,7 +214,7 @@ public CswRecord getRecordById(String requestURL, String DocID,
     record.setId(DocID);
     LOG.finer("GetRecordByID: Transforming intermidiate xml to populate xml " +
     		"into csw Record");
-    profile.readCSWGetMetadataByIDResponse(responseStr, record);
+    profile.readCSWGetMetadataByIDResponse(getCswClient(),responseStr, record);
     if (record == null) {
       throw new NullReferenceException("Record not populated.");
     }
@@ -272,6 +268,7 @@ public CswRecord getRecordById(String requestURL, String DocID,
 
   if (cswClient == null) {
     cswClient = new CswClient();
+    cswClient.setBatchHttpClient(catalog.getBatchHttpClient());
   }
 
   BufferedInputStream bStream = null;
@@ -282,7 +279,7 @@ public CswRecord getRecordById(String requestURL, String DocID,
   try {
     istIntermidiateDoc = 
       cswClient.submitHttpRequest("GET", requestUrl,
-      "");
+      "", username, password);
 
     
     String responseStr = Utils.getInputString2(istIntermidiateDoc);
@@ -323,7 +320,7 @@ public CswRecord getRecordById(String requestURL, String DocID,
     record.setId(DocID);
     LOG.finer("GetRecordByID: Transforming intermidiate xml to populate xml " +
         "into csw Record");
-    profile.readCSWGetMetadataByIDResponse(responseStr, record);
+    profile.readCSWGetMetadataByIDResponse(getCswClient(), responseStr, record);
     if (record == null) {
       throw new NullReferenceException("Record not populated.");
     }
@@ -346,7 +343,7 @@ public CswRecord getRecordById(String requestURL, String DocID,
     } else if (hasResourceUrl) {
       // need to load metadata from resource URL
       istRealDoc = cswClient.submitHttpRequest("GET", Utils.chkStr(record
-          .getMetadataResourceURL()), "", "", "");
+          .getMetadataResourceURL()), "", username, password);
 
       responseStr = Utils.getInputString2(istRealDoc);
 

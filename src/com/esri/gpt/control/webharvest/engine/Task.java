@@ -22,7 +22,7 @@ import com.esri.gpt.framework.resource.query.Criteria;
 /**
  * Task.
  */
-class Task {
+public class Task {
 
 /** resource to harvest */
 private HrRecord resource;

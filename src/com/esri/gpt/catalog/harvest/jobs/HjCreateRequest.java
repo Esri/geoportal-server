@@ -141,7 +141,11 @@ private boolean recover() {
     sbStmt.append("UPDATE ").append(getHarvestingJobsPendingTableName());
     sbStmt.append(" SET INPUT_DATE=?,HARVEST_DATE=?,JOB_STATUS=?,");
     sbStmt.append(" JOB_TYPE=?,CRITERIA=?");
-    sbStmt.append(" WHERE HARVEST_ID=? AND UPPER(JOB_STATUS)='").append(JobStatus.Canceled.name().toUpperCase()).append("'");
+    if (getIsDbCaseSensitive(this.getRequestContext())) {
+      sbStmt.append(" WHERE HARVEST_ID=? AND UPPER(JOB_STATUS)='").append(JobStatus.Canceled.name().toUpperCase()).append("'");
+    } else {
+      sbStmt.append(" WHERE HARVEST_ID=? AND JOB_STATUS='").append(JobStatus.Canceled.name().toUpperCase()).append("'");
+    }
 
 
     // establish the connection

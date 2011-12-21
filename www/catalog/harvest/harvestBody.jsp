@@ -235,6 +235,7 @@ function selectSection(section) {
   enableSection("waf", section=="waf");
   enableSection("csw", section=="csw");
   enableSection("agp", section=="agp");
+  enableSection("thredds", section=="thredds");
 
   if (section=="arcgis") {
     dojo.byId("harvestCreate:hostUrlLabel").innerHTML = dojo.byId("restUrlLabelValue").value;
@@ -466,8 +467,10 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 
 
 <%-- Port Number --%>
-<h:outputLabel styleClass="arcims requiredField" for="portArcImsNumber" value="#{gptMsg['catalog.harvest.manage.edit.portNumber']}"/>
+<%--
+<h:outputLabel styleClass="arcims" for="portArcImsNumber" value="#{gptMsg['catalog.harvest.manage.edit.portNumber']}"/>
 <h:inputText   styleClass="arcims" size="5" maxlength="5" value="#{HarvestController.editor.attrs['port']}" id="portArcImsNumber"/>
+--%>
 
 <%-- service name --%>
 <h:outputLabel styleClass="arcims requiredField" for="serviceName" value="#{gptMsg['catalog.harvest.manage.edit.serviceName']}"/>
@@ -475,11 +478,11 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 
 <%-- username name --%>
 <h:outputLabel styleClass="arcims" for="arcImsUserName" value="#{gptMsg['catalog.harvest.manage.edit.userName']}"/>
-<h:inputText   styleClass="arcims" size="30" value="#{HarvestController.editor.attrs['username']}" id="arcImsUserName"/>
+<h:inputText   styleClass="arcims" size="30" value="#{HarvestController.editor.attrs['arcims.username']}" id="arcImsUserName"/>
 
 <%-- username password --%>
 <h:outputLabel styleClass="arcims" for="arcImsUserPassword" value="#{gptMsg['catalog.harvest.manage.edit.userPassword']}"/>
-<h:inputSecret styleClass="arcims" redisplay="true" size="30" value="#{HarvestController.editor.attrs['password']}" id="arcImsUserPassword"/>
+<h:inputSecret styleClass="arcims" redisplay="true" size="30" value="#{HarvestController.editor.attrs['arcims.password']}" id="arcImsUserPassword"/>
 
 <%-- OAI specific properties -------------------------------------------------%>
 
@@ -495,11 +498,11 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 
 <%-- username name --%>
 <h:outputLabel styleClass="waf" for="wafImsUserName" value="#{gptMsg['catalog.harvest.manage.edit.userName']}"/>
-<h:inputText   styleClass="waf" size="30" value="#{HarvestController.editor.attrs['username']}" id="wafImsUserName"/>
+<h:inputText   styleClass="waf" size="30" value="#{HarvestController.editor.attrs['waf.username']}" id="wafImsUserName"/>
 
 <%-- username password --%>
 <h:outputLabel styleClass="waf" for="wafImsUserPassword" value="#{gptMsg['catalog.harvest.manage.edit.userPassword']}"/>
-<h:inputSecret styleClass="waf" redisplay="true" size="30" value="#{HarvestController.editor.attrs['password']}" id="wafImsUserPassword"/>
+<h:inputSecret styleClass="waf" redisplay="true" size="30" value="#{HarvestController.editor.attrs['waf.password']}" id="wafImsUserPassword"/>
 
 <%-- CSW specific properties -------------------------------------------------%>
 
@@ -508,7 +511,9 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <f:selectItems value="#{HarvestController.editor.allProfiles}"/>
 </h:selectOneMenu>
 
-<%-- ArcGIS Portal specific properties -------------------------------------------------%>
+<%-- ArcGIS Portal specific properties ---------------------------------------%>
+
+<%-- THREDDS specific properties ---------------------------------------------%>
 
 <%-- End of the panel --%>
 </h:panelGrid>

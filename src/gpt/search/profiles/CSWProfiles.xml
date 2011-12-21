@@ -477,6 +477,30 @@
          <SupportSpatialBoundary>False</SupportSpatialBoundary>
    </Profile>
          
-        
+     <!--  CSW OGCCORE FEMA --> 
+     <Profile>
+	    <ID>CSW.OGCCORE.FEMA</ID>
+	    <Name>CSW.OGCCORE.FEMA</Name>
+	    <CswNamespace>http://www.opengis.net/cat/csw</CswNamespace>
+	    <Description>CSW OGCCORE FEMA profile</Description>
+	    <!-- same as CSW.CORE.ESRI profile -->	            
+	    <GetRecords>
+	      <XSLTransformations>
+	        <Request>CSW_CORE_ESRI_GetRecords_Request.xslt</Request>
+            <Response>CSW_CORE_ESRI_GetRecords_Response.xslt</Response>
+	      </XSLTransformations>
+	    </GetRecords>
+	    <GetRecordByID>
+            <!-- HTTP GET request url Key-Value Pairs(KVPs). need to append "&Id=[the ID of the metadata]" to be retrieved before making the GetRecordByID call -->
+            <RequestKVPs><![CDATA[service=CSW&request=GetRecordById&version=2.0.0&ElementSetName=full]]></RequestKVPs>
+            <XSLTransformations>
+                <!-- style sheet transforms response to metadata xml or a resource URL that points to actual metadata -->
+                <Response>CSW_CORE_ESRI_GetRecordByID_Response.xslt</Response>
+            </XSLTransformations>
+        </GetRecordByID>
+        <SupportSpatialQuery>True</SupportSpatialQuery>
+        <SupportContentTypeQuery>True</SupportContentTypeQuery>
+        <SupportSpatialBoundary>True</SupportSpatialBoundary>
+	  </Profile>
 
 </CSWProfiles>
