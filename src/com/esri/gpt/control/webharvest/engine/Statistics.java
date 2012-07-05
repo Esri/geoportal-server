@@ -52,6 +52,12 @@ long getModifiedCount();
 long getPublishedCount();
 
 /**
+ * Gets total number of deleted documents.
+ * @return total number of deleted documents
+ */
+long getDeletedCount();
+
+/**
  * Gets start time.
  * @return start time
  */

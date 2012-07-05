@@ -13,12 +13,6 @@
  * limitations under the License.
  */
 package com.esri.gpt.catalog.publication;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.esri.gpt.catalog.arcims.ImsServiceException;
 import com.esri.gpt.catalog.context.CatalogIndexException;
 import com.esri.gpt.control.webharvest.IterationContext;
@@ -27,6 +21,12 @@ import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.util.Val;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Super-class for a processor that interacts with a resource for the express 
@@ -99,9 +99,10 @@ public abstract class ResourceProcessor {
    * @throws SQLException if an exception occurs while communicating with the database
    * @throws ImsServiceException if an exception occurs during delete
    * @throws CatalogIndexException if an exception occurs during delete
+   * @throws IOException if accessing index fails
    */
   protected void deleteUnreferencedSourceURIs() 
-    throws SQLException, ImsServiceException, CatalogIndexException {
+    throws SQLException, ImsServiceException, CatalogIndexException, IOException {
     List<ProcessedRecord> records = this.getContext().getProcessedRecords();
     if ((this.sourceURIs != null) && (this.sourceURIs.size() > 0) && (records.size() > 0)) {
       for (ProcessedRecord record: records) {

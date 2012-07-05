@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gmi:MI_TriggerCode" 
+           g:i18nBase="catalog.iso19139-2.MI_Metadata.acquisition.event.triggerCode" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/CodeListValue_Type.xml">
+  <g:body>
+   
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeSpace.xml" 
+      g:value="ISOTC211/19115"/>
+       
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeList.xml"
+      g:value="http://www.isotc211.org/2005/resources/Codelist/gmiCodelists.xml#MI_TriggerCode"/>
+     
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeListValue.xml">
+      <g:body>
+        <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+          <g:options>
+            <g:option g:label="" g:value=""/>
+            <g:option g:label="$i18nBase.automatic" g:value="automatic"/>
+            <g:option g:label="$i18nBase.manual" g:value="manual"/>
+            <g:option g:label="$i18nBase.preProgrammed" g:value="preProgrammed"/>
+          </g:options>
+        </g:input>
+      </g:body>          
+    </g:attribute>     
+     
+  </g:body> 
+</g:element>

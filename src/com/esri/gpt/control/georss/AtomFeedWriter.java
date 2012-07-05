@@ -28,6 +28,7 @@ import com.esri.gpt.catalog.search.SearchResultRecord;
 import com.esri.gpt.catalog.search.SearchResultRecords;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
+import java.io.BufferedWriter;
 
 
 /**
@@ -56,6 +57,9 @@ private RecordSnippetWriter.Target _target = RecordSnippetWriter.Target.blank;
 /** The _message broker. */
 private MessageBroker _messageBroker = null;
 
+/** line separator */
+private String lineSeparator;
+
 // constructors ================================================================
 /**
  * Constructor.
@@ -64,6 +68,8 @@ private MessageBroker _messageBroker = null;
  */
 public AtomFeedWriter(PrintWriter writer) {
   _writer = writer;
+  lineSeparator =	(String) java.security.AccessController.doPrivileged(
+              new sun.security.action.GetPropertyAction("line.separator"));
 }
 
 /**
@@ -75,6 +81,8 @@ public AtomFeedWriter(PrintWriter writer) {
 public AtomFeedWriter(PrintWriter writer, String entryBaseUrl) {
   _writer = writer;
   _entryBaseUrl = entryBaseUrl;
+  lineSeparator =	(String) java.security.AccessController.doPrivileged(
+              new sun.security.action.GetPropertyAction("line.separator"));
 }
 
 // properties
@@ -464,11 +472,11 @@ public void WriteTo(java.io.Writer writer) {
   if (writer == null)
     return;
   try {
-    writer.append(ENTITY_OPEN_TAG);
+    writer.append(ENTITY_OPEN_TAG+lineSeparator);
     if (getTitle() != null) {
       try {
         data = TITLE_OPEN_TAG + Val.escapeXml(getTitle()) + TITLE_CLOSE_TAG;
-        writer.append(data);
+        writer.append("\t"+data+lineSeparator);
       } catch (Exception e) {
         LOGGER.log(Level.WARNING, "", e);
       }
@@ -479,7 +487,7 @@ public void WriteTo(java.io.Writer writer) {
       for (String lnk : getLinks()) {
         try {
           data = LINK_TAG.replace("?", Val.escapeXml(lnk));
-          writer.append(data);
+          writer.append("\t"+data+lineSeparator);
         } catch (Exception e) {
           LOGGER.log(Level.WARNING, "", e);
         }
@@ -490,7 +498,7 @@ public void WriteTo(java.io.Writer writer) {
         data = Val.escapeXml(getId());
         data = ID_OPEN_TAG + "urn:uuid:" + data.substring(1, data.length() - 1)
             + ID_CLOSE_TAG;
-        writer.append(data);
+        writer.append("\t"+data+lineSeparator);
       } catch (Exception e) {
         LOGGER.log(Level.WARNING, "", e);
       }
@@ -502,7 +510,7 @@ public void WriteTo(java.io.Writer writer) {
         format = new SimpleDateFormat(TIME_FORMAT_PATTERN);
         data = data + "T" + format.format(getPublished()) + "Z";
         data = UPDATED_OPEN_TAG + data + UPDATED_CLOSE_TAG;
-        writer.append(data);
+        writer.append("\t"+data+lineSeparator);
       } catch (Exception e) {
         LOGGER.log(Level.WARNING, "", e);
       }
@@ -511,7 +519,7 @@ public void WriteTo(java.io.Writer writer) {
       try {
         data = SUMMARY_OPEN_TAG + Val.escapeXml(getSummary())
             + SUMMARY_CLOSE_TAG;
-        writer.append(data);
+        writer.append("\t"+data+lineSeparator);
       } catch (Exception e) {
         LOGGER.log(Level.WARNING, "", e);
       }
@@ -520,15 +528,15 @@ public void WriteTo(java.io.Writer writer) {
       try {
         data = BOX_OPEN_TAG + getMiny() + " " + getMinx() + " " + getMaxy()
             + " " + getMaxx() + BOX_CLOSE_TAG;
-        writer.append(data);
+        writer.append("\t"+data+lineSeparator);
       } catch (Exception e) {
         LOGGER.log(Level.WARNING, "", e);
       }
     }
     if( getCustomElements() != null) {
-      writer.append(Val.chkStr(getCustomElements()));
+      writer.append("\t"+Val.chkStr(getCustomElements())+lineSeparator);
     }
-    writer.append(ENTITY_CLOSE_TAG);
+    writer.append(ENTITY_CLOSE_TAG+lineSeparator);
   } catch (Exception e) {
     LOGGER.log(Level.WARNING, "", e);
   }
@@ -833,12 +841,12 @@ public void writePreamble(java.io.Writer writer) throws IOException {
   String data = null;
   if (writer == null)
     return;
-  writer.append(ATOM_HEADER);
-  writer.append(ATOM_ROOT_OPEN_TAG);
+  writer.append(ATOM_HEADER+lineSeparator);
+  writer.append(ATOM_ROOT_OPEN_TAG+lineSeparator);
   if (getInfo().length() > 0) {
     try {
       data = Val.escapeXml(getInfo());
-      writer.append(COMMENT_OPEN_TAG + data + COMMENT_CLOSE_TAG);
+      writer.append(COMMENT_OPEN_TAG +lineSeparator+ data + COMMENT_CLOSE_TAG+lineSeparator);
     } catch (Exception e) {
       LOGGER.log(Level.WARNING, "", e);
     }
@@ -846,7 +854,7 @@ public void writePreamble(java.io.Writer writer) throws IOException {
   if (getId() != null) {
     try {
       data = Val.escapeXml(getId());
-      writer.append(ID_OPEN_TAG + data + ID_CLOSE_TAG);
+      writer.append(ID_OPEN_TAG + data + ID_CLOSE_TAG+lineSeparator);
     } catch (Exception e) {
       LOGGER.log(Level.WARNING, "", e);
     }
@@ -854,7 +862,7 @@ public void writePreamble(java.io.Writer writer) throws IOException {
   if (getTitle() != null) {
     try {
       data = Val.escapeXml(getTitle());
-      writer.append(TITLE_OPEN_TAG + data + TITLE_CLOSE_TAG);
+      writer.append(TITLE_OPEN_TAG + data + TITLE_CLOSE_TAG+lineSeparator);
     } catch (Exception e) {
       LOGGER.log(Level.WARNING, "", e);
     }
@@ -862,7 +870,7 @@ public void writePreamble(java.io.Writer writer) throws IOException {
   if (getLink() != null) {
     try {
       data = LINK_TAG.replace("?", Val.escapeXml(getEntryBaseUrl()));
-      writer.append(data);
+      writer.append(data+lineSeparator);
     } catch (Exception e) {
       LOGGER.log(Level.WARNING, "", e);
     }
@@ -871,7 +879,7 @@ public void writePreamble(java.io.Writer writer) throws IOException {
   if (getAuthor() != null) {
     try {
       data = Val.escapeXml(getAuthor());
-      writer.append(AUTHOR_OPEN_TAG + data + AUTHOR_CLOSE_TAG);
+      writer.append(AUTHOR_OPEN_TAG + data + AUTHOR_CLOSE_TAG+lineSeparator);
     } catch (Exception e) {
       LOGGER.log(Level.WARNING, "", e);
     }
@@ -883,7 +891,7 @@ public void writePreamble(java.io.Writer writer) throws IOException {
       format = new SimpleDateFormat(TIME_FORMAT_PATTERN);
       data = data + "T" + format.format(getUpdated()) + "Z";
       data = UPDATED_OPEN_TAG + data + UPDATED_CLOSE_TAG;
-      writer.append(data);
+      writer.append(data+lineSeparator);
 
     } catch (Exception e) {
       LOGGER.log(Level.WARNING, "", e);
@@ -907,7 +915,7 @@ public void writePreamble(java.io.Writer writer) throws IOException {
  * @throws IOException Signals that an I/O exception has occurred.
  */
 public void writeEnd(java.io.Writer writer) throws IOException {
-  writer.write(ATOM_ROOT_CLOSE_TAG);
+  writer.write(ATOM_ROOT_CLOSE_TAG+lineSeparator);
 }
 
 /**

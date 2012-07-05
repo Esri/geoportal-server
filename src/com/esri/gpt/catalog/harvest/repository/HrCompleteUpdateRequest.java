@@ -102,7 +102,7 @@ public class HrCompleteUpdateRequest extends HrRequest {
       HrRecords records = select.getQueryResult().getRecords();
       if (records.size() > 0) {
         HrRecord oldRecord = records.get(0);
-        if (user.getLocalID()!=oldRecord.getLocalId()) {
+        if (user.getLocalID()!=oldRecord.getOwnerId()) {
           if (!user.getIsAdministrator()) {
             throw new NotAuthorizedException("Not authorized.");
           }

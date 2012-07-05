@@ -25,7 +25,9 @@ import com.esri.gpt.framework.util.ReadOnlyIterator;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.NodeListAdapter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -135,6 +137,14 @@ class TFolder implements DestroyableResource {
     }
   }
   
+  private String encodeUrl(String str) {
+    try {
+      return URLEncoder.encode(str, "UTF-8");
+    } catch (UnsupportedEncodingException ex) {
+      return str;
+    }
+  }
+  
   private List<Resource> parseResponse(Document doc) throws XPathException, IOException {
     ArrayList<Resource> resources = new ArrayList<Resource>();
     
@@ -149,12 +159,13 @@ class TFolder implements DestroyableResource {
       URL baseUrl = new URL(infoUrl.toExternalForm());
       baseUrl = new URL(baseUrl, iso);
     
-      NodeList ndDatasets = (NodeList)xPath.evaluate("//dataset[string-length(normalize-space(@urlPath))>0]/@urlPath", ndCatalog, XPathConstants.NODESET);
+      NodeList ndDatasets = (NodeList)xPath.evaluate("//dataset[string-length(normalize-space(@urlPath))>0]", ndCatalog, XPathConstants.NODESET);
       for (Node ndDataset: new NodeListAdapter(ndDatasets)) {
-        String url = Val.chkStr(ndDataset.getNodeValue());
+        String url = (String)xPath.evaluate("@urlPath",ndDataset,XPathConstants.STRING);
+        String ID = (String)xPath.evaluate("@ID",ndDataset,XPathConstants.STRING);
         if (!url.isEmpty()) {
           URL datasetUrl = new URL(baseUrl, url);
-          TFile datasetFile = new TFile(proxy, datasetUrl.toExternalForm());
+          TFile datasetFile = new TFile(proxy, datasetUrl.toExternalForm()+"?catalog="+encodeUrl(info.getUrl())+"&dataset="+ID);
           resources.add(datasetFile);
         }
       }

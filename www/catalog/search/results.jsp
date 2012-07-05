@@ -18,6 +18,30 @@
 <%@ taglib prefix="h" uri="http://java.sun.com/jsf/html" %>
 <%@ taglib prefix="gpt" uri="http://www.esri.com/tags-gpt"%>
 
+<gpt:jscriptVariable 
+   quoted="false" value="#{SearchController.serviceCheckerEnabled}" 
+   variableName="serviceCheckerEnabled" 
+   id="serviceCheckerEnabled">
+</gpt:jscriptVariable>
+
+<gpt:jscriptVariable 
+   quoted="" value="#{SearchController.serviceCheckerCheckUrl}" 
+   variableName="serviceCheckerCheckUrl" 
+   id="serviceCheckerCheckUrl">
+</gpt:jscriptVariable>
+
+<gpt:jscriptVariable 
+   quoted="" value="#{SearchController.serviceCheckerInfoUrl}" 
+   variableName="serviceCheckerInfoUrl" 
+   id="serviceCheckerInfoUrl">
+</gpt:jscriptVariable>
+
+<gpt:jscriptVariable 
+   quoted="" value="#{SearchController.serviceCheckerToken}" 
+   variableName="serviceCheckerToken" 
+   id="serviceCheckerToken">
+</gpt:jscriptVariable>
+
 <f:verbatim>
 
 <script type="text/javascript">
@@ -299,6 +323,111 @@ function rsInsertReviewsHandler(data) {
    
 }
 
+/*
+Goes through the resource urls and types and forwards the information to
+the service checker url via an xml to json jsp
+*/
+function rsGetQualityOfService() {
+  if (!serviceCheckerEnabled) {
+    // return immediatelly if service checker not enabled
+    return;
+  }
+  dojo.query(".recordInfo").forEach(
+    function(node, index) {
+      var uuid = dojo.query(".recordUuid", node)[0].value;
+      var url  = dojo.query(".recordUrl", node)[0].value;
+      var type = dojo.query(".recordType", node)[0].value;
+      
+      
+      if(type == null || type == "") {
+        type = null;
+      } else if(type.toLowerCase() == "aims") {
+        type = "image";
+      } else if(type.toLowerCase() == "wms" || type.toLowerCase() == "wfs" || type.toLowerCase() == "csw" || type.toLowerCase() == "kml" || type.toLowerCase() == "sos" || type.toLowerCase() == "ags") {
+      } else {
+        type = null;
+      }
+
+      //alert("Candid: "+uuid+", type: "+type);
+
+      if (type!=null) {
+        var checkUrl = 
+          serviceCheckerCheckUrl + "?auth=" + serviceCheckerToken
+          + "&type=" + encodeURIComponent(type)
+          + "&id=" + encodeURIComponent(uuid)
+          ;
+        var infoUrl = 
+          serviceCheckerInfoUrl
+          + "?serviceType=" + encodeURIComponent(type)
+          + "&uId=" + encodeURIComponent(uuid)
+        var context = {
+          node: node,
+          index: index,
+          uuid: uuid,
+          url: checkUrl,
+          info: infoUrl,
+          type: type
+        };
+        //alert("Calling: "+checkUrl);
+        dojo.xhrGet({
+          url: contextPath + "/catalog/download/proxy.jsp?"+checkUrl,
+          handleAs: "json",
+          load: dojo.hitch(context, function(data) {
+            console.log("Received data: "+data);
+            try {
+              if (data.error!=null) {
+                console.log(data.error.message);
+              } else if (data.data!=null && data.data.constructor==Array && data.data.length>0) {
+                var score = data.data[0].summary.scoredTest.currentScore;
+                var info = null;
+                var imgSrc = "<%=request.getContextPath()%>/catalog/images/serviceChecker"; 
+                if(score == NaN){
+                  imgSrc = imgSrc + "Unknown16.png";
+                  info = "Unknown";
+                } else if(score < 0) {
+                  imgSrc = imgSrc + "Unknown16.png";
+                  info = "Unknown";
+                } else if(score <= 25) {
+                  imgSrc = imgSrc + "VeryBad16.png";
+                } else if(score <= 50 ) {
+                  imgSrc = imgSrc + "Bad16.png";
+                } else if(score <= 75 ) {
+                  imgSrc = imgSrc + "Good16.png";
+                } else if(score > 75 && score <= 100) {
+                  imgSrc = imgSrc + "Excellent16.png";
+                } else {
+                  imgSrc = imgSrc + "Unknown16.png";
+                  info = "Unknown";
+                }
+                if(info == null) {
+                  info = "Service Availability = " + score + "%";
+                }
+                var elRecordImg = dojo.byId("frmSearchCriteria:mdRecords:"+ this.index +":smallImgContentType");
+                var serviceUrl = this.info;
+
+                var elLink = dojo.create("a",
+                  {target: "_blank", href:serviceUrl, alt:info, title:info},
+                  elRecordImg,
+                  'after');
+                dojo.style(elLink, 
+                  {"border":"0px", "text-decoration" : "none", "border-bottom" : "0px", "margin-right": "0.5em"});
+                var elImg = dojo.create("img", {src:imgSrc, alt:info, title:info}, elLink);
+
+                dojo.style(elImg, {"border":"0px"});
+              }
+            } catch (error) {
+              console.log(error.message);
+            }
+          }),
+          error: function(error) {
+            console.log(error.message);
+          }
+        });
+      }
+    }
+  );
+}
+
 </script>
 
 </f:verbatim>
@@ -463,6 +592,17 @@ function rsInsertReviewsHandler(data) {
                value="#{record.thumbnailLink.url}" width="64" height="64" styleClass="resultsThumbnail" />
             <h:outputText id="_txtAbstract" styleClass="resultsContent" value="#{record['abstract']}" />
 				  </h:panelGroup>
+				  
+				  <% // resource info %>
+                  <f:verbatim>
+                    <div class="recordInfo" style="display: none; visibility: hidden;">
+                      </f:verbatim>
+                        <h:inputText styleClass="recordUuid" value="#{record.uuid}"/>
+                        <h:inputText styleClass="recordUrl" value="#{record.resourceUrl}"/>
+                        <h:inputText styleClass="recordType" value="#{record.serviceType}"/>
+                      <f:verbatim>
+                    </div>
+                  </f:verbatim>
 				    
 				  <% // Resource links %>
 					<h:panelGrid id="pgdResourceLinks">
@@ -530,7 +670,7 @@ function rsInsertReviewsHandler(data) {
   <h:outputLink id="srRestJSON" target="_blank" value="#{SearchController.restSearchRequestUrlJson}" styleClass="resultsLinkRestApi">
     <h:outputText value="JSON"/>
   </h:outputLink>
-  <h:outputLink id="srRestCSV" target="_blank" value="javascript:void(0);"onclick="javascript:getCsv('#{SearchController.restSearchRequestUrlJson}'); return false;" styleClass="resultsLinkRestApi">
+  <h:outputLink id="srRestCSV" target="_blank" value="javascript:void(0);" onclick="javascript:getCsv('#{SearchController.restSearchRequestUrlJson}'); return false;" styleClass="resultsLinkRestApi">
     <h:outputText value="CSV"/>
   </h:outputLink>
 </h:panelGroup>

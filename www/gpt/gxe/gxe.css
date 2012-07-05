@@ -1,0 +1,374 @@
+/* See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ 
+/* GXE ************************************************ */
+
+
+.gxeDocument {
+  background-color: inherit;
+}
+
+.gxeControlBar {
+	margin-bottom: 5px;
+}
+
+.gxeRepairMode {
+	height: 450px !important;
+  overflow-y: auto;
+}
+
+.gxeDocument label.required {
+  font-weight: bold;
+  font-style: italic;
+}
+
+.gxeDocument .requiredFieldNote  {
+  display: block; 
+  margin-top: 10px; 
+  font-size: x-small;
+}
+
+.gxeSection {
+  display: block;
+  width: 98%;
+  margin-bottom: 1em;
+  padding: 0px 0px 5px 5px;  
+}
+
+.gxeSectionHeader {
+  margin: 5px 0px 5px 0px;
+}
+
+.gxeSectionBody {
+  margin: 0px 0px 0px 10px;
+}
+
+.gxeSectionMenu {
+  margin: 0px 6px 0px 12px;
+}
+
+.gxeSectionMenu img {
+  cursor: hand; 
+  cursor: pointer;
+  margin: 8px 6px 8px 6px; 
+  text-align: left; 
+  vertical-align: middle;
+  width: auto;
+  height: auto;
+}
+
+img.gxeDisabled {
+  filter:progid:DXImageTransform.Microsoft.Alpha(opacity=30);
+  opacity: 0.4;
+}
+
+ul.gxeSelectMany li {
+  list-style: none;
+}
+
+.gxeTabsHeader {}
+
+.gxeTabsBody {
+  display: block;
+  width: 98%;
+  border: 1px solid #CCC;
+  background: url(images/small_bg.gif) repeat-x;
+  padding: 10px 0px 5px 5px;
+  clear: both;
+}
+
+ul.gxeTabArray {
+  display: inline; 
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+ul.gxeTabArray li {
+	display: inline;
+	margin: 0 0.15em;
+}
+
+ul.gxeTabArray li a {
+	color: #333;
+	background-color: #FFFFFF;
+	border: 1px solid #CCCCCC;
+	line-height: 2em;
+	padding: 5px 10px;
+	text-align: center;
+	text-decoration: none;
+	font-weight: normal;
+}
+
+ul.gxeTabArray li a:link, ul.gxeTabArray li a:visited {
+  color: #333;
+  text-decoration: none; 
+  font-weight: normal;
+}
+
+ul.gxeTabArray li a:hover {
+  background: url("images/gxe-gradient.png") repeat-x scroll left bottom #FFFFFF;
+}
+
+ul.gxeTabArray li a:active, ul.gxeTabArray li a:focus {
+  outline: none;
+}
+
+ul.gxeTabArray li a.current {
+  background: url("images/gxe-gradient.png") repeat-x scroll left bottom #FFFFFF;
+  color: #333333;
+  font-weight: bold !important;
+}
+
+.gxeMessageArea {
+	background-color: inherit;
+	display: none;
+	margin-bottom: 1em; 
+}
+
+.gxeMessageArea .gxeClearAll {
+  margin: 5px 5px 0px 5px;
+}
+
+.gxeMessageListWrapper {
+	background-color: #FFF;
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #CCC;
+}
+
+.gxeMessageList {
+  list-style-type: none;
+  display: block;
+}
+
+.gxeMessageList .success {
+  background: url(images/success.png) #FFF no-repeat 6px 6px;
+  padding: 5px 30px;
+}
+.gxeMessageList .error {
+  background: url(images/error.png) #FFF no-repeat 6px 6px;
+  padding: 5px 30px;
+}
+.gxeMessageList .warning {
+  background: url(images/warning.png) #FFF no-repeat 0px 0px;
+  padding: 5px 30px;
+}
+
+a.gxeInputTool, a.gxeClearAll, a.gxeUseMapButton {
+	margin: 0px 10px;
+  color: #21759B !important;
+  text-decoration: none !important; 
+  font-weight: normal !important;
+  outline: none !important;
+}
+
+.gxeMap {
+  margin-top: 10px;
+}
+
+table.gxeMapEnvelopeTable {
+	margin: 0;
+  padding: 0;
+}
+
+.gxeMapEnvelopeTable td {
+  vertical-align: top;
+}
+
+.gxeMapEnvelopeTable .gxeMapCoordinates {
+  margin-top: 30px;
+  padding-right: 20px;
+}
+
+.gxeMapContainer {
+	margin-top: 1px; 
+	border: 1px solid #000000;
+	width: 440px; 
+	height:300px;
+  cursor:hand; cursor:pointer;
+}
+.gxeMapCanvas {
+	width: 440px; 
+	height:300px;
+	cursor:hand; cursor:pointer;
+}
+
+.gxeDisplayNone {
+  display: none;
+}
+
+.gxeMetadataDialog {}
+
+.gxeMetadataDialog .gxeDocument {
+  overflow-y: auto;
+}
+
+.gxeMetadataDialog input[type="checkbox"], .gxePopupDialog input[type="checkbox"] {
+	margin-right: 4px !important;
+	margin-bottom: 4px !important;
+}
+
+.gxeMetadataDialog input[type="radio"], .gxePopupDialog input[type="radio"] {
+	margin-right: 4px !important;
+}
+
+.gxeMetadataDialog input[type="text"], .gxePopupDialog input[type="text"] {
+	font-size: 1.1em !important;
+}
+
+.gxeMetadataDialog .gxeMode {
+	height: 400px;
+}
+
+.gxeMetadataDialog .gxeViewDetailsMode {
+  overflow-y: scroll;
+}
+
+.gxeMetadataDialog .gxeViewXmlMode {
+  width: 99%;
+}
+
+.gxeMainControlBar {
+  padding: 6px 4px;
+  margin-bottom: 4px;
+  background-color: #e8e8e8;
+  border: 1px solid #DDD;
+  border-radius: 3px;
+}
+
+.gxePopupPanel {
+  padding: 6px 4px;
+  margin-bottom: 4px;
+  border: 1px solid #DDD;
+  border-radius: 3px;
+  background: url(images/small_bg.gif) repeat-x;
+}
+
+.gxeButton {
+  padding: 4px 6px;
+	white-space: nowrap;
+	vertical-align: middle;
+	color: #666;
+	background: transparent;
+	cursor: pointer;
+	border: 1px solid #DDD;
+	border-radius: 3px;
+	text-shadow: 0 1px 1px white;
+	-webkit-box-shadow: 0 1px 1px #fff;
+	-moz-box-shadow:    0 1px 1px #fff;
+	box-shadow:         0 1px 1px #fff;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.gxeButton-enabled:hover, .gxeButton-prominent {
+  border-color: #999;
+  background: -webkit-linear-gradient(top, white, #E0E0E0);
+  background:    -moz-linear-gradient(top, white, #E0E0E0);
+  background:     -ms-linear-gradient(top, white, #E0E0E0);
+  background:      -o-linear-gradient(top, white, #E0E0E0);
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.25), inset 0 0 3px #fff;
+  -moz-box-shadow:    0 1px 2px rgba(0,0,0,0.25), inset 0 0 3px #fff;
+  box-shadow:         0 1px 2px rgba(0,0,0,0.25), inset 0 0 3px #fff;
+}
+
+.gxeButton-enabled:active {
+	border: 1px solid #AAA;
+	border-bottom-color: #CCC;
+	border-top-color: #999;
+	-webkit-box-shadow: inset 0 1px 2px #aaa;
+	-moz-box-shadow:    inset 0 1px 2px #aaa;
+	box-shadow:         inset 0 1px 2px #aaa;
+	background: -webkit-linear-gradient(top, #E6E6E6, gainsboro);
+	background:    -moz-linear-gradient(top, #E6E6E6, gainsboro);
+	background:     -ms-linear-gradient(top, #E6E6E6, gainsboro);
+	background:      -o-linear-gradient(top, #E6E6E6, gainsboro);
+}
+
+.gxeButton-down:after {
+	content: "";
+	display: inline-block;
+	width: 0;
+	height: 0;
+	border-top: 4px solid #999;
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
+	margin: 0 0 0 4px;
+	position: relative;
+	top: -1px;
+}
+
+.gxeButtonSeparator {
+	margin-left: 20px;
+}
+
+ul.gxeLinks {
+	margin:0px;
+  padding:0px;
+}
+
+ul.gxeLinks li {
+	margin-bottom: 8px;
+  list-style: none;
+  color: #21759B;
+}
+
+div.gxeLinks button {
+	margin-bottom: 8px;
+  color: #21759B;
+}
+
+ul.gxeLinks li a:link,
+ul.gxeLinks li a:visited,
+ul.gxeLinks li a:hover, 
+ul.gxeLinks li a:active, 
+ul.gxeLinks li a:focus {
+  color: #21759B;
+  text-decoration: none; 
+  font-weight: normal;
+  outline: none;
+}
+
+ul.gxeMessageList li a:link,
+ul.gxeMessageList li a:visited,
+ul.gxeMessageList li a:hover, 
+ul.gxeMessageList li a:active, 
+ul.gxeMessageList li a:focus {
+  color: #21759B;
+  text-decoration: none; 
+  font-weight: normal;
+  outline: none;
+}
+
+ul.gxeMessageList {
+	margin: 4px;
+  padding: 0px;
+}
+
+.gxePopupDialog ul.gxeSelectMany {
+	margin: 4px;
+  padding: 0px;
+}
+
+p.gxeHeading {
+	margin-top: 0px;
+	margin-bottom: 4px;
+	font-weight: bold;
+}

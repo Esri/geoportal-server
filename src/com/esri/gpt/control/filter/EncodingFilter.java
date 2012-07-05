@@ -92,6 +92,7 @@ public class EncodingFilter implements Filter {
                          (requestURI.indexOf("viewMetadataDetails.page") == -1) &&
                          !(requestURI.indexOf("report.page")>=0 && httpRequest.getQueryString()!=null && httpRequest.getQueryString().indexOf("uuid=")>=0) &&
                          (requestURI.indexOf("preview.page") == -1) &&
+                         (requestURI.indexOf("liveDataProxy.page") == -1) &&
                          (requestURI.indexOf("login.page") == -1);
         
         LOGGER.finest("check="+bCheck+" requestURI="+requestURI);

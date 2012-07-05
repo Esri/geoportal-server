@@ -32,7 +32,7 @@ private String          _usernameSearchPattern = "";
 private Attribute       _userObjectClasses;
 private LdapNameMapping _userProfileMapping;
 private String          _userSearchDIT = "";
-  
+private String          _userRequestsSearchPattern = "";
 // constructors ================================================================
 
 /** Default constructor. */
@@ -43,6 +43,13 @@ public LdapUserProperties() {
 }
 
 // properties ==================================================================
+public String getUserRequestsSearchPattern() {
+	return _userRequestsSearchPattern;
+}
+
+public void setUserRequestsSearchPattern(String userRequestsSearchPattern) {
+	this._userRequestsSearchPattern = userRequestsSearchPattern;
+}
 
 /**
  * Gets the password encryption algorithm.
@@ -51,6 +58,7 @@ public LdapUserProperties() {
 public String getPasswordEncryptionAlgorithm() {
   return _passwordEncryptionAlgorithm;
 }
+
 /**
  * Sets the password encryption algorithm.
  * @param algorithm the password encryption algorithm
@@ -208,6 +216,21 @@ public String returnUserLoginSearchFilter(String username) {
   username = Val.chkStr(username);
   if (username.length() > 0) {
     return replace(getUsernameSearchPattern(),username);
+  } else {
+    return username;
+  }
+}
+
+/**
+ * Returns the search filter for finding a user based upon a login username.
+ * <br/>The filter will be based upon the configured getUserLoginSearchPattern().
+ * @param username the login username
+ * @return the filter
+ */
+public String returnUserNewRequestSearchFilter(String username,String param) {
+  username = Val.chkStr(username);
+  if (username.length() > 0) {
+    return replaceParam(getUserRequestsSearchPattern(),username,param);
   } else {
     return username;
   }

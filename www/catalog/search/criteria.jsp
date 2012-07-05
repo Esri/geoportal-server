@@ -18,6 +18,27 @@
 <%@ taglib prefix="h" uri="http://java.sun.com/jsf/html" %>
 <%@ taglib prefix="gpt" uri="http://www.esri.com/tags-gpt"%>
 
+<%
+  com.esri.gpt.framework.jsf.MessageBroker schMsgBroker = com.esri.gpt.framework.jsf.PageContext.extractMessageBroker();
+	String schContextPath = request.getContextPath();	
+	com.esri.gpt.framework.context.RequestContext schContext = com.esri.gpt.framework.context.RequestContext.extract(request);
+	com.esri.gpt.catalog.context.CatalogConfiguration schCatalogCfg = schContext.getCatalogConfiguration();
+	com.esri.gpt.framework.collection.StringAttributeMap schParameters = schCatalogCfg.getParameters();
+	boolean hasSearchHint = false;
+	if(schParameters.containsKey("catalog.searchCriteria.hasSearchHint")){	
+		String schHasSearchHint = com.esri.gpt.framework.util.Val.chkStr(schParameters.getValue("catalog.searchCriteria.hasSearchHint"));
+		hasSearchHint = Boolean.valueOf(schHasSearchHint);
+	}
+	String schHintPrompt = schMsgBroker.retrieveMessage("catalog.searchCriteria.hintSearch.prompt");
+	String VER121 = "v1.2.1";
+%>
+
+<% if(hasSearchHint){ %>
+  <input type="hidden" id="schContextPath" value="<%=schContextPath %>"/>
+  <input type="hidden" id="schHintPrompt" value="<%=schHintPrompt %>"/>
+	<script type="text/javascript" src="<%=schContextPath+"/catalog/js/" +VER121+ "/gpt-search-hint.js"%>"></script>	
+<% } %>
+
 <% // date picker support %>
 <gpt:DatePickerConfig/>
 
@@ -250,6 +271,17 @@
       scReconfigureCriteria();
       if(typeof(rsInsertReviews) != 'undefined') {
           rsInsertReviews();
+      }
+      if ((typeof(itemCart) != "undefined") && (itemCart != null)) {
+        itemCart.connectToSearchResults();
+      }
+      
+	  if(typeof(rsGetQualityOfService) != 'undefined') {
+  	      try{
+  	  		rsGetQualityOfService();
+	  	  	} catch(error) {
+	  	  	    console.log("unable to fetch quality of service info : ", error);
+	  	  	}
       }
     }
     dojo.addOnLoad(scInitComponents);
@@ -939,7 +971,18 @@
         if(typeof(rsInsertReviews) != 'undefined') {
           rsInsertReviews();
         }
-        
+        if ((typeof(itemCart) != "undefined") && (itemCart != null)) {
+          itemCart.connectToSearchResults();
+        }
+
+		if(typeof(rsGetQualityOfService) != 'undefined') {
+  	      try{
+  	  		rsGetQualityOfService();
+	  	  	} catch(error) {
+	  	  	    console.log("unable to fetch quality of service info : ", error);
+	  	  	}
+        }
+
         //scShowDistrSearchSites(false);
         try {
           scMap.clearFootPrints();
@@ -1402,6 +1445,9 @@
     url="/catalog/images/loading.gif" alt="" 
     width="30px">
   </h:graphicImage>
+   <f:verbatim>
+   	<div id="hints"></div>
+   </f:verbatim>
 </h:panelGrid> 
 
 <h:panelGroup id="dockDistributedSearch" rendered="#{SearchController.searchConfig.allowExternalSearch == true}">

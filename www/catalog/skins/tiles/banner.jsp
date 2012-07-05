@@ -15,7 +15,28 @@
 --%>
 <%@taglib prefix="f" uri="http://java.sun.com/jsf/core"%>
 <%@taglib prefix="h" uri="http://java.sun.com/jsf/html"%>
+<%
+  String bnrCartEnabled = com.esri.gpt.framework.context.RequestContext.extract(request).getCatalogConfiguration().getParameters().getValue("catalog.cart.enabled");
+  if (bnrCartEnabled == null) bnrCartEnabled = "false";
+%>
 
+<f:verbatim>
+<script type="text/javascript" src="<%=request.getContextPath()%>/gpt/GptCore.js"></script>
+<script type="text/javascript">	
+  GptCore.config["GptCore.serverContextPath"] = "<%=request.getContextPath()%>";
+  GptCore.config["GptCore.clientContextPath"] = "<%=request.getContextPath()%>";
+</script>  
+
+<% if (bnrCartEnabled.equals("true")) { %>
+<script type="text/javascript" src="<%=request.getContextPath()%>/gpt/form/Cart.js"></script>
+<script type="text/javascript">	
+  var itemCart = new gpt.form.Cart();
+  itemCart.contextPath = "<%=request.getContextPath()%>";
+  itemCart.title = '<%=com.esri.gpt.framework.jsf.PageContext.extractMessageBroker().retrieveMessage("catalog.cart.caption")%>';
+  itemCart.initialize();
+  <% } %>
+</script> 
+</f:verbatim>
 
 <div id="gptTitle">
 	<%=com.esri.gpt.framework.jsf.PageContext.extract().getSiteTitle()%>
@@ -69,6 +90,12 @@
 		value="#{gptMsg['catalog.identity.logout.menuCaption']}" 
 		rendered="#{not PageContext.roleMap['anonymous'] && PageContext.identitySupport.supportsLogout}"
 		actionListener="#{LoginController.processLogout}"/>
+
+	<h:outputLink value="#" styleClass="gptCartMainLink"
+	  rendered="#{not empty PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'] and PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'].value == 'true'}"
+		onclick="if ((typeof(itemCart) != 'undefined') && (itemCart != null)) itemCart.showDialog();">
+		<h:outputText value="#{gptMsg['catalog.cart.menuCaption']}" />
+	</h:outputLink>
 
   <h:outputText 
     id="msgAuthenticatedUser"

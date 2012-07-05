@@ -22,6 +22,7 @@ Extracts statisticts from the report into textual form:
 harvested=<number>
 validated=<number>
 published=<number>
+deleted=<number>
 
 -->
 
@@ -37,6 +38,8 @@ published=<number>
 <xsl:text>
 </xsl:text>
 <xsl:text>published=</xsl:text><xsl:call-template name="published"/>
+</xsl:text>
+<xsl:text>deleted=</xsl:text><xsl:call-template name="deleted"/>
 </xsl:template>
 
 <xsl:template name="harvested">
@@ -68,6 +71,17 @@ published=<number>
 		</xsl:when>
 		<xsl:otherwise>
 			<xsl:call-template name="published"/>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<xsl:template name="deleted">
+	<xsl:choose>
+		<xsl:when test="count(metadata/report/docsDeleted)>0">
+			<xsl:value-of select="metadata/report/docsDeleted[1]"/>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:text>0</xsl:text>
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>

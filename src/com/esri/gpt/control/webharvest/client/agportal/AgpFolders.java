@@ -18,17 +18,6 @@ package com.esri.gpt.control.webharvest.client.agportal;
 import com.esri.gpt.catalog.arcgis.agportal.client.SearchClient;
 import com.esri.gpt.catalog.arcgis.agportal.client.SearchClient.SearchResult;
 import com.esri.gpt.catalog.arcgis.agportal.itemInfo.ESRI_ItemInformation;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.logging.Logger;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.json.JSONException;
-import org.xml.sax.SAXException;
-
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.isodate.IsoDateFormat;
@@ -40,8 +29,12 @@ import com.esri.gpt.framework.resource.common.StringUri;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.util.ReadOnlyIterator;
 import com.esri.gpt.framework.util.Val;
-import java.util.Date;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
+import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import org.json.JSONException;
+import org.xml.sax.SAXException;
 
 /**
  * ArcGIS Portal folders.
@@ -76,6 +69,7 @@ public class AgpFolders implements Iterable<Resource> {
     this.criteria = criteria;
   }
 
+  @Override
   public Iterator<Resource> iterator() {
     return new AgpFolderIterator();
   }
@@ -95,6 +89,7 @@ public class AgpFolders implements Iterable<Resource> {
     /** no more records*/
     private boolean noMore;
 
+    @Override
     public boolean hasNext() {
       if (!noMore && nextAgpRecords == null) {
         if (resumptionId > 0) {
@@ -111,6 +106,7 @@ public class AgpFolders implements Iterable<Resource> {
       return !noMore;
     }
 
+    @Override
     public Resource next() {
       if (!hasNext()) {
         throw new NoSuchElementException();
@@ -119,6 +115,7 @@ public class AgpFolders implements Iterable<Resource> {
       nextAgpRecords = null;
       return new Resource() {
 
+        @Override
         public Iterable<Resource> getNodes() {
           return records;
         }
@@ -166,10 +163,12 @@ public class AgpFolders implements Iterable<Resource> {
             private String itemInfoUrl = info.getUrl().replaceAll("/$", "") + "/content/items/" + ii.getId() + "/info/iteminfo.xml";
             private StringUri uri = new StringUri(formatUuid(ii.getId()));
 
+            @Override
             public SourceUri getSourceUri() {
               return uri;
             }
 
+            @Override
             public String getContent() throws IOException {
               try {
                 document.append(startDcTemplate);
@@ -182,7 +181,7 @@ public class AgpFolders implements Iterable<Resource> {
                   app.append("dc:date", new IsoDateFormat().format(ii.getModifiedDate()));
                 }
                 app.append("dc:identifier", ii.getId());
-                if (!app.append("dc:description", ii.getDesc())) {
+                if (!app.append("dc:description", ii.getDescription())) {
                   app.append("dc:description", ii.getSnippet());
                 }
                 app.append("dct:references", ii.getUrl());
@@ -190,7 +189,7 @@ public class AgpFolders implements Iterable<Resource> {
                 app.append("dc:creator", ii.getOwner());
                 app.append("dct:accessRights", ii.getAccess());
                 app.append("dc:language", ii.getCulture());
-                app.append("dc:type", ii.getKeywords());
+                app.append("dc:type", ii.getTypeKeywords());
                 app.append("dc:type", ii.getTags());
                 app.append("dc:subject", ii.getType());
                 if (ii.getExtent()!=null && ii.getExtent().isValid()) {

@@ -253,6 +253,20 @@ protected void authenticate(RequestContext requestContext, User user)
     user.setDistinguishedName(sAuthenticatedDN);
     populateUser(requestContext,user,sTargetedGroupDN);
     
+    RoleSet roles = user.getAuthenticationStatus().getAuthenticatedRoles();
+    if (roles.hasRole("gptForbiddenAccess")) {
+      User activeUser = requestContext.getUser();
+      if(activeUser.getAuthenticationStatus().getWasAuthenticated()){
+    	  String activeUserDn = requestContext.getUser().getDistinguishedName();
+    	  String managedUserDn = user.getDistinguishedName();
+    	  if(activeUserDn.equals(managedUserDn)){
+    		throw new AuthenticationException("Forbidden"); 
+    	  }
+      }else{
+        throw new AuthenticationException("Forbidden");
+      }
+    }
+    
   } catch (AuthenticationException e) {
     user.getAuthenticationStatus().reset();
     throw new CredentialsDeniedException("Invalid credentials.");
@@ -380,7 +394,7 @@ protected void finalize() throws Throwable {
  * @throws NamingException if an LDAP naming exception occurs
  * @throws SQLException if a database communication exception occurs
  */
-private void populateUser(RequestContext requestContext, 
+protected void populateUser(RequestContext requestContext, 
                           User user,
                           String targetedGroupDN)
   throws IdentityException, NamingException, SQLException {
@@ -435,7 +449,7 @@ private void populateUser(RequestContext requestContext,
  * @throws AuthenticationException if the authentication of credentials failed
  * @throws NamingException if an LDAP naming exception occurs
  */
-private String searchForUser(UsernamePasswordCredentials credentials)
+protected String searchForUser(UsernamePasswordCredentials credentials)
   throws AuthenticationException, NamingException {
   LdapClient client = null;
   String sAuthenticatedDN = "";

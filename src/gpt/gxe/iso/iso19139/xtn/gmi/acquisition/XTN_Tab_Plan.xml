@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Acquisition/Plan tab (simplified) -->      
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gmi:acquisitionPlan" g:minOccurs="0" g:maxOccurs="unbounded"
+           g:label="$i18n.catalog.iso19139-2.MI_Metadata.section.acuisition.plan"
+           g:extends="$base/xtn/ui/UI_Element.xml"> 
+   
+  <g:body>
+    <g:element g:targetName="gmi:MI_Plan" h:tag="div" g:jsClass="gxe.control.Element">
+        
+       <!-- Type - manner of sampling geometry that the planner expects for collection of objective data -->
+              <g:element g:targetName="gmi:type" g:minOccurs="0" g:maxOccurs="1"
+           g:label="$i18n.catalog.iso19139-2.MI_Metadata.acuisition.plan.type"
+           g:extends="$base/xtn/gmi/acquisition/MI_GeometryTypeCode_PropertyType.xml">
+         </g:element>
+      
+	  
+	     <!-- Status - current status of the plan (pending, completed, etc.) -->
+		<g:element g:targetName="gmi:status" g:minOccurs="1" g:maxOccurs="1"
+		      g:label="$i18n.catalog.iso19139-2.MI_Metadata.acquisition.plan.status"
+		      g:extends="$base/schema/gmd/identification/MD_ProgressCode_PropertyType.xml"/> 
+		      
+		<!--  Citation information - identification of authority requesting target collection -->        
+           <g:element g:targetName="gmi:citation" g:minOccurs="1" g:maxOccurs="1"
+            g:label="$i18n.catalog.iso19139-2.MI_Metadata.acquisition.plan.citation"
+            g:extends="$base/xtn/ui/UI_Element.xml">
+     
+            <!-- Citation information, from gmd:CI_Citation -->
+            <g:body>
+            <g:element g:targetName="gmd:CI_Citation" 
+           g:label="$i18n.catalog.iso19139.XTN_Identification.citation.title"
+           h:tag="div" g:jsClass="gxe.control.Element" g:extends="$base/schema/gmd/citation/CI_Citation_Type.xml"/>
+            </g:body>
+          </g:element>
+ 
+   </g:element>   
+  </g:body>
+</g:element>
+
+

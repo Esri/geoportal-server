@@ -3,6 +3,6 @@
            xmlns:h="http://www.esri.com/geoportal/gxe/html"
            g:extends="$base/schema/gco/xtn/Wrapped_BasicPropertyType.xml">       
   <g:body>
-    <g:element g:minOccurs="0" g:extends="$base/schema/gco/basicTypes/DateTime.xml"/>
+    <g:element g:minOccurs="$parent" g:extends="$base/schema/gco/basicTypes/DateTime.xml"/>
   </g:body>
 </g:element>

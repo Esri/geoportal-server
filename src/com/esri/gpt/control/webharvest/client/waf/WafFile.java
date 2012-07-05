@@ -20,6 +20,8 @@ import com.esri.gpt.framework.resource.common.UrlUri;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
 import java.util.Date;
+import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.util.URIUtil;
 
 /**
  * WAF file.
@@ -29,10 +31,12 @@ private UrlUri uri;
 private WafProxy proxy;
 private WafProxy.Content content;
 private IOException storedException;
+private String encodedUrl;
 
 public WafFile(WafProxy proxy, String url) {
   this.proxy = proxy;
   this.uri = new UrlUri(url);
+  this.encodedUrl = encode(url);
 }
 
 @Override
@@ -47,7 +51,7 @@ public String getContent() throws IOException {
     throw storedException;
   }
   if (content==null) {
-    content = proxy.readContent(getSourceUri().asString());
+    content = proxy.readContent(encodedUrl);
   }
   String metadata = "";
   if (content!=null) {
@@ -61,7 +65,7 @@ public String getContent() throws IOException {
 public Date getUpdateDate() {
   try {
     if (content==null) {
-      content = proxy.readContent(getSourceUri().asString());
+      content = proxy.readContent(encodedUrl);
     }
   } catch (IOException ex) {
     // store that exception here because getUpdateDate can not throw any exception by interface
@@ -69,5 +73,14 @@ public Date getUpdateDate() {
     storedException = ex;
   }
   return content!=null? content.getLastModifedDate(): null;
+}
+
+private String encode(String url) {
+  url = Val.chkStr(url);
+  try {
+    return URIUtil.encodePathQuery(URIUtil.decode(url, "UTF-8"), "UTF-8");
+  } catch (URIException ex) {
+    return url;
+  }
 }
 }

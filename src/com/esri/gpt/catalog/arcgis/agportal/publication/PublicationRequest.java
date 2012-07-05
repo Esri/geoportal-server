@@ -14,13 +14,6 @@
  */
 package com.esri.gpt.catalog.arcgis.agportal.publication;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.logging.Logger;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.esri.gpt.catalog.arcgis.agportal.itemInfo.ESRI_ItemInformation;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationContext;
@@ -31,12 +24,19 @@ import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.HttpClientRequest.MethodName;
 import com.esri.gpt.framework.http.StringProvider;
 import com.esri.gpt.framework.util.Val;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * This class is used to handle publication request to ArcGIS Portal instance.
  * NOTE! This is EXPERIMENTAL feature. It might be removed at any time in the future.
+ * @deprecated 
  */
+@Deprecated
 public class PublicationRequest {
 
   /**
@@ -96,7 +96,7 @@ public class PublicationRequest {
    */
   public PublicationRequest(RequestContext requestContext,
       CredentialProvider credtialProvider, String httpReferer) throws Exception {
-    this(requestContext, getDefaultEndPoint(requestContext), credtialProvider, httpReferer);
+    this(requestContext, EndPoint.extract(requestContext), credtialProvider, httpReferer);
   }
 
   /**
@@ -162,19 +162,19 @@ public class PublicationRequest {
       this.addItemUrl = this.addItemUrl.replace("{0}",
           this.credentialProvider.getUsername());
 
-      content = "f=json&overwrite=" + this.ep.getOverwrite() + "&token="
+      content = "f=json&overwrite=" + "true" + "&token="
           + URLEncoder.encode(this.token, "UTF-8");
 
       // file
       content += "&URL="
-          + URLEncoder.encode(itemInfo.getResourceUrl(), "UTF-8");
+          + URLEncoder.encode(itemInfo.getUrl(), "UTF-8");
       content += "&title=" + URLEncoder.encode(itemInfo.getTitle(), "UTF-8");
       content += "&type=" + URLEncoder.encode(itemInfo.getType(), "UTF-8");
       content += "&tags=" + URLEncoder.encode(itemInfo.getTagsAsString(), "UTF-8");
 
-      if (itemInfo.getTags().size() == 0) {
-        if (itemInfo.getDesc().length() > 0) {
-          content += "&tags=" + URLEncoder.encode(itemInfo.getDesc(), "UTF-8");
+      if (itemInfo.getTags().isEmpty()) {
+        if (itemInfo.getDescription().length() > 0) {
+          content += "&tags=" + URLEncoder.encode(itemInfo.getDescription(), "UTF-8");
 
         } else if (itemInfo.getTitle().length() > 0) {
           content += "&tags=" + URLEncoder.encode(itemInfo.getTitle(), "UTF-8");
@@ -185,10 +185,10 @@ public class PublicationRequest {
         content += "&name=" + URLEncoder.encode(itemInfo.getName(), "UTF-8");
       }
 
-      if (itemInfo.getDesc().length() > 0) {
-        String viewTag = !hasMetadataViewTag(itemInfo.getDesc())? makeMetadataViewTag(itemInfo.getId()): "";
+      if (itemInfo.getDescription().length() > 0) {
+        String viewTag = !hasMetadataViewTag(itemInfo.getDescription())? makeMetadataViewTag(itemInfo.getId()): "";
         content += "&description="
-            + URLEncoder.encode(itemInfo.getDesc()+viewTag, "UTF-8");
+            + URLEncoder.encode(itemInfo.getDescription()+viewTag, "UTF-8");
       } else {
         content += "&description="+URLEncoder.encode(makeMetadataViewTag(itemInfo.getId()),"UTF-8");
       }
@@ -324,8 +324,6 @@ public class PublicationRequest {
     String content = "";
     this.publicationStatus = false;
     if (this.token != null && this.token.length() > 0) {
-      if (this.ep.getIsPublic()) {
-
         if (itemId != null && itemId.length() > 0) {
           this.shareItemUrl = shareItemUrl.replace("{0}",
               this.credentialProvider.getUsername());
@@ -348,21 +346,6 @@ public class PublicationRequest {
           }
 
         }
-      }
     }
-  }
-
-  /**
-   * Extracts end-point from the configuration
-   * @param ctx request context
-   * @return end-point
-   */
-  private static EndPoint getDefaultEndPoint(RequestContext ctx) {
-    StringAttributeMap params = ctx.getCatalogConfiguration().getParameters();
-    return new EndPoint(
-        params.get("share.with.arcgis.base.url").getValue(),
-        params.get("share.with.arcgis.token.url").getValue(),
-        Val.chkBool(params.get("share.with.arcgis.isPublic").getValue(), false),
-        Val.chkBool(params.get("share.with.arcgis.overwrite").getValue(), false));
   }
 }

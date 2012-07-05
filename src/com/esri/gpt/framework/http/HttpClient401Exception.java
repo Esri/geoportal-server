@@ -13,14 +13,13 @@
  * limitations under the License.
  */
 package com.esri.gpt.framework.http;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
  * Represents an exception throws when a a remote client requests authorization credentials. 
  */
-public class HttpClient401Exception extends IOException {
+public class HttpClient401Exception extends HttpClientException {
   
   /** instance variables ====================================================== */
   private String scheme;
@@ -34,7 +33,7 @@ public class HttpClient401Exception extends IOException {
    * @param msg the exception message
    */
   public HttpClient401Exception(String msg) {
-    super(msg);
+    super(401,msg);
   }
   
   /** properties  ============================================================= */

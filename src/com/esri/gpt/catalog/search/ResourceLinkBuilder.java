@@ -348,7 +348,7 @@ protected void buildAGSLinks(SearchXslRecord xRecord, SearchResultRecord record)
     // kml
     if (xRecord.getLinks().readShowLink(ResourceLink.TAG_AGSKML) &&
         (restUrl.toLowerCase().endsWith("/mapserver")
-        || restUrl.toLowerCase().endsWith("/imageserver"))) {
+        )) {
       url = restUrl + "/kml/mapImage.kmz";
       if (restUrl.toLowerCase().endsWith("/imageserver")) {
         url = restUrl + "/kml/image.kmz";
@@ -361,7 +361,8 @@ protected void buildAGSLinks(SearchXslRecord xRecord, SearchResultRecord record)
     // nmf
     if (xRecord.getLinks().readShowLink(ResourceLink.TAG_AGSNMF) &&
         (restUrl.toLowerCase().endsWith("/mapserver")
-        || restUrl.toLowerCase().endsWith("/globeserver"))) {
+    		) 
+    ) {
       url = restUrl + "?f=nmf";
       resourceKey = "catalog.rest.addToGlobeNmf";
       link = this.makeLink(url, ResourceLink.TAG_AGSNMF, resourceKey);

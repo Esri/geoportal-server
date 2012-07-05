@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.framework.security.identity.ldap;
 import com.esri.gpt.framework.collection.StringSet;
+import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.security.credentials.ChangePasswordCriteria;
 import com.esri.gpt.framework.security.credentials.CredentialPolicy;
 import com.esri.gpt.framework.security.credentials.CredentialPolicyException;
@@ -22,12 +23,23 @@ import com.esri.gpt.framework.security.credentials.RecoverPasswordCriteria;
 import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
 import com.esri.gpt.framework.security.identity.IdentityAdapter;
 import com.esri.gpt.framework.security.identity.IdentityException;
+import com.esri.gpt.framework.security.principal.Group;
+import com.esri.gpt.framework.security.principal.Groups;
 import com.esri.gpt.framework.security.principal.User;
 import com.esri.gpt.framework.security.principal.Users;
 
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
+import javax.naming.directory.ModificationItem;
 
 /**
  * Identity adapter for an LDAP based identity store.
@@ -56,7 +68,6 @@ protected LdapConfiguration getLdapConfiguration() {
 }
 
 // methods =====================================================================
-
 /**
  * Authenticates a user.
  * @param user the subject user
@@ -144,6 +155,24 @@ protected LdapClient newServiceConnection()
     throw new IdentityException("Unable to connect to LDAP.",e);
   }
 }
+
+/**
+ * Populate user profile information from ldap.
+ * @param context the RequestContext
+ * @param user the user to be read
+ * @throws IdentityException if a service account connection cannot be established
+ * @throws NamingException if an LDAP naming exception occurs
+ * @throws SQLException if a database communication exception occurs
+ */
+public void populateUser(RequestContext context,User user)throws IdentityException, NamingException, SQLException {
+	  LdapClient client = null;
+	  try {
+	    client = newServiceConnection();
+	    client.populateUser(context, user, "");
+	  } finally {
+	    if (client != null) client.close();
+	  }
+	}
 
 /**
  * Reads the members of a group.
@@ -293,7 +322,104 @@ public void addUserToRole(User user, String role)
   }
 }
 
+/**
+ * Adds  user to group.
+ * @param user the subject user
+ * @param groupDn
+ * @throws CredentialPolicyException if the credentials are invalid
+ * @throws IdentityException if a system error occurs preventing the action
+ * @throws NamingException if an LDAP naming exception occurs
+ * @throws SQLException if a database communication exception occurs
+ */
+@Override
+public void addUserToGroup(User user, String groupDn)
+  throws CredentialPolicyException, IdentityException, NamingException, SQLException {
+  LdapClient client = null;
+  try {
+           
+    // register the user
+    client = newServiceConnection();
+    client.getEditFunctions().addUserToGroup(client.getConnectedContext(),user, groupDn);
+  } finally {
+    if (client != null) client.close();
+  }
+}
 
+/**
+ * Removes user from group.
+ * @param user the subject user
+ * @param groupDn
+ * @throws CredentialPolicyException if the credentials are invalid
+ * @throws IdentityException if a system error occurs preventing the action
+ * @throws NamingException if an LDAP naming exception occurs
+ * @throws SQLException if a database communication exception occurs
+ */
+@Override
+public void removeUserFromGroup(User user, String groupDn)
+  throws CredentialPolicyException, IdentityException, NamingException, SQLException {
+  LdapClient client = null;
+  try {           
+    // register the user
+    client = newServiceConnection();
+    client.getEditFunctions().removeUserFromGroup(client.getConnectedContext(),user, groupDn);
+  } finally {
+    if (client != null) client.close();
+  }
+}
+
+/**
+ * Adds user attribute.
+ * @param  objectDn the subject dn
+ * @param  role the user attribute will be added.
+ * @param  role the user attribute value will be added.
+ * @throws CredentialPolicyException if the credentials are invalid
+ * @throws IdentityException if a system error occurs preventing the action
+ * @throws NamingException if an LDAP naming exception occurs
+ * @throws SQLException if a database communication exception occurs
+ */
+@Override
+public void addAttribute(String objectDn, String attributeName, String attributeValue)
+  throws CredentialPolicyException, IdentityException, NamingException, SQLException {
+	LdapClient client = null;
+	  try {
+	           
+	    // register the user
+	    client = newServiceConnection();
+	    BasicAttributes ldapAttributes = new BasicAttributes();
+	    BasicAttribute ldapAttribute = new BasicAttribute(attributeName,attributeValue);
+	    ldapAttributes.put(ldapAttribute);
+	    client.getEditFunctions().addAttribute(client.getConnectedContext(), objectDn, ldapAttributes);
+	  } finally {
+	    if (client != null) client.close();
+	  }
+}
+
+/**
+ * Adds user attribute.
+ * @param  objectDn the subject dn
+ * @param  role the user attribute will be removed.
+ * @param  role the user attribute value will be removed
+ * @throws CredentialPolicyException if the credentials are invalid
+ * @throws IdentityException if a system error occurs preventing the action
+ * @throws NamingException if an LDAP naming exception occurs
+ * @throws SQLException if a database communication exception occurs
+ */
+@Override
+public void removeAttribute(String objectDn,String attributeName, String attributeValue)
+  throws CredentialPolicyException, IdentityException, NamingException, SQLException {
+	LdapClient client = null;
+	  try {
+	           
+	    // register the user
+	    client = newServiceConnection();
+	    BasicAttributes ldapAttributes = new BasicAttributes();
+	    BasicAttribute ldapAttribute = new BasicAttribute(attributeName,attributeValue);
+	    ldapAttributes.put(ldapAttribute);
+	    client.getEditFunctions().removeEntry(client.getConnectedContext(), objectDn, ldapAttributes);
+	  } finally {
+	    if (client != null) client.close();
+	  }
+}
 
 
 /**
@@ -318,6 +444,81 @@ public void updateUserProfile(User user)
            client.getConnectedContext(),user,false,false);
   } finally {
     if (client != null) client.close();
+  }
+}
+
+/**
+ * Builds list of ldap users matching filter.
+ * @param filter the user search filter for ldap
+ * @return the list of users matching filter
+ * @throws IdentityException if a system error occurs preventing the action
+ * @throws NamingException if an LDAP naming exception occurs
+ */
+public Users readUsers(String filter, String attributeName) throws IdentityException, NamingException {
+	LdapClient client = null;
+	try {  
+	  client = newServiceConnection();	 
+	  return client.getQueryFunctions().readUsers(client.getConnectedContext(), filter,attributeName);
+	} finally {
+	  if (client != null) client.close();
+	}
+}
+
+/**
+ * Builds list of ldap groups matching filter.
+ * @param filter the group search filter for ldap
+ * @return the list of groups matching filter
+ * @throws NamingException if an LDAP naming exception occurs
+ * @throws IdentityException 
+ */
+public Groups readGroups(String filter) throws NamingException, IdentityException{
+	LdapClient client = null;
+	try {  
+	  client = newServiceConnection();	 
+	  return client.getQueryFunctions().readGroups(client.getConnectedContext(), filter);
+	} finally {
+	  if (client != null) client.close();
+	}
+}
+
+/**
+ * Delete user from ldap
+ * @param user the user to be deleted from ldap.
+ * @throws CredentialPolicyException if the credentials are invalid 
+ * @throws IdentityException if a system error occurs preventing the action
+ * @throws NamingException if an LDAP naming exception occurs
+ * @throws SQLException if a database communication exception occurs
+ */
+public void deleteUser(User user)
+throws CredentialPolicyException, IdentityException, NamingException, SQLException {
+	LdapClient client = null;
+	try {  
+	  // register the user
+	  client = newServiceConnection();
+	  removeUserFromGroups(user);
+	  client.getConnectedContext().destroySubcontext(user.getDistinguishedName());
+	} finally {
+	  if (client != null) client.close();
+	}
+}
+
+/**
+ * Removes user from groups its member of.
+ * @param user the subject user
+ * @throws CredentialPolicyException if the credentials are invalid
+ * @throws IdentityException if a system error occurs preventing the action
+ * @throws NamingException if an LDAP naming exception occurs
+ * @throws SQLException if a database communication exception occurs
+ */
+private void removeUserFromGroups(User user)
+  throws CredentialPolicyException, IdentityException, NamingException, SQLException {
+  try {
+    Groups grps = user.getGroups();
+    for(Group g : grps.values()){
+    	removeUserFromGroup(user, g.getDistinguishedName());
+    }
+  
+  } finally {
   }
 }
 

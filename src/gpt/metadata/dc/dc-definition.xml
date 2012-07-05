@@ -14,7 +14,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<schema key="dc" templateFile="gpt/metadata/dc/dc-template.xml">
+<schema key="dc" templateFile="gpt/metadata/dc/dc-template.xml" toEsriItemInfoXslt="gpt/metadata/dc/dc-toEsriItemInfo.xslt">
         
   <!-- schema label -->
   <label resourceKey="catalog.mdParam.schema.dc"/>

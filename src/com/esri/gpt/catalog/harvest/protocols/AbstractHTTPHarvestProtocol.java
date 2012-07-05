@@ -14,8 +14,10 @@
  */
 package com.esri.gpt.catalog.harvest.protocols;
 
+import com.esri.gpt.framework.http.CredentialProvider;
+import com.esri.gpt.framework.http.HttpClientRequest;
+import com.esri.gpt.framework.http.StringHandler;
 import com.esri.gpt.framework.util.Val;
-import java.util.List;
 
 /**
  * Abstract HTTP-based harvest protocol
@@ -64,4 +66,17 @@ public abstract class AbstractHTTPHarvestProtocol extends HarvestProtocol {
     _userPassword = Val.chkStr(userPassword);
   }
 // methods =====================================================================
+
+  @Override
+  public void ping(String url) throws Exception {
+    HttpClientRequest httpRequest = new HttpClientRequest();
+    httpRequest.setUrl(url);
+    httpRequest.setCredentialProvider(getCredentialProvider());
+    httpRequest.setContentHandler(new StringHandler());
+    httpRequest.execute();
+  }
+
+  private CredentialProvider getCredentialProvider() {
+    return (!getUserName().isEmpty() && !getUserPassword().isEmpty()? new CredentialProvider(getUserName(), getUserPassword()): null);
+  }
 }

@@ -14,7 +14,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<gptConfig version="1.2.0">
+<gptConfig version="1.2.2">
 
     <databaseReference name="gpt" jndiName="jdbc/gpt"/>
     
@@ -39,18 +39,18 @@
     </mail>
 
    <!-- Base map configuration. (used in search page, preview, details page, editor)
-       - jsapiUrl: URL to the JavaScript API
-       - mapServiceUrl: URL for a map service 
+        - jsapiUrl: URL to the JavaScript API
+        - mapServiceUrl: URL for a map service 
            Types: ArcGIS REST, WMS, WMTS. (This can be empty for openstreet map).
-       - mapServiceType: A type of map service 
+        - mapServiceType: A type of map service 
            Values: dynamic | tiled | wms | wmts | openstreet
-       - mapVisibleLayers: An array of visible WMS layer names. 
+        - mapVisibleLayers: An array of visible WMS layer names. 
            This parameter should be defined when WMS is used as a map service. 
            (from <name> element of WMS GetCapabilities xml)  
            Example: "['name1','name2','name3','name4']"
-       - geometryServiceUrl: REST URL to an ArcGIS Server GeometryServer service.
-       - locatorUrl: REST URL to an ArcGIS Server GeocodeServer service
-       - locatorSingleFieldParameter: field for the GeocodeServer service upon which locations can be searched 
+        - geometryServiceUrl: REST URL to an ArcGIS Server GeometryServer service.
+        - locatorUrl: REST URL to an ArcGIS Server GeocodeServer service
+        - locatorSingleFieldParameter: field for the GeocodeServer service upon which locations can be searched 
     -->
     
     <interactiveMap
@@ -86,17 +86,17 @@
  
     <!-- Additional configuration for Lucene
         - lucene.alwaysStoreXmlInIndex: 
-          true if the full document xml should be store within the index
+			true if the full document xml should be store within the index
         - lucene.force.isPartOf: 
-          force all Lucene queries to have an isPartOf field equal to the supplied value
+			force all Lucene queries to have an isPartOf field equal to the supplied value
         - lucene.useSingleSearcher: 
-          true if a single Lucene searcher is preferred across all threads
+			true if a single Lucene searcher is preferred across all threads
         - lucene.useSingleWriter: 
-          true if a single Lucene writer is preferred across all threads
+			true if a single Lucene writer is preferred across all threads
         - lucene.useRemoteWriter:
-          true if documents should be indexed remotely
+			true if documents should be indexed remotely
         - lucene.remoteWriterUrl:
-          the URL to be used when indexing documents remotely
+			the URL to be used when indexing documents remotely
     -->      
     <parameter key="lucene.alwaysStoreXmlInIndex" value="false"/>
     <parameter key="lucene.force.isPartOf" value=""/>
@@ -118,7 +118,6 @@
         - assertion.comment.enabled: allow users to leave comments for resources.
         - assertion.comment.maxLength: maximum characters allowed for one comment.  
     -->
-    
     <parameter key="assertion.index.enabled" value="true"/>
     <parameter key="assertion.index.location" value=""/>
     <parameter key="assertion.index.allowNonLocalResourceIds" value="false"/>
@@ -126,42 +125,46 @@
     <parameter key="assertion.comment.enabled" value="true"/>
     <parameter key="assertion.comment.maxLength" value="2048"/>
           
-    <!-- Map Viewer configuration. Optional. You can use the following section to integrate a map viewer with your geoportal, according to the  Integrate a Map Viewer webhelp documentation at http://help.arcgis.com/en/geoportal_extension/10.0/help/index.html#/Integrate_a_Map_Viewer/00t00000000s000000/.  Below is the flex map viewer configuration. 
-        - url = Url of the Flex viewer. {contextPath}  parameter will be replaced with the application server contextpath
-        - className: class name of the map viewer instance, e.g., for Flex example is com.esri.gpt.catalog.search.MapViewerFlex. NOTE: The   
-          MapViewerFlex must be in the same domain and port in order for layering of resources to work 
+    <!-- Map Viewer configuration. 
+		  Optional. You can use the following section to integrate a map viewer with your geoportal, 
+		  According to the Integrate a Map Viewer webhelp documentation at: 
+			  http://help.arcgis.com/en/geoportal_extension/10.0/help/index.html#/Integrate_a_Map_Viewer/00t00000000s000000/  
+		  Below is the flex map viewer configuration. 
+        - url = Url of the Flex viewer. {contextPath} parameter will be replaced with the application server contextpath.
+			NOTE: For other clients to use "Add to Map" link in REST response, the absolute URL to your Flex Viewer needs to be configured in the url parameter.
+        - className: class name of the map viewer instance, e.g., for Flex example is com.esri.gpt.catalog.search.MapViewerFlex. 
+			NOTE: The MapViewerFlex must be in the same domain and port in order for layering of resources to work 
     -->
-    <!-- The Geoportal Flex widget configuration for ArcGIS View for Flex 2.2
-        <mapViewer>
-            <instance 
-                url="{contextPath}/viewer/index.jsp" 
-                className="com.esri.gpt.catalog.search.MapViewerFlex">
-            <parameter key="width" value="1000"/>
-            <parameter key="height" value="700"/>
-            <parameter key="regexCanConsumeUrl" value=""/>
-            </instance>
-        </mapViewer>
-      -->
+    <!-- The Geoportal Flex widget configuration for ArcGIS View for Flex 2.2 -->
+    <mapViewer>
+        <instance 
+            url="{contextPath}/viewer/index.jsp" 
+            className="com.esri.gpt.catalog.search.MapViewerFlex">
+        <parameter key="width" value="1000"/>
+        <parameter key="height" value="700"/>
+        <parameter key="regexCanConsumeUrl" value=""/>
+        </instance>
+    </mapViewer>
       
-      <!-- The map viewer configuration for Portal for ArcGIS  
-      <mapViewer>
-          <instance 
-              url="[agsportal]/home/webmap/viewer.html" 
-              className="com.esri.gpt.catalog.search.MapViewerAgsPortal">
-              <parameter key="wmsBaseMapUrl" value="http://server.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer"/>
-          </instance>
-      </mapViewer>
-      -->
+    <!-- The map viewer configuration for Portal for ArcGIS  
+    <mapViewer>
+        <instance 
+            url="[agsportal]/home/webmap/viewer.html" 
+            className="com.esri.gpt.catalog.search.MapViewerAgsPortal">
+            <parameter key="wmsBaseMapUrl" value="http://server.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer"/>
+        </instance>
+    </mapViewer>
+    -->
             
-      <!-- Search settings.
-      - searchTimeoutMillisecs: length of time allotted to a search attempt before a timeout error occurs
-      - distributedSearchTimeoutMillisecs: length of time allotted to a federated search attempt before a timeout error occurs
-      - distributedSearchMaxSelectedSites: maximum number of sites allowed to be searched in one federated search attempt
-      - searchResultsPerPage: number of results to show on a page.  If more results are returned than this value, page navigation will be visible
-      - searchResultsReviewsShown: How should the reviews be shown on the results page.  Options are "none", "only-reviewed" or "all"
-      - maxSavedSearches: maximum number of allowed searches in storage, per user.
-      - allowExternalSiteSearch: Flag enabling federated search
-      -->   
+    <!-- Search settings.
+		- searchTimeoutMillisecs: length of time allotted to a search attempt before a timeout error occurs
+		- distributedSearchTimeoutMillisecs: length of time allotted to a federated search attempt before a timeout error occurs
+		- distributedSearchMaxSelectedSites: maximum number of sites allowed to be searched in one federated search attempt
+		- searchResultsPerPage: number of results to show on a page.  If more results are returned than this value, page navigation will be visible
+		- searchResultsReviewsShown: How should the reviews be shown on the results page.  Options are "none", "only-reviewed" or "all"
+		- maxSavedSearches: maximum number of allowed searches in storage, per user.
+		- allowExternalSiteSearch: Flag enabling federated search
+    -->   
         
     <search
         searchTimeoutMillisecs="10000"
@@ -171,11 +174,11 @@
         searchResultsReviewsShown="only-reviewed"
         maxSavedSearches="10"
         allowExternalSiteSearch="true">
-    
         <!-- Settings for repositories available in federated search
             - key: regular expression, can be used to identify the rid for the repository.
             - class: search engine instance, a Java class that will process the search request.
-            - labelResourceKey: text that appears in the federated search list. If no key is given, the repository will not be visible in the federated search list.
+            - labelResourceKey: text that appears in the federated search list. 
+				If no key is given, the repository will not be visible in the federated search list.
             - abstractResourceKey: text that appears on the REST distributed search, describing the repository. -->
         <repositories> 
             <repository 
@@ -219,8 +222,8 @@
         <!-- Metadata Access Policy Configuration 
             For Ldap identity adapter, single group restriction policy configure as below, 
             if not configured then publisher selects from all ldap groups 
-            type="unrestricted"
-            or
+            type="unrestricted" 
+			      or
             type="public-protected" protectedGroupDN="distinguishedName(E.g. cn=gpt_administrators,ou=groups,ou=system)"
             or
             type="restricted" 
@@ -248,7 +251,7 @@
             - sitemap.changefreg: the change frequency to be listed per document reference,
                 hourly daily weekly monthly yearly , default = weekly
             - sitemap.priority: the priority to be listed per document reference, 0.0 -> 1.0,
-               default = none   
+                default = none   
         -->
          
         <parameter key="sitemap.baseUrl" value=""/>
@@ -265,7 +268,9 @@
     
         <!-- Web Harvester parameters.
             - webharvester.active: flag for if synchronization is active at startup. Default: true
-            - webharvester.queueEnabled: flag to enable task queue. Default: current webharvester.active value. Note! its is not possible to set this flag to false if webharvester.active is true
+            - webharvester.queueEnabled: flag to enable task queue. 
+				Default: current webharvester.active value. 
+				Note! its is not possible to set this flag to false if webharvester.active is true
             - webharvester.poolsize: pool size of the Threads. Default: 4
             - webharvester.autoSelectFrequency: Resources auto-selection frequency. Default: 1[HOUR]
             - webharvester.watchDogFrequency: Watch-dog activation frequency. Default: 1[MINUTE]
@@ -275,6 +280,10 @@
             - webharvester.resource.autoApprove: Autoapprove newly registered resources. Default: false
             - webharvester.updateindex: Update the Lucene index following document publication. Default: true
             - webharvester.cleanup: Delete documents that no longer exist on the remote server. Default: true
+            - webharvester.policy.class: Manages policy of the harvester; currently only manages how frequently enforce 'full harvest'. 
+				Default: com.esri.gpt.control.webharvest.engine.DefaultHarvestPolicy
+            - webharvester.policy.simple.frequency: frequency how often 'full harvest' should be enforced. 
+				For example, if the value is 3, every third harvest for a site will be a full harvest.
         -->    
         <parameter key="webharvester.active" value="true"/>
         <parameter key="webharvester.queueEnabled" value=""/>
@@ -287,51 +296,48 @@
         <parameter key="webharvester.resource.autoApprove" value=""/>     
         <parameter key="webharvester.updateindex" value="true"/>
         <parameter key="webharvester.cleanup" value="true"/>
+        <parameter key="webharvester.policy.class" value="com.esri.gpt.control.webharvest.engine.SimpleHarvestPolicy"/>
+        <parameter key="webharvester.policy.simple.frequency" value="1"/>
 
         <!-- Additional Parameters.
             - catalog.enableEditForAllPubMethods:
-              true if document editing should be enabled for all publication methods,
-              false if only documents created by the editor should be editable
+				true if document editing should be enabled for all publication methods,
+				false if only documents created by the editor should be editable
             - catalog.admin.allowApplyToAll:
-              true if an administrator should be able to apply an action to 
-              all matching records
+				true if an administrator should be able to apply an action to 
+				all matching records
             - catalog.useCollections:
-              true enables collections (experimental, should be false by default)
+				true enables collections (experimental, should be false by default)
             - database.isCaseSensitive:
-              true if the database is case sensitive (set this to false for MySQL)
+				true if the database is case sensitive (set this to false for MySQL)
             - publicationRequest.autoApprove:
-              true if newly published documents should be approved by default
+				true if newly published documents should be approved by default
             - spatialRelevance.ranking.maxDoc:
-              turn spatial relevance ranking off when the catalog exceeds the supplied
-              maximum document number
+				turn spatial relevance ranking off when the catalog exceeds the supplied maximum document number
             - rssProviderUrl:
-              URL to include as the provider within RSS responses
+				URL to include as the provider within RSS responses
             - reverseProxy.baseContextPath:
-              the URL prefix to use when the application is deployed behind a 
-              reverse proxy (e.g. http://somehost/geoportal)
+				the URL prefix to use when the application is deployed behind a reverse proxy (e.g. http://somehost/geoportal)
             - RestServlet.printXml.stripStyleSheets:
-              true if references to XSLs and DOCTYPEs would be stripped from
-              document XMLs when requesting the full XML from the rest end-point
+				true if references to XSLs and DOCTYPEs would be stripped from
+				document XMLs when requesting the full XML from the rest end-point
             - Administration.viewMetadata.stripStyleSheets:
-              true if references to XSLs and DOCTYPEs would be stripped from
-              document XMLs when requesting a full XML view from the administration page
-            - resourceLinkBuilder.preview.filter: regular expression disabling ‘preview’ link on search result 
-                  for all records having resource URL matching template. 
-                  Default: empty (always display ‘review’ if resource URL available)
-            - httpClientRequest.connectionTimeout: connection timeout for HTTP requests to the  remote endpoints 
-                  using Apache HTTP client. If no value is provided, the default value is infinitive.                  
-                  Possible values:  If no unit is given, number of milliseconds,
-                                    [SECOND] – number of seconds
-                                    [MINUTE] – number of minutes
-                                    [HOUR] – number of hours
-            - httpClientRequest.responseTimeout: response timeout for HTTP requests to the remote endpoints 
-                  using Apache HTTP client. If no value is provided, the default value is infinitive.
-                  Possible values:  If no unit is given, number of milliseconds,
-                                    [SECOND] – number of seconds
-                                    [MINUTE] – number of minutes
-                                    [HOUR] – number of hours
-            - httpClient.alwaysClose: forces to always close socket connection for requests to the remote endpoints 
-                  using Apache HTTP client. Default: false.                  
+				true if references to XSLs and DOCTYPEs would be stripped from
+				document XMLs when requesting a full XML view from the administration page
+            - httpClientRequest.connectionTimeout: connection timeout for HTTP requests to the remote endpoints using Apache HTTP client. 
+				If no value is provided, the default value is infinitive.                  
+                Possible values:  If no unit is given, number of milliseconds,
+					[SECOND] – number of seconds
+					[MINUTE] – number of minutes
+					[HOUR] – number of hours
+            - httpClientRequest.responseTimeout: response timeout for HTTP requests to the remote endpoints using Apache HTTP client. 
+				If no value is provided, the default value is infinitive.
+                Possible values:  If no unit is given, number of milliseconds,
+					[SECOND] – number of seconds
+					[MINUTE] – number of minutes
+					[HOUR] – number of hours
+            - httpClient.alwaysClose: forces to always close socket connection for requests to the remote endpoints using Apache HTTP client. 
+				Default: false.                  
         -->  
         <parameter key="catalog.enableEditForAllPubMethods" value="false"/>
         <parameter key="catalog.admin.allowApplyToAll" value="true"/>
@@ -343,10 +349,51 @@
         <parameter key="reverseProxy.baseContextPath" value=""/>
         <parameter key="RestServlet.printXml.stripStyleSheets" value="true"/>
         <parameter key="Administration.viewMetadata.stripStyleSheets" value="true"/>
-        <parameter key="resourceLinkBuilder.preview.filter" value="^ftp://.*|^ftps://.*|.*\.zip$|.*\.e00$|.*\.lpk$|.*\.pkinfo$|.*\.gz$|.*\.tgz$|.*\.tar$|.*\.rar$|.*\.shp$|.*\.dbf$|.*\.xls$|.*\.dwg$|.*\.dxf$|.*\.dgn$|.*\.mxd$|.*\.lyr$|.*\.nmf$|.*f=lyr.*|.*f=nmf.*|.*/globeserver.*|.*/gpserver.*|.*/geocodeserver.*|.*/geometryserver.*|.*/networkserver.*|.*/geodataserver.*|.*service=wfs.*|.*wfsserver.*|.*service=wcs.*|.*wcsserver.*|.*service=csw.*|.*cswserver.*"/>
         <parameter key="httpClientRequest.connectionTimeout" value="2[MINUTE]"/>
         <parameter key="httpClientRequest.responseTimeout" value="2[MINUTE]"/>
         <parameter key="httpClient.alwaysClose" value="false"/>
+  
+        
+		    <!-- Resource Link Builder
+			      - resourceLinkBuilder.preview.filter: regular expression disabling ‘preview’ link on search result 
+				      for all records having resource URL matching template. 
+		    -->	
+        <parameter key="resourceLinkBuilder.preview.filter" value="^ftp://.*|^ftps://.*|.*\.zip$|.*\.e00$|.*\.lpk$|.*\.pkinfo$|.*\.gz$|.*\.tgz$|.*\.tar$|.*\.rar$|.*\.shp$|.*\.dbf$|.*\.xls$|.*\.dwg$|.*\.dxf$|.*\.dgn$|.*\.mxd$|.*\.lyr$|.*\.nmf$|.*f=lyr.*|.*f=nmf.*|.*/globeserver.*|.*/gpserver.*|.*/geocodeserver.*|.*/geometryserver.*|.*/networkserver.*|.*/geodataserver.*|.*service=wfs.*|.*wfsserver.*|.*service=wcs.*|.*wcsserver.*|.*service=csw.*|.*cswserver.*|.*mobileserver.*|.*naserver.*"/>
+  
+        <!-- This parameter is used to enable managing user role in ldap identity store. -->
+        <parameter key="ldap.identity.manage.userRoleEnabled" value="true"/>    
+        <!-- This parameter is used to restrict managing user roles to roles configured in geoportal. -->
+        <parameter key="ldap.identity.restrictToConfiguredRoles" value="true"/>     
+        <!-- This parameter is used to restrict number to matches to be returned on searching ldap users. -->
+        <parameter key="ldap.identity.search.maxResults" value="1000"/>  
+
+        <!--
+			  This configuration is to connect FGDC Service Checker services to monitor registered live services in geoportal site. 
+			  To enable this feature, it is required to get API key from FGDC Service Checker site. 
+			  Please visit http://registry.gsdi.org/statuschecker/ and sign up for your Geoportal Server site. 
+        Service checker parameters:
+            - servicechecker.enabled: enables or disables service checker. Default: false
+            - servicechecker.token: service checker token. 
+				Contact FGDC.GOV to obtain token for your specific deployment.
+            - servicechecker.checkUrl: service checker URL
+            - servicechecker.infoUrl: service info URL
+        -->
+        <parameter key="servicechecker.enabled" value="false"/>
+        <parameter key="servicechecker.token" value=""/>
+        <parameter key="servicechecker.checkUrl" value="http://registry.fgdc.gov/statuschecker/api/v2/results"/>
+        <parameter key="servicechecker.infoUrl" value="http://registry.fgdc.gov/statuschecker/ServiceDetail.php"/>
+
+        <!--
+        Item cart parameters: 
+			  This is a sample processor, a specific processor can be created based upon the usecase.
+            - catalog.cart.enabled: enables or disables the cart. Default: false
+            - catalog.cart.maxItems: maximum number of items in the cart. Default: 10
+            - catalog.cart.processor: the Java class used to process items Default: none
+        -->
+        <parameter key="catalog.cart.enabled" value="false"/>
+        <parameter key="catalog.cart.maxItems" value="100"/>
+        <parameter key="catalog.cart.processor" value="com.esri.gpt.control.cart.ZipXmls"/>
+
     </catalog>
     
     <!-- Download data configuration.
@@ -417,92 +464,110 @@
         </simpleAdapter>
         -->
       
-       <ldapAdapter>
-          <ldapConnectionProperties
-              providerURL="ldap://ldap_host_name:ldap_port"
-              initialContextFactoryName="com.sun.jndi.ldap.LdapCtxFactory"
-              securityAuthentication="simple"
-              securityProtocol="">
-              <ldapServiceAccount
-                  securityPrincipal="ldap_admin_user"
-                  securityCredentials="ldap_admin_password"
-                  encrypted="false"/>
-          </ldapConnectionProperties>
+        <ldapAdapter>
+            <ldapConnectionProperties
+                providerURL="ldap://ldap_host_name:ldap_port"
+                initialContextFactoryName="com.sun.jndi.ldap.LdapCtxFactory"
+                securityAuthentication="simple"
+                securityProtocol="">
+                <ldapServiceAccount
+                    securityPrincipal="ldap_admin_user"
+                    securityCredentials="ldap_admin_password"
+                    encrypted="false"/>
+            </ldapConnectionProperties>
         
-          <singleSignOn
-              active="false"
-              credentialLocation="userPrincipal"
-              anonymousValue=""
-              logoutOutcome=""/>
+            <singleSignOn
+                active="false"
+                credentialLocation="userPrincipal"
+                anonymousValue=""
+                logoutOutcome=""/>
             
-          <selfCareSupport
-              supportsLogin="true"
-              supportsLogout="true"
-              supportsUserRegistration="true"
-              supportsUserProfileManagement="true"
-              supportsPasswordChange="true"
-              supportsPasswordRecovery="true"/>
-            
-          <roles authenticatedUserRequiresRole="true">
+            <selfCareSupport
+                supportsLogin="true"
+                supportsLogout="true"
+                supportsUserRegistration="true"
+                supportsUserProfileManagement="true"
+                supportsPasswordChange="true"
+                supportsPasswordRecovery="true"/>
+
+		  
+		    <!-- optional parameters for user role management: 
+				An alternate way to prevent users from specific groups is to set "forbidden" attribute to true. 
+		        - manage: Used to configure role to be managed on the user role management page.
+					If the value is true, the users having the role are managed on the user role management page. Default is true.
+				- forbidden: Used to configure role to prevent users with this role from logging in to geoportal
+					If the value is true, the users having the role will not be allowed to login.
+				- resKey: A resource key to the label displayed for the corresponding role on the user role management page.
+		    -->    
+            <roles authenticatedUserRequiresRole="true">
+                <role
+                    key="gptRegisteredUser"
+                    resKey="catalog.role.gptRegisteredUser"
+				    manage="true"
+				    forbidden="false"
+                    groupDN="group_distinguished_name_for_registered_user"/>
+                <role
+                    key="gptPublisher"
+                    inherits="gptRegisteredUser"
+                    resKey="catalog.role.gptPublisher"
+				    manage="true"
+				    forbidden="false"
+                    groupDN="group_distinguished_name_for_publisher"/>
               <role
-                  key="gptRegisteredUser"
-                  groupDN="group_distinguished_name_for_registered_user"/>
-              <role
-                  key="gptPublisher"
-                  inherits="gptRegisteredUser"
-                  groupDN="group_distinguished_name_for_publisher"/>
-              <role
-                  key="gptAdministrator"
-                  inherits="gptPublisher"
-                  groupDN="group_distinguished_name_for_administrator"/>
-          </roles>
+                    key="gptAdministrator"
+                    inherits="gptPublisher"
+                    resKey="catalog.role.gptAdministrator"
+				    manage="true"
+				    forbidden="false"
+                    groupDN="group_distinguished_name_for_administrator"/>
+            </roles>
         
-          <users
-              displayNameAttribute="uid"
-              passwordEncryptionAlgorithm="SHA"
-              newUserDNPattern="cn={0},Users_Node_DN"
-              usernameSearchPattern="(&amp;(objectclass=person)(uid={0}))"
-              searchDIT="Users_Node_DN">
-              <requiredObjectClasses>
-                  <objectClass name="top"/>
-                  <objectClass name="person"/>
-                  <objectClass name="organizationalPerson"/>
-                  <objectClass name="inetOrgPerson"/>
-              </requiredObjectClasses>
-              <userAttributeMap>
-                  <attribute key="username"     ldapName="uid"/>
-                  <attribute key="password"     ldapName="userPassword"/>
-                  <attribute key="email"        ldapName="mail"/>
-                  <attribute key="firstName"    ldapName="givenName"/>
-                  <attribute key="lastName"     ldapName="sn"/>
-                  <attribute key="displayName"  ldapName="displayName"/>
-                  <attribute key="organization" ldapName="o"/>
-                  <attribute key="affiliation"  ldapName="businessCategory"/>
-                  <attribute key="street"       ldapName="street"/>
-                  <attribute key="city"         ldapName="l"/>
-                  <attribute key="stateOrProv"  ldapName="st"/>
-                  <attribute key="postalCode"   ldapName="postalCode"/>
-                  <attribute key="country"      ldapName=""/>
-                  <attribute key="phone"        ldapName="telephoneNumber"/>
-              </userAttributeMap>
-          </users>
+            <users
+                displayNameAttribute="uid"
+                passwordEncryptionAlgorithm="SHA"
+                newUserDNPattern="cn={0},Users_Node_DN"
+                usernameSearchPattern="(&amp;(objectclass=person)(uid={0}))"
+                searchDIT="Users_Node_DN">
+                <requiredObjectClasses>
+                    <objectClass name="top"/>
+                    <objectClass name="person"/>
+                    <objectClass name="organizationalPerson"/>
+                    <objectClass name="inetOrgPerson"/>
+                </requiredObjectClasses>
+                <userAttributeMap>
+                    <attribute key="username"     ldapName="uid"/>
+                    <attribute key="password"     ldapName="userPassword"/>
+                    <attribute key="email"        ldapName="mail"/>
+                    <attribute key="firstName"    ldapName="givenName"/>
+                    <attribute key="lastName"     ldapName="sn"/>
+                    <attribute key="displayName"  ldapName="displayName"/>
+                    <attribute key="organization" ldapName="o"/>
+                    <attribute key="affiliation"  ldapName="businessCategory"/>
+                    <attribute key="street"       ldapName="street"/>
+                    <attribute key="city"         ldapName="l"/>
+                    <attribute key="stateOrProv"  ldapName="st"/>
+                    <attribute key="postalCode"   ldapName="postalCode"/>
+                    <attribute key="country"      ldapName=""/>
+                    <attribute key="phone"        ldapName="telephoneNumber"/>
+                </userAttributeMap>
+            </users>
       
-          <groups
-              displayNameAttribute="cn"
-              dynamicMemberOfGroupsAttribute=""
-              dynamicMembersAttribute=""
-              memberAttribute="uniquemember"
-              memberSearchPattern="(&amp;(objectclass=groupOfUniqueNames)(uniquemember={0}))"
-              searchDIT="Groups_Node_DN">
+            <groups
+                displayNameAttribute="cn"
+                dynamicMemberOfGroupsAttribute=""
+                dynamicMembersAttribute=""
+                memberAttribute="uniquemember"
+                memberSearchPattern="(&amp;(objectclass=groupOfUniqueNames)(uniquemember={0}))"
+                searchDIT="Groups_Node_DN">
      
-              <!-- 
-              <metadataManagementGroup
-                  name="Region 1"
-                  groupDN="group_distinguished_name"/>
-              <metadataManagementGroup
-                  name="Region 2"
-                  groupDN="group_distinguished_name"/>
-              -->
+            <!-- 
+                <metadataManagementGroup
+                    name="Region 1"
+                    groupDN="group_distinguished_name"/>
+                <metadataManagementGroup
+                    name="Region 2"
+                    groupDN="group_distinguished_name"/>
+            -->
             </groups>
         </ldapAdapter>
     </identity>

@@ -15,10 +15,7 @@
 package com.esri.gpt.control.georss;
 
 import com.esri.gpt.catalog.discovery.rest.RestQuery;
-import com.esri.gpt.catalog.search.ResourceLink;
-import com.esri.gpt.catalog.search.ResourceLinks;
-import com.esri.gpt.catalog.search.SearchResultRecord;
-import com.esri.gpt.catalog.search.SearchResultRecords;
+import com.esri.gpt.catalog.search.*;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.isodate.IsoDateFormat;
 import com.esri.gpt.framework.jsf.MessageBroker;
@@ -62,6 +59,7 @@ public JsonFeedWriter(PrintWriter writer, RestQuery query, boolean pretty) {
 /** indentation level */
 private int level = 0;
 
+@Override
 public void write(SearchResultRecords records) {
   String sTitle = messageBroker.retrieveMessage("catalog.rest.title");
   String sDescription = messageBroker.retrieveMessage("catalog.rest.description");
@@ -87,6 +85,12 @@ public void write(SearchResultRecords records) {
 	  if (records.size()>=query.getFilter().getMaxRecords()) {
 	    printArg("more", query.getMoreUrl(), true);
 	  }
+  }
+  OpenSearchProperties osProps = records.getOpenSearchProperties();
+  if (osProps!=null) {
+    printArg("totalResults", new Long(osProps.getNumberOfHits()), true);
+    printArg("startIndex", new Long(osProps.getStartRecord()), true);
+    printArg("itemsPerPage", new Long(osProps.getRecordsPerPage()), true);
   }
   printRecords(records, false);
 
@@ -193,6 +197,9 @@ private void printPolygon(Envelope env) {
 private void printLinks(ResourceLinks links, boolean more) {
   println("\"links\"" +sp()+ ":" +sp()+ "[");
   levelUp();
+  if (links.getThumbnail()!=null) {
+    printLink(links.getThumbnail(), links.size()>0);
+  }
   for (int j = 0; j<links.size(); j++) {
     ResourceLink link = links.get(j);
     printLink(link, j<links.size()-1);
@@ -207,12 +214,14 @@ private void printLinks(ResourceLinks links, boolean more) {
  * @param more flag to indicate if there will be more arguments
  */
 private void printLink(ResourceLink link, boolean more) {
-  println("{");
-  levelUp();
-  printArg("href", link.getUrl(), true);
-  printArg("type", link.getTag(), false);
-  levelDown();
-  println("}" + (more? ",": ""));
+  if (!link.getTag().isEmpty() && !link.getUrl().isEmpty()) {
+    println("{");
+    levelUp();
+    printArg("href", link.getUrl(), true);
+    printArg("type", link.getTag(), false);
+    levelDown();
+    println("}" + (more? ",": ""));
+  }
 }
 
 /**
@@ -226,6 +235,19 @@ private void printArg(String argName, String argVal, boolean more) {
   argVal = Val.chkStr(argVal);
   if (argName.length()>0) {
     println("\"" +argName+ "\"" + sp() + ":" + sp() + "\"" +Val.escapeStrForJson(argVal)+ "\""+(more? ",": ""));
+  }
+}
+
+/**
+ * Prints argument.
+ * @param argName argument name
+ * @param argVal argument value
+ * @param more flag to indicate if there will be more arguments
+ */
+private void printArg(String argName, Number argVal, boolean more) {
+  argName = Val.chkStr(argName);
+  if (argName.length()>0) {
+    println("\"" +argName+ "\"" + sp() + ":" + sp() + argVal + (more? ",": ""));
   }
 }
 

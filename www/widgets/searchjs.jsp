@@ -33,7 +33,7 @@
   String msgNoMatch = msg.retrieveMessage("catalog.widget.search.msg.noMatch");
   String about = msg.retrieveMessage("catalog.widget.search.about");
   
-  String frameworkUrl = "http://serverapi.arcgisonline.com/jsapi/arcgis/?v=1.3";
+  String frameworkUrl = "http://serverapi.arcgisonline.com/jsapi/arcgis/?v=2.5";
   String baseUrl = com.esri.gpt.framework.context.RequestContext.resolveBaseContextPath(request);
   String restUrl = baseUrl+"/rest/find/document";
   String cssUrl = baseUrl+"/widgets/widgets.css";

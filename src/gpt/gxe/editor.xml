@@ -26,7 +26,8 @@
       <g:i18n g:key="validate.integer">$i18n.catalog.gxe.general.validate.integer</g:i18n>
       <g:i18n g:key="validate.number">$i18n.catalog.gxe.general.validate.number</g:i18n>
       <g:i18n g:key="validate.date">$i18n.catalog.gxe.general.validate.date</g:i18n> 
-      <g:i18n g:key="validate.other">$i18n.catalog.gxe.general.validate.other</g:i18n> 
+      <g:i18n g:key="validate.other">$i18n.catalog.gxe.general.validate.other</g:i18n>
+      <g:i18n g:key="validate.iso8601">$i18n.catalog.gxe.general.validate.iso8601</g:i18n>
 
       <g:i18n g:key="map.useMap">$i18n.catalog.general.map.useMap</g:i18n>       
       <g:i18n g:key="map.zoomToWorld">$i18n.catalog.general.map.zoomToWorld</g:i18n> 

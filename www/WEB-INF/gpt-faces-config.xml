@@ -551,6 +551,13 @@
       <to-view-id>/catalog/identity/userRegistration.jsp</to-view-id>
       <redirect/>
     </navigation-case>
+    
+    <!-- user management page -->
+    <navigation-case>
+      <from-outcome>catalog.publication.manage.user.role</from-outcome>
+      <to-view-id>/catalog/identity/manageUserRole.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
  
     <!-- metadata publication pages -->
     <navigation-case>
@@ -586,9 +593,8 @@
       <to-view-id>/catalog/publication/validateMetadata.jsp</to-view-id>
       <redirect/>
     </navigation-case>
+     
    
-  
-    
     <!-- harvest repository pages -->
     <navigation-case>
       <from-outcome>catalog.harvest.manage.edit</from-outcome>

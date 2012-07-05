@@ -139,19 +139,19 @@ public class ItemInfoLuceneAdapter {
 							itemInfo.setTitle(vals[0]);
 							itemInfo.setName(vals[0]);
 						} else if (fieldName.contains("resource.url")) {
-							itemInfo.setResourceUrl(vals[0]);
+							itemInfo.setUrl(vals[0]);
 							String type = Val.chkStr(guessServiceTypeFromUrl(vals[0]));
 							if (type.length() > 0) {
 								itemInfo.setType(type);
 							}
 						} else if (fieldName.contains("contentType")) {
 						} else if (fieldName.contains("keywords")) {
-							itemInfo.setKeywords(Arrays.asList(vals));
+							itemInfo.setTypeKeywords(Arrays.asList(vals));
 							itemInfo.setTags(Arrays.asList(vals));
 						} else if (fieldName.contains("dataTheme")) {
 							itemInfo.setTags(Arrays.asList(vals));
 						} else if (fieldName.contains("abstract")) {
-							itemInfo.setDesc(vals[0]);
+							itemInfo.setDescription(vals[0]);
 //						} else if (fieldName.contains("xml")) {
 //							itemInfo.setXml(vals[0]);
 						} else if (fieldName.contains("minx")) {

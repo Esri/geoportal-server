@@ -15,12 +15,11 @@
  limitations under the License.
 -->
 <schemas>
-	<schema fileName="gpt/metadata/esri/esri-arcgis-definition.xml"/>
-  <schema fileName="gpt/metadata/esri/esri-fgdc-definition.xml"/>  
+  <schema fileName="gpt/metadata/fgdc/fgdc-definition.xml"/>
+  <schema fileName="gpt/metadata/esri/esri-arcgis-definition.xml"/>
   <schema fileName="gpt/metadata/esri/esri-iso-definition.xml"/>
     
   <schema fileName="gpt/metadata/dc/dc-definition.xml"/>
-  <schema fileName="gpt/metadata/fgdc/fgdc-definition.xml"/>
   
   <schema fileName="gpt/metadata/iso/nap/nap-iso-19115-definition.xml"/>
   <schema fileName="gpt/metadata/iso/nap/nap-iso-19119-definition.xml"/>
@@ -28,9 +27,11 @@
   <!-- UK GEMINI 2.1 
     GEMINI document interrogation rules are based upon
     gmd:metadataStandardVersion[gco:CharacterString='UK GEMINI 2.1']
+    <schema fileName="gpt/metadata/iso/gemini/gemini-iso-19115-definition.xml"/>
+    <schema fileName="gpt/metadata/iso/gemini/gemini-iso-19119-definition.xml"/>
   -->
-  <schema fileName="gpt/metadata/iso/gemini/gemini-iso-19115-definition.xml"/>
-  <schema fileName="gpt/metadata/iso/gemini/gemini-iso-19119-definition.xml"/>
+  <schema fileName="gpt/metadata/iso/Gemini2_R1r2/gemini-iso-19115-definition.xml"/>
+  <schema fileName="gpt/metadata/iso/Gemini2_R1r2/gemini-iso-19119-definition.xml"/>
   
   <!--  NOTE: Only one of INSPIRE or standard ISO should be enabled -->  
   <!-- 

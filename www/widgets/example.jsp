@@ -33,14 +33,16 @@
 
 <p>Copy the following lines and paste into an html page at the point within 
 the html body where you want the widget to appear.</p>
+<p><b>NOTE:</b> If your html page already includes ArcGIS Javascript API, you don't need to copy the javascript api reference part in the below example. <br/>If you have dojo javascript library reference in your html page, please be aware of that dojo libarary referenced in ArcGIS Javascript API may cause a potential conflict with your dojo reference.</p>
+
 <textarea cols="110" rows="4">
 <!-- Catalog Search Widget -->
-<script type="text/javascript" src="http://serverapi.arcgisonline.com/jsapi/arcgis/?v=1.3"></script>
+<script type="text/javascript" src="http://serverapi.arcgisonline.com/jsapi/arcgis/?v=2.5"></script>
 <script type="text/javascript" src="<%=searchjsUrl%>"></script>
 </textarea>
 
 <br/>
-<script type="text/javascript" src="http://serverapi.arcgisonline.com/jsapi/arcgis/?v=1.3"></script>
+<script type="text/javascript" src="http://serverapi.arcgisonline.com/jsapi/arcgis/?v=2.5"></script>
 <script type="text/javascript" src="<%=searchjsUrl%>"></script>
 <br/>
 

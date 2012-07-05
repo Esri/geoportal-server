@@ -137,7 +137,6 @@ public void load(ApplicationConfiguration appConfig) throws Exception {
     loadHarvesterConfiguration(appConfig, dom, root);
     loadProtocolFactories(appConfig, dom, root);
 
-
     // forward proxy authentication
     Node ndProxyAuth = (Node) xpath.evaluate("forwardProxyAuth", root, XPathConstants.NODE);
     if (ndProxyAuth != null) {
@@ -621,6 +620,7 @@ private void loadIdentity(ApplicationConfiguration appConfig, Document dom,
       roles.setAuthenticatedUserRequiresRole(Val.chkBool(xpath.evaluate(
           "@authenticatedUserRequiresRole", ndRoles), true));
       roles.setRegisteredUserRoleKey(sRegUserKey);
+                 
       NodeList nlRoles = (NodeList) xpath.evaluate("role", ndRoles,
           XPathConstants.NODESET);
       for (int i = 0; i < nlRoles.getLength(); i++) {
@@ -628,6 +628,9 @@ private void loadIdentity(ApplicationConfiguration appConfig, Document dom,
         Role role = new Role();
         role.setKey(xpath.evaluate("@key", ndRole));
         role.setInherits(xpath.evaluate("@inherits", ndRole));
+        role.setResKey(xpath.evaluate("@resKey", ndRole));
+        role.setManage(Val.chkBool(xpath.evaluate("@manage", ndRole),true));
+        role.setForbidden(Val.chkBool(xpath.evaluate("@forbidden", ndRole),false));
         role.setDistinguishedName(xpath.evaluate("@groupDN", ndRole));
         roles.add(role);
       }
@@ -647,6 +650,10 @@ private void loadIdentity(ApplicationConfiguration appConfig, Document dom,
       props.setUserDNPattern(xpath.evaluate("@newUserDNPattern", ndUser));
       props.setUsernameSearchPattern(xpath.evaluate("@usernameSearchPattern",
           ndUser));
+      
+      props.setUserRequestsSearchPattern(xpath.evaluate("@newUserRequestSearchPattern",
+              ndUser));
+      
       props.setUserSearchDIT(xpath.evaluate("@searchDIT", ndUser));
       NodeList nlObj = (NodeList) xpath.evaluate(
           "requiredObjectClasses/objectClass/@name", ndUser,

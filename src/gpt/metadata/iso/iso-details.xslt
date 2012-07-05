@@ -1031,15 +1031,6 @@
 				<xsl:value-of select="srv:operationName/gco:CharacterString"/>
 			</dt>
 			</xsl:if>
-			<xsl:if test="srv:operationName/gco:CharacterString">			
-			<dt>
-				<em>
-				<xsl:call-template name="get_property">
-				<xsl:with-param name="key">catalog.iso19139.SV_OperationMetadata.operationName</xsl:with-param>
-				</xsl:call-template>: </em>							
-				<xsl:value-of select="srv:operationName/gco:CharacterString"/>
-			</dt>
-			</xsl:if>
 			<xsl:for-each select="srv:DCP">			
 			<dt>
 				<em>

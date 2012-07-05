@@ -14,7 +14,10 @@
  */
 package com.esri.gpt.framework.jsf;
 import com.esri.gpt.control.search.browse.TocsByKey;
+import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
+import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
 import com.esri.gpt.framework.security.identity.IdentitySupport;
 import com.esri.gpt.framework.security.principal.User;
 import com.esri.gpt.framework.util.Val;
@@ -38,6 +41,7 @@ private RoleMap            _roleMap = null;
 private String             _prepareView = "";
 private String             _tabId = "";
 private TocsByKey		   _tocsByKey = null;
+private boolean 		   _manageUser = false;
  
 // constructors ================================================================
  
@@ -262,8 +266,32 @@ public void setPrepareView(String prepareView) {
   _prepareView = Val.chkStr(prepareView);
 }
 
-// methods =====================================================================
+/**
+ * Checks if manage user role is enabled
+ * @return manageUser enabled if true
+ */
+public boolean isManageUser() {
+	RequestContext rc = getContextBroker().extractRequestContext();
+	UsernamePasswordCredentials upc = rc.getIdentityConfiguration().getSimpleConfiguration().getServiceAccountCredentials();
+	if(upc !=null) return _manageUser;
+	
+	StringAttributeMap sNavParameters = rc.getCatalogConfiguration().getParameters();
+	if(sNavParameters.containsKey("ldap.identity.manage.userRoleEnabled")){	
+		String hasManageUser = Val.chkStr(sNavParameters.getValue("ldap.identity.manage.userRoleEnabled"));
+		_manageUser = Boolean.valueOf(hasManageUser);
+	}
+	return _manageUser;
+}
 
+/**
+ * Sets value for manage users link
+ * @param _manageUser the value for manageUser
+ */
+public void setManageUser(boolean _manageUser) {
+	this._manageUser = _manageUser;
+}
+
+// methods =====================================================================
 /**
  * Extract the PageContext from the Faces context instance.
  * @return the PageContext
@@ -279,5 +307,6 @@ public static PageContext extract() {
 public static MessageBroker extractMessageBroker() {
   return (new FacesContextBroker()).extractMessageBroker();
 }
+
 
 }

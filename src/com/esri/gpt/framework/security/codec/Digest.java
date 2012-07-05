@@ -20,6 +20,7 @@ import com.esri.gpt.framework.util.Val;
 import java.net.HttpURLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -274,7 +275,16 @@ private static String[] extractAttribute(String param) {
  * @return authenticate attribute or empty string if not availabale
  */
 private static String extractAuthenticateAttribute(HttpURLConnection connection) {
-  Map<String, List<String>> headerFields = connection.getHeaderFields();
+  Map<String, List<String>> headerFields = 
+          new TreeMap<String, List<String>>(new Comparator<String>(){
+            @Override
+            public int compare(String o1, String o2) {
+              if (o1==null) return -1;
+              if (o2==null) return 1;
+              return o1.compareToIgnoreCase(o2);
+            }
+          });
+  headerFields.putAll(connection.getHeaderFields());
   List<String> wwwAuthenticateList = headerFields.get(AUTHENTICATE_ATTR);
   if (wwwAuthenticateList != null && wwwAuthenticateList.size() > 0) {
     return Val.chkStr(wwwAuthenticateList.get(0));

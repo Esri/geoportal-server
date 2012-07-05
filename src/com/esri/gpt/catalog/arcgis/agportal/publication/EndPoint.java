@@ -15,30 +15,41 @@
  */
 package com.esri.gpt.catalog.arcgis.agportal.publication;
 
+import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.util.Val;
 
 /**
  * Publication endpoint.
- * NOTE! This is EXPERIMENTAL feature. It might be removed at any time in the future.
  */
 public class EndPoint {
   private String baseArcGISUrl;
   private String generateTokenUrl;
-  private boolean isPublic;
-  private boolean overwrite;
+  private String referer = "";
   
   /**
    * Creates instance of the end-point.
    * @param baseArcGISUrl base ArcGIS portal URL
    * @param generateTokenUrl URL to generate token
-   * @param isPublic <code>true</code> if is public
-   * @param overwrite  <code>true</code> if overwrite
+   * @param referer referer
    */
-  public EndPoint(String baseArcGISUrl, String generateTokenUrl, boolean isPublic, boolean overwrite) {
+  public EndPoint(String baseArcGISUrl, String generateTokenUrl, String referer) {
     this.baseArcGISUrl = Val.chkStr(baseArcGISUrl);
     this.generateTokenUrl = Val.chkStr(generateTokenUrl);
-    this.isPublic = isPublic;
-    this.overwrite = overwrite;
+    this.referer = Val.chkStr(referer);
+  }
+
+  /**
+   * Extracts end-point from the configuration
+   * @param ctx request context
+   * @return end-point
+   */
+  public static EndPoint extract(RequestContext ctx) {
+    StringAttributeMap params = ctx.getCatalogConfiguration().getParameters();
+    return new EndPoint(
+        params.get("share.with.arcgis.base.url").getValue(),
+        params.get("share.with.arcgis.token.url").getValue(),
+        params.get("share.with.arcgis.referer").getValue());
   }
   
   /**
@@ -56,20 +67,12 @@ public class EndPoint {
   public String getGenerateTokenUrl() {
     return generateTokenUrl;
   }
-  
+
   /**
-   * Gets <code>true</code> if is public.
-   * @return <code>true</code> if is public
+   * Gets referer.
+   * @return referer
    */
-  public boolean getIsPublic() {
-    return isPublic;
-  }
-  
-  /**
-   * Gets <code>true</code> if overwrite.
-   * @return <code>true</code> if overwrite
-   */
-  public boolean getOverwrite() {
-    return overwrite;
+  public String getReferer() {
+    return referer;
   }
 }

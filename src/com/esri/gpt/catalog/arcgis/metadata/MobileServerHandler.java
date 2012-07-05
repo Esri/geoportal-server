@@ -39,6 +39,9 @@ public class MobileServerHandler extends ServiceHandler {
     throws Exception {
     serviceInfo.getKeywords().add(serviceInfo.getType());
     serviceInfo.addKeywords("liveData,service,mobile",",");
+    
+    serviceInfo.setRestUrl(serviceInfo.getRestUrl().replaceAll("/MapServer/MobileServer", "/MobileServer"));
+    serviceInfo.setResourceUrl(serviceInfo.getResourceUrl().replaceAll("/MapServer/MobileServer", "/MobileServer"));
   }
   
 }

@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,7 +32,8 @@ import java.util.regex.Pattern;
 class WafFolderQuick extends WafFolder {
 
   private static final Pattern A_PATTERN = Pattern.compile("[<]a[^>]*[>]", Pattern.CASE_INSENSITIVE);
-  private static final Pattern HREF_PATTERN = Pattern.compile("href\\p{Space}*=\\p{Space}*\"[^\"]*\"", Pattern.CASE_INSENSITIVE);
+  private static final Pattern HREF_PATTERN = Pattern.compile("href\\p{Space}*=\\p{Space}*(\"[^\"]*\"|\'[^\']*\')", Pattern.CASE_INSENSITIVE);
+  private static final String  HREF_VALUE_PATTERN = "^[^\"]*\"|\"[^\"]*$|^[^\']*\'|\'[^\']*$";
   private Set<String> processedFolders;
 
   /**
@@ -57,16 +59,17 @@ class WafFolderQuick extends WafFolder {
   @Override
   protected Collection<Resource> parseResonse(String response) throws IOException {
     final ArrayList<Resource> directoryUrls = new ArrayList<Resource>();
+    final HashSet<String> processedFiles = new HashSet<String>();
     Matcher aMatcher = A_PATTERN.matcher(response);
     int aIdx = 0;
-    URL baseUrl = new URL(url.replaceAll("/+$", "")+"/");
+    URL baseUrl = new URL(url);
     while (aMatcher.find(aIdx)) {
       String a = aMatcher.group();
       Matcher hrefMatcher = HREF_PATTERN.matcher(a);
       int hrefIdx = 0;
       while (hrefMatcher.find(hrefIdx)) {
         if (criteria == null || criteria.getMaxRecords() == null || criteria.getMaxRecords() == 0 || directoryUrls.size() < criteria.getMaxRecords()) {
-          String documentUrl = hrefMatcher.group().replaceAll("^[^\"]*\"|\"[^\"]*$", "");
+          String documentUrl = hrefMatcher.group().replaceAll(HREF_VALUE_PATTERN, "");
           URL pathUrl = new URL(baseUrl, documentUrl);
           if (baseUrl.getHost().equals(pathUrl.getHost())) {
             String pathExternalForm = pathUrl.toExternalForm();
@@ -78,7 +81,10 @@ class WafFolderQuick extends WafFolder {
                 }
               }
             } else if (documentUrl.toLowerCase().endsWith(".xml")) {
-              directoryUrls.add(new WafFile(proxy, pathExternalForm));
+              if (!processedFiles.contains(pathExternalForm.toLowerCase())) {
+                directoryUrls.add(new WafFile(proxy, pathExternalForm));
+                processedFiles.add(pathExternalForm.toLowerCase());
+              }
             }
           }
         } else {

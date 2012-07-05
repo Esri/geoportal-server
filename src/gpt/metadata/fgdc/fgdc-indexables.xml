@@ -30,13 +30,27 @@
     <property meaning="envelope.north" xpath="northbc"/>
   </property>   
     
-  <property meaning="resource.url" xpath="/metadata/idinfo/citation/citeinfo/onlink[2]"/>
-  <property meaning="website.url" xpath="/metadata/idinfo/citation/citeinfo/onlink[1]"/>
+  <property meaning="resource.check.urls" xpathType="NODESET"
+     xpath="/metadata/idinfo/citation/citeinfo/onlink"/>
+  <property meaning="resource.check.urls" xpathType="NODESET"
+     xpath="/metadata/Esri/primaryOnlink"/>
+  <property meaning="resource.check.urls" xpathType="NODESET"
+     xpath="/metadata/distinfo/stdorder/digform/digtopt/onlinopt/computer/networka/networkr"/>
+       
   <property meaning="thumbnail.url" xpath="/metadata/idinfo/browse/browsen"/>
-  <!-- <property meaning="thumbnail.binary" xpath="/metadata/Binary/Thumbnail/Data"/> -->
     
   <property meaning="contentType" xpath="/metadata/distinfo/resdesc"/>
-  <property meaning="dataTheme" xpath="/metadata/idinfo/keywords/theme[1]/themekey"/>
+  <property meaning="dataTheme" xpath="/metadata/idinfo/keywords/theme/themekey"/>
+
+  <property meaning="publisher" xpathType="NODESET"
+    xpath="/metadata/metainfo/metc/cntinfo/cntperp/cntorg | /metadata/metainfo/metc/cntinfo/cntorgp/cntorg"/>
+  
+  <property meaning="fgdc.begdate" xpath="/metadata/idinfo/timeperd/timeinfo/rngdates/begdate"/>
+  <property meaning="fgdc.enddate" xpath="/metadata/idinfo/timeperd/timeinfo/rngdates/enddate"/>
+  <property meaning="fgdc.sngdate" xpath="/metadata/idinfo/timeperd/timeinfo/sngdate/caldate"/>
+  <property meaning="fgdc.multidate" xpath="/metadata/idinfo/timeperd/timeinfo/mdattim/sngdate/caldate"/>
+  
+  <property meaning="body" xpathType="STRING" xpath="/*"/>
   
 </indexables>
 

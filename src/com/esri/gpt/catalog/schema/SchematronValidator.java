@@ -94,40 +94,48 @@ public class SchematronValidator {
    */
   public void validate(Schema schema, String xml) throws ValidationException {
     setValidationErrors(new ValidationErrors());
-    if (schema.getSchematronXslt().length() > 0) {   
+    if (schema.getSchematronXslt().length() > 0) {  
+      String schematronXslt = null;
       try {
         
-        // run the validation xsl
-        XsltTemplate template = this.getCompiledTemplate(schema.getSchematronXslt());
-        String result = template.transform(xml);
-        
-        // load the result SVRL document
-        Document dom = DomUtil.makeDomFromString(result,true);
-        Namespaces namespaces = new Namespaces();
-        namespaces.add("svrl","http://purl.oclc.org/dsdl/svrl");
-        NamespaceContextImpl nsc = new NamespaceContextImpl(namespaces);
-        XPath xpath = XPathFactory.newInstance().newXPath();
-        xpath.setNamespaceContext(nsc);
-        
-        // check for failed assertions
-        NodeList nl = (NodeList)xpath.evaluate("//svrl:failed-assert",dom,XPathConstants.NODESET);
-        for (int i=0;i<nl.getLength();i++) {
-          Node nd = nl.item(i);
-          String sLocation = Val.chkStr(xpath.evaluate("@location",nd));
-          String sText = Val.chkStr(xpath.evaluate("svrl:text",nd));
-          if (sText.length() == 0) {
-            sText = "Untitled Schematron assertion failure.";
-          }
-          ValidationError error = new ValidationError();
-          error.location = sLocation;
-          error.setMessage(sText);
-          error.setReasonCode(ValidationError.REASONCODE_SCHEMATRON_VIOLATION);
-          getValidationErrors().add(error);
+        String[] tokens = schema.getSchematronXslt().split(",");
+        for (String token: tokens) {
+          schematronXslt = Val.chkStr(token);
+          if (schematronXslt.length() == 0) continue;
           
+        
+          // run the validation xsl
+          XsltTemplate template = this.getCompiledTemplate(schematronXslt);
+          String result = template.transform(xml);
+          
+          // load the result SVRL document
+          Document dom = DomUtil.makeDomFromString(result,true);
+          Namespaces namespaces = new Namespaces();
+          namespaces.add("svrl","http://purl.oclc.org/dsdl/svrl");
+          NamespaceContextImpl nsc = new NamespaceContextImpl(namespaces);
+          XPath xpath = XPathFactory.newInstance().newXPath();
+          xpath.setNamespaceContext(nsc);
+          
+          // check for failed assertions
+          NodeList nl = (NodeList)xpath.evaluate("//svrl:failed-assert",dom,XPathConstants.NODESET);
+          for (int i=0;i<nl.getLength();i++) {
+            Node nd = nl.item(i);
+            String sLocation = Val.chkStr(xpath.evaluate("@location",nd));
+            String sText = Val.chkStr(xpath.evaluate("svrl:text",nd));
+            if (sText.length() == 0) {
+              sText = "Untitled Schematron assertion failure.";
+            }
+            ValidationError error = new ValidationError();
+            //error.location = sLocation;
+            error.setMessage(sText);
+            error.setReasonCode(ValidationError.REASONCODE_SCHEMATRON_VIOLATION);
+            getValidationErrors().add(error);
+          }
         }
+        
       } catch (Exception e) {
         String sMsg = "Error executing schematron validation, schema="+
-            schema.getKey()+" schematronXslt="+schema.getSchematronXslt();
+            schema.getKey()+" schematronXslt="+schematronXslt;
         LogUtil.getLogger().log(Level.SEVERE,sMsg,e);
         ValidationError error = new ValidationError();
         error.setMessage(sMsg);

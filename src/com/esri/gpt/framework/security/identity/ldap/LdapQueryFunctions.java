@@ -13,23 +13,33 @@
  * limitations under the License.
  */
 package com.esri.gpt.framework.security.identity.ldap;
-import com.esri.gpt.framework.collection.StringSet;
-import com.esri.gpt.framework.security.principal.Group;
-import com.esri.gpt.framework.security.principal.User;
-import com.esri.gpt.framework.security.principal.UserAttribute;
-import com.esri.gpt.framework.security.principal.UserAttributeMap;
-import com.esri.gpt.framework.util.LogUtil;
-import com.esri.gpt.framework.util.Val;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import java.util.*;
-import javax.naming.directory.*;
-import javax.naming.ldap.BasicControl;
-import javax.naming.ldap.Control;
-import javax.naming.ldap.InitialLdapContext;
-import javax.naming.ldap.LdapContext;
+import javax.naming.LimitExceededException;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.PartialResultException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
+import javax.naming.ldap.BasicControl;
+import javax.naming.ldap.Control;
+import javax.naming.ldap.LdapContext;
+
+import com.esri.gpt.framework.collection.StringSet;
+import com.esri.gpt.framework.security.principal.Group;
+import com.esri.gpt.framework.security.principal.Groups;
+import com.esri.gpt.framework.security.principal.User;
+import com.esri.gpt.framework.security.principal.UserAttribute;
+import com.esri.gpt.framework.security.principal.UserAttributeMap;
+import com.esri.gpt.framework.security.principal.Users;
+import com.esri.gpt.framework.util.LogUtil;
+import com.esri.gpt.framework.util.Val;
 
 /**
  * Handles functionality related to querying an LDAP identity store.
@@ -56,6 +66,7 @@ protected LdapQueryFunctions(LdapConfiguration configuration) {
 }
 
 // properties ==================================================================
+
 
 // methods =====================================================================
 
@@ -91,6 +102,10 @@ protected void appendAttributeValues(Attributes attributes,
       }
       enAttr.close();
     }
+  }catch (PartialResultException pre) {
+	 LogUtil.getLogger().finer(pre.toString());
+  } catch (LimitExceededException lee) {
+	 LogUtil.getLogger().finer(lee.toString());
   } finally {
     closeEnumeration(enAttr);
   }
@@ -117,6 +132,10 @@ protected void appendSubStringValues(Attribute attribute, StringSet values)
         }
       }
     }
+  } catch (PartialResultException pre) {
+	 LogUtil.getLogger().finer(pre.toString());
+  } catch (LimitExceededException lee) {
+	 LogUtil.getLogger().finer(lee.toString());
   } finally {
     closeEnumeration(enAttr);
   }
@@ -168,16 +187,22 @@ protected StringSet readAttribute(DirContext dirContext,
                                   String objectDN, 
                                   String attrubuteName)
   throws NamingException {
-  StringSet values = new StringSet();
-  if ((objectDN.length() > 0) && (attrubuteName.length() > 0)) {
-    String[] aReturn = new String[1];
-    aReturn[0] = attrubuteName;
-    Attributes attributes = dirContext.getAttributes(objectDN,aReturn);
-    if (attributes != null) {
-      appendSubStringValues(attributes.get(attrubuteName),values);
+	StringSet values = new StringSet();
+	try{	  
+	  if ((objectDN.length() > 0) && (attrubuteName.length() > 0)) {
+	    String[] aReturn = new String[1];
+	    aReturn[0] = attrubuteName;
+	    Attributes attributes = dirContext.getAttributes(objectDN,aReturn);
+	    if (attributes != null) {
+	      appendSubStringValues(attributes.get(attrubuteName),values);
+	    }
+	  }	  
+    } catch (PartialResultException pre) {
+      LogUtil.getLogger().finer(pre.toString());
+    } catch (LimitExceededException lee) {
+        LogUtil.getLogger().finer(lee.toString());
     }
-  }
-  return values;
+	return values;
 }
 
 /**
@@ -333,6 +358,8 @@ protected void readUserGroups(DirContext dirContext, User user)
           }
         } catch (PartialResultException pre) {
           LogUtil.getLogger().finer(pre.toString());
+        } catch (LimitExceededException lee) {
+            LogUtil.getLogger().finer(lee.toString());
         }
       }
       
@@ -462,6 +489,119 @@ protected void readUserProfile(DirContext dirContext, User user)
 }
 
 /**
+ * Builds list of ldap users matching filter.
+ * @param dirContext the directory context
+ * @param filter the user search filter for ldap
+ * @return the list of users matching filter
+ * @throws NamingException if an LDAP naming exception occurs
+ */
+protected Users readUsers(DirContext dirContext,String filter, String attributeName) throws NamingException{	
+	Users users = new Users();
+	NamingEnumeration<SearchResult> enSearch = null;
+	try{
+		LdapUserProperties userProps = getConfiguration().getUserProperties();
+		String sNameAttribute = userProps.getUserDisplayNameAttribute();
+	    String sBaseDN = userProps.getUserSearchDIT();
+	    String sFilter = userProps.returnUserLoginSearchFilter(filter);
+	    if(attributeName != null){	    
+	    	sFilter = userProps.returnUserNewRequestSearchFilter(filter, attributeName);
+	    }
+	    SearchControls controls = new SearchControls();
+	    controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+	    if (sNameAttribute.length() > 0) {
+	      String[] aReturn = new String[1];
+	      aReturn[0] = sNameAttribute;
+	      controls.setReturningAttributes(aReturn);
+	    }
+	    
+	    enSearch = dirContext.search(sBaseDN,sFilter,controls);
+	    try { 
+	      while (enSearch.hasMore()) {
+	        SearchResult result = (SearchResult)enSearch.next();
+	        String sDN = buildFullDN(result.getName(),sBaseDN);
+	        if (sDN.length() > 0) {
+	          String sName = "";
+	          if (sNameAttribute.length() > 0) {
+	            Attribute attrName = result.getAttributes().get(sNameAttribute);
+	            if ((attrName != null) && (attrName.size() > 0)) {
+	              sName = Val.chkStr(attrName.get(0).toString());
+	            }
+	          }
+
+		          User user = new User();
+		          user.setDistinguishedName(sDN);
+		          user.setKey(user.getDistinguishedName());
+		          user.setName(sName);
+		          users.add(user);
+	        }
+	      }
+	    } catch (PartialResultException pre) {
+	      LogUtil.getLogger().finer(pre.toString());
+	    } catch (LimitExceededException lee) {
+	        LogUtil.getLogger().finer(lee.toString());
+	    }
+	}finally {
+	    closeEnumeration(enSearch);
+	}
+    return users;
+}
+
+/**
+ * Builds list of ldap groups matching filter.
+ * @param dirContext the directory context
+ * @param filter the group search filter for ldap
+ * @return the list of groups matching filter
+ * @throws NamingException if an LDAP naming exception occurs
+ */
+protected Groups readGroups(DirContext dirContext,String filter) throws NamingException{	
+	Groups groups = new Groups();
+	NamingEnumeration<SearchResult> enSearch = null;
+	try{
+		LdapGroupProperties groupProps = getConfiguration().getGroupProperties();
+		String sNameAttribute = groupProps.getGroupDisplayNameAttribute();
+	    String sBaseDN = groupProps.getGroupSearchDIT();
+	    String sFilter = groupProps.returnGroupNameSearchFilter(filter);
+	    SearchControls controls = new SearchControls();
+	    controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+	    if (sNameAttribute.length() > 0) {
+	      String[] aReturn = new String[1];
+	      aReturn[0] = sNameAttribute;
+	      controls.setReturningAttributes(aReturn);
+	    }
+	    
+	    enSearch = dirContext.search(sBaseDN,sFilter,controls);
+	    try { 
+	      while (enSearch.hasMore()) {
+	        SearchResult result = (SearchResult)enSearch.next();
+	        String sDN = buildFullDN(result.getName(),sBaseDN);
+	        if (sDN.length() > 0) {
+	          String sName = "";
+	          if (sNameAttribute.length() > 0) {
+	            Attribute attrName = result.getAttributes().get(sNameAttribute);
+	            if ((attrName != null) && (attrName.size() > 0)) {
+	              sName = Val.chkStr(attrName.get(0).toString());
+	            }
+	          }
+
+		          Group group = new Group();
+		          group.setDistinguishedName(sDN);
+		          group.setKey(group.getDistinguishedName());
+		          group.setName(sName);
+		          groups.add(group);
+	        }
+	      }
+	    } catch (PartialResultException pre) {
+	      LogUtil.getLogger().finer(pre.toString());
+	    } catch (LimitExceededException lee) {
+	        LogUtil.getLogger().finer(lee.toString());
+	    }
+	}finally {
+	    closeEnumeration(enSearch);
+	}
+    return groups;
+}
+
+/**
  * Returns a list of distinguished names resulting from a search.
  * <br/>The search is executed with SearchControls.SUBTREE_SCOPE.
  * @param dirContext the directory context
@@ -490,6 +630,8 @@ protected StringSet searchDNs(DirContext dirContext,
         }
       } catch (PartialResultException pre) {
         LogUtil.getLogger().finer(pre.toString());
+      } catch (LimitExceededException lee) {
+          LogUtil.getLogger().finer(lee.toString());
       }
     }
   } finally {

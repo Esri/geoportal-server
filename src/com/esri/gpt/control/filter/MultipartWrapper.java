@@ -132,7 +132,7 @@ private static Logger getLogger() {
 public String getParameter(String name) {
   String[] aValues = _formParameters.get(name);
   if (aValues == null) {
-    return null;
+    return super.getParameter(name);
   } else {
     return aValues[0];
   }

@@ -27,13 +27,11 @@ import com.esri.gpt.framework.jsf.components.UILiveData;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.XsltTemplates;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlOutputText;
 import javax.xml.parsers.ParserConfigurationException;
@@ -41,12 +39,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 /**
@@ -79,6 +72,7 @@ public class Schema extends Component {
   private String            _toEsriXslt = "";
   private ValidationErrors  _validationErrors;
   private String            _xsdLocation = "";
+  private String            _toEsriItemInfoXslt = "";
 
   // constructors ================================================================
   
@@ -122,7 +116,7 @@ public class Schema extends Component {
       if (objectToDuplicate.getGxeEditorDefinition() != null) {
         setGxeEditorDefinition(objectToDuplicate.getGxeEditorDefinition());
       }
-      
+      setToEsriItemInfoXslt(objectToDuplicate.getToEsriItemInfoXslt());
     }
   }
 
@@ -356,6 +350,22 @@ public class Schema extends Component {
    */
   public void setSchematronXslt(String xslt) {
     this._schematronXslt = Val.chkStr(xslt);
+  }
+
+  /**
+   * Gets XSLT (file path) used to perform to ESRI_ItemInformation transformation.
+   * @return XSLT file path
+   */
+  public String getToEsriItemInfoXslt() {
+    return _toEsriItemInfoXslt;
+  }
+
+  /**
+   * Sets XSLT (file path) used to perform to ESRI_ItemInformation transformation.
+   * @param xslt XSLT file path
+   */
+  public void setToEsriItemInfoXslt(String xslt) {
+    this._toEsriItemInfoXslt = Val.chkStr(xslt);
   }
 
   /**
@@ -598,6 +608,7 @@ public class Schema extends Component {
     setToEsriXslt(DomUtil.getAttributeValue(attributes, "toEsriXslt"));
     setXsdLocation(DomUtil.getAttributeValue(attributes, "xsdLocation"));
     setSchematronXslt(DomUtil.getAttributeValue(attributes, "schematronXslt"));
+    setToEsriItemInfoXslt(DomUtil.getAttributeValue(attributes, "toEsriItemInfoXslt"));
 
     // configure the label component
     setLabel(context.getFactory().newLabel(context, DomUtil.findFirst(node, "label")));
@@ -771,6 +782,9 @@ public class Schema extends Component {
     }
     if (getSchematronXslt().length() > 0) {
       sb.append(" schematronXslt=\"").append(getSchematronXslt()).append("\"");
+    }
+    if (getToEsriItemInfoXslt().length() > 0) {
+      sb.append(" toEsriItemInfoXslt=\"").append(getToEsriItemInfoXslt()).append("\"");
     }
     if (getLabel() != null) {
       sb.append("\n").append(getLabel());

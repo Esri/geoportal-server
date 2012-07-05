@@ -41,14 +41,14 @@ public class ItemInfoJsonAdapter {
     ESRI_ItemInformation itemInfo = new ESRI_ItemInformation();
     itemInfo.setId(jsonObject.getString("id"));
     itemInfo.setTitle(jsonObject.getString("title"));
-    itemInfo.setDesc(jsonObject.getString("description"));
+    itemInfo.setDescription(jsonObject.getString("description"));
     itemInfo.setSnippet(jsonObject.getString("snippet"));
     itemInfo.setUrl(jsonObject.getString("url"));
     itemInfo.setOwner(jsonObject.getString("owner"));
     itemInfo.setAccess(jsonObject.getString("access"));
     itemInfo.setCulture(jsonObject.getString("culture"));
     itemInfo.setType(jsonObject.getString("type"));
-    itemInfo.setKeywords(makeListFromJsonArray(jsonObject.getJSONArray("typeKeywords")));
+    itemInfo.setTypeKeywords(makeListFromJsonArray(jsonObject.getJSONArray("typeKeywords")));
     itemInfo.setTags(makeListFromJsonArray(jsonObject.getJSONArray("tags")));
 
     JSONArray extentArray = jsonObject.getJSONArray("extent");

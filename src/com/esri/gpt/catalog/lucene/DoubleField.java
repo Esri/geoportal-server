@@ -191,7 +191,11 @@ public class DoubleField extends DatastoreField {
    */
   @Override
   protected Object makeValueToReturn(String storedValue) {
-    return doubleFromIndexableString(storedValue,getPrecision());
+    try {
+      return Double.parseDouble(storedValue);
+    } catch (NumberFormatException ex) {
+      return null;
+    }
   }
   
   /**

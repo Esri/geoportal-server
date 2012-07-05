@@ -55,6 +55,7 @@ private String esc(String str) {
       proxy="<%=request.getContextPath()%>/catalog/livedata/liveDataProxy.page"
       verbose="true"
       errorMessage="<fmt:message key="catalog.search.liveData.errorMessage"/>"
+      WMSErrorMessage="<fmt:message key="catalog.search.liveData.WMSErrorMessage"/>"
       basemapLabel="<fmt:message key="catalog.search.liveData.basemapLabel"/>"
       tooltips="<fmt:message key="catalog.search.liveData.tooltips"/>"></div>
   </body>

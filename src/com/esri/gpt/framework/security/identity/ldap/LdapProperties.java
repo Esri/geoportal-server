@@ -65,4 +65,23 @@ public String replace(String pattern, String value) {
   return value;
 }
 
+/**
+ * Replaces all occurrences of param within a pattern with the supplied value.
+ * @param pattern the replacement pattern
+ * @param value the replacement value
+ */
+public String replaceParam(String pattern, String value, String param) {
+  pattern = Val.chkStr(pattern);
+  value = Val.chkStr(value);
+  param = Val.chkStr(param);
+  if ((pattern.length() > 0) && (pattern.indexOf("{0}") != -1)) {
+	  param = pattern.replaceAll("\\{0\\}",param);
+  }
+  if ((param.length() > 0) && (param.indexOf("{1}") != -1)) {
+	  value = param.replaceAll("\\{1\\}",value);
+  }
+  return pattern;
+ // return value;
+}
+
 }

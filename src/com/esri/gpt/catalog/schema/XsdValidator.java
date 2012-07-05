@@ -41,6 +41,7 @@ private static HashMap<String,javax.xml.validation.Schema>XSDS;
   
 // instance variables ==========================================================
 private ValidationErrors _validationErrors;
+private String           _xsdLocation = null;
 
 // static initialization
 static {
@@ -143,7 +144,10 @@ public void error(SAXParseException e) throws SAXException {
  */
 private javax.xml.validation.Validator newValidator(Schema schema)
   throws ValidationException {
-  String xsdLocation = schema.getXsdLocation();
+  String xsdLocation = Val.chkStr(_xsdLocation);
+  if (xsdLocation.length() == 0) {
+    xsdLocation = Val.chkStr(schema.getXsdLocation());
+  }
   if (xsdLocation.length() > 0) {
     String sMsg;
     ValidationError error;
@@ -241,9 +245,36 @@ public void validate(Schema schema, Source source)
  */
 public void validate(Schema schema, String xml)
   throws ValidationException {
-  StringReader reader = new StringReader(xml);
-  Source source = new SAXSource(new InputSource(reader));
-  validate(schema,source);
+  _xsdLocation = null;
+  setValidationErrors(new ValidationErrors());
+  String sXsd = Val.chkStr(schema.getXsdLocation());
+  if (sXsd.length() > 0) {
+    int nIdx = sXsd.indexOf("[GML32]");
+    if (nIdx != -1) {
+      String sLeft = Val.chkStr(sXsd.substring(0,nIdx));
+      String sRight = Val.chkStr(sXsd.substring(nIdx+7));
+      sXsd = "";
+      if ((sLeft.length() > 0) && (sRight.length() > 0)) {
+        sXsd = sLeft;
+        if (xml != null) {
+          if (xml.contains("\"http://www.opengis.net/gml/3.2\"") ||
+              xml.contains("'http://www.opengis.net/gml/3.2'")) {
+            sXsd = sRight;
+          }
+        }
+      } else if (sLeft.length() > 0) {
+        sXsd = sLeft;
+      } else if (sRight.length() > 0) {
+        sXsd = sRight;
+      }
+    }
+  }
+  if (sXsd.length() > 0) {
+    _xsdLocation = sXsd;
+    StringReader reader = new StringReader(xml);
+    Source source = new SAXSource(new InputSource(reader));
+    validate(schema,source);
+  }
 }
 
 /**

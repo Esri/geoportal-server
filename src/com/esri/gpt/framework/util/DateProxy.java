@@ -292,6 +292,18 @@ private void resetParts() {
 }
 
 /**
+ * Subtract number of days from current date
+ * @param daysToSubtract number of days to Subtract
+ * @return the Subtracted timestamp
+ */
+public static Timestamp subtractDays(int daysToSubtract) {
+  GregorianCalendar cal = new GregorianCalendar();	    
+  cal.setTimeInMillis(System.currentTimeMillis());
+  cal.add(Calendar.DAY_OF_MONTH, (-1 * daysToSubtract));
+  return new Timestamp(cal.getTimeInMillis()); 
+}
+
+/**
  * Returns a string representation this object.
  * @return the string
  */

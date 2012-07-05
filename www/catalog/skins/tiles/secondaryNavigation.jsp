@@ -17,7 +17,6 @@
 <%@taglib prefix="h" uri="http://java.sun.com/jsf/html"%>
 <%@taglib prefix="tiles" uri="http://struts.apache.org/tags-tiles"  %>
 
-
 <f:subview id="svSecondaryNavigation">
    <f:subview id="svScript">
        <jsp:include page="/catalog/tc/suite_script.jsp"/>
@@ -25,6 +24,7 @@
 
 	<h:form id="frmSecondaryNavigation"
 	            rendered="#{(PageContext.tabStyleMap['catalog.publication']!='' or
+	                PageContext.tabStyleMap['catalog.manage.user.role']!='' or
 	                PageContext.tabStyleMap['catalog.harvest']!='' or 
 	                PageContext.tabStyleMap['catalog.sdisuite']!='') and
 	                PageContext.roleMap['gptPublisher']}">
@@ -40,6 +40,12 @@
 	    value="#{gptMsg['catalog.publication.addMetadata.subMenuCaption']}"
 	    styleClass="#{PageContext.menuStyleMap['catalog.publication.addMetadata']}"/>
 	    
+	  <h:commandLink action="catalog.publication.manage.user.role"
+	    id="publicationManageUserRole"
+	    rendered="#{PageContext.roleMap['gptAdministrator'] and PageContext.manageUser}"
+	    value="#{gptMsg['catalog.publication.manage.user.role.subMenuCaption']}"
+	    styleClass="#{PageContext.menuStyleMap['catalog.publication.manage.user.role']}"/>
+	 	    
 	  <f:subview id="svLinks">
 	            <jsp:include page="/catalog/tc/suite_links.jsp"/>
 	  </f:subview>

@@ -15,12 +15,7 @@
 package com.esri.gpt.control.webharvest.engine;
 
 import com.esri.gpt.framework.util.TimePeriod;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -54,7 +49,7 @@ private static final String PREFIX = "rep";
 /** temporary storage file suffix */
 private static final String SUFFIX = ".txt";
 /** default sub-folder for the intermediate report files */
-private static final String SUBFOLDER = "/reports";
+private static final String SUBFOLDER = "/geoportal/reports";
 /** maximum documents to harvest */
 private Integer maxDocToHarvest;
 /** maximum documents to report */
@@ -69,6 +64,8 @@ private volatile long validated;
 private volatile long added;
 /** number of updated records */
 private volatile long updated;
+/** number of deleted records */
+private volatile long deleted;
 /** directory */
 private File directory;
 /** storage file */
@@ -215,6 +212,15 @@ public synchronized long getAddedCount() {
   @Override
 public synchronized long getModifiedCount() {
   return this.updated;
+}
+
+  @Override
+public synchronized long getDeletedCount() {
+  return deleted;
+}  
+
+public synchronized void setDeletedCount(long deletedCount) {
+  this.deleted = deletedCount;
 }
 
   @Override
@@ -405,6 +411,7 @@ private String getReportStats() {
   sb.append("<docsAdded>").append(added).append("</docsAdded>");
   sb.append("<docsUpdated>").append(updated).append("</docsUpdated>");
   sb.append("<docsFailed>").append(harvested - (added + updated)).append("</docsFailed>");
+  sb.append("<docsDeleted>").append(deleted).append("</docsDeleted>");
   sb.append("<duration>").append(new TimePeriod(getDuration()).toString()).append("</duration>");
   sb.append("<average>").append(getPerformance()).append("rec/min</average>");
   if (maxRepRecords!=null && harvested>maxRepRecords) {

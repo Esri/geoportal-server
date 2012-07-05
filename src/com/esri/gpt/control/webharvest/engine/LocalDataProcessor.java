@@ -38,21 +38,13 @@ import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.security.identity.IdentityAdapter;
 import com.esri.gpt.framework.security.identity.IdentityConfiguration;
 import com.esri.gpt.framework.security.identity.local.LocalDao;
-import com.esri.gpt.framework.security.principal.Group;
-import com.esri.gpt.framework.security.principal.Groups;
-import com.esri.gpt.framework.security.principal.Publisher;
-import com.esri.gpt.framework.security.principal.User;
-import com.esri.gpt.framework.security.principal.Users;
+import com.esri.gpt.framework.security.principal.*;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.XsltTemplate;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.transform.TransformerException;
@@ -169,6 +161,10 @@ class LocalDataProcessor implements DataProcessor {
     
     try {
       rp.setEndTime(endTime);
+      
+      // cleanup
+      long deletedCount = performCleanup(context, unit, helper);
+      rp.setDeletedCount(deletedCount);
 
       // prepare event record
       HeRecord event = new HeRecord(unit.getRepository());
@@ -176,6 +172,7 @@ class LocalDataProcessor implements DataProcessor {
       event.setHarvestedCount((int) rp.getHarvestedCount());
       event.setValidatedCount((int) rp.getValidatedCount());
       event.setPublishedCount((int) rp.getPublishedCount());
+      event.setDeletedCount(deletedCount);
 
       // save report
       HeUpdateRequest updateReq = new HeUpdateRequest(context, event);
@@ -200,28 +197,6 @@ class LocalDataProcessor implements DataProcessor {
 
       sendNotification(context, event);
 
-      // perform cleanup for the specific harvest repository
-      if (unit.getCleanupFlag()) {
-        // create Iterable based on MapEntryIterator
-        Iterable<Map.Entry<String, String>> iterable = new Iterable<Map.Entry<String, String>>() {
-
-          @Override
-          public Iterator<Map.Entry<String, String>> iterator() {
-            return new MapEntryIterator(helper.getSourceUris());
-          }
-        };
-
-        if (unit.getPublisher() != null) {
-          // delete all records identified by each sourceUri available in Iterable
-          ApplicationConfiguration appCfg = ApplicationContext.getInstance().getConfiguration();
-          boolean webharvesterCleanup = Val.chkBool(appCfg.getCatalogConfiguration().getParameters().getValue("webharvester.cleanup"), true);
-          if (webharvesterCleanup) {
-            DeleteSourceUrisRequest deleteSourceUrisRequest = new DeleteSourceUrisRequest(context, unit.getPublisher(), iterable);
-            deleteSourceUrisRequest.execute();
-          }
-        }
-      }
-
       // notify listeners
       listener.onHarvestEnd(unit.getRepository());
 
@@ -240,6 +215,43 @@ class LocalDataProcessor implements DataProcessor {
     }
   }
 
+  /**
+   * Performs cleanup.
+   * @param context request context
+   * @param unit execution unit
+   * @param helper execution unit helper
+   */
+  private long performCleanup(RequestContext context, ExecutionUnit unit, final ExecutionUnitHelper helper) {
+      // perform cleanup for the specific harvest repository
+      if (unit.getCleanupFlag()) {
+        // create Iterable based on MapEntryIterator
+        Iterable<Map.Entry<String, String>> iterable = new Iterable<Map.Entry<String, String>>() {
+
+          @Override
+          public Iterator<Map.Entry<String, String>> iterator() {
+            return new MapEntryIterator(helper.getSourceUris());
+          }
+        };
+
+        if (unit.getPublisher() != null) {
+          // delete all records identified by each sourceUri available in Iterable
+          ApplicationConfiguration appCfg = ApplicationContext.getInstance().getConfiguration();
+          boolean webharvesterCleanup = Val.chkBool(appCfg.getCatalogConfiguration().getParameters().getValue("webharvester.cleanup"), true);
+          if (webharvesterCleanup) {
+            LOGGER.info("[SYNCHRONIZER] Attempting to clean non-existend records from: "+unit);
+            DeleteSourceUrisRequest deleteSourceUrisRequest = new DeleteSourceUrisRequest(context, unit.getPublisher(), iterable);
+            try {
+              deleteSourceUrisRequest.execute();
+              LOGGER.info("[SYNCHRONIZER] Cleaned "+deleteSourceUrisRequest.getDeletedCount()+" records from: "+unit);
+              return deleteSourceUrisRequest.getDeletedCount();
+            } catch (Exception ex) {
+              LOGGER.log(Level.SEVERE, "[SYNCHRONIZER] Error when attempting to clean non-existend records from: "+unit, ex);
+            }
+          }
+        }
+      }
+      return 0;
+  }
   /**
    * Called uppon harvesting a single metadata.
    * @param unit execution unit
@@ -384,11 +396,12 @@ class LocalDataProcessor implements DataProcessor {
    * @param repository repository
    * @param sourceUris source URI's collector
    * @throws SQLException if accessing database fails
+   * @throws IOException if accessing index fails
    */
-  private void collectExistingSourceURIs(RequestContext context, HrRecord repository, final SourceUriArray sourceUris) throws SQLException {
+  private void collectExistingSourceURIs(RequestContext context, HrRecord repository, final SourceUriArray sourceUris) throws SQLException, IOException {
     CollectSourceUrisRequest request = new CollectSourceUrisRequest(context, repository) {
       @Override
-      protected void onSourceUri(String sourceUri, String uuid) {
+      protected void onSourceUri(String sourceUri, String uuid) throws IOException {
         sourceUris.add(new String[]{sourceUri, uuid});
       }
     };

@@ -20,6 +20,7 @@ import com.esri.gpt.catalog.context.CatalogIndexException;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.security.principal.Publisher;
 import com.esri.gpt.framework.sql.BaseDao;
+import java.io.IOException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -68,10 +69,12 @@ class CatalogDao extends BaseDao {
    * @throws SQLException if an exception occurs while communicating with the database
    * @throws ImsServiceException if an exception occurs during delete
    * @throws CatalogIndexException if an exception occurs during delete
+   * @throws IOException if accessing index fails
    */
   protected void deleteSourceURIs(final ProcessingContext context, Map<String,String> sourceURIs)
-    throws SQLException, ImsServiceException, CatalogIndexException {
+    throws SQLException, ImsServiceException, CatalogIndexException, IOException {
     this.deleteSourceURIs(context.getPublisher(), sourceURIs.entrySet(), new CatalogRecordListener() {
+      @Override
       public void onRecord(String sourceUri, String uuid) {
         context.incrementNumberDeleted();
         ProcessedRecord record = new ProcessedRecord();
@@ -90,9 +93,10 @@ class CatalogDao extends BaseDao {
    * @throws SQLException if an exception occurs while communicating with the database
    * @throws ImsServiceException if an exception occurs during delete
    * @throws CatalogIndexException if an exception occurs during delete
+   * @throws IOException if accessing index fails
    */
   protected void deleteSourceURIs(Publisher publisher, Iterable<Map.Entry<String,String>> sourceURIs, CatalogRecordListener listener)
-      throws ImsServiceException, SQLException, CatalogIndexException {
+      throws ImsServiceException, SQLException, CatalogIndexException, IOException {
     ImsMetadataAdminDao adminDao = new ImsMetadataAdminDao(getRequestContext());
     DeleteMetadataRequest delRequest = new DeleteMetadataRequest(
         this.getRequestContext(),publisher);
@@ -153,9 +157,10 @@ class CatalogDao extends BaseDao {
    * @param siteUuid site UUID
    * @param listener source URI listener
    * @throws SQLException if an exception occurs while communicating with the database
+   * @throws IOException if accessing index fails
    */
   protected void querySourceURIs(String siteUuid, CatalogRecordListener listener)
-    throws SQLException {
+    throws SQLException, IOException {
     PreparedStatement st = null;
     try {
       String table = this.getResourceTableName();
@@ -179,6 +184,6 @@ class CatalogDao extends BaseDao {
   }
 
   protected static interface CatalogRecordListener {
-    void onRecord(String sourceUri, String uuid);
+    void onRecord(String sourceUri, String uuid) throws IOException;
   }
 }

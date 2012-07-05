@@ -171,7 +171,7 @@ public class ResponseInfo {
 
   /**
    * Sets responseHeaders.
-   * @param responseHeaders responseHeaders
+   * @param headers responseHeaders
    */
   public void setResponseHeaders(Header[] headers) {
     this.responseHeaders = headers!=null? headers: new Header[]{};

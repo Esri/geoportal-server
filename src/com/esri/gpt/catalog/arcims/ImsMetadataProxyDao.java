@@ -13,47 +13,54 @@
  * limitations under the License.
  */
 package com.esri.gpt.catalog.arcims;
+
 import com.esri.gpt.catalog.context.CatalogIndexException;
 import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.security.identity.IdentityAdapter;
+import com.esri.gpt.framework.security.principal.Group;
 import com.esri.gpt.framework.security.principal.Publisher;
+import com.esri.gpt.framework.security.principal.User;
 import com.esri.gpt.framework.sql.BaseDao;
 import com.esri.gpt.framework.sql.IClobMutator;
 import com.esri.gpt.framework.sql.ManagedConnection;
 import com.esri.gpt.framework.util.Val;
-
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Manages ArcIMS Metadata Server like tables in the absence of the metadata server.
+ * Manages ArcIMS Metadata Server like tables in the absence of the metadata
+ * server.
  */
 class ImsMetadataProxyDao extends BaseDao {
-  
-  /** class variables ========================================================= */
+
+  /**
+   * class variables =========================================================
+   */
   private static final Logger LOGGER = Logger.getLogger(ImsMetadataProxyDao.class.getName());
-  
-  /** instance variables ====================================================== */
+  /**
+   * instance variables ======================================================
+   */
   private Publisher publisher;
-  
-  /** constructors ============================================================ */
-  
+  private boolean groupsLoaded;
+
+  /**
+   * constructors ============================================================
+   */
   /**
    * Constructs with an associated request context.
+   *
    * @param requestContext the request context
    */
   protected ImsMetadataProxyDao(RequestContext requestContext, Publisher publisher) {
     super(requestContext);
     this.publisher = publisher;
   }
-  
-  /** properties ============================================================== */
 
+  /**
+   * properties ==============================================================
+   */
   private String getResourceTableName() {
     return getRequestContext().getCatalogConfiguration().getResourceTableName();
   }
@@ -61,19 +68,22 @@ class ImsMetadataProxyDao extends BaseDao {
   private String getResourceDataTableName() {
     return getRequestContext().getCatalogConfiguration().getResourceDataTableName();
   }
-  
-  /** methods ================================================================= */
-  
+
+  /**
+   * methods =================================================================
+   */
   /**
    * Authorizes a request.
+   *
    * @param request the underlying request
    * @param the UUID of the subject record
-   * @throws ImsServiceException typically related to an authorization related exception
+   * @throws ImsServiceException typically related to an authorization related
+   * exception
    * @throws SQLException if a database exception occurs
    */
-  private void authorize(ImsRequest request, String uuid) 
-    throws ImsServiceException, SQLException {
-    
+  private void authorize(ImsRequest request, String uuid)
+          throws ImsServiceException, SQLException {
+
     boolean checkOwner = false;
     if (request instanceof PutMetadataRequest) {
       checkOwner = true;
@@ -89,78 +99,84 @@ class ImsMetadataProxyDao extends BaseDao {
       if (!this.publisher.getIsAdministrator()) {
         throw new ImsServiceException("TransferOwnershipRequest: not authorized.");
       }
-    } 
-    
+    }
+
     if (checkOwner) {
       int ownerID = this.queryOwnerByUuid(uuid);
       if ((ownerID != -1) && (ownerID != this.publisher.getLocalID())) {
-        String username = this.queryUsernameByID(ownerID);
-        String msg = "The document is owned by another user: "+username+", "+uuid;
-        throw new ImsServiceException(msg);
+        String username = Val.chkStr(queryUsernameByID(ownerID));
+        if (!belongsToTheGroup(username)) {
+          String msg = "The document is owned by another user: " + username + ", " + uuid;
+          throw new ImsServiceException(msg);
+        }
       }
     }
-    
+
   }
-  
+
   /**
    * Deletes a record from the proxied ArcIMS metadata table.
+   *
    * @param request the underlying request
    * @param uuid the UUID for the record to delete
    * @return the number of rows affected
-   * @throws ImsServiceException typically related to an authorization related exception
+   * @throws ImsServiceException typically related to an authorization related
+   * exception
    * @throws SQLException if a database exception occurs
    */
-  protected int deleteRecord(DeleteMetadataRequest request, String uuid) 
-    throws ImsServiceException, SQLException {
+  protected int deleteRecord(DeleteMetadataRequest request, String uuid)
+          throws ImsServiceException, SQLException {
     Connection con = null;
     boolean autoCommit = true;
     PreparedStatement st = null;
     int nRows = 0;
     try {
-      this.authorize(request,uuid);
+      this.authorize(request, uuid);
       ImsMetadataAdminDao adminDao = new ImsMetadataAdminDao(getRequestContext());
       nRows = adminDao.deleteRecord(uuid);
     } catch (CatalogIndexException ex) {
-      if (con!=null) {
+      if (con != null) {
         con.rollback();
       }
       throw new ImsServiceException(ex.getMessage(), ex);
     } catch (ImsServiceException ex) {
-      if (con!=null) {
+      if (con != null) {
         con.rollback();
       }
       throw ex;
     } catch (SQLException ex) {
-      if (con!=null) {
+      if (con != null) {
         con.rollback();
       }
       throw ex;
     } finally {
       closeStatement(st);
-      if (con!=null) {
+      if (con != null) {
         con.setAutoCommit(autoCommit);
       }
     }
     return nRows;
   }
-  
+
   /**
-   * Determines if a document UUID exists within the proxied ArcIMS metadata table.
+   * Determines if a document UUID exists within the proxied ArcIMS metadata
+   * table.
+   *
    * @param con the JDBC connection
    * @param uuid the document UUID to check
    * @return true if the document UUID exists
    * @throws SQLException if a database exception occurs
    */
   private long doesRecordExist(String table, String uuid)
-    throws SQLException {
+          throws SQLException {
     long id = -1;
     PreparedStatement st = null;
     try {
       Connection con = returnConnection().getJdbcConnection();
-      String sSql = "SELECT ID FROM "+table+" WHERE DOCUUID=?";
+      String sSql = "SELECT ID FROM " + table + " WHERE DOCUUID=?";
       logExpression(sSql);
       st = con.prepareStatement(sSql);
-      st.setString(1,uuid);
+      st.setString(1, uuid);
       ResultSet rs = st.executeQuery();
       if (rs.next()) {
         id = rs.getLong(1);
@@ -173,37 +189,39 @@ class ImsMetadataProxyDao extends BaseDao {
 
   /**
    * Inserts or updates a record within the proxied ArcIMS metadata table.
+   *
    * @param request the underlying request
    * @param info the information for the document to be inserted
    * @return the number of rows affected
-   * @throws ImsServiceException typically related to an authorization related exception
+   * @throws ImsServiceException typically related to an authorization related
+   * exception
    * @throws SQLException if a database exception occurs
    */
   protected int insertRecord(PutMetadataRequest request, PutMetadataInfo info)
-    throws ImsServiceException, SQLException {
+          throws ImsServiceException, SQLException {
     Connection con = null;
     boolean autoCommit = true;
     PreparedStatement st = null;
     ResultSet rs = null;
-    
+
     // initialize
     int nRows = 0;
-    String sXml  = info.getXml();
+    String sXml = info.getXml();
     String sUuid = info.getUuid();
     String sName = info.getName();
     String sThumbnailBinary = info.getThumbnailBinary();
     String sTable = this.getResourceTableName();
     String sDataTable = this.getResourceDataTableName();
-    long id = doesRecordExist(sTable,sUuid);
-    
+    long id = doesRecordExist(sTable, sUuid);
+
     try {
       ManagedConnection mc = returnConnection();
       con = mc.getJdbcConnection();
       autoCommit = con.getAutoCommit();
       con.setAutoCommit(false);
 
-      if (id<0) {
-        
+      if (id < 0) {
+
         // insert a record
         StringBuffer sql = new StringBuffer();
         sql.append("INSERT INTO ").append(sTable);
@@ -213,23 +231,23 @@ class ImsMetadataProxyDao extends BaseDao {
         sql.append("OWNER");
         sql.append(")");
         sql.append(" VALUES(?,?,?)");
-        
+
         logExpression(sql.toString());
 
         st = con.prepareStatement(sql.toString());
         int n = 1;
-        st.setString(n++,sUuid);
-        st.setString(n++,sName);
-        st.setInt(n++,this.publisher.getLocalID());
+        st.setString(n++, sUuid);
+        st.setString(n++, sName);
+        st.setInt(n++, this.publisher.getLocalID());
         nRows = st.executeUpdate();
 
         closeStatement(st);
 
         if (nRows > 0) {
           if (getIsDbCaseSensitive(this.getRequestContext())) {
-            st = con.prepareStatement("SELECT id FROM "+sTable+" WHERE UPPER(docuuid)=?");
+            st = con.prepareStatement("SELECT id FROM " + sTable + " WHERE UPPER(docuuid)=?");
           } else {
-            st = con.prepareStatement("SELECT id FROM "+sTable+" WHERE docuuid=?");
+            st = con.prepareStatement("SELECT id FROM " + sTable + " WHERE docuuid=?");
           }
           st.setString(1, sUuid.toUpperCase());
           rs = st.executeQuery();
@@ -246,16 +264,16 @@ class ImsMetadataProxyDao extends BaseDao {
 
           logExpression(sql.toString());
           st = con.prepareStatement(sql.toString());
-          st.setString(1,sUuid);
-          st.setLong(2,id);
-          st.setString(3,sXml);
+          st.setString(1, sUuid);
+          st.setLong(2, id);
+          st.setString(3, sXml);
           st.executeUpdate();
         }
 
       } else {
-        
+
         // update a record
-        this.authorize(request,sUuid);
+        this.authorize(request, sUuid);
         StringBuffer sql = new StringBuffer();
         sql.append("UPDATE ").append(sTable);
         sql.append(" SET ");
@@ -272,20 +290,20 @@ class ImsMetadataProxyDao extends BaseDao {
         int n = 1;
         if (!request.getLockTitle()) {
           // update title only if it's allowed to (occurs only during synchronization)
-          st.setString(n++,sName);
+          st.setString(n++, sName);
         }
-        st.setInt(n++,this.publisher.getLocalID());
+        st.setInt(n++, this.publisher.getLocalID());
         st.setTimestamp(n++, new Timestamp(System.currentTimeMillis()));
-        st.setString(n++,sUuid);
+        st.setString(n++, sUuid);
         nRows = st.executeUpdate();
-        if (nRows > 0) { 
+        if (nRows > 0) {
           request.setActionStatus(ImsRequest.ACTION_STATUS_REPLACED);
         }
 
         closeStatement(st);
 
         sql = new StringBuffer();
-        if (doesRecordExist(sDataTable, sUuid)>=0) {
+        if (doesRecordExist(sDataTable, sUuid) >= 0) {
           sql.append("UPDATE ").append(sDataTable);
           sql.append(" SET DOCUUID=?, XML=?, THUMBNAIL=?");
           sql.append(" WHERE ID=?");
@@ -297,42 +315,43 @@ class ImsMetadataProxyDao extends BaseDao {
 
         logExpression(sql.toString());
         st = con.prepareStatement(sql.toString());
-        st.setString(1,sUuid);
-        st.setString(2,sXml);
-        st.setBytes(3,null);
-        st.setLong(4,id);
+        st.setString(1, sUuid);
+        st.setString(2, sXml);
+        st.setBytes(3, null);
+        st.setLong(4, id);
         st.executeUpdate();
       }
 
       con.commit();
     } catch (ImsServiceException ex) {
-      if (con!=null) {
+      if (con != null) {
         con.rollback();
       }
       throw ex;
     } catch (SQLException ex) {
-      if (con!=null) {
+      if (con != null) {
         con.rollback();
       }
       throw ex;
     } finally {
       closeResultSet(rs);
       closeStatement(st);
-      if (con!=null) {
+      if (con != null) {
         con.setAutoCommit(autoCommit);
       }
     }
-    
+
     // thumbnail binary
     if ((sThumbnailBinary != null) && (sThumbnailBinary.length() > 0)) {
-      this.updateThumbnail(sThumbnailBinary,sUuid);
+      this.updateThumbnail(sThumbnailBinary, sUuid);
     }
-    
+
     return nRows;
   }
-  
+
   /**
    * Queries the owner id associated with a document UUID.
+   *
    * @param uuid the document UUID
    * @return the owner name (empty string if not found)
    * @throws SQLException if a database exception occurs
@@ -354,7 +373,7 @@ class ImsMetadataProxyDao extends BaseDao {
         }
         logExpression(sql.toString());
         st = con.prepareStatement(sql.toString());
-        st.setString(1,username.toUpperCase());
+        st.setString(1, username.toUpperCase());
         ResultSet rs = st.executeQuery();
         if (rs.next()) {
           ownerID = rs.getInt(1);
@@ -365,9 +384,10 @@ class ImsMetadataProxyDao extends BaseDao {
     }
     return ownerID;
   }
-  
+
   /**
    * Queries the owner id associated with a document UUID.
+   *
    * @param uuid the document UUID
    * @return the owner name (empty string if not found)
    * @throws SQLException if a database exception occurs
@@ -384,7 +404,7 @@ class ImsMetadataProxyDao extends BaseDao {
         sql.append(" WHERE DOCUUID=?");
         logExpression(sql.toString());
         st = con.prepareStatement(sql.toString());
-        st.setString(1,uuid);
+        st.setString(1, uuid);
         ResultSet rs = st.executeQuery();
         if (rs.next()) {
           ownerID = rs.getInt(1);
@@ -395,9 +415,10 @@ class ImsMetadataProxyDao extends BaseDao {
     }
     return ownerID;
   }
-  
+
   /**
    * Queries the owner id associated with a document UUID.
+   *
    * @param uuid the document UUID
    * @return the owner name (empty string if not found)
    * @throws SQLException if a database exception occurs
@@ -407,35 +428,37 @@ class ImsMetadataProxyDao extends BaseDao {
     PreparedStatement st = null;
     try {
       String table = this.getRequestContext().getCatalogConfiguration().getUserTableName();
-        Connection con = returnConnection().getJdbcConnection();
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT USERNAME FROM ").append(table);
-        sql.append(" WHERE USERID=?");
-        logExpression(sql.toString());
-        st = con.prepareStatement(sql.toString());
-        st.setInt(1,userID);
-        ResultSet rs = st.executeQuery();
-        if (rs.next()) {
-          username = rs.getString(1);
-        }
+      Connection con = returnConnection().getJdbcConnection();
+      StringBuilder sql = new StringBuilder();
+      sql.append("SELECT USERNAME FROM ").append(table);
+      sql.append(" WHERE USERID=?");
+      logExpression(sql.toString());
+      st = con.prepareStatement(sql.toString());
+      st.setInt(1, userID);
+      ResultSet rs = st.executeQuery();
+      if (rs.next()) {
+        username = rs.getString(1);
+      }
     } finally {
       closeStatement(st);
     }
     return username;
   }
-  
+
   /**
    * Reads a record from the proxied ArcIMS metadata table.
+   *
    * @param request the underlying request
    * @param uuid the UUID for the record to read
-   * @throws ImsServiceException typically related to an authorization related exception
+   * @throws ImsServiceException typically related to an authorization related
+   * exception
    * @throws SQLException if a database exception occurs
    */
-  protected void readRecord(GetDocumentRequest request, String uuid) 
-    throws ImsServiceException, SQLException {
+  protected void readRecord(GetDocumentRequest request, String uuid)
+          throws ImsServiceException, SQLException {
     PreparedStatement st = null;
     try {
-      this.authorize(request,uuid);
+      this.authorize(request, uuid);
 
       ManagedConnection mc = returnConnection();
       Connection con = mc.getJdbcConnection();
@@ -446,23 +469,23 @@ class ImsMetadataProxyDao extends BaseDao {
       sql.append(" FROM ").append(getResourceTableName()).append(" WHERE DOCUUID=?");
       logExpression(sql.toString());
       st = con.prepareStatement(sql.toString());
-      st.setString(1,uuid);
+      st.setString(1, uuid);
       ResultSet rs = st.executeQuery();
       if (rs.next()) {
         request.setUpdateTimestamp(rs.getTimestamp(1));
         request.setActionStatus(ImsRequest.ACTION_STATUS_OK);
-        
+
         closeStatement(st);
 
         sql = new StringBuffer();
         sql.append("SELECT XML");
         sql.append(" FROM ").append(getResourceDataTableName()).append(" WHERE DOCUUID=?");
         st = con.prepareStatement(sql.toString());
-        st.setString(1,uuid);
+        st.setString(1, uuid);
         rs = st.executeQuery();
 
         if (rs.next()) {
-          request.setXml(cm.get(rs,1));
+          request.setXml(cm.get(rs, 1));
         }
       }
 
@@ -470,23 +493,25 @@ class ImsMetadataProxyDao extends BaseDao {
       closeStatement(st);
     }
   }
-  
+
   /**
    * Transfers ownership for a record in the proxied ArcIMS metadata table.
+   *
    * @param request the underlying request
    * @param uuid the UUID for the record to read
    * @return the number of rows affected
-   * @throws ImsServiceException typically related to an authorization related exception
+   * @throws ImsServiceException typically related to an authorization related
+   * exception
    * @throws SQLException if a database exception occurs
    */
-  protected int transferOwnership(TransferOwnershipRequest request, String uuid, String newOwner) 
-    throws ImsServiceException, SQLException {
+  protected int transferOwnership(TransferOwnershipRequest request, String uuid, String newOwner)
+          throws ImsServiceException, SQLException {
     PreparedStatement st = null;
     try {
-      this.authorize(request,uuid);
+      this.authorize(request, uuid);
       int ownerID = this.queryOwnerByUsername(newOwner);
       if (ownerID == -1) {
-        throw new ImsServiceException("Unrecognized publisher: "+newOwner);
+        throw new ImsServiceException("Unrecognized publisher: " + newOwner);
       }
       StringBuilder sql = new StringBuilder();
       sql.append("UPDATE ").append(this.getResourceTableName());
@@ -494,10 +519,10 @@ class ImsMetadataProxyDao extends BaseDao {
       logExpression(sql.toString());
       Connection con = returnConnection().getJdbcConnection();
       st = con.prepareStatement(sql.toString());
-      st.setInt(1,ownerID);
-      st.setString(2,uuid);
+      st.setInt(1, ownerID);
+      st.setString(2, uuid);
       int nRows = st.executeUpdate();
-      if (nRows > 0) { 
+      if (nRows > 0) {
         request.setActionStatus(ImsRequest.ACTION_STATUS_REPLACED);
       }
       return nRows;
@@ -505,7 +530,7 @@ class ImsMetadataProxyDao extends BaseDao {
       closeStatement(st);
     }
   }
-  
+
   private void updateThumbnail(String base64Thumbnail, String uuid) {
     PreparedStatement st = null;
     try {
@@ -516,16 +541,66 @@ class ImsMetadataProxyDao extends BaseDao {
       logExpression(sql.toString());
       Connection con = returnConnection().getJdbcConnection();
       st = con.prepareStatement(sql.toString());
-      st.setBytes(1,bytes);
-      st.setString(2,uuid);
+      st.setBytes(1, bytes);
+      st.setString(2, uuid);
       st.executeUpdate();
     } catch (IOException e) {
-      LOGGER.log(Level.SEVERE,"Error converting base64 thumbnail to bytes.",e);
+      LOGGER.log(Level.SEVERE, "Error converting base64 thumbnail to bytes.", e);
     } catch (SQLException e) {
-      LOGGER.log(Level.SEVERE,"Error saving thumbnail blob to database.",e);
+      LOGGER.log(Level.SEVERE, "Error saving thumbnail blob to database.", e);
     } finally {
       closeStatement(st);
     }
   }
 
+  /**
+   * Checks if publisher belongs to the group
+   * @param groupName group name
+   * @return <code>true</code> if publisher belongs to the group
+   * @throws ImsServiceException
+   * @throws SQLException 
+   */
+  private boolean belongsToTheGroup(String groupName) throws ImsServiceException, SQLException {
+    assertUserGroups();
+    boolean isPartOfTheGroup = false;
+    for (Group grp : publisher.getGroups().values()) {
+      if (groupName.equals(grp.getName())) {
+        isPartOfTheGroup = true;
+        break;
+      }
+    }
+    return isPartOfTheGroup;
+  }
+
+  /**
+   * Asserts user's groups
+   *
+   * @throws SQLException if accessing database fails
+   * @throws ImsServiceException if any other problem occurs
+   */
+  private void assertUserGroups() throws ImsServiceException, SQLException {
+    if (!groupsLoaded) {
+      if (publisher.getGroups().isEmpty()) {
+        loadUserGroups(publisher);
+      }
+      groupsLoaded = true;
+    }
+  }
+
+  /**
+   * Loads user's groups
+   *
+   * @param user user
+   * @throws SQLException if accessing database fails
+   * @throws ImsServiceException if any other problem occurs
+   */
+  private void loadUserGroups(User user) throws SQLException, ImsServiceException {
+    try {
+      RequestContext requestContext = RequestContext.extract(null);
+      IdentityAdapter identityAdapter = requestContext.newIdentityAdapter();
+      identityAdapter.readUserGroups(user);
+    } catch (Exception ex) {
+      throw new ImsServiceException("Error evaluation asserting groups.");
+    }
+  }
 }

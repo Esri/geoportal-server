@@ -55,7 +55,7 @@ private static final String DEFAULT_LANG= "en";
 // CX help file
 private static final String CX_HELP = "cxhelp.xml";
 // REMOTE_HELP_SYSTEM is an absolute URL to the help system on the net.
-private static final String REMOTE_HELP_SYSTEM = "https://sourceforge.net/apps/mediawiki/geoportal/index.php?title=";
+private static final String REMOTE_HELP_SYSTEM = "http://sourceforge.net/apps/mediawiki/geoportal/index.php?title=";
 %>
 
 <%!
@@ -250,17 +250,9 @@ String helpPage = pages.get(cmd);
 // help full url
 String helpFullUrl = "";
 
-// CASE 1: only default help set is available and Geoportal IS NOT user locale aware
-helpFullUrl = concat(rootContextPath, LOCAL_HELP_SYSTEM, DEFAULT_LANG, CONTENT_DIR, "index.html#", helpPartialUrl);
 
-// CASE 2: there are several help sets available and Geoportal IS user locale aware
-//helpFullUrl = concat(rootContextPath, LOCAL_HELP_SYSTEM, lang, CONTENT_DIR, "index.html#", helpPartialUrl);
-//if (!checkUrl(helpFullUrl)) {
-//  helpFullUrl = concat(rootContextPath, LOCAL_HELP_SYSTEM, DEFAULT_LANG, CONTENT_DIR, "index.html#", helpPartialUrl);
-//}
-
-// CASE 3: only web help is awailable
-//helpFullUrl = REMOTE_HELP_SYSTEM + helpPage;
+// Only web help is awailable
+helpFullUrl = REMOTE_HELP_SYSTEM + helpPage;
 
 // redirect to the page
 response.sendRedirect(helpFullUrl);

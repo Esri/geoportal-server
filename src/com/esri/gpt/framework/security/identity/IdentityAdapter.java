@@ -19,11 +19,16 @@ import com.esri.gpt.framework.security.credentials.ChangePasswordCriteria;
 import com.esri.gpt.framework.security.credentials.CredentialPolicyException;
 import com.esri.gpt.framework.security.credentials.CredentialsDeniedException;
 import com.esri.gpt.framework.security.credentials.RecoverPasswordCriteria;
+import com.esri.gpt.framework.security.principal.Groups;
 import com.esri.gpt.framework.security.principal.User;
 import com.esri.gpt.framework.security.principal.Users;
 
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
 import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
 
 /**
  * Super class for an identity adapter.
@@ -80,7 +85,6 @@ public void setRequestContext(RequestContext requestContext) {
 }
   
 // methods =====================================================================
-
 /**
  * Authenticates credentials.
  * @param user the subject user
@@ -105,6 +109,18 @@ public void changePassword(User user, ChangePasswordCriteria criteria)
   throws CredentialsDeniedException, CredentialPolicyException, 
          IdentityException, NamingException, SQLException {
   throwNotSupportedException("changePassword");
+}
+
+/**
+ * Delete user from ldap
+ * @param user the user to be deleted from ldap.
+ * @throws CredentialPolicyException if the credentials are invalid
+ * @throws IdentityException if a system error occurs preventing the action
+ * @throws NamingException if an LDAP naming exception occurs
+ * @throws SQLException if a database communication exception occurs
+ */
+public void deleteUser(User user)
+	throws CredentialPolicyException, IdentityException, NamingException, SQLException {
 }
 
 /**
@@ -169,9 +185,37 @@ public void registerUser(User user)
 }
 
 /**
+ * Adds user attribute.
+ * @param  objectDn the subject dn
+ * @param  role the user attribute will be added.
+ * @param  role the user attribute value will be added.
+ * @throws CredentialPolicyException if the credentials are invalid
+ * @throws IdentityException if a system error occurs preventing the action
+ * @throws NamingException if an LDAP naming exception occurs
+ * @throws SQLException if a database communication exception occurs
+ */
+public void addAttribute(String objectDn, String attributeName, String attributeValue)
+  throws CredentialPolicyException, IdentityException, NamingException, SQLException {
+}
+
+/**
+ * Adds user attribute.
+ * @param  objectDn the subject dn
+ * @param  role the user attribute will be removed.
+ * @param  role the user attribute value will be removed
+ * @throws CredentialPolicyException if the credentials are invalid
+ * @throws IdentityException if a system error occurs preventing the action
+ * @throws NamingException if an LDAP naming exception occurs
+ * @throws SQLException if a database communication exception occurs
+ */
+public void removeAttribute(String objectDn, String attributeName, String attributeValue)
+  throws CredentialPolicyException, IdentityException, NamingException, SQLException {
+}
+
+/**
  * Adds user to role.
  * @param user the subject user
- * @param  role
+ * @param  role the role user will be added.
  * @throws CredentialPolicyException if the credentials are invalid
  * @throws IdentityException if a system error occurs preventing the action
  * @throws NamingException if an LDAP naming exception occurs
@@ -179,6 +223,33 @@ public void registerUser(User user)
  */
 public void addUserToRole(User user, String role)
   throws CredentialPolicyException, IdentityException, NamingException, SQLException {
+}
+
+/**
+ * Adds user to group.
+ * @param user the subject user
+ * @param  groupDn the dn of group user will be added.
+ * @throws CredentialPolicyException if the credentials are invalid
+ * @throws IdentityException if a system error occurs preventing the action
+ * @throws NamingException if an LDAP naming exception occurs
+ * @throws SQLException if a database communication exception occurs
+ */
+public void addUserToGroup(User user, String groupDn)
+  throws CredentialPolicyException, IdentityException, NamingException, SQLException {
+}
+
+
+/**
+ * Removes user from group.
+ * @param user the subject user
+ * @param groupDn the distinguishedName for the ldap group
+ * @throws CredentialPolicyException if the credentials are invalid
+ * @throws IdentityException if a system error occurs preventing the action
+ * @throws NamingException if an LDAP naming exception occurs
+ * @throws SQLException if a database communication exception occurs
+ */
+public void removeUserFromGroup(User user, String groupDn)
+  throws CredentialPolicyException, IdentityException, NamingException, SQLException {	
 }
 
 
@@ -204,6 +275,30 @@ public void throwNotSupportedException(String method)
  */
 public void updateUserProfile(User user)
   throws CredentialPolicyException, IdentityException, NamingException, SQLException {
+}
+
+/**
+ * Builds list of ldap users matching filter.
+ * @param filter the user search filter for ldap
+ * @return the list of users matching filter
+ * @throws IdentityException if a system error occurs preventing the action
+ * @throws NamingException if an LDAP naming exception occurs
+ */
+public Users readUsers(String filter, String attributeName) 
+	throws IdentityException, NamingException {
+	return null;
+}
+
+/**
+ * Builds list of ldap groups matching filter.
+ * @param filter the group search filter for ldap
+ * @return the list of groups matching filter
+ * @throws NamingException if an LDAP naming exception occurs
+ * @throws IdentityException 
+ */
+public Groups readGroups(String filter) 
+		throws NamingException, IdentityException{
+	return null;
 }
 
 }

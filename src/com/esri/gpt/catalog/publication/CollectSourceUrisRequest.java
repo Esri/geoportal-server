@@ -16,6 +16,7 @@ package com.esri.gpt.catalog.publication;
 
 import com.esri.gpt.catalog.harvest.repository.HrRecord;
 import com.esri.gpt.framework.context.RequestContext;
+import java.io.IOException;
 import java.sql.SQLException;
 
 /**
@@ -42,11 +43,13 @@ public CollectSourceUrisRequest(RequestContext requestContext, HrRecord reposito
 /**
  * Executes request.
  * @throws SQLException if accessing database fails
+ * @throws IOException if accessing index fails
  */
-public void execute() throws SQLException {
+public void execute() throws SQLException, IOException {
   CatalogDao dao = new CatalogDao(requestContext);
   dao.querySourceURIs(repository.getUuid(), new CatalogDao.CatalogRecordListener() {
-      public void onRecord(String sourceUri, String uuid) {
+      @Override
+      public void onRecord(String sourceUri, String uuid) throws IOException {
         CollectSourceUrisRequest.this.onSourceUri(sourceUri, uuid);
       }
   });
@@ -56,7 +59,8 @@ public void execute() throws SQLException {
  * Called every time a source URI is found. Override to provide data handling.
  * @param sourceUri source URI
  * @param uuid record UUID
+ * @throws IOException if accessing index fails
  */
-protected void onSourceUri(String sourceUri, String uuid) {
+protected void onSourceUri(String sourceUri, String uuid) throws IOException {
 }
 }

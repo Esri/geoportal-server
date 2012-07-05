@@ -60,6 +60,7 @@ import com.esri.gpt.catalog.search.SearchFilterPagination;
 import com.esri.gpt.catalog.search.SearchResult;
 import com.esri.gpt.catalog.search.SearchSaveRpstryFactory;
 import com.esri.gpt.control.georss.RestQueryServlet;
+import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.BaseActionListener;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
@@ -1005,4 +1006,24 @@ protected String getRestSearchRequestUrl(String format) {
   return url;
 }
 
+public boolean getServiceCheckerEnabled() {
+  return Val.chkBool(getParameter("servicechecker.enabled",""), false);
+}
+
+public String getServiceCheckerCheckUrl() {
+  return getParameter("servicechecker.checkUrl","http://registry.fgdc.gov/statuschecker/api/v2/results");
+}
+
+public String getServiceCheckerInfoUrl() {
+  return getParameter("servicechecker.infoUrl","http://registry.fgdc.gov/statuschecker/ServiceDetail.php");
+}
+
+
+public String getServiceCheckerToken() {
+  return getParameter("servicechecker.token","1059304b3e56ebbeddc23686f3ff8ef0");
+}
+
+private String getParameter(String parameterName, String defaultParameterValue) {
+  return Val.chkStr(ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getParameters().getValue(parameterName), defaultParameterValue);
+}
 }

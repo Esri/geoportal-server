@@ -104,9 +104,9 @@ public void close() throws IOException {
  * Adds new string to the collection.
  * @param values array of values
  * @return <code>true</code> if adding values succeed
+ * @throws IOException if accessing index fails
  */
-public boolean add(String [] values) {
-  try {
+public void add(String [] values) throws IOException {
     openForWriting();
     // create document
     Document doc = new Document();
@@ -116,36 +116,25 @@ public boolean add(String [] values) {
     }
     // save document
     writer.addDocument(doc);
-
-    return true;
-  } catch (Exception ex) {
-    LOGGER.log(Level.WARNING, "Error adding value to the collector.", ex);
-    return false;
-  }
 }
 
 /**
  * Removes string from the collection.
  * @param name field name
  * @param value field value
- * @return <code>true</code> if removing array succeed
+ * @throws IOException if accessing index fails
  */
-public boolean remove(String name, String value) {
-  try {
+public void remove(String name, String value) throws IOException {
     openForWriting();
     // delete documents matching term
     writer.deleteDocuments(new Term(name, value));
-    return true;
-  } catch (Exception ex) {
-    LOGGER.log(Level.WARNING, "Error removing value from the collector.", ex);
-    return false;
-  }
 }
 
 /**
  * Provides iterator over the current collection of stored pairs.
  * @return iterator
  */
+@Override
 public Iterator<String[]> iterator() {
   return new PairIterator();
 }

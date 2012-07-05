@@ -44,10 +44,13 @@
   gptMapConfig.locatorSingleFieldParameter = "<%=imConfig.getLocatorSingleFieldParameter()%>";
   gptMapConfig.locatorGraphicURL = "<%=request.getContextPath()%>/catalog/images/pushpin_red.gif";
   gptMapConfig.mapVisibleLayers = "<%=imConfig.getMapVisibleLayers()%>";
+  var gxeLocale = "<%=request.getLocale().toString()%>";
 </script>
 
-<script type="text/javascript" src="<%=request.getContextPath()%>/catalog/js/v1.1/gemet.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/catalog/js/v1.2/gxe.js"></script>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/gpt/gxe/gxe.css"></link>
+<script type="text/javascript" src="<%=request.getContextPath()%>/gpt/GptCore.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/gpt/gxe/gemet.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/gpt/gxe/gxe.js"></script>
 
 <% // prompt %>
 <h:outputText escape="false" styleClass="prompt" rendered="false"

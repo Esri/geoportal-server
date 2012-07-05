@@ -1420,200 +1420,6 @@ img.datepicker_trigger {
   vertical-align: top;  
 }
 
-
-
-/* GXE ************************************************ */
-
-.gxeDocument {
-  background-color: #FFF;
-}
-.gxeControlBar {
-	margin-bottom: 5px;
-}
-
-.gxeRepairMode {
-	height: 450px;
-  overflow: scroll;
-}
-
-.gxeDocument label.required {
-  font-weight: bold;
-  font-style: italic;
-}
-
-.gxeDocument .requiredFieldNote  {
-  display: block; 
-  margin-top: 10px; 
-  font-size: x-small;
-}
-
-.gxeSection {
-  display: block;
-  width: 98%;
-  border: 1px solid #CCC;
-  margin-bottom: 1em;
-  padding: 0px 0px 5px 5px;  
-}
-
-.gxeSectionHeader {
-  margin: 5px 0px 5px 0px;
-}
-
-.gxeSectionBody {
-  margin: 0px 0px 0px 10px;
-}
-
-.gxeSectionMenu {
-  margin: 0px 6px 0px 12px;
-}
-
-.gxeSectionMenu img {
-  cursor: hand; 
-  cursor: pointer;
-  margin: 8px 6px 8px 6px; 
-  text-align: left; 
-  vertical-align: middle;
-  width: auto;
-  height: auto;
-}
-
-img.gxeDisabled {
-  filter:progid:DXImageTransform.Microsoft.Alpha(opacity=30);
-  opacity: 0.4;
-}
-
-ul.gxeSelectMany li {
-  list-style: none;
-}
-
-.gxeTabsHeader {}
-
-.gxeTabsBody {
-  display: block;
-  width: 98%;
-  border: 1px solid #CCC;
-  background: url(images/small_bg.gif) repeat-x;
-  padding: 10px 0px 5px 5px;
-  clear: both;
-}
-
-ul.gxeTabArray {
-  display: inline; 
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-ul.gxeTabArray li {
-	display: inline;
-	margin: 0 0.15em;
-}
-
-ul.gxeTabArray li a {
-	color: #333;
-	background-color: #FFFFFF;
-	border: 1px solid #CCCCCC;
-	line-height: 2em;
-	padding: 5px 10px;
-	text-align: center;
-	text-decoration: none;
-	font-weight: normal;
-}
-
-ul.gxeTabArray li a:link, ul.gxeTabArray li a:visited {
-  color: #333;
-  text-decoration: none; 
-  font-weight: normal;
-}
-
-ul.gxeTabArray li a:hover {
-  background: url("images/gxe-gradient.png") repeat-x scroll left bottom #FFFFFF;
-}
-
-ul.gxeTabArray li a:active, ul.gxeTabArray li a:focus {
-  outline: none;
-}
-
-ul.gxeTabArray li a.current {
-  background: url("images/gxe-gradient.png") repeat-x scroll left bottom #FFFFFF;
-  color: #333333;
-  font-weight: bold !important;
-}
-
-.gxeMessageArea {
-	background-color: #FFF;
-	display: none;
-	margin-bottom: 1em; 
-}
-.gxeMessageArea .gxeClearAll {
-  margin: 5px 5px 0px 5px;
-}
-.gxeMessageListWrapper {
-  max-height: 150px;
-  max-width: 879px;
-  overflow: scroll;
-  margin: 2px 0px 10px 0px;
-  border: 1px solid #CCC;
-}
-.gxeMessageList {
-	margin-left: 10px;
-  list-style-type: none;
-  display: block;
-  width: 98%;
-  background: url(images/small_bg.gif) repeat-x;
-}
-.gxeMessageList .success {
-  background: url(images/success.png) #FFF no-repeat 6px 6px;
-  padding: 5px 30px;
-}
-.gxeMessageList .error {
-  background: url(images/error.png) #FFF no-repeat 6px 6px;
-  padding: 5px 30px;
-}
-.gxeMessageList .warning {
-  background: url(images/warning.png) #FFF no-repeat 0px 0px;
-  padding: 5px 30px;
-}
-
-a.gxeInputTool {
-	margin: 0px 10px;
-}
-
-.gxeMap {
-  margin-top: 10px;
-}
-
-table.gxeMapEnvelopeTable {
-	margin: 0;
-  padding: 0;
-}
-
-.gxeMapEnvelopeTable td {
-  vertical-align: top;
-}
-
-.gxeMapEnvelopeTable .gxeMapCoordinates {
-  margin-top: 30px;
-  padding-right: 20px;
-}
-
-.gxeMapContainer {
-	margin-top: 1px; 
-	border: 1px solid #000000;
-	width: 440px; 
-	height:300px;
-  cursor:hand; cursor:pointer;
-}
-.gxeMapCanvas {
-	width: 440px; 
-	height:300px;
-	cursor:hand; cursor:pointer;
-}
-
-.gxeDisplayNone {
-  display: none;
-}
-
 .openstreetmap {
   position: absolute;
   bottom: 0px;
@@ -1628,4 +1434,66 @@ table.gxeMapEnvelopeTable {
   right: 75px;
   color: grey;
   font-size: xx-small;
+}
+
+// user role management page
+.user{
+  border-style: solid;
+}
+
+#users-div td{
+  
+}
+
+#user-search-results {
+	width: 100%;
+	height: 380px;
+	overflow: auto;
+	border: 1px solid #ccc;	
+}
+
+#user-search-results A {
+	margin: 0 1em 0 0;
+	font-size: 1.1em;
+}
+#user-search-results .current {
+	color: #000;
+	font-weight: bold;
+	text-decoration: none;
+	border-bottom: none;
+}
+#user-search-results a:visited {
+  color:#AE4F0C;
+}
+#user-search-results a.current:visited {
+  color:#000;
+}
+
+#user-current-title{
+  width:65%; 
+  padding-left:20px;
+}
+
+#user-current{
+  vertical-align: top; 
+}
+
+#user-managed-td {
+	vertical-align: top;
+}
+
+#user-managed{
+  width:65%; 
+  padding-left:20px;
+}
+
+#user-search {
+  width:30%; 
+}
+
+.user-Name {
+  font-size:1.5em;
+  color:#8A8E27;
+  font-family:"Trebuchet MS",Helvetica,Arial,Geneva,sans-serif;
+  font-weight:normal;
 }

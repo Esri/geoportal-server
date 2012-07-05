@@ -18,6 +18,7 @@ import com.esri.gpt.catalog.arcims.ImsServiceException;
 import com.esri.gpt.catalog.context.CatalogIndexException;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.security.principal.Publisher;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -31,6 +32,8 @@ private RequestContext requestContext;
 private Publisher publisher;
 /** iterable */
 private Iterable<Map.Entry<String,String>> sourceUriData;
+/** deleted count */
+private volatile long deletedCount;
 
 public DeleteSourceUrisRequest(RequestContext requestContext, Publisher publisher, Iterable<Map.Entry<String,String>> sourceUriData) {
   this.requestContext = requestContext;
@@ -38,12 +41,19 @@ public DeleteSourceUrisRequest(RequestContext requestContext, Publisher publishe
   this.sourceUriData = sourceUriData;
 }
 
-public void execute() throws ImsServiceException, SQLException, CatalogIndexException {
+public void execute() throws ImsServiceException, SQLException, CatalogIndexException, IOException {
+  deletedCount = 0;
   CatalogDao dao = new CatalogDao(requestContext);
   CatalogDao.CatalogRecordListener listener = new CatalogDao.CatalogRecordListener() {
+    @Override
     public void onRecord(String sourceUri, String uuid) {
+      deletedCount++;
     }
   };
   dao.deleteSourceURIs(publisher, sourceUriData, listener);
+}
+
+public long getDeletedCount() {
+  return deletedCount;
 }
 }

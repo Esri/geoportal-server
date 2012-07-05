@@ -86,7 +86,7 @@ public boolean getSuspended() {
 
 /**
  * Sets 'suspended' flag.
- * @return <code>true</code> to mark as suspended
+ * @param suspended <code>true</code> to mark as suspended
  */
 public void setSuspended(boolean suspended) {
   this.suspended = suspended;

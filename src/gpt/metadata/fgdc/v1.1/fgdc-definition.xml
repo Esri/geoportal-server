@@ -14,7 +14,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<schema key="fgdc" templateFile="gpt/metadata/fgdc/fgdc-template.xml">
+<schema key="fgdc" templateFile="gpt/metadata/fgdc/fgdc-template.xml" toEsriItemInfoXslt="gpt/metadata/fgdc/fgdc-toEsriItemInfo.xslt">
 
 <!-- schema label -->
 <label resourceKey="catalog.mdParam.schema.fgdc.bestpractice"/>

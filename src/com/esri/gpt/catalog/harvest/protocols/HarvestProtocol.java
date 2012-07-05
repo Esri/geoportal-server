@@ -124,7 +124,7 @@ public abstract class HarvestProtocol implements Protocol, Serializable {
    * @deprecated
    */
   @Deprecated
-  public final void ping(String url) throws Exception {
+  public void ping(String url) throws Exception {
     try {
       checkConnection(url);
     } catch (HRInvalidProtocolException ex) {

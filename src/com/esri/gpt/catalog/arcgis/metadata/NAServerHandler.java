@@ -39,6 +39,9 @@ public class NAServerHandler extends ServiceHandler {
     throws Exception {
     serviceInfo.getKeywords().add(serviceInfo.getType());
     serviceInfo.addKeywords("geographicService,service,network,route",",");
+    
+    serviceInfo.setRestUrl(serviceInfo.getRestUrl().replaceAll("/MapServer/NAServer", "/NAServer"));
+    serviceInfo.setResourceUrl(serviceInfo.getResourceUrl().replaceAll("/MapServer/NAServer", "/NAServer"));
   }
   
 }

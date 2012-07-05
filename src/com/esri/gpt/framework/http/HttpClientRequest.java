@@ -15,27 +15,34 @@
 package com.esri.gpt.framework.http;
 import com.esri.gpt.catalog.context.CatalogConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
-import com.esri.gpt.framework.util.TimePeriod;
-import java.io.*;
+import com.esri.gpt.framework.http.multipart.MultiPartContentProvider;
+import com.esri.gpt.framework.http.multipart.PartWriter;
+import com.esri.gpt.framework.util.Val;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.PatternSyntaxException;
-
+import java.util.zip.GZIPInputStream;
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.auth.AuthPolicy;
 import org.apache.commons.httpclient.auth.AuthScheme;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.auth.AuthState;
 import org.apache.commons.httpclient.methods.*;
+import org.apache.commons.httpclient.methods.multipart.ByteArrayPartSource;
+import org.apache.commons.httpclient.methods.multipart.FilePart;
+import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
+import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-
-import com.esri.gpt.framework.util.Val;
-import java.util.zip.GZIPInputStream;
 
 /**
  * Provides an interface for the execution of outbound HTTP requests.
@@ -439,7 +446,7 @@ public class HttpClientRequest {
    * the ContentProvider is null. Otherwise, a PostMethod will be created.
    * @return the HTTP method
    */
-  private HttpMethodBase createMethod() {
+  private HttpMethodBase createMethod() throws IOException {
     HttpMethodBase method = null;
     MethodName name = this.getMethodName();
 
@@ -462,11 +469,14 @@ public class HttpClientRequest {
       method = new PutMethod(this.getUrl());
     } 
     
-    // provide the request body if necessary
+    // write the request body if necessary
     if (this.getContentProvider() != null) {
       if (method instanceof EntityEnclosingMethod) {
         EntityEnclosingMethod eMethod = (EntityEnclosingMethod)method;
-        ApacheEntityAdapter eAdapter = new ApacheEntityAdapter(this,this.getContentProvider());
+        RequestEntity eAdapter = 
+                getContentProvider() instanceof MultiPartContentProvider?
+                new MultiPartProviderAdapter(this, eMethod, (MultiPartContentProvider)getContentProvider()):
+                new ApacheEntityAdapter(this,this.getContentProvider());
         eMethod.setRequestEntity(eAdapter);
         if (eAdapter.getContentType() != null) {
           eMethod.setRequestHeader("Content-type",eAdapter.getContentType());
@@ -610,7 +620,7 @@ public class HttpClientRequest {
           }
           throw authException;
         } else {
-          throw new IOException(msg);
+          throw new HttpClientException(respInfo.getResponseCode(),msg);
         }
       }
            
@@ -721,4 +731,101 @@ public class HttpClientRequest {
     PUT;
   }
 
+  private static class PartWriterAdapter implements PartWriter {
+    ArrayList<org.apache.commons.httpclient.methods.multipart.Part> parts;
+    
+    public PartWriterAdapter(ArrayList<org.apache.commons.httpclient.methods.multipart.Part> parts) {
+      this.parts = parts;
+    }
+
+    @Override
+    public void write(String name, String value) throws IOException {
+      parts.add(new StringPart(name, value, "UTF-8"));
+    }
+
+    @Override
+    public void write(String name, final File file, String fileName, String contentType, String charset, final boolean deleteAfterUpload) throws IOException {
+      parts.add(new FilePart(name, fileName!=null && !fileName.isEmpty()? fileName: file.getName(), file, contentType, charset){
+        @Override
+        protected void sendData(OutputStream out) throws IOException {
+          super.sendData(out);
+          if (deleteAfterUpload) {
+            try {
+              boolean deleted = file.delete();
+              if (!deleted) {
+                LOGGER.warning("Unable to delete file: "+file.getAbsolutePath());
+              }
+            } catch (SecurityException ex) {
+              LOGGER.warning("Unable to delete file: "+file.getAbsolutePath());
+            }
+          }
+        }
+      });
+    }
+
+    @Override
+    public void write(String name, byte[] bytes, String fileName, String contentType, String charset) throws IOException {
+      parts.add(new FilePart(name, new ByteArrayPartSource(fileName, bytes), contentType, charset));
+    }
+  }
+  
+  /**
+   * Multi part provider adapter.
+   */
+  private static class MultiPartProviderAdapter implements RequestEntity {
+    private HttpClientRequest request;
+    private EntityEnclosingMethod method;
+    private MultiPartContentProvider provider;
+    private MultipartRequestEntity entity;
+
+    public MultiPartProviderAdapter(HttpClientRequest request, EntityEnclosingMethod method, MultiPartContentProvider provider) throws IOException {
+      this.request = request;
+      this.method = method;
+      this.provider = provider;
+//      ArrayList<org.apache.commons.httpclient.methods.multipart.Part> parts = new ArrayList<org.apache.commons.httpclient.methods.multipart.Part>();
+//      provider.writeParts(new PartWriterAdapter(parts));
+//      this.entity = new MultipartRequestEntity(parts.toArray(new org.apache.commons.httpclient.methods.multipart.Part[parts.size()]), method.getParams());
+    }
+
+    private MultipartRequestEntity getEntity() throws IOException {
+      if (entity==null) {
+        ArrayList<org.apache.commons.httpclient.methods.multipart.Part> parts = new ArrayList<org.apache.commons.httpclient.methods.multipart.Part>();
+        provider.writeParts(new PartWriterAdapter(parts));
+        entity = new MultipartRequestEntity(parts.toArray(new org.apache.commons.httpclient.methods.multipart.Part[parts.size()]), method.getParams());
+      }
+      return entity;
+    }
+    
+    @Override
+    public boolean isRepeatable() {
+      try {
+        return getEntity().isRepeatable();
+      } catch (IOException ex) {
+        return true;
+      }
+    }
+
+    @Override
+    public void writeRequest(OutputStream out) throws IOException {
+      getEntity().writeRequest(out);
+    }
+
+    @Override
+    public long getContentLength() {
+      try {
+        return getEntity().getContentLength();
+      } catch (IOException ex) {
+        return 0;
+      }
+    }
+
+    @Override
+    public String getContentType() {
+      try {
+        return getEntity().getContentType();
+      } catch (IOException ex) {
+        return "";
+      }
+    }
+  }
 }

@@ -23,27 +23,44 @@ import java.util.List;
 /**
  * Stores resource metadata information.
  * NOTE! This is EXPERIMENTAL feature. It might be removed at any time in the future.
+ * @see <a href="http://dev.arcgisonline.com/apidocs/sharing/useritem.html">http://dev.arcgisonline.com/apidocs/sharing/useritem.html</a>
  */
 public class ESRI_ItemInformation {
 
   /** instance variables ====================================================== */
-  private String id = "";
-  private String title = "";
   private String name = "";
-  private String desc = "";
-  private String snippet = "";
-  private String url = "";
-  private String type = "";
-  private String owner = "";
-  private String access = "";
-  private String culture = "";
-  private List<String> keywords = new ArrayList<String>();
-  private List<String> tags = new ArrayList<String>();
-  private String resourceUrl = "";
+  private String title = "";
+  private String thumbnail = "";
   private String thumbnailUrl = "";
+  private String type = "";
+  private List<String> typeKeywords = new ArrayList<String>();
+  private String description = "";
+  private List<String> tags = new ArrayList<String>();
+  private String snippet = "";
   private Envelope extent = new Envelope();
+  private String accessInformation = "";
+  private String licenseInfo = "";
+  private String culture = "";
+  
+  private String id = "";
+  private String item = "";
+  private String itemType = "";
+  private String owner = "";
+  private Date   uploadedDate;
   private Date   modifiedDate;
+  private String guid = "";
+  private String url = "";
+  private String access = "";
+  private long   size;
+  private long   numComments;
+  private long   numRatings;
+  private double avgRating;
+  private long   numViews;
+  private String sharingAccess = "";
+  private List<String> sharingGroups = new ArrayList<String>();
+  private String documentation = "";
 
+  
   /**
    * Creates instance of the item information
    */
@@ -55,19 +72,34 @@ public class ESRI_ItemInformation {
    */
   /**
    * Gets name.
-   * @return the name
+   * @return name
    */
   public String getName() {
     return name;
   }
 
   /**
-   * Sets name
-   * @param name
-   *          the name to set
+   * Sets name.
+   * @param name name
    */
   public void setName(String name) {
     this.name = Val.chkStr(name);
+  }
+
+  /**
+   * Gets thumbnail.
+   * @return thumbnail
+   */
+  public String getThumbnail() {
+    return thumbnail;
+  }
+
+  /**
+   * Sets thumbnail.
+   * @param thumbnail thumbnail
+   */
+  public void setThumbnail(String thumbnail) {
+    this.thumbnail = Val.chkStr(thumbnail);
   }
 
   /**
@@ -79,9 +111,8 @@ public class ESRI_ItemInformation {
   }
 
   /**
-   * Sets thumbnail URL
-   * @param thumbnailUrl
-   *          the thumbnail URL to set
+   * Sets thumbnail URL.
+   * @param thumbnailUrl thumbnail URL
    */
   public void setThumbnailUrl(String thumbnailUrl) {
     this.thumbnailUrl = Val.chkStr(thumbnailUrl);
@@ -89,7 +120,7 @@ public class ESRI_ItemInformation {
 
   /**
    * Gets id.
-   * @return the id
+   * @return id
    */
   public String getId() {
     return id;
@@ -97,16 +128,47 @@ public class ESRI_ItemInformation {
 
   /**
    * Sets id.
-   * @param id
-   *          the id to set
+   * @param id id
    */
   public void setId(String id) {
     this.id = Val.chkStr(id);
   }
 
   /**
+   * Gets item.
+   * @return item
+   */
+  public String getItem() {
+    return item;
+  }
+
+  /**
+   * Sets item.
+   * @param item item
+   */
+  public void setItem(String item) {
+    this.item = Val.chkStr(item);
+  }
+
+  /**
+   * Gets item type.
+   * @return item type
+   */
+  public String getItemType() {
+    return itemType;
+  }
+
+  /**
+   * Sets item type.
+   * @param itemType item type 
+   */
+  public void setItemType(String itemType) {
+    this.itemType = Val.chkStr(itemType);
+  }
+
+  /**
    * Gets title.
-   * @return the title
+   * @return title
    */
   public String getTitle() {
     return title;
@@ -114,8 +176,7 @@ public class ESRI_ItemInformation {
 
   /**
    * Sets title.
-   * @param title
-   *          the title to set
+   * @param title title
    */
   public void setTitle(String title) {
     this.title = Val.chkStr(title);
@@ -123,19 +184,18 @@ public class ESRI_ItemInformation {
 
   /**
    * Gets description.
-   * @return the description
+   * @return description
    */
-  public String getDesc() {
-    return desc;
+  public String getDescription() {
+    return description;
   }
 
   /**
    * Sets description.
-   * @param desc
-   *          the description to set
+   * @param description description
    */
-  public void setDesc(String desc) {
-    this.desc = Val.chkStr(desc);
+  public void setDescription(String description) {
+    this.description = Val.chkStr(description);
   }
 
   /**
@@ -171,27 +231,27 @@ public class ESRI_ItemInformation {
   }
 
   /**
-   * Gets keywords.
-   * @return the keywords list of keywords
+   * Gets typeKeywords.
+   * @return the typeKeywords list of typeKeywords
    */
-  public List<String> getKeywords() {
-    return keywords;
+  public List<String> getTypeKeywords() {
+    return typeKeywords;
   }
 
   /**
-   * Gets keywords as string.
-   * @return keywords as space separated string
+   * Gets typeKeywords as string.
+   * @return typeKeywords as space separated string
    */
-  public String getKeywordsAsString() {
-    return asString(keywords, " ");
+  public String getTypeKeywordsAsString() {
+    return asString(typeKeywords, " ");
   }
 
   /**
-   * Sets keywords.
-   * @param keywords list of keywords
+   * Sets typeKeywords.
+   * @param typeKeywords list of typeKeywords
    */
-  public void setKeywords(List<String> keywords) {
-    this.keywords = keywords != null ? keywords : new ArrayList<String>();
+  public void setTypeKeywords(List<String> typeKeywords) {
+    this.typeKeywords = typeKeywords != null ? typeKeywords : new ArrayList<String>();
   }
 
   /**
@@ -216,7 +276,7 @@ public class ESRI_ItemInformation {
    * @return tags as space separated string
    */
   public String getTagsAsString() {
-    return asString(tags, " ");
+    return asString(tags, ", ");
   }
 
   /**
@@ -229,27 +289,10 @@ public class ESRI_ItemInformation {
 
   /**
    * Sets tags.
-   * @param tags
-   *          list of tags
+   * @param tags list of tags
    */
   public void setTags(List<String> tags) {
     this.tags = tags != null ? tags : new ArrayList<String>();
-  }
-
-  /**
-   * Sets resource URL.
-   * @param resourceUrl resource URL
-   */
-  public void setResourceUrl(String resourceUrl) {
-    this.resourceUrl = Val.chkStr(resourceUrl);
-  }
-
-  /**
-   * Gets resource URL.
-   * @return resource URL
-   */
-  public String getResourceUrl() {
-    return resourceUrl;
   }
 
   /**
@@ -267,13 +310,29 @@ public class ESRI_ItemInformation {
   public void setModifiedDate(Date date) {
     this.modifiedDate = date;
   }
+
+  /**
+   * Gets uploaded date.
+   * @return uploaded date
+   */
+  public Date getUploadedDate() {
+    return uploadedDate;
+  }
+
+  /**
+   * Sets uploaded date.
+   * @param date uploaded date
+   */
+  public void setUploadedDate(Date date) {
+    this.uploadedDate = date;
+  }
   
   /**
    * Sets extent.
    * @param extent extent
    */
   public void setExtent(Envelope extent) {
-    this.extent = extent;
+    this.extent = extent!=null? extent: new Envelope();
   }
 
   /**
@@ -285,19 +344,35 @@ public class ESRI_ItemInformation {
   }
 
   /**
-   * Gets access.
-   * @return access
+   * Gets accessInformation.
+   * @return accessInformation
    */
-  public String getAccess() {
-    return access;
+  public String getAccessInformation() {
+    return accessInformation;
   }
 
   /**
-   * Sets access.
-   * @param access access
+   * Sets accessInformation.
+   * @param accessInformation accessInformation
    */
-  public void setAccess(String access) {
-    this.access = Val.chkStr(access);
+  public void setAccessInformation(String accessInformation) {
+    this.accessInformation = Val.chkStr(accessInformation);
+  }
+
+  /**
+   * Gets license info.
+   * @return license info
+   */
+  public String getLicenseInfo() {
+    return licenseInfo;
+  }
+
+  /**
+   * Sets license info.
+   * @param licenseInfo license info
+   */
+  public void setLicenseInfo(String licenseInfo) {
+    this.licenseInfo = Val.chkStr(licenseInfo);
   }
 
   /**
@@ -332,6 +407,208 @@ public class ESRI_ItemInformation {
     this.owner = Val.chkStr(owner);
   }
 
+  /**
+   * Gets access.
+   * @return access
+   */
+  public String getAccess() {
+    return access;
+  }
+
+  /**
+   * Sets access.
+   * @param access access
+   */
+  public void setAccess(String access) {
+    this.access = Val.chkStr(access);
+  }
+
+  /**
+   * Gets average rating.
+   * @return average rating
+   */
+  public double getAvgRating() {
+    return avgRating;
+  }
+
+  /**
+   * Sets average rating.
+   * @param avgRating average rating
+   */
+  public void setAvgRating(double avgRating) {
+    this.avgRating = avgRating;
+  }
+
+  /**
+   * Gets number of comments.
+   * @return number of comments
+   */
+  public long getNumComments() {
+    return numComments;
+  }
+
+  /**
+   * Sets number of comments.
+   * @param numComments number of comments
+   */
+  public void setNumComments(long numComments) {
+    this.numComments = numComments;
+  }
+
+  /**
+   * Gets number of ratings.
+   * @return number of ratings
+   */
+  public long getNumRatings() {
+    return numRatings;
+  }
+
+  /**
+   * Sets number of ratings.
+   * @param numRatings number of ratings
+   */
+  public void setNumRatings(long numRatings) {
+    this.numRatings = numRatings;
+  }
+
+  /**
+   * Gets number of reviews.
+   * @return number of reviews
+   */
+  public long getNumViews() {
+    return numViews;
+  }
+
+  /**
+   * Sets number of reviews.
+   * @param numViews number of reviews
+   */
+  public void setNumViews(long numViews) {
+    this.numViews = numViews;
+  }
+
+  /**
+   * Gets sharing access.
+   * @return sharing access
+   */
+  public String getSharingAccess() {
+    return sharingAccess;
+  }
+
+  /**
+   * Sets sharing access.
+   * @param sharingAccess sharing access 
+   */
+  public void setSharingAccess(String sharingAccess) {
+    this.sharingAccess = Val.chkStr(sharingAccess);
+  }
+
+  /**
+   * Gets size.
+   * @return size
+   */
+  public long getSize() {
+    return size;
+  }
+
+  /**
+   * Sets size.
+   * @param size size
+   */
+  public void setSize(long size) {
+    this.size = size;
+  }
+
+  /**
+   * Gets guid.
+   * @return guid
+   */
+  public String getGuid() {
+    return guid;
+  }
+
+  /**
+   * Sets guid.
+   * @param guid guid
+   */
+  public void setGuid(String guid) {
+    this.guid = Val.chkStr(guid);
+  }
+
+  /**
+   * Gets sharingGroups.
+   * @return list of sharingGroups
+   */
+  public List<String> getSharingGroups() {
+    return sharingGroups;
+  }
+
+  /**
+   * Sets sharingGroups
+   * @param sharingGroups list of sharingGroups
+   */
+  public void setSharingGroups(List<String> sharingGroups) {
+    this.sharingGroups = sharingGroups!=null? sharingGroups: new ArrayList<String>();
+  }
+
+  /**
+   * Gets documentation.
+   * @return documentation
+   */
+  public String getDocumentation() {
+    return documentation;
+  }
+
+  /**
+   * Sets documentation.
+   * @param documentation 
+   */
+  public void setDocumentation(String documentation) {
+    this.documentation = Val.chkStr(documentation);
+  }
+
+  @Override
+  public String toString() {
+    return title + " ("+id+")";
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof ESRI_ItemInformation)) return false;
+    ESRI_ItemInformation ii = (ESRI_ItemInformation)obj;
+    if(!name.equals(ii.name)) return false;
+    if(!title.equals(ii.title)) return false;
+    if(!thumbnail.equals(ii.thumbnail)) return false;
+    if(!thumbnailUrl.equals(ii.thumbnailUrl)) return false;
+    if(!type.equals(ii.type)) return false;
+    if(!typeKeywords.equals(ii.typeKeywords)) return false;
+    if(!description.equals(ii.description)) return false;
+    if(!tags.equals(ii.tags)) return false;
+    if(!snippet.equals(ii.snippet)) return false;
+    if(!extent.equals(ii.extent)) return false;
+    if(!accessInformation.equals(ii.accessInformation)) return false;
+    if(!licenseInfo.equals(ii.licenseInfo)) return false;
+    if(!culture.equals(ii.culture)) return false;
+    if(!id.equals(ii.id)) return false;
+    if(!item.equals(ii.item)) return false;
+    if(!itemType.equals(ii.itemType)) return false;
+    if(!owner.equals(ii.owner)) return false;
+    if((uploadedDate!=null && !uploadedDate.equals(ii.uploadedDate)) || (uploadedDate==null && ii.uploadedDate!=null)) return false;
+    if((modifiedDate!=null && !modifiedDate.equals(ii.modifiedDate)) || (modifiedDate==null && ii.modifiedDate!=null)) return false;
+    if(!guid.equals(ii.guid)) return false;
+    if(!url.equals(ii.url)) return false;
+    if(!access.equals(ii.access)) return false;
+    if(size!=ii.size) return false;
+    if(numComments!=ii.numComments) return false;
+    if(numRatings!=ii.numRatings) return false;
+    if(avgRating!=ii.avgRating) return false;
+    if(numViews!=ii.numViews) return false;
+    if(!sharingAccess.equals(ii.sharingAccess)) return false;
+    if(!sharingGroups.equals(ii.sharingGroups)) return false;
+    if(!documentation.equals(ii.documentation)) return false;
+    return true;
+  }
+  
   /**
    * Gets array of strings as a single string.
    * @param array array of strings

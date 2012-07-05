@@ -74,7 +74,7 @@ public class ServiceHandlerFactory {
     handlers.put("wfsserver","com.esri.gpt.catalog.arcgis.metadata.WFSServerHandler");
     handlers.put("wcsserver","com.esri.gpt.catalog.arcgis.metadata.WCSServerHandler");
     
-    handlers.put("searchserver","com.esri.gpt.catalog.arcgis.metadata.SearchServerHandler");
+    //handlers.put("searchserver","com.esri.gpt.catalog.arcgis.metadata.SearchServerHandler");
     handlers.put("featureserver","com.esri.gpt.catalog.arcgis.metadata.FeatureServerHandler");
     
   }

@@ -25,18 +25,8 @@ import com.esri.gpt.framework.http.CredentialProvider;
 import com.esri.gpt.framework.scheduler.IScheduledTask;
 import com.esri.gpt.framework.sql.ManagedConnection;
 import com.esri.gpt.framework.util.Val;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.io.*;
+import java.sql.*;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,6 +52,7 @@ public class ReverseSynchronizer implements Runnable, IScheduledTask {
    * Sets the configuration parameters for the task.
    * @param parameters the configuration parameters
    */
+  @Override
   public void setParameters(StringAttributeMap parameters) {
     this.parameters = parameters;
   }
@@ -70,6 +61,7 @@ public class ReverseSynchronizer implements Runnable, IScheduledTask {
   /**
    * Run the synchronization process.
    */
+  @Override
   public void run() {
 
     try {
@@ -172,7 +164,7 @@ public class ReverseSynchronizer implements Runnable, IScheduledTask {
    * @throws Exception if creating publication request fails
    */
   private PublicationRequest createPublicationRequest(RequestContext context) throws Exception {
-    return new PublicationRequest(context, extractEndPoint(), getCredentialProvider(), getParameter("referer"));
+    return new PublicationRequest(context, EndPoint.extract(context), getCredentialProvider(), getParameter("referer"));
   }
 
   /**
@@ -235,14 +227,6 @@ public class ReverseSynchronizer implements Runnable, IScheduledTask {
         }
       }
     }
-  }
-
-  private EndPoint extractEndPoint() {
-    return new EndPoint(
-        getParameter("baseUrl"),
-        getParameter("tokenUrl"),
-        Val.chkBool(getParameter("isPublic"), false),
-        Val.chkBool(getParameter("overwrite"), false));
   }
 
   /**

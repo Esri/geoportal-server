@@ -13,9 +13,24 @@
  * limitations under the License.
  */
 package com.esri.gpt.framework.security.identity.ldap;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import javax.naming.NameAlreadyBoundException;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.BasicAttributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.ModificationItem;
+
 import com.esri.gpt.framework.collection.StringSet;
+import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.security.credentials.CredentialPolicyException;
 import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
+import com.esri.gpt.framework.security.identity.IdentityException;
 import com.esri.gpt.framework.security.principal.Role;
 import com.esri.gpt.framework.security.principal.Roles;
 import com.esri.gpt.framework.security.principal.User;
@@ -23,11 +38,6 @@ import com.esri.gpt.framework.security.principal.UserAttribute;
 import com.esri.gpt.framework.security.principal.UserAttributeMap;
 import com.esri.gpt.framework.util.LogUtil;
 import com.esri.gpt.framework.util.Val;
-
-import java.util.ArrayList;
-import javax.naming.directory.*;
-import javax.naming.NameAlreadyBoundException;
-import javax.naming.NamingException;
 
 /**
  * Handles functionality related to editing an LDAP identity store.
@@ -210,6 +220,14 @@ protected User recoverUserPassword(DirContext dirContext,
 }
 
 /**
+ * Extract the request context.
+ * @return the request context
+ */
+public RequestContext extractRequestContext() {
+  return RequestContext.extract(null);
+}
+
+/**
  * Register a new user.
  * @param dirContext the directory context
  * @param user the subject user
@@ -239,7 +257,7 @@ protected void registerUser(DirContext dirContext, User user)
   }
 
   // prepare attributes and add the new user to LDAP
-  Attributes attributes = prepareRegistrationAttributes(upCreds,user.getProfile());
+  Attributes attributes = prepareRegistrationAttributes(upCreds,user.getProfile());  
   addEntry(dirContext,user.getDistinguishedName(),attributes);
 
   // add user to general user group
@@ -261,7 +279,7 @@ protected void registerUser(DirContext dirContext, User user)
  * Adds user to role.
  * @param dirContext the directory context
  * @param user the subject user
- * @param role
+ * @param role the role key for the role
  * @throws CredentialPolicyException if the username or password is empty
  * @throws NamingException if an LDAP naming exception occurs
  * @throws NameAlreadyBoundException if the new user DN already exists
@@ -270,20 +288,53 @@ protected void addUserToRole(DirContext dirContext, User user, String role)
   throws CredentialPolicyException, NamingException {
     
  //TODO: need to check if the user is already in role.
-  // initialize
-  LdapUserProperties userProps = getConfiguration().getUserProperties();
-  LdapGroupProperties groupProps = getConfiguration().getGroupProperties();   
-  
+
   // add user to general user group
   Roles configuredRoles = getConfiguration().getIdentityConfiguration().getConfiguredRoles();     
   Role roleRegistered = configuredRoles.get(role);    
   String sGeneralDN = roleRegistered.getDistinguishedName();
+  addUserToGroup(dirContext, user, sGeneralDN);
+}
+
+/**
+ * Adds user to group.
+ * @param dirContext the directory context
+ * @param user the subject user
+ * @param groupDn the dn for the group
+ * @throws CredentialPolicyException if the username or password is empty
+ * @throws NamingException if an LDAP naming exception occurs
+ * @throws NameAlreadyBoundException if the new user DN already exists
+ */
+protected void addUserToGroup(DirContext dirContext, User user, String groupDn) 
+  throws CredentialPolicyException, NamingException {
+    
+  // initialize
+  LdapGroupProperties groupProps = getConfiguration().getGroupProperties();   
+  
+  // add user to general user group
   String sGroupAttribute = groupProps.getGroupMemberAttribute();
   BasicAttribute groupAttribute = new BasicAttribute(sGroupAttribute);
   BasicAttributes groupAttributes = new BasicAttributes();
   groupAttribute.add(user.getDistinguishedName());
   groupAttributes.put(groupAttribute);
-  addAttribute(dirContext,sGeneralDN,groupAttributes); 
+  addAttribute(dirContext,groupDn,groupAttributes);  
+  /*
+  Roles configuredRoles = getConfiguration().getIdentityConfiguration().getConfiguredRoles();     
+  for (Role role : configuredRoles.values()){
+	  if(role.getDistinguishedName().equalsIgnoreCase(groupDn)){
+		  String accessKeyAttribute = Val.chkStr(role.getAccessKey());
+		  if(accessKeyAttribute.length() > 0){
+			  BasicAttribute accessAttr = new BasicAttribute(accessKeyAttribute);
+			  BasicAttributes attributes = new BasicAttributes();
+			  attributes.put(accessAttr);
+			  try {
+				  removeEntry(dirContext,user.getDistinguishedName(), attributes);
+			  }catch(javax.naming.directory.AttributeInUseException aue){}
+			  catch(javax.naming.directory.NoSuchAttributeException nse){}
+			  break;
+		  }
+	  }
+  }*/
 }
 
 
@@ -378,6 +429,7 @@ protected void updateUserProfile(DirContext dirContext,
     ModificationItem[] modItems = (ModificationItem[])alModItems.toArray(
                                    new ModificationItem[0]);
     dirContext.modifyAttributes(sUserDN,modItems);
+
   }
 }
 
@@ -398,6 +450,59 @@ protected void updateUserPassword(DirContext dirContext,
          getConfiguration().getUserProperties().getPasswordEncryptionAlgorithm());
   userUpd.getProfile().set(UserAttributeMap.TAG_USER_PASSWORD,sPassword);
   updateUserProfile(dirContext,userUpd,false,true);
+}
+
+/**
+ * Removes user from group.
+ * @param user the subject user
+ * @param groupDn the distinguishedName for the ldap group
+ * @throws CredentialPolicyException if the credentials are invalid
+ * @throws IdentityException if a system error occurs preventing the action
+ * @throws NamingException if an LDAP naming exception occurs
+ * @throws SQLException if a database communication exception occurs
+ */
+protected void removeUserFromGroup(DirContext dirContext,User user, String groupDn)
+  throws CredentialPolicyException, IdentityException, NamingException, SQLException {
+  LdapClient client = null;
+  ArrayList<ModificationItem>  alModItems = new ArrayList<ModificationItem>();
+  ModificationItem[] modItems = null;
+  try {
+           	  	  
+    Attributes attributes = dirContext.getAttributes(groupDn);
+ // initialize
+    
+    ModificationItem modItem;
+    
+    try {
+      if (attributes != null) {
+      	Attribute attr = attributes.get("uniqueMember");
+      		NamingEnumeration<?> vals = attr.getAll();;
+      		while (vals.hasMore()) {
+      			String val = (String) vals.next();
+      			if(val.equalsIgnoreCase(user.getDistinguishedName())){
+      				attr.remove(val);
+      			}
+      			
+      		}
+      		
+      		modItem = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,attr);
+          alModItems.add(modItem);
+
+      }
+    } finally {
+    }
+    
+ // execute the LDAP modification if modification items exist
+    if (alModItems.size() > 0) {
+      modItems = (ModificationItem[])alModItems.toArray(
+                                     new ModificationItem[0]);
+      dirContext.modifyAttributes(groupDn,modItems);
+    }
+
+    
+  } finally {
+    if (client != null) client.close();
+  }
 }
 
 }

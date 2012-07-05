@@ -41,6 +41,8 @@ private int _harvestedCount;
 private int _validatedCount;
 /** Published documents number. */
 private int _publishedCount;
+/** Deleted documents number.*/
+private long _deletedCount;
 
 // constructors ================================================================
 
@@ -114,6 +116,7 @@ public String toString() {
   sb.append(" #harvested:").append(_harvestedCount);
   sb.append(" #validated:").append(_validatedCount);
   sb.append(" #published:").append(_publishedCount);
+  sb.append(" #deleted:").append(_deletedCount);
 
   return sb.toString();
 }
@@ -164,6 +167,22 @@ public int getPublishedCount() {
  */
 public void setPublishedCount(int published) {
   _publishedCount = published;
+}
+
+/**
+ * Gets deleted documents count.
+ * @return deleted documents count
+ */
+public long getDeletedCount() {
+  return _deletedCount;
+}
+
+/**
+ * Sets deleted documents count.
+ * @param deleted deleted documents count
+ */
+public void setDeletedCount(long deleted) {
+  this._deletedCount = deleted;
 }
 
 }

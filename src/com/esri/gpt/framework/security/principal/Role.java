@@ -25,6 +25,9 @@ public class Role extends SecurityPrincipal {
 // instance variables ==========================================================
 private RoleSet _fullRoleSet = new RoleSet();
 private String  _inherits = "";
+private String  _resKey = "";
+private boolean _manage = true;
+private boolean _forbidden = false;
  
 // constructors ================================================================
 
@@ -51,6 +54,7 @@ public Role(String key) {
 public RoleSet getFullRoleSet(){
   return _fullRoleSet;
 }
+
 /**
  * Sets full set of role keys applicable to this role.
  * <br/>The set includes this role key, plus all inherited role keys.
@@ -73,6 +77,53 @@ public String getInherits(){
  */
 public void setInherits(String inherits){
   _inherits = Val.chkStr(inherits);
+}
+
+/**
+ * Is role to be managed
+ * @return if true the role is manage on user management page
+ */
+public boolean isManage() {
+	return _manage;
+}
+
+/**
+ * Set the manage role attribute
+ * @param manage
+ */
+public void setManage(boolean manage) {
+	this._manage = manage;
+}
+
+/**
+ * Gets resource key configured for role
+ * @return
+ */
+public String getResKey() {
+	return _resKey;
+}
+/**
+ * Sets resource key configuration
+ * @param resKey
+ */
+public void setResKey(String resKey) {
+	this._resKey = Val.chkStr(resKey);
+}
+
+/**
+ * Check if role is configured to be forbidden from access
+ * @return true if forbidden
+ */
+public boolean isForbidden() {
+	return _forbidden;
+}
+
+/**
+ * Sets forbidden configuration.
+ * @param forbidden
+ */
+public void setForbidden(boolean forbidden) {
+	this._forbidden = forbidden;
 }
 
 // methods =====================================================================
@@ -113,6 +164,8 @@ public String toString() {
   sb.append(" key=\"").append(getKey()).append("\"\n");
   sb.append(" ldapGroupDN=\"").append(getDistinguishedName()).append("\"\n");
   sb.append(" inherits=\"").append(getInherits()).append("\"\n");
+  sb.append(" manage=\"").append(isManage()).append("\"\n");
+  sb.append(" forbidden=\"").append(isForbidden()).append("\"\n");
   sb.append(" fullRoleSet=").append(getFullRoleSet()).append("\n");
   sb.append(") ===== end ").append(getClass().getName());
   return sb.toString();

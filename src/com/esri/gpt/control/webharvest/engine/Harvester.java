@@ -17,6 +17,7 @@ package com.esri.gpt.control.webharvest.engine;
 import com.esri.gpt.catalog.harvest.jobs.HjResetRunningRequest;
 import com.esri.gpt.catalog.harvest.repository.HrRecord;
 import com.esri.gpt.catalog.management.MmdEnums.ApprovalStatus;
+import com.esri.gpt.control.rest.writer.ResponseWriter;
 import com.esri.gpt.control.webharvest.common.CommonCriteria;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
 import com.esri.gpt.framework.context.RequestContext;
@@ -131,7 +132,7 @@ public class Harvester implements HarvesterMBean {
             if (ProtocolInvoker.getUpdateContent(resource.getProtocol())) {
               RequestContext context = RequestContext.extract(null);
               try {
-                submit(context, resource, null, resource.getLastSyncDate());
+                submit(context, resource, null, resource.getLastSyncDate()==null || HarvestPolicy.getInstance().getForceFullHarvest(resource)? null: resource.getLastSyncDate());
               } finally {
                 context.onExecutionPhaseCompleted();
               }
@@ -537,5 +538,16 @@ public class Harvester implements HarvesterMBean {
       processors.add(factory.newProcessor(messageBroker, baseContextPath, listener));
     }
     return processors;
+  }
+  
+  /**
+   * Writes harvester engine statistics
+   * @param writer the response writer
+   * @param sb the response string builder
+   * @throws Exception if exception occurs
+   */
+  public void writeStatistics(ResponseWriter writer,StringBuilder sb) throws Exception {
+	  HarvesterStatisticsCollector hsc = new HarvesterStatisticsCollector(pool, watchDog, taskQueue, messageBroker);
+	  hsc.writeStatistics(writer, sb);
   }
 }

@@ -148,8 +148,8 @@ public abstract void writeError(Throwable err);
 
 /**
  * Write the search result.  This will be used instead of
- * {@link #write(SearchResultRecords)} since the searchresultsRecords
- * can be extracted from {@link (SearchResult)}.
+ * {@link FeedWriter#write(SearchResultRecords)} since the searchresultsRecords
+ * can be extracted from {@link SearchResult}.
  *
  * @param result the result
  */

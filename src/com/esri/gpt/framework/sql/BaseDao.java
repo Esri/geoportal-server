@@ -152,7 +152,7 @@ public static void closeResultSet(ResultSet rs) {
 /**
  * Determine if the database is case sensitive.
  * @param context the active request context
- * @param true if the database is case sensitive
+ * @return true if the database is case sensitive
  */
 public static boolean getIsDbCaseSensitive(RequestContext context) {
   if (context == null) return true;
