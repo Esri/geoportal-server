@@ -17,7 +17,7 @@
 # ------------------------------------------
 # Basic Explanation on what this does ...
 # ------------------------------------------
-function Usage ()
+Usage ()
 	{
 	echo
 	echo Usage : create_schema_pg.cmd [host] [port] [geoportal database] [geoportal user] 
@@ -29,7 +29,7 @@ function Usage ()
 	exit 1
 }
 
-function Run ()
+Run ()
 	{
 	echo "$(date)" >> GPT_schema.txt
 	echo  Running schema_pg.sql ...   >> GPT_Schema.txt
