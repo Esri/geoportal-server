@@ -23,7 +23,7 @@ function Usage ()
 	echo Usage : create_schema_oracle [geoportal username] [geoportal password] 
 	echo Where [geoportal username] is the geoportal user
 	echo       [geoportal password] is the password of the geoportal user
-	echo e.g. create_schema_oracle geoportal10 geoportal10pwd
+	echo e.g. create_schema_oracle geoportal geoportalpwd
 	exit 1
 }
 
