@@ -1,0 +1,1388 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="generator" content="JsDoc Toolkit" />
+		
+		<title>GXE JavaScript Reference - gxe.xml.XmlNode</title>
+
+		<style type="text/css">
+			/* default.css */
+body
+{
+	font: 12px "Lucida Grande", Tahoma, Arial, Helvetica, sans-serif;
+	width: 800px;
+}
+
+.header
+{
+	clear: both;
+	background-color: #ccc;
+	padding: 8px;
+}
+
+h1
+{
+	font-size: 150%;
+	font-weight: bold;
+	padding: 0;
+	margin: 1em 0 0 .3em;
+}
+
+hr
+{
+	border: none 0;
+	border-top: 1px solid #7F8FB1;
+	height: 1px;
+}
+
+pre.code
+{
+	display: block;
+	padding: 8px;
+	border: 1px dashed #ccc;
+}
+
+#index
+{
+	margin-top: 24px;
+	float: left;
+	width: 160px;
+	position: absolute;
+	left: 8px;
+	background-color: #F3F3F3;
+	padding: 8px;
+}
+
+#content
+{
+	margin-left: 190px;
+	width: 600px;
+}
+
+.classList
+{
+	list-style-type: none;
+	padding: 0;
+	margin: 0 0 0 8px;
+	font-family: arial, sans-serif;
+	font-size: 1em;
+	overflow: auto;
+}
+
+.classList li
+{
+	padding: 0;
+	margin: 0 0 8px 0;
+}
+
+.summaryTable { width: 100%; }
+
+h1.classTitle
+{
+	font-size:170%;
+	line-height:130%;
+}
+
+h2 { font-size: 110%; }
+caption, div.sectionTitle
+{
+	background-color: #7F8FB1;
+	color: #fff;
+	font-size:130%;
+	text-align: left;
+	padding: 2px 6px 2px 6px;
+	border: 1px #7F8FB1 solid;
+}
+
+div.sectionTitle { margin-bottom: 8px; }
+.summaryTable thead { display: none; }
+
+.summaryTable td
+{
+	vertical-align: top;
+	padding: 4px;
+	border-bottom: 1px #7F8FB1 solid;
+	border-right: 1px #7F8FB1 solid;
+}
+
+/*col#summaryAttributes {}*/
+.summaryTable td.attributes
+{
+	border-left: 1px #7F8FB1 solid;
+	width: 140px;
+	text-align: right;
+}
+
+td.attributes, .fixedFont
+{
+	line-height: 15px;
+	color: #002EBE;
+	font-family: "Courier New",Courier,monospace;
+	font-size: 13px;
+}
+
+.summaryTable td.nameDescription
+{
+	text-align: left;
+	font-size: 13px;
+	line-height: 15px;
+}
+
+.summaryTable td.nameDescription, .description
+{
+	line-height: 15px;
+	padding: 4px;
+	padding-left: 4px;
+}
+
+.summaryTable { margin-bottom: 8px; }
+
+ul.inheritsList
+{
+	list-style: square;
+	margin-left: 20px;
+	padding-left: 0;
+}
+
+.detailList {
+	margin-left: 20px; 
+	line-height: 15px;
+}
+.detailList dt { margin-left: 20px; }
+
+.detailList .heading
+{
+	font-weight: bold;
+	padding-bottom: 6px;
+	margin-left: 0;
+}
+
+.light, td.attributes, .light a:link, .light a:visited
+{
+	color: #777;
+	font-style: italic;
+}
+
+.fineprint
+{
+	text-align: right;
+	font-size: 10px;
+}
+		</style>
+	</head>
+
+	<body>
+<!-- ============================== header ================================= -->	
+		<!-- begin static/header.html -->
+		<div id="header">
+</div>
+		<!-- end static/header.html -->
+
+<!-- ============================== classes index ============================ -->
+		<div id="index">
+			<!-- begin publish.classesIndex -->
+			<div align="center"><a href="../index.html">Class Index</a>
+| <a href="../files.html">File Index</a></div>
+<hr />
+<h2>Classes</h2>
+<ul class="classList">
+	
+	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
+	
+	<li><a href="../symbols/cfgAttribute.html">cfgAttribute</a></li>
+	
+	<li><a href="../symbols/cfgObject.html">cfgObject</a></li>
+	
+	<li><a href="../symbols/fgdc.control.KeywordSelector.html">fgdc.control.KeywordSelector</a></li>
+	
+	<li><a href="../symbols/gxe.html">gxe</a></li>
+	
+	<li><a href="../symbols/gxe.cfg.html">gxe.cfg</a></li>
+	
+	<li><a href="../symbols/gxe.Client.html">gxe.Client</a></li>
+	
+	<li><a href="../symbols/gxe.Context.html">gxe.Context</a></li>
+	
+	<li><a href="../symbols/gxe.control.Attribute.html">gxe.control.Attribute</a></li>
+	
+	<li><a href="../symbols/gxe.control.Control.html">gxe.control.Control</a></li>
+	
+	<li><a href="../symbols/gxe.control.ControlArray.html">gxe.control.ControlArray</a></li>
+	
+	<li><a href="../symbols/gxe.control.Element.html">gxe.control.Element</a></li>
+	
+	<li><a href="../symbols/gxe.control.ElementChoice.html">gxe.control.ElementChoice</a></li>
+	
+	<li><a href="../symbols/gxe.control.ElementChoiceBody.html">gxe.control.ElementChoiceBody</a></li>
+	
+	<li><a href="../symbols/gxe.control.ExclusiveControlArray.html">gxe.control.ExclusiveControlArray</a></li>
+	
+	<li><a href="../symbols/gxe.control.IndexedTabArray.html">gxe.control.IndexedTabArray</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputBase.html">gxe.control.InputBase</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputDelimitedTextArea.html">gxe.control.InputDelimitedTextArea</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputGemetKeyword.html">gxe.control.InputGemetKeyword</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputSelectMany.html">gxe.control.InputSelectMany</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputSelectOne.html">gxe.control.InputSelectOne</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputText.html">gxe.control.InputText</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputTextArea.html">gxe.control.InputTextArea</a></li>
+	
+	<li><a href="../symbols/gxe.control.Map.html">gxe.control.Map</a></li>
+	
+	<li><a href="../symbols/gxe.control.MessageArea.html">gxe.control.MessageArea</a></li>
+	
+	<li><a href="../symbols/gxe.control.NonExclusiveControlArray.html">gxe.control.NonExclusiveControlArray</a></li>
+	
+	<li><a href="../symbols/gxe.control.Parameter.html">gxe.control.Parameter</a></li>
+	
+	<li><a href="../symbols/gxe.control.RepeatablesContainer.html">gxe.control.RepeatablesContainer</a></li>
+	
+	<li><a href="../symbols/gxe.control.Section.html">gxe.control.Section</a></li>
+	
+	<li><a href="../symbols/gxe.control.SectionBody.html">gxe.control.SectionBody</a></li>
+	
+	<li><a href="../symbols/gxe.control.SectionHeader.html">gxe.control.SectionHeader</a></li>
+	
+	<li><a href="../symbols/gxe.control.SectionMenu.html">gxe.control.SectionMenu</a></li>
+	
+	<li><a href="../symbols/gxe.control.TabArray.html">gxe.control.TabArray</a></li>
+	
+	<li><a href="../symbols/gxe.control.Tabs.html">gxe.control.Tabs</a></li>
+	
+	<li><a href="../symbols/gxe.control.TabsBody.html">gxe.control.TabsBody</a></li>
+	
+	<li><a href="../symbols/gxe.control.TargetLabel.html">gxe.control.TargetLabel</a></li>
+	
+	<li><a href="../symbols/gxe.html.HtmlAttribute.html">gxe.html.HtmlAttribute</a></li>
+	
+	<li><a href="../symbols/gxe.html.HtmlAttributes.html">gxe.html.HtmlAttributes</a></li>
+	
+	<li><a href="../symbols/gxe.util.ArrayList.html">gxe.util.ArrayList</a></li>
+	
+	<li><a href="../symbols/gxe.util.StringBuffer.html">gxe.util.StringBuffer</a></li>
+	
+	<li><a href="../symbols/gxe.xml.DomProcessor.html">gxe.xml.DomProcessor</a></li>
+	
+	<li><a href="../symbols/gxe.xml.Generator.html">gxe.xml.Generator</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlAttribute.html">gxe.xml.XmlAttribute</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlAttributes.html">gxe.xml.XmlAttributes</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlDocument.html">gxe.xml.XmlDocument</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlElement.html">gxe.xml.XmlElement</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlElements.html">gxe.xml.XmlElements</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlNamespace.html">gxe.xml.XmlNamespace</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlNamespaces.html">gxe.xml.XmlNamespaces</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlNode.html">gxe.xml.XmlNode</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlNodeInfo.html">gxe.xml.XmlNodeInfo</a></li>
+	
+</ul>
+<hr />
+			<!-- end publish.classesIndex -->
+		</div>
+		
+		<div id="content">
+<!-- ============================== class title ============================ -->
+			<h1 class="classTitle">
+				
+				Class gxe.xml.XmlNode
+			</h1>
+
+<!-- ============================== class summary ========================== -->			
+			<p class="description">
+				
+				
+			
+				A target XML node (element or attribute).
+				
+				
+					<br /><i>Defined in: </i> <a href="../symbols/src/gxe.js.html">gxe.js</a>.
+				
+			</p>
+
+<!-- ============================== constructor summary ==================== -->			
+			
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class gxe.xml.XmlNode.">
+				<caption>Class Summary</caption>
+				<thead>
+					<tr>
+						<th scope="col">Constructor Attributes</th>
+						<th scope="col">Constructor Name and Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="attributes">&nbsp;</td>
+						<td class="nameDescription" >
+							<div class="fixedFont">
+								<b><a href="../symbols/gxe.xml.XmlNode.html#constructor">gxe.xml.XmlNode</a></b>()
+							</div>
+							<div class="description"></div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+
+<!-- ============================== properties summary ===================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class gxe.xml.XmlNode.">
+					<caption>Field Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Field Attributes</th>
+							<th scope="col">Field Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/gxe.xml.XmlNode.html#cfgObject">cfgObject</a></b>
+								</div>
+								<div class="description">the associated editor configuration object</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/gxe.xml.XmlNode.html#isOptionalPlaceHolder">isOptionalPlaceHolder</a></b>
+								</div>
+								<div class="description">true if this node is an optional place holder only   (no serialization)</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/gxe.xml.XmlNode.html#isPlaceHolder">isPlaceHolder</a></b>
+								</div>
+								<div class="description">true if this node is a place holder only   (no serialization)</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/gxe.xml.XmlNode.html#nodeInfo">nodeInfo</a></b>
+								</div>
+								<div class="description">the node information</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/gxe.xml.XmlNode.html#parentDocument">parentDocument</a></b>
+								</div>
+								<div class="description">the parent XML document</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/gxe.xml.XmlNode.html#parentElement">parentElement</a></b>
+								</div>
+								<div class="description">the parent HTML element</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+			
+
+<!-- ============================== methods summary ======================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class gxe.xml.XmlNode.">
+					<caption>Method Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Method Attributes</th>
+							<th scope="col">Method Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.xml.XmlNode.html#constructor">constructor</a></b>(parentDocument, parentElement, cfgObject)
+								</div>
+								<div class="description">Constructor.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.xml.XmlNode.html#echo">echo</a></b>(xmlGenerator, stringBuffer, nDepth)
+								</div>
+								<div class="description">Serializes XML content.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.xml.XmlNode.html#formatValidationMessage">formatValidationMessage</a></b>(inputControl, i18nContextKey)
+								</div>
+								<div class="description">Formats a validation message.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.xml.XmlNode.html#getInputControl">getInputControl</a></b>()
+								</div>
+								<div class="description">Gets the input control associated with this node.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.xml.XmlNode.html#getLabelText">getLabelText</a></b>()
+								</div>
+								<div class="description">Gets the default label text for the node.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.xml.XmlNode.html#getQualifiedUri">getQualifiedUri</a></b>()
+								</div>
+								<div class="description">Gets the qualified URI for the node.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.xml.XmlNode.html#getSerializeIfEmpty">getSerializeIfEmpty</a></b>()
+								</div>
+								<div class="description">Indicates if this node should be serialized even if its content is empty.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.xml.XmlNode.html#intitalizeNodeInfo">intitalizeNodeInfo</a></b>()
+								</div>
+								<div class="description">Initializes the node info.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.xml.XmlNode.html#isAttribute">isAttribute</a></b>()
+								</div>
+								<div class="description">Determines if the node represents an XML attribute.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.xml.XmlNode.html#isRepeatable">isRepeatable</a></b>()
+								</div>
+								<div class="description">Determines if the node is repeatable.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.xml.XmlNode.html#resolveMinOccurs">resolveMinOccurs</a></b>()
+								</div>
+								<div class="description">Resolves the minimum number of occurrences for the node.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.xml.XmlNode.html#setInputControl">setInputControl</a></b>(ctl)
+								</div>
+								<div class="description">Sets the input control associated with this node.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.xml.XmlNode.html#validateInput">validateInput</a></b>(inputControl, bInFeedbackMode)
+								</div>
+								<div class="description">Validates the content of an input control.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.xml.XmlNode.html#validateInputValue">validateInputValue</a></b>(inputControl, value)
+								</div>
+								<div class="description">Validates an input value associated with a control.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.xml.XmlNode.html#validateInputValues">validateInputValues</a></b>(inputControl, values)
+								</div>
+								<div class="description">Validates multiple input values associated with a control.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.xml.XmlNode.html#wrapsIsoMultiValueList">wrapsIsoMultiValueList</a></b>()
+								</div>
+								<div class="description">Determines if this element wraps an ISO19139 multi-value list.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+			
+<!-- ============================== events summary ======================== -->
+			
+
+<!-- ============================== constructor details ==================== -->		
+			
+			<div class="details"><a name="constructor"> </a>
+				<div class="sectionTitle">
+					Class Detail
+				</div>
+				
+				<div class="fixedFont">
+						<b>gxe.xml.XmlNode</b>()
+				</div>
+				
+				<div class="description">
+					
+					
+				</div>
+				
+				
+				
+				
+					
+					
+					
+					
+					
+					
+					
+
+			</div>
+			
+
+<!-- ============================== field details ========================== -->		
+			
+				<div class="sectionTitle">
+					Field Detail
+				</div>
+				
+					<a name="cfgObject"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Object}</span>
+					<b>cfgObject</b>
+					
+					</div>
+					<div class="description">
+						the associated editor configuration object
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="isOptionalPlaceHolder"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{boolean}</span>
+					<b>isOptionalPlaceHolder</b>
+					
+					</div>
+					<div class="description">
+						true if this node is an optional place holder only   (no serialization)
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="isPlaceHolder"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{boolean}</span>
+					<b>isPlaceHolder</b>
+					
+					</div>
+					<div class="description">
+						true if this node is a place holder only   (no serialization)
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="nodeInfo"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/gxe.xml.XmlNodeInfo.html">gxe.xml.XmlNodeInfo</a>}</span>
+					<b>nodeInfo</b>
+					
+					</div>
+					<div class="description">
+						the node information
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="parentDocument"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/gxe.xml.XmlDocument.html">gxe.xml.XmlDocument</a>}</span>
+					<b>parentDocument</b>
+					
+					</div>
+					<div class="description">
+						the parent XML document
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="parentElement"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Element}</span>
+					<b>parentElement</b>
+					
+					</div>
+					<div class="description">
+						the parent HTML element
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					
+				
+			
+
+<!-- ============================== method details ========================= -->		
+			
+				<div class="sectionTitle">
+					Method Detail
+				</div>
+				
+					<a name="constructor"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>constructor</b>(parentDocument, parentElement, cfgObject)
+					
+					</div>
+					<div class="description">
+						Constructor.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.xml.XmlDocument.html">gxe.xml.XmlDocument</a>}</span> <b>parentDocument</b>
+									
+								</dt>
+								<dd>the parent XML document</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Element}</span> <b>parentElement</b>
+									
+								</dt>
+								<dd>the parent HTML element</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>cfgObject</b>
+									
+								</dt>
+								<dd>the associated editor configuration object</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="echo"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>echo</b>(xmlGenerator, stringBuffer, nDepth)
+					
+					</div>
+					<div class="description">
+						Serializes XML content.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.xml.Generator.html">gxe.xml.Generator</a>}</span> <b>xmlGenerator</b>
+									
+								</dt>
+								<dd>the XML generator</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.util.StringBuffer.html">gxe.util.StringBuffer</a>}</span> <b>stringBuffer</b>
+									
+								</dt>
+								<dd>the buffer to which content will be written</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Integer}</span> <b>nDepth</b>
+									
+								</dt>
+								<dd>the indentation depth</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="formatValidationMessage"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{String}</span>
+					<b>formatValidationMessage</b>(inputControl, i18nContextKey)
+					
+					</div>
+					<div class="description">
+						Formats a validation message.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.control.InputBase.html">gxe.control.InputBase</a>}</span> <b>inputControl</b>
+									
+								</dt>
+								<dd>the associated input control</dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>i18nContextKey</b>
+									
+								</dt>
+								<dd>the context key associated with the localized message string</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{String}</span> the message</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getInputControl"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/gxe.control.InputBase.html">gxe.control.InputBase</a>}</span>
+					<b>getInputControl</b>()
+					
+					</div>
+					<div class="description">
+						Gets the input control associated with this node.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/gxe.control.InputBase.html">gxe.control.InputBase</a>}</span> the input control (can be null)</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getLabelText"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{String}</span>
+					<b>getLabelText</b>()
+					
+					</div>
+					<div class="description">
+						Gets the default label text for the node.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{String}</span> the label text</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getQualifiedUri"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{String}</span>
+					<b>getQualifiedUri</b>()
+					
+					</div>
+					<div class="description">
+						Gets the qualified URI for the node.<br/>Format: namespaceURI#localName
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{String}</span> the qualified URI</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getSerializeIfEmpty"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{boolean}</span>
+					<b>getSerializeIfEmpty</b>()
+					
+					</div>
+					<div class="description">
+						Indicates if this node should be serialized even if its content is empty.<br/>Based upon cfg attribute g:serializeIfEmpty.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> true if this node should be serialized when empty</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="intitalizeNodeInfo"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>intitalizeNodeInfo</b>()
+					
+					</div>
+					<div class="description">
+						Initializes the node info.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="isAttribute"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{boolean}</span>
+					<b>isAttribute</b>()
+					
+					</div>
+					<div class="description">
+						Determines if the node represents an XML attribute.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> true if the node is an attribute</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="isRepeatable"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{boolean}</span>
+					<b>isRepeatable</b>()
+					
+					</div>
+					<div class="description">
+						Determines if the node is repeatable.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> true if the node is repeatable</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="resolveMinOccurs"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Integer}</span>
+					<b>resolveMinOccurs</b>()
+					
+					</div>
+					<div class="description">
+						Resolves the minimum number of occurrences for the node.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Integer}</span> the minimum number of occurrences</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="setInputControl"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>setInputControl</b>(ctl)
+					
+					</div>
+					<div class="description">
+						Sets the input control associated with this node.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.control.InputBase.html">gxe.control.InputBase</a>}</span> <b>ctl</b>
+									
+								</dt>
+								<dd>the input control</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="validateInput"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{"isValid":{boolean}|"message":{String}}</span>
+					<b>validateInput</b>(inputControl, bInFeedbackMode)
+					
+					</div>
+					<div class="description">
+						Validates the content of an input control.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.control.InputBase.html">gxe.control.InputBase</a>}</span> <b>inputControl</b>
+									
+								</dt>
+								<dd>the input control</dd>
+							
+								<dt>
+									<span class="light fixedFont">{boolean}</span> <b>bInFeedbackMode</b>
+									
+								</dt>
+								<dd>true if the request is part of validation feedback</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{"isValid":{boolean}|"message":{String}}</span> the validation status</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="validateInputValue"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{"isValid":{boolean}|"message":{String}}</span>
+					<b>validateInputValue</b>(inputControl, value)
+					
+					</div>
+					<div class="description">
+						Validates an input value associated with a control.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.control.InputBase.html">gxe.control.InputBase</a>}</span> <b>inputControl</b>
+									
+								</dt>
+								<dd>the input control that generated the value</dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>value</b>
+									
+								</dt>
+								<dd>the input value</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{"isValid":{boolean}|"message":{String}}</span> the validation status</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="validateInputValues"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{"isValid":{boolean}|"message":{String}}</span>
+					<b>validateInputValues</b>(inputControl, values)
+					
+					</div>
+					<div class="description">
+						Validates multiple input values associated with a control.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.control.InputBase.html">gxe.control.InputBase</a>}</span> <b>inputControl</b>
+									
+								</dt>
+								<dd>the input control that generated the values</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Array}</span> <b>values</b>
+									
+								</dt>
+								<dd>the value array</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{"isValid":{boolean}|"message":{String}}</span> the validation status</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="wrapsIsoMultiValueList"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{boolean}</span>
+					<b>wrapsIsoMultiValueList</b>()
+					
+					</div>
+					<div class="description">
+						Determines if this element wraps an ISO19139 multi-value list.<br/>(e.g. MD_TopicCategoryCode - InputSelectMany)
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					
+				
+			
+			
+<!-- ============================== event details ========================= -->		
+			
+			
+			<hr />
+		</div>
+
+		
+<!-- ============================== footer ================================= -->
+		<div class="fineprint" style="clear:both">
+		</div>
+	</body>
+</html>

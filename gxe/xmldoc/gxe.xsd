@@ -1,0 +1,1212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:g="http://www.esri.com/geoportal/gxe" xmlns:h="http://www.esri.com/geoportal/gxe/html" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.esri.com/geoportal/gxe" elementFormDefault="qualified" attributeFormDefault="qualified">
+	<xs:import namespace="http://www.esri.com/geoportal/gxe/html" schemaLocation="gxe-html.xsd"/>
+	<!--
+		Begin element definitions =================================================================
+	-->
+	<!--
+		g:annotation
+	-->
+	<xs:element name="annotation">
+		<xs:annotation>
+			<xs:documentation>
+				Can be used to annotate an editor delinition element.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="g:documentation" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:anyAttribute/>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:any-element
+	-->
+	<xs:element name="any-element">
+		<xs:annotation>
+			<xs:documentation>
+				Placeholder to represent any element within then http://www.esri.com/geoportal/gxe namespace.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<!--
+		g:attribute
+	-->
+	<xs:element name="attribute">
+		<xs:annotation>
+			<xs:documentation>
+				An editor definition element that is bound to a target XML attribute.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="g:gxe-type-section">
+					<xs:sequence>
+						<xs:element ref="g:restriction" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:attributeGroup ref="g:gxe-attributes-target"/>
+					<xs:attributeGroup ref="g:gxe-attributes-multiplicity-attribute"/>
+					<xs:attribute ref="g:preferOpen" use="optional"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:attributeGroup
+	-->
+	<xs:element name="attributeGroup">
+		<xs:annotation>
+			<xs:documentation>
+				Represents a basic container for child definition elements of type g:attribute.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="g:attribute" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:body
+	-->
+	<xs:element name="body">
+		<xs:annotation>
+			<xs:documentation>
+				Intended to represent the body portion of a user interface section.
+				A user interface section typically has a header and body.
+				The header will typically contain the primay label (or tabs), and the body would contain the content.
+				The body will typically contain one or more children providing a hierarchical user interface structure.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="g:any-element" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attributeGroup ref="g:gxe-attributes-renderable"/>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:container
+	-->
+	<xs:element name="container">
+		<xs:annotation>
+			<xs:documentation>
+				Represents a basic container for child definition elements.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="g:any-element" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute ref="g:rendered" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:context
+	-->
+	<xs:element name="context">
+		<xs:annotation>
+			<xs:documentation>
+				Provides a context for the editor.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="g:i18n" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="g:any-element" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attributeGroup ref="g:gxe-attributes-non-renderable"/>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:documentation
+	-->
+	<xs:element name="documentation" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Can be used to provides documention text for g:annotatuon element.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<!--
+		g:editor
+	-->
+	<xs:element name="editor">
+		<xs:annotation>
+			<xs:documentation>
+				The root element for an editor definition.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="g:context"/>
+				<xs:element ref="g:rootElement"/>
+				<xs:element ref="g:any-element" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attributeGroup ref="g:gxe-attributes-non-renderable"/>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:element
+	-->
+	<xs:element name="element">
+		<xs:annotation>
+			<xs:documentation>
+				An editor definition element that is bound to a target XML element.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="g:gxe-type-section">
+					<xs:sequence>
+						<xs:element ref="g:restriction" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element ref="g:matchTopElements" minOccurs="0"/>
+					</xs:sequence>
+					<xs:attributeGroup ref="g:gxe-attributes-target"/>
+					<xs:attributeGroup ref="g:gxe-attributes-multiplicity-element"/>
+					<xs:attribute ref="g:useExclusiveDisplay" use="optional"/>
+					<xs:attribute ref="g:preferOpen" use="optional"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:elementChoice
+	-->
+	<xs:element name="elementChoice">
+		<xs:annotation>
+			<xs:documentation>
+				An editor definition the provides an exclusive choice of target XML elements.
+				The header contains the radio buttons, the body will contain the optional elements (one header radio per body child).
+				Within the body, only elements of type G:element will be considered.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="g:gxe-type-section">
+					<xs:attribute ref="g:labelNone" use="optional"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:header
+	-->
+	<xs:element name="header">
+		<xs:annotation>
+			<xs:documentation>
+				Intended to represent the header portion of a user interface section.
+				A user interface section typically has a header and body.
+				The header will typically contain the primay label (or tabs), and the body would contain the content.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:choice minOccurs="0">
+					<xs:element ref="g:label"/>
+					<xs:element ref="g:tabArray"/>
+				</xs:choice>
+				<xs:element ref="g:any-element" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attributeGroup ref="g:gxe-attributes-renderable"/>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:i18n
+	-->
+	<xs:element name="i18n">
+		<xs:annotation>
+			<xs:documentation>
+				Provides localizable string information for the editor context (i.e. for button names or messages 
+				globally required by the editor itself). Example:
+				<![CDATA[<g:i18n g:key="button.clearMessages">$i18n.catalog.gxe.general.button.clearMessages</g:i18n>]]></xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute ref="g:key" use="required"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:import
+	-->
+	<xs:element name="import">
+		<xs:annotation>
+			<xs:documentation>
+				Instructs the processor to import the content of an editor definition file.
+				The location of the file is spcified by the value of the "g:src" attribute.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute ref="g:src" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:input
+	-->
+	<xs:element name="input">
+		<xs:annotation>
+			<xs:documentation>
+				Represents the input component associated with a target XML node (element text or attribute value).
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attributeGroup ref="g:gxe-attributes-renderable"/>
+			<xs:attribute ref="g:tip"/>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:label
+	-->
+	<xs:element name="label">
+		<xs:annotation>
+			<xs:documentation>
+				Provides information associated with a label.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attributeGroup ref="g:gxe-attributes-renderable"/>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:match
+	-->
+	<xs:element name="match">
+		<xs:annotation>
+			<xs:documentation>
+				Represents a match condition for an XML document query (does not support full XPath expressions). 
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute ref="g:qPath" use="required"/>
+			<xs:attribute ref="g:qValue" use="optional"/>
+			<xs:attribute ref="g:qMode" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:matchTopElements
+	-->
+	<xs:element name="matchTopElements">
+		<xs:annotation>
+			<xs:documentation>
+				Used in limited cases to query an existing targeted XML document in order to match content with an
+				editor definition element (does not support full XPath expressions).
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="g:match" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute ref="g:any-attribute"/>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:namespace
+	-->
+	<xs:element name="namespace">
+		<xs:annotation>
+			<xs:documentation>
+				 Defines of a targeted XML namespace.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attributeGroup ref="g:gxe-attributes-namespace"/>
+			<xs:attributeGroup ref="g:gxe-attributes-non-renderable"/>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:namespaces
+	-->
+	<xs:element name="namespaces">
+		<xs:annotation>
+			<xs:documentation>
+				Defines of a collection targeted XML namespaces.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="g:namespace" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attributeGroup ref="g:gxe-attributes-non-renderable"/>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:option
+	-->
+	<xs:element name="option">
+		<xs:annotation>
+			<xs:documentation>
+				Defines a selectable option. This definition element does not render on its own, it is processed by a parent control:
+				$base/core/ui/InputSelectOne.xml - a dropdown list (gxe.control.input.InputSelectOne)
+				$base/core/ui/InputSelectMany.xml - a set of check boxes (gxe.control.input.InputSelectMany)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attributeGroup ref="g:gxe-attributes-option"/>
+			<xs:attribute ref="g:any-attribute"/>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:options
+	-->
+	<xs:element name="options">
+		<xs:annotation>
+			<xs:documentation>
+				Defines a set of selectable options. This definition element does not render on its own, it is processed by a parent control:
+				$base/core/ui/InputSelectOne.xml - a dropdown list (gxe.control.input.InputSelectOne)
+				$base/core/ui/InputSelectMany.xml - a set of check boxes (gxe.control.input.InputSelectMany)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="g:option" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute ref="g:any-attribute"/>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:restriction
+	-->
+	<xs:element name="restriction">
+		<xs:annotation>
+			<xs:documentation>
+				Defines restrictions for targeted XML node values (element text or attribute values).
+				The child elements are intended to mirror common XML Schema restrictions.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<!--
+					numbers
+				-->
+				<xs:element name="minExclusive" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Defines a minimum exclusive numeric value.
+						</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="value" type="xs:decimal" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="minInclusive" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Defines a minimum inclusive numeric value.
+						</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="value" type="xs:decimal" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="maxExclusive" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Defines a maximum exclusive numeric value.
+						</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="value" type="xs:decimal" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="maxInclusive" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Defines a maximum inclusive numeric value.
+						</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="value" type="xs:decimal" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<!--
+					string lengths
+				-->
+				<xs:element name="length" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Defines an exact string length.
+						</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="value" type="xs:integer" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="minLength" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Defines a minimum string length.
+						</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="value" type="xs:integer" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="maxLength" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Defines a maximum string length.
+						</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="value" type="xs:integer" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<!--
+					pattern
+				-->
+				<xs:element name="pattern" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Defines a regular expression pattern for a string value.
+							The regular expression must be specified in JavaScript format.
+							Some of these expressions are quite difficult get get working.
+						</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="value" type="xs:string" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:anyAttribute/>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:rootElement
+	-->
+	<xs:element name="rootElement">
+		<xs:annotation>
+			<xs:documentation>
+				Provides a reference to the editor definition element that is bound to the targetted XML root.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attributeGroup ref="g:gxe-attributes-renderable"/>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:section
+	-->
+	<xs:element name="section">
+		<xs:annotation>
+			<xs:documentation>
+				Intended to represent a user interface section.
+				A user interface section typically has a header and body.
+				The header will typically contain the primay label (or tabs), and the body would contain the content.
+				The body will typically contain one or more children providing a hierarchical user interface structure.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="g:gxe-type-section"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:tabArray
+	-->
+	<xs:element name="tabArray">
+		<xs:annotation>
+			<xs:documentation>
+				Container for an array of tabs typically located within the header of a user interface section.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attributeGroup ref="g:gxe-attributes-renderable"/>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:tabs
+	-->
+	<xs:element name="tabs">
+		<xs:annotation>
+			<xs:documentation>
+				Intended to represent a set of tabs within the user interface, typically contaiuning a header and a body.
+				The header contains the tabs the body will contain the content (one header tab per body child).
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="g:gxe-type-section"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		g:textNode
+	-->
+	<xs:element name="textNode">
+		<xs:annotation>
+			<xs:documentation>
+				An editor definition element that is bound to the text of a complex target XML element.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="g:gxe-type-section"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<!--
+		End element definitions ==================================================================
+	-->
+	<!--
+		Begin type definitions ===================================================================
+	-->
+	<!--
+		g:gxe-type-section
+	-->
+	<xs:complexType name="gxe-type-section">
+		<xs:annotation>
+			<xs:documentation>
+				Intended to represent a user interface section.
+				A user interface section typically has a header and body.
+				The header will typically contain the primay label (or tabs), and the body would contain the content.
+				The body will typically contain one or more children providing a hierarchical user interface structure.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="g:header" minOccurs="0"/>
+			<xs:element ref="g:body" minOccurs="0"/>
+			<xs:element ref="g:any-element" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="g:gxe-attributes-renderable"/>
+	</xs:complexType>
+	<!--
+		End type definitions =====================================================================
+	-->
+	<!--
+		Begin attribute definitions =================================================================
+	-->
+	<!--
+		g:alias
+	-->
+	<xs:attribute name="alias" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies a single aliased value that can be used to initilize a selectable option (InputSelectOne or InputSelectMany).
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:alternateValues
+	-->
+	<xs:attribute name="alternateValues" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies a comma delimited list of acceptable alternate values for the targeted XML node (element text or attribute value).
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:any-attribute
+	-->
+	<xs:attribute name="any-attribute">
+		<xs:annotation>
+			<xs:documentation>
+				Placeholder to represent any attribute within then http://www.esri.com/geoportal/gxe namespace.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:delimiter
+	-->
+	<xs:attribute name="delimiter" type="xs:string" default=",">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies a delimiter. Typically associated with:
+				$base/core/ui/InputDelimitedTextArea.xml
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:displayInline
+	-->
+	<xs:attribute name="displayInline" type="xs:boolean" default="false">
+		<xs:annotation>
+			<xs:documentation>
+				Indicates a preference for the display of an HTML element (inline vs block).
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:extends
+	-->
+	<xs:attribute name="extends" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies that a definition element will extend the content of an editor definition file.
+				The location of the file is spcified by the value of the "extends" attribute.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:extensible
+	-->
+	<xs:attribute name="extensible" type="xs:boolean" default="false">
+		<xs:annotation>
+			<xs:documentation>
+				Indicates where or not a definition element is extensible.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:fixedValue
+	-->
+	<xs:attribute name="fixedValue" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies a fixed default value for the targeted XML node (element text or attribute value).
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:i18nBase
+	-->
+	<xs:attribute name="i18nBase" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies a base prefix for localized strings within a Java resource bundle (.properties file).
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:info
+	-->
+	<xs:attribute name="info" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies the value for help information associated with a target HTML node (element or attribute).
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:isDocumentTitle
+	-->
+	<xs:attribute name="isDocumentTitle" type="xs:boolean" default="false">
+		<xs:annotation>
+			<xs:documentation>
+				Indicates wherther or not the targeted XML node (element text or attribute value) is the document title.
+				This is used when saving a document as a draft (at a minimum, a title is required).
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:isIsoCLV
+	-->
+	<xs:attribute name="isIsoCLV" type="xs:boolean" default="false">
+		<xs:annotation>
+			<xs:documentation>
+				Indicates whether or not the XML target is an ISO code list value.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:isIsoWMLV
+	-->
+	<xs:attribute name="isIsoWMLV" type="xs:boolean" default="false">
+		<xs:annotation>
+			<xs:documentation>
+				Indicates whether or not the XML target is a wrapped ISO multi value list.
+				e.g. MD_TopicCategoryCode - InputSelectMany
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:isOther
+	-->
+	<xs:attribute name="isOther" type="xs:boolean" default="false">
+		<xs:annotation>
+			<xs:documentation>
+				If set to "true", it indicates that the parent option should provide a text box for allowing the input of an "other" value.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:jsClass
+	-->
+	<xs:attribute name="jsClass" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies the JavaScript class that will be instantiated to process the definition element.
+				By default, class gxe.control.Control will act as the processor (found within gxe.js).
+				If specified, the "jsClass" attribute value must refer to a JavaScript class that extends from
+				gxe.control.Control (either directly or from one of it's sub-classes).
+				Specifying a "jsClass' allows a developer to associate specific logic with an editor definition element.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:key
+	-->
+	<xs:attribute name="key" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies a key value. 
+				Typically used in combination with definition element g:i18n .
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:label
+	-->
+	<xs:attribute name="label" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies the value for a user interface label.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:labelNone
+	-->
+	<xs:attribute name="labelNone" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies a the user interface label value to use when a target XML element choice is optional.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:maxOccurs
+	-->
+	<xs:attribute name="maxOccurs" default="1">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies the maximum number of times a target XML element can occur.
+				The value "unbounded" indicates that the element can appear an unlimited number of times.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:union memberTypes="xs:integer">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="unbounded"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:union>
+		</xs:simpleType>
+	</xs:attribute>
+	<!--
+		g:minOccurs
+	-->
+	<xs:attribute name="minOccurs" type="xs:integer" default="1">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies the minimum number of times a target XML element can occur.
+				The value "0" indicates that the element is optional.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:preferOpen
+	-->
+	<xs:attribute name="preferOpen" type="xs:boolean" default="true">
+		<xs:annotation>
+			<xs:documentation>
+				Indicates a preference for the display of optional target XML nodes (elements or attributes)
+				When true, the section will be open by default for new documents (i.e. checked).
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:prefix
+	-->
+	<xs:attribute name="prefix" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies a prefix value. 
+				Typically used in combination with definition element g:namespace.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:qMode
+	-->
+	<xs:attribute name="qMode">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies an XML query match mode (does not support full XPath expressions). 
+				Typically used in combination with definition element g:match.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="optional"/>
+				<xs:enumeration value="required"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:attribute>
+	<!--
+		g:qPath
+	-->
+	<xs:attribute name="qPath" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies an XML query path (does not support full XPath expressions). 
+				Typically used in combination with definition element g:match.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:qValue
+	-->
+	<xs:attribute name="qValue" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies an XML query value (does not support full XPath expressions). 
+				Typically used in combination with definition element g:match.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:rendered
+	-->
+	<xs:attribute name="rendered" default="true">
+		<xs:annotation>
+			<xs:documentation>
+				Indicates where or not a definition element should be rendered within the user interface.
+				The default is true, but if and only if the definition element has an associated HTML tag.
+				If the definition element is within the "h" namespace (http://www.esri.com/geoportal/gxe/html),
+				then the element will render using the associated tag (i.e. element h:div will render an HTML "div").
+				If the definition element is not within the "h" namespace (http://www.esri.com/geoportal/gxe/html)
+				and an h:tag attribute is present, the element will render using the value of h:tag
+				(i.e. element g:element with attribute h:tag="div" will render an HTML "div").
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:union memberTypes="xs:boolean xs:string"/>
+		</xs:simpleType>
+	</xs:attribute>
+	<!--
+		g:overridable
+	-->
+	<xs:attribute name="overridable" type="xs:boolean" default="false">
+		<xs:annotation>
+			<xs:documentation>
+				Indicates where or not a definition element is overridable.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:src
+	-->
+	<xs:attribute name="src" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies the src location for that an editor definition file.
+				Typically used in combination with definition element g:import.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:selected
+	-->
+	<xs:attribute name="selected" type="xs:boolean" default="false">
+		<xs:annotation>
+			<xs:documentation>
+				Indicates whether or not the an option should be selected by default.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:serializeIfEmpty
+	-->
+	<xs:attribute name="serializeIfEmpty" type="xs:boolean" default="false">
+		<xs:annotation>
+			<xs:documentation>
+				Indicates wherther or not the targeted XML node (element or attribute) should be serialized even if it is empty
+				("serialized" - written to the XML document).
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:targetName
+	-->
+	<xs:attribute name="targetName" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies the targeted XML node name (element or attribute).
+				The recommendation is to always use a qualified name (i.e. [namespace prefix]:[name])
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:targetNS
+	-->
+	<xs:attribute name="targetNS" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies the namespace for the targeted XML node (element or attribute).
+				Can be set to an empty string to indicate no namespace (i.e. targetNS="")
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:thesaurus
+	-->
+	<xs:attribute name="thesaurus" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies a thesaurus reference value.
+				Used by JavaScript class fgdc.control.KeywordSelector.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:tip
+	-->
+	<xs:attribute name="tip" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies the value for a user interface tool tip to display when hovering over an input control.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:uri
+	-->
+	<xs:attribute name="uri" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies a URI value. 
+				Typically used in combination with definition element g:namespace.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:use
+	-->
+	<xs:attribute name="use" default="optional">
+		<xs:annotation>
+			<xs:documentation>
+				Indicates whether the target XML attribute is "optional" or "required".
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="optional"/>
+				<xs:enumeration value="required"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:attribute>
+	<!--
+		g:useExclusiveDisplay
+	-->
+	<xs:attribute name="useExclusiveDisplay" type="xs:boolean" default="true">
+		<xs:annotation>
+			<xs:documentation>
+				Indicates a preference for the display target XML elements with a multiplicity greater than one.
+				When true, multiple elements will have and indexed array of tabs for navigation.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:value
+	-->
+	<xs:attribute name="value" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies a value.
+				Typically the default value for the targeted XML node (element text or attribute value), 
+				or a coded value associated with a selectable option.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		g:valueType
+	-->
+	<xs:attribute name="valueType" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies the vaue data type the for the targeted XML node (element text or attribute value).
+				(examples xs:string, xs:integer, ...) 
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!--
+		End attribute definitions ==================================================================
+	-->
+	<!--
+		Begin attributeGroup definitions ============================================================
+	-->
+	<!--
+		g:gxe-attributes-base
+	-->
+	<xs:attributeGroup name="gxe-attributes-base">
+		<xs:annotation>
+			<xs:documentation>
+				Attributes common to all editor definition elements.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute ref="g:i18nBase" use="optional"/>
+	</xs:attributeGroup>
+	<!--
+		g:gxe-attributes-control-base
+	-->
+	<xs:attributeGroup name="gxe-attributes-control-base">
+		<xs:annotation>
+			<xs:documentation>
+				Attributes common to all renderable editor controls.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute ref="g:jsClass" use="optional"/>
+		<xs:attribute ref="g:rendered" use="optional"/>
+	</xs:attributeGroup>
+	<!--
+		g:gxe-attributes-extensibility
+	-->
+	<xs:attributeGroup name="gxe-attributes-extensibility">
+		<xs:annotation>
+			<xs:documentation>
+				Attributes associated with the extensibility of editor components.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute ref="g:extends" use="optional"/>
+		<xs:attribute ref="g:extensible" use="optional"/>
+		<xs:attribute ref="g:overridable" use="optional"/>
+	</xs:attributeGroup>
+	<!--
+		g:gxe-attributes-fgdc-util
+	-->
+	<xs:attributeGroup name="gxe-attributes-fgdc-util">
+		<xs:annotation>
+			<xs:documentation>
+				Attributes specific to the FGDC implementation.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute ref="g:thesaurus" use="optional"/>
+	</xs:attributeGroup>
+	<!--
+		g:gxe-attributes-iso-util
+	-->
+	<xs:attributeGroup name="gxe-attributes-iso-util">
+		<xs:annotation>
+			<xs:documentation>
+				Attributes specific to the ISO19139 implementation.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute ref="g:isIsoCLV" use="optional" default="false"/>
+		<xs:attribute ref="g:isIsoWMLV" use="optional" default="false"/>
+	</xs:attributeGroup>
+	<!--
+		g:gxe-attributes-multiplicity-attribute
+	-->
+	<xs:attributeGroup name="gxe-attributes-multiplicity-attribute">
+		<xs:annotation>
+			<xs:documentation>
+				Attributes associated with the multiplicity of a targeted XML attribute.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute ref="g:use" use="optional"/>
+	</xs:attributeGroup>
+	<!--
+		g:gxe-attributes-multiplicity-element
+	-->
+	<xs:attributeGroup name="gxe-attributes-multiplicity-element">
+		<xs:annotation>
+			<xs:documentation>
+				Attributes associated with the multiplicity of a targeted XML element.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute ref="g:minOccurs" use="optional"/>
+		<xs:attribute ref="g:maxOccurs" use="optional"/>
+	</xs:attributeGroup>
+	<!--
+		g:gxe-attributes-namespace
+	-->
+	<xs:attributeGroup name="gxe-attributes-namespace">
+		<xs:annotation>
+			<xs:documentation>
+				Attributes associated with the definition of a targeted XML namespace.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute ref="g:prefix" use="required"/>
+		<xs:attribute ref="g:uri" use="required"/>
+	</xs:attributeGroup>
+	<!--
+		g:gxe-attributes-non-renderable
+	-->
+	<xs:attributeGroup name="gxe-attributes-non-renderable">
+		<xs:annotation>
+			<xs:documentation>
+				Attributes common to all non-renderable editor definition elements.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attributeGroup ref="g:gxe-attributes-base"/>
+		<xs:attributeGroup ref="g:gxe-attributes-extensibility"/>
+		<xs:attribute ref="g:any-attribute"/>
+		<!--<xs:anyAttribute/>-->
+	</xs:attributeGroup>
+	<!--
+		g:gxe-attributes-option
+	-->
+	<xs:attributeGroup name="gxe-attributes-option">
+		<xs:annotation>
+			<xs:documentation>
+				Attributes associated with the definition of a selectable option.
+				Typically used in conjunction with:
+				$base/core/ui/InputSelectOne.xml - a dropdown list (gxe.control.input.InputSelectOne)
+				$base/core/ui/InputSelectMany.xml - a set of check boxes (gxe.control.input.InputSelectMany)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute ref="g:value" use="required"/>
+		<xs:attribute ref="g:label" use="required"/>
+		<xs:attribute ref="g:selected" use="optional"/>
+		<xs:attribute ref="g:isOther" use="optional"/>
+	</xs:attributeGroup>
+	<!--
+		g:gxe-attributes-renderable
+	-->
+	<xs:attributeGroup name="gxe-attributes-renderable">
+		<xs:annotation>
+			<xs:documentation>
+				Attributes common to all renderable editor definition elements.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attributeGroup ref="g:gxe-attributes-base"/>
+		<xs:attributeGroup ref="g:gxe-attributes-control-base"/>
+		<xs:attributeGroup ref="g:gxe-attributes-extensibility"/>
+		<xs:attributeGroup ref="h:html-attributes-common"/>
+		<xs:attribute ref="g:any-attribute"/>
+		<!--<xs:anyAttribute/>-->
+	</xs:attributeGroup>
+	<!--
+		g:gxe-attributes-target
+	-->
+	<xs:attributeGroup name="gxe-attributes-target">
+		<xs:annotation>
+			<xs:documentation>
+				Attributes associated with a targeted XML node (element or attribute).
+				The target reflects the structure of the XML document that will be created by the editor.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute ref="g:targetName" use="required"/>
+		<xs:attribute ref="g:targetNS" use="optional"/>
+		<xs:attribute ref="g:label" use="optional"/>
+		<xs:attribute ref="g:info" use="optional"/>
+		<xs:attribute ref="g:isDocumentTitle" use="optional" default="false"/>
+		<xs:attribute ref="g:serializeIfEmpty" use="optional" default="false"/>
+		<xs:attributeGroup ref="g:gxe-attributes-target-value"/>
+	</xs:attributeGroup>
+	<!--
+		g:gxe-attributes-target-value
+	-->
+	<xs:attributeGroup name="gxe-attributes-target-value">
+		<xs:annotation>
+			<xs:documentation>
+				Attributes associated with value domain of a targeted XML node (element text or attribute value).
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute ref="g:valueType" use="optional"/>
+		<xs:attribute ref="g:value" use="optional"/>
+		<xs:attribute ref="g:fixedValue" use="optional"/>
+		<xs:attribute ref="g:alternateValues" use="optional"/>
+		<xs:attribute ref="g:alias" use="optional"/>
+	</xs:attributeGroup>
+	<!--
+		End attributeGroup definitions ==============================================================
+	-->
+</xs:schema>

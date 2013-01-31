@@ -1,0 +1,896 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="generator" content="JsDoc Toolkit" />
+		
+		<title>GXE JavaScript Reference - gxe.control.InputBase</title>
+
+		<style type="text/css">
+			/* default.css */
+body
+{
+	font: 12px "Lucida Grande", Tahoma, Arial, Helvetica, sans-serif;
+	width: 800px;
+}
+
+.header
+{
+	clear: both;
+	background-color: #ccc;
+	padding: 8px;
+}
+
+h1
+{
+	font-size: 150%;
+	font-weight: bold;
+	padding: 0;
+	margin: 1em 0 0 .3em;
+}
+
+hr
+{
+	border: none 0;
+	border-top: 1px solid #7F8FB1;
+	height: 1px;
+}
+
+pre.code
+{
+	display: block;
+	padding: 8px;
+	border: 1px dashed #ccc;
+}
+
+#index
+{
+	margin-top: 24px;
+	float: left;
+	width: 160px;
+	position: absolute;
+	left: 8px;
+	background-color: #F3F3F3;
+	padding: 8px;
+}
+
+#content
+{
+	margin-left: 190px;
+	width: 600px;
+}
+
+.classList
+{
+	list-style-type: none;
+	padding: 0;
+	margin: 0 0 0 8px;
+	font-family: arial, sans-serif;
+	font-size: 1em;
+	overflow: auto;
+}
+
+.classList li
+{
+	padding: 0;
+	margin: 0 0 8px 0;
+}
+
+.summaryTable { width: 100%; }
+
+h1.classTitle
+{
+	font-size:170%;
+	line-height:130%;
+}
+
+h2 { font-size: 110%; }
+caption, div.sectionTitle
+{
+	background-color: #7F8FB1;
+	color: #fff;
+	font-size:130%;
+	text-align: left;
+	padding: 2px 6px 2px 6px;
+	border: 1px #7F8FB1 solid;
+}
+
+div.sectionTitle { margin-bottom: 8px; }
+.summaryTable thead { display: none; }
+
+.summaryTable td
+{
+	vertical-align: top;
+	padding: 4px;
+	border-bottom: 1px #7F8FB1 solid;
+	border-right: 1px #7F8FB1 solid;
+}
+
+/*col#summaryAttributes {}*/
+.summaryTable td.attributes
+{
+	border-left: 1px #7F8FB1 solid;
+	width: 140px;
+	text-align: right;
+}
+
+td.attributes, .fixedFont
+{
+	line-height: 15px;
+	color: #002EBE;
+	font-family: "Courier New",Courier,monospace;
+	font-size: 13px;
+}
+
+.summaryTable td.nameDescription
+{
+	text-align: left;
+	font-size: 13px;
+	line-height: 15px;
+}
+
+.summaryTable td.nameDescription, .description
+{
+	line-height: 15px;
+	padding: 4px;
+	padding-left: 4px;
+}
+
+.summaryTable { margin-bottom: 8px; }
+
+ul.inheritsList
+{
+	list-style: square;
+	margin-left: 20px;
+	padding-left: 0;
+}
+
+.detailList {
+	margin-left: 20px; 
+	line-height: 15px;
+}
+.detailList dt { margin-left: 20px; }
+
+.detailList .heading
+{
+	font-weight: bold;
+	padding-bottom: 6px;
+	margin-left: 0;
+}
+
+.light, td.attributes, .light a:link, .light a:visited
+{
+	color: #777;
+	font-style: italic;
+}
+
+.fineprint
+{
+	text-align: right;
+	font-size: 10px;
+}
+		</style>
+	</head>
+
+	<body>
+<!-- ============================== header ================================= -->	
+		<!-- begin static/header.html -->
+		<div id="header">
+</div>
+		<!-- end static/header.html -->
+
+<!-- ============================== classes index ============================ -->
+		<div id="index">
+			<!-- begin publish.classesIndex -->
+			<div align="center"><a href="../index.html">Class Index</a>
+| <a href="../files.html">File Index</a></div>
+<hr />
+<h2>Classes</h2>
+<ul class="classList">
+	
+	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
+	
+	<li><a href="../symbols/cfgAttribute.html">cfgAttribute</a></li>
+	
+	<li><a href="../symbols/cfgObject.html">cfgObject</a></li>
+	
+	<li><a href="../symbols/fgdc.control.KeywordSelector.html">fgdc.control.KeywordSelector</a></li>
+	
+	<li><a href="../symbols/gxe.html">gxe</a></li>
+	
+	<li><a href="../symbols/gxe.cfg.html">gxe.cfg</a></li>
+	
+	<li><a href="../symbols/gxe.Client.html">gxe.Client</a></li>
+	
+	<li><a href="../symbols/gxe.Context.html">gxe.Context</a></li>
+	
+	<li><a href="../symbols/gxe.control.Attribute.html">gxe.control.Attribute</a></li>
+	
+	<li><a href="../symbols/gxe.control.Control.html">gxe.control.Control</a></li>
+	
+	<li><a href="../symbols/gxe.control.ControlArray.html">gxe.control.ControlArray</a></li>
+	
+	<li><a href="../symbols/gxe.control.Element.html">gxe.control.Element</a></li>
+	
+	<li><a href="../symbols/gxe.control.ElementChoice.html">gxe.control.ElementChoice</a></li>
+	
+	<li><a href="../symbols/gxe.control.ElementChoiceBody.html">gxe.control.ElementChoiceBody</a></li>
+	
+	<li><a href="../symbols/gxe.control.ExclusiveControlArray.html">gxe.control.ExclusiveControlArray</a></li>
+	
+	<li><a href="../symbols/gxe.control.IndexedTabArray.html">gxe.control.IndexedTabArray</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputBase.html">gxe.control.InputBase</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputDelimitedTextArea.html">gxe.control.InputDelimitedTextArea</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputGemetKeyword.html">gxe.control.InputGemetKeyword</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputSelectMany.html">gxe.control.InputSelectMany</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputSelectOne.html">gxe.control.InputSelectOne</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputText.html">gxe.control.InputText</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputTextArea.html">gxe.control.InputTextArea</a></li>
+	
+	<li><a href="../symbols/gxe.control.Map.html">gxe.control.Map</a></li>
+	
+	<li><a href="../symbols/gxe.control.MessageArea.html">gxe.control.MessageArea</a></li>
+	
+	<li><a href="../symbols/gxe.control.NonExclusiveControlArray.html">gxe.control.NonExclusiveControlArray</a></li>
+	
+	<li><a href="../symbols/gxe.control.Parameter.html">gxe.control.Parameter</a></li>
+	
+	<li><a href="../symbols/gxe.control.RepeatablesContainer.html">gxe.control.RepeatablesContainer</a></li>
+	
+	<li><a href="../symbols/gxe.control.Section.html">gxe.control.Section</a></li>
+	
+	<li><a href="../symbols/gxe.control.SectionBody.html">gxe.control.SectionBody</a></li>
+	
+	<li><a href="../symbols/gxe.control.SectionHeader.html">gxe.control.SectionHeader</a></li>
+	
+	<li><a href="../symbols/gxe.control.SectionMenu.html">gxe.control.SectionMenu</a></li>
+	
+	<li><a href="../symbols/gxe.control.TabArray.html">gxe.control.TabArray</a></li>
+	
+	<li><a href="../symbols/gxe.control.Tabs.html">gxe.control.Tabs</a></li>
+	
+	<li><a href="../symbols/gxe.control.TabsBody.html">gxe.control.TabsBody</a></li>
+	
+	<li><a href="../symbols/gxe.control.TargetLabel.html">gxe.control.TargetLabel</a></li>
+	
+	<li><a href="../symbols/gxe.html.HtmlAttribute.html">gxe.html.HtmlAttribute</a></li>
+	
+	<li><a href="../symbols/gxe.html.HtmlAttributes.html">gxe.html.HtmlAttributes</a></li>
+	
+	<li><a href="../symbols/gxe.util.ArrayList.html">gxe.util.ArrayList</a></li>
+	
+	<li><a href="../symbols/gxe.util.StringBuffer.html">gxe.util.StringBuffer</a></li>
+	
+	<li><a href="../symbols/gxe.xml.DomProcessor.html">gxe.xml.DomProcessor</a></li>
+	
+	<li><a href="../symbols/gxe.xml.Generator.html">gxe.xml.Generator</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlAttribute.html">gxe.xml.XmlAttribute</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlAttributes.html">gxe.xml.XmlAttributes</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlDocument.html">gxe.xml.XmlDocument</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlElement.html">gxe.xml.XmlElement</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlElements.html">gxe.xml.XmlElements</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlNamespace.html">gxe.xml.XmlNamespace</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlNamespaces.html">gxe.xml.XmlNamespaces</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlNode.html">gxe.xml.XmlNode</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlNodeInfo.html">gxe.xml.XmlNodeInfo</a></li>
+	
+</ul>
+<hr />
+			<!-- end publish.classesIndex -->
+		</div>
+		
+		<div id="content">
+<!-- ============================== class title ============================ -->
+			<h1 class="classTitle">
+				
+				Class gxe.control.InputBase
+			</h1>
+
+<!-- ============================== class summary ========================== -->			
+			<p class="description">
+				
+				<br />Extends
+					<a href="../symbols/gxe.control.Control.html">gxe.control.Control</a>.<br />
+				
+			
+				Base class for all input controls.
+				
+				
+					<br /><i>Defined in: </i> <a href="../symbols/src/gxe.js.html">gxe.js</a>.
+				
+			</p>
+
+<!-- ============================== constructor summary ==================== -->			
+			
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class gxe.control.InputBase.">
+				<caption>Class Summary</caption>
+				<thead>
+					<tr>
+						<th scope="col">Constructor Attributes</th>
+						<th scope="col">Constructor Name and Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="attributes">&nbsp;</td>
+						<td class="nameDescription" >
+							<div class="fixedFont">
+								<b><a href="../symbols/gxe.control.InputBase.html#constructor">gxe.control.InputBase</a></b>()
+							</div>
+							<div class="description"></div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+
+<!-- ============================== properties summary ===================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class gxe.control.InputBase.">
+					<caption>Field Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Field Attributes</th>
+							<th scope="col">Field Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/gxe.control.InputBase.html#supportsMultipleValues">supportsMultipleValues</a></b>
+								</div>
+								<div class="description">indicates whether or not the control supports  the input of multiple values</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+				<dl class="inheritsList">
+				<dt>Fields borrowed from class <a href="../symbols/gxe.control.Control.html">gxe.control.Control</a>: </dt><dd><a href="../symbols/gxe.control.Control.html#cfgObject">cfgObject</a>, <a href="../symbols/gxe.control.Control.html#context">context</a>, <a href="../symbols/gxe.control.Control.html#gxeId">gxeId</a>, <a href="../symbols/gxe.control.Control.html#htmlAttributes">htmlAttributes</a>, <a href="../symbols/gxe.control.Control.html#htmlElement">htmlElement</a>, <a href="../symbols/gxe.control.Control.html#htmlTag">htmlTag</a>, <a href="../symbols/gxe.control.Control.html#htmlTextContent">htmlTextContent</a>, <a href="../symbols/gxe.control.Control.html#parentControl">parentControl</a>, <a href="../symbols/gxe.control.Control.html#xmlNode">xmlNode</a>, <a href="../symbols/gxe.control.Control.html#xmlParentElement">xmlParentElement</a></dd>
+				</dl>
+				
+			
+
+<!-- ============================== methods summary ======================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class gxe.control.InputBase.">
+					<caption>Method Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Method Attributes</th>
+							<th scope="col">Method Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.InputBase.html#findParentLabelText">findParentLabelText</a></b>(xmlNode)
+								</div>
+								<div class="description">Attempts to find label text associated with the input control.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.InputBase.html#fireInputChanged">fireInputChanged</a></b>(e)
+								</div>
+								<div class="description">Fires the onInputChanged() event.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.InputBase.html#fireInputChangedOnKeyUp">fireInputChangedOnKeyUp</a></b>(e)
+								</div>
+								<div class="description">Fires the onInputChanged() event based upon a browser onkeyup() event.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.InputBase.html#getInputValue">getInputValue</a></b>(bInFeedbackMode)
+								</div>
+								<div class="description">Gets the value associated with the input control.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.InputBase.html#getInputValues">getInputValues</a></b>(bInFeedbackMode)
+								</div>
+								<div class="description">Gets the values associated with the input control.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.InputBase.html#getSupportsMultipleValues">getSupportsMultipleValues</a></b>()
+								</div>
+								<div class="description">Indicates whether or not the control supports the input of multiple values.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.InputBase.html#makeOtherInputText">makeOtherInputText</a></b>(cfgOption)
+								</div>
+								<div class="description">Makes an HTML "input" element of type "text" supporting entry of "other" code values.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+				<dl class="inheritsList">
+				<dt>Methods borrowed from class <a href="../symbols/gxe.control.Control.html">gxe.control.Control</a>: </dt><dd><a href="../symbols/gxe.control.Control.html#build">build</a>, <a href="../symbols/gxe.control.Control.html#createHtmlElement">createHtmlElement</a>, <a href="../symbols/gxe.control.Control.html#ensureVisibility">ensureVisibility</a>, <a href="../symbols/gxe.control.Control.html#evaluateValue">evaluateValue</a>, <a href="../symbols/gxe.control.Control.html#execBuild">execBuild</a>, <a href="../symbols/gxe.control.Control.html#findFirstChildControl">findFirstChildControl</a>, <a href="../symbols/gxe.control.Control.html#focus">focus</a>, <a href="../symbols/gxe.control.Control.html#getLabelText">getLabelText</a>, <a href="../symbols/gxe.control.Control.html#importCfgProperties">importCfgProperties</a>, <a href="../symbols/gxe.control.Control.html#importHtmlAttributes">importHtmlAttributes</a>, <a href="../symbols/gxe.control.Control.html#initialize">initialize</a>, <a href="../symbols/gxe.control.Control.html#processCfgAttribute">processCfgAttribute</a>, <a href="../symbols/gxe.control.Control.html#processCfgElement">processCfgElement</a>, <a href="../symbols/gxe.control.Control.html#processChildren">processChildren</a></dd>
+				</dl>
+				
+			
+<!-- ============================== events summary ======================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the events documented in the class gxe.control.InputBase.">
+					<caption>Event Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Event Attributes</th>
+							<th scope="col">Event Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.InputBase.html#event:onInputChanged">onInputChanged</a></b>(inputControl)
+								</div>
+								<div class="description">An event fired when input has changed.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+				<dl class="inheritsList">
+				<dt>Events borrowed from class <a href="../symbols/gxe.control.Control.html">gxe.control.Control</a>: </dt><dd><a href="../symbols/gxe.control.Control.html#event:fireOnEvent">fireOnEvent</a>, <a href="../symbols/gxe.control.Control.html#event:onChildControlCreated">onChildControlCreated</a>, <a href="../symbols/gxe.control.Control.html#event:onEvent">onEvent</a>, <a href="../symbols/gxe.control.Control.html#event:onHtmlChildrenCreated">onHtmlChildrenCreated</a>, <a href="../symbols/gxe.control.Control.html#event:onHtmlElementCreated">onHtmlElementCreated</a></dd>
+				</dl>
+				
+			
+
+<!-- ============================== constructor details ==================== -->		
+			
+			<div class="details"><a name="constructor"> </a>
+				<div class="sectionTitle">
+					Class Detail
+				</div>
+				
+				<div class="fixedFont">
+						<b>gxe.control.InputBase</b>()
+				</div>
+				
+				<div class="description">
+					
+					
+				</div>
+				
+				
+				
+				
+					
+					
+					
+					
+					
+					
+					
+
+			</div>
+			
+
+<!-- ============================== field details ========================== -->		
+			
+				<div class="sectionTitle">
+					Field Detail
+				</div>
+				
+					<a name="supportsMultipleValues"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{boolean}</span>
+					<b>supportsMultipleValues</b>
+					
+					</div>
+					<div class="description">
+						indicates whether or not the control supports  the input of multiple values
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					
+				
+			
+
+<!-- ============================== method details ========================= -->		
+			
+				<div class="sectionTitle">
+					Method Detail
+				</div>
+				
+					<a name="findParentLabelText"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{String}</span>
+					<b>findParentLabelText</b>(xmlNode)
+					
+					</div>
+					<div class="description">
+						Attempts to find label text associated with the input control.The label text is used for validation feedback within the gxe.control.MessageArea portion of the page.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.xml.XmlNode.html">gxe.xml.XmlNode</a>}</span> <b>xmlNode</b>
+									
+								</dt>
+								<dd>the targeted XML node for input control</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{String}</span> the label text</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="fireInputChanged"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>fireInputChanged</b>(e)
+					
+					</div>
+					<div class="description">
+						Fires the onInputChanged() event.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Event}</span> <b>e</b>
+									
+								</dt>
+								<dd>the underlying browser event</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="fireInputChangedOnKeyUp"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>fireInputChangedOnKeyUp</b>(e)
+					
+					</div>
+					<div class="description">
+						Fires the onInputChanged() event based upon a browser onkeyup() event.The onInputChanged() event will only be fired if the user key is not 13 (carriage return) and not 9 (tab).
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Event}</span> <b>e</b>
+									
+								</dt>
+								<dd>the underlying browser event</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="getInputValue"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Object}</span>
+					<b>getInputValue</b>(bInFeedbackMode)
+					
+					</div>
+					<div class="description">
+						Gets the value associated with the input control.This method should be overridden for all sub-classes that support single valuedinput (i.e. where this.supportsMultipleValues == false).
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{boolean}</span> <b>bInFeedbackMode</b>
+									
+								</dt>
+								<dd>true if the value is being requested as validation feedback</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Object}</span> the input value</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getInputValues"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Object[]}</span>
+					<b>getInputValues</b>(bInFeedbackMode)
+					
+					</div>
+					<div class="description">
+						Gets the values associated with the input control.This method should be overridden for all sub-classes that support multi-valuedinput (i.e. where this.supportsMultipleValues == true).
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{boolean}</span> <b>bInFeedbackMode</b>
+									
+								</dt>
+								<dd>true if the value is being requested as validation feedback</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Object[]}</span> the input values</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getSupportsMultipleValues"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{boolean}</span>
+					<b>getSupportsMultipleValues</b>()
+					
+					</div>
+					<div class="description">
+						Indicates whether or not the control supports the input of multiple values.(simple wrapper for this.supportsMultipleValues)
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> true if multi-valued input is supported</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="makeOtherInputText"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Element}</span>
+					<b>makeOtherInputText</b>(cfgOption)
+					
+					</div>
+					<div class="description">
+						Makes an HTML "input" element of type "text" supporting entry of "other" code values.This function is useful when the user requires the ability to enter a value outsideof a coded domain.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>cfgOption</b>
+									
+								</dt>
+								<dd>the JSON configuration object associated with the input control</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Element}</span> the HTML "input" element</dd>
+							
+							</dl>
+						
+						
+						
+
+					
+				
+			
+			
+<!-- ============================== event details ========================= -->		
+			
+				<div class="sectionTitle">
+					Event Detail
+				</div>
+				
+					<a name="event:onInputChanged"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>onInputChanged</b>(inputControl)
+					
+					</div>
+					<div class="description">
+						An event fired when input has changed.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>inputControl</b>
+									
+								</dt>
+								<dd>the input control that initiated the change</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					
+				
+			
+			
+			<hr />
+		</div>
+
+		
+<!-- ============================== footer ================================= -->
+		<div class="fineprint" style="clear:both">
+		</div>
+	</body>
+</html>

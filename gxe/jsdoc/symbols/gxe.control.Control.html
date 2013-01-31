@@ -1,0 +1,1790 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="generator" content="JsDoc Toolkit" />
+		
+		<title>GXE JavaScript Reference - gxe.control.Control</title>
+
+		<style type="text/css">
+			/* default.css */
+body
+{
+	font: 12px "Lucida Grande", Tahoma, Arial, Helvetica, sans-serif;
+	width: 800px;
+}
+
+.header
+{
+	clear: both;
+	background-color: #ccc;
+	padding: 8px;
+}
+
+h1
+{
+	font-size: 150%;
+	font-weight: bold;
+	padding: 0;
+	margin: 1em 0 0 .3em;
+}
+
+hr
+{
+	border: none 0;
+	border-top: 1px solid #7F8FB1;
+	height: 1px;
+}
+
+pre.code
+{
+	display: block;
+	padding: 8px;
+	border: 1px dashed #ccc;
+}
+
+#index
+{
+	margin-top: 24px;
+	float: left;
+	width: 160px;
+	position: absolute;
+	left: 8px;
+	background-color: #F3F3F3;
+	padding: 8px;
+}
+
+#content
+{
+	margin-left: 190px;
+	width: 600px;
+}
+
+.classList
+{
+	list-style-type: none;
+	padding: 0;
+	margin: 0 0 0 8px;
+	font-family: arial, sans-serif;
+	font-size: 1em;
+	overflow: auto;
+}
+
+.classList li
+{
+	padding: 0;
+	margin: 0 0 8px 0;
+}
+
+.summaryTable { width: 100%; }
+
+h1.classTitle
+{
+	font-size:170%;
+	line-height:130%;
+}
+
+h2 { font-size: 110%; }
+caption, div.sectionTitle
+{
+	background-color: #7F8FB1;
+	color: #fff;
+	font-size:130%;
+	text-align: left;
+	padding: 2px 6px 2px 6px;
+	border: 1px #7F8FB1 solid;
+}
+
+div.sectionTitle { margin-bottom: 8px; }
+.summaryTable thead { display: none; }
+
+.summaryTable td
+{
+	vertical-align: top;
+	padding: 4px;
+	border-bottom: 1px #7F8FB1 solid;
+	border-right: 1px #7F8FB1 solid;
+}
+
+/*col#summaryAttributes {}*/
+.summaryTable td.attributes
+{
+	border-left: 1px #7F8FB1 solid;
+	width: 140px;
+	text-align: right;
+}
+
+td.attributes, .fixedFont
+{
+	line-height: 15px;
+	color: #002EBE;
+	font-family: "Courier New",Courier,monospace;
+	font-size: 13px;
+}
+
+.summaryTable td.nameDescription
+{
+	text-align: left;
+	font-size: 13px;
+	line-height: 15px;
+}
+
+.summaryTable td.nameDescription, .description
+{
+	line-height: 15px;
+	padding: 4px;
+	padding-left: 4px;
+}
+
+.summaryTable { margin-bottom: 8px; }
+
+ul.inheritsList
+{
+	list-style: square;
+	margin-left: 20px;
+	padding-left: 0;
+}
+
+.detailList {
+	margin-left: 20px; 
+	line-height: 15px;
+}
+.detailList dt { margin-left: 20px; }
+
+.detailList .heading
+{
+	font-weight: bold;
+	padding-bottom: 6px;
+	margin-left: 0;
+}
+
+.light, td.attributes, .light a:link, .light a:visited
+{
+	color: #777;
+	font-style: italic;
+}
+
+.fineprint
+{
+	text-align: right;
+	font-size: 10px;
+}
+		</style>
+	</head>
+
+	<body>
+<!-- ============================== header ================================= -->	
+		<!-- begin static/header.html -->
+		<div id="header">
+</div>
+		<!-- end static/header.html -->
+
+<!-- ============================== classes index ============================ -->
+		<div id="index">
+			<!-- begin publish.classesIndex -->
+			<div align="center"><a href="../index.html">Class Index</a>
+| <a href="../files.html">File Index</a></div>
+<hr />
+<h2>Classes</h2>
+<ul class="classList">
+	
+	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
+	
+	<li><a href="../symbols/cfgAttribute.html">cfgAttribute</a></li>
+	
+	<li><a href="../symbols/cfgObject.html">cfgObject</a></li>
+	
+	<li><a href="../symbols/fgdc.control.KeywordSelector.html">fgdc.control.KeywordSelector</a></li>
+	
+	<li><a href="../symbols/gxe.html">gxe</a></li>
+	
+	<li><a href="../symbols/gxe.cfg.html">gxe.cfg</a></li>
+	
+	<li><a href="../symbols/gxe.Client.html">gxe.Client</a></li>
+	
+	<li><a href="../symbols/gxe.Context.html">gxe.Context</a></li>
+	
+	<li><a href="../symbols/gxe.control.Attribute.html">gxe.control.Attribute</a></li>
+	
+	<li><a href="../symbols/gxe.control.Control.html">gxe.control.Control</a></li>
+	
+	<li><a href="../symbols/gxe.control.ControlArray.html">gxe.control.ControlArray</a></li>
+	
+	<li><a href="../symbols/gxe.control.Element.html">gxe.control.Element</a></li>
+	
+	<li><a href="../symbols/gxe.control.ElementChoice.html">gxe.control.ElementChoice</a></li>
+	
+	<li><a href="../symbols/gxe.control.ElementChoiceBody.html">gxe.control.ElementChoiceBody</a></li>
+	
+	<li><a href="../symbols/gxe.control.ExclusiveControlArray.html">gxe.control.ExclusiveControlArray</a></li>
+	
+	<li><a href="../symbols/gxe.control.IndexedTabArray.html">gxe.control.IndexedTabArray</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputBase.html">gxe.control.InputBase</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputDelimitedTextArea.html">gxe.control.InputDelimitedTextArea</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputGemetKeyword.html">gxe.control.InputGemetKeyword</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputSelectMany.html">gxe.control.InputSelectMany</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputSelectOne.html">gxe.control.InputSelectOne</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputText.html">gxe.control.InputText</a></li>
+	
+	<li><a href="../symbols/gxe.control.InputTextArea.html">gxe.control.InputTextArea</a></li>
+	
+	<li><a href="../symbols/gxe.control.Map.html">gxe.control.Map</a></li>
+	
+	<li><a href="../symbols/gxe.control.MessageArea.html">gxe.control.MessageArea</a></li>
+	
+	<li><a href="../symbols/gxe.control.NonExclusiveControlArray.html">gxe.control.NonExclusiveControlArray</a></li>
+	
+	<li><a href="../symbols/gxe.control.Parameter.html">gxe.control.Parameter</a></li>
+	
+	<li><a href="../symbols/gxe.control.RepeatablesContainer.html">gxe.control.RepeatablesContainer</a></li>
+	
+	<li><a href="../symbols/gxe.control.Section.html">gxe.control.Section</a></li>
+	
+	<li><a href="../symbols/gxe.control.SectionBody.html">gxe.control.SectionBody</a></li>
+	
+	<li><a href="../symbols/gxe.control.SectionHeader.html">gxe.control.SectionHeader</a></li>
+	
+	<li><a href="../symbols/gxe.control.SectionMenu.html">gxe.control.SectionMenu</a></li>
+	
+	<li><a href="../symbols/gxe.control.TabArray.html">gxe.control.TabArray</a></li>
+	
+	<li><a href="../symbols/gxe.control.Tabs.html">gxe.control.Tabs</a></li>
+	
+	<li><a href="../symbols/gxe.control.TabsBody.html">gxe.control.TabsBody</a></li>
+	
+	<li><a href="../symbols/gxe.control.TargetLabel.html">gxe.control.TargetLabel</a></li>
+	
+	<li><a href="../symbols/gxe.html.HtmlAttribute.html">gxe.html.HtmlAttribute</a></li>
+	
+	<li><a href="../symbols/gxe.html.HtmlAttributes.html">gxe.html.HtmlAttributes</a></li>
+	
+	<li><a href="../symbols/gxe.util.ArrayList.html">gxe.util.ArrayList</a></li>
+	
+	<li><a href="../symbols/gxe.util.StringBuffer.html">gxe.util.StringBuffer</a></li>
+	
+	<li><a href="../symbols/gxe.xml.DomProcessor.html">gxe.xml.DomProcessor</a></li>
+	
+	<li><a href="../symbols/gxe.xml.Generator.html">gxe.xml.Generator</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlAttribute.html">gxe.xml.XmlAttribute</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlAttributes.html">gxe.xml.XmlAttributes</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlDocument.html">gxe.xml.XmlDocument</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlElement.html">gxe.xml.XmlElement</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlElements.html">gxe.xml.XmlElements</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlNamespace.html">gxe.xml.XmlNamespace</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlNamespaces.html">gxe.xml.XmlNamespaces</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlNode.html">gxe.xml.XmlNode</a></li>
+	
+	<li><a href="../symbols/gxe.xml.XmlNodeInfo.html">gxe.xml.XmlNodeInfo</a></li>
+	
+</ul>
+<hr />
+			<!-- end publish.classesIndex -->
+		</div>
+		
+		<div id="content">
+<!-- ============================== class title ============================ -->
+			<h1 class="classTitle">
+				
+				Class gxe.control.Control
+			</h1>
+
+<!-- ============================== class summary ========================== -->			
+			<p class="description">
+				
+				
+			
+				Base class for all renderable controls.<br/><br/>Controls are created and rendered based upon the configuration objects associatedwith an editor (i.e. elements that define the editor).<br/><br/>Controls will only be rendered if an associated HTML tag name can be determined.<ul><li>If a configuration object explicitly defines an h:tag attribute, it will be used tocreate a corresponding HTML DOM element on the page.</li><li>If a configuration object is defined within the GXE HTML namespace, then the local nameof the configuration object will be used to create a corresponding HTML DOM element on the page.</li></ul><br/><br/>The processing flow is as follows:<ul><li>instantiate</li><li>...initialize</li><li>...build</li><li>...execBuild</li><li>......importCfgProperties</li><li>.........importHtmlAttributes</li><li>......createHtmlElement</li><li>......onHtmlElementCreated</li><li>......processChildren</li><li>......... (recursive on this process)</li><li>......onHtmlChildrenCreated</li><li>......parentControl.onChildControlCreated</li></ul>
+				
+				
+					<br /><i>Defined in: </i> <a href="../symbols/src/gxe.js.html">gxe.js</a>.
+				
+			</p>
+
+<!-- ============================== constructor summary ==================== -->			
+			
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class gxe.control.Control.">
+				<caption>Class Summary</caption>
+				<thead>
+					<tr>
+						<th scope="col">Constructor Attributes</th>
+						<th scope="col">Constructor Name and Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="attributes">&nbsp;</td>
+						<td class="nameDescription" >
+							<div class="fixedFont">
+								<b><a href="../symbols/gxe.control.Control.html#constructor">gxe.control.Control</a></b>()
+							</div>
+							<div class="description"></div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+
+<!-- ============================== properties summary ===================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class gxe.control.Control.">
+					<caption>Field Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Field Attributes</th>
+							<th scope="col">Field Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/gxe.control.Control.html#cfgObject">cfgObject</a></b>
+								</div>
+								<div class="description">the associated editor configuration object   (i.e.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/gxe.control.Control.html#context">context</a></b>
+								</div>
+								<div class="description">the editor context</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/gxe.control.Control.html#gxeId">gxeId</a></b>
+								</div>
+								<div class="description">a unique auto-generated ID for the control</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/gxe.control.Control.html#htmlAttributes">htmlAttributes</a></b>
+								</div>
+								<div class="description">the configured HTML attributes for the control</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/gxe.control.Control.html#htmlElement">htmlElement</a></b>
+								</div>
+								<div class="description">the HTML element to which the control is attached</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/gxe.control.Control.html#htmlTag">htmlTag</a></b>
+								</div>
+								<div class="description">the configured tag name for the HTML element</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/gxe.control.Control.html#htmlTextContent">htmlTextContent</a></b>
+								</div>
+								<div class="description">the configured text node content for the HTML element</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/gxe.control.Control.html#parentControl">parentControl</a></b>
+								</div>
+								<div class="description">the parent of this control</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/gxe.control.Control.html#xmlNode">xmlNode</a></b>
+								</div>
+								<div class="description">the targeted XML node.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/gxe.control.Control.html#xmlParentElement">xmlParentElement</a></b>
+								</div>
+								<div class="description">the parent element of the targeted XML node</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+			
+
+<!-- ============================== methods summary ======================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class gxe.control.Control.">
+					<caption>Method Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Method Attributes</th>
+							<th scope="col">Method Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#build">build</a></b>(htmlParentElement, domProcessor, domNode)
+								</div>
+								<div class="description">Builds the user interface control.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#createHtmlElement">createHtmlElement</a></b>()
+								</div>
+								<div class="description">Creates the HTML element associated with the control.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#ensureVisibility">ensureVisibility</a></b>(subjectXmlNode)
+								</div>
+								<div class="description">Ensures the visibility of the HTML element associated with the control.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#evaluateValue">evaluateValue</a></b>(value)
+								</div>
+								<div class="description">Evaluates a configuration value.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#execBuild">execBuild</a></b>(htmlParentElement, domProcessor, domNode)
+								</div>
+								<div class="description">Executes the build of the the user interface control.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#findFirstChildControl">findFirstChildControl</a></b>(sDojoSelector, the)
+								</div>
+								<div class="description">Finds the first child control that matches a Dojo query expression.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#focus">focus</a></b>(subjectXmlNode)
+								</div>
+								<div class="description">Ensures the visibility of and focuses the HTML element associated with the control.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#getLabelText">getLabelText</a></b>()
+								</div>
+								<div class="description">Gets the label text associated with a control.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#importCfgProperties">importCfgProperties</a></b>(cfgObject)
+								</div>
+								<div class="description">Imports configuration properties into the current control.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#importHtmlAttributes">importHtmlAttributes</a></b>(cfgObject)
+								</div>
+								<div class="description">Imports configuration attributes within the GXE HTML namespace into the current control.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#initialize">initialize</a></b>(context, cfgObject)
+								</div>
+								<div class="description">Initializes the instance.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#processCfgAttribute">processCfgAttribute</a></b>(cfgAttribute, htmlParentElement, xmlParentElement, domProcessor, domNode)
+								</div>
+								<div class="description">Processes a configuration object associated with a targeted XML attribute (g:attribute).</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#processCfgElement">processCfgElement</a></b>(cfgElement, htmlParentElement, xmlParentElement, domProcessor, domNode)
+								</div>
+								<div class="description">Processes a configuration object associated with a targeted XML element (g:element).</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#processChildren">processChildren</a></b>(cfgObject, htmlParentElement, xmlNode, domProcessor, domNode)
+								</div>
+								<div class="description">Processes the children of a configuration object.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+			
+<!-- ============================== events summary ======================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the events documented in the class gxe.control.Control.">
+					<caption>Event Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Event Attributes</th>
+							<th scope="col">Event Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#event:fireOnEvent">fireOnEvent</a></b>(e)
+								</div>
+								<div class="description">Explicitly fires the onEvent method.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#event:onChildControlCreated">onChildControlCreated</a></b>(control, domProcessor, domNode)
+								</div>
+								<div class="description">Fired on a parent control when a child has been created.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#event:onEvent">onEvent</a></b>(e, gxeControl, htmlEventName, gxeEventName)
+								</div>
+								<div class="description">Fired for certain events triggered by the control.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#event:onHtmlChildrenCreated">onHtmlChildrenCreated</a></b>(domProcessor, domNode)
+								</div>
+								<div class="description">Fired when all of the children for a control have been created.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gxe.control.Control.html#event:onHtmlElementCreated">onHtmlElementCreated</a></b>(domProcessor, domNode)
+								</div>
+								<div class="description">Fired when the HTML element for a control has been created.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+			
+
+<!-- ============================== constructor details ==================== -->		
+			
+			<div class="details"><a name="constructor"> </a>
+				<div class="sectionTitle">
+					Class Detail
+				</div>
+				
+				<div class="fixedFont">
+						<b>gxe.control.Control</b>()
+				</div>
+				
+				<div class="description">
+					
+					
+				</div>
+				
+				
+				
+				
+					
+					
+					
+					
+					
+					
+					
+
+			</div>
+			
+
+<!-- ============================== field details ========================== -->		
+			
+				<div class="sectionTitle">
+					Field Detail
+				</div>
+				
+					<a name="cfgObject"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/cfgObject.html">cfgObject</a>}</span>
+					<b>cfgObject</b>
+					
+					</div>
+					<div class="description">
+						the associated editor configuration object   (i.e. an editor definition element)
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="context"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/gxe.Context.html">gxe.Context</a>}</span>
+					<b>context</b>
+					
+					</div>
+					<div class="description">
+						the editor context
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="gxeId"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{String}</span>
+					<b>gxeId</b>
+					
+					</div>
+					<div class="description">
+						a unique auto-generated ID for the control
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="htmlAttributes"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/gxe.html.HtmlAttributes.html">gxe.html.HtmlAttributes</a>}</span>
+					<b>htmlAttributes</b>
+					
+					</div>
+					<div class="description">
+						the configured HTML attributes for the control
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="htmlElement"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Element}</span>
+					<b>htmlElement</b>
+					
+					</div>
+					<div class="description">
+						the HTML element to which the control is attached
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="htmlTag"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{String}</span>
+					<b>htmlTag</b>
+					
+					</div>
+					<div class="description">
+						the configured tag name for the HTML element
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="htmlTextContent"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{String}</span>
+					<b>htmlTextContent</b>
+					
+					</div>
+					<div class="description">
+						the configured text node content for the HTML element
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="parentControl"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/gxe.control.Control.html">gxe.control.Control</a>}</span>
+					<b>parentControl</b>
+					
+					</div>
+					<div class="description">
+						the parent of this control
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="xmlNode"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/gxe.xml.XmlNode.html">gxe.xml.XmlNode</a>}</span>
+					<b>xmlNode</b>
+					
+					</div>
+					<div class="description">
+						the targeted XML node.  This is section based, many component controls target the same node.   (e.g. a header div, a label, an input text box can all target the same XML node)
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="xmlParentElement"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/gxe.xml.XmlElement.html">gxe.xml.XmlElement</a>}</span>
+					<b>xmlParentElement</b>
+					
+					</div>
+					<div class="description">
+						the parent element of the targeted XML node
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					
+				
+			
+
+<!-- ============================== method details ========================= -->		
+			
+				<div class="sectionTitle">
+					Method Detail
+				</div>
+				
+					<a name="build"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>build</b>(htmlParentElement, domProcessor, domNode)
+					
+					</div>
+					<div class="description">
+						Builds the user interface control.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Element}</span> <b>htmlParentElement</b>
+									
+								</dt>
+								<dd>the parent HTML element (a new   control will be appended to this parent)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.xml.DomProcessor.html">gxe.xml.DomProcessor</a>}</span> <b>domProcessor</b>
+									
+								</dt>
+								<dd>an XML processor   (when opening an existing document)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Node}</span> <b>domNode</b>
+									
+								</dt>
+								<dd>the DOM node that is actively being processed   (when opening an existing document)</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="createHtmlElement"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Element}</span>
+					<b>createHtmlElement</b>()
+					
+					</div>
+					<div class="description">
+						Creates the HTML element associated with the control.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Element}</span> the HTML element (can be null)</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="ensureVisibility"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>ensureVisibility</b>(subjectXmlNode)
+					
+					</div>
+					<div class="description">
+						Ensures the visibility of the HTML element associated with the control.<br/>By default, no action is taken and the ensureVisibility method is triggered for the parent control.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.xml.XmlNode.html">gxe.xml.XmlNode</a>}</span> <b>subjectXmlNode</b>
+									
+								</dt>
+								<dd>the subject XML node (can be null)</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="evaluateValue"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Object}</span>
+					<b>evaluateValue</b>(value)
+					
+					</div>
+					<div class="description">
+						Evaluates a configuration value.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>value</b>
+									
+								</dt>
+								<dd>the value</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Object}</span> the evaluated value</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="execBuild"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>execBuild</b>(htmlParentElement, domProcessor, domNode)
+					
+					</div>
+					<div class="description">
+						Executes the build of the the user interface control.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Element}</span> <b>htmlParentElement</b>
+									
+								</dt>
+								<dd>the parent HTML element (a new   control will be appended to this parent)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.xml.DomProcessor.html">gxe.xml.DomProcessor</a>}</span> <b>domProcessor</b>
+									
+								</dt>
+								<dd>an XML processor   (when opening an existing document)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Node}</span> <b>domNode</b>
+									
+								</dt>
+								<dd>the DOM node that is actively being processed   (when opening an existing document)</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="findFirstChildControl"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>findFirstChildControl</b>(sDojoSelector, the)
+					
+					</div>
+					<div class="description">
+						Finds the first child control that matches a Dojo query expression.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>sDojoSelector</b>
+									
+								</dt>
+								<dd>the Dojo query expression</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.control.Control.html">gxe.control.Control</a>}</span> <b>the</b>
+									
+								</dt>
+								<dd>first matching child control (null if none)</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="focus"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>focus</b>(subjectXmlNode)
+					
+					</div>
+					<div class="description">
+						Ensures the visibility of and focuses the HTML element associated with the control.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.xml.XmlNode.html">gxe.xml.XmlNode</a>}</span> <b>subjectXmlNode</b>
+									
+								</dt>
+								<dd>the subject XML node (can be null)</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="getLabelText"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>getLabelText</b>()
+					
+					</div>
+					<div class="description">
+						Gets the label text associated with a control.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd>the label text (can be null)</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="importCfgProperties"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>importCfgProperties</b>(cfgObject)
+					
+					</div>
+					<div class="description">
+						Imports configuration properties into the current control.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/cfgObject.html">cfgObject</a>}</span> <b>cfgObject</b>
+									
+								</dt>
+								<dd>the associated configuration object</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="importHtmlAttributes"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>importHtmlAttributes</b>(cfgObject)
+					
+					</div>
+					<div class="description">
+						Imports configuration attributes within the GXE HTML namespace into the current control.<br/>(i.e. namespace "http://www.esri.com/geoportal/gxe/html")
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/cfgObject.html">cfgObject</a>}</span> <b>cfgObject</b>
+									
+								</dt>
+								<dd>the associated configuration object</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="initialize"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>initialize</b>(context, cfgObject)
+					
+					</div>
+					<div class="description">
+						Initializes the instance.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.Context.html">gxe.Context</a>}</span> <b>context</b>
+									
+								</dt>
+								<dd>the editor context</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/cfgObject.html">cfgObject</a>}</span> <b>cfgObject</b>
+									
+								</dt>
+								<dd>the associated editor configuration object   (i.e. an editor definition element)</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="processCfgAttribute"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>processCfgAttribute</b>(cfgAttribute, htmlParentElement, xmlParentElement, domProcessor, domNode)
+					
+					</div>
+					<div class="description">
+						Processes a configuration object associated with a targeted XML attribute (g:attribute).
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/cfgObject.html">cfgObject</a>}</span> <b>cfgAttribute</b>
+									
+								</dt>
+								<dd>the configuration object to process</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Element}</span> <b>htmlParentElement</b>
+									
+								</dt>
+								<dd>the parent HTML element  (new controls will be appended to this parent)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.xml.XmlElement.html">gxe.xml.XmlElement</a>}</span> <b>xmlParentElement</b>
+									
+								</dt>
+								<dd>the targeted XML parent element</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.xml.DomProcessor.html">gxe.xml.DomProcessor</a>}</span> <b>domProcessor</b>
+									
+								</dt>
+								<dd>an XML processor   (when opening an existing document)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Node}</span> <b>domNode</b>
+									
+								</dt>
+								<dd>the DOM node that is actively being processed   (when opening an existing document)</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="processCfgElement"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>processCfgElement</b>(cfgElement, htmlParentElement, xmlParentElement, domProcessor, domNode)
+					
+					</div>
+					<div class="description">
+						Processes a configuration object associated with a targeted XML element (g:element).
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/cfgObject.html">cfgObject</a>}</span> <b>cfgElement</b>
+									
+								</dt>
+								<dd>the configuration object to process</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Element}</span> <b>htmlParentElement</b>
+									
+								</dt>
+								<dd>the parent HTML element  (new controls will be appended to this parent)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.xml.XmlElement.html">gxe.xml.XmlElement</a>}</span> <b>xmlParentElement</b>
+									
+								</dt>
+								<dd>the targeted XML parent element</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.xml.DomProcessor.html">gxe.xml.DomProcessor</a>}</span> <b>domProcessor</b>
+									
+								</dt>
+								<dd>an XML processor   (when opening an existing document)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Node}</span> <b>domNode</b>
+									
+								</dt>
+								<dd>the DOM node that is actively being processed   (when opening an existing document)</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="processChildren"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>processChildren</b>(cfgObject, htmlParentElement, xmlNode, domProcessor, domNode)
+					
+					</div>
+					<div class="description">
+						Processes the children of a configuration object.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/cfgObject.html">cfgObject</a>}</span> <b>cfgObject</b>
+									
+								</dt>
+								<dd>the configuration object to process</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Element}</span> <b>htmlParentElement</b>
+									
+								</dt>
+								<dd>the parent HTML element  (new controls will be appended to this parent)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.xml.XmlNode.html">gxe.xml.XmlNode</a>}</span> <b>xmlNode</b>
+									
+								</dt>
+								<dd>the target XML node</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.xml.DomProcessor.html">gxe.xml.DomProcessor</a>}</span> <b>domProcessor</b>
+									
+								</dt>
+								<dd>an XML processor   (when opening an existing document)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Node}</span> <b>domNode</b>
+									
+								</dt>
+								<dd>the DOM node that is actively being processed   (when opening an existing document)</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					
+				
+			
+			
+<!-- ============================== event details ========================= -->		
+			
+				<div class="sectionTitle">
+					Event Detail
+				</div>
+				
+					<a name="event:fireOnEvent"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>fireOnEvent</b>(e)
+					
+					</div>
+					<div class="description">
+						Explicitly fires the onEvent method.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Event}</span> <b>e</b>
+									
+								</dt>
+								<dd>the underlying browser event</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="event:onChildControlCreated"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>onChildControlCreated</b>(control, domProcessor, domNode)
+					
+					</div>
+					<div class="description">
+						Fired on a parent control when a child has been created.<br/>This event fires after the child has been fully processed.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.control.Control.html">gxe.control.Control</a>}</span> <b>control</b>
+									
+								</dt>
+								<dd>the child control</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.xml.DomProcessor.html">gxe.xml.DomProcessor</a>}</span> <b>domProcessor</b>
+									
+								</dt>
+								<dd>an XML processor   (when opening an existing document)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Node}</span> <b>domNode</b>
+									
+								</dt>
+								<dd>the DOM node that is actively being processed   (when opening an existing document)</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="event:onEvent"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>onEvent</b>(e, gxeControl, htmlEventName, gxeEventName)
+					
+					</div>
+					<div class="description">
+						Fired for certain events triggered by the control.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Event}</span> <b>e</b>
+									
+								</dt>
+								<dd>the underlying browser event</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.control.Control.html">gxe.control.Control</a>}</span> <b>gxeControl</b>
+									
+								</dt>
+								<dd>the control that fired the event</dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>htmlEventName</b>
+									
+								</dt>
+								<dd>the HTML event name (e.g. "onclick")</dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>gxeEventName</b>
+									
+								</dt>
+								<dd>a GXE name for the event (e.g. "onLabelClicked")</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="event:onHtmlChildrenCreated"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>onHtmlChildrenCreated</b>(domProcessor, domNode)
+					
+					</div>
+					<div class="description">
+						Fired when all of the children for a control have been created.<br/>This event fires after all child controls have been added to the HTML DOM.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.xml.DomProcessor.html">gxe.xml.DomProcessor</a>}</span> <b>domProcessor</b>
+									
+								</dt>
+								<dd>an XML processor   (when opening an existing document)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Node}</span> <b>domNode</b>
+									
+								</dt>
+								<dd>the DOM node that is actively being processed   (when opening an existing document)</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="event:onHtmlElementCreated"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>onHtmlElementCreated</b>(domProcessor, domNode)
+					
+					</div>
+					<div class="description">
+						Fired when the HTML element for a control has been created.<br/>This event fires prior to the creation of child controls.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/gxe.xml.DomProcessor.html">gxe.xml.DomProcessor</a>}</span> <b>domProcessor</b>
+									
+								</dt>
+								<dd>an XML processor   (when opening an existing document)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Node}</span> <b>domNode</b>
+									
+								</dt>
+								<dd>the DOM node that is actively being processed   (when opening an existing document)</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					
+				
+			
+			
+			<hr />
+		</div>
+
+		
+<!-- ============================== footer ================================= -->
+		<div class="fineprint" style="clear:both">
+		</div>
+	</body>
+</html>

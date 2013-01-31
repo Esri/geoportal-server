@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:h="http://www.esri.com/geoportal/gxe/html" xmlns:g="http://www.esri.com/geoportal/gxe" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.esri.com/geoportal/gxe/html" elementFormDefault="qualified" attributeFormDefault="qualified">
+	<xs:import namespace="http://www.esri.com/geoportal/gxe" schemaLocation="gxe.xsd"/>
+	<!--
+		h:html-elements
+	-->
+	<xs:group name="html-elements">
+		<xs:annotation>
+			<xs:documentation>
+				The list of HTML elements currently referenced within editor definition files.
+				This is not an exaustive list, any renderable HTML element can be referenced.
+				The list is represented by an "xs:sequence" but there is no restriction on order.
+				The list is not intended to define an XML Schema for XHTML, it is simply intended to document currently referenced HTML elements.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<!--
+				h:a
+			-->
+			<xs:element name="a" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						Renders an HTML "a" element (anchor).
+						This HTML attributes listed are not exaustive, any HTML attribute that is valid for corresponding HTML tag can be used.
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="h:html-type-base">
+							<xs:attribute name="href" type="xs:string" use="optional">
+								<xs:annotation>
+									<xs:documentation>
+										The "href" attribute.
+									</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<!--
+				h:div
+			-->
+			<xs:element name="div" type="h:html-type-base" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						Renders an HTML "div" element.
+						This HTML attributes listed are not exaustive, any HTML attribute that is valid for corresponding HTML tag can be used.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<!--
+				h:input
+			-->
+			<xs:element name="input" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						Renders an HTML "input" element.
+						This HTML attributes listed are not exaustive, any HTML attribute that is valid for corresponding HTML tag can be used.
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="h:html-type-base">
+							<xs:attribute name="type" type="xs:string" use="optional">
+								<xs:annotation>
+									<xs:documentation>
+										The imput type (typically "text").
+									</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="maxlength" type="xs:integer" use="optional">
+								<xs:annotation>
+									<xs:documentation>
+										The maximum number of characters allowed.
+									</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="size" type="xs:integer" use="optional">
+								<xs:annotation>
+									<xs:documentation>
+										The display width of the input element. 
+									</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<!--
+				h:label
+			-->
+			<xs:element name="label" type="h:html-type-base" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						Renders an HTML "label" element.
+						This HTML attributes listed are not exaustive, any HTML attribute that is valid for corresponding HTML tag can be used.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<!--
+				h:select
+			-->
+			<xs:element name="select" type="h:html-type-base" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						Renders an HTML "select" element.
+						This HTML attributes listed are not exaustive, any HTML attribute that is valid for corresponding HTML tag can be used.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<!--
+				h:table
+			-->
+			<xs:element name="table" type="h:html-type-base" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						Renders an HTML "table" element.
+						This HTML attributes listed are not exaustive, any HTML attribute that is valid for corresponding HTML tag can be used.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<!--
+				h:tbody
+			-->
+			<xs:element name="tbody" type="h:html-type-base" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						Renders an HTML "tbody" element (table body).
+						This HTML attributes listed are not exaustive, any HTML attribute that is valid for corresponding HTML tag can be used.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<!--
+				h:tr
+			-->
+			<xs:element name="tr" type="h:html-type-base" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						Renders an HTML "tr" element (table row).
+						This HTML attributes listed are not exaustive, any HTML attribute that is valid for corresponding HTML tag can be used.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<!--
+				h:td
+			-->
+			<xs:element name="td" type="h:html-type-base" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						Renders an HTML "td" element (table cell data).
+						This HTML attributes listed are not exaustive, any HTML attribute that is valid for corresponding HTML tag can be used.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<!--
+				h:textarea
+			-->
+			<xs:element name="textarea" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						Renders an HTML "textarea" element.
+						This HTML attributes listed are not exaustive, any HTML attribute that is valid for corresponding HTML tag can be used.
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="h:html-type-base">
+							<xs:attribute name="cols" type="xs:integer" use="optional">
+								<xs:annotation>
+									<xs:documentation>
+										The number of columns.
+									</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="rows" type="xs:integer" use="optional">
+								<xs:annotation>
+									<xs:documentation>
+										The number of rows.
+									</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<!--
+				h:ul
+			-->
+			<xs:element name="ul" type="h:html-type-base" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						Renders an HTML "ul" element (unordered list).
+						This HTML attributes listed are not exaustive, any HTML attribute that is valid for corresponding HTML tag can be used.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<!--
+		h:html-type-base
+	-->
+	<xs:complexType name="html-type-base">
+		<xs:annotation>
+			<xs:documentation>
+				Represents the base type for a definition element within the http://www.esri.com/geoportal/gxe/html namespace.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:any minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="h:html-attributes-common"/>
+		<xs:attributeGroup ref="g:gxe-attributes-control-base"/>
+		<xs:attributeGroup ref="g:gxe-attributes-extensibility"/>
+		<xs:anyAttribute/>
+	</xs:complexType>
+	<!--
+		h:html-attributes-common
+	-->
+	<xs:attributeGroup name="html-attributes-common">
+		<xs:annotation>
+			<xs:documentation>
+				Attribute group for common HTML attributes. 
+				This is not an exaustive list, any HTML attribute that is valid for corresponding HTML tag can be used.
+				The HTML "id" attribute is reserved, it will be auto-generated by the editor.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="class" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					Specifies the CSS class name for the element.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="tag" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					Specifies the HTML tag to render. This is useful for editor definition elements that are not in the "h" namespace
+					(http://www.esri.com/geoportal/gxe/html).
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:attributeGroup>
+</xs:schema>
