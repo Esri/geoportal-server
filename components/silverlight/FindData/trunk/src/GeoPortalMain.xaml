@@ -1,0 +1,196 @@
+﻿<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<UserControl x:Class="GeoportalWidget.GeoPortalMain"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:esri="http://schemas.esri.com/arcgis/client/2009"
+    xmlns:slData="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data"
+    xmlns:local="clr-namespace:GeoportalWidget"
+     >
+    <UserControl.Resources>
+        <local:BooleanToVisibilityConverter x:Key="MyBooleanToVisibilityConverter"></local:BooleanToVisibilityConverter>
+        <esri:MarkerSymbol x:Name="MySymbol">
+            <esri:MarkerSymbol.ControlTemplate>
+                <ControlTemplate>
+                    <Grid>
+                        <Rectangle RadiusX="10" RadiusY="10" Fill="#44000000" Margin="10,10,-10,-10" />
+                        <Rectangle RadiusX="5" RadiusY="5" Margin="3" >
+                            <Rectangle.Fill>
+                                <LinearGradientBrush EndPoint="1.038,1.136" StartPoint="0.015,0.188">
+                                    <GradientStop Color="#FF5A7FB1"/>
+                                    <GradientStop Color="#FF092959" Offset="0.946"/>
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Border CornerRadius="10" BorderBrush="#FF222957" BorderThickness="3" />
+                        <StackPanel Orientation="Vertical" Margin="10,5,10,5" MinWidth="300" MaxWidth="600">
+                            <Grid Margin="0,0,0,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width=".93*"></ColumnDefinition>
+                                    <ColumnDefinition Width=".07*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding Attributes[Title]}" TextWrapping="Wrap" Foreground="#FFFFFFFF" FontSize="14" FontWeight="Black" FontFamily="Portable User Interface" />
+                                <Image Grid.Column="1" x:Name="CloseImg" Margin="3" Height="20" Width="20" Source="/GeoportalWidget;component/Images/dismiss.png" VerticalAlignment="Top" HorizontalAlignment="Right"  MouseLeftButtonDown="CloseImg_MouseLeftButtonDown"></Image>
+                            </Grid>
+                            <Border BorderBrush="Black" BorderThickness="2" Margin="5" Padding="5">
+                            <TextBlock TextWrapping="Wrap" Text="{Binding Attributes[Abstract]}" Foreground="#FFFFFFFF" FontSize="12" FontFamily="Portable User Interface" />
+                            </Border>
+                            <StackPanel Orientation="Horizontal" Margin="10">
+                                <HyperlinkButton x:Name="Metadata" Foreground="#FFFFFFFF" FontSize="12" FontStyle="Italic" FontFamily="Portable User Interface" Tag="{Binding Attributes[Metadata]}" Visibility="{Binding Attributes[MetadataVisible], Converter={StaticResource MyBooleanToVisibilityConverter},ConverterParameter=MetadataVisible}" Content="Metadata" Click="HyperlinkButton_Click" />
+                                <Rectangle Width="5"></Rectangle>
+                                <HyperlinkButton x:Name="Download" Foreground="#FFFFFFFF" FontSize="12" FontStyle="Italic" FontFamily="Portable User Interface" Tag="{Binding Attributes[Download]}" Visibility="{Binding Path=Attributes[DownloadVisible], Converter={StaticResource MyBooleanToVisibilityConverter},ConverterParameter=DownloadVisible}"  Content="Download" Click="HyperlinkButton_Click" />
+                                <Rectangle Height="5" Width="5"></Rectangle>
+                                <HyperlinkButton x:Name="Details" Foreground="#FFFFFFFF" FontSize="12" FontStyle="Italic" FontFamily="Portable User Interface" Tag="{Binding Attributes[Details]}" Visibility="{Binding Path=Attributes[DetailsVisible], Converter={StaticResource MyBooleanToVisibilityConverter},ConverterParameter=DetailsVisible}"  Content="Details" Click="HyperlinkButton_Click" />
+                                <Rectangle Height="5" Width="5"></Rectangle>
+                                <HyperlinkButton x:Name="Open" Foreground="#FFFFFFFF" FontSize="12" FontStyle="Italic" FontFamily="Portable User Interface" Tag="{Binding Attributes[Open]}" Visibility="{Binding Path=Attributes[OpenVisible], Converter={StaticResource MyBooleanToVisibilityConverter},ConverterParameter=OpenVisible}"   Content="Open" Click="HyperlinkButton_Click" />
+                                <Rectangle Height="5" Width="5"></Rectangle>
+                                <HyperlinkButton x:Name="Add" Foreground="#FFFFFFFF" FontSize="12" FontStyle="Italic" FontFamily="Portable User Interface" Tag="{Binding Attributes[Add]}" Visibility="{Binding Path=Attributes[AddVisible], Converter={StaticResource MyBooleanToVisibilityConverter},ConverterParameter=OpenVisible}"  Content="Add to Map" Click="HyperlinkButton_Click" />
+                                <Rectangle Height="5" Width="5"></Rectangle>
+                                <HyperlinkButton x:Name="Website" Foreground="#FFFFFFFF" FontSize="12" FontStyle="Italic" FontFamily="Portable User Interface" Tag="{Binding Attributes[Website]}" Visibility="{Binding Path=Attributes[WebsiteVisible], Converter={StaticResource MyBooleanToVisibilityConverter},ConverterParameter=OpenVisible}"  Content="Website" Click="HyperlinkButton_Click" />
+                                <Rectangle Height="5" Width="5"></Rectangle>
+                                <HyperlinkButton x:Name="Preview" Foreground="#FFFFFFFF" FontSize="12" FontStyle="Italic" FontFamily="Portable User Interface" Tag="{Binding Attributes[Preview]}" Visibility="{Binding Path=Attributes[PreviewVisible], Converter={StaticResource MyBooleanToVisibilityConverter},ConverterParameter=OpenVisible}"  Content="Preview" Click="HyperlinkButton_Click" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </ControlTemplate>
+
+            </esri:MarkerSymbol.ControlTemplate>
+        </esri:MarkerSymbol >
+        <esri:SimpleFillSymbol x:Name="SelectSymbol">
+            <esri:SimpleFillSymbol.ControlTemplate>
+                <ControlTemplate>
+                    <Path x:Name="Element" Fill="Transparent" Stroke="Red" StrokeThickness="2"
+							  Cursor="Hand">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="SelectionStates">
+                                <VisualState x:Name="Unselected"/>
+                                <VisualState x:Name="Selected">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Element" Storyboard.TargetProperty="(Path.StrokeThickness)" To="4" Duration="0:0:.25" >
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Path>
+                </ControlTemplate>
+            </esri:SimpleFillSymbol.ControlTemplate>
+        </esri:SimpleFillSymbol>
+        <esri:SimpleRenderer x:Name="glRenderer" Symbol="{StaticResource SelectSymbol}" ></esri:SimpleRenderer>
+        <DropShadowEffect x:Name="dropShadow" BlurRadius="10" ShadowDepth="10" Direction="-45" Color="Black" Opacity="0.5" />
+
+        <esri:SimpleFillSymbol x:Name="VisibleBoxSymbol" Fill="Transparent" BorderBrush="Red" BorderThickness="2"></esri:SimpleFillSymbol>
+        <esri:SimpleFillSymbol x:Name="InvisibleBoxSymbol" Fill="Transparent" BorderBrush="Transparent" BorderThickness="0"></esri:SimpleFillSymbol>
+        <esri:SimpleFillSymbol x:Name="SelectedBoxSymbol" Fill="Transparent" BorderBrush="Red" BorderThickness="4"></esri:SimpleFillSymbol>
+    </UserControl.Resources>
+    <Grid Margin="5">
+       
+        <StackPanel Orientation="Vertical">
+            <Grid x:Name="LayoutRoot">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="SearchText" Grid.Column="0" Width="200" Text="" Margin="5,5,5,5" KeyDown="SearchText_KeyDown"></TextBox>
+                <Button x:Name="SearchButton" Grid.Column="1" Width="75" Content="Search" Margin="5,5,5,5" Click="SearchButton_Click" ></Button>
+                <TextBlock x:Name="TextStatus" Grid.Column="2" Text="{Binding _Status}" Margin="1,1,1,1" />
+            </Grid>
+            <!--<StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                <HyperlinkButton x:Name="HelpButton" Click="HelpButton_Click">
+                    <HyperlinkButton.Content>
+                        <Image x:Name="helpImg" Height="20" Width="20" Source="/SilverlightPTK;component/Images/i_help.png"></Image>
+                    </HyperlinkButton.Content>
+                </HyperlinkButton>
+            </StackPanel>-->
+            <!--<StackPanel x:Name="LayoutRoot" Orientation="Horizontal" HorizontalAlignment="Center" Effect="{StaticResource dropShadow}">
+                <TextBox x:Name="SearchText" Width="200" Text="" Margin="5,5,5,5" KeyDown="SearchText_KeyDown"></TextBox>
+                <Button x:Name="SearchButton" Content="Search" Margin="5,5,5,5" Click="SearchButton_Click" ></Button>
+                
+                <TextBlock x:Name="TextStatus" Text="{Binding _Status}" Margin="1,1,1,1" />
+            </StackPanel>-->
+            <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
+                <!--<TextBlock Text="Geoportal List" />-->
+                <ComboBox Margin="0,5,5,5" x:Name="GeoList" Width="200" />
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="3,5,5,5">
+                <CheckBox x:Name="LiveDataMaps" Content="Live Data Maps" />
+                <StackPanel Orientation="Horizontal" Margin="0,5,5,5">
+                    <RadioButton x:Name="AnywhereRadio" Margin="0,3,3,3" Content="Anywhere" IsChecked="true" />
+
+                    <RadioButton x:Name="IntersectingRadio" Margin="3" Content="Intersecting" />
+                    <RadioButton x:Name="FullyWithinRadio" Margin="3" Content="Fully within" />
+                </StackPanel>
+            </StackPanel>
+            <StackPanel x:Name="LayoutRootData" HorizontalAlignment="Center" Effect="{StaticResource dropShadow}" Visibility="Collapsed">
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox x:Name="ResetAll" Margin="2,1,1,2" IsChecked="True" Checked="ResetAll_Checked" Unchecked="ResetAll_Checked"></CheckBox>
+                    <Rectangle Width="10"></Rectangle>
+                    <TextBlock x:Name="TotalFoundText"></TextBlock>
+                </StackPanel>
+                <!--<ScrollViewer VerticalScrollBarVisibility="Auto" Canvas.Left="10" Canvas.Top="50" Width="340" Height="130" >-->
+                <slData:DataGrid x:Name="QueryDetailsDataGrid" ScrollViewer.VerticalScrollBarVisibility="Auto" Width="340" Height="150" Margin="5"   LoadingRow="QueryDetailsDataGrid_LoadingRow" AutoGenerateColumns="False"  HeadersVisibility="None"   Background="White"  >
+                    <slData:DataGrid.Columns>
+                        <slData:DataGridTemplateColumn>
+                            <slData:DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox x:Name="RowFilterButton" IsChecked="{Binding IsEnable}" Tag="{Binding Title}" Checked="RowFilterButton_Checked" Unchecked="RowFilterButton_Checked" />
+                                </DataTemplate>
+                            </slData:DataGridTemplateColumn.CellTemplate>
+                        </slData:DataGridTemplateColumn>
+                        <slData:DataGridTextColumn Binding="{Binding Path=Title}" IsReadOnly="True" Header="Name"/>
+                    </slData:DataGrid.Columns>
+                </slData:DataGrid>
+                <!--</ScrollViewer>-->
+            </StackPanel>
+        </StackPanel>
+        <esri:Map Visibility="Collapsed" x:Name="HiddenMap">
+            <esri:Map.Layers>
+
+                <esri:GraphicsLayer ID="glWithMapTip" >
+                    <esri:GraphicsLayer.MapTip>
+                        <Grid esri:GraphicsLayer.MapTipHideDelay="00:00:00.5">
+                            <Rectangle RadiusX="10" RadiusY="10" Fill="#44000000" Margin="10,10,-10,-10" />
+                            <Rectangle RadiusX="5" RadiusY="5" Margin="3" >
+                                <Rectangle.Fill>
+                                    <LinearGradientBrush EndPoint="1.038,1.136" StartPoint="0.015,0.188">
+                                        <GradientStop Color="#FFD1DFF2"/>
+                                        <GradientStop Color="#FF092959" Offset="0.946"/>
+                                    </LinearGradientBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Border CornerRadius="10" BorderBrush="#FF222957" BorderThickness="3" />
+                            <StackPanel Orientation="Vertical" Margin="20,15,20,15">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                    <TextBlock Text="Title: " FontWeight="Bold" Foreground="#FF0F274E" FontSize="12" />
+                                    <TextBlock Text="{Binding Title}" Foreground="#FFFFFFFF" FontSize="12" FontStyle="Italic" FontFamily="Portable User Interface" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <!--<TextBlock Text="Open: " FontWeight="Bold" Foreground="#FF0F274E" FontSize="12" />-->
+                                    <HyperlinkButton Foreground="#FFFFFFFF" FontSize="12" FontStyle="Italic" FontFamily="Portable User Interface" Tag="{Binding Open}" Content="Open" Click="HyperlinkButton_Click" />
+                                    <HyperlinkButton Foreground="#FFFFFFFF" FontSize="12" FontStyle="Italic" FontFamily="Portable User Interface" Tag="{Binding Preview, Mode=OneWay}"  Content="Preview" Click="HyperlinkButton_Click" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </esri:GraphicsLayer.MapTip>
+                </esri:GraphicsLayer>
+            </esri:Map.Layers>
+        </esri:Map>
+
+    </Grid>
+
+
+</UserControl>
