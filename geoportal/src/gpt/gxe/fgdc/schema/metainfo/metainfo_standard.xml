@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!-- 
+		Metadata standard name and version 
+		(metainfo.metstdn and metstdn.metstdv)
+	-->
+<h:div xmlns:g="http://www.esri.com/geoportal/gxe" 
+	xmlns:h="http://www.esri.com/geoportal/gxe/html">
+
+	<!-- metadata standard name -->
+	<g:element g:targetName="metstdn" g:value="FGDC Content Standard for Digital Geospatial Metadata" 
+		g:label="$i18n.catalog.fgdc.metainfo.metstdn"
+		g:extends="$base/core/xml/ElementTextOnly.xml">
+		<g:body>
+			<g:input h:readonly="readonly" g:extends="$base/core/ui/InputText.xml"/>
+		</g:body>
+	</g:element>
+
+	<!-- metadata standard version -->
+	<g:element g:targetName="metstdv" g:value="FGDC-STD-001-1998"
+		g:label="$i18n.catalog.fgdc.metainfo.metstdv" 
+		g:extends="$base/core/xml/ElementTextOnly.xml">
+		<g:body>
+			<g:input h:readonly="readonly" g:extends="$base/core/ui/InputText.xml"/>
+		</g:body>
+	</g:element>
+
+</h:div>
+

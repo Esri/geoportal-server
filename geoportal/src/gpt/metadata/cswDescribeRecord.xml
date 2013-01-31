@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<csw:DescribeRecordResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2">
+  <csw:SchemaComponent schemaLanguage="XMLSCHEMA" targetNamespace="http://www.opengis.net/cat/csw/2.0.2">
+    <xsd:schema id="csw:Record" targetNamespace="http://www.opengis.net/cat/csw/2.0.2" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" elementFormDefault="qualified" version="2.0.2">
+      <xsd:import namespace="http://purl.org/dc/terms/" schemaLocation="rec-dcterms.xsd"/>
+      <xsd:import namespace="http://purl.org/dc/elements/1.1/" schemaLocation="rec-dcmes.xsd"/>
+      <xsd:import namespace="http://www.opengis.net/ows" schemaLocation="../../ows/1.0.0/owsAll.xsd"/>
+      <xsd:element name="AbstractRecord" id="AbstractRecord" type="csw:AbstractRecordType" abstract="true"/>
+      <xsd:complexType name="AbstractRecordType" id="AbstractRecordType" abstract="true"/>
+      <xsd:element name="DCMIRecord" type="csw:DCMIRecordType" substitutionGroup="csw:AbstractRecord"/>
+      <xsd:complexType name="DCMIRecordType">
+        <xsd:complexContent>
+          <xsd:extension base="csw:AbstractRecordType">
+            <xsd:sequence>
+              <xsd:group ref="dct:DCMI-terms"/>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="BriefRecord" type="csw:BriefRecordType" substitutionGroup="csw:AbstractRecord"/>
+      <xsd:complexType name="BriefRecordType" final="#all">
+        <xsd:complexContent>
+          <xsd:extension base="csw:AbstractRecordType">
+            <xsd:sequence>
+              <xsd:element ref="dc:identifier" minOccurs="1" maxOccurs="unbounded"/>
+              <xsd:element ref="dc:title" minOccurs="1" maxOccurs="unbounded"/>
+              <xsd:element ref="dc:type" minOccurs="0"/>
+              <xsd:element ref="ows:BoundingBox" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="SummaryRecord" type="csw:SummaryRecordType" substitutionGroup="csw:AbstractRecord"/>
+      <xsd:complexType name="SummaryRecordType" final="#all">
+        <xsd:complexContent>
+          <xsd:extension base="csw:AbstractRecordType">
+            <xsd:sequence>
+              <xsd:element ref="dc:identifier" minOccurs="1" maxOccurs="unbounded"/>
+              <xsd:element ref="dc:title" minOccurs="1" maxOccurs="unbounded"/>
+              <xsd:element ref="dc:type" minOccurs="0"/>
+              <xsd:element ref="dc:subject" minOccurs="0" maxOccurs="unbounded"/>
+              <xsd:element ref="dc:format" minOccurs="0" maxOccurs="unbounded"/>
+              <xsd:element ref="dc:relation" minOccurs="0" maxOccurs="unbounded"/>
+              <xsd:element ref="dct:modified" minOccurs="0" maxOccurs="unbounded"/>
+              <xsd:element ref="dct:abstract" minOccurs="0" maxOccurs="unbounded"/>
+              <xsd:element ref="dct:spatial" minOccurs="0" maxOccurs="unbounded"/>
+              <xsd:element ref="ows:BoundingBox" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="Record" type="csw:RecordType" substitutionGroup="csw:AbstractRecord"/>
+      <xsd:complexType name="RecordType" final="#all">
+        <xsd:complexContent>
+          <xsd:extension base="csw:DCMIRecordType">
+            <xsd:sequence>
+              <xsd:element name="AnyText" type="csw:EmptyType" minOccurs="0" maxOccurs="unbounded"/>
+              <xsd:element ref="ows:BoundingBox" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="EmptyType"/>
+    </xsd:schema>
+  </csw:SchemaComponent>
+
+<!-- ISO AP schemas -->
+  <csw:SchemaComponent schemaLanguage="XMLSCHEMA" targetNamespace="http://www.isotc211.org/2005/gmd">
+    <xsd:schema id="gmd:MD_Metadata" targetNamespace="http://www.isotc211.org/2005/gmd" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsd="http://www.w3.org/2001/XMLSchema"  xmlns:ows="http://www.opengis.net/ows" elementFormDefault="qualified" version="2.0.2">
+
+	<!-- ================================= Annotation ================================ -->
+	<xsd:annotation>
+		<xsd:documentation>This file was generated from ISO TC/211 UML class diagrams == 01-26-2005 12:40:05 ====== </xsd:documentation>
+		<xsd:documentation>http://schemas.opengis.net/iso/19139/20060504/gmd/metadataApplication.xsd </xsd:documentation>
+	</xsd:annotation>
+	<!-- ================================== Imports ================================== -->
+	<xsd:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="http://schemas.opengis.net/iso/19139/20060504/gco/gco.xsd"/>
+	<xsd:include schemaLocation="../gmd/metadataEntity.xsd"/>
+
+	<!-- ########################################################################### -->
+	<!-- ########################################################################### -->
+	<!-- ================================== Classes ================================= -->
+	<xsd:complexType name="AbstractDS_Aggregate_Type" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>Identifiable collection of datasets</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+
+			<xsd:extension base="gco:AbstractObject_Type">
+				<xsd:sequence>
+					<xsd:element name="composedOf" type="gmd:DS_DataSet_PropertyType" maxOccurs="unbounded"/>
+					<xsd:element name="seriesMetadata" type="gmd:MD_Metadata_PropertyType" maxOccurs="unbounded"/>
+					<xsd:element name="subset" type="gmd:DS_Aggregate_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="superset" type="gmd:DS_Aggregate_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+
+	</xsd:complexType>
+	<!-- ........................................................................ -->
+	<xsd:element name="AbstractDS_Aggregate" type="gmd:AbstractDS_Aggregate_Type" abstract="true"/>
+	<!-- ........................................................................ -->
+	<xsd:complexType name="DS_Aggregate_PropertyType">
+		<xsd:sequence minOccurs="0">
+			<xsd:element ref="gmd:AbstractDS_Aggregate"/>
+		</xsd:sequence>
+		<xsd:attributeGroup ref="gco:ObjectReference"/>
+
+		<xsd:attribute ref="gco:nilReason"/>
+	</xsd:complexType>
+	<!-- =========================================================================== -->
+	<xsd:complexType name="DS_DataSet_Type">
+		<xsd:annotation>
+			<xsd:documentation>Identifiable collection of data</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+
+			<xsd:extension base="gco:AbstractObject_Type">
+				<xsd:sequence>
+					<xsd:element name="has" type="gmd:MD_Metadata_PropertyType" maxOccurs="unbounded"/>
+					<xsd:element name="partOf" type="gmd:DS_Aggregate_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- ........................................................................ -->
+
+	<xsd:element name="DS_DataSet" type="gmd:DS_DataSet_Type"/>
+	<!-- ........................................................................ -->
+	<xsd:complexType name="DS_DataSet_PropertyType">
+		<xsd:sequence minOccurs="0">
+			<xsd:element ref="gmd:DS_DataSet"/>
+		</xsd:sequence>
+		<xsd:attributeGroup ref="gco:ObjectReference"/>
+		<xsd:attribute ref="gco:nilReason"/>
+	</xsd:complexType>
+
+	<!-- =========================================================================== -->
+	<xsd:complexType name="DS_OtherAggregate_Type">
+		<xsd:complexContent>
+			<xsd:extension base="gmd:AbstractDS_Aggregate_Type"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- ........................................................................ -->
+	<xsd:element name="DS_OtherAggregate" type="gmd:DS_OtherAggregate_Type" substitutionGroup="gmd:AbstractDS_Aggregate"/>
+	<!-- ........................................................................ -->
+
+	<xsd:complexType name="DS_OtherAggregate_PropertyType">
+		<xsd:sequence minOccurs="0">
+			<xsd:element ref="gmd:DS_OtherAggregate"/>
+		</xsd:sequence>
+		<xsd:attributeGroup ref="gco:ObjectReference"/>
+		<xsd:attribute ref="gco:nilReason"/>
+	</xsd:complexType>
+	<!-- =========================================================================== -->
+	<xsd:complexType name="DS_Series_Type">
+
+		<xsd:complexContent>
+			<xsd:extension base="gmd:AbstractDS_Aggregate_Type"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- ........................................................................ -->
+	<xsd:element name="DS_Series" type="gmd:DS_Series_Type" substitutionGroup="gmd:AbstractDS_Aggregate"/>
+	<!-- ........................................................................ -->
+	<xsd:complexType name="DS_Series_PropertyType">
+		<xsd:sequence minOccurs="0">
+
+			<xsd:element ref="gmd:DS_Series"/>
+		</xsd:sequence>
+		<xsd:attributeGroup ref="gco:ObjectReference"/>
+		<xsd:attribute ref="gco:nilReason"/>
+	</xsd:complexType>
+	<!-- =========================================================================== -->
+	<xsd:complexType name="DS_Initiative_Type">
+		<xsd:complexContent>
+			<xsd:extension base="gmd:AbstractDS_Aggregate_Type"/>
+
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- ........................................................................ -->
+	<xsd:element name="DS_Initiative" type="gmd:DS_Initiative_Type" substitutionGroup="gmd:AbstractDS_Aggregate"/>
+	<!-- ........................................................................ -->
+	<xsd:complexType name="DS_Initiative_PropertyType">
+		<xsd:sequence minOccurs="0">
+			<xsd:element ref="gmd:DS_Initiative"/>
+		</xsd:sequence>
+
+		<xsd:attributeGroup ref="gco:ObjectReference"/>
+		<xsd:attribute ref="gco:nilReason"/>
+	</xsd:complexType>
+	<!-- =========================================================================== -->
+	<xsd:complexType name="DS_Platform_Type">
+		<xsd:complexContent>
+			<xsd:extension base="gmd:DS_Series_Type"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- ........................................................................ -->
+	<xsd:element name="DS_Platform" type="gmd:DS_Platform_Type" substitutionGroup="gmd:DS_Series"/>
+	<!-- ........................................................................ -->
+	<xsd:complexType name="DS_Platform_PropertyType">
+		<xsd:sequence minOccurs="0">
+			<xsd:element ref="gmd:DS_Platform"/>
+		</xsd:sequence>
+		<xsd:attributeGroup ref="gco:ObjectReference"/>
+		<xsd:attribute ref="gco:nilReason"/>
+
+	</xsd:complexType>
+	<!-- =========================================================================== -->
+	<xsd:complexType name="DS_Sensor_Type">
+		<xsd:complexContent>
+			<xsd:extension base="gmd:DS_Series_Type"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- ........................................................................ -->
+	<xsd:element name="DS_Sensor" type="gmd:DS_Sensor_Type" substitutionGroup="gmd:DS_Series"/>
+
+	<!-- ........................................................................ -->
+	<xsd:complexType name="DS_Sensor_PropertyType">
+		<xsd:sequence minOccurs="0">
+			<xsd:element ref="gmd:DS_Sensor"/>
+		</xsd:sequence>
+		<xsd:attributeGroup ref="gco:ObjectReference"/>
+		<xsd:attribute ref="gco:nilReason"/>
+	</xsd:complexType>
+	<!-- =========================================================================== -->
+
+	<xsd:complexType name="DS_ProductionSeries_Type">
+		<xsd:complexContent>
+			<xsd:extension base="gmd:DS_Series_Type"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- ........................................................................ -->
+	<xsd:element name="DS_ProductionSeries" type="gmd:DS_ProductionSeries_Type" substitutionGroup="gmd:DS_Series"/>
+	<!-- ........................................................................ -->
+	<xsd:complexType name="DS_ProductionSeries_PropertyType">
+
+		<xsd:sequence minOccurs="0">
+			<xsd:element ref="gmd:DS_ProductionSeries"/>
+		</xsd:sequence>
+		<xsd:attributeGroup ref="gco:ObjectReference"/>
+		<xsd:attribute ref="gco:nilReason"/>
+	</xsd:complexType>
+	<!-- =========================================================================== -->
+	<xsd:complexType name="DS_StereoMate_Type">
+		<xsd:complexContent>
+
+			<xsd:extension base="gmd:DS_OtherAggregate_Type"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- ........................................................................ -->
+	<xsd:element name="DS_StereoMate" type="gmd:DS_StereoMate_Type" substitutionGroup="gmd:DS_OtherAggregate"/>
+	<!-- ........................................................................ -->
+	<xsd:complexType name="DS_StereoMate_PropertyType">
+		<xsd:sequence minOccurs="0">
+			<xsd:element ref="gmd:DS_StereoMate"/>
+
+		</xsd:sequence>
+		<xsd:attributeGroup ref="gco:ObjectReference"/>
+		<xsd:attribute ref="gco:nilReason"/>
+	</xsd:complexType>
+
+    </xsd:schema>
+  </csw:SchemaComponent>
+
+</csw:DescribeRecordResponse>

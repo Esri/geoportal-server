@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gmd:MD_TopologyLevelCode" 
+           g:i18nBase="catalog.iso19139.MD_TopologyLevelCode" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/CodeListValue_Type.xml">
+  <g:body>
+   
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeSpace.xml" 
+      g:value="ISOTC211/19115"/>
+       
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeList.xml"
+      g:value="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopologyLevelCode"/>
+     
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeListValue.xml">
+      <g:body>
+        <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+          <g:options>
+            <g:option g:label="" g:value="" />
+            <g:option g:label="$i18nBase.geometryOnly" g:value="geometryOnly" />
+            <g:option g:label="$i18nBase.topology1D" g:value="topology1D"/>
+            <g:option g:label="$i18nBase.planarGraph" g:value="planarGraph"/>
+            <g:option g:label="$i18nBase.fullPlanarGraph" g:value="fullPlanarGraph"/>
+            <g:option g:label="$i18nBase.surfaceGraph" g:value="surfaceGraph"/>
+            <g:option g:label="$i18nBase.fullSurfaceGraph" g:value="fullSurfaceGraph"/>
+            <g:option g:label="$i18nBase.topology3D" g:value="topology3D"/>
+            <g:option g:label="$i18nBase.fullTopology3D" g:value="fullTopology3D"/>
+            <g:option g:label="$i18nBase.abstract" g:value="abstract"/>
+          </g:options>
+        </g:input>
+      </g:body>          
+    </g:attribute>     
+     
+  </g:body> 
+</g:element>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>         
+<g:editor xmlns:g="http://www.esri.com/geoportal/gxe"
+          xmlns:h="http://www.esri.com/geoportal/gxe/html"
+          g:extends="gpt/gxe/iso/iso19139/iso19139-service-editor.xml"/>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- gmd:MD_Metadata root element (Dataset) -->     
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+           g:label="$i18n.catalog.gemini.schema.dataset"
+           g:extends="gpt/gxe/iso/iso19139/profiles/inspire/MD_Metadata_Dataset.xml">
+
+  <!-- namespaces -->
+  <g:namespaces g:overridable="true">
+    <g:namespace g:prefix="gmd" g:uri="http://www.isotc211.org/2005/gmd"/>
+    <g:namespace g:prefix="gco" g:uri="http://www.isotc211.org/2005/gco"/>
+    <g:namespace g:prefix="srv" g:uri="http://www.isotc211.org/2005/srv"/>
+    <g:namespace g:prefix="gml" g:uri="http://www.opengis.net/gml/3.2"/>
+    <g:namespace g:prefix="xlink" g:uri="http://www.w3.org/1999/xlink"/>
+  </g:namespaces>
+
+</g:element>

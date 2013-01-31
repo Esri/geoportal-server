@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>         
+<h:input xmlns:g="http://www.esri.com/geoportal/gxe"
+         xmlns:h="http://www.esri.com/geoportal/gxe/html"
+         h:tag="input" h:type="text" h:size="60" h:maxlength="2048" 
+         g:jsClass="gxe.control.InputText"/>

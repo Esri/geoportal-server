@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gco:DateTime"
+           g:valueType="xs:dateTime"
+           g:nillable="true"
+           g:extends="$base/xtn/ui/UI_Wrapped_ElementTextOnly.xml">
+  <g:body>
+    <g:input g:tip="$i18n.catalog.gxe.general.iso8601.tip"
+      g:extends="$base/core/ui/InputText.xml"/>
+  </g:body>
+</g:element>

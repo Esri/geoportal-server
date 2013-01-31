@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:extends="$base/core/xml/Element.xml"> 
+  <g:body>
+    <g:attribute g:targetNS="" g:targetName="isInfinite" g:valueType="xs:boolean"
+       g:extends="$base/core/xml/Attribute.xml"/>
+    <g:textNode g:extends="$base/core/xml/TextNode.xml"/>
+  </g:body>
+</g:element>

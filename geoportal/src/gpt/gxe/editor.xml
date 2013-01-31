@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>         
+<g:editor xmlns:g="http://www.esri.com/geoportal/gxe"
+          xmlns:h="http://www.esri.com/geoportal/gxe/html"
+          g:extensible="true">
+  
+    <g:context g:extensible="true">
+    
+      <g:i18n g:key="dialog.ok">$i18n.catalog.general.dialog.ok</g:i18n>   
+      <g:i18n g:key="dialog.cancel">$i18n.catalog.general.dialog.cancel</g:i18n>
+ 
+      <g:i18n g:key="button.clearMessages">$i18n.catalog.gxe.general.button.clearMessages</g:i18n>   
+      <g:i18n g:key="button.repeatSection">$i18n.catalog.gxe.general.button.repeatSection</g:i18n>
+      <g:i18n g:key="button.removeSection">$i18n.catalog.gxe.general.button.removeSection</g:i18n>
+      <g:i18n g:key="button.moveSectionUp">$i18n.catalog.gxe.general.button.moveSectionUp</g:i18n>
+      <g:i18n g:key="button.moveSectionDown">$i18n.catalog.gxe.general.button.moveSectionDown</g:i18n>
+      <g:i18n g:key="button.moveSectionLeft">$i18n.catalog.gxe.general.button.moveSectionLeft</g:i18n>
+      <g:i18n g:key="button.moveSectionRight">$i18n.catalog.gxe.general.button.moveSectionRight</g:i18n>
+      
+      <g:i18n g:key="client.loading">$i18n.catalog.gxe.general.client.loading</g:i18n>   
+      <g:i18n g:key="client.error">$i18n.catalog.gxe.general.client.error</g:i18n>
+      <g:i18n g:key="client.saving.title">$i18n.catalog.gxe.general.client.saving.title</g:i18n>
+            
+      <g:i18n g:key="validate.format">$i18n.catalog.gxe.general.validate.format</g:i18n>
+      <g:i18n g:key="validate.ok">$i18n.catalog.gxe.general.validate.ok</g:i18n>
+      <g:i18n g:key="validate.empty">$i18n.catalog.gxe.general.validate.empty</g:i18n>
+      <g:i18n g:key="validate.integer">$i18n.catalog.gxe.general.validate.integer</g:i18n>
+      <g:i18n g:key="validate.number">$i18n.catalog.gxe.general.validate.number</g:i18n>
+      <g:i18n g:key="validate.date">$i18n.catalog.gxe.general.validate.date</g:i18n> 
+      <g:i18n g:key="validate.other">$i18n.catalog.gxe.general.validate.other</g:i18n>
+      <g:i18n g:key="validate.iso8601">$i18n.catalog.gxe.general.validate.iso8601</g:i18n>
+
+      <g:i18n g:key="map.useMap">$i18n.catalog.general.map.useMap</g:i18n>       
+      <g:i18n g:key="map.zoomToWorld">$i18n.catalog.general.map.zoomToWorld</g:i18n> 
+      <g:i18n g:key="map.zoomToInputEnvelope">$i18n.catalog.general.map.zoomToInputEnvelope</g:i18n> 
+      <g:i18n g:key="map.drawInputEnvelope">$i18n.catalog.general.map.drawInputEnvelope</g:i18n> 
+      <g:i18n g:key="map.deactivate">$i18n.catalog.general.map.deactivate</g:i18n> 
+      <g:i18n g:key="map.locate">$i18n.catalog.general.map.locate</g:i18n> 
+      
+      <g:i18n g:key="gemet.dialogTitle">$i18n.catalog.gemet.dialogTitle</g:i18n> 
+      <g:i18n g:key="gemet.dialogHelp">$i18n.catalog.gemet.dialogHelp</g:i18n> 
+      <g:i18n g:key="gemet.wordNotFound">$i18n.catalog.gemet.wordNotFound</g:i18n> 
+      <g:i18n g:key="gemet.ok">$i18n.catalog.gemet.ok</g:i18n> 
+      <g:i18n g:key="gemet.cancel">$i18n.catalog.gemet.cancel</g:i18n> 
+      <g:i18n g:key="gemet.queryGemet">$i18n.catalog.gemet.queryGemet</g:i18n> 
+      <g:i18n g:key="gemet.queryGemet.alt">$i18n.catalog.gemet.queryGemet.alt</g:i18n> 
+      <g:i18n g:key="gemet.lblErrorKeywordEmpty">$i18n.catalog.gemet.lblErrorKeywordEmpty</g:i18n> 
+      <g:i18n g:key="gemet.find">$i18n.catalog.gemet.find</g:i18n>  
+      <g:i18n g:key="gemet.connectingMessage">$i18n.catalog.gemet.connectingMessage</g:i18n>  
+      
+    </g:context>
+    
+    <g:rootElement g:overridable="true"/>
+
+</g:editor>

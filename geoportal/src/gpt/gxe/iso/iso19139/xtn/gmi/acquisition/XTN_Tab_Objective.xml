@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Acquisition/Objective tab (simplified) -->      
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gmi:objective" g:minOccurs="0" g:maxOccurs="unbounded"
+           g:label="$i18n.catalog.iso19139-2.MI_Metadata.section.acuisition.objective"
+           g:extends="$base/xtn/ui/UI_Element.xml"> 
+   
+  <g:body>
+    <g:element g:targetName="gmi:MI_Objective" h:tag="div" g:jsClass="gxe.control.Element">
+      
+       <!-- Identifier - code used to identify the objective -->
+      <g:element g:targetName="gmi:identifier" g:minOccurs="1" g:maxOccurs="unbounded" g:extends="$base/xtn/gmd/identification/XTN_ResourceIdentifier.xml"/>     
+	    
+      
+     <!--  Priority - priority applied to the target -->   
+        <g:element g:targetName="gmi:priority" g:minOccurs="0" g:maxOccurs="1"
+           g:label="$i18n.catalog.iso19139-2.MI_Metadata.acquisition.objective.priority"
+           g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"> 
+                </g:element>
+      
+     <!-- type - collection technique for the objective -->
+        <g:element g:targetName="gmi:type" g:minOccurs="0" g:maxOccurs="unbounded"
+           g:label="$i18n.catalog.iso19139-2.MI_Metadata.acquisition.objective.type"
+           g:extends="$base/xtn/gmi/acquisition/MI_ObjectiveTypeCode_PropertyType.xml">
+         </g:element>
+         
+                
+     <!--  function - role or purpose performed by or activity performed at the objective --> 
+        <g:element g:targetName="gmi:function" g:minOccurs="0" g:maxOccurs="unbounded"
+           g:label="$i18n.catalog.iso19139-2.MI_Metadata.acquisition.objective.function"
+           g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"> 
+                </g:element>
+                
+       <!-- extent - (simplified) extent information including the bounding box and temporal extent of the objective - vertical and polygon extents not included -->
+          
+             <g:element g:targetName="gmi:extent" g:minOccurs="0" g:maxOccurs="unbounded"
+            g:label="$i18n.catalog.iso19139-2.MI_Metadata.acquisition.objective.extent"
+            g:extends="$base/xtn/ui/UI_Element.xml">
+     
+     <!-- Extent information, from gmd:EX_Extent -->
+     <g:body> 
+      	  <g:element g:targetName="gmd:EX_Extent" g:minOccurs="0" g:maxOccurs="unbounded"
+	           h:tag="div" g:jsClass="gxe.control.Element">
+              <g:element g:extends="$base/xtn/gmd/extent/XTN_GeographicElement.xml"/>
+              <g:element g:extends="$base/xtn/gmd/extent/XTN_TemporalElement.xml"/>
+             </g:element>
+             </g:body>
+	       </g:element>       
+	       
+	 <!-- Mandatory role information for objectiveOccurrence: event or events associated with objective completion -->
+	<g:element g:targetName="gmi:objectiveOccurrence" g:minOccurs="1" g:maxOccurs="unbounded"
+		      g:label="$i18n.catalog.iso19139-2.MI_Metadata.acquisition.objective.objectiveOccurrence"
+		      g:extends="$base/xtn/gmi/acquisition/MI_Event.xml"/> 
+		       
+    
+       </g:element> 
+  </g:body>
+</g:element> 
+
+

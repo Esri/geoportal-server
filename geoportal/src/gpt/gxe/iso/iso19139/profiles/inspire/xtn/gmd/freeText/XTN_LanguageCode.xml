@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- INSPIRE language codes -->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gmd:LanguageCode" 
+           g:i18nBase="catalog.iso19139.LanguageCode" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/CodeListValue_Type.xml">
+  <g:body>
+   
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeSpace.xml" g:value=""/>
+       
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeList.xml"
+      g:value="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#LanguageCode"/>
+     
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeListValue.xml">
+      <g:body>
+        <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+          <g:options g:i18nBase="catalog.mdCode.language.iso639_2">
+            <!-- <g:option g:label="" g:value=""/> -->
+            <g:option g:value="bul" g:label="$i18nBase.bul"/>
+            <g:option g:value="cze" g:label="$i18nBase.cze"/>
+            <g:option g:value="dan" g:label="$i18nBase.dan"/>
+            <g:option g:value="dut" g:label="$i18nBase.dut"/>
+            <g:option g:value="eng" g:label="$i18nBase.eng" g:selected="true"/>
+            <g:option g:value="est" g:label="$i18nBase.est"/>
+            <g:option g:value="fin" g:label="$i18nBase.fin"/>
+            <g:option g:value="fre" g:label="$i18nBase.fre"/>
+            <g:option g:value="ger" g:label="$i18nBase.ger"/>
+            <g:option g:value="gre" g:label="$i18nBase.gre"/>
+            <g:option g:value="hun" g:label="$i18nBase.hun"/>
+            <g:option g:value="gle" g:label="$i18nBase.gle"/>
+            <g:option g:value="ita" g:label="$i18nBase.ita"/>
+            <g:option g:value="lav" g:label="$i18nBase.lav"/>
+            <g:option g:value="lit" g:label="$i18nBase.lit"/>
+            <g:option g:value="mlt" g:label="$i18nBase.mlt"/>
+            <g:option g:value="pol" g:label="$i18nBase.pol"/>
+            <g:option g:value="por" g:label="$i18nBase.por"/>
+            <g:option g:value="rum" g:label="$i18nBase.rum"/>
+            <g:option g:value="slo" g:label="$i18nBase.slo"/>
+            <g:option g:value="slv" g:label="$i18nBase.slv"/>
+            <g:option g:value="spa" g:label="$i18nBase.spa"/>
+            <g:option g:value="swe" g:label="$i18nBase.swe"/>
+          </g:options>
+        </g:input>
+      </g:body>          
+    </g:attribute>     
+     
+  </g:body> 
+</g:element>

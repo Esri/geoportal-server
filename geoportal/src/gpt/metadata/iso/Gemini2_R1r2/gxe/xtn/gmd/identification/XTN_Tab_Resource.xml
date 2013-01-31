@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Identification/Resource tab -->      
+<h:div xmlns:g="http://www.esri.com/geoportal/gxe" 
+       xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+       h:tag="div" 
+       g:label="$i18n.catalog.iso19139.MD_Metadata.section.identification.resource">
+	<g:tabs g:extends="$base/xtn/ui/UI_Tabs.xml">
+	  <g:body>
+	  
+	    <!-- Representation tab -->
+	    <h:div g:label="$i18n.catalog.iso19139.MD_Metadata.section.identification.representation">
+	      <g:element g:targetName="gmd:spatialRepresentationType" g:minOccurs="0" g:maxOccurs="unbounded"
+	        g:label="$i18n.catalog.iso19139.XTN_Identification.spatialRepresentationType"
+	        g:extends="$base/schema/gmd/identification/MD_SpatialRepresentationTypeCode_PropertyType.xml"/>
+	      <g:element g:targetName="gmd:spatialResolution" g:minOccurs="0" g:maxOccurs="2"
+	        g:label="$i18n.catalog.iso19139.XTN_Identification.spatialResolution"
+	        g:extends="$base/schema/gmd/identification/MD_Resolution_PropertyType.xml"/>
+	    </h:div>
+	     
+	     <!-- Resource language tab -->
+	     <h:div g:label="$i18n.catalog.iso19139.MD_Metadata.section.identification.language"> 
+	       <g:element g:targetName="gmd:language" g:minOccurs="1" g:maxOccurs="unbounded"
+	         g:label="$i18n.catalog.iso19139.XTN_Identification.language"
+	         g:extends="$base/xtn/gmd/metadataEntity/XTN_Language.xml"/>
+	     </h:div>
+	  
+	     <!-- Classification tab (MD_TopicCategoryCode) -->
+	     <h:div g:label="$i18n.catalog.iso19139.MD_Metadata.section.identification.classification">  
+	       <g:element g:targetName="gmd:topicCategory" g:minOccurs="1" g:maxOccurs="unbounded"
+	         g:extends="$base/schema/gmd/identification/MD_TopicCategoryCode_PropertyType.xml"/>
+	     </h:div>     
+	    
+	     <!-- Extent tab -->
+	     <h:div g:label="$i18n.catalog.iso19139.MD_Metadata.section.identification.extent">
+	       <g:element g:targetName="gmd:extent" g:minOccurs="0" g:maxOccurs="1"
+	         h:tag="div" g:jsClass="gxe.control.Element">
+	         <g:element g:targetName="gmd:EX_Extent" g:minOccurs="0" g:maxOccurs="1"
+	           h:tag="div" g:jsClass="gxe.control.Element">
+             <g:element 
+               g:extends="$base/xtn/gmd/extent/XTN_GeographicBoundingBox.xml"/>
+             <g:element 
+               g:extends="$base/xtn/gmd/extent/XTN_GeographicDescription.xml"/>
+             <g:element g:minOccurs="1" g:maxOccurs="1"
+               g:extends="$base/xtn/gmd/extent/XTN_TemporalElement.xml"/>
+             <g:element 
+               g:extends="$base/xtn/gmd/extent/XTN_VerticalElement.xml"/>                
+	         </g:element>
+	       </g:element>        
+	     </h:div>     
+	     
+	     <!-- Supplemental information --> 
+       <h:div g:label="$i18n.catalog.iso19139.MD_DataIdentification.supplementalInformation">
+				 <g:element g:targetName="gmd:supplementalInformation" g:minOccurs="0" g:maxOccurs="1"
+				   g:label="$i18n.catalog.iso19139.MD_DataIdentification.supplementalInformation"
+				   g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml">
+		       <g:body>
+		         <g:element>
+		           <g:body>
+		             <g:input g:extends="$base/core/ui/InputTextArea.xml" h:cols="60" h:rows="8"/>
+		           </g:body>
+		         </g:element>
+		       </g:body>
+				 </g:element>  
+	     </h:div>
+	     
+	  </g:body>
+	</g:tabs> 
+	
+</h:div>

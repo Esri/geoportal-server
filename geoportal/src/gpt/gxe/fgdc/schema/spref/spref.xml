@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Spatial Reference
+		spref (/metadata/spref)
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect04.xsd
+		http://www.fgdc.gov/metadata/csdgm/04.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="spref"
+	g:i18nBase="catalog.fgdc.spref" g:label="$i18nBase" 
+	g:extends="$base/core/xml/Element.xml">
+	<g:body>
+		<g:tabs g:extends="$base/core/ui/Tabs.xml">
+			<g:body>
+
+				<!-- Horizontal Coordinate System -->
+				<g:element g:targetName="horizsys" g:minOccurs="0"
+					g:extends="$base/core/xml/Element.xml">
+					<g:body>
+
+						<!-- Geographic, Planar or Local -->
+						<g:elementChoice g:extends="$base/core/xml/ElementChoice.xml">
+							<g:body>
+
+								<!-- Geographic -->
+								<g:element g:targetName="geograph" 
+									g:i18nBase="catalog.fgdc.spref.horizsys.geograph" g:label="$i18nBase"
+									h:tag="div" g:jsClass="gxe.control.Element">
+
+									<!-- Latitude Resolution -->
+									<g:element g:targetName="latres" g:valueType="xs:double"
+										g:tip="$i18n.catalog.fgdc.general.number.greaterThanZero.tip"
+										g:extends="$base/core/xml/ElementTextOnly.xml">
+										<g:restriction>
+											<g:minExclusive g:value="0.0"/>
+										</g:restriction>
+									</g:element>
+
+									<!-- Longitude Resolution -->
+									<g:element g:targetName="longres" g:valueType="xs:double"
+										g:tip="$i18n.catalog.fgdc.general.number.greaterThanZero.tip"
+										g:extends="$base/core/xml/ElementTextOnly.xml">
+										<g:restriction>
+											<g:minExclusive g:value="0.0"/>
+										</g:restriction>
+									</g:element>
+
+									<!-- Geographic Coordinate Units -->
+									<g:element g:targetName="geogunit"
+										g:extends="$base/core/xml/ElementTextOnly.xml">
+										<g:body>
+											<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+												<g:options g:i18nBase="catalog.fgdc.spref.geogunit.option">
+													<g:option g:value="Decimal degrees" g:label="$i18nBase.decimalDegrees"/>
+													<g:option g:value="Decimal minutes" g:label="$i18nBase.decimalMinutes"/>
+													<g:option g:value="Decimal seconds" g:label="$i18nBase.decimalSeconds"/>
+													<g:option g:value="Degrees and decimal minutes"
+														g:label="$i18nBase.degreesAndDecimalMinutes"/>
+													<g:option g:value="Degrees, minutes, and decimal seconds"
+														g:label="$i18nBase.degreesMinutesAndDecimalSeconds"/>
+													<g:option g:value="Radians" g:label="$i18nBase.radians"/>
+													<g:option g:value="Grads" g:label="$i18nBase.grads"/>
+												</g:options>
+											</g:input>
+										</g:body>
+									</g:element>
+
+								</g:element>
+
+								<!-- Planar
+								<g:element g:targetName="planar" g:maxOccurs="unbounded"
+									g:extends="$base/core/xml/Element.xml">
+								</g:element>
+								 -->
+
+								<!-- Local -->
+								<g:element g:targetName="local" 
+									g:i18nBase="catalog.fgdc.spref.horizsys.local" g:label="$i18nBase"
+									h:tag="div" g:jsClass="gxe.control.Element">
+								
+									<!-- Local Description -->
+									<g:element g:targetName="localdes"
+										g:extends="$base/core/xml/ElementTextOnly.xml"/>
+										
+									<!-- Local Georeference Information -->
+									<g:element g:targetName="localgeo"
+										g:extends="$base/core/xml/ElementTextOnly.xml"/>
+										
+								</g:element>
+
+							</g:body>
+						</g:elementChoice>
+
+						<!-- Geodetic Model -->
+						<g:element g:targetName="geodetic" g:minOccurs="0"
+							g:i18nBase="catalog.fgdc.spref.horizsys.geodetic" g:label="$i18nBase"
+							g:extends="$base/core/xml/Element.xml">
+							<g:body>
+							
+								<!-- Horizontal Datum Name -->
+								<g:element g:targetName="horizdn" g:minOccurs="0"
+									g:preferOpen="true" g:extends="$base/core/xml/ElementTextOnly.xml">
+									<g:body>
+										<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+											<g:options g:i18nBase="catalog.fgdc.spref.horizdn.option">
+												<g:option g:value="North American Datum of 1983"
+													g:label="$i18nBase.nad83"/>
+												<g:option g:value="North American Datum of 1927"
+													g:label="$i18nBase.nad27"/>
+												<g:option g:value="_other_" g:label="$i18n.catalog.mdCode.other"
+													g:isOther="true"/>
+											</g:options>
+										</g:input>
+									</g:body>
+								</g:element>
+								
+								<!-- Ellipsoid Name -->
+								<g:element g:targetName="ellips"
+									g:extends="$base/core/xml/ElementTextOnly.xml">
+									<g:body>
+										<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+											<g:options g:i18nBase="catalog.fgdc.spref.ellips.option">
+												<g:option g:value="Geodetic Reference System 80"
+													g:label="$i18nBase.grs80"/>
+												<g:option g:value="Clarke 1866" g:label="$i18nBase.clarke1866"/>
+												<g:option g:value="_other_" g:label="$i18n.catalog.mdCode.other"
+													g:isOther="true"/>
+											</g:options>
+										</g:input>
+									</g:body>
+								</g:element>
+
+								<!-- Semi-major Axis -->
+								<g:element g:targetName="semiaxis" g:valueType="xs:double"
+									g:tip="$i18n.catalog.fgdc.general.number.greaterThanZero.tip"
+									g:extends="$base/core/xml/ElementTextOnly.xml">
+									<g:restriction>
+										<g:minExclusive g:value="0.0"/>
+									</g:restriction>
+								</g:element>
+
+								<!-- Denominator of Flattening Ratio -->
+								<g:element g:targetName="denflat" g:valueType="xs:double"
+									g:tip="$i18n.catalog.fgdc.general.number.greaterThanZero.tip"
+									g:extends="$base/core/xml/ElementTextOnly.xml">
+									<g:restriction>
+										<g:minExclusive g:value="0.0"/>
+									</g:restriction>
+								</g:element>
+
+							</g:body>
+						</g:element>
+
+					</g:body>
+				</g:element>
+
+        <!-- Vertical Coordinate System -->
+				<g:element g:targetName="vertdef" g:minOccurs="0"
+					g:i18nBase="catalog.fgdc.spref.vertdef" g:label="$i18nBase"
+					g:extends="$base/core/xml/Element.xml">
+					<g:body>
+
+						<!-- Altitude System -->
+						<g:element g:targetName="altsys" g:minOccurs="0"
+						  g:i18nBase="catalog.fgdc.spref.vertdef.altsys" g:label="$i18nBase"
+							g:extends="$base/core/xml/Element.xml">
+							<g:body>
+
+								<!-- Altitude Datum Name -->
+								<g:element g:targetName="altdatum"
+									g:extends="$base/core/xml/ElementTextOnly.xml">
+									<g:body>
+										<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+											<g:options g:i18nBase="catalog.fgdc.spref.altdatum.option">
+												<g:option g:value="North American Vertical Datum of 1988" g:label="$i18nBase.navd88"/>
+												<g:option g:value="National Geodetic Vertical Datum of 1929" g:label="$i18nBase.ngvd29"/>
+												<g:option g:value="_other_" g:label="$i18n.catalog.mdCode.other" g:isOther="true"/>              
+											</g:options>
+										</g:input>
+									</g:body>									
+								</g:element>
+								
+								<!-- Altitude Resolution -->
+								<g:element g:targetName="altres" g:maxOccurs="unbounded"
+									g:valueType="xs:double" 
+									g:tip="$i18n.catalog.fgdc.general.number.greaterThanZero.tip"
+									g:extends="$base/core/xml/ElementTextOnly.xml">
+									<g:restriction>
+										<g:minExclusive g:value="0.0"/>
+									</g:restriction>
+								</g:element>
+
+								<!-- Altitude Distance Units -->
+								<g:element g:targetName="altunits"
+									g:extends="$base/core/xml/ElementTextOnly.xml">
+									<g:body>
+										<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+											<g:options g:i18nBase="catalog.fgdc.spref.units.option">
+												<g:option g:value="meters" g:label="$i18nBase.meters"/>
+												<g:option g:value="feet" g:label="$i18nBase.feet"/>
+												<g:option g:value="_other_" g:label="$i18n.catalog.mdCode.other" g:isOther="true"/>              
+											</g:options>
+										</g:input>
+									</g:body>									
+								</g:element>
+
+								<!-- Altitude Encoding Method -->
+								<g:element g:targetName="altenc"
+									g:extends="$base/core/xml/ElementTextOnly.xml">
+									<g:body>
+										<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+											<g:options g:i18nBase="catalog.fgdc.spref.vertdef.altsys.altenc.option">
+												<g:option
+													g:value="Explicit elevation coordinate included with horizontal coordinates"
+													g:label="$i18nBase.explicit"/>
+												<g:option g:value="Implicit coordinate" g:label="$i18nBase.implicit"/>
+												<g:option g:value="Attribute values" g:label="$i18nBase.attribute"/>
+											</g:options>
+										</g:input>
+									</g:body>
+								</g:element>
+
+							</g:body>
+						</g:element>
+						
+						<!-- Depth System -->
+						<g:element g:targetName="depthsys" g:minOccurs="0"
+							g:i18nBase="catalog.fgdc.spref.vertdef.depthsys" g:label="$i18nBase"
+							g:extends="$base/core/xml/Element.xml">
+							<g:body>
+
+								<!-- Depth Datum Name -->
+								<g:element g:targetName="depthdn"
+									g:extends="$base/core/xml/ElementTextOnly.xml">
+									<g:body>
+										<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+											<g:options g:i18nBase="catalog.fgdc.spref.depthdn.option">
+												<g:option g:label="$i18nBase.1" g:value="Local surface"/> 
+												<g:option g:label="$i18nBase.2" g:value="Chart datum; datum for sounding reduction"/>  
+												<g:option g:label="$i18nBase.3" g:value="Lowest astronomical tide"/>  
+												<g:option g:label="$i18nBase.4" g:value="Highest astronomical tide"/>  
+												<g:option g:label="$i18nBase.5" g:value="Mean low water"/>  
+												<g:option g:label="$i18nBase.6" g:value="Mean high water"/>  
+												<g:option g:label="$i18nBase.7" g:value="Mean sea level"/>  
+												<g:option g:label="$i18nBase.8" g:value="Land survey datum"/>  
+												<g:option g:label="$i18nBase.9" g:value="Mean low water springs"/>  
+												<g:option g:label="$i18nBase.10" g:value="Mean high water springs"/>  
+												<g:option g:label="$i18nBase.11" g:value="Mean low water neap"/>  
+												<g:option g:label="$i18nBase.12" g:value="Mean high water neap"/>  
+												<g:option g:label="$i18nBase.13" g:value="Mean lower low water"/>  
+												<g:option g:label="$i18nBase.14" g:value="Mean lower low water springs"/>  
+												<g:option g:label="$i18nBase.15" g:value="Mean higher high water"/>  
+												<g:option g:label="$i18nBase.16" g:value="Mean higher low water"/>  
+												<g:option g:label="$i18nBase.17" g:value="Mean lower high water"/>  
+												<g:option g:label="$i18nBase.18" g:value="Spring tide"/>  
+												<g:option g:label="$i18nBase.19" g:value="Tropic lower low water"/>  
+												<g:option g:label="$i18nBase.20" g:value="Neap tide"/>  
+												<g:option g:label="$i18nBase.21" g:value="High water"/>  
+												<g:option g:label="$i18nBase.22" g:value="Higher high water"/>  
+												<g:option g:label="$i18nBase.23" g:value="Low water"/>  
+												<g:option g:label="$i18nBase.24" g:value="Low-water datum"/>  
+												<g:option g:label="$i18nBase.25" g:value="Lowest low water"/>  
+												<g:option g:label="$i18nBase.26" g:value="Lower low water"/>  
+												<g:option g:label="$i18nBase.27" g:value="Lowest normal low water"/>  
+												<g:option g:label="$i18nBase.28" g:value="Mean tide level"/>  
+												<g:option g:label="$i18nBase.29" g:value="Indian spring low water"/>  
+												<g:option g:label="$i18nBase.30" g:value="High-water full and charge"/>  
+												<g:option g:label="$i18nBase.31" g:value="Low-water full and charge"/>  
+												<g:option g:label="$i18nBase.32" g:value="Columbia River datum"/>  
+												<g:option g:label="$i18nBase.33" g:value="Gulf Coast low water datum"/>  
+												<g:option g:label="$i18nBase.34" g:value="Equatorial springs low water"/>  
+												<g:option g:label="$i18nBase.35" g:value="Approximate lowest astronomical tide"/>  
+												<g:option g:label="$i18nBase.36" g:value="No correction"/> 											
+												<g:option g:value="_other_" g:label="$i18n.catalog.mdCode.other" g:isOther="true"/>              
+											</g:options>
+										</g:input>
+									</g:body>									
+								</g:element>
+
+								<!-- Depth Resolution -->
+								<g:element g:targetName="depthres" g:maxOccurs="unbounded"
+									g:valueType="xs:double" 
+									g:tip="$i18n.catalog.fgdc.general.number.greaterThanZero.tip"
+									g:extends="$base/core/xml/ElementTextOnly.xml">
+									<g:restriction>
+										<g:minExclusive g:value="0.0"/>
+									</g:restriction>
+								</g:element>
+
+								<!-- Depth Distance Units -->
+								<g:element g:targetName="depthdu"
+									g:extends="$base/core/xml/ElementTextOnly.xml">
+									<g:body>
+										<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+											<g:options g:i18nBase="catalog.fgdc.spref.units.option">
+												<g:option g:value="meters" g:label="$i18nBase.meters"/>
+												<g:option g:value="feet" g:label="$i18nBase.feet"/>
+												<g:option g:value="_other_" g:label="$i18n.catalog.mdCode.other" g:isOther="true"/>              
+											</g:options>
+										</g:input>
+									</g:body>									
+								</g:element>
+
+								<!-- Depth Encoding Method -->
+								<g:element g:targetName="depthem"
+									g:extends="$base/core/xml/ElementTextOnly.xml">
+									<g:body>
+										<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+											<g:options g:i18nBase="catalog.fgdc.spref.vertdef.depthsys.depthem.option">
+												<g:option
+													g:value="Explicit depth coordinate included with horizontal coordinates"
+													g:label="$i18nBase.explicit"/>
+												<g:option g:value="Implicit coordinate" g:label="$i18nBase.implicit"/>
+												<g:option g:value="Attribute values" g:label="$i18nBase.attribute"/>
+											</g:options>
+										</g:input>
+									</g:body>									
+								</g:element>
+
+							</g:body>
+						</g:element>
+
+					</g:body>
+				</g:element>
+
+			</g:body>
+		</g:tabs>
+	</g:body>
+</g:element>
+

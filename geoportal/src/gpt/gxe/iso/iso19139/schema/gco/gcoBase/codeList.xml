@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>         
+<g:attribute xmlns:g="http://www.esri.com/geoportal/gxe" 
+             xmlns:h="http://www.esri.com/geoportal/gxe/html"
+             g:targetNS="" g:targetName="codeList" 
+             g:use="required" g:valueType="xs:anyURI"
+             g:label="$i18n.catalog.iso19139.gco.CodeListValue.codeList" 
+             g:extends="$base/xtn/ui/UI_Attribute.xml"
+             g:rendered="false">
+  <!-- TODO rendering should be turned on for experts -->
+</g:attribute>

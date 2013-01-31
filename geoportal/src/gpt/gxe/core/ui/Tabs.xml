@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:tabs xmlns:g="http://www.esri.com/geoportal/gxe" 
+        xmlns:h="http://www.esri.com/geoportal/gxe/html"
+        h:tag="div" h:class="gxeTabs" 
+        g:extensible="true" g:jsClass="gxe.control.Tabs">
+        
+  <g:header g:extensible="true" h:tag="div" h:class="gxeTabsHeader">
+    <g:tabArray h:tag="ul" h:class="gxeTabArray" g:jsClass="gxe.control.TabArray"/>
+  </g:header> 
+         
+  <g:body g:extensible="true" h:tag="div" h:class="gxeTabsBody" 
+    g:jsClass="gxe.control.TabsBody"/>
+    
+</g:tabs>

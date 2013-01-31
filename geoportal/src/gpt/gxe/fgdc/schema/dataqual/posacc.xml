@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Positional Accuracy 
+		(posacc, /metadata/dataqual/posacc) 
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect02.xsd
+		http://www.fgdc.gov/metadata/csdgm/02.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="posacc"
+	g:i18nBase="catalog.fgdc.dataqual.posacc" g:label="$i18nBase"
+	g:extends="$base/core/xml/Element.xml">
+	<g:body>
+
+		<!-- Horizontal Positional Accuracy -->
+		<g:element g:targetName="horizpa" g:minOccurs="0"
+			g:i18nBase="catalog.fgdc.dataqual.posacc.horizpa" g:label="$i18nBase"
+			g:extends="$base/core/xml/Element.xml">
+			<g:body>
+
+				<!-- Horizontal Positional Accuracy Report -->
+				<g:element g:targetName="horizpar"
+					g:extends="$base/core/xml/ElementTextOnly.xml">
+					<g:body>
+						<g:input g:extends="$base/core/ui/InputTextArea.xml"/>
+					</g:body>
+				</g:element>
+
+				<!-- Quantitative Horizontal Positional Accuracy Assessment -->
+				<g:element g:targetName="qhorizpa" g:minOccurs="0"
+					g:i18nBase="catalog.fgdc.dataqual.posacc.horizpa.qhorizpa" g:label="$i18nBase"
+					g:maxOccurs="unbounded" g:extends="$base/core/xml/Element.xml">
+					<g:body>
+
+						<!-- Horizontal Positional Accuracy Value -->
+						<g:element g:targetName="horizpav" g:valueType="xs:double"
+							g:extends="$base/core/xml/ElementTextOnly.xml"/>
+
+						<!-- Horizontal Positional Accuracy Explanation -->
+						<g:element g:targetName="horizpae"
+							g:extends="$base/core/xml/ElementTextOnly.xml">
+							<g:body>
+								<g:input g:extends="$base/core/ui/InputTextArea.xml"/>
+							</g:body>
+						</g:element>
+
+					</g:body>
+				</g:element>
+			</g:body>
+		</g:element>
+
+		<!-- Vertical Positional Accuracy -->
+		<g:element g:targetName="vertacc" g:minOccurs="0"
+			g:i18nBase="catalog.fgdc.dataqual.posacc.vertacc" g:label="$i18nBase"
+			g:extends="$base/core/xml/Element.xml">
+			<g:body>
+
+				<!-- Vertical Positional Accuracy Report -->
+				<g:element g:targetName="vertaccr"
+					g:extends="$base/core/xml/ElementTextOnly.xml">
+					<g:body>
+						<g:input g:extends="$base/core/ui/InputTextArea.xml"/>
+					</g:body>
+				</g:element>
+
+				<!-- Quantitative Vertical Positional Accuracy Assessment -->
+				<g:element g:targetName="qvertpa" g:minOccurs="0"
+					g:i18nBase="catalog.fgdc.dataqual.posacc.vertacc.qvertpa" g:label="$i18nBase"
+					g:maxOccurs="unbounded" g:extends="$base/core/xml/Element.xml">
+					<g:body>
+
+						<!-- Vertical Positional Accuracy Value -->
+						<g:element g:targetName="vertaccv" g:valueType="xs:double"
+							g:extends="$base/core/xml/ElementTextOnly.xml"/>
+
+						<!-- Vertical Positional Accuracy Explanation -->
+						<g:element g:targetName="vertacce"
+							g:extends="$base/core/xml/ElementTextOnly.xml">
+							<g:body>
+								<g:input g:extends="$base/core/ui/InputTextArea.xml"/>
+							</g:body>
+						</g:element>
+
+					</g:body>
+				</g:element>
+			</g:body>
+		</g:element>
+
+	</g:body>
+</g:element>

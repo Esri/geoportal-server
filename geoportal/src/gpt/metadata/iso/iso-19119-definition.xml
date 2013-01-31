@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<schema key="iso-19119" 
+        templateFile="gpt/metadata/iso/iso-19119-template.xml"
+        cswOutputSchema="http://www.isotc211.org/2005/gmd" 
+        cswBriefXslt="gpt/metadata/iso/apiso-brief.xslt" 
+        cswSummaryXslt="gpt/metadata/iso/apiso-summary.xslt"
+	      xsdLocation="http://schemas.opengis.net/iso/19139/20060504/gmd/gmd.xsd,http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd"
+        toEsriItemInfoXslt="gpt/metadata/iso/iso-toEsriItemInfo.xslt"
+        detailsXslt="gpt/metadata/iso/iso-details.xslt" >
+        
+	<!-- schema label -->
+	<label resourceKey="catalog.mdParam.schema.iso19139.services"/>
+
+	<!-- schema namespaces -->
+	<namespace prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
+	<namespace prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
+	<namespace prefix="gml" uri="http://www.opengis.net/gml"/>
+	<namespace prefix="srv" uri="http://www.isotc211.org/2005/srv"/>
+
+	<!-- schema interrogation -->
+	<interrogation count="count(/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification)"/>
+
+  <!-- indexables -->
+  <indexables fileName="gpt/metadata/iso/apiso-indexables.xml"/>
+  
+  <!-- Geoportal XML editor -->
+  <editor fileName="gpt/gxe/iso/iso19139/iso19139-service-editor.xml"/>
+  
+	<!-- general section -->
+	<section key="general">
+		<label resourceKey="catalog.mdParam.general.caption"/>
+		<parameter key="general.fileIdentifier" meaning="fileIdentifier">
+			<label resourceKey="catalog.mdParam.general.fileIdentifier"/>
+			<input type="text" size="50" maxlength="2048" defaultValue="#{EditMetadataController.newUuid}"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString"/>
+		</parameter>
+
+		<!-- language used for documenting metadata -->
+		<parameter key="general.language" meaning="language">
+			<label resourceKey="catalog.mdParam.general.metadataLanguage"/>
+			<input type="text" size="50" maxlength="2048" defaultValue="en"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:language/gco:CharacterString"/>
+		</parameter>
+
+		<!--"date that the metadata was created " as per ISO 19115 standard -->
+		<parameter key="general.datestamp" meaning="datestamp">
+			<label resourceKey="catalog.mdParam.general.metadataDateStamp"/>
+			<input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat" defaultValue="#{EditMetadataController.now}"/>
+			<validation required="true" valueType="date"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:dateStamp/gco:Date | /gmd:MD_Metadata/gmd:dateStamp/gco:DateTime"
+                 update="/gmd:MD_Metadata/gmd:dateStamp/gco:Date"/>
+		</parameter>
+
+		<!--party responsible for the metadata information-->
+		<parameter key="general.organization">
+			<label resourceKey="catalog.mdParam.general.organization"/>
+			<input type="text" defaultValue="#{EditMetadataController.userProfile['organization'].value}"/>
+			<validation required="true"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+		</parameter>
+
+		<!-- "custodian" role: party that accepts accountability and responsibility for the data and ensures appropriate care and maintenance of the resource", as per ISO 19115 standard -->
+		<parameter key="general.custodian">
+			<label resourceKey="catalog.mdParam.general.custodian"/>
+			<input type="text" editable="false" defaultValue="custodian"/>
+			<validation required="true"/>
+			<content nodeType="isoCodeListValue" useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue"/>
+		</parameter>
+	</section>
+
+	<!-- identification section -->
+	<section key="identification">
+		<label resourceKey="catalog.mdParam.identification.caption"/>
+
+		<parameter key="identification.title" meaning="title">
+			<label resourceKey="catalog.mdParam.identification.title"/>
+			<input type="text"/>
+			<validation required="true"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
+		</parameter>
+
+		<parameter key="identification.publicationDate">
+			<label resourceKey="catalog.mdParam.identification.datasetPublicationDate"/>
+			<input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat" defaultValue="#{EditMetadataController.now}"/>
+			<validation required="true" valueType="date"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:DateTime" update="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date"/>
+		</parameter>
+
+		<parameter key="identification.abstract" meaning="abstract">
+			<label resourceKey="catalog.mdParam.identification.abstract"/>
+			<input type="textArea"/>
+			<validation required="true"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:abstract/gco:CharacterString"/>
+		</parameter>
+
+		<!--ISO 19119 serviceType section. GPT 9.3 has defined options, although LocalName is not a pre-defined list -->
+		<parameter key="identification.serviceType" meaning="serviceType">
+			<label resourceKey="catalog.mdParam.identification.service.serviceType"/>
+			<input type="selectOneMenu"/>
+			<validation required="true"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType/gco:ScopedName" update="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName">
+				<codes>
+				<code key=""/>
+					<code key="urn:x-esri:specification:ServiceType:ArcIMS" resourceKey="catalog.mdCode.resourceType.urn_x_esri_specification_ServiceType_ArcIMS"/>
+  				<code key="urn:x-esri:specification:ServiceType:ArcGIS" resourceKey="catalog.mdCode.resourceType.urn_x_esri_specification_ServiceType_ArcGIS"/>
+  				<code key="urn:ogc:dataFormat:GML:2.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_dataFormat_GML_2.0"/>
+  				<code key="urn:ogc:dataFormat:GML:2.1.1" resourceKey="catalog.mdCode.resourceType.urn_ogc_dataFormat_GML_2.1.1"/>
+  				<code key="urn:ogc:dataFormat:GML:2.1.2" resourceKey="catalog.mdCode.resourceType.urn_ogc_dataFormat_GML_2.1.2"/>
+  				<code key="urn:ogc:dataFormat:GML:3.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_dataFormat_GML_3.0"/>
+  				<code key="urn:ogc:dataFormat:GML:3.1.1" resourceKey="catalog.mdCode.resourceType.urn_ogc_dataFormat_GML_3.1.1"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.1:CORBA" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.1_CORBA"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.1:HTTP" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.1_HTTP"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.1:HTTP:ebRIM" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.1_HTTP_ebRIM"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.1:HTTP:EO" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.1_HTTP_EO"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.1:HTTP:FGDC-CSDGM" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.1_HTTP_FGDC_CSDGM"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.1:HTTP:ISO19115/19119" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.1_HTTP_ISO19115_19119"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.1:Z39.50" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.1_Z39.50"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.1:Z39.50:GEOProfile" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.1_Z39.50_GEOProfile"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.1:Z39.50:SRU" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.1_Z39.50_SRU"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.2:CORBA" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.2_CORBA"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.2:HTTP" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.2_HTTP"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.2:HTTP:ebRIM" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.2_HTTP_ebRIM"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.2:HTTP:EO" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.2_HTTP_EO"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.2:HTTP:FGDC-CSDGM" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.2_HTTP_FGDC_CSDGM"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.2:HTTP:ISO19115/19119" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.2_HTTP_ISO19115_19119"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.2:Z39.50" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.2_Z39.50"/>
+  				<code key="urn:ogc:serviceType:CoordinateTransformationService:1.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CoordinateTransformationService_1.0"/>
+  				<code key="urn:ogc:serviceType:CoordinateTransformationService:1.0:COM" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CoordinateTransformationService_1.0_COM"/>
+  				<code key="urn:ogc:serviceType:CoordinateTransformationService:1.0:CORBA" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CoordinateTransformationService_1.0_CORBA"/>
+  				<code key="urn:ogc:serviceType:CoordinateTransformationService:1.0:Java" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CoordinateTransformationService_1.0_Java"/>
+  				<code key="urn:ogc:serviceType:GridCoverage:1.0:COM" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_GridCoverage_1.0_COM"/>
+  				<code key="urn:ogc:serviceType:GridCoverage:1.0:CORBA" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_GridCoverage_1.0_CORBA"/>
+  				<code key="urn:ogc:serviceType:OpenLSCoreServices:1.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_OpenLSCoreServices_1.0"/>
+  				<code key="urn:ogc:serviceType:OpenLSCoreServices:1.0:SOAP" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_OpenLSCoreServices_1.0_SOAP"/>
+  				<code key="urn:ogc:serviceType:OpenLSCoreServices:1.1" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_OpenLSCoreServices_1.1"/>
+                <code key="urn:ogc:serviceType:KML:2.2" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_KML_2.2"/>
+  				<code key="urn:ogc:serviceType:SimpleFeatureAccess:1.0:CORBA" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_SimpleFeatureAccess_1.0_CORBA"/>
+  				<code key="urn:ogc:serviceType:SimpleFeatureAccess:1.1:OLE/COM" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_SimpleFeatureAccess_1.1_OLE_COM"/>
+  				<code key="urn:ogc:serviceType:SimpleFeatureAccess:1.1:SQL" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_SimpleFeatureAccess_1.1_SQL"/>
+  				<code key="urn:ogc:serviceType:SimpleFeatureAccess:1.2:SQL" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_SimpleFeatureAccess_1.2_SQL"/>
+                <code key="urn:ogc:serviceType:SensorObservationService:1.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_SensorObservationService_1.0"/>  				
+  				<code key="urn:ogc:serviceType:WebCoverageService:1.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebCoverageService_1.0"/>
+  				<code key="urn:ogc:serviceType:WebCoverageService:1.1.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebCoverageService_1.1.0"/>
+  				<code key="urn:ogc:serviceType:WebFeatureService:1.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebFeatureService_1.0"/>
+  				<code key="urn:ogc:serviceType:WebFeatureService:1.1" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebFeatureService_1.1"/>
+  				<code key="urn:ogc:serviceType:WebMapService:1.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebMapService_1.0"/>
+  				<code key="urn:ogc:serviceType:WebMapService:1.1" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebMapService_1.1"/>
+  				<code key="urn:ogc:serviceType:WebMapService:1.1.1" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebMapService_1.1.1"/>
+  				<code key="urn:ogc:serviceType:WebMapService:1.3.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebMapService_1.3.0"/>
+  				<code key="urn:ogc:serviceType:WebMapService:Post:0.0.3" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebMapService_Post_0.0.3"/>
+  				<code key="urn:ogc:serviceType:WebProcessingService:0.4" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebProcessingService_0.4"/>
+				</codes>
+			 </content>
+		</parameter>
+		
+		<!--operation name. For example, "GetCapabilities" -->
+		<parameter key="identification.operationName" meaning="operationName">
+			<label resourceKey="catalog.mdParam.identification.service.operationName"/>
+			<input type="text" defaultValue=""/>
+			<validation required="true"/>
+			<content useSelectForUpdate="true" select="   /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:operationName/gco:CharacterString"/>
+		</parameter>
+
+		<!-- this is where the user actually types in the url to their service -->
+		<parameter key="identification.connectPoint" meaning="resource.url">
+			<label resourceKey="catalog.mdParam.identification.service.connectPoint"/>
+			<input type="text" testResourceKey="catalog.publication.editMetadata.button.test.service"/>
+			<validation required="true"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
+		</parameter>
+
+	<!--ISO 19119 coupling type section. Refers to the type of coupling with the Dataset. Options are loose, mixed, or tight -->
+		<parameter key="identification.couplingType" meaning="couplingType">
+			<label resourceKey="catalog.mdParam.identification.service.couplingType"/>
+			<input type="selectOneMenu"/>
+			<validation required="true"/>
+			<content nodeType="isoCodeListValue" useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:couplingType/srv:SV_CouplingType/@codeListValue">
+			<codes>
+				<code key=""/>
+				<code key="loose" resourceKey="catalog.mdCode.couplingType.loose"/>
+				<code key="mixed" resourceKey="catalog.mdCode.couplingType.mixed"/>
+				<code key="tight" resourceKey="catalog.mdCode.couplingType.tight"/>
+			</codes>
+		 </content> 
+		</parameter>
+	</section>
+
+	<!-- thumbnail section -->
+	<section key="thumbnail" open="false" obligation="optional" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic">
+		<label resourceKey="catalog.mdParam.thumbnail.caption"/>
+
+		<parameter key="thumbnail.url" meaning="thumbnail.url">
+			<label resourceKey="catalog.mdParam.thumbnail.url"/>
+			<input type="text" maxlength="2048"/>
+			<validation required="true"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
+		</parameter>
+
+		<parameter key="thumbnail.description">
+			<label resourceKey="catalog.mdParam.thumbnail.description"/>
+			<input type="text"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString"/>
+		</parameter>
+
+		<parameter key="thumbnail.type">
+			<label resourceKey="catalog.mdParam.thumbnail.type"/>
+			<input type="text" size="10"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileType/gco:CharacterString"/>
+		</parameter>
+	</section>
+
+	<!-- reference system information -->
+	<section key="referenceSystemInfo" open="false" obligation="optional" select="/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier">
+		<label resourceKey="catalog.mdParam.referenceSystemInfo.caption"/>
+
+		<parameter key="referenceSystemInfo.code">
+			<label resourceKey="catalog.mdParam.referenceSystemInfo.code"/>
+			<input type="text" editable="true" maxlength="100" defaultValue="4326"/>
+			<validation required="true"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
+		</parameter>
+
+		<parameter key="referenceSystemInfo.codespace">
+			<label resourceKey="catalog.mdParam.referenceSystemInfo.codespace"/>
+			<input type="text" editable="true"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString"/>
+		</parameter>
+	</section>
+
+	<!-- envelope section -->
+	<section key="envelope" obligation="optional" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent">
+		<label resourceKey="catalog.mdParam.envelope.caption"/>
+
+		<parameter key="envelope.west" meaning="envelope.west">
+			<label resourceKey="catalog.mdParam.envelope.west"/>
+			<input type="text" size="24" maxlength="24" defaultValue="-180" hintResourceKey="catalog.general.inputLongitudeFormat"/>
+			<validation required="true" valueType="double"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal"/>
+		</parameter>
+
+		<parameter key="envelope.south" meaning="envelope.south">
+			<label resourceKey="catalog.mdParam.envelope.south"/>
+			<input type="text" size="24" maxlength="24" defaultValue="-90" hintResourceKey="catalog.general.inputLatitudeFormat"/>
+			<validation required="true" valueType="double"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude/gco:Decimal"/>
+		</parameter>
+
+		<parameter key="envelope.east" meaning="envelope.east">
+			<label resourceKey="catalog.mdParam.envelope.east"/>
+			<input type="text" size="24" maxlength="24" defaultValue="180" hintResourceKey="catalog.general.inputLongitudeFormat"/>
+			<validation required="true" valueType="double"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude/gco:Decimal"/>
+		</parameter>
+
+		<parameter key="envelope.north" meaning="envelope.north">
+			<label resourceKey="catalog.mdParam.envelope.north"/>
+			<input type="text" size="24" maxlength="24" defaultValue="90" hintResourceKey="catalog.general.inputLatitudeFormat"/>
+			<validation required="true" valueType="double"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude/gco:Decimal"/>
+		</parameter>
+
+		<section key="envelope.map.container">
+			<parameter key="envelope.map">
+				<input type="map"/>
+			</parameter>
+		</section>
+</section>
+		<!-- data quality section -->
+		<section key="dataQuality" open="false" obligation="optional" select="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality">
+			<label resourceKey="catalog.mdParam.dataQualityInfo.caption"/>
+
+			<parameter key="dataQualityInfo.lineage">
+				<label resourceKey="catalog.mdParam.dataQualityInfo.lineage"/>
+				<input type="textArea"/>
+				<validation required="true"/>
+				<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement/gco:CharacterString"/>
+			</parameter>
+		</section>
+
+	<!-- contact section, a subset of the identification section) -->
+	<section key="contact" open="false" obligation="optional" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact">
+		<label resourceKey="catalog.mdParam.contact.caption"/>
+		<!--point of contact:identification of, and means of communication with, person(s) and organization(s) associated with the resource(s)" -->
+
+		<parameter key="contact.organization">
+			<label resourceKey="catalog.mdParam.contact.organization"/>
+			<input type="text" defaultValue="#{EditMetadataController.userProfile['organization'].value}"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+		</parameter>
+
+		<parameter key="contact.position">
+			<label resourceKey="catalog.mdParam.contact.position"/>
+			<input type="text"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:positionName/gco:CharacterString"/>
+		</parameter>
+
+		<parameter key="contact.address.address">
+			<label resourceKey="catalog.mdParam.contact.address.address"/>
+			<input type="text" defaultValue="#{EditMetadataController.userProfile['street'].value}"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:deliveryPoint/gco:CharacterString"/>
+		</parameter>
+
+		<parameter key="contact.address.city">
+			<label resourceKey="catalog.mdParam.contact.address.city"/>
+			<input type="text" defaultValue="#{EditMetadataController.userProfile['city'].value}"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:city/gco:CharacterString"/>
+		</parameter>
+
+		<parameter key="contact.address.state">
+			<label resourceKey="catalog.mdParam.contact.address.state"/>
+			<input type="text" defaultValue="#{EditMetadataController.userProfile['stateOrProv'].value}"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:administrativeArea/gco:CharacterString"/>
+		</parameter>
+
+		<parameter key="contact.address.postalCode">
+			<label resourceKey="catalog.mdParam.contact.address.postalCode"/>
+			<input type="text" defaultValue="#{EditMetadataController.userProfile['postalCode'].value}"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:postalCode/gco:CharacterString"/>
+		</parameter>
+
+		<parameter key="contact.address.country">
+			<label resourceKey="catalog.mdParam.contact.address.country"/>
+			<input type="text"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:country/gco:CharacterString"/>
+		</parameter>
+
+		<parameter key="contact.email">
+			<label resourceKey="catalog.mdParam.contact.email"/>
+			<input type="text" defaultValue="#{EditMetadataController.userProfile['email'].value}"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"/>
+		</parameter>
+
+		<parameter key="contact.onlineResource" meaning="website.url">
+			<label resourceKey="catalog.mdParam.contact.onlineResource"/>
+			<input type="text"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL" delete="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource"/>
+		</parameter>
+
+		<parameter key="contact.phoneNumber">
+			<label resourceKey="catalog.mdParam.contact.phoneNumber"/>
+			<input type="text" defaultValue="#{EditMetadataController.userProfile['phone'].value}"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:phone/gmd:CI_Telephone/gmd:voice/gco:CharacterString"/>
+		</parameter>
+
+		<parameter key="contact.faxNumber">
+			<label resourceKey="catalog.mdParam.contact.faxNumber"/>
+			<input type="text"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:phone/gmd:CI_Telephone/gmd:facsimile/gco:CharacterString"/>
+		</parameter>
+	</section>
+
+	<!-- distribution section -->
+	<section key="distribution" open="false" obligation="optional" select="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution">
+		<label resourceKey="catalog.mdParam.distribution.caption"/>
+
+		<parameter key="distribution.format.name">
+			<label resourceKey="catalog.mdParam.distribution.format.name"/>
+			<input type="text"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" 
+               delete="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"
+               select="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString"/>
+		</parameter>
+
+		<parameter key="distribution.format.version">
+			<label resourceKey="catalog.mdParam.distribution.format.version"/>
+			<input type="text"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" 
+               delete="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"
+               select="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:version/gco:CharacterString"/>
+		</parameter>
+
+		<parameter key="distribution.transferOptions.onLine.linkage">
+			<label resourceKey="catalog.mdParam.distribution.transferOptions.onLine.linkage"/>
+			<input type="text"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/gmd:URL" delete="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions"/>
+		</parameter>
+                
+                <parameter key="distribution.transferOptions.onLine.function">
+                    <label resourceKey="catalog.mdParam.distribution.transferOptions.onLine.function"/>
+                    <input type="selectOneMenu"/>
+                    <validation required="false"/>
+                    <content nodeType="isoCodeListValue" useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue">
+		<codes>
+                	<code key=""/>
+                        <code key="download"                    
+                                    resourceKey="catalog.mdCode.onLineFunctionCode.download"/>
+                        <code key="information"                    
+                                    resourceKey="catalog.mdCode.onLineFunctionCode.information"/>
+                        <code key="offlineAccess"                    
+                                    resourceKey="catalog.mdCode.onLineFunctionCode.offlineAccess"/>
+                        <code key="order"                    
+                                    resourceKey="catalog.mdCode.onLineFunctionCode.order"/>
+                        <code key="search"                    
+                                    resourceKey="catalog.mdCode.onLineFunctionCode.search"/>                
+		</codes>
+		</content>
+    </parameter>
+	</section>
+
+	<!-- metadata standard section -->
+	<section key="standard" open="false">
+		<label resourceKey="catalog.mdParam.standard.caption"/>
+
+		<parameter key="standard.name">
+			<label resourceKey="catalog.mdParam.standard.name"/>
+			<input type="text" editable="false" defaultValue="ISO 19139/19119 Metadata for Web Services"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString"/>
+		</parameter>
+
+		<parameter key="standard.version">
+			<label resourceKey="catalog.mdParam.standard.version"/>
+			<input type="text" editable="false" defaultValue="2005"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:metadataStandardVersion/gco:CharacterString"/>
+		</parameter>
+	</section>
+</schema>

@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<schema 
+	      key="inspire-iso-19115" 
+	      templateFile="gpt/metadata/iso/inspire/inspire-iso-19115-template.xml" 
+		    cswOutputSchema="http://www.isotc211.org/2005/gmd" 
+		    cswBriefXslt="gpt/metadata/iso/apiso-brief.xslt" 
+		    cswSummaryXslt="gpt/metadata/iso/apiso-summary.xslt"
+	      xsdLocation="http://www.isotc211.org/2005/gmd/metadataEntity.xsd[GML32]http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmd/metadataEntity.xsd"
+        detailsXslt="gpt/metadata/iso/iso-details.xslt">
+  	
+	<!-- schema label -->
+	<label resourceKey="catalog.mdParam.schema.inspire.coregeog"/>
+	
+	<!-- schema namespaces -->
+	<namespace prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
+	<namespace prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
+	<namespace prefix="gml" uri="http://www.opengis.net/gml"/>
+	
+	<!-- schema interrogation -->
+	<interrogation count="count(/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification)"/>
+	
+	<!-- indexables -->
+	<indexables fileName="gpt/metadata/iso/inspire/inspire-apiso-indexables.xml"/>
+	
+  <!-- Geopoprtal XML editor -->
+  <editor fileName="gpt/gxe/iso/iso19139/profiles/inspire/inspire-iso19139-dataset-editor.xml"/>
+	
+	<!-- general section -->
+	<section key="general">
+		<label resourceKey="catalog.mdParam.inspire.general.caption"/>
+		<parameter key="general.fileIdentifier" meaning="fileIdentifier">
+			<label resourceKey="catalog.mdParam.inspire.general.fileIdentifier"/>
+			<input type="text" editable="false" size="50" maxlength="2048" defaultValue="#{EditMetadataController.newUuid}"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString"/>
+		</parameter>
+		<!--section key="metadataPointOfContact">
+      <label resourceKey="catalog.mdParam.inspire.general.metadataPointOfContact.caption"/>  
+
+      <parameter key="general.contact.role">
+        <label resourceKey="catalog.mdParam.inspire.general.contact.role"/>
+        <input type="text" editable="false" defaultValue="custodian"/>
+        <validation required="true"/>
+        <content nodeType="isoCodeListValue" useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue"/>     
+      </parameter>
+
+      <parameter key="general.contact.email">
+        <label resourceKey="catalog.mdParam.inspire.general.contact.email"/>
+        <input type="text" defaultValue="#{EditMetadataController.userProfile['email'].value}"/>
+        <validation required="true"/>
+        <content useSelectForUpdate="true" deleteParentIfEmpty="true"
+                 select="/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"/>
+      </parameter>
+
+      <parameter key="general.contact.organization">
+        <label resourceKey="catalog.mdParam.inspire.general.contact.organization"/>
+        <input type="text" defaultValue="#{EditMetadataController.userProfile['organization'].value}"/>
+        <validation required="true"/>
+        <content useSelectForUpdate="true" 
+               select="/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+      </parameter>
+      
+    </section-->
+		<!--"date that the metadata was created " as per ISO 19115 standard -->
+		<parameter key="general.datestamp">
+			<label resourceKey="catalog.mdParam.inspire.general.metadataDateStamp"/>
+			<input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat" defaultValue="#{EditMetadataController.now}"/>
+			<validation required="true" valueType="date"/>
+			<content select="/gmd:MD_Metadata/gmd:dateStamp/gco:Date | /gmd:MD_Metadata/gmd:dateStamp/gco:DateTime" update="/gmd:MD_Metadata/gmd:dateStamp/gco:Date"/>
+		</parameter>
+		<!-- language used for documenting metadata -->
+		<parameter key="general.language">
+			<label resourceKey="catalog.mdParam.inspire.general.metadataLanguage"/>
+			<input type="selectOneMenu" defaultValue="eng"/>
+			<validation required="true"/>
+			<content nodeType="isoCodeListValue" select="/gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue | /gmd:MD_Metadata/gmd:language/gmd:LanguageCode/text() | /gmd:MD_Metadata/gmd:language/gco:CharacterString" update="/gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue">
+				<codes>
+					<code key=""/>
+					<code key="bul" resourceKey="catalog.mdCode.language.iso639_2.bul"/>
+					<code key="cze" resourceKey="catalog.mdCode.language.iso639_2.cze"/>
+					<code key="dan" resourceKey="catalog.mdCode.language.iso639_2.dan"/>
+					<code key="dut" resourceKey="catalog.mdCode.language.iso639_2.dut"/>
+					<code key="eng" resourceKey="catalog.mdCode.language.iso639_2.eng"/>
+					<code key="est" resourceKey="catalog.mdCode.language.iso639_2.est"/>
+					<code key="fin" resourceKey="catalog.mdCode.language.iso639_2.fin"/>
+					<code key="fre" resourceKey="catalog.mdCode.language.iso639_2.fre"/>
+					<code key="ger" resourceKey="catalog.mdCode.language.iso639_2.ger"/>
+					<code key="gre" resourceKey="catalog.mdCode.language.iso639_2.gre"/>
+					<code key="hun" resourceKey="catalog.mdCode.language.iso639_2.hun"/>
+					<code key="gle" resourceKey="catalog.mdCode.language.iso639_2.gle"/>
+					<code key="ita" resourceKey="catalog.mdCode.language.iso639_2.ita"/>
+					<code key="lav" resourceKey="catalog.mdCode.language.iso639_2.lav"/>
+					<code key="lit" resourceKey="catalog.mdCode.language.iso639_2.lit"/>
+					<code key="mlt" resourceKey="catalog.mdCode.language.iso639_2.mlt"/>
+					<code key="pol" resourceKey="catalog.mdCode.language.iso639_2.pol"/>
+					<code key="por" resourceKey="catalog.mdCode.language.iso639_2.por"/>
+					<code key="rum" resourceKey="catalog.mdCode.language.iso639_2.rum"/>
+					<code key="slo" resourceKey="catalog.mdCode.language.iso639_2.slo"/>
+					<code key="slv" resourceKey="catalog.mdCode.language.iso639_2.slv"/>
+					<code key="spa" resourceKey="catalog.mdCode.language.iso639_2.spa"/>
+					<code key="swe" resourceKey="catalog.mdCode.language.iso639_2.swe"/>
+					<!--code key="kor" resourceKey="catalog.mdCode.language.iso639_2.kor"/>
+          <code key="nor" resourceKey="catalog.mdCode.language.iso639_2.nor"/>
+          <code key="rus" resourceKey="catalog.mdCode.language.iso639_2.rus"/>
+          <code key="tur" resourceKey="catalog.mdCode.language.iso639_2.tur"/>
+          <code key="chi" resourceKey="catalog.mdCode.language.iso639_2.chi"/-->
+				</codes>
+			</content>
+		</parameter>
+		<parameter key="general.contact.organization">
+			<label resourceKey="catalog.mdParam.inspire.general.contact.organization"/>
+			<input type="text" defaultValue="#{EditMetadataController.userProfile['organization'].value}"/>
+			<validation required="true"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+		</parameter>
+		<parameter key="general.contact.role">
+			<label resourceKey="catalog.mdParam.inspire.general.contact.role"/>
+			<input type="selectOneMenu"/>
+			<validation required="true"/>
+			<content nodeType="isoCodeListValue" useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
+				<codes>
+					<code key=""/>
+					<code key="author" resourceKey="catalog.mdParam.inspire.contact.position.author"/>
+					<code key="custodian" resourceKey="catalog.mdParam.inspire.contact.position.custodian"/>
+					<code key="distributor" resourceKey="catalog.mdParam.inspire.contact.position.distributor"/>
+					<code key="originator" resourceKey="catalog.mdParam.inspire.contact.position.originator"/>
+					<code key="owner" resourceKey="catalog.mdParam.inspire.contact.position.owner"/>
+					<code key="pointOfContact" resourceKey="catalog.mdParam.inspire.contact.position.pointOfContact"/>
+					<code key="principalInvestigator" resourceKey="catalog.mdParam.inspire.contact.position.principalInvestigator"/>
+					<code key="processor" resourceKey="catalog.mdParam.inspire.contact.position.processor"/>
+					<code key="publisher" resourceKey="catalog.mdParam.inspire.contact.position.publisher"/>
+					<code key="resourceProvider" resourceKey="catalog.mdParam.inspire.contact.position.resourceProvider"/>
+					<code key="user" resourceKey="catalog.mdParam.inspire.contact.position.user"/>
+				</codes>
+			</content>
+		</parameter>
+		<parameter key="general.contact.email">
+			<label resourceKey="catalog.mdParam.inspire.general.contact.email"/>
+			<input type="text" defaultValue="#{EditMetadataController.userProfile['email'].value}"/>
+			<validation required="true"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"/>
+		</parameter>
+	</section>
+	<!-- identification section -->
+	<section key="identification">
+		<label resourceKey="catalog.mdParam.inspire.identification.caption"/>
+		<!-- 2.2.1 Resource Title -->
+		<parameter key="identification.title" meaning="title">
+			<label resourceKey="catalog.mdParam.inspire.identification.title"/>
+			<input type="text"/>
+			<validation required="true"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
+		</parameter>
+		<!-- 2.2.2 Resource Abstract -->
+		<parameter key="identification.abstract">
+			<label resourceKey="catalog.mdParam.inspire.identification.abstract"/>
+			<input type="textArea"/>
+			<validation required="true"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString"/>
+		</parameter>
+		<!-- 2.2.3 Resource Type -->
+		<parameter key="general.hierarchyLevel">
+			<label resourceKey="catalog.mdParam.inspire.identification.hierarchyLevel"/>
+			<input type="selectOneMenu" defaultValue="dataset"/>
+			<validation/>
+			<content useSelectForUpdate="true" nodeType="isoCodeListValue" select="/gmd:MD_Metadata/gmd:hierarchyLevel/gmd:MD_ScopeCode">
+				<codes>
+					<code key=""/>
+					<code key="dataset" resourceKey="catalog.mdCode.scope.dataset"/>
+					<code key="series" resourceKey="catalog.mdCode.scope.series"/>
+				</codes>
+			</content>
+		</parameter>
+		<!-- 2.2.4 - Resource Locator -->
+		<parameter key="distribution.transferOptions.onLine.linkage">
+			<label resourceKey="catalog.mdParam.inspire.distribution.transferOptions.onLine.linkage"/>
+			<input type="text"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/gmd:URL" delete="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions"/>
+		</parameter>
+		<!-- 2.2.5 - Unique Resource Identifier -->
+		<parameter key="identification.datasetIdentifier">
+			<label resourceKey="catalog.mdParam.inspire.identification.datasetIdentifier"/>
+			<input type="text" size="50" editable="false" maxlength="2048" defaultValue="#{EditMetadataController.newUuid}"/>
+			<validation required="true"/>
+			<content useSelectForUpdate="false" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString|/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString" update="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString" delete="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier"/>
+		</parameter>
+		<!-- 2.2.6 - not applicable to dataset and series -->
+		<!-- 2.2.7 - Resource Language -->
+		<parameter key="datasetInfo.datasetLanguage">
+			<label resourceKey="catalog.mdParam.inspire.datasetInfo.datasetLanguage"/>
+			<input type="selectOneMenu" defaultValue="eng"/>
+			<validation required="true"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language/gmd:LanguageCode/@codeListValue | /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language/gmd:LanguageCode/text()" update="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language/gmd:LanguageCode/@codeListValue">
+				<codes>
+					<code key=""/>
+					<code key="bul" resourceKey="catalog.mdCode.language.iso639_2.bul"/>
+					<code key="cze" resourceKey="catalog.mdCode.language.iso639_2.cze"/>
+					<code key="dan" resourceKey="catalog.mdCode.language.iso639_2.dan"/>
+					<code key="dut" resourceKey="catalog.mdCode.language.iso639_2.dut"/>
+					<code key="eng" resourceKey="catalog.mdCode.language.iso639_2.eng"/>
+					<code key="est" resourceKey="catalog.mdCode.language.iso639_2.est"/>
+					<code key="fin" resourceKey="catalog.mdCode.language.iso639_2.fin"/>
+					<code key="fre" resourceKey="catalog.mdCode.language.iso639_2.fre"/>
+					<code key="ger" resourceKey="catalog.mdCode.language.iso639_2.ger"/>
+					<code key="gre" resourceKey="catalog.mdCode.language.iso639_2.gre"/>
+					<code key="hun" resourceKey="catalog.mdCode.language.iso639_2.hun"/>
+					<code key="gle" resourceKey="catalog.mdCode.language.iso639_2.gle"/>
+					<code key="ita" resourceKey="catalog.mdCode.language.iso639_2.ita"/>
+					<code key="lav" resourceKey="catalog.mdCode.language.iso639_2.lav"/>
+					<code key="lit" resourceKey="catalog.mdCode.language.iso639_2.lit"/>
+					<code key="mlt" resourceKey="catalog.mdCode.language.iso639_2.mlt"/>
+					<code key="pol" resourceKey="catalog.mdCode.language.iso639_2.pol"/>
+					<code key="por" resourceKey="catalog.mdCode.language.iso639_2.por"/>
+					<code key="rum" resourceKey="catalog.mdCode.language.iso639_2.rum"/>
+					<code key="slo" resourceKey="catalog.mdCode.language.iso639_2.slo"/>
+					<code key="slv" resourceKey="catalog.mdCode.language.iso639_2.slv"/>
+					<code key="spa" resourceKey="catalog.mdCode.language.iso639_2.spa"/>
+					<code key="swe" resourceKey="catalog.mdCode.language.iso639_2.swe"/>
+					<!--code key="kor" resourceKey="catalog.mdCode.language.iso639_2.kor"/>
+          <code key="nor" resourceKey="catalog.mdCode.language.iso639_2.nor"/>
+          <code key="rus" resourceKey="catalog.mdCode.language.iso639_2.rus"/>
+          <code key="tur" resourceKey="catalog.mdCode.language.iso639_2.tur"/>
+          <code key="chi" resourceKey="catalog.mdCode.language.iso639_2.chi"/-->
+				</codes>
+			</content>
+		</parameter>
+	</section>
+	<!-- theme section -->
+	<section key="theme">
+		<label resourceKey="catalog.mdParam.inspire.theme.caption"/>
+		<parameter key="theme.topics">
+			<label resourceKey="catalog.mdParam.inspire.theme.topics"/>
+			<input type="selectManyCheckbox"/>
+			<validation required="true"/>
+			<content nodeType="gcoList" useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode">
+				<codes>
+					<code key="boundaries" resourceKey="catalog.mdCode.topic.boundaries"/>
+					<code key="farming" resourceKey="catalog.mdCode.topic.farming"/>
+					<code key="climatologyMeteorologyAtmosphere" resourceKey="catalog.mdCode.topic.climatologyMeteorologyAtmosphere"/>
+					<code key="biota" resourceKey="catalog.mdCode.topic.biota"/>
+					<code key="economy" resourceKey="catalog.mdCode.topic.economy"/>
+					<code key="planningCadastre" resourceKey="catalog.mdCode.topic.planningCadastre"/>
+					<code key="society" resourceKey="catalog.mdCode.topic.society"/>
+					<code key="elevation" resourceKey="catalog.mdCode.topic.elevation"/>
+					<code key="environment" resourceKey="catalog.mdCode.topic.environment"/>
+					<code key="structure" resourceKey="catalog.mdCode.topic.structure"/>
+					<code key="geoscientificInformation" resourceKey="catalog.mdCode.topic.geoscientificInformation"/>
+					<code key="health" resourceKey="catalog.mdCode.topic.health"/>
+					<code key="imageryBaseMapsEarthCover" resourceKey="catalog.mdCode.topic.imageryBaseMapsEarthCover"/>
+					<code key="inlandWaters" resourceKey="catalog.mdCode.topic.inlandWaters"/>
+					<code key="location" resourceKey="catalog.mdCode.topic.location"/>
+					<code key="intelligenceMilitary" resourceKey="catalog.mdCode.topic.intelligenceMilitary"/>
+					<code key="oceans" resourceKey="catalog.mdCode.topic.oceans"/>
+					<code key="transportation" resourceKey="catalog.mdCode.topic.transportation"/>
+					<code key="utilitiesCommunication" resourceKey="catalog.mdCode.topic.utilitiesCommunication"/>
+				</codes>
+			</content>
+		</parameter>
+	</section>
+	<!-- thumbnail section -->
+	<section key="thumbnail" open="false" obligation="optional" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic">
+		<label resourceKey="catalog.mdParam.thumbnail.caption"/>
+		<parameter key="thumbnail.url" meaning="thumbnail.url">
+			<label resourceKey="catalog.mdParam.thumbnail.url"/>
+			<input type="text" maxlength="2048"/>
+			<validation required="true"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
+		</parameter>
+		<parameter key="thumbnail.description">
+			<label resourceKey="catalog.mdParam.thumbnail.description"/>
+			<input type="text"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString"/>
+		</parameter>
+		<parameter key="thumbnail.type">
+			<label resourceKey="catalog.mdParam.thumbnail.type"/>
+			<input type="text" size="10"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileType/gco:CharacterString"/>
+		</parameter>
+	</section>
+	<!-- reference system information -->
+	<section key="referenceSystemInfo" open="false" obligation="optional" select="/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier">
+		<label resourceKey="catalog.mdParam.referenceSystemInfo.caption"/>
+		<parameter key="referenceSystemInfo.code">
+			<label resourceKey="catalog.mdParam.referenceSystemInfo.code"/>
+			<input type="text" editable="true" maxlength="100" defaultValue="4326"/>
+			<validation required="true"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
+		</parameter>
+		<parameter key="referenceSystemInfo.codespace">
+			<label resourceKey="catalog.mdParam.referenceSystemInfo.codespace"/>
+			<input type="text" editable="true"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString"/>
+		</parameter>
+	</section>
+	<!-- Keyword section -->
+	<section key="keyword" open="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords">
+		<label resourceKey="catalog.mdParam.inspire.keyword.caption"/>
+		<validation required="true"/>
+		<section key="keyword.gemet" open="true">
+			<label resourceKey="catalog.mdParam.inspire.keyword.dataTheme.label"/>
+			<parameter key="keyword.theme" meaning="keywords">
+				<label resourceKey="catalog.mdParam.inspire.keyword.dataTheme"/>
+				<input type="selectOneMenu"/>
+				<validation required="true"/>
+				<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords[1]/gmd:MD_Keywords/gmd:keyword/gco:CharacterString">
+					<codes>
+						<code key="Addresses" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.addresses"/>
+						<code key="Administrative_units" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.administrativeUnits"/>
+						<code key="Agricultural_and_aquaculture_facilities" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.agriculturalAndAquacultureFacilities"/>
+						<code key="Area_management_restriction_regulation_zones_and_reporting_units" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.areaManagementRestrictionRegulationZonesAndReportingUnits"/>
+						<code key="Atmospheric_conditions" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.atmosphericConditions"/>
+						<code key="Bio-geographical_regions" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.bioGeographicalRegions"/>
+						<code key="Buildings" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.buildings"/>
+						<code key="Cadastral_parcels" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.cadastralParcels"/>
+						<code key="Coordinate_reference_systems" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.coordinateReferenceSystems"/>
+						<code key="Elevation" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.elevation"/>
+						<code key="Energy_resources" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.energyResources"/>
+						<code key="Environmental_monitoring_facilities" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.environmentalMonitoringFacilities"/>
+						<code key="Geographical_grid_systems" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.geographicalGridSystems"/>
+						<code key="Geographical_names" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.geographicalNames"/>
+						<code key="Geology" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.geology"/>
+						<code key="Habitats_and_biotopes" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.habitatsAndBiotopes"/>
+						<code key="Human_health_and_safety" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.humanHealthAndSafety"/>
+						<code key="Hydrography" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.hydrography"/>
+						<code key="Land_cover" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.landCover"/>
+						<code key="Land_use" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.landUser"/>
+						<code key="Meteorological_geographical_features" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.meteorologicalGeographicalFeatures"/>
+						<code key="Mineral_resources" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.mineralResources"/>
+						<code key="Natural_risk_zones" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.naturalRiskZones"/>
+						<code key="Oceanographic_geographical_features" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.oceanographicGeographicalFeatures"/>
+						<code key="Orthoimagery" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.orthoimagery"/>
+						<code key="Population_distribution_-_demography" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.populationDistributionDemography"/>
+						<code key="Production_and_industrial_facilities" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.productionAndIndustrialFacilities"/>
+						<code key="Protected_sites" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.protectedSites"/>
+						<code key="Sea_regions" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.seaRegions"/>
+						<code key="Soil" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.soil"/>
+						<code key="Species_distribution" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.speciesDistribution"/>
+						<code key="Statistical_units" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.statisticalUnits"/>
+						<code key="Transport_networks" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.transportNetworks"/>
+						<code key="Utility_and_Government_services" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.utilityAndGovernmentService"/>
+					</codes>
+				</content>
+			</parameter>
+		</section>
+		<section key="keyword.keyword" open="true">
+			<label resourceKey="catalog.mdParam.inspire.keyword.keywordValue.label"/>
+			<parameter key="keyword.keyword.title">
+				<label resourceKey="catalog.mdParam.inspire.keyword.title"/>
+				<input type="text" size="24" maxlength="24"/>
+				<validation required="false"/>
+				<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords[2]/gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
+			</parameter>
+			<parameter key="keyword.keyword.keywordValue" meaning="keywords">
+				<label resourceKey="catalog.mdParam.inspire.keyword.keywordValue"/>
+				<input type="text" size="24" maxlength="24"/>
+				<validation required="false"/>
+				<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords[2]/gmd:MD_Keywords/gmd:keyword/gco:CharacterString"/>
+			</parameter>
+			<parameter key="keyword.keyword.dateType">
+				<label resourceKey="catalog.mdParam.inspire.keyword.referenceDateType.caption"/>
+				<input type="selectOneMenu"/>
+				<validation required="false"/>
+				<content useSelectForUpdate="true" deleteParentIfEmpty="false" nodeType="isoCodeListValue" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords[2]/gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode">
+					<codes>
+						<code key="creation" resourceKey="catalog.mdParam.inspire.keyword.referenceDateType.creation"/>
+						<code key="publication" resourceKey="catalog.mdParam.inspire.keyword.referenceDateType.publication"/>
+						<code key="revision" resourceKey="catalog.mdParam.inspire.keyword.referenceDateType.revision"/>
+					</codes>
+				</content>
+			</parameter>
+			<parameter key="keyword.keyword.date">
+				<label resourceKey="catalog.mdParam.inspire.keyword.referenceDate"/>
+				<input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat" defaultValue="#{EditMetadataController.now}"/>
+				<validation required="false" valueType="date"/>
+				<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords[2]/gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date"/>
+			</parameter>
+		</section>
+	</section>
+	<!-- envelope section -->
+	<section key="envelope">
+		<label resourceKey="catalog.mdParam.inspire.envelope.caption"/>
+		<parameter key="envelope.west" meaning="envelope.west">
+			<label resourceKey="catalog.mdParam.inspire.envelope.west"/>
+			<input type="text" size="24" maxlength="24" defaultValue="-180" hintResourceKey="catalog.general.inputLongitudeFormat"/>
+			<validation required="true" valueType="double"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal"/>
+		</parameter>
+		<parameter key="envelope.south" meaning="envelope.south">
+			<label resourceKey="catalog.mdParam.inspire.envelope.south"/>
+			<input type="text" size="24" maxlength="24" defaultValue="-90" hintResourceKey="catalog.general.inputLatitudeFormat"/>
+			<validation required="true" valueType="double"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude/gco:Decimal"/>
+		</parameter>
+		<parameter key="envelope.east" meaning="envelope.east">
+			<label resourceKey="catalog.mdParam.inspire.envelope.east"/>
+			<input type="text" size="24" maxlength="24" defaultValue="180" hintResourceKey="catalog.general.inputLongitudeFormat"/>
+			<validation required="true" valueType="double"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude/gco:Decimal"/>
+		</parameter>
+		<parameter key="envelope.north" meaning="envelope.north">
+			<label resourceKey="catalog.mdParam.inspire.envelope.north"/>
+			<input type="text" size="24" maxlength="24" defaultValue="90" hintResourceKey="catalog.general.inputLatitudeFormat"/>
+			<validation required="true" valueType="double"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude/gco:Decimal"/>
+		</parameter>
+		<section key="envelope.map.container">
+			<parameter key="envelope.map">
+				<input type="map"/>
+			</parameter>
+		</section>
+	</section>
+	<!-- temporal section -->
+	<section key="temporal" open="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement">
+		<label resourceKey="catalog.mdParam.inspire.temporal.caption"/>
+		<section key="temporal.extent" open="true">
+			<label resourceKey="catalog.mdParam.inspire.temporal.extent"/>
+			<parameter key="temporal.extent.begin">
+				<label resourceKey="catalog.mdParam.inspire.temporal.extent.begin"/>
+				<input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat" defaultValue="#{EditMetadataController.now}"/>
+				<validation required="false" valueType="date"/>
+				<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition" delete="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition"/>
+			</parameter>
+			<parameter key="temporal.extent.end">
+				<label resourceKey="catalog.mdParam.inspire.temporal.extent.end"/>
+				<input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat" defaultValue="#{EditMetadataController.now}"/>
+				<validation required="false" valueType="date"/>
+				<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition" delete="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition"/>
+			</parameter>
+		</section>
+		<parameter key="temporal.publication">
+			<label resourceKey="catalog.mdParam.inspire.temporal.dateOfPublication"/>
+			<input type="text" size="20" maxlength="10" hintResourceKey="catalog.mdParam.inspire.temporal.dateOfPublication.hint"/>
+			<validation valueType="date"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='publication']/../../gmd:date/gco:Date" delete="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='publication']/../.."/>
+		</parameter>
+		<parameter key="temporal.revision">
+			<label resourceKey="catalog.mdParam.inspire.temporal.dateOfLastRevision"/>
+			<input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat"/>
+			<validation valueType="date"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='revision']/../../gmd:date/gco:Date" delete="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='revision']/../.."/>
+		</parameter>
+		<parameter key="temporal.creation">
+			<label resourceKey="catalog.mdParam.inspire.temporal.dateOfCreation"/>
+			<input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat"/>
+			<validation valueType="date"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='creation']/../../gmd:date/gco:Date" delete="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='creation']/../.."/>
+		</parameter>
+	</section>
+	<!-- data quality section -->
+	<section key="dataQuality" open="true" select="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality">
+		<label resourceKey="catalog.mdParam.inspire.dataQualityInfo.caption"/>
+		<parameter key="dataQualityInfo.lineage">
+			<label resourceKey="catalog.mdParam.inspire.dataQualityInfo.lineage"/>
+			<input type="textArea"/>
+			<validation required="true"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement/gco:CharacterString" delete="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage"/>
+		</parameter>
+		
+		<section key="dataQuality.spatialResolution">
+			<label resourceKey="catalog.mdParam.inspire.dataQualityInfo.spatialResolution"/>
+			<section key="dataQualityInfo.equivalentScale.section" obligation="exclusive" open="true" 
+				select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale">
+				<label resourceKey="catalog.mdParam.inspire.dataQualityInfo.equivalentScale"/>	
+				<parameter key="dataQualityInfo.equivalentScale">
+					<label resourceKey="catalog.mdParam.inspire.dataQualityInfo.equivalentScale"/>
+					<input type="text" size="20" maxlength="10" hintResourceKey="catalog.mdParam.inspire.dataQualityInfo.equivalentScale.hint"/>
+					<validation required="false"/>
+					<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer" delete="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution"/>
+				</parameter>
+			</section>
+			<section key="dataQualityInfo.distance.section" obligation="exclusive" open="false" 
+				select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance">
+				<label resourceKey="catalog.mdParam.inspire.dataQualityInfo.distance"/>			
+				<parameter key="dataQualityInfo.distance">
+					<label resourceKey="catalog.mdParam.inspire.dataQualityInfo.distance"/>
+					<input type="text" size="20" maxlength="10"/>
+					<validation required="false"/>
+					<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance" delete="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution"/>
+				</parameter>
+				<parameter key="dataQualityInfo.unitOfMeasure">
+					<label resourceKey="catalog.mdParam.inspire.dataQualityInfo.unitOfMeasure"/>
+					<input type="text" size="20" maxlength="10" defaultValue="m"/>
+					<validation required="false"/>
+					<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance/@uom"/>
+				</parameter>
+			</section>
+		</section>
+	</section>
+	
+	
+	<!-- conformity section -->
+	<section key="conformity" open="false" obligation="optional" select="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString" delete="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report" deleteIfEmpty="true">
+	   	<label resourceKey="catalog.mdParam.inspire.conformity.caption"/>
+	   	<validation required="true"/>
+			<parameter key="conformity.creation.title">
+				<label resourceKey="catalog.mdParam.inspire.conformity.title"/>
+				<input type="text" size="50"/>
+				<validation required="true"/>
+				<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
+			</parameter>
+			<parameter key="conformity.creation.date">
+				<label resourceKey="catalog.mdParam.inspire.conformity.date"/>
+				<input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat"/>
+				<validation valueType="date" required="true"/>
+				<content useSelectForUpdate="true" 
+								select="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date"
+								deleteIfEmpty="true"/>
+			</parameter>
+
+			<parameter key="conformity.creation.dateType">
+				<label resourceKey="catalog.mdParam.inspire.keyword.referenceDateType.caption"/>
+				<input type="selectOneMenu"/>
+				<validation required="true"/>
+				<content useSelectForUpdate="true" deleteParentIfEmpty="false" nodeType="isoCodeListValue" select="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue">
+					<codes>
+						<code key="creation" resourceKey="catalog.mdParam.inspire.keyword.referenceDateType.creation"/>
+						<code key="publication" resourceKey="catalog.mdParam.inspire.keyword.referenceDateType.publication"/>
+						<code key="revision" resourceKey="catalog.mdParam.inspire.keyword.referenceDateType.revision"/>
+					</codes>
+				</content>
+			</parameter>
+
+			<parameter key="conformity.creation.degree">
+				<label resourceKey="catalog.mdParam.inspire.conformity.degree"/>
+				<input type="selectOneMenu" defaultValue=""/>
+				<validation required="false"/>
+				<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass/gco:Boolean" delete="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass/gco:Boolean">
+					<codes>
+						<code key="true" resourceKey="catalog.mdParam.inspire.conformity.degree.conformant"/>
+						<code key="false" resourceKey="catalog.mdParam.inspire.conformity.degree.notConformant"/>
+					</codes>
+				</content>
+			</parameter>
+
+	</section>
+
+	<!-- constraints section -->
+	<section key="constraints" open="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints">
+		<label resourceKey="catalog.mdParam.inspire.constraints.caption"/>
+		<section key="constraints.conditions">
+			<label resourceKey="catalog.mdParam.inspire.constraints.contitions.label"/>
+			<section key="constraints.conditions.section.predefined" obligation="exclusive" open="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation[gco:CharacterString='no conditions apply' or gco:CharacterString='conditions unknown']/gco:CharacterString">
+				<label resourceKey="catalog.mdParam.inspire.constraints.contitions.predefined.label"/>
+				<parameter key="constraints.conditions.predefined">
+					<label resourceKey="catalog.mdParam.inspire.constraints.accesAndUse"/>
+					<input type="selectOneMenu"/>
+					<validation required="true"/>
+					<content useSelectForUpdate="true" deleteParentIfEmpty="false" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation/gco:CharacterString">
+						<codes>
+							<code key="no conditions apply" resourceKey="catalog.mdParam.inspire.constraints.accesAndUse.noCondition"/>
+							<code key="conditions unknown" resourceKey="catalog.mdParam.inspire.constraints.accesAndUse.unknownCondition"/>
+						</codes>
+					</content>
+				</parameter>
+			</section>
+			<section key="constraints.conditions.section.free" obligation="exclusive" open="false" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation[gco:CharacterString!='no conditions apply' and gco:CharacterString!='conditions unknown']/gco:CharacterString">
+				<label resourceKey="catalog.mdParam.inspire.constraints.contitions.free.label"/>
+				<parameter key="constraints.conditions.free">
+					<label resourceKey="catalog.mdParam.inspire.constraints.accesAndUse"/>
+					<input type="text" size="50" maxlength="2048"/>
+					<validation required="true"/>
+					<content useSelectForUpdate="true" deleteParentIfEmpty="false" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation/gco:CharacterString"/>
+				</parameter>
+			</section>
+		</section>
+		<section key="constraints.limitations">
+			<label resourceKey="catalog.mdParam.inspire.constraints.limitations.label"/>
+			<section key="constraints.limitations.section.predefined" obligation="exclusive" open="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints[gco:CharacterString='no limitations' or starts-with(gco:CharacterString,'(a)') or starts-with(gco:CharacterString,'(b)') or starts-with(gco:CharacterString,'(c)') or starts-with(gco:CharacterString,'(d)') or starts-with(gco:CharacterString,'(e)') or starts-with(gco:CharacterString,'(f)') or starts-with(gco:CharacterString,'(g)') or starts-with(gco:CharacterString,'(h)')]/gco:CharacterString">
+				<label resourceKey="catalog.mdParam.inspire.constraints.contitions.predefined.label"/>
+				<parameter key="constraints.limitations.predefined">
+					<label resourceKey="catalog.mdParam.inspire.constraints.publicAccess"/>
+					<input type="selectOneMenu"/>
+					<validation required="true"/>
+					<content useSelectForUpdate="true" deleteParentIfEmpty="false" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString">
+						<codes>
+							<code key="no limitations" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.noLimitations"/>
+							<code key="(a) the confidentiality of the proceedings of public authorities,where such confidentiality is provided for by law;" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.confidentialityOfProceedings"/>
+							<code key="(b) international relations, public security or national defence;" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.internationalRelations"/>
+							<code key="(c) the course of justice, the ability of any person to receive a fair trial or the ability of a public authority to conduct an enquiry of a criminal or disciplinary nature;" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.courseOfJustice"/>
+							<code key="(d) the confidentiality of commercial or industrial information, where such confidentiality is provided for by national or Community   law to protect a legitimate economic interest, including the public interest in maintaining statistical confidentiality and tax secrecy;" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.confidentialityOfCommercial"/>
+							<code key="(e) intellectual property rights;" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.intellectualProperty"/>
+							<code key="(f) the confidentiality of personal data and/or files relating to a natural person where that person has not consented to the disclosure of the information to the public, where such confidentiality is provided for by national or Community law;" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.confidentialityOfPersonalData"/>
+							<code key="(g) the interests or protection of any person who supplied the information requested on a voluntary basis without being under, or capable of being put under, a legal obligation to do so, unless that person has consented to the release of the information concerned;" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.interestsOrProtection"/>
+							<code key="(h) the protection of the environment to which such information relates, such as the location of rare species." resourceKey="catalog.mdParam.inspire.constraints.publicAccess.protectionOfEnvironment"/>
+						</codes>
+					</content>
+				</parameter>
+			</section>
+			<section key="constraints.limitations.section.free" obligation="exclusive" open="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints[gco:CharacterString!='no limitations' and starts-with(gco:CharacterString,'(a)')=false and starts-with(gco:CharacterString,'(b)')=false and starts-with(gco:CharacterString,'(c)')=false and starts-with(gco:CharacterString,'(d)')=false and starts-with(gco:CharacterString,'(e)')=false and starts-with(gco:CharacterString,'(f)')=false and starts-with(gco:CharacterString,'(g)')=false and starts-with(gco:CharacterString,'(h)')=false]/gco:CharacterString">
+				<label resourceKey="catalog.mdParam.inspire.constraints.contitions.free.label"/>
+				<parameter key="constraints.limitations.free">
+					<label resourceKey="catalog.mdParam.inspire.constraints.publicAccess"/>
+					<input type="text" size="50" maxlength="2048"/>
+					<validation required="true"/>
+					<content useSelectForUpdate="true" deleteParentIfEmpty="false" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString"/>
+				</parameter>
+			</section>
+		</section>
+	</section>
+	<!-- contact section, a subset of the identification section) -->
+	<section key="contact" open="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact">
+		<label resourceKey="catalog.mdParam.inspire.contact.caption"/>
+		<!--point of contact:identification of, and means of communication with, person(s) and organization(s) associated with the resource(s)" -->
+		<parameter key="contact.organization">
+			<label resourceKey="catalog.mdParam.inspire.contact.organization"/>
+			<input type="text" defaultValue="#{EditMetadataController.userProfile['organization'].value}"/>
+			<validation required="true"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+		</parameter>
+		<parameter key="contact.position">
+			<label resourceKey="catalog.mdParam.inspire.contact.position"/>
+			<input type="selectOneMenu" defaultValue="custodian"/>
+			<validation required="true"/>
+			<content nodeType="isoCodeListValue" useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
+				<codes>
+					<code key=""/>
+					<code key="author" resourceKey="catalog.mdParam.inspire.contact.position.author"/>
+					<code key="custodian" resourceKey="catalog.mdParam.inspire.contact.position.custodian"/>
+					<code key="distributor" resourceKey="catalog.mdParam.inspire.contact.position.distributor"/>
+					<code key="originator" resourceKey="catalog.mdParam.inspire.contact.position.originator"/>
+					<code key="owner" resourceKey="catalog.mdParam.inspire.contact.position.owner"/>
+					<code key="pointOfContact" resourceKey="catalog.mdParam.inspire.contact.position.pointOfContact"/>
+					<code key="principalInvestigator" resourceKey="catalog.mdParam.inspire.contact.position.principalInvestigator"/>
+					<code key="processor" resourceKey="catalog.mdParam.inspire.contact.position.processor"/>
+					<code key="publisher" resourceKey="catalog.mdParam.inspire.contact.position.publisher"/>
+					<code key="resourceProvider" resourceKey="catalog.mdParam.inspire.contact.position.resourceProvider"/>
+					<code key="user" resourceKey="catalog.mdParam.inspire.contact.position.user"/>
+				</codes>
+			</content>
+		</parameter>
+
+		<parameter key="contact.email">
+			<label resourceKey="catalog.mdParam.inspire.contact.email"/>
+			<input type="text" defaultValue="#{EditMetadataController.userProfile['email'].value}"/>
+			<validation required="true"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"/>
+		</parameter>
+	</section>
+	
+	<section key="distribution" open="false" obligation="optional" select="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString | /gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:version/gco:CharacterString | /gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:function/gmd:CI_OnLineFunctionCode">
+		<label resourceKey="catalog.mdParam.distribution.caption"/>
+		<parameter key="distribution.format.name">
+			<label resourceKey="catalog.mdParam.distribution.format.name"/>
+			<input type="text"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString"/>
+		</parameter>
+		<parameter key="distribution.format.version">
+			<label resourceKey="catalog.mdParam.distribution.format.version"/>
+			<input type="text"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:version/gco:CharacterString"/>
+		</parameter>
+		<parameter key="distribution.transferOptions.onLine.function" meaning="resource.type">
+			<label resourceKey="catalog.mdParam.distribution.transferOptions.onLine.function"/>
+			<input type="selectOneMenu"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:function/gmd:CI_OnLineFunctionCode">
+				<codes>
+					<code key=""/>
+					<code key="download" resourceKey="catalog.mdCode.onLineFunctionCode.download"/>
+					<code key="information" resourceKey="catalog.mdCode.onLineFunctionCode.information"/>
+					<code key="offlineAccess" resourceKey="catalog.mdCode.onLineFunctionCode.offlineAccess"/>
+					<code key="order" resourceKey="catalog.mdCode.onLineFunctionCode.order"/>
+					<code key="search" resourceKey="catalog.mdCode.onLineFunctionCode.search"/>
+				</codes>
+			</content>
+		</parameter>
+	</section>
+	<!-- metadata standard section -->
+	<section key="standard" open="false">
+		<label resourceKey="catalog.mdParam.standard.caption"/>
+		<parameter key="standard.name">
+			<label resourceKey="catalog.mdParam.standard.name"/>
+			<input type="text" editable="false" defaultValue="INSPIRE Metadata for Datasets"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString"/>
+		</parameter>
+		<parameter key="standard.version">
+			<label resourceKey="catalog.mdParam.standard.version"/>
+			<input type="text" editable="false" defaultValue="DRAFT"/>
+			<validation required="false"/>
+			<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:metadataStandardVersion/gco:CharacterString"/>
+		</parameter>
+	</section>
+</schema>
+
+

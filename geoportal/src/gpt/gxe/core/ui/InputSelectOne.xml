@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>         
+<h:select xmlns:g="http://www.esri.com/geoportal/gxe"
+          xmlns:h="http://www.esri.com/geoportal/gxe/html"
+          h:tag="select" g:jsClass="gxe.control.InputSelectOne">
+  <g:options g:overridable="true"/>
+</h:select>

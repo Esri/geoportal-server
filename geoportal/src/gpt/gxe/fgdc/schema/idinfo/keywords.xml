@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Keywords 
+		keywords (/metadata/idinfo/keywords) 
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect01.xsd
+		http://www.fgdc.gov/metadata/csdgm/01.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="keywords"
+	g:i18nBase="catalog.fgdc.idinfo.keywords" g:label="$i18nBase"
+	g:extends="$base/core/xml/Element.xml">
+	<g:body>
+		<g:tabs g:extends="$base/core/ui/Tabs.xml">
+			<g:body>
+			
+				<!-- theme -->
+				<g:element g:targetName="theme" g:minOccurs="1" g:maxOccurs="unbounded"
+					g:extends="$base/core/xml/Element.xml">
+					<g:body>
+					
+						<g:element g:targetName="themekt" g:value="None"
+							g:label="$i18n.catalog.fgdc.idinfo.keywords.label.thesaursus"
+							g:extends="$base/core/xml/ElementTextOnly.xml">
+							<g:body>	
+							  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+							    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='None';_o.fireInputChanged();"
+							    >$i18n.catalog.fgdc.general.none</h:a>
+							    
+							  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+							  	g:jsClass="fgdc.control.KeywordSelector"
+							  	g:thesaurus="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode"
+							    >$i18n.catalog.fgdc.idinfo.keywords.themekt.isoTopicCategory
+									<g:options g:i18nBase="catalog.iso19139.MD_TopicCategoryCode">
+										<g:option g:label="$i18nBase.boundaries" g:value="boundaries"/>
+										<g:option g:label="$i18nBase.farming" g:value="farming"/>
+										<g:option g:label="$i18nBase.climatologyMeteorologyAtmosphere" g:value="climatologyMeteorologyAtmosphere"/>
+										<g:option g:label="$i18nBase.biota" g:value="biota"/>
+										<g:option g:label="$i18nBase.economy" g:value="economy"/>
+										<g:option g:label="$i18nBase.planningCadastre" g:value="planningCadastre"/>
+										<g:option g:label="$i18nBase.society" g:value="society"/>
+										<g:option g:label="$i18nBase.elevation" g:value="elevation"/>
+										<g:option g:label="$i18nBase.environment" g:value="environment"/>
+										<g:option g:label="$i18nBase.structure" g:value="structure"/>
+										<g:option g:label="$i18nBase.geoscientificInformation" g:value="geoscientificInformation"/>
+										<g:option g:label="$i18nBase.health" g:value="health"/>
+										<g:option g:label="$i18nBase.imageryBaseMapsEarthCover" g:value="imageryBaseMapsEarthCover"/>
+										<g:option g:label="$i18nBase.inlandWaters" g:value="inlandWaters"/>
+										<g:option g:label="$i18nBase.location" g:value="location"/>
+										<g:option g:label="$i18nBase.intelligenceMilitary" g:value="intelligenceMilitary"/>
+										<g:option g:label="$i18nBase.oceans" g:value="oceans"/>
+										<g:option g:label="$i18nBase.transportation" g:value="transportation"/>
+										<g:option g:label="$i18nBase.utilitiesCommunication" g:value="utilitiesCommunication"/>
+									</g:options>
+							  </h:a>
+							</g:body>
+						</g:element>
+						
+						<g:element g:targetName="themekey" g:maxOccurs="unbounded"
+							g:label="$i18n.catalog.fgdc.idinfo.keywords.label.delimited"
+							g:extends="$base/core/xml/ElementTextOnly.xml">
+							<g:body>
+								<g:input g:extends="$base/core/ui/InputDelimitedTextArea.xml"/>
+							</g:body>
+						</g:element>
+					</g:body>
+				</g:element>
+
+				<!-- place -->
+				<g:element g:targetName="place" g:minOccurs="0"
+					g:maxOccurs="unbounded" g:extends="$base/core/xml/Element.xml">
+					<g:body>
+						<g:element g:targetName="placekt" g:value="None"
+							g:label="$i18n.catalog.fgdc.idinfo.keywords.label.thesaursus"
+							g:extends="$base/core/xml/ElementTextOnly.xml">
+							<g:body>
+							  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+							    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='None';_o.fireInputChanged();"
+							    >$i18n.catalog.fgdc.general.none</h:a>
+							  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+							    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='Geographic Names Information System';_o.fireInputChanged();"
+							    >$i18n.catalog.fgdc.idinfo.keywords.placekt.gnis</h:a>
+							</g:body>
+						</g:element>
+						<g:element g:targetName="placekey" g:maxOccurs="unbounded"
+							g:label="$i18n.catalog.fgdc.idinfo.keywords.label.delimited"
+							g:extends="$base/core/xml/ElementTextOnly.xml">
+							<g:body>
+								<g:input g:extends="$base/core/ui/InputDelimitedTextArea.xml"/>
+							</g:body>
+						</g:element>
+					</g:body>
+				</g:element>
+
+				<!-- stratum -->
+				<g:element g:targetName="stratum" g:minOccurs="0"
+					g:maxOccurs="unbounded" g:extends="$base/core/xml/Element.xml">
+					<g:body>
+						<g:element g:targetName="stratkt" g:value="None"
+							g:label="$i18n.catalog.fgdc.idinfo.keywords.label.thesaursus"
+							g:extends="$base/core/xml/ElementTextOnly.xml">
+							<g:body>
+							  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+							    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='None';_o.fireInputChanged();"
+							    >$i18n.catalog.fgdc.general.none</h:a>
+							</g:body>
+						</g:element>
+						<g:element g:targetName="stratkey" g:maxOccurs="unbounded"
+							g:label="$i18n.catalog.fgdc.idinfo.keywords.label.delimited"
+							g:extends="$base/core/xml/ElementTextOnly.xml">
+							<g:body>
+								<g:input g:extends="$base/core/ui/InputDelimitedTextArea.xml"/>
+							</g:body>
+						</g:element>
+					</g:body>
+				</g:element>
+
+				<!-- temporal -->
+				<g:element g:targetName="temporal" g:minOccurs="0"
+					g:maxOccurs="unbounded" g:extends="$base/core/xml/Element.xml">
+					<g:body>
+						<g:element g:targetName="tempkt" g:value="None"
+							g:label="$i18n.catalog.fgdc.idinfo.keywords.label.thesaursus"
+							g:extends="$base/core/xml/ElementTextOnly.xml">
+							<g:body>
+							  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+							    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='None';_o.fireInputChanged();"
+							    >$i18n.catalog.fgdc.general.none</h:a>
+							</g:body>
+						</g:element>
+						<g:element g:targetName="tempkey" g:maxOccurs="unbounded"
+							g:label="$i18n.catalog.fgdc.idinfo.keywords.label.delimited"
+							g:extends="$base/core/xml/ElementTextOnly.xml">
+							<g:body>
+								<g:input g:extends="$base/core/ui/InputDelimitedTextArea.xml"/>
+							</g:body>
+						</g:element>
+					</g:body>
+				</g:element>
+
+			</g:body>
+		</g:tabs>
+
+	</g:body>
+</g:element>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Metadata Information
+		metainfo (/metadata/metainfo)
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect07.xsd
+		http://www.fgdc.gov/metadata/csdgm/07.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="metainfo"
+	g:i18nBase="catalog.fgdc.metainfo" g:label="$i18nBase" 
+	g:extends="$base/core/xml/Element.xml">
+	<g:body>
+		<g:tabs g:extends="$base/core/ui/Tabs.xml">
+			<g:body>
+
+				<!-- metadata dates -->
+				<h:div g:label="$i18n.catalog.fgdc.metainfo.section.dates">
+
+					<!-- metadata date -->
+					<g:element g:targetName="metd" g:value="#{EditMetadataController.now}" 
+						g:extends="$base/schema/FGDCdate.xml"/>
+
+					<!-- metadata review date -->
+					<g:element g:targetName="metrd" g:minOccurs="0"
+						g:extends="$base/schema/FGDCdate.xml"/>
+
+					<!-- metadata future review date -->
+					<g:element g:targetName="metfrd" g:minOccurs="0"
+						g:extends="$base/schema/FGDCdate.xml"/>
+
+				</h:div>
+
+				<!-- metadata contact -->
+				<h:div g:label="$i18n.catalog.fgdc.metainfo.section.contact">
+					<g:element g:targetName="metc" h:tag="div"
+						g:jsClass="gxe.control.Element">
+						<g:element g:targetName="cntinfo" h:class=""
+							g:extends="$base/schema/cntinfo/cntinfo.xml"/>
+					</g:element>
+				</h:div>
+
+				<!-- metadata standard -->
+				<h:div g:label="$i18n.catalog.fgdc.metainfo.section.standard"
+					g:extends="$base/schema/metainfo/metainfo_standard.xml"/>
+					
+				<!-- additional -->
+				<h:div g:label="$i18n.catalog.fgdc.metainfo.section.additional">
+				
+					<!-- Metadata Time Convention-->
+					<g:element g:targetName="mettc" g:minOccurs="0"
+						g:extends="$base/core/xml/ElementTextOnly.xml">
+						<g:body>
+							<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+								<g:options g:i18nBase="catalog.fgdc.metainfo.mettc.option">
+									<g:option g:value="" g:label=""/>
+									<g:option g:value="local time" g:label="$i18nBase.localTime"/>
+									<g:option g:value="local time with time differential factor" g:label="$i18nBase.localTimeFactor"/>
+									<g:option g:value="universal time" g:label="$i18nBase.universalTime"/>
+								</g:options>
+							</g:input>
+						</g:body>									
+					</g:element>
+				
+					<!-- Metadata Access Constraints -->
+					<g:element g:targetName="metac" g:minOccurs="0"
+						g:extends="$base/core/xml/ElementTextOnly.xml"/>
+						
+					<!-- Metadata Use Constraints -->
+					<g:element g:targetName="metuc" g:minOccurs="0"
+						g:extends="$base/core/xml/ElementTextOnly.xml"/>
+						
+					<!-- Metadata Security Information -->
+					<g:element g:minOccurs="0" g:extends="$base/schema/metainfo/metsi.xml"/>
+					
+					<!-- Metadata Extensions -->
+					<g:element g:targetName="metextns" g:minOccurs="0" g:maxOccurs="unbounded"
+						g:i18nBase="catalog.fgdc.metainfo.metextns" g:label="$i18nBase" 
+						g:extends="$base/core/xml/Element.xml">
+						<g:body>
+							<g:element g:targetName="onlink" g:minOccurs="0" g:maxOccurs="unbounded"
+								g:extends="$base/core/xml/ElementTextOnly.xml"/>
+							<g:element g:targetName="metprof" g:minOccurs="0"
+								g:extends="$base/core/xml/ElementTextOnly.xml"/>
+						</g:body>
+				  </g:element>
+					
+				</h:div>
+
+			</g:body>
+		</g:tabs>
+	</g:body>
+</g:element>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Identification/Constraints tab -->      
+<h:div xmlns:g="http://www.esri.com/geoportal/gxe" 
+       xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+       h:tag="div" 
+       g:label="$i18n.catalog.iso19139.MD_Metadata.section.identification.resourceConstraints">
+       
+	<g:element g:targetName="gmd:resourceConstraints" g:minOccurs="0" g:maxOccurs="unbounded"
+	  g:label="$i18n.catalog.iso19139.AbstractMD_Identification.resourceConstraints"
+	  g:extends="$base/xtn/gmd/constraints/XTN_Constraints_Choice.xml"/>
+	  
+</h:div>

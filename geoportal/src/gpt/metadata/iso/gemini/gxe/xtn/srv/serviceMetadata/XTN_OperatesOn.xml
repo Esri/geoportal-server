@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!--  simplified operates on srv:SV_ServiceIdentification/srv:operatesOn -->      
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="srv:operatesOn" g:minOccurs="1" g:maxOccurs="unbounded"
+           g:label="$i18n.catalog.iso19139.SV_ServiceIdentification.operatesOn"
+           g:preferOpen="true"
+           g:extends="$base/xtn/ui/UI_Element.xml"> 
+  <g:body>
+  
+    <g:attribute g:targetName="xlink:href" 
+      g:label="$i18n.catalog.iso19139.object.xlink.href"
+      g:extends="$base/xtn/ui/UI_Attribute.xml"
+      g:use="required">
+    </g:attribute> 
+    
+    <g:attribute g:targetNS="" g:targetName="uuidref" 
+      g:label="$i18n.catalog.iso19139.object.uuidref"
+      g:extends="$base/xtn/ui/UI_Attribute.xml">
+    </g:attribute> 
+      
+  </g:body>
+</g:element>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.DS_DataSet" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/AbstractObject_Type.xml">
+  <g:annotation>
+    <g:documentation>Identifiable collection of data</g:documentation>
+  </g:annotation>
+  <g:body>
+  
+    <!-- TODO recursion issues -->
+    <!-- 
+    <g:element g:targetName="gmd:has" g:minOccurs="1" g:maxOccurs="unbounded"
+      g:extends="$base/schema/gmd/metadataEntity/MD_Metadata_PropertyType.xml"/>
+      
+    <g:element g:targetName="gmd:partOf" g:minOccurs="0" g:maxOccurs="unbounded"
+      g:extends="$base/schema/gmd/metadataApplication/DS_Aggregate_PropertyType.xml"/>
+    -->
+
+    
+
+    
+  </g:body>
+</g:element>

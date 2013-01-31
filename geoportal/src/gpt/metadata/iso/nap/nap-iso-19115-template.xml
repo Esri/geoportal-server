@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/metadataEntity.xsd">
+    <fileIdentifier>
+        <gco:CharacterString/>
+    </fileIdentifier>
+    <language>
+        <gco:CharacterString>en</gco:CharacterString>
+    </language>
+    <characterSet>
+        <MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8"/>
+    </characterSet>
+    <hierarchyLevel>
+        <MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset"/>
+    </hierarchyLevel>
+    <contact>
+        <CI_ResponsibleParty>
+            <individualName>
+                <gco:CharacterString/>
+            </individualName>
+            <organisationName>
+                <gco:CharacterString/>
+            </organisationName>
+            <positionName>
+                <gco:CharacterString/>
+            </positionName>
+            <role>
+                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+            </role>
+        </CI_ResponsibleParty>
+    </contact>
+    <dateStamp>
+        <gco:Date>2000-01-01</gco:Date>
+    </dateStamp>
+    <metadataStandardName>
+        <gco:CharacterString>NAP - Metadata</gco:CharacterString>
+    </metadataStandardName>
+    <identificationInfo>
+        <MD_DataIdentification>
+            <citation>
+                <CI_Citation>
+                    <title>
+                        <gco:CharacterString/>
+                    </title>
+                    <date>
+                        <CI_Date>
+                            <date>
+                                <gco:Date>1970-01-01</gco:Date>
+                            </date>
+                            <dateType>
+                                <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation1"/>
+                            </dateType>
+                        </CI_Date>
+                    </date>
+                    <date>
+                        <CI_Date>
+                            <date>
+                                <gco:Date>1970-01-02</gco:Date>
+                            </date>
+                            <dateType>
+                                <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation2"/>
+                            </dateType>
+                        </CI_Date>
+                    </date>
+                    <date>
+                        <CI_Date>
+                            <date>
+                                <gco:Date>1970-01-03</gco:Date>
+                            </date>
+                            <dateType>
+                                <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation3"/>
+                            </dateType>
+                        </CI_Date>
+                    </date>
+                    <citedResponsibleParty>
+                        <CI_ResponsibleParty>
+                            <individualName>
+                                <gco:CharacterString>individualName1</gco:CharacterString>
+                            </individualName>
+                            <organisationName>
+                                <gco:CharacterString>organisationName1</gco:CharacterString>
+                            </organisationName>
+                            <positionName>
+                                <gco:CharacterString>positionName1</gco:CharacterString>
+                            </positionName>
+                            <role>
+                                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="role1"/>
+                            </role>
+                        </CI_ResponsibleParty>
+                    </citedResponsibleParty>
+                    <citedResponsibleParty>
+                        <CI_ResponsibleParty>
+                            <individualName>
+                                <gco:CharacterString>individualName2</gco:CharacterString>
+                            </individualName>
+                            <organisationName>
+                                <gco:CharacterString>organisationName2</gco:CharacterString>
+                            </organisationName>
+                            <positionName>
+                                <gco:CharacterString>positionName2</gco:CharacterString>
+                            </positionName>
+                            <role>
+                                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="role2"/>
+                            </role>
+                        </CI_ResponsibleParty>
+                    </citedResponsibleParty>
+                    <citedResponsibleParty>
+                        <CI_ResponsibleParty>
+                            <individualName>
+                                <gco:CharacterString>individualName3</gco:CharacterString>
+                            </individualName>
+                            <organisationName>
+                                <gco:CharacterString>organisationName3</gco:CharacterString>
+                            </organisationName>
+                            <positionName>
+                                <gco:CharacterString>positionName3</gco:CharacterString>
+                            </positionName>
+                            <role>
+                                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="role3"/>
+                            </role>
+                        </CI_ResponsibleParty>
+                    </citedResponsibleParty>
+                </CI_Citation>
+            </citation>
+            <abstract>
+                <gco:CharacterString/>
+            </abstract>
+            <status>
+                <MD_ProgressCode codeList="http://www.geoconnections.org/nap/metadata/register/napMetadataRegister.xml#IC_106" codeListValue="status1"/>
+            </status>
+            <status>
+                <MD_ProgressCode codeList="http://www.geoconnections.org/nap/metadata/register/napMetadataRegister.xml#IC_106" codeListValue="status2"/>
+            </status>
+            <status>
+                <MD_ProgressCode codeList="http://www.geoconnections.org/nap/metadata/register/napMetadataRegister.xml#IC_106" codeListValue="status3"/>
+            </status>
+            <language>
+                <gco:CharacterString/>
+            </language>
+            <language>
+                <gco:CharacterString/>
+            </language>
+            <language>
+                <gco:CharacterString/>
+            </language>
+            <topicCategory>
+                <MD_TopicCategoryCode>biota</MD_TopicCategoryCode>
+            </topicCategory>
+            <extent>
+                <EX_Extent>
+                    <geographicElement>
+                        <EX_GeographicBoundingBox>
+                            <westBoundLongitude>
+                                <gco:Decimal>10</gco:Decimal>
+                            </westBoundLongitude>
+                            <eastBoundLongitude>
+                                <gco:Decimal>10</gco:Decimal>
+                            </eastBoundLongitude>
+                            <southBoundLatitude>
+                                <gco:Decimal>10</gco:Decimal>
+                            </southBoundLatitude>
+                            <northBoundLatitude>
+                                <gco:Decimal>10</gco:Decimal>
+                            </northBoundLatitude>
+                        </EX_GeographicBoundingBox>
+                    </geographicElement>
+                </EX_Extent>
+            </extent>
+        </MD_DataIdentification>
+    </identificationInfo>
+
+</MD_Metadata>

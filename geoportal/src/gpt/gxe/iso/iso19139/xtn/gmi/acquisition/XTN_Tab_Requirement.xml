@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Acquisition/Requirment tab (simplified) -->      
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gmi:acquisitionRequirement" g:minOccurs="0" g:maxOccurs="unbounded"
+           g:label="$i18n.catalog.iso19139-2.MI_Metadata.section.acuisition.requirement"
+           g:extends="$base/xtn/ui/UI_Element.xml"> 
+   
+  <g:body>
+    <g:element g:targetName="gmi:MI_Requirement" h:tag="div" g:jsClass="gxe.control.Element">
+      
+      <!--  Citation information - identification of reference or guidance material for the requirement -->
+          
+             <g:element g:targetName="gmi:citation" g:minOccurs="0" g:maxOccurs="1"
+            g:label="$i18n.catalog.iso19139-2.MI_Metadata.section.acquisition.citation"
+            g:extends="$base/xtn/ui/UI_Element.xml">
+     
+     <!-- Citation information, from gmd:CI_Citation -->
+     <g:body>
+         <g:element g:targetName="gmd:CI_Citation" 
+           g:label="$i18n.catalog.iso19139.XTN_Identification.citation.title"
+           h:tag="div" g:jsClass="gxe.control.Element" g:extends="$base/schema/gmd/citation/CI_Citation_Type.xml"/>
+     </g:body>
+ </g:element>
+          
+      <!-- Identifier - unique name, or code, for the requirement -->
+      <g:element g:targetName="gmi:identifier" g:minOccurs="1" g:maxOccurs="1" g:extends="$base/xtn/gmd/identification/XTN_ResourceIdentifier.xml"/>     
+	    
+	    <!-- Requestor - origin of requirement -->
+      <g:element g:targetName="gmi:requestor" g:minOccurs="1" g:maxOccurs="unbounded"
+		      g:label="$i18n.catalog.iso19139-2.MI_Metadata.acquisition.requirement.requestor"
+		      g:extends="$base/schema/gmd/citation/CI_ResponsibleParty_PropertyType.xml"/>
+		      
+		 <!-- Recipient - person(s), or body(ies), to receive results of requirement -->
+      <g:element g:targetName="gmi:recipient" g:minOccurs="1" g:maxOccurs="unbounded"
+		      g:label="$i18n.catalog.iso19139-2.MI_Metadata.acquisition.requirement.recipient"
+		      g:extends="$base/schema/gmd/citation/CI_ResponsibleParty_PropertyType.xml"/>
+		      
+		<!-- Priority - relative ordered importance, or urgency, of the requirement -->
+      <g:element g:targetName="gmi:priority" g:minOccurs="1" g:maxOccurs="1"
+		      g:label="$i18n.catalog.iso19139-2.MI_Metadata.acquisition.requirement.priority"
+		      g:extends="$base/xtn/gmi/acquisition/MI_PriorityCode_PropertyType.xml"/>
+	
+	<!-- requestedDate - required or preferred acquisition date and time -->
+      <g:element g:targetName="gmi:requestedDate" g:minOccurs="1" g:maxOccurs="1"
+		      g:label="$i18n.catalog.iso19139-2.MI_Metadata.acquisition.requirement.requestedDate"
+		      g:extends="$base/xtn/gmi/acquisition/MI_RequestedDate.xml"/>
+		      
+	<!--  expiryDate - date and time after which collection is no longer valid -->
+           <g:element g:targetName="gmi:expiryDate" g:minOccurs="1" g:maxOccurs="1"
+            g:label="$i18n.catalog.iso19139-2.MI_Metadata.acquisition.requirement.expiryDate"
+            g:extends="$base/schema/gco/basicTypes/DateTime_PropertyType.xml"/>	      
+		           
+	 </g:element>
+  </g:body>
+</g:element>
+
+

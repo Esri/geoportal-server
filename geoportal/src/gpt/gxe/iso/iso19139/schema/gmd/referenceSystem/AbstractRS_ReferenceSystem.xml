@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gmd:AbstractRS_ReferenceSystem" 
+           g:extends="$base/schema/gmd/referenceSystem/AbstractRS_ReferenceSystem_Type.xml"> 
+</g:element>

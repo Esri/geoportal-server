@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.MD_Georectified" g:label="$i18nBase"
+           g:extends="$base/schema/gmd/spatialRepresentation/MD_GridSpatialRepresentation_Type.xml">
+  <g:body>
+  
+    <g:element g:targetName="gmd:checkPointAvailability" g:minOccurs="1" g:maxOccurs="1"
+      g:extends="$base/schema/gco/basicTypes/Boolean_PropertyType.xml"/>
+    
+    <g:element g:targetName="gmd:checkPointDescription" g:minOccurs="0" g:maxOccurs="1"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
+
+    <!--  TODO requires implementation
+    <g:element g:targetName="gmd:cornerPoints" g:minOccurs="0" g:maxOccurs="unbounded"
+      g:extends="$base/gss/GM_Point_PropertyType.xml"/>
+    -->
+     
+    <!--  TODO requires implementation 
+    <g:element g:targetName="gmd:centerPoint" g:minOccurs="0" g:maxOccurs="1"
+      g:extends="$base/gss/GM_Point_PropertyType.xml"/>      
+    --> 
+    
+    <g:element g:targetName="gmd:pointInPixel" g:minOccurs="0" g:maxOccurs="1"
+      g:extends="$base/schema/gmd/spatialRepresentation/MD_PixelOrientationCode_PropertyType.xml"/>
+      
+    <g:element g:targetName="gmd:transformationDimensionDescription" g:minOccurs="0" g:maxOccurs="1"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
+      
+    <g:element g:targetName="gmd:transformationDimensionMapping" g:minOccurs="0" g:maxOccurs="2"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
+    
+  </g:body>
+</g:element>

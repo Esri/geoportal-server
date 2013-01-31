@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Metadata Security Information 
+		metsi (/metadata/metainfo/metsi) 
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect07.xsd
+		http://www.fgdc.gov/metadata/csdgm/07.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="metsi"
+	g:i18nBase="catalog.fgdc.metainfo.metsi" g:label="$i18nBase"
+	g:extends="$base/core/xml/Element.xml">
+	<g:body>
+
+		<!-- Metadata Security Classification System -->
+		<g:element g:targetName="metscs" g:extends="$base/core/xml/ElementTextOnly.xml"/>
+
+		<!-- Metadata Security Classification -->
+		<g:element g:targetName="metsc" g:extends="$base/core/xml/ElementTextOnly.xml">
+			<g:body>
+				<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+					<g:options g:i18nBase="catalog.fgdc.idinfo.secinfo.secclass.option">
+						<g:option g:value="" g:label=""/>
+						<g:option g:value="Top secret" g:label="$i18nBase.topSecret"/>
+						<g:option g:value="Secret" g:label="$i18nBase.secret"/>
+						<g:option g:value="Confidential" g:label="$i18nBase.confidential"/>
+						<g:option g:value="Restricted" g:label="$i18nBase.restricted"/>
+						<g:option g:value="Unclassified" g:label="$i18nBase.unclassified"/>
+						<g:option g:value="Sensitive" g:label="$i18nBase.sensitive"/>
+						<g:option g:value="_other_" g:label="$i18n.catalog.mdCode.other"
+							g:isOther="true"/>
+					</g:options>
+				</g:input>
+			</g:body>
+		</g:element>
+
+		<!-- Metadata Security Handling Description -->
+		<g:element g:targetName="metshd" g:extends="$base/core/xml/ElementTextOnly.xml">
+			<g:body>
+				<g:input g:extends="$base/core/ui/InputTextArea.xml"/>
+			</g:body>
+		</g:element>
+
+	</g:body>
+</g:element>
