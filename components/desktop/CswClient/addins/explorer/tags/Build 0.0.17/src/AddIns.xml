@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ExplorerAddIns name="CSW Client" description="CSW Client" publisher="geoportal" groupCaption="CSW Client">
+  <dockWindow id="com.esri.gpt.csw.CSWSearchDockWindow" assembly="CSWSearchDockWindow.dll" caption="Geoportal Server - CSW Client" className="com.esri.gpt.csw.CSWSearchDockWindow" largeImage="Images\CSWSearchDockWindow_DockWindow.png" tooltip="Search CSW interfaces"/>
+</ExplorerAddIns>
