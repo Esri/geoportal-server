@@ -24,7 +24,7 @@ Geoportal Server documentation is broken down into three buckets: a wiki, Javado
 
 * The [wiki](https://github.com/Esri/geoportal-server/wiki) hosts topics for how to install, configure, customize, and use the Geoportal Server and its related components.</li>
 * The [Javadoc](http://esri.github.com/geoportal-server/javadoc/current) describes the Java packages used in the Geoportal Server web application.</li>
-* The [XML Editor JavaScript](http://esri.github.com/geoportal-server/gxe/xmldoc} documentation</a> explains its JavaScript classes and XML elements and configuration files.</li>
+* The [XML Editor JavaScript](http://esri.github.com/geoportal-server/gxe/xmldoc) documentation</a> explains its JavaScript classes and XML elements and configuration files.</li>
 
 
 ## Support or Contact
