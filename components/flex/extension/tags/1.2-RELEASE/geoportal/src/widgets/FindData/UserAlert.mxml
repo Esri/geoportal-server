@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+                showCloseButton="true" 
+                close="doClose(event)"
+                styleName="WidgetCanvas" 
+                titleStyleName="WidgetTitle">
+  <mx:Metadata>
+    [ResourceBundle("gptStrings")]
+  </mx:Metadata>
+  <mx:Script>
+    <![CDATA[
+      import com.esri.ags.Map;
+      import com.esri.gpt.utils.Utils;
+      import com.esri.viewer.BaseWidget;
+      
+      import mx.core.UIComponent;
+      import mx.logging.ILogger;
+      import mx.logging.Log;
+      import mx.managers.PopUpManager;
+      
+      [Bindable]
+      private var message:String = "";
+      [Bindable]
+      private var advancedMessage:String = "";
+      private var bShowingMoreInited:Boolean = false;
+      [Bindable]
+      private var bShowMoreOption:Boolean = true;
+      
+      private var _xmlConfig:XML;
+                 
+      private static const INCREASE_HEIGHT:uint = 200;
+      private static const INCREASE_WIDTH:uint = 350;
+      
+      /** Class logger **/
+      private static const LOG:ILogger = 
+        Log.getLogger("com.esri.gpt.flexviewer.widgets.UserAlert");
+      
+      // properties ================================================================
+      /**
+       * Sets the configuration xml object
+       * 
+       * @param xmlConfig the configuration xml
+       * */
+      public function set xmlConfig(xmlConfig:XML):void {
+        this._xmlConfig = xmlConfig;
+       
+      } 
+      
+      /**
+       * Gets the xml configuration object
+       * 
+       * @return (object could be null)
+       * 
+       * */
+      public function get xmlConfig():XML{
+        return this._xmlConfig;
+      }
+      
+      // methods ===================================================================
+      /**
+       * Show the pop up
+       * 
+       * @param widget The widget
+       * @param message The text message
+       * @param advancedMessage The advanced message to show
+       * @param title if null, default title will be used
+       * 
+       * */
+      public function show(map:Map,
+                           message:String, advancedMessage:String, 
+                                           title:String=null):void {
+		PopUpManager.removePopUp(this);
+        PopUpManager.addPopUp(this, UIComponent(map), true);
+        PopUpManager.centerPopUp(this);
+		PopUpManager.bringToFront(this);
+        
+        this.title = (title == null)? 
+           resourceManager.getString('gptStrings','finddata.lblErrorTitle') : 
+           title;
+        this.message = message;
+        this.advancedMessage = advancedMessage;
+        
+        
+        if(advancedMessage != null && Utils.chkString(advancedMessage) != "") {
+          bShowMoreOption = true;
+        } else {
+          bShowMoreOption = true;
+        }
+        LOG.error(message + "\n\n" + advancedMessage);    
+      }
+      
+      
+      /**
+       * Closes the pop up manager
+       * 
+       * @param event The Event
+       * */
+      private function doClose(event:Event):void {
+        PopUpManager.removePopUp(this);
+        reset();
+      }
+      
+      /**
+       * Shows the extra information
+       * */
+      private function doShowMore():void {
+        this.currentState = "sttShowMore";
+        bShowingMoreInited = true;
+      }
+      
+      /**
+       * Resets the gui
+       * */
+      private function reset():void {
+        if(bShowingMoreInited) {
+          this.currentState = "sttShowLess";
+        }
+      }
+      
+      
+      
+    ]]>
+  </mx:Script>
+  
+  <mx:states>
+    <mx:State name="sttShowMore">
+      <mx:AddChild relativeTo="{contShowMore1}" position="lastChild">
+        <mx:TextArea id="txtAdvancedMessage" 
+                     editable="false"
+                     selectable="true"
+                     width="{INCREASE_WIDTH}"
+                     height="{INCREASE_HEIGHT}"
+                     text="{advancedMessage}"/>
+      </mx:AddChild>
+      <mx:RemoveChild target="{lnkShowMore}"/>
+    </mx:State>
+    <mx:State name="sttShowLess">
+      <mx:RemoveChild target="{txtAdvancedMessage}" />
+    </mx:State>
+  </mx:states>
+  
+  <!-- mx:Resize id="effThisShowMoreHeight" target="{this}" 
+  heightTo="{this.height + INCREASE_HEIGHT}" heightFrom="{this.height}"/>
+  <mx:Resize id="effThisShowMoreWidth" target="{this}" 
+  widthTo="{this.width + INCREASE_WIDTH}" widthFrom="{this.width}"/>
+  
+  <mx:Resize id="effThisShowLessHeight" target="{this}" 
+  heighTo="{this.height - INCREASE_HEIGHT}" heightFrom="{this.height}"/>
+  <mx:Resize id="effThisShowLessWidth" target="{this}" 
+  widthTo="{this.width - INCREASE_WIDTH}" widthFrom="{this.width}"/ -->  
+  
+  <mx:VBox>
+    <mx:Text id="txtMessage" styleName="InfoText" width="350" text="{message}"/>
+    <mx:HBox id="contShowMore">
+      <mx:LinkButton id="lnkShowMore"
+                     buttonMode="true" click="doShowMore()" 
+                     label="{resourceManager.getString('gptStrings','finddata.lblShowMore')}"
+                     styleName="ControllerLinkButton"
+                     visible="{bShowMoreOption}"/>
+    </mx:HBox>
+    <mx:VBox id="contShowMore1"/>
+  </mx:VBox>
+</mx:TitleWindow>

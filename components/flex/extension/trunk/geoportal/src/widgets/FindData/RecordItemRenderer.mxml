@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+Esri Inc. licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:mx="library://ns.adobe.com/flex/mx"
+                autoDrawBackground="false"
+                dataChange="itemrenderer_dataChangeHandler(event)"
+                minHeight="30"
+                mouseOut="itemrenderer_mouseOutHandler(event)"
+                mouseOver="itemrenderer_mouseOverHandler(event)"
+                creationComplete="creationCompleteHandler(event)"
+                useHandCursor="true"
+                buttonMode="true">
+  
+  <fx:Script>
+    <![CDATA[
+      import com.esri.ags.Graphic;
+      import com.esri.ags.Map;
+      import com.esri.ags.geometry.MapPoint;
+      import com.esri.ags.geometry.Polygon;
+      import com.esri.ags.symbols.SimpleFillSymbol;
+      import com.esri.ags.symbols.SimpleLineSymbol;
+      import com.esri.ags.symbols.SimpleMarkerSymbol;
+      import com.esri.ags.symbols.Symbol;
+      import com.esri.gpt.finddata.GptRSSEvent;
+      import com.esri.gpt.finddata.SearchResultRecord;
+      import com.esri.gpt.utils.ProjectionHandler;
+      import com.esri.viewer.AppEvent;
+      import com.esri.viewer.ViewerContainer;
+      
+      import mx.events.FlexEvent;
+      
+      // these events bubble up from the GeoRSSFeedItemRenderer
+      [Event(name="GptRSSRecordClick", type="com.esri.gpt.finddata.flexviewer.widgets.GptRSSEvent")]
+      [Event(name="GptRSSRecordMouseOver", type="com.esri.gpt.finddata.flexviewer.widgets.GptRSSEvent")]
+      [Event(name="GptRSSRecordMouseOut", type="com.esri.gpt.finddata.flexviewer.widgets.GptRSSEvent")]
+      
+      // instance variables ====================================================
+      [Bindable]
+      private var gptRSSRecord:SearchResultRecord;
+      
+      private var lastResultSymbol:Symbol;
+      
+      private var recordGraphic:Graphic;
+      
+       
+      // methods ===============================================================
+      /**
+      * Method called when new record is inserted.
+      * 
+      * @param event The flex event
+      * */
+      private function itemrenderer_dataChangeHandler(event:FlexEvent):void
+      {
+        gptRSSRecord = data as SearchResultRecord;
+        var gptRssGrp:RecordDataGroup = this.parent as RecordDataGroup;
+        if(recordGraphic != null && gptRssGrp != null) {
+          gptRssGrp.graphicsLayer.remove (recordGraphic );
+        }
+          
+        recordGraphic = readGraphic();
+        if(recordGraphic != null) {
+          
+          if(gptRssGrp != null && gptRSSRecord != null && 
+             gptRSSRecord.geom != null) {
+            var map:Map = ViewerContainer.getInstance().mapManager.map;
+            var projHandler:ProjectionHandler = 
+              new ProjectionHandler(map.spatialReference);
+            recordGraphic.geometry = 
+            projHandler.reprojectGeom(gptRSSRecord.geom);
+            gptRssGrp.graphicsLayer.add(recordGraphic);
+          }
+        }
+        drawCheckBox.selected = true;
+      }
+      
+      /**
+      * Creates a Graphic from the record geometry
+      * 
+      * @return The graphic
+      * */
+      private function readGraphic():Graphic {
+        if(gptRSSRecord.geom == null || 
+          gptRSSRecord.hasDefaultGeometry == true) {
+          return null;
+        }
+        var gptRssGrp:RecordDataGroup = this.parent as RecordDataGroup;
+        if(gptRssGrp == null) {
+          return null;
+        }
+      
+        var polygon:Polygon = gptRSSRecord.geom as Polygon;
+        var symbol:Symbol = gptRssGrp.graphicSymbol;
+        if(polygon != null && polygon.rings.length == 1 && 
+          polygon.rings[0].length > 4 ) {
+          var minX:MapPoint =(polygon.rings[0])[0] as MapPoint;
+          var maxX:MapPoint =(polygon.rings[0])[1] as MapPoint;
+          var minY:MapPoint =(polygon.rings[0])[2] as MapPoint;
+          var maxY:MapPoint =(polygon.rings[0])[3] as MapPoint;
+          if(maxX.x == minX.x && maxY.y == minY.y) {
+            symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_SQUARE,
+              15, gptRssGrp.graphicSymbol.color, 1, 0, 0, 0, 
+              gptRssGrp.graphicSymbol.outline);
+          }
+        }
+        var graphic:Graphic = new Graphic(gptRSSRecord.geom);
+        graphic.id = gptRSSRecord.id;
+        graphic.symbol = symbol;
+        graphic.autoMoveToTop = false;
+        graphic.checkForMouseListeners = false;
+        
+        return graphic;
+      }
+      
+      /**
+      * Highlights the Record and the Graphic associated with the record when
+      * mouse is over the record title
+      * 
+      * @param event The highlight Event
+      * */
+      private function highLight(appEvent:AppEvent):void {
+		var event:GptRSSEvent  = appEvent.data as GptRSSEvent;
+        if(!(
+          event.dataObject.recordIndex == this.itemIndex ||
+          event.dataObject.id == this.gptRSSRecord.id ||
+          event.dataObject.graphicId == this.gptRSSRecord.id ||
+          this.recordGraphic == null ||
+          event.dataObject.graphicId == this.recordGraphic.id ||
+          event.dataObject.graphic == this.recordGraphic 
+          ) ) {
+          return;
+        }
+        this.currentState = "hovered";
+        var gptRssGrp:RecordDataGroup = this.parent as RecordDataGroup;
+        if(gptRssGrp == null) {
+          return;
+        }
+        if(this.recordGraphic != null) {
+          this.recordGraphic.symbol = gptRssGrp.graphicSymbolHighlighted;
+        }
+      }
+      
+      /**
+       * Highlights the Record and the Graphic associated with the record 
+       * 
+       * @param event The highlight Event
+       * */
+      private function unHighLight(appEvent:AppEvent):void {
+		var event:GptRSSEvent  = appEvent.data as GptRSSEvent;  
+        if(!(
+          event.dataObject.recordIndex == this.itemIndex ||
+          event.dataObject.id == this.gptRSSRecord.id ||
+          event.dataObject.graphicId == this.gptRSSRecord.id ||
+          this.recordGraphic == null ||
+          event.dataObject.graphicId == this.recordGraphic.id ||
+          event.dataObject.graphic == this.recordGraphic
+          ) ) {
+          return;
+        }
+        this.currentState = "normal";
+        var gptRssGrp:RecordDataGroup = this.parent as RecordDataGroup;
+        if(gptRssGrp == null) {
+          return;
+        }
+        if(this.recordGraphic != null) {
+          this.recordGraphic.symbol = gptRssGrp.graphicSymbol;
+        }
+      }
+      
+      /**
+      * Unhighlight all graphics 
+      * 
+      * @param event 
+      * */
+      private function unHighLightAllHandler(appEvent:AppEvent):void {
+		var event:GptRSSEvent  = appEvent.data as GptRSSEvent;  
+        this.currentState = "normal";
+        var gptRssGrp:RecordDataGroup = this.parent as RecordDataGroup;
+        if(gptRssGrp != null && this.recordGraphic != null) {
+          this.recordGraphic.symbol = gptRssGrp.graphicSymbol;
+        }
+      }
+      
+      /**
+      * Handler called to hide all associated graphics
+      * */
+      private function hideAllGraphicsHandler(event:AppEvent):void {
+        showExtentGraphic(false);
+      }
+      
+      /**
+      * Handler called to show all associated graphics
+      * */
+      private function showAllGraphicsHandler(event:AppEvent):void {
+        showExtentGraphic(true);
+      }
+      
+      /**
+       * Shows the graphic or hides it.         * 
+       * @param show Whether the graphic should be shown or not
+       * */
+      private function showExtentGraphic(show:Boolean):void {
+        if(recordGraphic == null) {
+          return;
+        }
+        recordGraphic.setVisible(show);
+        recordGraphic.visible = show;
+        drawCheckBox.selected = show; 
+      } 
+      
+      /**
+       * Mouse click record handler
+       * 
+       * @param event The mouse event
+       * */
+      private function itemrenderer_clickHandler(event:MouseEvent):void {
+        dispatchEvent(new GptRSSEvent(GptRSSEvent.GPT_RSS_RECORD_CLICK, 
+          {recordIndex: this.itemIndex}, true, true));
+      }
+      
+      /**
+       * Mouse over record handler
+       * 
+       * @param event The mouse event
+       * */
+      private function itemrenderer_mouseOverHandler(event:MouseEvent):void
+      {
+        highLight( new AppEvent(GptRSSEvent.GPT_RSS_RECORD_MOUSE_OVER,
+			new GptRSSEvent(GptRSSEvent.GPT_RSS_RECORD_MOUSE_OVER, 
+          {recordIndex: this.itemIndex}, true, true) ));
+        event.stopPropagation();
+        dispatchEvent(new GptRSSEvent(GptRSSEvent.GPT_RSS_RECORD_MOUSE_OVER, 
+          {recordIndex: this.itemIndex}, true, true) );
+ 
+      }
+      
+      /**
+      * Mouse out record handler
+      * 
+      * @param event The mouse event
+      * */
+      private function itemrenderer_mouseOutHandler(event:MouseEvent):void
+      {
+        unHighLight( new AppEvent(GptRSSEvent.GPT_RSS_RECORD_MOUSE_OUT , 
+			new GptRSSEvent(GptRSSEvent.GPT_RSS_RECORD_MOUSE_OUT, 
+          {recordIndex: this.itemIndex}, true, true) ));
+        event.stopPropagation();
+        dispatchEvent(new GptRSSEvent(GptRSSEvent.GPT_RSS_RECORD_MOUSE_OUT, 
+          {recordIndex: this.itemIndex}, true, true) );
+        
+      }
+      
+          
+      /**
+      * Handler for creation complete
+      * 
+      * @param event for creation complete
+      * */
+      protected function creationCompleteHandler(event:FlexEvent):void
+      {
+        AppEvent.addListener(GptRSSEvent.GPT_RSS_RECORD_MOUSE_OUT, 
+          unHighLight, false, 0, true);
+		AppEvent.addListener(GptRSSEvent.GPT_RSS_RECORD_MOUSE_OVER, 
+          highLight, false, 0, true);
+       
+		AppEvent.addListener(
+          GptRSSEvent.GPT_HIDE_ALL_GRAPHICS,
+            hideAllGraphicsHandler, false, 0, true);
+        
+		AppEvent.addListener(
+          GptRSSEvent.GPT_SHOW_ALL_GRAPHICS,
+            showAllGraphicsHandler, false, 0, true);
+        
+		AppEvent.addListener(GptRSSEvent.GPT_UNHIGHLIGHT_ALL,
+          unHighLightAllHandler, false, 0, true);
+      
+      }
+      
+     ]]>
+  </fx:Script>
+  
+  <s:states>
+    <s:State name="normal"/>
+    <s:State name="hovered"/>
+  </s:states>
+  
+  <!-- border/background rectangle -->
+  <s:Rect left="0" right="0" top="0" bottom="0"
+          radiusX="4"
+          radiusY="4">
+    <s:stroke>
+      <mx:SolidColorStroke alpha="{getStyle('borderAlpha')}"
+                           color="{getStyle('borderColor')}"
+                           weight="1"/>
+    </s:stroke>
+    <s:fill>
+      <s:SolidColor alpha="0.3"
+                    alpha.hovered="0.8"
+                    color.hovered="{getStyle('rollOverColor')}"
+                    color.normal="{getStyle('contentBackgroundColor')}"/>
+    </s:fill>
+  </s:Rect>
+  
+  <s:HGroup width="100%" height="100%"
+            paddingBottom="3" 
+            paddingLeft="3"
+            paddingRight="3"
+            paddingTop="3"
+            verticalAlign="middle">
+    
+    <s:CheckBox
+      id="drawCheckBox"
+      selected="true" 
+      change="{showExtentGraphic(event.currentTarget.selected)}" />
+      
+    <s:VGroup width="100%" height="100%"
+              useHandCursor="true"
+              click="itemrenderer_clickHandler(event)"
+              verticalAlign="middle">
+      <s:Label width="100%"
+               fontWeight="bold"
+               maxDisplayedLines="-1"
+               text="{gptRSSRecord.title}"
+               useHandCursor="true"/>
+    </s:VGroup>
+  </s:HGroup>
+</s:ItemRenderer>

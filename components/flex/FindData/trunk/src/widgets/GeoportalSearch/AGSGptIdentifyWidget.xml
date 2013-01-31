@@ -1,0 +1,19 @@
+<config>
+  <useProxy proxyUrl="">true</useProxy> 
+  <identifylayeroption>visible</identifylayeroption>
+  <identifytolerance>10</identifytolerance>
+  <zoomscale>5000</zoomscale>
+  <identifyIcon>com/esri/solutions/flexviewer/assets/images/icons/i_info.png</identifyIcon>
+  <label name="lblHelpIdTitle" value="How to get More Details"/>
+  <label name="lblTolerance" value="Tolerance"/>
+  <labels>
+    <identifylabel>View Details</identifylabel>
+    <resultslabel>Results</resultslabel>
+    <descriptionlabel>Use the View Details tool to identify features on the map:</descriptionlabel>
+    <pointlabel>Identify</pointlabel>
+    <clearlabel>Clear</clearlabel>
+    <loadinglabel>Loading...</loadinglabel>
+    <selectionlabel>Features Identified:</selectionlabel>
+    <noInfoLabel>No Information</noInfoLabel>
+  </labels>
+</config>

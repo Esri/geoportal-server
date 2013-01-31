@@ -1,0 +1,1 @@
+- 3/25/2011 - Fixed proxy to disallow caching on the client side.  304 responses were causing map not to be fetched.

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+See the NOTICE file distributed with
+
+this work for additional information regarding copyright ownership.
+
+Esri Inc. licenses this file to You under the Apache License, Version 2.0
+
+(the "License"); you may not use this file except in compliance with
+
+the License.  You may obtain a copy of the License at
+
+
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+Unless required by applicable law or agreed to in writing, software
+
+distributed under the License is distributed on an "AS IS" BASIS,
+
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+See the License for the specific language governing permissions and
+
+limitations under the License.
+-->
+<mx:HBox	xmlns:mx		="http://www.adobe.com/2006/mxml" 
+			xmlns:flash		="flash.filters.*" 
+			width			="95%" 
+			minHeight		="40" 
+			styleName		="RecordCanvas" 
+			backgroundAlpha	="0.3" 
+			useHandCursor	="true" 
+			buttonMode		="true" 
+			paddingLeft		="3" 
+			paddingRight	="3" 
+			mouseOver		="mouseOverRow()" 
+			mouseOut		="mouseOutRow()" 
+			verticalAlign	="middle">
+	
+	<mx:Script>
+		<![CDATA[
+		
+			[Bindable]
+			private var recicon:String = "com/esri/solutions/flexviewer/assets/images/icons/i_pushpin.png";
+			
+			[Bindable]
+			private var title:String;
+				
+			[Bindable]
+			private var content:String;			
+			
+			private var _infoData:Object;
+			
+			public function get infoData():Object
+			{
+				return _infoData;
+			}
+			
+			public function set infoData(value:Object):void
+			{
+				_infoData = value;
+				
+				recicon = infoData.icon;
+				title = infoData.title;
+				content = infoData.content;
+				
+				if (infoData.link)
+				{
+					var link:String = infoData.link;
+					var pos:Number = link.length - 4;
+					var sfx:String = link.substr(pos, 4).toLowerCase();
+					if ((sfx == ".jpg") || (sfx == ".png") || (sfx ==".gif"))
+					{
+						recLink.visible = false;
+						recLink.includeInLayout = false;
+					}
+					else
+					{
+						recLink.visible = true;
+						recLink.includeInLayout = true;
+					}
+				}
+			}
+						
+			private function mouseOverRow():void
+			{
+				this.setStyle("backgroundAlpha", 0.8);
+			}			
+			
+			private function mouseOutRow():void
+			{
+				this.setStyle("backgroundAlpha", 0.3);
+			}
+		
+			private function showLink():void
+			{
+				navigateToURL(new URLRequest(infoData.link));
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Image id="recIcon" source="{recicon}" width="20" height="20">
+		<mx:filters>
+			<flash:GlowFilter color="#000000" alpha="0.5" blurX="10" blurY="10"/>
+		</mx:filters>
+	</mx:Image>
+	<mx:VBox verticalGap="0" width="90%" height="100%">
+		<mx:VBox verticalGap="0" 
+				 width="100%"
+				 height="100%"
+				 mouseChildren="false" 
+				 useHandCursor="true" 
+				 buttonMode="true">
+			<mx:Text selectable="false" styleName="RecordText" fontWeight="bold" text="{title}" width="90%"/>
+			<mx:Text selectable="false" styleName="RecordText" fontWeight="normal" text="{content}" width="90%"/>
+		</mx:VBox>
+	</mx:VBox>
+	<mx:Image id="recLink" source="com/esri/solutions/flexviewer/assets/images/widget/w_link.png" click="showLink()" visible="false" includeInLayout="false" useHandCursor="true" buttonMode="true"/>
+
+</mx:HBox>
