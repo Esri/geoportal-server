@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Config_Transaction.xml -->
+<items>
+ 
+  <!-- invalid outputFormat -->
+  <item shouldPass="false" owsLocator="@outputFormat" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" outputFormat="">
+        <csw:Insert></csw:Insert>
+      </csw:Transaction>
+    ]]></xml> 
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" outputFormat="a">
+        <csw:Insert></csw:Insert>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+  
+  <!-- invalid verboseResponse -->
+  <item shouldPass="false" owsLocator="@verboseResponse" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" verboseResponse="">
+      </csw:Transaction>
+    ]]></xml> 
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" verboseResponse="a">
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+   
+  <!-- invalid requestId -->
+  <item shouldPass="false" owsLocator="@requestId" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" requestId="">
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+  
+  <!-- invalid transaction type -->
+  <item shouldPass="false" owsLocator="csw:Transaction" owsCode="MissingParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+  
+</items>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Config_Dev.xml -->
+<items>
+
+  <!-- ogc:Intersects spatial queries -->
+
+  <!-- make some test data -->
+  <item shouldPass="true">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Insert>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+            xmlns:dc="http://purl.org/dc/elements/1.1/"
+            xmlns:ows="http://www.opengis.net/ows">
+            <dc:identifier>idDelete10</dc:identifier>
+            <dc:title>idDelete10</dc:title>
+            <ows:BoundingBox>
+              <ows:LowerCorner>170.123 10.4567</ows:LowerCorner>
+              <ows:UpperCorner>175.3456 15.78</ows:UpperCorner>
+            </ows:BoundingBox>
+          </csw:Record>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+            xmlns:dc="http://purl.org/dc/elements/1.1/"
+            xmlns:ows="http://www.opengis.net/ows">
+            <dc:identifier>idDelete11</dc:identifier>
+            <dc:title>idDelete11</dc:title>
+            <ows:BoundingBox>
+              <ows:LowerCorner>170 10</ows:LowerCorner>
+              <ows:UpperCorner>-175.3456 15.78</ows:UpperCorner>
+            </ows:BoundingBox>
+          </csw:Record>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+            xmlns:dc="http://purl.org/dc/elements/1.1/"
+            xmlns:ows="http://www.opengis.net/ows">
+            <dc:identifier>idDelete12</dc:identifier>
+            <dc:title>idDelete12</dc:title>
+            <ows:BoundingBox>
+              <ows:LowerCorner>-198 10.4567</ows:LowerCorner>
+              <ows:UpperCorner>198 15.78</ows:UpperCorner>
+            </ows:BoundingBox>
+          </csw:Record>
+        </csw:Insert>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+
+  <!-- intersects: match against a document that DOES NOT cross the date line -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idDelete10</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+
+                <ogc:Intersects>
+                  <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                  <gml:Envelope>
+                     <gml:lowerCorner>-180.0 -110.0</gml:lowerCorner>
+                     <gml:upperCorner>180.0 110.0</gml:upperCorner>
+                  </gml:Envelope>
+                </ogc:Intersects> 
+
+              
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- delete the test data -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="3" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalDeleted"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete10</ogc:Literal>
+                </ogc:PropertyIsEqualTo>   
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete11</ogc:Literal>
+                </ogc:PropertyIsEqualTo> 
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete12</ogc:Literal>
+                </ogc:PropertyIsEqualTo> 
+              </ogc:Or>
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+  
+</items>

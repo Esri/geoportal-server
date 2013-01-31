@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Config_GetCapabilities.xml -->
+<items>
+
+  <!-- acceptVersions -->
+  <item shouldPass="false" owsLocator="acceptVersions" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=GetCapabilities&acceptVersions=]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="acceptVersions" owsCode="VersionNegotiationFailed">
+    <url><![CDATA[service=CSW&request=GetCapabilities&acceptVersions=a,b]]></url>
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertEquals" expected="2.0.2" src="serviceProperties.serviceVersion"/>
+    <url><![CDATA[service=CSW&request=GetCapabilities&acceptVersions=a,2.0.2]]></url>
+    <url><![CDATA[service=CSW&request=GetCapabilities&acceptVersions=a,2.0.2&version=bad]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="ows:AcceptVersions/ows:Version" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW">
+        <ows:AcceptVersions><ows:Version></ows:Version></ows:AcceptVersions>
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item>
+  <item shouldPass="false" owsLocator="ows:AcceptVersions/ows:Version" owsCode="VersionNegotiationFailed">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW">
+        <ows:AcceptVersions>
+          <ows:Version>1</ows:Version><ows:Version>2</ows:Version>
+        </ows:AcceptVersions>
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertEquals" expected="2.0.2" src="serviceProperties.serviceVersion"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW">
+        <ows:AcceptVersions>
+          <ows:Version>1</ows:Version><ows:Version>2.0.2</ows:Version>
+        </ows:AcceptVersions>
+      </csw:GetCapabilities>
+    ]]></xml>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW" version="bad">
+        <ows:AcceptVersions>
+          <ows:Version>1</ows:Version><ows:Version>2.0.2</ows:Version>
+        </ows:AcceptVersions>
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item>
+  
+  <!-- acceptFormats -->
+  <item shouldPass="false" owsLocator="acceptFormats" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=GetCapabilities&acceptFormats=]]></url>
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertEquals" expected="application/xml" src="operationResponse.outputFormat"/>
+    <url><![CDATA[service=CSW&request=GetCapabilities&acceptFormats=application/xml]]></url>
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertEquals" expected="text/xml" src="operationResponse.outputFormat"/>
+    <url><![CDATA[service=CSW&request=GetCapabilities&acceptFormats=a,text/xml]]></url>
+    <url><![CDATA[service=CSW&request=GetCapabilities&acceptFormats=text/xml&outputFormat=bad]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="ows:AcceptFormats/ows:OutputFormat" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW">
+        <ows:AcceptFormats><ows:OutputFormat></ows:OutputFormat></ows:AcceptFormats>
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertEquals" expected="application/xml" src="operationResponse.outputFormat"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW">
+        <ows:AcceptFormats><ows:OutputFormat>application/xml</ows:OutputFormat></ows:AcceptFormats>
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertEquals" expected="text/xml" src="operationResponse.outputFormat"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW" outputFormat="bad">
+        <ows:AcceptFormats>
+          <ows:OutputFormat>1</ows:OutputFormat><ows:OutputFormat>text/xml</ows:OutputFormat>
+        </ows:AcceptFormats>
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertNotNull" src="xpath-node:/csw:Capabilities/ows:ServiceIdentification"/>
+    <url><![CDATA[service=CSW&request=GetCapabilities&acceptFormats=a,b]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW">
+        <ows:AcceptFormats>
+          <ows:OutputFormat>1</ows:OutputFormat><ows:OutputFormat>2</ows:OutputFormat>
+        </ows:AcceptFormats>
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item>
+    
+  <!-- acceptFormats
+  <item shouldPass="false" owsLocator="acceptFormats" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=GetCapabilities&acceptFormats=]]></url>
+    <url><![CDATA[service=CSW&request=GetCapabilities&acceptFormats=a,b]]></url>
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertEquals" expected="application/xml" src="operationResponse.outputFormat"/>
+    <url><![CDATA[service=CSW&request=GetCapabilities&acceptFormats=application/xml]]></url>
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertEquals" expected="text/xml" src="operationResponse.outputFormat"/>
+    <url><![CDATA[service=CSW&request=GetCapabilities&acceptFormats=a,text/xml]]></url>
+    <url><![CDATA[service=CSW&request=GetCapabilities&acceptFormats=text/xml&outputFormat=bad]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="ows:AcceptFormats/ows:OutputFormat" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW">
+        <ows:AcceptFormats><ows:OutputFormat></ows:OutputFormat></ows:AcceptFormats>
+      </csw:GetCapabilities>
+    ]]></xml>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW">
+        <ows:AcceptFormats>
+          <ows:OutputFormat>1</ows:OutputFormat><ows:OutputFormat>2</ows:OutputFormat>
+        </ows:AcceptFormats>
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertEquals" expected="application/xml" src="operationResponse.outputFormat"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW">
+        <ows:AcceptFormats><ows:OutputFormat>application/xml</ows:OutputFormat></ows:AcceptFormats>
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertEquals" expected="text/xml" src="operationResponse.outputFormat"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW" outputFormat="bad">
+        <ows:AcceptFormats>
+          <ows:OutputFormat>1</ows:OutputFormat><ows:OutputFormat>text/xml</ows:OutputFormat>
+        </ows:AcceptFormats>
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item> -->
+  
+  <!-- outputFormat -->
+  <item shouldPass="false" owsLocator="outputFormat" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=GetCapabilities&outputFormat=]]></url>
+    <url><![CDATA[service=CSW&request=GetCapabilities&Outputformat=a]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="@outputFormat" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        service="CSW" outputFormat="">
+      </csw:GetCapabilities>
+    ]]></xml>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        service="CSW" outputFormat="a">
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertEquals" expected="application/xml" src="operationResponse.outputFormat"/>
+    <url><![CDATA[service=CSW&request=GetCapabilities&outputFormat=application/xml]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        service="CSW" version = "2.0.2" outputFormat="application/xml">
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertEquals" expected="text/xml" src="operationResponse.outputFormat"/>
+    <url><![CDATA[service=CSW&request=GetCapabilities&outputFormat=text/xml]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        service="CSW" version = "2.0.2" outputFormat="text/xml">
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item>
+  
+  <!-- invalid sections -->
+  <item shouldPass="false" owsLocator="sections" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&request=GetCapabilities&sections=123]]></url>
+    <url><![CDATA[service=CSW&request=GetCapabilities&sections=123,456]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="ows:Sections/ows:Section" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW">
+        <ows:Sections>
+          <ows:Section>ServiceProvider</ows:Section><ows:Section>xyz</ows:Section>
+        </ows:Sections>
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item>
+  
+  <!-- validate responses (ogc:Filter_Capabilities is not optional) -->
+  <item shouldPass="true">
+    <assertion type="assertNotNull" src="xpath-node:/csw:Capabilities/ows:ServiceIdentification"/>
+    <assertion type="assertNotNull" src="xpath-node:/csw:Capabilities/ows:ServiceProvider"/>
+    <assertion type="assertNotNull" src="xpath-node:/csw:Capabilities/ows:OperationsMetadata"/>
+    <assertion type="assertNotNull" src="xpath-node:/csw:Capabilities/ogc:Filter_Capabilities"/>
+    <url><![CDATA[service=CSW&request=GetCapabilities]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW">
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertNotNull" src="xpath-node:/csw:Capabilities/ows:ServiceIdentification"/>
+    <assertion type="assertNotNull" src="xpath-node:/csw:Capabilities/ows:ServiceProvider"/>
+    <assertion type="assertNull"    src="xpath-node:/csw:Capabilities/ows:OperationsMetadata"/>
+    <assertion type="assertNotNull" src="xpath-node:/csw:Capabilities/ogc:Filter_Capabilities"/>
+    <url><![CDATA[service=CSW&request=GetCapabilities&sections=ServiceIdentification,ServiceProvider]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW">
+        <ows:Sections>
+          <ows:Section>ServiceIdentification</ows:Section><ows:Section>ServiceProvider</ows:Section>
+        </ows:Sections>
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertNull"    src="xpath-node:/csw:Capabilities/ows:ServiceIdentification"/>
+    <assertion type="assertNotNull" src="xpath-node:/csw:Capabilities/ows:ServiceProvider"/>
+    <assertion type="assertNull"    src="xpath-node:/csw:Capabilities/ows:OperationsMetadata"/>
+    <assertion type="assertNotNull" src="xpath-node:/csw:Capabilities/ogc:Filter_Capabilities"/>
+    <url><![CDATA[service=CSW&request=GetCapabilities&sections=ServiceProvider]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW">
+        <ows:Sections><ows:Section>ServiceProvider</ows:Section></ows:Sections>
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item>
+  <item shouldPass="true">
+    <assertion type="assertNull"    src="xpath-node:/csw:Capabilities/ows:ServiceIdentification"/>
+    <assertion type="assertNotNull" src="xpath-node:/csw:Capabilities/ows:ServiceProvider"/>
+    <assertion type="assertNotNull" src="xpath-node:/csw:Capabilities/ows:OperationsMetadata"/>
+    <assertion type="assertNotNull" src="xpath-node:/csw:Capabilities/ogc:Filter_Capabilities"/>
+    <url><![CDATA[service=CSW&request=GetCapabilities&sections=ServiceProvider&sections=OperationsMetadata]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW">
+        <ows:Sections>
+          <ows:Section>ServiceProvider</ows:Section><ows:Section>OperationsMetadata</ows:Section>
+        </ows:Sections>
+      </csw:GetCapabilities>
+    ]]></xml> 
+  </item>
+  
+  <!-- validate one of the HTTP endpoints within the response -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" expected="/geoportal/csw" 
+      src="xpath-string:/csw:Capabilities/ows:OperationsMetadata/ows:Operation[@name='GetCapabilities']/ows:DCP/ows:HTTP/ows:Get/@xlink:href"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW">
+      </csw:GetCapabilities>
+    ]]></xml> 
+  </item>
+  
+  <!-- empty sections parameter should return all non-optional sections -->
+  <item shouldPass="true">
+    <assertion type="assertNotNull" src="xpath-node:/csw:Capabilities/ogc:Filter_Capabilities"/>
+    <assertion type="assertEquals" expected="1.0" src="xpath-number:count(/csw:Capabilities/*)"/>
+    <url><![CDATA[service=CSW&request=GetCapabilities&sections=]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ows="http://www.opengis.net/ows" service="CSW">
+        <ows:Sections>
+        </ows:Sections>
+      </csw:GetCapabilities>
+    ]]></xml> 
+  </item>
+  
+</items>

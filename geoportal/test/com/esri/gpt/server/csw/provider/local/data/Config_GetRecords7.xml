@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Config_GetRecords7.xml -->
+<items>
+
+  <!-- ogc:Within spatial queries -->
+  
+  <!-- make some test data -->
+  <item shouldPass="true">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Insert>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+            xmlns:dc="http://purl.org/dc/elements/1.1/"
+            xmlns:ows="http://www.opengis.net/ows">
+            <dc:identifier>idDelete10</dc:identifier>
+            <dc:title>idDelete10</dc:title>
+            <ows:BoundingBox>
+              <ows:LowerCorner>170.123 10.4567</ows:LowerCorner>
+              <ows:UpperCorner>175.3456 15.78</ows:UpperCorner>
+            </ows:BoundingBox>
+          </csw:Record>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+            xmlns:dc="http://purl.org/dc/elements/1.1/"
+            xmlns:ows="http://www.opengis.net/ows">
+            <dc:identifier>idDelete11</dc:identifier>
+            <dc:title>idDelete11</dc:title>
+            <ows:BoundingBox>
+              <ows:LowerCorner>170 10</ows:LowerCorner>
+              <ows:UpperCorner>-175.3456 15.78</ows:UpperCorner>
+            </ows:BoundingBox>
+          </csw:Record>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+            xmlns:dc="http://purl.org/dc/elements/1.1/"
+            xmlns:ows="http://www.opengis.net/ows">
+            <dc:identifier>idDelete12</dc:identifier>
+            <dc:title>idDelete12</dc:title>
+            <ows:BoundingBox>
+              <ows:LowerCorner>-198 10.4567</ows:LowerCorner>
+              <ows:UpperCorner>198 15.78</ows:UpperCorner>
+            </ows:BoundingBox>
+          </csw:Record>
+        </csw:Insert>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+
+  <!-- within: match against a document that DOES NOT cross the date line -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idDelete10</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                
+                <ogc:Within>
+                  <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                  <gml:Envelope>
+                     <gml:lowerCorner>165 5</gml:lowerCorner>
+                     <gml:upperCorner>179 25</gml:upperCorner>
+                  </gml:Envelope>
+                </ogc:Within>
+                <ogc:Within>
+                  <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                  <gml:Envelope>
+                     <gml:lowerCorner>170.123 10.4567</gml:lowerCorner>
+                     <gml:upperCorner>175.3456 15.78</gml:upperCorner>
+                  </gml:Envelope>
+                </ogc:Within>
+                <ogc:Within>
+                  <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                  <gml:Envelope>
+                     <gml:lowerCorner>150 5</gml:lowerCorner>
+                     <gml:upperCorner>-150 25</gml:upperCorner>
+                  </gml:Envelope>
+                </ogc:Within>
+        
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- within: no-match against a document that DOES NOT cross the date line -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="0.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idDelete10</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                                       
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>10 1</gml:lowerCorner>
+                       <gml:upperCorner>11 2</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>165 5</gml:lowerCorner>
+                       <gml:upperCorner>172 12</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>171 11</gml:lowerCorner>
+                       <gml:upperCorner>172 12</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>10 5</gml:lowerCorner>
+                       <gml:upperCorner>11 25</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>165 5</gml:lowerCorner>
+                       <gml:upperCorner>172 25</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>171 5</gml:lowerCorner>
+                       <gml:upperCorner>172 25</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>100 1</gml:lowerCorner>
+                       <gml:upperCorner>-100 2</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>172 5</gml:lowerCorner>
+                       <gml:upperCorner>-178 25</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>150 11</gml:lowerCorner>
+                       <gml:upperCorner>-150 12</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>150 5</gml:lowerCorner>
+                       <gml:upperCorner>-150 12</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  
+                </ogc:Or>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- within: match against a document that DOES cross the date line -->
+  <item shouldPass="true">
+   <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+     <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idDelete11</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+
+                <ogc:Within>
+                  <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                  <gml:Envelope>
+                     <gml:lowerCorner>-180 5</gml:lowerCorner>
+                     <gml:upperCorner>180 25</gml:upperCorner>
+                  </gml:Envelope>
+                </ogc:Within>   
+                <ogc:Within>
+                  <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                  <gml:Envelope>
+                     <gml:lowerCorner>169 5</gml:lowerCorner>
+                     <gml:upperCorner>-170 25</gml:upperCorner>
+                  </gml:Envelope>
+               </ogc:Within>  
+                                                   
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- within: no-match against a document that DOES cross the date line -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="0.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idDelete11</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>10 1</gml:lowerCorner>
+                       <gml:upperCorner>11 2</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>165 5</gml:lowerCorner>
+                       <gml:upperCorner>172 12</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>171 11</gml:lowerCorner>
+                       <gml:upperCorner>172 12</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>10 5</gml:lowerCorner>
+                       <gml:upperCorner>11 25</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>165 5</gml:lowerCorner>
+                       <gml:upperCorner>172 25</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>171 5</gml:lowerCorner>
+                       <gml:upperCorner>172 25</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  
+	                <ogc:Within>
+	                  <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+	                  <gml:Envelope>
+	                     <gml:lowerCorner>172 12</gml:lowerCorner>
+	                     <gml:upperCorner>172 12</gml:upperCorner>
+	                  </gml:Envelope>
+	                </ogc:Within> 
+                  
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>-160 1</gml:lowerCorner>
+                       <gml:upperCorner>-150 2</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>-178 5</gml:lowerCorner>
+                       <gml:upperCorner>-161 12</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>-179 11</gml:lowerCorner>
+                       <gml:upperCorner>-178 12</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>-160 5</gml:lowerCorner>
+                       <gml:upperCorner>-150 25</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>-178 5</gml:lowerCorner>
+                       <gml:upperCorner>-161 25</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>-179 5</gml:lowerCorner>
+                       <gml:upperCorner>-178 25</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                                
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>178 5</gml:lowerCorner>
+                       <gml:upperCorner>-178 25</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>150 11</gml:lowerCorner>
+                       <gml:upperCorner>-150 12</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  <ogc:Within>
+                    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope>
+                       <gml:lowerCorner>150 5</gml:lowerCorner>
+                       <gml:upperCorner>-150 12</gml:upperCorner>
+                    </gml:Envelope>
+                  </ogc:Within>
+                  
+                </ogc:Or>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- delete the test data -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="3" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalDeleted"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete10</ogc:Literal>
+                </ogc:PropertyIsEqualTo>   
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete11</ogc:Literal>
+                </ogc:PropertyIsEqualTo> 
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete12</ogc:Literal>
+                </ogc:PropertyIsEqualTo> 
+              </ogc:Or>
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+  
+</items>

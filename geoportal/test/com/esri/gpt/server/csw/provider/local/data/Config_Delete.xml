@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Config_Delete.xml -->
+<items>
+
+  <!-- delete (invalid constraint version - this isn't currently checked) -->
+
+  <!-- delete (no constraint specified) -->
+  <item shouldPass="false" owsLocator="csw:Constraint" owsCode="MissingParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Delete handle="hdl"></csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item> 
+  
+  <!-- delete (csw:CqlText is not supported) -->
+  <item shouldPass="false" owsLocator="csw:CqlText" owsCode="OperationNotSupported">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Delete handle="hdl">
+          <csw:Constraint version="1.1.0"><csw:CqlText></csw:CqlText></csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item> 
+  
+  <!-- delete (no filter specified) -->
+  <item shouldPass="false" owsLocator="ogc:Filter" owsCode="MissingParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Delete handle="hdl">
+          <csw:Constraint version="1.1.0"></csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item> 
+  
+  <!-- delete (ogc:Or is the only logical clause supported) -->
+  <item shouldPass="false" owsLocator="ogc:And" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete handle="hdl">
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+              </ogc:And>
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item> 
+  <item shouldPass="false" owsLocator="ogc:Not" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete handle="hdl">
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:Not>
+              </ogc:Not>
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item> 
+  
+  <!-- delete (ogc:PropertyIsEqualTo is the only comparison clause supported) -->
+  <item shouldPass="false" owsLocator="ogc:PropertyIsGreaterThan" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete>
+          <csw:Constraint>
+            <ogc:Filter>
+              <ogc:Or>
+                <ogc:PropertyIsGreaterThan></ogc:PropertyIsGreaterThan>   
+              </ogc:Or>
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item> 
+  
+  <!-- delete (ogc:PropertyName is required) -->
+  <item shouldPass="false" owsLocator="ogc:PropertyIsEqualTo/ogc:PropertyName" owsCode="MissingParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete>
+          <csw:Constraint>
+            <ogc:Filter>
+              <ogc:Or>
+                <ogc:PropertyIsEqualTo></ogc:PropertyIsEqualTo>   
+              </ogc:Or>
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item> 
+  <item shouldPass="false" owsLocator="ogc:PropertyIsEqualTo/ogc:PropertyName" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete>
+          <csw:Constraint>
+            <ogc:Filter>
+              <ogc:Or>
+                <ogc:PropertyIsEqualTo><ogc:PropertyName></ogc:PropertyName></ogc:PropertyIsEqualTo>   
+              </ogc:Or>
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item> 
+  
+  <!-- delete (ogc:PropertyName must be Id, csw:Id, identifier, dc:identifier) -->
+  <item shouldPass="false" owsLocator="ogc:PropertyIsEqualTo/ogc:PropertyName" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete>
+          <csw:Constraint>
+            <ogc:Filter>
+              <ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Title</ogc:PropertyName>
+                </ogc:PropertyIsEqualTo>   
+              </ogc:Or>
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item> 
+  
+  <!-- delete (ogc:Literal is required) -->
+  <item shouldPass="false" owsLocator="ogc:PropertyIsEqualTo/ogc:Literal" owsCode="MissingParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete>
+          <csw:Constraint>
+            <ogc:Filter>
+              <ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                </ogc:PropertyIsEqualTo>   
+              </ogc:Or>
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item> 
+  <item shouldPass="false" owsLocator="ogc:PropertyIsEqualTo/ogc:Literal" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete>
+          <csw:Constraint>
+            <ogc:Filter>
+              <ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal></ogc:Literal>
+                </ogc:PropertyIsEqualTo>   
+              </ogc:Or>
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item> 
+  
+  <!-- delete (no Ids specified) -->
+  <item shouldPass="false" owsCode="NoApplicableCode">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete><csw:Constraint><ogc:Filter></ogc:Filter></csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+  
+  <!-- delete (successful transaction, but no deletions) -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="5" src="transactionOptions.deletionIDs.size"/>
+    <assertion type="assertEquals" 
+      expected="0" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalInserted"/>
+    <assertion type="assertEquals" 
+      expected="0" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalUpdated"/>
+    <assertion type="assertEquals" 
+      expected="0" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalDeleted"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idWillNotExist1</ogc:Literal>
+                </ogc:PropertyIsEqualTo>   
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idWillNotExist2</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idWillNotExist3</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:Or>
+                  <ogc:PropertyIsEqualTo>
+                    <ogc:PropertyName>csw:Id</ogc:PropertyName>
+                    <ogc:Literal>idWillNotExist4</ogc:Literal>
+                  </ogc:PropertyIsEqualTo>  
+                  <ogc:PropertyIsEqualTo>
+                    <ogc:PropertyName>Id</ogc:PropertyName>
+                    <ogc:Literal>idWillNotExist5</ogc:Literal>
+                  </ogc:PropertyIsEqualTo>  
+                </ogc:Or>
+              </ogc:Or>
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+  
+  <!-- delete (successful transaction, but no deletions) -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="2" src="transactionOptions.deletionIDs.size"/>
+    <assertion type="assertEquals" 
+      expected="0" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalDeleted"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>Id</ogc:PropertyName>
+                <ogc:Literal>idWillNotExist1</ogc:Literal>
+              </ogc:PropertyIsEqualTo>   
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>Id</ogc:PropertyName>
+                <ogc:Literal>idWillNotExist2</ogc:Literal>
+              </ogc:PropertyIsEqualTo>  
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+  
+  <!-- insert some records that can be deleted-->
+  <item shouldPass="true">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Insert>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete1</dc:identifier>
+            <dc:title>idDelete1</dc:title>
+          </csw:Record>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete2</dc:identifier>
+            <dc:title>idDelete2</dc:title>
+          </csw:Record>
+        </csw:Insert>
+        <csw:Insert>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete3</dc:identifier>
+            <dc:title>idDelete3</dc:title>
+          </csw:Record>
+          <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:identifier>idDelete4</dc:identifier>
+            <dc:title>idDelete4</dc:title>
+          </csw:Record>
+        </csw:Insert>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>  
+
+  <!-- delete the inserted records -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="4" src="transactionOptions.deletionIDs.size"/>
+    <assertion type="assertEquals" 
+      expected="0" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalInserted"/>
+    <assertion type="assertEquals" 
+      expected="0" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalUpdated"/>
+    <assertion type="assertEquals" 
+      expected="4" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalDeleted"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete1</ogc:Literal>
+                </ogc:PropertyIsEqualTo>   
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete2</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete3</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>csw:Id</ogc:PropertyName>
+                  <ogc:Literal>idDelete4</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+              </ogc:Or>
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+  
+</items>
