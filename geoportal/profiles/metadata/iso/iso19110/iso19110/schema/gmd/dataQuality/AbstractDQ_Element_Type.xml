@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.AbstractDQ_Element" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/AbstractObject_Type.xml" g:abstract="true">
+  <g:body>
+
+    <g:element g:targetName="gmd:nameOfMeasure" g:minOccurs="0" g:maxOccurs="unbounded"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml">
+    </g:element>
+
+    <g:element g:targetName="gmd:dateTime" g:minOccurs="0" g:maxOccurs="unbounded"
+      g:extends="$base/schema/gco/basicTypes/DateTime_PropertyType.xml">
+    </g:element>
+
+    <g:tabs g:extends="$base/core/ui/Tabs.xml">
+      <g:body>
+        <g:element g:targetName="gmd:measureIdentification" g:minOccurs="0"
+          g:extends="$base/schema/gmd/referenceSystem/MD_Identifier_PropertyType.xml">
+        </g:element>
+
+        <g:element g:targetName="gmd:measureDescription" g:minOccurs="0"
+          g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml">
+        </g:element>
+
+        <g:element g:targetName="gmd:evaluationMethodType" g:minOccurs="0"
+          g:extends="$base/schema/gmd/dataQuality/DQ_EvaluationMethodTypeCode_PropertyType.xml">
+        </g:element>
+
+        <g:element g:targetName="gmd:evaluationMethodDescription" g:minOccurs="0"
+          g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml">
+        </g:element>
+
+        <g:element g:targetName="gmd:evaluationProcedure" g:minOccurs="0"
+          g:extends="$base/schema/gmd/citation/CI_Citation_PropertyType.xml">
+        </g:element>
+      </g:body>
+    </g:tabs>
+
+    <g:tabs g:extends="$base/core/ui/Tabs.xml">
+      <g:body>
+        <g:element g:targetName="gmd:result" g:minOccurs="0"
+          g:extends="$base/schema/gmd/dataQuality/DQ_ConformanceResult_PropertyType.xml">
+        </g:element>
+
+        <g:element g:targetName="gmd:result" g:minOccurs="0"
+          g:extends="$base/schema/gmd/dataQuality/DQ_QuantitativeResult_PropertyType.xml">
+        </g:element>
+      </g:body>
+    </g:tabs>
+
+  </g:body>
+</g:element>

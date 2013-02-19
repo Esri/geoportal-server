@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gmd:AbstractEX_GeographicExtent"
+           g:abstract="true"
+           g:extends="$base/schema/gmd/extent/AbstractEX_GeographicExtent_Type.xml">
+</g:element>

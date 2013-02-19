@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gmd:MD_DatatypeCode" 
+           g:i18nBase="catalog.iso19139.MD_DatatypeCode" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/CodeListValue_Type.xml">
+  <g:body>
+   
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeSpace.xml" 
+      g:value="ISOTC211/19115"/>
+       
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeList.xml"
+      g:value="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_DatatypeCode"/>
+     
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeListValue.xml">
+      <g:body>
+        <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+          <g:options>
+            <g:option g:label="" g:value="" />
+            <g:option g:label="$i18nBase.class" g:value="class" />
+            <g:option g:label="$i18nBase.codelist" g:value="codelist" />
+            <g:option g:label="$i18nBase.enumeration" g:value="enumeration" />
+            <g:option g:label="$i18nBase.codelistElement" g:value="codelistElement" />
+            <g:option g:label="$i18nBase.abstractClass" g:value="abstractClass" />
+            <g:option g:label="$i18nBase.aggregateClass" g:value="aggregateClass" />
+            <g:option g:label="$i18nBase.specifiedClass" g:value="specifiedClass" />
+            <g:option g:label="$i18nBase.datatypeClass" g:value="datatypeClass" />
+            <g:option g:label="$i18nBase.interfaceClass" g:value="interfaceClass" />
+            <g:option g:label="$i18nBase.unionClass" g:value="unionClass" />
+            <g:option g:label="$i18nBase.metaClass" g:value="metaClass" />
+            <g:option g:label="$i18nBase.typeClass" g:value="typeClass" />
+            <g:option g:label="$i18nBase.characterString" g:value="characterString" />
+            <g:option g:label="$i18nBase.integer" g:value="integer" />
+            <g:option g:label="$i18nBase.association" g:value="association" />
+          </g:options>
+        </g:input>
+      </g:body>          
+    </g:attribute>     
+     
+  </g:body> 
+</g:element>

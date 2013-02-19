@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.AbstractEX_GeographicExtent" g:label="$i18nBase"
+           g:abstract="true"
+           g:extends="$base/schema/gco/gcoBase/ObjectReference_PropertyType.xml">
+  <g:body>
+
+    <g:element g:targetName="gmd:extentTypeCode" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/Boolean_PropertyType.xml">
+    </g:element>
+    
+  </g:body>
+</g:element>
