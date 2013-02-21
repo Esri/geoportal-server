@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.DQ_ConformanceResult" g:label="$i18nBase"
+           g:extends="$base/schema/gmd/dataQuality/AbstractDQ_Result_Type.xml">
+  <g:body>
+
+    <g:element g:targetName="gmd:specification"
+      g:extends="$base/schema/gmd/citation/CI_Citation_PropertyType.xml">
+    </g:element>
+
+    <g:element g:targetName="gmd:explanation"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml">
+    </g:element>
+
+    <g:element g:targetName="gmd:pass"
+      g:extends="$base/schema/gco/basicTypes/Boolean_PropertyType.xml">
+    </g:element>
+
+  </g:body>
+
+</g:element>

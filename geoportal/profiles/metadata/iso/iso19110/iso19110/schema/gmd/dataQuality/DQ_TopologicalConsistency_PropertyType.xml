@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="DQ_TopologicalConsistency"
+           g:extends="$base/schema/gco/gcoBase/ObjectReference_PropertyType.xml">
+  <g:body>
+    <g:import g:minOccurs="0" g:src="$base/schema/gmd/dataQuality/DQ_TopologicalConsistency.xml"/>
+  </g:body>
+</g:element>

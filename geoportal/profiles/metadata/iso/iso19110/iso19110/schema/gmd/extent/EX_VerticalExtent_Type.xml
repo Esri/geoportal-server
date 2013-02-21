@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.EX_VerticalExtent" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/AbstractObject_Type.xml">
+  <g:body>
+
+    <g:element g:targetName="gmd:minimumValue"
+      g:extends="$base/schema/gco/basicTypes/Real_PropertyType.xml">
+    </g:element>
+
+    <g:element g:targetName="gmd:maximumValue"
+      g:extends="$base/schema/gco/basicTypes/Real_PropertyType.xml">
+    </g:element>
+
+    <g:element g:targetName="gmd:verticalCRS"
+      g:extends="$base/schema/gcr/spatialReferencing/SC_CRS_PropertyType.xml">
+    </g:element>
+
+  </g:body>
+</g:element>

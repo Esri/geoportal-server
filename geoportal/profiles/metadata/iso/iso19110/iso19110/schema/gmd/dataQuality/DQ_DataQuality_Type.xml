@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.DQ_DataQuality" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/AbstractObject_Type.xml">
+  <g:body>
+    <g:tabs g:extends="$base/core/ui/Tabs.xml">
+      <g:body>
+
+        <g:element g:targetName="gmd:scope"
+          g:extends="$base/schema/gmd/dataQuality/DQ_Scope_PropertyType.xml">
+        </g:element>
+
+        <g:element g:targetName="gmd:report" g:minOccurs="0" g:maxOccurs="unbounded"
+          g:extends="$base/schema/gmd/dataQuality/DQ_Element_PropertyType.xml">
+        </g:element>
+
+        <g:element g:targetName="gmd:lineage" g:minOccurs="0"
+          g:extends="$base/schema/gmd/dataQuality/LI_Lineage_PropertyType.xml">
+        </g:element>
+
+      </g:body>
+    </g:tabs>
+  </g:body>
+</g:element>

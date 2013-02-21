@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gco:Length" g:i18nBase="catalog.iso19139.Length"
+           g:extends="$base/schema/gco/basicTypes/Measure.xml"> 
+  <g:body>
+    <g:attribute g:extends="$base/xtn/ui/UI_Attribute.xml" g:targetNS="" g:targetName="uom" g:use="required">
+      <g:body>
+        <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+          <g:options>
+            <g:option g:label="" g:value="" />
+            <g:option g:label="$i18nBase.km" g:value="km" />
+            <g:option g:label="$i18nBase.m" g:value="m"/>
+            <g:option g:label="$i18nBase.mi" g:value="mi"/>
+            <g:option g:label="$i18nBase.ft" g:value="ft"/>
+          </g:options>
+        </g:input>
+      </g:body>          
+    </g:attribute>     
+  </g:body>
+</g:element>
+

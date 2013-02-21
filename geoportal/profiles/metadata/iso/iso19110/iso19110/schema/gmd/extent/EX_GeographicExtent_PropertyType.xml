@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:extends="$base/schema/gco/gcoBase/AbstractObject_Type.xml">
+  <g:body>
+
+    <g:element minOccurs="0" g:label="$i18n.catalog.iso19139.EX_GeographicExtent"
+        g:extends="$base/schema/gmd/extent/AbstractEX_GeographicExtent.xml">
+    </g:element>
+
+  </g:body>
+</g:element>
