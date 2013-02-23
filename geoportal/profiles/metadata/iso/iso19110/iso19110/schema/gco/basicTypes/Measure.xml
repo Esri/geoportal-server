@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gco:Measure" g:valueType="xs:double"
+           g:extends="$base/xtn/ui/UI_Wrapped_ElementTextOnly.xml"> 
+           
+           
+<!-- 
+
+  TODO
+
+  /gml/basicTypes.xsd
+  
+  <complexType name="MeasureType">
+    <annotation>
+      <documentation>gml:MeasureType supports recording an amount encoded as a value of XML Schema double, together with a units of measure indicated by an attribute uom, short for â€œunits Of measureâ€. The value of the uom attribute identifies a reference system for the amount, usually a ratio or interval scale.</documentation>
+    </annotation>
+    <simpleContent>
+      <extension base="double">
+        <attribute name="uom" type="gml:UomIdentifier" use="required"/>
+      </extension>
+    </simpleContent>
+  </complexType>
+  <simpleType name="UomIdentifier">
+    <annotation>
+      <documentation>The simple type gml:UomIdentifer defines the syntax and value space of the unit of measure identifier.</documentation>
+    </annotation>
+    <union memberTypes="gml:UomSymbol gml:UomURI"/>
+  </simpleType>
+  <simpleType name="UomSymbol">
+    <annotation>
+      <documentation>This type specifies a character string of length at least one, and restricted such that it must not contain any of the following characters: â€œ:â€ (colon), â€œ â€œ (space), (newline), (carriage return), (tab). This allows values corresponding to familiar abbreviations, such as â€œkgâ€, â€œm/sâ€, etc. 
+It is recommended that the symbol be an identifier for a unit of measure as specified in the â€œUnified Code of Units of Measure" (UCUM) (http://aurora.regenstrief.org/UCUM). This provides a set of symbols and a grammar for constructing identifiers for units of measure that are unique, and may be easily entered with a keyboard supporting the limited character set known as 7-bit ASCII. ISO 2955 formerly provided a specification with this scope, but was withdrawn in 2001. UCUM largely follows ISO 2955 with modifications to remove ambiguities and other problems.</documentation>
+    </annotation>
+    <restriction base="string">
+      <pattern value="[^: \n\r\t]+"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="UomURI">
+    <annotation>
+      <documentation>This type specifies a URI, restricted such that it must start with one of the following sequences: â€œ#â€, â€œ./â€, â€œ../â€, or a string of characters followed by a â€œ:â€. These patterns ensure that the most common URI forms are supported, including absolute and relative URIs and URIs that are simple fragment identifiers, but prohibits certain forms of relative URI that could be mistaken for unit of measure symbol . 
+NOTE  It is possible to re-write such a relative URI to conform to the restriction (e.g. â€œ./m/sâ€).
+In an instance document, on elements of type gml:MeasureType the mandatory uom attribute shall carry a value corresponding to either 
+- a conventional unit of measure symbol,
+- a link to a definition of a unit of measure that does not have a conventional symbol, or when it is desired to indicate a precise or variant definition.</documentation>
+    </annotation>
+    <restriction base="anyURI">
+      <pattern value="([a-zA-Z][a-zA-Z0-9\-\+\.]*:|\.\./|\./|#).*"/>
+    </restriction>
+  </simpleType>
+
+ -->
+ 
+ 
+</g:element>

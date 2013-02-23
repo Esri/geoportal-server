@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.MD_TopicCategoryCode" g:label="$i18nBase"
+           g:isIsoWMVL="true"
+           g:extends="$base/xtn/ui/UI_Wrapped_ElementTextOnly.xml">
+  <g:annotation>
+    <g:documentation>High-level geospatial data thematic classification to assist in the grouping and search of available geospatial datasets</g:documentation>
+  </g:annotation>
+  <g:body>
+    <g:input g:extends="$base/core/ui/InputSelectMany.xml">
+      <g:options>
+        <!-- <g:option g:label="" g:value=""/> -->
+        <g:option g:label="$i18nBase.boundaries" g:value="boundaries"/>
+        <g:option g:label="$i18nBase.farming" g:value="farming"/>
+        <g:option g:label="$i18nBase.climatologyMeteorologyAtmosphere" g:value="climatologyMeteorologyAtmosphere"/>
+        <g:option g:label="$i18nBase.biota" g:value="biota"/>
+        <g:option g:label="$i18nBase.economy" g:value="economy"/>
+        <g:option g:label="$i18nBase.planningCadastre" g:value="planningCadastre"/>
+        <g:option g:label="$i18nBase.society" g:value="society"/>
+        <g:option g:label="$i18nBase.elevation" g:value="elevation"/>
+        <g:option g:label="$i18nBase.environment" g:value="environment"/>
+        <g:option g:label="$i18nBase.structure" g:value="structure"/>
+        <g:option g:label="$i18nBase.geoscientificInformation" g:value="geoscientificInformation"/>
+        <g:option g:label="$i18nBase.health" g:value="health"/>
+        <g:option g:label="$i18nBase.imageryBaseMapsEarthCover" g:value="imageryBaseMapsEarthCover"/>
+        <g:option g:label="$i18nBase.inlandWaters" g:value="inlandWaters"/>
+        <g:option g:label="$i18nBase.location" g:value="location"/>
+        <g:option g:label="$i18nBase.intelligenceMilitary" g:value="intelligenceMilitary"/>
+        <g:option g:label="$i18nBase.oceans" g:value="oceans"/>
+        <g:option g:label="$i18nBase.transportation" g:value="transportation"/>
+        <g:option g:label="$i18nBase.utilitiesCommunication" g:value="utilitiesCommunication"/>
+      </g:options>
+    </g:input>
+  </g:body>
+</g:element>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Editor ISO 19110 (FeatureCatalog) -->        
+<g:editor xmlns:g="http://www.esri.com/geoportal/gxe"
+          xmlns:h="http://www.esri.com/geoportal/gxe/html"
+          g:extends="gpt/gxe/editor.xml">    
+          
+  <g:rootElement g:overridable="true" g:extends="$base/FC_FeatureCatalogue.xml"/>
+  
+</g:editor>

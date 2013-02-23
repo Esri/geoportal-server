@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.MD_FeatureCatalogueDescription" g:label="$i18nBase"
+           g:extends="$base/schema/gmd/content/AbstractMD_ContentInformation_Type.xml">
+  <g:body>
+    <g:element g:targetName="gmd:complianceCode" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/Boolean_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:language" minOccurs="0" maxOccurs="unbounded"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:includedWithDataset"
+      g:extends="$base/schema/gco/basicTypes/Boolean_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:featureTypes"
+      g:extends="$base/schema/gco/basicTypes/GenericName_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:featureCatalogueCitation"
+      g:extends="$base/schema/gmd/citation/CI_Citation_PropertyType.xml"/>
+  </g:body>
+</g:element>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<schema key="http://www.isotc211.org/2005/gfc" 
+        templateFile="gpt/metadata/iso/iso-19110-fc-template.xml"
+        cswOutputSchema="http://www.isotc211.org/2005/gfc" 
+        cswBriefXslt="" 
+        cswSummaryXslt="" 
+        xsdLocation="http://www.isotc211.org/2005/gfc/gfc.xsd">
+
+  
+  <!-- schema label -->
+  <label resourceKey="catalog.mdParam.schema.iso19110.featureCatalogue"/>
+
+  <!-- schema namespaces -->
+  <namespace prefix="gml" uri="http://www.opengis.net/gml/3.2" />
+  <namespace prefix="gmd" uri="http://www.isotc211.org/2005/gmd" />
+  <namespace prefix="gco" uri="http://www.isotc211.org/2005/gco" />
+  <namespace prefix="gfc" uri="http://www.isotc211.org/2005/gfc" />
+  <namespace prefix="gmx" uri="http://www.isotc211.org/2005/gmx" />
+  <namespace prefix="gsr" uri="http://www.isotc211.org/2005/gsr" />
+  <namespace prefix="gss" uri="http://www.isotc211.org/2005/gss" />
+  <namespace prefix="gts" uri="http://www.isotc211.org/2005/gts" />
+  
+  <!-- schema interrogation -->
+  <interrogation count="count(/gfc:FC_FeatureCatalogue)"/>
+  
+  <!-- indexables -->
+  <indexables fileName=""/>
+  
+  <!-- Geoportal XML editor -->
+  <editor fileName="gpt/gxe/iso/iso19110/iso19110-FeatureCatalog-editor.xml"/>
+  
+</schema>

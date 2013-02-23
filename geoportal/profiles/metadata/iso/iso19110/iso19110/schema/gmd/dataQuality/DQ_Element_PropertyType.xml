@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:extends="$base/schema/gco/gcoBase/ObjectReference_PropertyType.xml">
+  <g:body>
+    <g:elementChoice g:minOccurs="0" g:extends="$base/xtn/ui/UI_ElementChoice.xml">
+      <g:body>
+	      <g:element g:extends="$base/schema/gmd/dataQuality/DQ_AbsoluteExternalPositionalAccuracy.xml"/>
+          <g:element g:extends="$base/schema/gmd/dataQuality/DQ_AccuracyOfATimeMeasurement.xml"/>
+          <g:element g:extends="$base/schema/gmd/dataQuality/DQ_GriddedDataPositionalAccuracy.xml"/>
+          <g:element g:extends="$base/schema/gmd/dataQuality/DQ_NonQuantitativeAttributeAccuracy.xml"/>
+          <g:element g:extends="$base/schema/gmd/dataQuality/DQ_QuantitativeAttributeAccuracy.xml"/>
+          <g:element g:extends="$base/schema/gmd/dataQuality/DQ_RelativeInternalPositionalAccuracy.xml"/>
+          <g:element g:extends="$base/schema/gmd/dataQuality/DQ_CompletenessCommission.xml"/>
+          <g:element g:extends="$base/schema/gmd/dataQuality/DQ_CompletenessOmission.xml"/>
+          <g:element g:extends="$base/schema/gmd/dataQuality/DQ_ConceptualConsistency.xml"/>
+          <g:element g:extends="$base/schema/gmd/dataQuality/DQ_DomainConsistency.xml"/>
+          <g:element g:extends="$base/schema/gmd/dataQuality/DQ_FormatConsistency.xml"/>
+          <g:element g:extends="$base/schema/gmd/dataQuality/DQ_TopologicalConsistency.xml"/>
+          <g:element g:extends="$base/schema/gmd/dataQuality/DQ_TemporalConsistency.xml"/>
+          <g:element g:extends="$base/schema/gmd/dataQuality/DQ_TemporalValidity.xml"/>
+          <g:element g:extends="$base/schema/gmd/dataQuality/DQ_ThematicClassificationCorrectness.xml"/>
+      </g:body>
+    </g:elementChoice>
+  </g:body>
+</g:element>

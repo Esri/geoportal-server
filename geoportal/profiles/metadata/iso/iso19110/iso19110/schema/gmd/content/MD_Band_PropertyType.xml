@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:label="$i18n.catalog.iso19139.MD_Band"
+           g:extends="$base/schema/gco/gcoBase/ObjectReference_PropertyType.xml">
+  <g:body>
+    <g:import g:minOccurs="0" g:src="$base/schema/gmd/content/MD_Band.xml"/>
+  </g:body>
+</g:element>

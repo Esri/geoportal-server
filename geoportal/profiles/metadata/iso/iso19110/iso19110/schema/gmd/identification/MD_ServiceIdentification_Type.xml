@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.MD_ServiceIdentification" g:label="$i18nBase"
+           g:extends="$base/schema/gmd/identification/AbstractMD_Identification_Type.xml">
+  <g:annotation>
+    <g:documentation>See 19119 for further info</g:documentation>
+  </g:annotation>
+</g:element>

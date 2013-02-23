@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.MD_Band" g:label="$i18nBase"
+           g:extends="$base/schema/gmd/content/MD_RangeDimension_Type.xml">
+  <g:body>
+    <g:element g:targetName="gmd:minValue" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/Real_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:maxValue" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/Real_PropertyType.xml"/>
+
+    <!-- TODO: provide gml/UnitDefinition.xml
+    <g:element g:targetName="gmd:units" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/UomLength_PropertyType.xml"/>
+    -->
+
+    <g:element g:targetName="gmd:peakResponse" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/Real_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:bitsPerValue" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/Integer_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:toneGradation" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/Integer_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:scaleFactor" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/Real_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:offset" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/Real_PropertyType.xml"/>
+  </g:body>
+</g:element>

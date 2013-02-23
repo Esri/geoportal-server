@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.RS_Identifier" g:label="$i18nBase"
+           g:extends="$base/schema/gmd/referenceSystem/MD_Identifier_Type.xml">
+  <g:body>
+  
+    <g:element g:targetName="gmd:codeSpace" g:minOccurs="0" g:maxOccurs="1"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
+    
+    <g:element g:targetName="gmd:version" g:minOccurs="0" g:maxOccurs="1"
+      g:rendered="$editor.isAdvancedMode"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
+    
+  </g:body>
+</g:element>

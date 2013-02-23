@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.LI_Source" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/AbstractObject_Type.xml">
+  <g:body>
+
+    <g:element g:targetName="gmd:description" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml">
+    </g:element>
+
+    <g:tabs g:extends="$base/core/ui/Tabs.xml">
+      <g:body>
+        <g:element g:targetName="gmd:scaleDenominator" minOccurs="0"
+          g:extends="$base/schema/gmd/identification/MD_RepresentativeFraction_PropertyType.xml">
+        </g:element>
+
+        <g:element g:targetName="gmd:sourceReferenceSystem" minOccurs="0"
+          g:extends="$base/schema/gmd/referenceSystem/MD_ReferenceSystem_PropertyType.xml">
+        </g:element>
+
+        <g:element g:targetName="gmd:sourceCitation" minOccurs="0"
+          g:extends="$base/schema/gmd/citation/CI_Citation_PropertyType.xml">
+        </g:element>
+
+        <g:element g:targetName="gmd:sourceExtent" minOccurs="0" maxOccurs="unbounded"
+          g:extends="$base/schema/gmd/extent/EX_Extent_PropertyType.xml">
+        </g:element>
+
+        <!-- TODO (recurrent)
+        <g:element g:targetName="gmd:sourceStep" minOccurs="0" maxOccurs="unbounded"
+          g:extends="$base/schema/gmd/dataQuality/LI_ProcessStep_PropertyType.xml">
+        </g:element>
+        -->
+      </g:body>
+    </g:tabs>
+
+  </g:body>
+
+</g:element>

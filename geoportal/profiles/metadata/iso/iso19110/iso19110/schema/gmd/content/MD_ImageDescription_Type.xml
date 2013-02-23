@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.MD_ImageDescription" g:label="$i18nBase"
+           g:extends="$base/schema/gmd/content/MD_CoverageDescription_Type.xml">
+  <g:body>
+    <g:element g:targetName="gmd:illuminationElevationAngle" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/Real_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:illuminationAzimuthAngle" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/Real_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:imagingCondition" minOccurs="0"
+      g:extends="$base/schema/gmd/content/MD_ImagingConditionCode_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:imageQualityCode" g:minOccurs="0"
+      g:extends="$base/schema/gmd/referenceSystem/MD_Identifier_PropertyType.xml">
+    </g:element>
+
+    <g:element g:targetName="gmd:cloudCoverPercentage" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/Real_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:processingLevelCode" g:minOccurs="0"
+      g:extends="$base/schema/gmd/referenceSystem/MD_Identifier_PropertyType.xml">
+    </g:element>
+
+    <g:element g:targetName="gmd:compressionGenerationQuantity" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/Integer_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:triangulationIndicator" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/Boolean_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:radiometricCalibrationDataAvailability" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/Boolean_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:cameraCalibrationInformationAvailability" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/Boolean_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:filmDistortionInformationAvailability" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/Boolean_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:lensDistortionInformationAvailability" minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/Boolean_PropertyType.xml"/>
+  </g:body>
+</g:element>
