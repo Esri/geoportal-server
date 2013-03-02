@@ -20,15 +20,15 @@
 function Usage ()
 {
         echo
-	echo Usage : grants_linuxpg.sh [host] [port] [database] [geoportal10 schema] [postgresUser] [geoportal10User]
+	echo Usage : grants_linuxpg.sh [host] [port] [database] [geoportal schema] [postgresUser] [geoportalUser]
 
 	echo Where [host] is the host name
 	echo       [port] is the port number of postgreSQL
 	echo       [database] is the database name
-	echo       [geoportal10 schema] is the geoportal10 schema name
-	echo       [geoportal10User] is the geoportal10 user name
+	echo       [geoportal schema] is the geoportal schema name
+	echo       [geoportalUser] is the geoportal user name
 	echo       [postgresUser] is the user name to connect as, not the user name to create
-	echo eg. grants_linuxpg.sh localhost 5432 postgres geoportal10 postgres geoportal10pwd
+	echo eg. grants_linuxpg.sh localhost 5432 postgres geoportal postgres geoportalpwd
 	exit 1
 }
 
@@ -36,10 +36,10 @@ function Run ()
 {
         echo "$(date)" >> grants_pg.txt
 	echo  Running grants_pg.sql ...   >> grants_pg.txt
-	./createuser  -P -R -S -D -h $HOST_NAME -p $PORT_NUM -U $_USERTOCONNECT $_GEOPORTALUSER >> grants_pg.txt
-	./psql  -e -h $HOST_NAME -p $PORT_NUM -d $DB_NAME -U $_USERTOCONNECT -v geoportalschema=$_GEOPORTALSCHEMA -v geoportaluser=$_GEOPORTALUSER -v geoportaluserpwd=$_GEOPORTALUSERPWD -f grants_pg.sql >> grants_pg.txt
+	createuser  -P -R -S -D -h $HOST_NAME -p $PORT_NUM -U $_USERTOCONNECT $_GEOPORTALUSER >> grants_pg.txt
+	psql  -e -h $HOST_NAME -p $PORT_NUM -d $DB_NAME -U $_USERTOCONNECT -v geoportalschema=$_GEOPORTALSCHEMA -v geoportaluser=$_GEOPORTALUSER -v geoportaluserpwd=$_GEOPORTALUSERPWD -f grants_pg.sql >> grants_pg.txt
 	echo  ... All done.   >> grants_pg.txt
-	sudo gedit grants_pg.txt
+	vi grants_pg.txt
 }
 
 
