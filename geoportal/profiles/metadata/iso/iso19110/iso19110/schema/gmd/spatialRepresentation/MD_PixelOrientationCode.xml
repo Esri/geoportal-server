@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gmd:MD_PixelOrientationCode" 
+           g:i18nBase="catalog.iso19139.MD_PixelOrientationCode" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/CodeListValue_Type.xml">
+  <g:body>
+   
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeSpace.xml" 
+      g:value="ISOTC211/19115"/>
+       
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeList.xml"
+      g:value="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_PixelOrientationCode"/>
+     
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeListValue.xml">
+      <g:body>
+        <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+          <g:options>
+            <g:option g:label="" g:value="" />
+            <g:option g:label="$i18nBase.center" g:value="center" />
+            <g:option g:label="$i18nBase.lowerLeft" g:value="lowerLeft"/>
+            <g:option g:label="$i18nBase.lowerRight" g:value="lowerRight"/>
+            <g:option g:label="$i18nBase.upperRight" g:value="upperRight"/>
+            <g:option g:label="$i18nBase.upperLeft" g:value="upperLeft"/>
+          </g:options>
+        </g:input>
+      </g:body>          
+    </g:attribute>     
+     
+  </g:body> 
+</g:element>

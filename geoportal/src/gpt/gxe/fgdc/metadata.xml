@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		FGDC root metadata element.
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998.xsd
+		http://www.fgdc.gov/metadata/csdgm/00.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="metadata" 
+	g:minOccurs="1" g:maxOccurs="1"
+	g:label="$i18n.catalog.mdParam.schema.fgdc" 
+	g:extends="$base/core/xml/Element.xml">
+
+	<!-- FGDC has no namespaces -->
+	<g:namespaces g:extensible="true"/>
+
+	<g:body>
+		<g:tabs g:extends="$base/core/ui/Tabs.xml">
+			<g:body>
+
+				<!-- identification -->
+				<h:div g:label="$i18n.catalog.fgdc.metadata.section.idinfo">
+					<g:element g:extends="$base/schema/idinfo/idinfo.xml"/>
+				</h:div>
+
+				<!-- quality -->
+				<h:div g:label="$i18n.catalog.fgdc.metadata.section.dataqual">
+					<g:element g:minOccurs="0"
+						g:extends="$base/schema/dataqual/dataqual.xml"/>
+				</h:div>
+
+				<!-- spatial data organization 
+				<h:div g:label="$i18n.catalog.fgdc.metadata.section.spdoinfo"> 
+					<g:element g:minOccurs="0" g:extends="$base/schema/spdoinfo/spdoinfo.xml"/>
+				</h:div>
+				-->
+
+				<!-- spatial reference -->
+				<h:div g:label="$i18n.catalog.fgdc.metadata.section.spref">
+					<g:element g:minOccurs="0" g:extends="$base/schema/spref/spref.xml"/>
+				</h:div>
+
+				<!-- entity and attribute -->
+				<h:div g:label="$i18n.catalog.fgdc.metadata.section.eainfo"> 
+					<g:element g:minOccurs="0" g:extends="$base/schema/eainfo/eainfo.xml"/>
+				</h:div>
+
+				<!-- distribution -->
+				<h:div g:label="$i18n.catalog.fgdc.metadata.section.distinfo">
+					<g:element g:minOccurs="0" g:maxOccurs="unbounded"
+						g:extends="$base/schema/distinfo/distinfo.xml"/>
+				</h:div>
+
+				<!-- metadata -->
+				<h:div g:label="$i18n.catalog.fgdc.metadata.section.metainfo">
+					<g:element g:extends="$base/schema/metainfo/metainfo.xml"/>
+				</h:div>
+
+			</g:body>
+		</g:tabs>
+
+	</g:body>
+</g:element>

@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+  <tlib-version>1.0</tlib-version>
+  <short-name>gpt</short-name>
+  <uri>http://www.esri.com/tags-gpt</uri>
+  <!-- Page context -->
+  <tag>
+    <name>page</name>
+    <tag-class>com.esri.gpt.framework.jsf.PageContextTag</tag-class>
+    <body-content>scriptless</body-content>
+    <!-- id: page key identifying a page -->
+    <attribute>
+      <name>id</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <!-- caption: page caption - plain text -->
+    <attribute>
+      <name>captionkey</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <!-- caption: page caption - plain text -->
+    <attribute>
+      <name>caption</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <!-- prepare view expression -->
+    <attribute>
+      <name>prepareView</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <!-- tabi d -->
+    <attribute>
+      <name>tabId</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+  </tag>
+  <!--  JScript Variable Writer -->
+  <tag>
+    <name>jscriptVariable</name>
+    <tag-class>com.esri.gpt.framework.jsf.components.JscriptTag</tag-class>
+    <body-content>scriptless</body-content>
+    <attribute>
+      <name>id</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <required>true</required>
+      <description>id of component</description>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <required>true</required>
+      <description>value to be written to variable</description>
+    </attribute>
+    <attribute>
+      <name>variableName</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>Name of jscript variable</description>
+      <required>true</required>
+    </attribute>
+    <attribute>
+      <name>quoted</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>boolean whether value will be quoted or not</description>
+      <required>true</required>
+    </attribute>
+  </tag>
+  <!-- Pagination component -->
+  <tag>
+    <name>pageCursor</name>
+    <tag-class>com.esri.gpt.framework.jsf.components.PaginationTag</tag-class>
+    <body-content>scriptless</body-content>
+    <attribute>
+      <name>id</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <required>true</required>
+      <description>id of component</description>
+    </attribute>
+    <attribute>
+      <name>action</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>Method that will be called on pagination actions.
+      If its a get method, include the get suffix</description>
+    </attribute>
+    <attribute>
+      <name>actionListener</name>
+      <rtexprvalue>false</rtexprvalue>
+      <required>true</required>
+      <type>java.lang.String</type>
+      <description>Method that will be called on pagination actions.
+      ActionEvent will be sent.  see UIPagination</description>
+    </attribute>
+    <attribute>
+      <name>pageCursor</name>
+      <rtexprvalue>true</rtexprvalue>
+      <required>true</required>
+      <type>java.lang.String</type>
+      <description>Method that returns results pageCursor object </description>
+    </attribute>
+    <attribute>
+      <name>criteriaPageCursor</name>
+      <rtexprvalue>true</rtexprvalue>
+      <required>false</required>
+      <type>java.lang.String</type>
+      <description>Method that returns criteria pageCursor object </description>
+    </attribute>
+    <attribute>
+      <name>idPrefix</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>prefix id of components. should be unique within page</description>
+    </attribute>
+    <attribute>
+      <name>cssPrefix</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>prefix for CSS of components.</description>
+    </attribute>
+    <attribute>
+      <name>propertiesPrefix</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>prefix for properties of components.</description>
+    </attribute>
+    <attribute>
+      <name>maxEnumeratedPages</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>Maximum pages to be shown during pagination. 
+         less or equal to -1 to show all. 0 to show none</description>
+    </attribute>
+    <attribute>
+      <name>label</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>Label for the pagination {[\d]*} will denote
+      places that will be filled by the label values.</description>
+    </attribute>
+    <attribute>
+      <name>labelPosition</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>Can be above, below, leftSide or rightSide</description>
+    </attribute>
+    <attribute>
+      <name>labelValues</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>"|" delimited strings or value bindings</description>
+    </attribute>
+    <attribute>
+      <name>labelNoResults</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>String or Value binding message when no results are found</description>
+    </attribute>
+  </tag>
+  <!-- Page view initialization component -->
+  <tag>
+    <name>prepareView</name>
+    <tag-class>com.esri.gpt.framework.jsf.components.PrepareViewTag</tag-class>
+    <body-content>scriptless</body-content>
+  </tag>
+  <tag>
+    <name>tableCommandLink</name>
+    <tag-class>com.esri.gpt.framework.jsf.components.TableCommandLinkTag</tag-class>
+    <body-content>scriptless</body-content>
+    <attribute>
+      <name>action</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          MethodBinding representing the application action to invoke when
+          this component is activated by the user.  The expression must
+          evaluate to a public method that takes no parameters, and returns
+          a String (the logical outcome) which is passed to the
+          NavigationHandler for this application.
+      </description>
+    </attribute>
+    <attribute>
+      <name>actionListener</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          MethodBinding representing an action listener method that will be
+          notified when this component is activated by the user.  The
+          expression must evaluate to a public method that takes an
+          ActionEvent parameter, with a return type of void.
+      </description>
+    </attribute>
+    <attribute>
+      <name>id</name>
+      <required>true</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          The component identifier for this component.  This value must be
+          unique within the closest parent component that is a naming
+          container.
+      </description>
+    </attribute>
+    <attribute>
+      <name>immediate</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Flag indicating that, if this component is activated by the user,
+          notifications should be delivered to interested listeners and actions
+          immediately (that is, during Apply Request Values phase) rather than
+          waiting until Invoke Application phase.
+      </description>
+    </attribute>
+    <attribute>
+      <name>rendered</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Flag indicating whether or not this component should be rendered
+          (during Render Response Phase), or processed on any subsequent
+          form submit.
+      </description>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          The current value of this component.
+      </description>
+    </attribute>
+    <attribute>
+      <name>accesskey</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Access key that, when pressed, transfers focus
+          to this element.
+      </description>
+    </attribute>
+    <attribute>
+      <name>charset</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          The character encoding of the resource designated
+          by this hyperlink.
+      </description>
+    </attribute>
+    <attribute>
+      <name>coords</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          The position and shape of the hot spot on the screen
+          (for use in client-side image maps).
+      </description>
+    </attribute>
+    <attribute>
+      <name>dir</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Direction indication for text that does not inherit directionality.
+          Valid values are "LTR" (left-to-right) and "RTL" (right-to-left).
+      </description>
+    </attribute>
+    <attribute>
+      <name>hreflang</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          The language code of the resource designated
+          by this hyperlink.
+      </description>
+    </attribute>
+    <attribute>
+      <name>lang</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Code describing the language used in the generated markup
+          for this component.
+      </description>
+    </attribute>
+    <attribute>
+      <name>onblur</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Javascript code executed when this element loses focus.
+      </description>
+    </attribute>
+    <attribute>
+      <name>ondblclick</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Javascript code executed when a pointer button is
+          double clicked over this element.
+      </description>
+    </attribute>
+    <attribute>
+      <name>onfocus</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Javascript code executed when this element receives focus.
+      </description>
+    </attribute>
+    <attribute>
+      <name>onkeydown</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Javascript code executed when a key is
+          pressed down over this element.
+      </description>
+    </attribute>
+    <attribute>
+      <name>onkeypress</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Javascript code executed when a key is
+          pressed and released over this element.
+      </description>
+    </attribute>
+    <attribute>
+      <name>onkeyup</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Javascript code executed when a key is
+          released over this element.
+      </description>
+    </attribute>
+    <attribute>
+      <name>onmousedown</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Javascript code executed when a pointer button is
+          pressed down over this element.
+      </description>
+    </attribute>
+    <attribute>
+      <name>onmousemove</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Javascript code executed when a pointer button is
+          moved within this element.
+      </description>
+    </attribute>
+    <attribute>
+      <name>onmouseout</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Javascript code executed when a pointer button is
+          moved away from this element.
+      </description>
+    </attribute>
+    <attribute>
+      <name>onmouseover</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Javascript code executed when a pointer button is
+          moved onto this element.
+      </description>
+    </attribute>
+    <attribute>
+      <name>onmouseup</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Javascript code executed when a pointer button is
+          released over this element.
+      </description>
+    </attribute>
+    <attribute>
+      <name>rel</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          The relationship from the current document
+          to the anchor specified by this hyperlink.
+          The value of this attribute is a space-separated
+          list of link types.  
+      </description>
+    </attribute>
+    <attribute>
+      <name>rev</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          A reverse link from the anchor specified
+          by this hyperlink to the current document.
+          The value of this attribute is a space-separated
+          list of link types.  
+      </description>
+    </attribute>
+    <attribute>
+      <name>shape</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          The shape of the hot spot on the screen
+          (for use in client-side image maps).  Valid
+          values are:  default (entire region); rect
+          (rectangular region); circle (circular region);
+          and poly (polygonal region).
+      </description>
+    </attribute>
+    <attribute>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          CSS style(s) to be applied when this component is rendered.
+      </description>
+    </attribute>
+    <attribute>
+      <name>styleClass</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Space-separated list of CSS style class(es) to be applied when
+          this element is rendered.  This value must be passed through
+          as the "class" attribute on generated markup.
+      </description>
+    </attribute>
+    <attribute>
+      <name>tabindex</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Position of this element in the tabbing order
+          for the current document.  This value must be
+          an integer between 0 and 32767.
+      </description>
+    </attribute>
+    <attribute>
+      <name>target</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Name of a frame where the resource
+          retrieved via this hyperlink is to
+          be displayed.
+      </description>
+    </attribute>
+    <attribute>
+      <name>title</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          Advisory title information about markup elements generated
+          for this component.
+      </description>
+    </attribute>
+    <attribute>
+      <name>type</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+      
+          The content type of the resource designated
+          by this hyperlink.
+      </description>
+    </attribute>
+    <attribute>
+      <name>binding</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>
+         The value binding expression linking this component to a property in a backing bean
+      </description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>DatePickerConfig</name>
+    <tag-class>com.esri.gpt.framework.jsf.DatePickerConfig</tag-class>
+    <body-content>scriptless</body-content>
+  </tag>
+  <!--  JScript Variable Writer -->
+  <tag>
+    <name>LiveData</name>
+    <tag-class>com.esri.gpt.framework.jsf.components.LiveDataTag</tag-class>
+    <body-content>scriptless</body-content>
+    <attribute>
+      <name>mapService</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <required>false</required>
+    </attribute>
+    <attribute>
+      <name>geometryService</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <required>false</required>
+    </attribute>
+    <attribute>
+      <name>url</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <required>true</required>
+    </attribute>
+    <attribute>
+      <name>mapStyle</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <required>false</required>
+    </attribute>
+    <attribute>
+      <name>verbose</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <required>false</required>
+    </attribute>
+    <attribute>
+      <name>errorMessage</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <required>false</required>
+    </attribute>
+    <attribute>
+      <name>basemapLabel</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <required>false</required>
+    </attribute>
+    <attribute>
+      <name>tooltips</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <required>false</required>
+    </attribute>
+    <attribute>
+      <name>onCreatePlaceholder</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <required>false</required>
+    </attribute>
+  </tag>
+</taglib>

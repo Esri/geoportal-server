@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- INSPIRE data theme keywords (gmd:descriptiveKeywords) --> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+           h:class=""
+           g:targetName="gmd:descriptiveKeywords" g:minOccurs="1" g:maxOccurs="1"
+           g:extends="$base/xtn/ui/UI_Element.xml">
+  <g:header g:rendered="false"/>
+  <g:body>
+	  <g:element g:targetName="gmd:MD_Keywords" g:minOccurs="0" g:maxOccurs="1"
+	    h:tag="div" g:jsClass="gxe.control.Element">
+	    
+	    <!-- keyword selection 
+	    <g:element g:targetName="gmd:keyword" g:minOccurs="1" g:maxOccurs="unbounded"
+	      g:label="$i18n.catalog.mdParam.inspire.keyword.dataTheme.label"
+	      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml">
+	      <g:body>
+	        <g:element g:isIsoWMVL="true">
+	          <g:body>
+	            <g:input g:extends="$base/core/ui/InputSelectMany.xml">
+	              <g:options g:i18nBase="catalog.mdParam.inspire.keyword.dataTheme">
+		              <g:option g:value="Addresses" g:alias="Addresses" g:label="$i18nBase.addresses"/>
+		              <g:option g:value="Administrative units" g:alias="Administrative_units" g:label="$i18nBase.administrativeUnits"/>
+		              <g:option g:value="Agricultural and aquaculture facilities" g:alias="Agricultural_and_aquaculture_facilities" g:label="$i18nBase.agriculturalAndAquacultureFacilities"/>
+		              <g:option g:value="Area management/restriction/regulation zones and reporting units" g:alias="Area_management_restriction_regulation_zones_and_reporting_units" g:label="$i18nBase.areaManagementRestrictionRegulationZonesAndReportingUnits"/>
+		              <g:option g:value="Atmospheric conditions" g:alias="Atmospheric_conditions" g:label="$i18nBase.atmosphericConditions"/>
+		              <g:option g:value="Bio-geographical regions" g:alias="Bio-geographical_regions" g:label="$i18nBase.bioGeographicalRegions"/>
+		              <g:option g:value="Buildings" g:alias="Buildings" g:label="$i18nBase.buildings"/>
+		              <g:option g:value="Cadastral parcels" g:alias="Cadastral_parcels" g:label="$i18nBase.cadastralParcels"/>
+	                <g:option g:value="Coordinate reference systems" g:alias="Coordinate_reference_systems" g:label="$i18nBase.coordinateReferenceSystems"/>
+			            <g:option g:value="Elevation" g:alias="Elevation" g:label="$i18nBase.elevation"/>
+			            <g:option g:value="Energy resources" g:alias="Energy_resources" g:label="$i18nBase.energyResources"/>
+			            <g:option g:value="Environmental monitoring facilities" g:alias="Environmental_monitoring_facilities" g:label="$i18nBase.environmentalMonitoringFacilities"/>
+			            <g:option g:value="Geographical grid systems" g:alias="Geographical_grid_systems" g:label="$i18nBase.geographicalGridSystems"/>
+			            <g:option g:value="Geographical names" g:alias="Geographical_names" g:label="$i18nBase.geographicalNames"/>
+			            <g:option g:value="Geology" g:alias="Geology" g:label="$i18nBase.geology"/>
+			            <g:option g:value="Habitats and biotopes" g:alias="Habitats_and_biotopes" g:label="$i18nBase.habitatsAndBiotopes"/>
+			            <g:option g:value="Human health and safety" g:alias="Human_health_and_safety" g:label="$i18nBase.humanHealthAndSafety"/>
+			            <g:option g:value="Hydrography" g:alias="Hydrography" g:label="$i18nBase.hydrography"/>
+			            <g:option g:value="Land cover" g:alias="Land_cover" g:label="$i18nBase.landCover"/>
+			            <g:option g:value="Land use" g:alias="Land_use" g:label="$i18nBase.landUser"/>
+			            <g:option g:value="Meteorological geographical features" g:alias="Meteorological_geographical_features" g:label="$i18nBase.meteorologicalGeographicalFeatures"/>
+			            <g:option g:value="Mineral resources" g:alias="Mineral_resources" g:label="$i18nBase.mineralResources"/>
+			            <g:option g:value="Natural risk zones" g:alias="Natural_risk_zones" g:label="$i18nBase.naturalRiskZones"/>
+			            <g:option g:value="Oceanographic geographical features" g:alias="Oceanographic_geographical_features" g:label="$i18nBase.oceanographicGeographicalFeatures"/>
+			            <g:option g:value="Orthoimagery" g:alias="Orthoimagery" g:label="$i18nBase.orthoimagery"/>
+			            <g:option g:value="Population distribution — demography" g:alias="Population_distribution_-_demography" g:label="$i18nBase.populationDistributionDemography"/>
+			            <g:option g:value="Production and industrial facilities" g:alias="Production_and_industrial_facilities" g:label="$i18nBase.productionAndIndustrialFacilities"/>
+			            <g:option g:value="Protected sites" g:alias="Protected_sites" g:label="$i18nBase.protectedSites"/>
+			            <g:option g:value="Sea regions" g:alias="Sea_regions" g:label="$i18nBase.seaRegions"/>
+			            <g:option g:value="Soil" g:alias="Soil" g:label="$i18nBase.soil"/>
+			            <g:option g:value="Species distribution" g:alias="Species_distribution" g:label="$i18nBase.speciesDistribution"/>
+			            <g:option g:value="Statistical units" g:alias="Statistical_units" g:label="$i18nBase.statisticalUnits"/>
+			            <g:option g:value="Transport networks" g:alias="Transport_networks" g:label="$i18nBase.transportNetworks"/>
+			            <g:option g:value="Utility and governmental services" g:alias="Utility_and_Government_services" g:label="$i18nBase.utilityAndGovernmentService"/>       
+		            </g:options>
+		          </g:input>
+		        </g:body>
+		      </g:element>
+		    </g:body> 
+	    </g:element>
+	    -->
+	    
+	    <g:element g:targetName="gmd:keyword" g:minOccurs="1" g:maxOccurs="unbounded"
+        g:label="$i18n.catalog.mdParam.inspire.keyword.dataTheme.label"
+        g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml">
+        <g:body>
+          <g:element g:isIsoWMVL="true">
+            <g:body>
+              <g:input g:extends="$base/core/ui/InputDelimitedTextArea.xml"
+                 g:jsClass="gxe.control.InputGemetTheme"
+                 h:cols="60" h:rows="8"/>
+            </g:body>
+          </g:element>
+        </g:body>
+      </g:element>
+	    
+	    
+	    <!-- GEMET - INSPIRE themes, version 1.0 -->
+	    <g:element g:targetName="gmd:thesaurusName" 
+	      h:tag="div" h:class="gxeDisplayNone" g:jsClass="gxe.control.Element">
+	      <g:element g:targetName="gmd:CI_Citation" h:tag="div" g:jsClass="gxe.control.Element">
+	        <g:element g:targetName="gmd:title" h:tag="div" g:jsClass="gxe.control.Element">
+	          <g:element g:targetName="gco:CharacterString" h:tag="div" g:jsClass="gxe.control.Element"
+	            g:fixedValue="GEMET - INSPIRE themes, version 1.0">
+	            <g:input g:extends="$base/core/ui/InputText.xml"/>
+	          </g:element>
+	        </g:element>
+	        <g:element g:targetName="gmd:date" h:tag="div" g:jsClass="gxe.control.Element">
+	          <g:element g:targetName="gmd:CI_Date" h:tag="div" g:jsClass="gxe.control.Element">
+	            <g:element g:targetName="gmd:date" h:tag="div" g:jsClass="gxe.control.Element"> 
+	             <g:element g:targetName="gco:Date" h:tag="div" g:jsClass="gxe.control.Element"
+	               g:fixedValue="2008-06-01">
+	               <g:input g:extends="$base/core/ui/InputText.xml"/>
+	             </g:element>
+	           </g:element>
+	            <g:element g:targetName="gmd:dateType" h:tag="div" g:jsClass="gxe.control.Element">
+	             <g:element g:targetName="gmd:CI_DateTypeCode" h:tag="div" g:jsClass="gxe.control.Element"
+	               g:fixedValue="publication">
+	               <g:input g:extends="$base/core/ui/InputText.xml"/>
+	               <g:attribute g:targetNS="" g:targetName="codeList" h:tag="div" g:jsClass="gxe.control.Attribute"
+	                 g:fixedValue="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode">
+	                 <g:input g:extends="$base/core/ui/InputText.xml"/>
+	               </g:attribute>
+	               <g:attribute g:targetNS="" g:targetName="codeListValue" h:tag="div" g:jsClass="gxe.control.Attribute"
+	                 g:fixedValue="publication">
+	                 <g:input g:extends="$base/core/ui/InputText.xml"/>
+	               </g:attribute>
+	             </g:element>
+	           </g:element>
+	          </g:element>
+	        </g:element>
+	      </g:element> 
+	    </g:element>
+	  
+	  </g:element>
+	</g:body>
+</g:element>
+  
+      
+

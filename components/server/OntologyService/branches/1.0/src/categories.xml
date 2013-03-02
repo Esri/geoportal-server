@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<categories>
+  <category key="livestock" value="Agriculture and Farming"/>
+  <category key="agriculture" value="Agriculture and Farming"/>
+  <category key="flora" value="Biology and Ecology"/>
+  <category key="fauna" value="Biology and Ecology"/>
+  <category key="ecology" value="Biology and Ecology"/>
+  <category key="habitat" value="Biology and Ecology"/>
+  <category key="wetland" value="Biology and Ecology"/>
+  <category key="national boundary" value="Administrative and Political Boundaries"/>
+  <category key="administrative boundary" value="Administrative and Political Boundaries"/>
+  <category key="atmosphere" value="Atmosphere and Climatic"/>
+  <category key="meteorology" value="Atmosphere and Climatic"/>
+  <category key="business" value="Business and Economic"/>
+  <category key="economy" value="Business and Economic"/>
+  <category key="altitude" value="Elevation and Derived Products"/>
+  <category key="slope" value="Elevation and Derived Products"/>
+  <category key="natural resource" value="Environment and Conservation"/>
+  <category key="pollution" value="Environment and Conservation"/>
+  <category key="monitoring" value="Environment and Conservation"/>
+  <category key="geology" value="Geological and Geophysical"/>
+  <category key="mineral" value="Geological and Geophysical"/>
+  <category key="earthquake" value="Geological and Geophysical"/>
+  <category key="landslide" value="Geological and Geophysical"/>
+  <category key="volcano" value="Geological and Geophysical"/>
+  <category key="soil" value="Geological and Geophysical"/>
+  <category key="hydrogeology" value="Geological and Geophysical"/>
+  <category key="erosion" value="Geological and Geophysical"/>
+  <category key="disease" value="Human Health and Disease"/>
+  <category key="hygiene" value="Human Health and Disease"/>
+  <category key="health" value="Human Health and Disease"/>
+  <category key="land cover" value="Imagery and Base Maps"/>
+  <category key="map" value="Imagery and Base Maps"/>
+  <category key="military zone" value="Military"/>
+  <category key="military activities" value="Military"/>
+  <category key="river" value="Inland Water Resource"/>
+  <category key="glacier" value="Inland Water Resource"/>
+  <category key="lake" value="Inland Water Resource"/>
+  <category key="dam" value="Inland Water Resource"/>
+  <category key="flood" value="Inland Water Resource"/>
+  <category key="water quality" value="Inland Water Resource"/>
+  <category key="tide" value="Oceans and Estuaries"/>
+  <category key="reef" value="Oceans and Estuaries"/>
+  <category key="land use plan" value="Cadastral"/>
+  <category key="land use planning" value="Cadastral"/>
+  <category key="archaeology" value="Cultural, Society and Demography"/>
+  <category key="religion" value="Cultural, Society and Demography"/>
+  <category key="demography" value="Cultural, Society and Demography"/>
+  <category key="crime" value="Cultural, Society and Demography"/>
+  <category key="justice" value="Cultural, Society and Demography"/>
+  <category key="architecture" value="Facilities and Structures"/>
+  <category key="building" value="Facilities and Structures"/>
+  <category key="museum" value="Facilities and Structures"/>
+  <category key="church" value="Facilities and Structures"/>
+  <category key="housing" value="Facilities and Structures"/>
+  <category key="monument" value="Facilities and Structures"/>
+  <category key="shop" value="Facilities and Structures"/>
+  <category key="road" value="Transportation Networks"/>
+  <category key="airport" value="Transportation Networks"/>
+  <category key="tunnel" value="Transportation Networks"/>
+  <category key="chart (nautical)" value="Transportation Networks"/>
+  <category key="railway" value="Transportation Networks"/>
+  <category key="solar energy" value="Utilities and Communication"/>
+  <category key="nuclear energy" value="Utilities and Communication"/>
+  <category key="water purification" value="Utilities and Communication"/>
+  <category key="sewage disposal" value="Utilities and Communication"/>
+  <category key="communication" value="Utilities and Communication"/>
+  <category key="radio" value="Utilities and Communication"/>
+</categories>

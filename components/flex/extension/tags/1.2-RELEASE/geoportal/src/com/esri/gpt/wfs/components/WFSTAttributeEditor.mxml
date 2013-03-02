@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright 2008 ESRI
+
+All rights reserved under the copyright laws of the United States
+and applicable international laws, treaties, and conventions.
+
+You may freely redistribute and use this sample code, with or
+without modification, provided you include the original copyright
+notice and use restrictions.
+See use restrictions at http://resources.esri.com/help/9.3/usagerestrictions.htm.
+-->
+<mx:DataGrid xmlns:mx="http://www.adobe.com/2006/mxml" editable="true"
+	itemEditBegin="onAttributeEditBegin(event)"
+	itemEditEnd="onAttributeEditEnd(event)">
+	<mx:Script>
+		<![CDATA[
+			import com.esri.gpt.wfs.events.WFSTEvent;
+			import com.esri.gpt.wfs.events.WFSTEvent;
+			import mx.collections.ArrayCollection;
+			import mx.controls.TextInput;
+			import mx.events.DataGridEventReason;
+			import mx.events.DataGridEvent;
+			import com.esri.gpt.wfs.layers.WFSTLayer;
+			
+			private var m_wfsLayerChanged :Boolean = false;
+			private var m_wfsLayer :WFSTLayer = null;
+			private var m_currentAttribute :String;
+			private var m_currentValue :String;
+			
+			[Bindable]
+			/** The WFSTLayer this control is currently bound to. */
+			public function get wfsLayer() :WFSTLayer
+			{
+				return m_wfsLayer;
+			}
+			
+			/** @private */
+			public function set wfsLayer( layer :WFSTLayer ) :void
+			{
+				if( m_wfsLayer != layer )
+				{
+					unregisterListeners();
+					m_wfsLayer = layer;
+					m_wfsLayerChanged = true;
+					registerListeners();
+					invalidateProperties();
+				}
+			}
+			
+			/**
+			 * @private
+			 * Registers the control with the current WFST layer.
+			 */
+			private function registerListeners() :void
+			{
+				if( wfsLayer )
+				{
+					m_wfsLayer.addEventListener( WFSTEvent.EDIT_BEGUN, editBegun );
+					m_wfsLayer.addEventListener( WFSTEvent.EDIT_SAVED, editSaved );
+					m_wfsLayer.addEventListener( WFSTEvent.EDIT_CANCELED, editCanceled );
+					m_wfsLayer.addEventListener( WFSTEvent.FEATURE_SELECTED, featureSelected );
+					m_wfsLayer.addEventListener( WFSTEvent.FEATURE_DESELECTED, featureDeselected );
+				}
+			}
+			
+			/**
+			 * @private
+			 * Unregisters the control with the current WFST layer.
+			 */
+			private function unregisterListeners() :void
+			{
+				if( wfsLayer )
+				{
+					m_wfsLayer.removeEventListener( WFSTEvent.EDIT_BEGUN, editBegun );
+					m_wfsLayer.removeEventListener( WFSTEvent.EDIT_SAVED, editSaved );
+					m_wfsLayer.removeEventListener( WFSTEvent.EDIT_CANCELED, editCanceled );
+					m_wfsLayer.removeEventListener( WFSTEvent.FEATURE_SELECTED, featureSelected );
+					m_wfsLayer.removeEventListener( WFSTEvent.FEATURE_DESELECTED, featureDeselected );
+				}
+			}
+			
+			/**
+			 * @private
+			 * Handles readying the control for attribute editing.
+			 */ 
+			private function onAttributeEditBegin( event :DataGridEvent ) :void
+			{
+				var attribute :Object = ArrayCollection( dataProvider ).getItemAt( event.rowIndex );
+				m_currentAttribute = attribute.Name;
+				m_currentValue = attribute.Value;
+			}
+			
+			/**
+			 * @private
+			 * Handles the attribute value updates once editing is finished.
+			 */
+			private function onAttributeEditEnd( event :DataGridEvent ) :void
+			{
+				if( event.reason == DataGridEventReason.CANCELLED )
+				{
+					return;
+				}
+				
+				if( wfsLayer && wfsLayer.editing )
+				{
+					var dataField :String = event.dataField;
+					var newValue :String = ( ( event.currentTarget as DataGrid ).itemEditorInstance as TextInput ).text;
+					if( dataField == "Value" && newValue != m_currentValue )
+					{
+						m_wfsLayer.setAttributeValue( m_currentAttribute, newValue );
+					}
+				}
+			}
+			
+			/**
+			 * @private
+			 * Handles the state of the control after an edit has begun.
+			 * @see WFSTEvent.EDIT_BEGUN
+			 */
+			private function editBegun( event :WFSTEvent ) :void
+			{
+				valueColumn.editable = true;
+			}
+			
+			/**
+			 * @private
+			 * Handles the state of the control after an edit has been saved.
+			 * @see WFSTEvent.EDIT_SAVED
+			 */
+			private function editSaved( event :WFSTEvent ) :void
+			{
+				valueColumn.editable = false;
+			}
+			
+			/**
+			 * @private
+			 * Handles the state of the control after an edit has been canceled.
+			 * @see WFSTEvent.EDIT_CANCELED
+			 */
+			private function editCanceled( event :WFSTEvent ) :void
+			{
+				valueColumn.editable = false;
+			}
+			
+			/**
+			 * @private
+			 * Handles the selection of a feature in the WFST layer.
+			 * @see WFSTEvent.FEATURE_SELECTED
+			 */
+			private function featureSelected( event :WFSTEvent ) :void
+			{
+				if( wfsLayer )
+				{
+					dataProvider = wfsLayer.selectedFeatureAttributes;
+				}
+			}
+			
+			/**
+			 * @private
+			 * Handles the deselection of a feature in the WFST layer.
+			 * @see WFSTEvent.FEATURE_DESELECTED
+			 */
+			private function featureDeselected( event :WFSTEvent ) :void
+			{
+				dataProvider = null;
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:columns>
+		<mx:DataGridColumn dataField="Name" sortable="false" editable="false"/>
+		<mx:DataGridColumn id="valueColumn" dataField="Value" sortable="false" editable="false"/>
+	</mx:columns>
+</mx:DataGrid>

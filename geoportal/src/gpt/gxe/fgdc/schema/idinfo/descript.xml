@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Description 
+		descript (/metadata/idinfo/descript) 
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect01.xsd
+		http://www.fgdc.gov/metadata/csdgm/01.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="descript"
+	g:i18nBase="catalog.fgdc.idinfo.descript" g:label="$i18nBase"
+	g:extends="$base/core/xml/Element.xml">
+	<g:body>
+
+		<!-- Abstract -->
+		<g:element g:targetName="abstract" g:extends="$base/core/xml/ElementTextOnly.xml">
+			<g:body>
+				<g:input g:extends="$base/core/ui/InputTextArea.xml" h:cols="60"
+					h:rows="8"/>
+			</g:body>
+		</g:element>
+
+		<!-- Purpose -->
+		<g:element g:targetName="purpose" g:extends="$base/core/xml/ElementTextOnly.xml">
+			<g:body>
+				<g:input g:extends="$base/core/ui/InputTextArea.xml" h:cols="60"
+					h:rows="8"/>
+			</g:body>
+		</g:element>
+
+		<!-- Supplemental Information -->
+		<g:element g:targetName="supplinf" g:minOccurs="0"
+			g:extends="$base/core/xml/ElementTextOnly.xml">
+			<g:body>
+				<g:input g:extends="$base/core/ui/InputTextArea.xml" h:cols="60"
+					h:rows="8"/>
+			</g:body>
+		</g:element>
+
+	</g:body>
+</g:element>

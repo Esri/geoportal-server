@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<!-- 
+Root element for the schema.
+  key             = The key for the schema.
+                    Required, must be unique.
+  templateFile    = The relative path to the template file.
+                    Required.
+  editable        = Determines whether the schema should be displayed
+                    on the Create Metadata page.
+                    Optional, default=true, valid values: true|false
+  detailsXslt     = The relative path to an XSLT that transforms an XML
+                    document of this type to an HTML fragment for display on
+                    the Metadata Details page. 
+                    Optional.   
+  cswOutputSchema = The CSW output schema (namespace) associated with the document
+                    Typically applies if the document can generate non Dublin Core responses.
+                    Optional.
+  cswBriefXslt    = The relative path to an XSLT that transforms an XML
+                    document of this type into it's brief CSW response.
+                    Typically applies if the document can generate non Dublin Core responses.
+                    Optional.
+  cswSummaryXslt  = The relative path to an XSLT that transforms an XML
+                    document of this type into it's summary CSW response.
+                    Typically applies if the document can generate non Dublin Core responses.
+                    Optional.
+  xsdLocation     = Sets the location of the XML Schema Definition file for the 
+                    metadata standard. If supplied, documents will be validated against 
+                    the XSD prior to publication.
+  schematronXslt  = The relative path to an XSLT that will be used to validate documents
+                    of this type. If supplied, the XSLT must produce an SVRL document 
+                    (Schematron Validation Report Language).
+                    Optional.
+                 
+e.g. <schema key="fgdc" templateFile="gpt/metadata/fgdc-template.xml" editable="true">
+-->
+<schema key="" templateFile="" editable="" detailsXslt="" 
+  cswOutputSchema="" cswBriefXslt="" cswSummaryXslt="" xsdLocation="">
+  
+  <!-- 
+  The label for the schema. (required)
+    resourceKey = The UI property bundle resource key.
+                  Required.
+  e.g. <label resourceKey="catalog.mdParam.schema.fgdc"/>
+  -->
+  <label resourceKey=""/>
+  
+  <!-- 
+  Zero, one or many namespace elements for the schema. (optional)
+    prefix = The namespace prefix.
+             Required.
+    uri    = The URI associated with the namespace.
+             Required.
+  e.g. <namespace prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/> 
+  -->
+  <namespace prefix="" uri=""/>
+  
+  <!-- 
+  Specifies an expression to be used when interrogating a metadata 
+  document to determine if it matches this schema. (required)
+    count = An XPath expression that counts nodes matching this schema.
+            Required.
+  e.g. <interrogation count="count(/metadata/dataIdInfo/*[node()])"/>
+  -->
+  <interrogation count=""/>
+  
+  <!--
+  One or more sections within the schema. 
+    key                = The key for the section.
+                         Required, must be unique.
+    obligation         = The obligation associated with the section.
+                         Optional, default=mandatory,
+                         valid values: mandatory|optional|exclusive
+    open               = Indicates if the section should be open by default
+                         within the metadata editor. When the obligation is
+                         "optional" or "exclusive", the section's open status 
+                         for existing documents is determined by presence 
+                         (if the sections is contained within the document, 
+                         it will be open).
+                         Optional, default=true, valid values: true|false
+      
+    select             = An XPath expression used to determine if a section is present.
+                         Optional (should be supplied when the obligation is 
+                         "optional" or "exclusive").
+    delete             = An XPath expression to determine nodes to delete when a 
+                         non-mandatory section is closed.
+                         Optional.
+    useSelectForDelete = Indicates that the XPath expression specified by
+                         the "select" to determine nodes to delete when a 
+                         non-mandatory section is closed. This attribute is 
+                         ignored if a "delete" expression has been supplied.
+                         Optional, default=true, valid values: true|false
+                              
+  e.g. <section key="identification">
+  -->
+  <section key="" obligation="" open=""
+           select="" delete="" useSelectForDelete="">
+
+    <!-- 
+    The label for the section.
+      resourceKey = The UI property bundle resource key.
+                    Required.
+    e.g. <label resourceKey="catalog.mdParam.identification.caption"/>
+    -->
+    <label resourceKey=""/>
+    
+    <!--
+    One or more parameters associated with the section.
+      key     = The key for the parameter.
+                Required, must be unique.
+      meaning = Ascribes meaning to the parameter. Most schema parameters are 
+                treated in an abstract fashion, their associated meaning is 
+                unknown. Several parameters are critical for publication and 
+                meaning is required.
+                Optional, 
+                valid values: title|fileIdentifier|abstract|esriDocID|
+                              envelope.east|envelope.north|envelope.south|envelope.west|
+                              thumbnail.binary|thumbnail.url
+      visible = Determines if the parameter should be displayed. Note that visible="false" can only be used if type="text" on the <input> component for the parameter.
+                Optional, default=true, valid values: true|false
+                
+    e.g. <parameter key="identification.title" visible="true" meaning="title"> 
+    -->
+    <parameter key="" meaning="" visible="">
+    
+      <!-- 
+      The label for the parameter. (optional)
+        resourceKey = The UI property bundle resource key.
+                      Required.
+      e.g. <label resourceKey="catalog.mdParam.identification.title"/>
+      -->
+      <label resourceKey=""/>
+
+      <!--
+      The input component associated with the parameter. (optional)
+        type            = The type of input component. Note that only when type="text" can visible="false" be used on the parent <parameter> element.
+                          Optional, default=text, 
+                          valid values: text|textArea|delimitedTextArea|textArray|map|
+                                        selectOneMenu|selectManyCheckbox|selectWithOther|
+        defaultValue    = The default value for the parameter.
+                          Can be specified directly or as a Faces value binding.
+                          Optional.
+                          e.g. defaultValue="Untitled"  
+                          e.g. defaultValue="#{EditMetadataController.newUuid}"  
+        editable        = Determines if the input control is editable. If not,
+                          the component will appear within the Metadata Editor, 
+                          but input will be disabled.
+                          Optional, default=true, 
+                          valid values: true|false 
+        hintResourceKey = A UI property bundle resource key used to generate
+                          hint text to the right of the input component.
+                          For instance, the input format for a date field 
+                          can be supplied with a hint resource key.
+                          Optional. 
+        maxlength       = The maximum length of an HTML INPUT TEXT box.
+                          Applies when type="text" or type="textArray".
+                          Optional, default=128.
+        size            = The size of an HTML INPUT TEXT box.
+                          Applies when type="text" or type="textArray". 
+                          Optional, default=50.                     
+        cols            = The number of HTML TEXTAREA columns.
+                          Applies when type="textArea" or type="delimitedTextArea".
+                          Optional, default=60.
+        rows            = The number of HTML TEXTAREA columns.
+                          Applies when type="textArea" or type="delimitedTextArea".
+                          Optional, default=8.
+        delimiter       = The delimiter to use when converting multiple XML 
+                          text nodes to/from and HTML TEXTAREA component.
+                          Applies when type="delimitedTextArea".
+                          Optional, default=",".
+        arraySize       = The number of input text components to generate.
+                          Applies when type="textArray".
+                          Optional, default=1.
+        otherCodeKey    = The code key associated with the "Other" option.
+                          Applies when type="selectWithOther".
+                          Optional, default="".
+        width           = The integer width for an interactive map (in pixels).
+                          Applies when type="map". 
+                          Optional, default=600. 
+        height          = The integer height for an interactive map (in pixels).
+                          Applies when type="map". 
+                          Optional, default=300.
+        styleClass      = The CSS style class name for an interactive map.
+                          Applies when type="map". 
+                          Optional, default="".
+        testResourceKey = A UI property bundle resource key used to generate
+                          test button to the right of the input component.
+                          For instance, the test button to test a resource link.
+                          Optional.
+                          
+      e.g. <input type="text" size="20" maxlength="10"
+                  hintResourceKey="catalog.general.inputDateFormat"
+                  testResourceKey="catalog.publication.editMetadata.button.test.service"
+                  defaultValue="#{EditMetadataController.now}"/>
+      -->      
+      <input type="" defaultValue="" editable="" hintResourceKey="" testResourceKey=""
+             maxlength="" size="" cols="" rows="" 
+             delimiter="" arraySize="" otherCodeKey=""
+             width="" height="" styleClass=""/>
+             
+      <!-- 
+      The validation component associated with the parameter. (optional)
+        required  = Determines if the parameter is required.
+                    Optional, default=false, valid values: true|false
+        valueType = The type of value associated with the parameter.
+                    Optional, default=string, 
+                    valid values: string|date|double|email|integer
+                    
+      e.g. <validation required="false" valueType="date"/>
+      -->
+      <validation required="" valueType=""/>
+
+      <!--
+      Describes the content for this parameter. (required) 
+        nodeType            = The type of node within a metadata document
+                              Optional, default=single, 
+                              valid values: single|list|gcoList|isoCodeListValue
+        useSelectForUpdate  = Indicates if the XPath expression specified by
+                              the select attribute should also be used to 
+                              perform updates to this parameter's value.
+                              Optional, default=false, valid values: true|false
+        deleteParentIfEmpty = Indicates that the parent node should be deleted
+                              if the an empty value for the parameter was supplied
+                              within the editor.
+                              Optional, default=false, valid values: true|false               
+        deleteParentIfEmpty = Indicates that the parent node should be deleted
+                              if the an empty value for the parameter was supplied
+                              within the editor.
+                              Optional, default=false, valid values: true|false                                                        
+        select              = An XPath expression to select the parameter's value.
+                              Required.
+        update              = An XPath expression to select the node to update with
+                              the parameter's value. 
+                              Optional (if empty and useSelectForUpdate is false, 
+                              the parameter value will not be updated)
+        delete              = An XPath expression to determine nodes to delete if
+                              a parameter's value is empty. 
+                              Optional.
+                             
+      e.g. <content useSelectForUpdate="true" select="/metadata/metainfo/metastdn"/>
+      -->      
+      <content nodeType="" useSelectForUpdate="" deleteIfEmpty="" deleteParentIfEmpty=""
+               select="" update="" delete="">
+
+        <!-- 
+        Container for a collection of codes that defined a value domain for the
+        parameter. Applies when the input type is selectOneMenu or selectManyCheckbox.
+        -->               
+        <codes>
+        
+          <!--
+          One or more codes within the collection.
+            key         = The key for the code.
+                          Required (but the key for one code can be empty, this
+                          will represent the "none specified" option).
+                          Must be unique within the collection of codes.
+            resourceKey = The UI property bundle resource key.
+                          Required.
+            
+          e.g. <code key="documentDigital"  
+                     resourceKey="catalog.mdCode.presentationForm.documentDigital"/>      
+          -->
+          <code key="" resourceKey=""/>
+          
+        </codes>
+        
+      </content>
+      
+    </parameter>
+    
+  </section>
+
+</schema>

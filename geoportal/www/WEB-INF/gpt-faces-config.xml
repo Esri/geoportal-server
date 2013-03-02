@@ -1,0 +1,733 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<faces-config version="2.0"
+    xmlns="http://java.sun.com/xml/ns/javaee" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+
+  <!-- define the phase listener  -->
+  <lifecycle>
+    <phase-listener>com.esri.gpt.framework.jsf.PrimaryPhaseListener</phase-listener>
+  </lifecycle>
+  <!--  converters -->
+  <converter>
+    <converter-id>gpt.ListToString</converter-id>
+    <converter-class>com.esri.gpt.framework.jsf.ConverterListToString</converter-class>
+  </converter>
+  <converter>
+    <converter-id>gpt.ResourceLinksToHtml</converter-id>
+    <converter-class>com.esri.gpt.framework.jsf.ConverterLinksToHtml</converter-class>
+  </converter>
+  
+  <!-- Components -->
+  <component>
+  	<description>Allows for pagination.  Attributes are held in enum.</description>
+  	<display-name>Pagination Object</display-name>
+  	<component-type>
+  	com.esri.gpt.faces.Pagination</component-type>
+  	<component-class>com.esri.gpt.framework.jsf.components.UIPagination</component-class>
+  </component>
+  <!-- page view initialization -->
+  <component>
+  	<description>Prepares page view.</description>
+  	<display-name>Prepare View object</display-name>
+  	<component-type>com.esri.gpt.faces.PrepareView</component-type>
+  	<component-class>com.esri.gpt.framework.jsf.components.UIPrepareView</component-class>
+  </component>
+  <component>
+  	<component-type>com.esri.gpt.faces.TableCommandLink</component-type>
+  	<component-class>com.esri.gpt.framework.jsf.components.UITableCommandLink</component-class>
+  </component>
+  <component>
+  	<description>Helps write cleaner javascript variables in javascript code</description>
+  	<component-type>com.esri.gpt.faces.JScript</component-type>
+  	<component-class>com.esri.gpt.framework.jsf.components.UIJscript</component-class>
+  </component>
+  <component>
+  	<description>Creates Live Data dijit</description>
+  	<component-type>com.esri.gpt.faces.LiveData</component-type>
+  	<component-class>com.esri.gpt.framework.jsf.components.UILiveData</component-class>
+  </component>
+  
+  <!-- define the managed bean that provide underlying support -->
+  <managed-bean>
+    <managed-bean-name>PageContext</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.framework.jsf.PageContext</managed-bean-class> 
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>    
+  <managed-bean>
+    <managed-bean-name>MessageBroker</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.framework.jsf.MessageBroker</managed-bean-class> 
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>bundleBaseName</property-name>
+      <property-class>java.lang.String</property-class>
+      <value>gpt.resources.gpt</value>
+    </managed-property>
+  </managed-bean> 
+  
+  <!-- sdi.suite integration factory -->
+  <managed-bean>
+    <managed-bean-name>SdiSuiteIntegrationFactory</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.sdisuite.IntegrationContextFactory</managed-bean-class> 
+    <managed-bean-scope>application</managed-bean-scope>
+  </managed-bean>     
+  
+  <!-- define the controllers -->
+  <managed-bean>
+    <managed-bean-name>LoginController</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.control.identity.LoginController</managed-bean-class> 
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>securityRoles</property-name>
+      <property-class>java.lang.String</property-class>
+      <value></value>
+    </managed-property>
+  </managed-bean>   
+  <managed-bean>
+    <managed-bean-name>SelfCareController</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.control.identity.SelfCareController</managed-bean-class> 
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>securityRoles</property-name>
+      <property-class>java.lang.String</property-class>
+      <value></value>
+    </managed-property>
+  </managed-bean>  
+  
+  <managed-bean>
+    <managed-bean-name>ManageMetadataController</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.control.publication.ManageMetadataController</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>securityRoles</property-name>
+      <property-class>java.lang.String</property-class>
+      <value>gptPublisher</value>
+    </managed-property>
+     <managed-property>
+      <property-name>criteria</property-name>
+      <property-class>com.esri.gpt.catalog.management.MmdCriteria</property-class>
+      <value>#{MetadataManagementSession}</value>
+    </managed-property>
+    <managed-property>
+      <property-name>recordsPerPage</property-name>
+      <property-class>int</property-class>
+      <value>50</value>
+    </managed-property>
+  </managed-bean>
+  <managed-bean>
+    <managed-bean-name>EditMetadataController</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.control.publication.EditMetadataController</managed-bean-class> 
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>harvestContext</property-name>
+      <property-class>com.esri.gpt.control.harvest.HarvestContext</property-class>
+      <value>#{HarvestContext}</value>
+    </managed-property>
+    <managed-property>
+      <property-name>securityRoles</property-name>
+      <property-class>java.lang.String</property-class>
+      <value>gptPublisher</value>
+    </managed-property>
+  </managed-bean>
+  <managed-bean>
+    <managed-bean-name>UploadMetadataSession</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.control.publication.UploadMetadataController$UploadOptions</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+  </managed-bean> 
+  <managed-bean>
+    <managed-bean-name>UploadMetadataController</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.control.publication.UploadMetadataController</managed-bean-class> 
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>securityRoles</property-name>
+      <property-class>java.lang.String</property-class>
+      <value>gptPublisher</value>
+    </managed-property>
+     <managed-property>
+      <property-name>options</property-name>
+      <property-class>com.esri.gpt.control.publication.UploadMetadataController$UploadOptions</property-class>
+      <value>#{UploadMetadataSession}</value>
+    </managed-property>
+  </managed-bean>
+  <managed-bean>
+    <managed-bean-name>ValidateMetadataController</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.control.publication.ValidateMetadataController</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>securityRoles</property-name>
+      <property-class>java.lang.String</property-class>
+      <value>gptRegisteredUser</value>
+    </managed-property>
+  </managed-bean>
+  <managed-bean>
+    <managed-bean-name>MetadataManagementSession</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.catalog.management.MmdCriteria</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>    
+   
+  <!-- Harvest managed beans -->
+  <managed-bean>
+    <managed-bean-name>HarvestContext</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.control.harvest.HarvestContext</managed-bean-class> 
+    <managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
+  <managed-bean>
+    <managed-bean-name>SortDirectionStyle</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.control.view.SortDirectionStyle</managed-bean-class> 
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>styleAsc</property-name>
+      <property-class>java.lang.String</property-class>
+      <value>ascending</value>
+    </managed-property>
+    <managed-property>
+      <property-name>styleDesc</property-name>
+      <property-class>java.lang.String</property-class>
+      <value>descending</value>
+    </managed-property>
+    <managed-property>
+      <property-name>styleNone</property-name>
+      <property-class>java.lang.String</property-class>
+      <value></value>
+    </managed-property>
+  </managed-bean>
+  <managed-bean>
+    <managed-bean-name>HarvestController</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.control.harvest.HarvestController</managed-bean-class> 
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>harvestContext</property-name>
+      <property-class>com.esri.gpt.control.harvest.HarvestContext</property-class>
+      <value>#{HarvestContext}</value>
+    </managed-property>
+    <managed-property>
+      <property-name>sortDirectionStyle</property-name>
+      <property-class>com.esri.gpt.control.view.SortDirectionStyle</property-class>
+      <value>#{SortDirectionStyle}</value>
+    </managed-property>
+    <managed-property>
+      <property-name>securityRoles</property-name>
+      <property-class>java.lang.String</property-class>
+      <value>gptPublisher</value>
+    </managed-property>
+  </managed-bean>   
+  <managed-bean>
+    <managed-bean-name>HarvestHistoryController</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.control.harvest.HarvestHistoryController</managed-bean-class> 
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>harvestContext</property-name>
+      <property-class>com.esri.gpt.control.harvest.HarvestContext</property-class>
+      <value>#{HarvestContext}</value>
+    </managed-property>
+    <managed-property>
+      <property-name>sortDirectionStyle</property-name>
+      <property-class>com.esri.gpt.control.view.SortDirectionStyle</property-class>
+      <value>#{SortDirectionStyle}</value>
+    </managed-property>
+    <managed-property>
+      <property-name>securityRoles</property-name>
+      <property-class>java.lang.String</property-class>
+      <value>gptPublisher</value>
+    </managed-property>
+  </managed-bean>
+  
+  <!-- Search Beans -->
+  <managed-bean>
+  	<description>Controller for search.</description>
+  	<managed-bean-name>SearchController</managed-bean-name>
+  	<managed-bean-class>com.esri.gpt.control.search.SearchHarvestSitesController</managed-bean-class>
+  	<managed-bean-scope>request</managed-bean-scope>
+  	<managed-property>
+  		<property-name>searchCriteria</property-name>
+  		<property-class>com.esri.gpt.catalog.search.SearchCriteria</property-class>
+  		<value>#{SearchCriteria}</value>
+  	</managed-property>
+  	<managed-property>
+  		<property-name>searchResult</property-name>
+  		<property-class>com.esri.gpt.catalog.search.SearchResult</property-class>
+  		<value>#{SearchResult}</value>
+  	</managed-property>
+  	<managed-property>
+      <property-name>searchFilterHarvestSites</property-name>
+      <property-class>com.esri.gpt.catalog.search.SearchFilterHarvestSites</property-class>
+      <value>#{SearchFilterHarvestSites}</value>
+    </managed-property>
+    <managed-property>
+      <property-name>defaultSiteId</property-name>
+      <property-class>java.lang.String</property-class>
+      <value>#{SearchProperties.defaultSiteId}</value>
+    </managed-property>
+    <managed-property>
+      <property-name>defaultSiteName</property-name>
+      <property-class>java.lang.String</property-class>
+      <value>#{SearchProperties.defaultSiteName}</value>
+    </managed-property>
+  </managed-bean>
+  
+  <managed-bean>
+  	<description>Results of search</description>
+  	<managed-bean-name>SearchResult</managed-bean-name>
+  	<managed-bean-class>com.esri.gpt.catalog.search.SearchResult</managed-bean-class>
+  	<managed-bean-scope>request</managed-bean-scope>
+  	<managed-property>
+  		<property-name>pageCursor</property-name>
+  		<property-class>com.esri.gpt.framework.request.PageCursor</property-class>
+  		<value>#{SearchResultPagination}</value>
+  	</managed-property>
+  </managed-bean>
+  <managed-bean>
+  	<description>Search Filter with keyword properties</description>
+  	<managed-bean-name>SearchFilterKeyword</managed-bean-name>
+  	<managed-bean-class>com.esri.gpt.catalog.search.SearchFilterKeyword</managed-bean-class>
+  	<managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
+  <managed-bean>
+  	<description>Search Filter with spatial properties</description>
+  	<managed-bean-name>SearchFilterSpatial</managed-bean-name>
+  	<managed-bean-class>com.esri.gpt.catalog.search.SearchFilterSpatial</managed-bean-class>
+  	<managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
+  <managed-bean>
+  	<description>Filter dealing with search criteria pages</description>
+  	<managed-bean-name>SearchFilterPagination</managed-bean-name>
+  	<managed-bean-class>com.esri.gpt.catalog.search.SearchFilterPagination</managed-bean-class>
+  	<managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
+  <managed-bean>
+    <description>Filter dealing with search result pages</description>
+    <managed-bean-name>SearchResultPagination</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.catalog.search.SearchFilterPagination</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>      
+  <managed-bean>
+    <description>Filter dealing with time based criteria</description>
+    <managed-bean-name>SearchFilterTemporal</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.catalog.search.SearchFilterTemporal</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
+  <managed-bean>
+    <description>Filter dealing with Content Types</description>
+    <managed-bean-name>SearchFilterContentTypes</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.catalog.search.SearchFilterContentTypes</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
+  <managed-bean>
+    <description>Filter dealing with sorting criteria</description>
+    <managed-bean-name>SearchFilterSort</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.catalog.search.SearchFilterSort</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
+  <managed-bean>
+    <description>Filter dealing with theme types</description>
+    <managed-bean-name>SearchFilterThemeTypes</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.catalog.search.SearchFilterThemeTypes</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
+  
+   <managed-bean>
+   	<description>Helps in keeping the datatable in the session so that the links work.</description>
+   	<managed-bean-name>dTable</managed-bean-name>
+   	<managed-bean-class>com.esri.gpt.control.view.DataTableBackingBean</managed-bean-class>
+   	<managed-bean-scope>request</managed-bean-scope>
+   </managed-bean>
+   
+   <managed-bean>
+   	<description>For choosing a different connection from the default</description>
+   	<managed-bean-name>SearchFilterConnection</managed-bean-name>
+   	<managed-bean-class>com.esri.gpt.catalog.search.SearchFilterConnection</managed-bean-class>
+   	<managed-bean-scope>session</managed-bean-scope>
+   </managed-bean>
+            
+  <managed-bean>
+    <description>Criteria currently in session</description>
+    <managed-bean-name>SearchCriteria</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.catalog.search.SearchCriteria</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+    <managed-property>
+      <property-name>searchFilterUri</property-name>
+      <property-class>com.esri.gpt.catalog.search.ISearchFilterURI</property-class>
+      <value>#{SearchFilterHarvestSites}</value>
+    </managed-property>
+    <managed-property>
+      <property-name>searchFilterThemes</property-name>
+      <property-class>com.esri.gpt.catalog.search.ISearchFilterThemes</property-class>
+      <value>#{SearchFilterThemeTypes}</value>
+    </managed-property>
+    <managed-property>
+      <property-name>searchFilterSpatial</property-name>
+      <property-class>com.esri.gpt.catalog.search.ISearchFilterSpatialObj</property-class>
+      <value>#{SearchFilterSpatial}</value>
+    </managed-property>
+    <managed-property>
+      <property-name>searchFilterContentTypes</property-name>
+      <property-class>com.esri.gpt.catalog.search.ISearchFilterContentTypes</property-class>
+      <value>#{SearchFilterContentTypes}</value>
+    </managed-property>
+    <managed-property>
+      <property-name>searchFilterKeyword</property-name>
+      <property-class>com.esri.gpt.catalog.search.ISearchFilterKeyword</property-class>
+      <value>#{SearchFilterKeyword}</value>
+    </managed-property>
+    <managed-property>
+      <property-name>searchFilterTemporal</property-name>
+      <property-class>com.esri.gpt.catalog.search.ISearchFilterTemporal</property-class>
+      <value>#{SearchFilterTemporal}</value>
+    </managed-property>
+    <managed-property>
+    	<property-name>searchFilterSort</property-name>
+    	<property-class>com.esri.gpt.catalog.search.ISearchFilterSort</property-class>
+    	<value>#{SearchFilterSort}</value>
+    </managed-property>
+    <managed-property>
+    	<property-name>searchFilterPageCursor</property-name>
+    	<property-class>com.esri.gpt.catalog.search.ISearchFilterPagination</property-class>
+    	<value>#{SearchFilterPagination}</value>
+    </managed-property>
+    <managed-property>
+        <property-name>miscelleniousFilters</property-name>
+    	<property-class>com.esri.gpt.catalog.search.SearchFiltersList</property-class>
+    	<list-entries>
+    		<value-class>com.esri.gpt.catalog.search.ISearchFilter</value-class>
+    		<value>#{SearchFilterHarvestSites}</value>
+    	</list-entries>
+    </managed-property>
+   </managed-bean>
+	
+	<!-- Directed Search -->
+	<managed-bean>
+      <description>Directed Search Filter with spatial properties</description>
+      <managed-bean-name>DsSearchFilterSpatial</managed-bean-name>
+      <managed-bean-class>com.esri.gpt.catalog.search.SearchFilterHarvestSpatial</managed-bean-class>
+      <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+	
+	
+	<managed-bean>
+    <description>Search harvesting sites</description>
+    <managed-bean-name>SearchFilterHarvestSites</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.catalog.search.SearchFilterHarvestSites</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+    <managed-property>
+      <property-name>selectedHarvestSiteName</property-name>
+      <property-class>java.lang.String</property-class>
+      <value>#{SearchProperties.defaultSiteName}</value>
+    </managed-property>
+    <managed-property>
+      <property-name>selectedHarvestSiteId</property-name>
+      <property-class>java.lang.String</property-class>
+      <value>#{SearchProperties.defaultSiteId}</value>
+    </managed-property>
+  </managed-bean> 
+  
+  <managed-bean>
+    <description>Search Properties</description>
+    <managed-bean-name>SearchProperties</managed-bean-name>
+    <managed-bean-class>java.util.HashMap</managed-bean-class>
+    <managed-bean-scope>application</managed-bean-scope>
+    <map-entries>
+      <!-- NOTE! JSF 2.0 does not accept map antries with empty values. -->
+      <!--
+      <map-entry>
+        <key>defaultSiteId</key>
+        <value></value>
+      </map-entry>
+      -->
+      <!--
+      <map-entry>
+        <key>defaultSiteName</key>
+        <value></value>
+      </map-entry>
+      -->
+    </map-entries>
+  </managed-bean>
+   
+	<managed-bean>
+    <description>Live Data Controller</description>
+    <managed-bean-name>LiveDataController</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.control.livedata.LiveDataController</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>frameStyle</property-name>
+      <property-class>java.lang.String</property-class>
+      <value>width: 600px; height: 432px;</value>
+    </managed-property>
+    <managed-property>
+      <property-name>frameStyleWide</property-name>
+      <property-class>java.lang.String</property-class>
+      <value>width: 880px; height: 432px;</value>
+    </managed-property>
+    <managed-property>
+      <property-name>mapHeightAdjustment</property-name>
+      <property-class>int</property-class>
+      <value>-38</value>
+    </managed-property>
+  </managed-bean>
+  
+  
+
+  <!-- Download controller -->
+  <managed-bean>
+    <managed-bean-name>DownloadController</managed-bean-name>
+    <managed-bean-class>com.esri.gpt.control.download.DownloadController</managed-bean-class> 
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>   
+  
+  <!-- define the navigation rules -->
+  <navigation-rule>
+    <from-view-id>/*</from-view-id>
+    
+    <!-- home page --> 
+    <navigation-case>
+      <from-outcome>homeDirect</from-outcome>
+      <to-view-id>/catalog/main/home.jsp</to-view-id>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>catalog.main.home</from-outcome>
+      <to-view-id>/catalog/main/home.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+    
+    <!-- content pages -->    
+    <navigation-case>
+      <from-outcome>catalog.content.about</from-outcome>
+      <to-view-id>/catalog/content/about.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>catalog.content.disclaimer</from-outcome>
+      <to-view-id>/catalog/content/disclaimer.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>   
+    <navigation-case>
+      <from-outcome>catalog.content.privacy</from-outcome>
+      <to-view-id>/catalog/content/privacy.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+    
+    <!--  identity pages -->
+    <navigation-case>
+      <from-outcome>catalog.identity.changePassword</from-outcome>
+      <to-view-id>/catalog/identity/changePassword.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>catalog.identity.feedback</from-outcome>
+      <to-view-id>/catalog/identity/feedback.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>catalog.identity.forgotPassword</from-outcome>
+      <to-view-id>/catalog/identity/forgotPassword.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>catalog.identity.login</from-outcome>
+      <to-view-id>/catalog/identity/login.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>catalog.identity.myProfile</from-outcome>
+      <to-view-id>/catalog/identity/myProfile.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>catalog.identity.userRegistration</from-outcome>
+      <to-view-id>/catalog/identity/userRegistration.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+    
+    <!-- user management page -->
+    <navigation-case>
+      <from-outcome>catalog.publication.manage.user.role</from-outcome>
+      <to-view-id>/catalog/identity/manageUserRole.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+ 
+    <!-- metadata publication pages -->
+    <navigation-case>
+      <from-outcome>catalog.publication.addMetadata</from-outcome>
+      <to-view-id>/catalog/publication/addMetadata.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>catalog.publication.createMetadata</from-outcome>
+      <to-view-id>/catalog/publication/createMetadata.jsp</to-view-id>
+      <redirect/>
+    </navigation-case> 
+    <navigation-case>
+      <from-outcome>catalog.publication.editMetadata</from-outcome>
+      <to-view-id>/catalog/publication/editMetadata.jsp</to-view-id>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>catalog.publication.gxeEditor</from-outcome>
+      <to-view-id>/catalog/publication/gxeEditor.jsp</to-view-id>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>catalog.publication.manageMetadata</from-outcome>
+      <to-view-id>/catalog/publication/manageMetadata.jsp</to-view-id>
+      <!-- <redirect/> -->
+    </navigation-case>  
+    <navigation-case>
+      <from-outcome>catalog.publication.uploadMetadata</from-outcome>
+      <to-view-id>/catalog/publication/uploadMetadata.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>  
+    <navigation-case>
+      <from-outcome>catalog.publication.validateMetadata</from-outcome>
+      <to-view-id>/catalog/publication/validateMetadata.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+     
+   
+    <!-- harvest repository pages -->
+    <navigation-case>
+      <from-outcome>catalog.harvest.manage.edit</from-outcome>
+      <to-view-id>/catalog/harvest/edit.jsp</to-view-id>
+      <!--redirect/-->
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>catalog.harvest.manage.create</from-outcome>
+      <to-view-id>/catalog/harvest/create.jsp</to-view-id>
+      <!--redirect/-->
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>catalog.harvest.manage.history</from-outcome>
+      <to-view-id>/catalog/harvest/history.jsp</to-view-id>
+      <!--redirect/-->
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>catalog.harvest.manage.report</from-outcome>
+      <to-view-id>/catalog/harvest/report.jsp</to-view-id>
+      <!--redirect/-->
+    </navigation-case>
+    
+    <!-- sdi.suite pages -->
+      <navigation-case>
+          <from-outcome>catalog.sdisuite.securityManager</from-outcome>
+          <to-view-id>/catalog/tc/securityManager.jsp</to-view-id>
+          <redirect/>
+      </navigation-case>
+      <navigation-case>
+          <from-outcome>catalog.sdisuite.serviceMonitor</from-outcome>
+          <to-view-id>/catalog/tc/serviceMonitor.jsp</to-view-id>
+          <redirect/>
+      </navigation-case>
+      <navigation-case>
+          <from-outcome>catalog.sdisuite.smartEditor</from-outcome>
+          <to-view-id>/catalog/tc/smartEditor.jsp</to-view-id>
+          <redirect/>
+      </navigation-case>
+      <navigation-case>
+          <from-outcome>catalog.sdisuite.myLicenses</from-outcome>
+          <to-view-id>/catalog/tc/myLicenses.jsp</to-view-id>
+          <redirect/>
+      </navigation-case>
+    
+  </navigation-rule>
+  
+  <!-- Search -->
+  <navigation-rule> 
+    <navigation-case> 
+      <from-outcome>catalog.search.home</from-outcome> 
+      <to-view-id>/catalog/search/search.jsp</to-view-id> 
+      <redirect/>
+    </navigation-case> 
+  </navigation-rule> 
+  <navigation-rule> 
+  <navigation-case> 
+      <from-outcome>catalog.search.results</from-outcome> 
+      <to-view-id>/catalog/search/search.jsp</to-view-id> 
+     </navigation-case> 
+  </navigation-rule> 
+  <navigation-rule> 
+     <navigation-case> 
+      <from-outcome>viewDetails</from-outcome> 
+      <to-view-id>/catalog/search/viewMetadataDetails.jsp</to-view-id> 
+    </navigation-case> 
+  </navigation-rule>
+  <navigation-rule> 
+     <navigation-case> 
+      <from-outcome>catalog.directedSearch.home</from-outcome> 
+      <to-view-id>/catalog/search/directedSearch.jsp</to-view-id> 
+    </navigation-case>  
+  </navigation-rule>
+  
+  
+  <!-- Extract pages -->
+  <navigation-rule> 
+    <navigation-case>
+      <from-outcome>catalog.download</from-outcome>
+      <to-view-id>/catalog/download/download.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+      
+  <!-- browse page -->
+  <navigation-rule>
+    <navigation-case>
+      <from-outcome>catalog.browse</from-outcome>
+      <to-view-id>/catalog/search/browse/browse.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+      
+  <!-- resource page -->
+  <navigation-rule>
+    <navigation-case>
+      <from-outcome>catalog.search.resource.details</from-outcome>
+      <to-view-id>/catalog/search/resource/details.jsp</to-view-id>
+    </navigation-case>
+  </navigation-rule>
+  
+  <!-- preview page -->
+  <navigation-rule>
+    <navigation-case>
+      <from-outcome>catalog.search.resource.preview</from-outcome>
+      <to-view-id>/catalog/search/resource/preview.jsp</to-view-id>
+    </navigation-case>
+  </navigation-rule>
+  
+  <!-- review page -->
+  <navigation-rule>
+    <navigation-case>
+      <from-outcome>catalog.search.resource.review</from-outcome>
+      <to-view-id>/catalog/search/resource/review.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+  
+  <!-- relations page -->
+  <navigation-rule>
+    <navigation-case>
+      <from-outcome>catalog.search.resource.relationships</from-outcome>
+      <to-view-id>/catalog/search/resource/relationships.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+  
+  <application>
+    <locale-config>
+      <default-locale>en</default-locale>
+      <supported-locale>en</supported-locale>
+      <supported-locale>fr</supported-locale>
+    </locale-config>
+    <message-bundle>gpt.resources.gpt</message-bundle> 
+  </application>
+  
+</faces-config>

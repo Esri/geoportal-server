@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<schemas>
+
+ <!-- schema interrogation -->
+	<schema key="ogc-csw-wms-wfs-wcs-wps-sos-sps" editable="false">
+	  <namespace prefix="ows" uri="http://www.opengis.net/ows"/>
+	  <namespace prefix="wms" uri="http://www.opengis.net/wms"/>
+	  <namespace prefix="csw" uri="http://www.opengis.net/cat/csw/2.0.2"/>
+		<namespace prefix="wcs" uri="http://www.opengis.net/wcs" />
+		<namespace prefix="wcs1" uri="http://www.opengis.net/wcs/1.1.1" />	
+		<namespace prefix="wfs" uri="http://www.opengis.net/wfs"/>
+		<namespace prefix="ows1" uri="http://www.opengis.net/ows/1.1"/>
+		<namespace prefix="kml" uri="http://www.opengis.net/kml/2.2"/>	
+	  <interrogation 
+	    count="count(//wfs:Service/wfs:Title) + count(//wms:Service/wms:Title) + count(//ows:ServiceIdentification/ows:Title) + 
+	    			 count(//wcs:Service/wcs:name) + count(/wms:WMT_MS_Capabilities/wms:Service/wms:Title) +
+	    			 count(//ows1:ServiceIdentification/ows1:Title) +  count(//wcs1:Service/wcs1:name) + count(/WMT_MS_Capabilities/Service/Title)"
+	    toKnownSchemaXslt="gpt/metadata/ogc/ogc-toDC.xslt"/>	    
+	</schema>
+	
+	<schema key="ogc-kml" editable="false">	  
+	  <namespace prefix="kml22" uri="http://www.opengis.net/kml/2.2"/>
+	  <interrogation 
+	    count="count(//kml22:Document) + count(//kml22:NetworkLink)"
+	    toKnownSchemaXslt="gpt/metadata/ogc/ogc-kml-toDC.xslt"/>	    
+	</schema>
+	
+	<schema key="kml" editable="false">    
+    <namespace prefix="kml20" uri="http://earth.google.com/kml/2.0"/> 
+    <namespace prefix="kml21" uri="http://earth.google.com/kml/2.1"/> 
+    <interrogation count="count(//kml20:Document) + count(//kml21:Document)"  
+      toKnownSchemaXslt="gpt/metadata/ogc/kml-toDC.xslt"/>      
+  </schema>
+	
+</schemas>

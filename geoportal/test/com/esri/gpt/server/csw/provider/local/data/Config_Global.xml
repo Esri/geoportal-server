@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Config_Global.xml -->
+<items>
+
+  <!-- service (required) -->
+  <item shouldPass="false" owsLocator="service" owsCode="MissingParameterValue">
+    <url><![CDATA[request=GetCapabilities]]></url>
+    <url><![CDATA[request=DescribeRecord]]></url>
+    <url><![CDATA[request=GetRecordById]]></url>
+    <url><![CDATA[request=GetRecords]]></url>
+    <url><![CDATA[request=Transaction]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="@service" owsCode="MissingParameterValue">    
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2">
+      </csw:GetCapabilities>
+    ]]></xml>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:DescribeRecord xmlns:csw="http://www.opengis.net/cat/csw/2.0.2">
+      </csw:DescribeRecord>
+    ]]></xml>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2">
+      </csw:GetRecordById>
+    ]]></xml>
+     <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2">
+      </csw:GetRecords>
+    ]]></xml>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2">
+      </csw:Transaction>
+    ]]></xml>
+  </item>
+  
+  <!-- service (invalid) -->
+  <item shouldPass="false" owsLocator="service" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW2&version=2.0.2&request=GetCapabilities]]></url>
+    <url><![CDATA[service=CSW2&version=2.0.2&request=DescribeRecord]]></url>
+    <url><![CDATA[service=CSW2&version=2.0.2&request=GetRecordById]]></url>
+    <url><![CDATA[service=CSW2&version=2.0.2&request=GetRecords]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="@service" owsCode="InvalidParameterValue">    
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW2">
+      </csw:GetCapabilities>
+    ]]></xml>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:DescribeRecord xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW2">
+      </csw:DescribeRecord>
+    ]]></xml>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW2">
+      </csw:GetRecordById>
+    ]]></xml>
+     <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW2">
+      </csw:GetRecords>
+    ]]></xml>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW2">
+      </csw:Transaction>
+    ]]></xml>
+  </item>
+  
+  <!-- version -->
+  <item shouldPass="false" owsLocator="version" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&version=2.0&request=GetCapabilities]]></url>
+    <url><![CDATA[service=CSW&version=2.0&request=DescribeRecord]]></url>
+    <url><![CDATA[service=CSW&version=2.0&request=GetRecordById]]></url>
+    <url><![CDATA[service=CSW&version=2.0&request=GetRecords]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="@version" owsCode="InvalidParameterValue">    
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2">
+      </csw:GetCapabilities>
+    ]]></xml>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:DescribeRecord xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2">
+      </csw:DescribeRecord>
+    ]]></xml>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2">
+      </csw:GetRecordById>
+    ]]></xml>
+     <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2">
+      </csw:GetRecords>
+    ]]></xml>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2">
+      </csw:Transaction>
+    ]]></xml>
+  </item>
+
+  <!-- version (explicit) -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" expected="CSW" src="serviceProperties.serviceName"/>
+    <assertion type="assertEquals" expected="2.0.2" src="serviceProperties.serviceVersion"/>
+    <url><![CDATA[service=CSW&request=DescribeRecord&version=2.0.2]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        service="CSW" version="2.0.2">
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item>
+  
+  <!-- version (optional) -->
+  <item shouldPass="true">
+    <url><![CDATA[service=CSW&request=DescribeRecord]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+      </csw:GetCapabilities>
+    ]]></xml>
+  </item>
+  
+  <!-- ensure a supplied and valid request/operation -->
+  <item shouldPass="false" owsLocator="request" owsCode="MissingParameterValue">
+    <url><![CDATA[service=CSW&version=2.0.2]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="request" owsCode="InvalidParameterValue">
+    <url><![CDATA[service=CSW&version=2.0.2&request=BadRequest]]></url>
+  </item>
+  <item shouldPass="false" owsLocator="root-node" owsCode="OperationNotSupported">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:NoOperation xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+      </csw:NoOperation>
+    ]]></xml>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <NoOperation2/>
+    ]]></xml>
+  </item>
+  
+  <!-- poorly formed XML -->
+  <item shouldPass="false" owsCode="NoApplicableCode">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <a><b></a>
+    ]]></xml>
+    <xml><![CDATA[text]]></xml>
+    <xml><![CDATA[]]></xml>
+  </item>
+    
+</items>

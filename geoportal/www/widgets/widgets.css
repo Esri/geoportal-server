@@ -1,0 +1,237 @@
+/* See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.gpt-search-anchor {
+  margin: 0;
+  padding: 4px;
+  outline: 0;
+  display: inline;
+  font-family: Verdana,Arial,Helvetica,sans-serif;
+  font-size: small;  
+  font-size-adjust: none;
+  font-stretch: normal;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  color: #000000;
+  background: #ffffff url(images/bg-anchor.jpg) repeat scroll 0px 0px;
+  vertical-align: middle;
+}
+
+.gpt-search-anchor label {
+  font-weight: bold;
+}
+
+.gpt-search-anchor img {
+	display: inline;
+  padding-left: 2px; 
+  vertical-align: bottom;
+  width: 24px;
+  height: 24px;
+  cursor: hand; cursor: pointer;
+}
+
+button.gpt-search-anchor-button {
+	font-family: Verdana,Arial,Helvetica,sans-serif;
+  font-size-adjust: none;
+  font-stretch: normal;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: bold;
+  color: #000000;
+  background: #ffffff url(images/bg-anchor.jpg) repeat scroll 0px 0px;
+}
+
+/* reset */
+.gpt-search-pane-container div,
+.gpt-search-pane-container label,
+.gpt-search-pane-container a,
+.gpt-search-pane-container img {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-weight: inherit;
+  font-style: inherit;
+  font-size: small;
+  font-family: inherit;
+  vertical-align: baseline;
+}
+.gpt-search-pane-container a,
+.gpt-search-pane-container img {
+  display: inline;
+}
+
+.gpt-search-pane-container .dojoxFloatingPane {
+	position:relative; 
+	position: absolute; 
+	height: 300px;
+  width: 450px;
+  margin: 2px 0px 0px 0px;
+  padding: 0px;
+  z-index: 100;
+  border: 1px solid gray;
+  background-color: #ffffff;
+  font-family: Verdana,Arial,Helvetica,sans-serif;
+  font-size: small;
+  font-size-adjust: none;
+  font-stretch: normal;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  color: #000000;
+  overflow: hidden;
+  -webkit-box-shadow: 0px 5px 10px #adadad;
+}
+
+.gpt-search-pane-container .dojoxFloatingPaneFg {
+  -webkit-box-shadow: 0px 8px 20px #525252;
+}
+
+.gpt-search-pane-container .dojoxFloatingPaneTitle {
+	height: 24px;
+	background: #ffffff url(images/bg-titlebar.gif) repeat scroll 0px 0px;
+	white-space: nowrap;
+	cursor: move;
+}
+
+.gpt-search-pane-container span.dijitTitleNode {
+	padding-left: 2px;
+  font-family: Verdana,Arial,Helvetica,sans-serif;
+  font-weight: bold;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.dojoxFloatingCloseIcon {
+  background: url(images/close.gif) no-repeat center center; 
+  width: 24px;
+  height: 24px; 
+  overflow: hidden;
+  float: right; 
+  cursor: hand; cursor: pointer;
+}
+
+.gpt-search-pane-container .dojoxFloatingPaneContent {
+  background-color: #ffffff;
+  overflow: auto;
+  height: 100%; 
+  width:  100%; 
+}
+
+.gpt-search-pane-container .dojoxFloatingResizeHandle {
+  background:url('images/resize.png') no-repeat bottom right;
+  position:absolute; 
+  right:0; 
+  bottom:0;   
+  width:16px;
+  height:16px; 
+  cursor:nw-resize;
+}
+
+.gpt-search-pane-container .dojoxResizeHandle {
+  float: right;
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 13px;
+  height: 13px;
+  z-index: 20;
+  background-image: url('images/resize.png');
+  line-height: 0px;
+}
+
+.gpt-search-pane-container .dojoxResizeNW {cursor: nw-resize;}
+.gpt-search-pane-container .dojoxResizeNE {cursor: ne-resize;}
+.gpt-search-pane-container .dojoxResizeW  {cursor: w-resize;}
+.gpt-search-pane-container .dojoxResizeN  {cursor: n-resize;}
+.gpt-search-pane-container .dojoxResizeHandleClone {
+	position:absolute; top:0; left:0; border:1px dashed #666; z-index:999;
+}
+
+.gpt-search-pane-container .gpt-search-pane-body {
+	margin: 0px;
+	padding: 0px;
+}
+
+.gpt-search-pane-container .gpt-search-pane-control {
+	padding: 4px 4px 8px 4px;
+	background: #ffffff url(images/bg-anchor.jpg) repeat scroll 0px 0px;
+}
+
+.gpt-search-pane-control label {
+	display: block;
+  font-weight: bold;
+}
+
+.gpt-search-pane-control img {
+	margin-left: 2px; 
+  margin-right: 2px; 
+  vertical-align: bottom;
+  width: 24px;
+  height: 24px;
+  cursor: hand; cursor: pointer;
+}
+
+.gpt-search-pane-container .gpt-search-pane-results {
+	padding: 0px 12px 12px 12px;
+  color: #000000;
+  background-color: #ffffff;
+}
+
+.gpt-search-pane-results .snippet {
+	margin: 4px 0px 4px 0px;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.gpt-search-pane-results .title {
+	padding: 1px;
+	color: #D03900;
+  font-weight: bold;
+  cursor: hand; cursor: pointer;
+}
+
+.gpt-search-pane-results .title img {
+  padding-right: 8px; 
+  vertical-align: text-bottom;
+}
+
+.gpt-search-pane-results .abstract {
+  display: none;
+  margin: 4px 0px 4px 12px;
+}
+
+.gpt-search-pane-results .links {
+  display: none;
+  margin: 4px 0px 4px 12px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.gpt-search-pane-results img {
+  width: 16px;
+  height: 16px;
+  overflow: hidden;
+}
+
+.gpt-search-pane-results .links a:link, .gpt-search-pane-results .links a:visited {
+  border-bottom:1px dotted;
+  color:#AE4F0C;
+  text-decoration:none;
+}
+
+.gpt-search-pane-results .links a:hover, .gpt-search-pane-results .links a:focus {
+  border-bottom-style:solid;
+  color:#D03900;
+}

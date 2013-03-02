@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Citation Information 
+		citeinfo 
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect08.xsd
+		http://www.fgdc.gov/metadata/csdgm/08.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="citeinfo"
+	g:i18nBase="catalog.fgdc.citeinfo" g:label="$i18nBase"
+	g:extends="$base/core/xml/Element.xml">
+	<g:body>
+
+		<!-- Originator -->
+		<g:element g:targetName="origin" g:minOccurs="1"
+			g:maxOccurs="unbounded" g:extends="$base/core/xml/ElementTextOnly.xml">
+			<g:body>
+			  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+			    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='Unknown';_o.fireInputChanged();"
+			    >$i18n.catalog.fgdc.general.unknown</h:a>
+			</g:body>
+		</g:element>
+
+		<!-- Publication Date -->
+		<g:element g:targetName="pubdate" g:extends="$base/schema/FGDCdate.xml"
+			g:alternateValues="Unknown,Unpublished material">
+			<g:body>
+			  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+			    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='Unknown';_o.fireInputChanged();"
+			    >$i18n.catalog.fgdc.general.unknown</h:a>
+			  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+			    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='Unpublished material';_o.fireInputChanged();"
+			    >$i18n.catalog.fgdc.general.date.unpublishedMaterial</h:a>
+			</g:body>
+		</g:element>
+		
+		<!-- Publication Time -->
+		<g:element g:targetName="pubtime" g:minOccurs="0"
+			g:extends="$base/schema/FGDCtime.xml"
+		  g:alternateValues="Unknown">
+			<g:body>
+			  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+			    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='Unknown';_o.fireInputChanged();"
+			    >$i18n.catalog.fgdc.general.unknown</h:a>
+			</g:body>
+		</g:element>
+
+		<!-- Title -->
+		<g:element g:targetName="title" g:isDocumentTitle="true" 
+			g:extends="$base/core/xml/ElementTextOnly.xml"/>
+			
+		<!-- Edition -->
+		<g:element g:targetName="edition" g:minOccurs="0"
+			g:extends="$base/core/xml/ElementTextOnly.xml"/>
+			
+		<!-- Geospatial Data Presentation Form -->
+		<g:element g:targetName="geoform" g:minOccurs="0"
+			g:extends="$base/core/xml/ElementTextOnly.xml">
+			<g:body>
+				<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+					<g:options g:i18nBase="catalog.fgdc.citeinfo.geoform.option">
+						<g:option g:value="" g:label=""/>
+						<g:option g:value="atlas" g:label="$i18nBase.atlas"/>
+						<g:option g:value="audio" g:label="$i18nBase.audio"/>
+						<g:option g:value="diagram" g:label="$i18nBase.diagram"/>
+						<g:option g:value="document" g:label="$i18nBase.document"/>
+						<g:option g:value="globe" g:label="$i18nBase.globe"/>
+						<g:option g:value="map" g:label="$i18nBase.map"/>
+						<g:option g:value="model" g:label="$i18nBase.model"/> 
+						<g:option g:value="multimedia presentation" g:label="$i18nBase.multiMediaPresentation"/>
+						<g:option g:value="profile" g:label="$i18nBase.profile"/>
+						<g:option g:value="raster digital data" g:label="$i18nBase.rasterDigitalData"/>
+						<g:option g:value="remote-sensing image" g:label="$i18nBase.remoteSensingImage"/>
+						<g:option g:value="section" g:label="$i18nBase.section"/>
+						<g:option g:value="spreadsheet" g:label="$i18nBase.spreadsheet"/>
+						<g:option g:value="tabular digital data" g:label="$i18nBase.tabularDigitalData"/>
+						<g:option g:value="vector digital data" g:label="$i18nBase.vectorDigitalData"/>
+						<g:option g:value="video" g:label="$i18nBase.video"/>
+						<g:option g:value="view" g:label="$i18nBase.view"/>
+						<g:option g:value="_other_" g:label="$i18n.catalog.mdCode.other"
+							g:isOther="true"/>
+					</g:options>
+				</g:input>
+			</g:body>
+		</g:element>
+		
+		<!-- Series Information -->
+		<g:element g:targetName="serinfo" g:minOccurs="0"
+			g:i18nBase="catalog.fgdc.citeinfo.serinfo" g:label="$i18nBase"
+			g:extends="$base/core/xml/Element.xml">
+			<g:body>
+
+				<!-- Series Name -->
+				<g:element g:targetName="sername"
+					g:extends="$base/core/xml/ElementTextOnly.xml"/>
+
+				<!-- Issue Identification -->
+				<g:element g:targetName="issue"
+					g:extends="$base/core/xml/ElementTextOnly.xml"/>
+
+			</g:body>
+		</g:element>
+
+		<!-- Publication Information -->
+		<g:element g:targetName="pubinfo" g:minOccurs="0"
+			g:i18nBase="catalog.fgdc.citeinfo.pubinfo" g:label="$i18nBase"
+			g:extends="$base/core/xml/Element.xml">
+			<g:body>
+
+				<!-- Publication Place -->
+				<g:element g:targetName="pubplace"
+					g:extends="$base/core/xml/ElementTextOnly.xml"/>
+
+				<!-- Publisher -->
+				<g:element g:targetName="publish"
+					g:extends="$base/core/xml/ElementTextOnly.xml"/>
+
+			</g:body>
+		</g:element>
+		
+		<!-- Other Citation Details -->
+		<g:element g:targetName="othercit" g:minOccurs="0"
+			g:extends="$base/core/xml/ElementTextOnly.xml">
+			<g:body>
+				<g:input g:extends="$base/core/ui/InputTextArea.xml"/>
+			</g:body>
+		</g:element>
+
+		<!-- Online Linkage (URL) -->
+		<g:element g:targetName="onlink" g:minOccurs="0"
+			g:maxOccurs="unbounded" g:useExclusiveDisplay="false" g:preferOpen="true"
+			g:extends="$base/core/xml/ElementTextOnly.xml"/>
+			
+		<!-- Larger Work Citation -->
+		<!--  TODO: this is recursive, not supported in GXE 1.1.1
+		<g:element g:targetName="lworkcit" g:minOccurs="0"
+			g:extends="$base/core/xml/Element.xml">
+			<g:body>
+				<g:element g:targetName="citeinfo"
+					g:extends="$base/schema/citeinfo/citeinfo.xml"/>
+			</g:body>
+		</g:element>
+		-->
+
+	</g:body>
+</g:element>

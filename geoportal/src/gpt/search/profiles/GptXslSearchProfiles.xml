@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<!--  More generalized.  Entries here currently will not be harvested  -->
+<GptProfiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="GptXslSearchProfiles.xsd">
+	<!-- GPT 10 profiles -->
+	<GptProfile> 
+		<ID>urn:esri:gpt:HTTP:JSON:ESRI:AGSONLINE</ID>
+		<Name>ArcGIS Server</Name>
+		<GetRecords>
+			<XSLTransformations>
+				<Request expectedGptXmlOutput="FULL_NATIVE_GPTXML">
+             OpenSearchXmlParams_1.0_GetRecords_Request.xslt
+           </Request>
+				<Response>
+             ArcgisOnline_GetRecords_Response.xslt
+        </Response>
+			</XSLTransformations>
+		</GetRecords>
+		<GetRecordByID>
+		  <RequestKVPs><![CDATA[http://www.arcgisonline.com/home/item.html?id={id}]]></RequestKVPs>
+			<XSLTransformations>
+				<Response>ArcgisOnline_GetRecordByID_Response.xslt</Response>
+			</XSLTransformations>
+		</GetRecordByID>
+		<SupportSpatialQuery>True</SupportSpatialQuery>
+		<SupportContentTypeQuery>True</SupportContentTypeQuery>
+		<SupportSpatialResponse>True</SupportSpatialResponse>
+		<Harvestable>False</Harvestable>
+	</GptProfile>
+	<GptProfile> 
+		<ID>urn:esri:gpt:HTTP:XML:GOOGLE:YOUTUBE</ID>
+		<Name>YouTube</Name>
+		<GetRecords>
+			<XSLTransformations>
+				<Request expectedGptXmlOutput="FULL_NATIVE_GPTXML">
+             OpenSearchXmlParams_1.0_GetRecords_Request.xslt
+           </Request>
+				<Response>
+             YouTubeSearch_GetRecords_Response.xslt
+        </Response>
+			</XSLTransformations>
+		</GetRecords>
+		<GetRecordByID>
+		  <RequestKVPs><![CDATA[http://www.youtube.com/watch?v={id}&amp;feature=youtube_gdata]]></RequestKVPs>
+			<XSLTransformations>
+				<Response>YouTubeSearch_GetRecordByID_Response.xslt</Response>
+			</XSLTransformations>
+		</GetRecordByID>
+		<SupportSpatialQuery>True</SupportSpatialQuery>
+		<SupportContentTypeQuery>True</SupportContentTypeQuery>
+		<SupportSpatialResponse>True</SupportSpatialResponse>
+		<Harvestable>False</Harvestable>
+	</GptProfile>
+	<GptProfile> 
+		<ID>urn:esri:gpt:HTTP:XML:ESRI:AGSSEARCH</ID>
+		<Name>ArcGIS Server Search</Name>
+		<GetRecords>
+			<XSLTransformations>
+		      <Request expectedGptXmlOutput="FULL_NATIVE_GPTXML">
+                OpenSearchXmlParams_1.0_GetRecords_Request.xslt
+              </Request>
+		   <Response>
+             AGSSearch_GetRecords_Response.xslt
+           </Response>
+			</XSLTransformations>
+		</GetRecords>
+		<GetRecordByID>
+		  <RequestKVPs><![CDATA[]]></RequestKVPs>
+			<XSLTransformations>
+				<Response>AGSSearch_GetRecordByID_Response.xslt</Response>
+			</XSLTransformations>
+		</GetRecordByID>
+		<SupportSpatialQuery>True</SupportSpatialQuery>
+		<SupportContentTypeQuery>True</SupportContentTypeQuery>
+		<SupportSpatialResponse>True</SupportSpatialResponse>
+		<Harvestable>False</Harvestable>
+	</GptProfile>
+	<GptProfile> 
+    <ID>urn:esri:gpt:HTTP:XML:SHAREPOINT</ID>
+    <Name>ArcGIS Server Search</Name>
+    <GetRecords>
+      <XSLTransformations>
+          <Request expectedGptXmlOutput="FULL_NATIVE_GPTXML">
+                OpenSearchXmlParams_1.0_GetRecords_Request.xslt
+              </Request>
+       <Response>SharePointSearch_GetRecords_Response.xslt</Response>
+      </XSLTransformations>
+    </GetRecords>
+    <GetRecordByID>
+      <RequestKVPs><![CDATA[]]></RequestKVPs>
+      <XSLTransformations>
+        <Response>AGSSearch_GetRecordByID_Response.xslt</Response>
+      </XSLTransformations>
+    </GetRecordByID>
+    <SupportSpatialQuery>True</SupportSpatialQuery>
+    <SupportContentTypeQuery>True</SupportContentTypeQuery>
+    <SupportSpatialResponse>True</SupportSpatialResponse>
+    <Harvestable>False</Harvestable>
+  </GptProfile>
+</GptProfiles>

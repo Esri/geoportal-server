@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- FGDC (main file for the Geoportal XML Editor) -->
+<g:editor xmlns:g="http://www.esri.com/geoportal/gxe" 
+	xmlns:h="http://www.esri.com/geoportal/gxe/html"
+	g:extends="gpt/gxe/editor.xml">
+	
+	<!-- context -->
+	<g:context g:extensible="true">
+	  <g:i18n g:key="validate.date">$i18n.catalog.fgdc.general.validate.date</g:i18n> 
+	</g:context>
+
+	<!-- root element -->
+	<g:rootElement g:overridable="true" g:extends="$base/metadata.xml"/>
+
+</g:editor>

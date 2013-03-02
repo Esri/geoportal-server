@@ -1,0 +1,14 @@
+<project name="FlexProject" default="main" basedir=".">
+    <description>
+        simple parent build file
+    </description>
+
+  <target name="main">
+    <ant antfile="build.xml" inheritrefs="true">
+     <property file="build.properties"/>
+    </ant>
+    <!-- <ant antfile="C:\Builds\GeoportalServer\Flex\Sources\geoportal\etc\build.xml" inheritrefs="true" /> -->
+  </target>
+  
+</project>
+

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.7.1
+Created-By: 1.6.0_21 (Sun Microsystems Inc.)
+Built-By: ESRI
+Specification-Title: Ontology Service
+Specification-Version: 0.0
+Specification-Vendor: ESRI
+Implementation-Title: Ontology Service
+Implementation-Version: Build 1.0.14
+Implementation-Vendor: ESRI

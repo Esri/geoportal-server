@@ -1,0 +1,83 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                       http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.geoportal.etc.web</groupId>
+  <artifactId>etc</artifactId>
+  <version>1.0</version>
+  <name>GeoportalServer Flex Project</name>
+
+  <build>   
+    <plugins>
+      <!-- <plugin>
+        <groupId>com.google.code.maven-replacer-plugin</groupId>
+        <artifactId>maven-replacer-plugin</artifactId>
+        <version>1.3.5</version>
+        <configuration>
+          <quiet>true</quiet>
+        </configuration>
+        <executions>
+          <execution>
+            <id>multiple-sub-replacement</id>
+            <phase>install</phase>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+            <configuration>
+              <file>target/Main.html</file>
+              <regex>false</regex>
+              <replacements>
+                <replacement>
+                  <token>BEGIN Browser History required section ${useBrowserHistory}></token>
+                  <value>BEGIN Browser History required section &gt;</value>
+                </replacement>                
+              </replacements>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin> -->
+      <plugin> 
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <phase> install </phase>
+            <configuration>
+              <target>
+              	<echo message="Executing Ant..." />                
+                  <ant antfile="build.xml" inheritrefs="true">
+                  <property file="tempbuild.properties"/>
+                 </ant>
+                <echo message="Copying files..." />
+                <!-- <attrib readonly="false">
+                  <fileset dir="../../server/psd-config/src/main/resources/WEB-INF/classes" includes="**/*.properties"/>
+                </attrib>
+                <copy todir="../../server/psd-webapp/src/main/webapp">
+                  <fileset dir="target">
+                    <exclude name="**/antrun/**"/>
+                    <exclude name="**/classes/**"/>
+                    <exclude name="**/surefire-reports/**"/>
+                    <exclude name="**/html-wrapper-template/**"/>
+                  </fileset>
+                </copy>
+                <delete file="../../server/psd-webapp/src/main/webapp/build-number.txt"/>
+                <copy file="target/classes/build-number.txt" todir="../../server/psd-webapp/src/main/webapp" />
+
+                <property name="trunk.dir" location="..\..\" />
+                <echo message="Server.dir: ${trunk.dir}"  />
+                <echo Message="BuildNum: ${BuildNumber}" /> -->
+               
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+
+</project>

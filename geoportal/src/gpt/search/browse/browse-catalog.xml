@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<tree>
+  <label>name</label>
+  <identifier>id</identifier>
+  
+  <!-- Catalog -->
+  <item>
+    <id>0</id>
+    <name resourceKey="catalog.browse.toc.browseCatalog"></name>
+    <query>searchText=*:*</query>
+    
+    <!-- Content types -->
+		<item>
+		  <id>1</id>
+		  <name resourceKey="catalog.search.filterContentTypes.title"></name>
+			<query>contentType=application,clearinghouse,document,downloadableData,geographicActivities,geographicService,liveData,mapFiles,offlineData,staticMapImage</query>
+			<item>
+			  <id>2</id>
+				<name resourceKey="catalog.search.filterContentTypes.application"></name>
+				<query>contentType=application</query>
+			</item>
+			<item>
+			  <id>3</id>
+				<name resourceKey="catalog.search.filterContentTypes.clearinghouse"></name>
+				<query>contentType=clearinghouse</query>
+			</item>
+			<item>
+			  <id>4</id>
+				<name resourceKey="catalog.search.filterContentTypes.document"></name>
+				<query>contentType=document</query>
+			</item>
+			<item>
+			  <id>5</id>
+				<name resourceKey="catalog.search.filterContentTypes.downloadableData"></name>
+				<query>contentType=downloadableData</query>
+			</item>
+			<item>
+			  <id>6</id>
+				<name resourceKey="catalog.search.filterContentTypes.geographicActivities"></name>
+				<query>contentType=geographicActivities</query>
+			</item>
+			<item>
+			  <id>7</id>
+				<name resourceKey="catalog.search.filterContentTypes.geographicService"></name>
+				<query>contentType=geographicService</query>
+			</item>
+			<item>
+			  <id>8</id>
+				<name resourceKey="catalog.search.filterContentTypes.liveData"></name>
+				<query>contentType=liveData</query>
+			</item>
+			<item>
+			  <id>9</id>
+				<name resourceKey="catalog.search.filterContentTypes.mapFiles"></name>
+				<query>contentType=mapFiles</query>
+			</item>
+			<item>
+			  <id>10</id>
+				<name resourceKey="catalog.search.filterContentTypes.offlineData"></name>
+				<query>contentType=offlineData</query>
+			</item>
+			<item>
+			  <id>11</id>
+				<name resourceKey="catalog.search.filterContentTypes.staticMapImage"></name>
+				<query>contentType=staticMapImage</query>
+			</item>
+		</item>
+		
+		<!-- ISO Topic Categories -->
+		<item>
+		  <id>12</id>
+		  <name resourceKey="catalog.harvest.iso.caption"></name>
+		  <query>dataCategory=boundaries,farming,climatologyMeteorologyAtmosphere,biota,economy,planningCadastre,society,elevation,environment,structure,geoscientificInformation,health,imageryBaseMapsEarthCover,inlandWaters,location,intelligenceMilitary,oceans,transportation,utilitiesCommunication</query>
+			<item>
+			  <id>13</id>
+        <name resourceKey="catalog.mdCode.topic.boundaries"></name>
+        <query>dataCategory=boundaries</query>
+      </item>
+			<item>
+			  <id>14</id>
+			  <name resourceKey="catalog.mdCode.topic.farming"></name>
+				<query>dataCategory=farming</query>
+			</item>
+			<item>
+			  <id>15</id>
+        <name resourceKey="catalog.mdCode.topic.climatologyMeteorologyAtmosphere"></name>
+        <query>dataCategory=climatologyMeteorologyAtmosphere</query>
+      </item>
+			<item>
+			  <id>16</id>
+				<name resourceKey="catalog.mdCode.topic.biota"></name>
+				<query>dataCategory=biota</query>
+			</item>
+			<item>
+			  <id>17</id>
+        <name resourceKey="catalog.mdCode.topic.economy"></name>
+        <query>dataCategory=economy</query>
+      </item>
+			<item>
+			  <id>18</id>
+        <name resourceKey="catalog.mdCode.topic.planningCadastre"></name>
+        <query>dataCategory=planningCadastre</query>
+      </item>
+      <item>
+        <id>19</id>
+        <name resourceKey="catalog.mdCode.topic.society"></name>
+        <query>dataCategory=society</query>
+      </item>
+			<item>
+			  <id>20</id>
+				<name resourceKey="catalog.mdCode.topic.elevation"></name>
+				<query>dataCategory=elevation</query>
+			</item>
+			<item>
+			  <id>21</id>
+        <name resourceKey="catalog.mdCode.topic.environment"></name>
+        <query>dataCategory=environment</query>
+      </item>
+			<item>
+			  <id>22</id>
+        <name resourceKey="catalog.mdCode.topic.structure"></name>
+        <query>dataCategory=structure</query>
+      </item>
+			<item>
+			  <id>23</id>
+				<name resourceKey="catalog.mdCode.topic.geoscientificInformation"></name>
+				<query>dataCategory=geoscientificInformation</query>
+			</item>
+			<item>
+			  <id>24</id>
+				<name resourceKey="catalog.mdCode.topic.health"></name>
+				<query>dataCategory=health</query>
+			</item>
+			<item>
+			  <id>25</id>
+				<name resourceKey="catalog.mdCode.topic.imageryBaseMapsEarthCover"></name>
+				<query>dataCategory=imageryBaseMapsEarthCover</query>
+			</item>
+			<item>
+			  <id>26</id>
+        <name resourceKey="catalog.mdCode.topic.inlandWaters"></name>
+        <query>dataCategory=inlandWaters</query>
+      </item>
+      <item>
+        <id>27</id>
+        <name resourceKey="catalog.mdCode.topic.location"></name>
+        <query>dataCategory=location</query>
+      </item>
+			<item>
+			  <id>28</id>
+				<name resourceKey="catalog.mdCode.topic.intelligenceMilitary"></name>
+				<query>dataCategory=intelligenceMilitary</query>
+			</item>
+			<item>
+			  <id>29</id>
+				<name resourceKey="catalog.mdCode.topic.oceans"></name>
+				<query>dataCategory=oceans</query>
+			</item>
+			<item>
+			  <id>30</id>
+				<name resourceKey="catalog.mdCode.topic.transportation"></name>
+				<query>dataCategory=transportation</query>
+			</item>
+			<item>
+			  <id>31</id>
+			  <name resourceKey="catalog.mdCode.topic.utilitiesCommunication"></name>
+				<query>dataCategory=utilitiesCommunication</query>
+			</item>
+		</item>
+	</item>
+</tree>

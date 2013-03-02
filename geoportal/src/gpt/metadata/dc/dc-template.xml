@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ows="http://www.opengis.net/ows" xmlns:dct="http://purl.org/dc/terms/" xmlns:dcmiBox="http://dublincore.org/documents/2000/07/11/dcmi-box/">
+  <rdf:Description rdf:about="http://dublincore.org/">
+    <dc:identifier></dc:identifier>
+    <dc:title></dc:title>
+    <dc:description></dc:description>
+    <dct:references></dct:references>
+    <dc:type></dc:type>
+    <dc:creator/>
+    <dc:date></dc:date>
+    <dc:language>eng</dc:language>
+    <dc:subject></dc:subject>
+    <ows:WGS84BoundingBox>
+      <ows:LowerCorner>-180 -90</ows:LowerCorner>
+      <ows:UpperCorner>180 90</ows:UpperCorner>
+    </ows:WGS84BoundingBox>
+  </rdf:Description>
+</rdf:RDF>

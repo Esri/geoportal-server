@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:label="$i18n.catalog.iso19139.DQ_QuantitativeResult"
+           g:extends="$base/schema/gco/gcoBase/ObjectReference_PropertyType.xml">
+  <g:body>
+    <g:element g:minOccurs="0" g:extends="$base/schema/gmd/dataQuality/DQ_QuantitativeResult.xml"/>
+  </g:body>
+</g:element>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Distribution Information 
+		distinfo (/metadata/distinfo)
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect06.xsd
+		http://www.fgdc.gov/metadata/csdgm/06.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="distinfo"
+	g:i18nBase="catalog.fgdc.distinfo" g:label="$i18nBase" 
+	g:extends="$base/core/xml/Element.xml">
+	<g:body>
+		<g:tabs g:extends="$base/core/ui/Tabs.xml">
+			<g:body>
+
+				<!-- distributor (contact) -->
+				<h:div g:label="$i18n.catalog.fgdc.distinfo.section.distributor">
+					<g:element g:targetName="distrib" h:tag="div"
+						g:jsClass="gxe.control.Element">
+						<g:element g:targetName="cntinfo" h:class=""
+							g:extends="$base/schema/cntinfo/cntinfo.xml"/>
+					</g:element>
+				</h:div>
+
+				<!-- description -->
+				<h:div g:label="$i18n.catalog.fgdc.distinfo.section.description">
+
+					<!-- resource description -->
+					<g:element g:targetName="resdesc" g:minOccurs="0"
+						g:preferOpen="true" g:extends="$base/core/xml/ElementTextOnly.xml">
+						<g:body>
+							<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+								<g:options g:i18nBase="fgdc.mdCode.resType">
+									<g:option g:value="" g:label=""/>
+									<g:option g:value="Live Data and Maps" g:label="$i18nBase.liveData"/>
+									<g:option g:value="Downloadable Data" g:label="$i18nBase.downloadableData"/>
+									<g:option g:value="Offline Data" g:label="$i18nBase.offlineData"/>
+									<g:option g:value="Static Map Images" g:label="$i18nBase.staticMapImages"/>
+									<g:option g:value="Other Documents" g:label="$i18nBase.document"/>
+									<g:option g:value="Applications" g:label="$i18nBase.application"/>
+									<g:option g:value="Geographic Services" g:label="$i18nBase.geographicService"/>
+									<g:option g:value="Clearinghouses" g:label="$i18nBase.clearingHouse"/>
+									<g:option g:value="Map Files" g:label="$i18nBase.mapFiles"/>
+									<g:option g:value="Geographic Activities" g:label="$i18nBase.geographicActivies"/>
+									<g:option g:value="_other_" g:label="$i18n.fgdc.mdCode.other"
+										g:isOther="true"/>
+								</g:options>
+							</g:input>
+						</g:body>
+					</g:element>
+
+					<!-- liability statement -->
+					<g:element g:targetName="distliab"
+						g:extends="$base/core/xml/ElementTextOnly.xml">
+						<g:body>
+							<g:input g:extends="$base/core/ui/InputTextArea.xml"/>
+						</g:body>
+					</g:element>
+
+				</h:div>
+
+				<!-- order process -->
+				<h:div g:label="$i18n.catalog.fgdc.distinfo.section.orderProcess">
+
+					<!--
+						TODO: standard order process <g:element g:targetName="stdorder"
+						g:minOccurs="0" g:maxOccurs="unbounded"
+						g:extends="$base/core/xml/Element.xml"> <g:body> </g:body>
+						</g:element>
+					-->
+
+					<!-- custom order process -->
+					<g:element g:targetName="custom" g:minOccurs="0"
+						g:extends="$base/core/xml/ElementTextOnly.xml">
+						<g:body>
+							<g:input g:extends="$base/core/ui/InputTextArea.xml"/>
+						</g:body>
+					</g:element>
+
+				</h:div>
+
+				<!-- technical prerequisites -->
+				<h:div g:label="$i18n.catalog.fgdc.distinfo.section.prerequisites">
+					<g:element g:targetName="techpreq" g:minOccurs="0"
+						g:extends="$base/core/xml/ElementTextOnly.xml">
+						<g:body>
+							<g:input g:extends="$base/core/ui/InputTextArea.xml"/>
+						</g:body>
+					</g:element>
+				</h:div>
+
+				<!-- availability -->
+				<h:div g:label="$i18n.catalog.fgdc.distinfo.section.availability">
+					<g:element g:targetName="availabl" g:minOccurs="0"
+						g:extends="$base/core/xml/Element.xml">
+						<g:body>
+							<g:element g:extends="$base/schema/timeinfo/timeinfo.xml"/>
+						</g:body>
+					</g:element>
+				</h:div>
+
+			</g:body>
+		</g:tabs>
+	</g:body>
+</g:element>
+

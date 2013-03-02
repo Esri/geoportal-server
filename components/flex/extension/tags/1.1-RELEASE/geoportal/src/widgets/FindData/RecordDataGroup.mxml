@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+Esri Inc. licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<s:DataGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+             xmlns:s="library://ns.adobe.com/flex/spark" 
+             creationComplete="initGptRSSFeedDataGroup(event)"
+             itemRenderer="widgets.FindData.RecordItemRenderer"
+             xmlns:mx="library://ns.adobe.com/flex/mx">
+<fx:Script>
+  <![CDATA[
+    import com.esri.ags.Graphic;
+    import com.esri.ags.Map;
+    import com.esri.ags.geometry.Extent;
+    import com.esri.ags.geometry.MapPoint;
+    import com.esri.ags.layers.GraphicsLayer;
+    import com.esri.ags.symbols.SimpleFillSymbol;
+    import com.esri.gpt.finddata.GptRSSEvent;
+    import com.esri.gpt.utils.Utils;
+    import com.esri.viewer.ViewerContainer;
+    
+    import mx.events.FlexEvent;
+    
+    [Event(name="GptRSSRecordClick", 
+         type="com.esri.gpt.finddata.flexviewer.widgets.GptRSSEvent")]
+    [Event(name="GptRSSRecordMouseOver", 
+         type="com.esri.gpt.finddata.flexviewer.widgets.GptRSSEvent")]
+    [Event(name="GptRSSRecordMouseOut", 
+         type="com.esri.gpt.finddata.flexviewer.widgets.GptRSSEvent")]
+    
+    // instance variables ======================================================
+    public var graphicSymbol:SimpleFillSymbol;
+    public var graphicSymbolHighlighted:SimpleFillSymbol;
+    public var graphicsLayer:GraphicsLayer;
+    
+    private var intervalId:Number;
+    private var lastMouseStageX:Number;
+    private var lastMouseStageY:Number;
+    private var map:Map; 
+    
+    // constructors ============================================================
+    /**
+     * On Creation complete
+     * */ 
+    public function initGptRSSFeedDataGroup(event:FlexEvent):void
+    {
+      map = ViewerContainer.getInstance().mapManager.map;
+      map.addEventListener(MouseEvent.MOUSE_MOVE, doHighlightBbox, 
+        false, 0, true);
+      this.addEventListener(MouseEvent.MOUSE_OVER, mouseOverHandler, 
+        false, 3, true); 
+    }
+    
+    // methods =================================================================    
+    /**
+     * Highlights the bboxes according to where the mouse currently is.  Timed
+     * so that it is done on hovering of the mouse 
+     * */
+    private function doHighlightBbox(event:MouseEvent):void {
+      clearTimeout(intervalId);
+      setTimeout(doHighlightBboxWorker, 100, event);
+    }  
+    
+    /**
+     * Mouse over handler
+     * 
+     * @param event The mouse event 
+     * */
+    private function mouseOverHandler(event:MouseEvent):void {
+      
+      ViewerContainer.dispatchEvent(new GptRSSEvent(
+        GptRSSEvent.GPT_UNHIGHLIGHT_ALL, null));
+    }
+    
+    /**
+     * Supports higlighting of bbox when mouse is over the map area
+     * 
+     * @param event The event
+     * @highlithgt true to be highlighted, false to be unhighlighted
+     * 
+     * */
+    private function doHighlightBboxWorker(event:MouseEvent):void {
+      
+      if(graphicsLayer != null) {
+        
+        if(lastMouseStageY == event.stageY  && lastMouseStageX == event.stageX){
+          return;
+        }
+        lastMouseStageY = event.stageY;
+        lastMouseStageX = event.stageX;
+        var point:MapPoint =  map.toMapFromStage(event.stageX, event.stageY);
+        for (var i:Number = 0; i < graphicsLayer.numChildren; i++) {
+          var graphic2:Graphic = graphicsLayer.getChildAt(i) as Graphic;
+          if(graphic2 == null || graphic2.visible == false) {
+            continue;
+          }
+          
+          var extent:Extent = Utils.massageExtent(graphic2.geometry);
+          if(graphic2.geometry != null && extent != null) {
+            var bContainsPoint:Boolean = extent.contains(point);
+            if(bContainsPoint == true ) {
+              ViewerContainer.dispatchEvent(new GptRSSEvent(
+                GptRSSEvent.GPT_RSS_RECORD_MOUSE_OVER,{ graphicId:graphic2.id},
+                true, true));
+            } else {
+              ViewerContainer.dispatchEvent(new GptRSSEvent(
+                GptRSSEvent.GPT_RSS_RECORD_MOUSE_OUT,{ graphicId:graphic2.id},
+                true, true));
+            }
+          }
+        }
+      } 
+      
+      
+    }    
+
+  
+
+  ]]>
+</fx:Script>  
+  <fx:Declarations>
+    <!-- Place non-visual elements (e.g., services, value objects) here -->
+  </fx:Declarations>
+</s:DataGroup>

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.2
+Created-By: 1.6.0_21-b07 (Sun Microsystems Inc.)
+Built-By: ESRI
+Specification-Title: Geoportal Server
+Specification-Version: 0.0
+Specification-Vendor: ESRI
+Implementation-Title: Geoportal Server
+Implementation-Version: Build 1.1.0.41
+Implementation-Vendor: ESRI

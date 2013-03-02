@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gmd:RS_Identifier" 
+           g:extends="$base/schema/gmd/referenceSystem/RS_Identifier_Type.xml"> 
+</g:element>

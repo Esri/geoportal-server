@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.DQ_QuantitativeResult" g:label="$i18nBase"
+           g:extends="$base/schema/gmd/dataQuality/AbstractDQ_Result_Type.xml">
+  <g:body>
+
+    <g:element g:targetName="gmd:valueType" g:minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/RecordType_PropertyType.xml">
+    </g:element>
+
+    <!-- TODO properly define UnitDefinition int UnitOfMeasure_PropertyType
+    <g:element g:targetName="gmd:valueUnit"
+      g:extends="$base/schema/gco/basicTypes/UnitOfMeasure_PropertyType.xml">
+    </g:element>
+    -->
+
+    <g:element g:targetName="gmd:errorStatistic" g:minOccurs="0"
+      g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml">
+    </g:element>
+
+    <g:element g:targetName="gmd:value" g:maxOccurs="unbounded"
+      g:extends="$base/schema/gco/basicTypes/Record_PropertyType.xml">
+    </g:element>
+
+  </g:body>
+  
+</g:element>

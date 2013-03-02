@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Data Quality Information
+		(dataqual, /metadata/dataqual)
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect02.xsd
+		http://www.fgdc.gov/metadata/csdgm/02.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="dataqual"
+	g:i18nBase="catalog.fgdc.dataqual" g:label="$i18nBase" 
+	g:extends="$base/core/xml/Element.xml">
+	<g:body>
+		<g:tabs g:extends="$base/core/ui/Tabs.xml">
+			<g:body>
+
+				<!-- Attribute Accuracy -->
+				<h:div g:label="$i18n.catalog.fgdc.dataqual.section.attracc">
+					<g:element g:targetName="attracc" g:minOccurs="0"
+						g:extends="$base/schema/dataqual/attracc.xml"/>
+				</h:div>
+
+				<!-- Logical Consistency Report -->
+				<h:div g:label="$i18n.catalog.fgdc.dataqual.section.logic">
+					<g:element g:targetName="logic"
+						g:extends="$base/core/xml/ElementTextOnly.xml">
+						<g:body>
+							<g:input g:extends="$base/core/ui/InputTextArea.xml"
+								h:cols="60" h:rows="8"/>
+						</g:body>
+					</g:element>
+				</h:div>
+
+				<!-- Completeness Report -->
+				<h:div g:label="$i18n.catalog.fgdc.dataqual.section.complete">
+					<g:element g:targetName="complete"
+						g:extends="$base/core/xml/ElementTextOnly.xml">
+						<g:body>
+							<g:input g:extends="$base/core/ui/InputTextArea.xml"
+								h:cols="60" h:rows="8"/>
+						</g:body>
+					</g:element>
+				</h:div>
+
+				<!-- Positional Accuracy -->
+				<h:div g:label="$i18n.catalog.fgdc.dataqual.section.posacc">
+					<g:element g:targetName="posacc" g:minOccurs="0"
+						g:extends="$base/schema/dataqual/posacc.xml"/>
+				</h:div>
+
+				<!-- Lineage -->
+				<h:div g:label="$i18n.catalog.fgdc.dataqual.section.lineage">
+					<g:element g:targetName="lineage"
+						g:extends="$base/schema/dataqual/lineage.xml"/>
+				</h:div>
+				
+				<!-- Cloud Coverage -->
+				<h:div g:label="$i18n.catalog.fgdc.dataqual.section.cloud">
+					<g:element g:targetName="cloud" g:minOccurs="0" 
+						g:valueType="xs:integer" 
+						g:alternateValues="Unknown"
+						g:tip="$i18n.catalog.fgdc.dataqual.cloud.tip"
+						g:extends="$base/core/xml/ElementTextOnly.xml">
+						<g:restriction>
+							<g:minInclusive g:value="0"/>
+							<g:maxInclusive g:value="100"/>
+						</g:restriction>
+						<g:body>
+						  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+						    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='Unknown';_o.fireInputChanged();"
+						    >$i18n.catalog.fgdc.general.unknown</h:a>
+						</g:body>
+					</g:element>
+				</h:div>
+
+			</g:body>
+		</g:tabs>
+	</g:body>
+</g:element>
+

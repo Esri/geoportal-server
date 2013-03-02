@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- gmd:MD_Metadata root element (Service) -->     
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+           g:label="$i18n.catalog.mdParam.schema.inspire.services"
+           g:extends="gpt/gxe/iso/iso19139/MD_Metadata_Service.xml"/>

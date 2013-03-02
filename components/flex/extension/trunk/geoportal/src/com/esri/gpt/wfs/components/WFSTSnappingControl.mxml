@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:DataGrid
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	creationComplete="onCreationComplete()"
+	selectable="false">
+	<mx:Script>
+		<![CDATA[
+			import mx.events.CollectionEvent;
+			import mx.events.CollectionEventKind;
+			import mx.events.PropertyChangeEvent;
+			import mx.collections.ArrayCollection;
+			import mx.collections.Sort;
+			import mx.collections.SortField;
+			import com.esri.ags.Map;
+			import com.esri.ags.layers.GraphicsLayer;
+			import com.esri.ags.layers.Layer;
+			import com.esri.ags.events.MapEvent;
+			import com.esri.gpt.wfs.layers.WFSTLazyLockLayer;
+			import com.esri.gpt.wfs.utils.LayerSnapContext;
+			import com.esri.gpt.wfs.utils.WFSUtil;
+			import com.esri.gpt.wfs.utils.SnapMode;
+			import com.esri.gpt.wfs.utils.SnapManager;
+			import com.esri.gpt.wfs.layers.WFSTLayer;
+			
+			private var m_snapManager :SnapManager = new SnapManager();
+			private var m_mapChanged :Boolean = false;
+			private var m_map :Map = null;
+			
+			[Bindable]
+			private var m_layerConfigs :ArrayCollection = new ArrayCollection();
+			
+			[Bindable]
+			/** The Map this control is currently bound to. */
+			public function get map() :Map
+			{
+				return m_map;
+			}
+			
+			/** @private */
+			public function set map( value :Map ) :void
+			{
+				if( m_map != value )
+				{
+					unregisterMapListeners();
+					m_map = value;
+					m_mapChanged = true;
+					registerMapListeners();
+					invalidateProperties();
+				}
+			}
+			
+			[Bindable( "snappingStateChanged" )]
+			/** The snapping is enabled property. */
+			public function get snappingEnabled() :Boolean
+			{
+				return m_snapManager.snappingEnabled();
+			}
+			
+			/** @private */
+			override protected function commitProperties() :void
+			{
+				super.commitProperties();
+				if( m_mapChanged )
+				{
+					// if the map changed, find the WFS layers
+					if( m_mapChanged )
+					{
+						findGraphicsLayers();
+					}
+					m_mapChanged = false;
+				}
+			}
+			
+			/**
+			 * @private
+			 * On creation complete, sets up the component.
+			 */
+			private function onCreationComplete() :void
+			{
+				var sort :Sort = new Sort();
+				sort.fields = [new SortField( "name", false, false )];
+				m_layerConfigs.sort = sort;
+				m_layerConfigs.refresh();
+				
+				dataProvider = m_layerConfigs;
+				dataProvider.addEventListener( CollectionEvent.COLLECTION_CHANGE, handleLayerProviderChange );
+				m_snapManager.layerProvider = m_layerConfigs;
+			}
+			
+			/**
+			 * @private
+			 * Registers the control with the current map.
+			 */
+			private function registerMapListeners() :void
+			{
+				if( map )
+				{
+					m_map.addEventListener( MapEvent.LAYER_ADD, layerAdded );
+					m_map.addEventListener( MapEvent.LAYER_REMOVE, layerRemoved );
+					m_map.addEventListener( MapEvent.LAYER_REMOVE_ALL, allLayersRemoved );
+				}
+			}
+			
+			/**
+			 * @private
+			 * Unregisters the control with the current map.
+			 */
+			private function unregisterMapListeners() :void
+			{
+				if( map )
+				{
+					m_map.removeEventListener( MapEvent.LAYER_ADD, layerAdded );
+					m_map.removeEventListener( MapEvent.LAYER_REMOVE, layerRemoved );
+					m_map.removeEventListener( MapEvent.LAYER_REMOVE_ALL, allLayersRemoved );
+				}
+			}
+			
+			/**
+			 * @private
+			 * Finds the GraphicsLayers available through the map.
+			 */
+			private function findGraphicsLayers() :void
+			{
+				if( map )
+				{
+					for each( var layerID :String in map.layerIds )
+					{
+						var layer :Layer = map.getLayer( layerID );
+						if( layer is GraphicsLayer )
+						{
+							addLayer( GraphicsLayer( layer ) );
+						}
+					}
+				}
+			}
+			
+			/**
+			 * @private
+			 * Handles a GraphicsLayer being added to the Map.
+			 */
+			private function layerAdded( event :MapEvent ) :void
+			{
+				if( event.layer is GraphicsLayer )
+				{
+					addLayer( GraphicsLayer( event.layer ) );
+				}
+			}
+			
+			/**
+			 * @private
+			 * Handles a GraphicsLayer being removed from the Map.
+			 */
+			private function layerRemoved( event :MapEvent ) :void
+			{
+				if( event.layer is GraphicsLayer )
+				{
+					removeLayer( GraphicsLayer( event.layer ) ); 
+				}
+			}
+			
+			/**
+			 * @private
+			 * Handles the removal of all layers from the Map.
+			 */
+			private function allLayersRemoved( event :MapEvent = null ) :void
+			{
+				m_layerConfigs.removeAll();
+			}
+			
+			/**
+			 * @private
+			 * If the layer isn't already configured, configure it and add it to the
+			 * layers which are managed by the snap manager.
+			 * @param layer The GraphicsLayer.
+			 */ 
+			private function addLayer( layer :GraphicsLayer ) :void
+			{
+				if( !configured( layer ) )
+				{
+					if( layer is WFSTLazyLockLayer )
+					{
+						WFSTLazyLockLayer( layer ).snapFunction = m_snapManager.findSnapPoint;
+						WFSTLazyLockLayer( layer ).snapEnabledFunction = m_snapManager.snappingEnabled;
+					}
+					else if( layer is WFSTLayer )
+					{
+						WFSTLayer( layer ).snapFunction = m_snapManager.findSnapPoint;
+						WFSTLayer( layer ).snapEnabledFunction = m_snapManager.snappingEnabled;
+					}
+					
+					var label :String = WFSUtil.getLayerLabel( layer );				
+					var layerContext :LayerSnapContext = new LayerSnapContext();
+					layerContext.name = label;
+					layerContext.edge = false;
+					layerContext.end = false;
+					layerContext.vertex = false;
+					layerContext.layer = layer;
+					
+					m_layerConfigs.addItem( layerContext );
+				}
+			}
+			
+			/**
+			 * @private
+			 * Removes a layer from the list of configured layers.
+			 * @param layer The GraphicsLayer.
+			 */
+			private function removeLayer( layer :GraphicsLayer ) :void
+			{
+				var config :Object = null;
+				for each( var layerConfig :Object in m_layerConfigs )
+				{
+					if( layerConfig.layer == layer )
+					{
+						config = layerConfig;
+						break;
+					}
+				}
+				
+				// remove the configuration matching that layer
+				if( config != null )
+				{
+					m_layerConfigs.removeItemAt( m_layerConfigs.getItemIndex( config ) );
+				}
+			}
+			
+			/**
+			 * @private
+			 * Returns true if the layer is already configured.
+			 * @param layer The GraphicsLayer.
+			 * @return True if the layer is already configured.
+			 */
+			private function configured( layer :GraphicsLayer ) :Boolean
+			{
+				var layerExists :Boolean = false;
+				for each( var layerConfig :Object in m_layerConfigs )
+				{
+					if( layerConfig.layer == layer )
+					{
+						layerExists = true;
+						break;
+					}
+				}
+				return layerExists;
+			}
+			
+			/** Recalculate whether snapping is enabled when the layer provider has been changed. */
+			private function handleLayerProviderChange( event :CollectionEvent ) :void
+			{
+				m_snapManager.resetSnapping();
+				dispatchEvent( new Event( "snappingStateChanged" ) );
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:columns>
+		<mx:DataGridColumn headerText="Layer" dataField="name" sortable="false" editable="false"/>
+		<mx:DataGridColumn headerText="Vertex" dataField="vertex" sortable="false" resizable="false" width="50">
+			<mx:itemRenderer>
+				<mx:Component>
+					<mx:HBox horizontalAlign="center">
+						<mx:Script>
+							<![CDATA[
+								import com.esri.gpt.wfs.utils.LayerSnapContext;
+							]]>
+						</mx:Script>
+						<mx:CheckBox click="LayerSnapContext( data ).vertex = !data.vertex" selected="{data.vertex}"/>
+					</mx:HBox>
+				</mx:Component>
+			</mx:itemRenderer>
+		</mx:DataGridColumn>
+		<mx:DataGridColumn headerText="Edge" dataField="edge" sortable="false" resizable="false" width="45">
+			<mx:itemRenderer>
+				<mx:Component>
+					<mx:HBox horizontalAlign="center">
+						<mx:Script>
+							<![CDATA[
+								import com.esri.gpt.wfs.utils.LayerSnapContext;
+							]]>
+						</mx:Script>
+						<mx:CheckBox horizontalCenter="0" click="LayerSnapContext( data ).edge = !data.edge" selected="{data.edge}"/>
+					</mx:HBox>
+				</mx:Component>
+			</mx:itemRenderer>
+		</mx:DataGridColumn>
+		<mx:DataGridColumn headerText="End" dataField="end" sortable="false" resizable="false" width="40">
+			<mx:itemRenderer>
+				<mx:Component>
+					<mx:HBox horizontalAlign="center">
+						<mx:Script>
+							<![CDATA[
+								import com.esri.gpt.wfs.utils.LayerSnapContext;
+							]]>
+						</mx:Script>
+						<mx:CheckBox horizontalCenter="0" click="LayerSnapContext( data ).end = !data.end" selected="{data.end}"/>
+					</mx:HBox>
+				</mx:Component>
+			</mx:itemRenderer>
+		</mx:DataGridColumn>
+	</mx:columns>
+</mx:DataGrid>

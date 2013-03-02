@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!--  provides a service type domain srv:SV_ServiceIdentification/srv:serviceType -->      
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="srv:serviceType" g:minOccurs="1" g:maxOccurs="1"
+           g:label="$i18n.catalog.iso19139.SV_ServiceIdentification.serviceType"
+           g:extends="$base/xtn/ui/UI_Element.xml"> 
+  <g:body>
+    <g:element g:targetName="gco:LocalName" g:minOccurs="1" g:maxOccurs="1"
+      h:tag="div" g:jsClass="gxe.control.Element">
+      <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+        <g:options g:i18nBase="catalog.mdCode.resourceType">
+          <g:option g:label="" g:value=""/>
+          <g:option g:value="urn:x-esri:specification:ServiceType:ArcIMS" g:label="$i18nBase.urn_x_esri_specification_ServiceType_ArcIMS"/>
+          <g:option g:value="urn:x-esri:specification:ServiceType:ArcGIS" g:label="$i18nBase.urn_x_esri_specification_ServiceType_ArcGIS"/>
+          <g:option g:value="urn:ogc:dataFormat:GML:2.0" g:label="$i18nBase.urn_ogc_dataFormat_GML_2.0"/>
+          <g:option g:value="urn:ogc:dataFormat:GML:2.1.1" g:label="$i18nBase.urn_ogc_dataFormat_GML_2.1.1"/>
+          <g:option g:value="urn:ogc:dataFormat:GML:2.1.2" g:label="$i18nBase.urn_ogc_dataFormat_GML_2.1.2"/>
+          <g:option g:value="urn:ogc:dataFormat:GML:3.0" g:label="$i18nBase.urn_ogc_dataFormat_GML_3.0"/>
+          <g:option g:value="urn:ogc:dataFormat:GML:3.1.1" g:label="$i18nBase.urn_ogc_dataFormat_GML_3.1.1"/>
+          <g:option g:value="urn:ogc:serviceType:CatalogueService:2.0.1:CORBA" g:label="$i18nBase.urn_ogc_serviceType_CatalogueService_2.0.1_CORBA"/>
+          <g:option g:value="urn:ogc:serviceType:CatalogueService:2.0.1:HTTP" g:label="$i18nBase.urn_ogc_serviceType_CatalogueService_2.0.1_HTTP"/>
+          <g:option g:value="urn:ogc:serviceType:CatalogueService:2.0.1:HTTP:ebRIM" g:label="$i18nBase.urn_ogc_serviceType_CatalogueService_2.0.1_HTTP_ebRIM"/>
+          <g:option g:value="urn:ogc:serviceType:CatalogueService:2.0.1:HTTP:EO" g:label="$i18nBase.urn_ogc_serviceType_CatalogueService_2.0.1_HTTP_EO"/>
+          <g:option g:value="urn:ogc:serviceType:CatalogueService:2.0.1:HTTP:FGDC-CSDGM" g:label="$i18nBase.urn_ogc_serviceType_CatalogueService_2.0.1_HTTP_FGDC_CSDGM"/>
+          <g:option g:value="urn:ogc:serviceType:CatalogueService:2.0.1:HTTP:ISO19115/19119" g:label="$i18nBase.urn_ogc_serviceType_CatalogueService_2.0.1_HTTP_ISO19115_19119"/>
+          <g:option g:value="urn:ogc:serviceType:CatalogueService:2.0.1:Z39.50" g:label="$i18nBase.urn_ogc_serviceType_CatalogueService_2.0.1_Z39.50"/>
+          <g:option g:value="urn:ogc:serviceType:CatalogueService:2.0.1:Z39.50:GEOProfile" g:label="$i18nBase.urn_ogc_serviceType_CatalogueService_2.0.1_Z39.50_GEOProfile"/>
+          <g:option g:value="urn:ogc:serviceType:CatalogueService:2.0.1:Z39.50:SRU" g:label="$i18nBase.urn_ogc_serviceType_CatalogueService_2.0.1_Z39.50_SRU"/>
+          <g:option g:value="urn:ogc:serviceType:CatalogueService:2.0.2:CORBA" g:label="$i18nBase.urn_ogc_serviceType_CatalogueService_2.0.2_CORBA"/>
+          <g:option g:value="urn:ogc:serviceType:CatalogueService:2.0.2:HTTP" g:label="$i18nBase.urn_ogc_serviceType_CatalogueService_2.0.2_HTTP"/>
+          <g:option g:value="urn:ogc:serviceType:CatalogueService:2.0.2:HTTP:ebRIM" g:label="$i18nBase.urn_ogc_serviceType_CatalogueService_2.0.2_HTTP_ebRIM"/>
+          <g:option g:value="urn:ogc:serviceType:CatalogueService:2.0.2:HTTP:EO" g:label="$i18nBase.urn_ogc_serviceType_CatalogueService_2.0.2_HTTP_EO"/>
+          <g:option g:value="urn:ogc:serviceType:CatalogueService:2.0.2:HTTP:FGDC-CSDGM" g:label="$i18nBase.urn_ogc_serviceType_CatalogueService_2.0.2_HTTP_FGDC_CSDGM"/>
+          <g:option g:value="urn:ogc:serviceType:CatalogueService:2.0.2:HTTP:ISO19115/19119" g:label="$i18nBase.urn_ogc_serviceType_CatalogueService_2.0.2_HTTP_ISO19115_19119"/>
+          <g:option g:value="urn:ogc:serviceType:CatalogueService:2.0.2:Z39.50" g:label="$i18nBase.urn_ogc_serviceType_CatalogueService_2.0.2_Z39.50"/>
+          <g:option g:value="urn:ogc:serviceType:CoordinateTransformationService:1.0" g:label="$i18nBase.urn_ogc_serviceType_CoordinateTransformationService_1.0"/>
+          <g:option g:value="urn:ogc:serviceType:CoordinateTransformationService:1.0:COM" g:label="$i18nBase.urn_ogc_serviceType_CoordinateTransformationService_1.0_COM"/>
+          <g:option g:value="urn:ogc:serviceType:CoordinateTransformationService:1.0:CORBA" g:label="$i18nBase.urn_ogc_serviceType_CoordinateTransformationService_1.0_CORBA"/>
+          <g:option g:value="urn:ogc:serviceType:CoordinateTransformationService:1.0:Java" g:label="$i18nBase.urn_ogc_serviceType_CoordinateTransformationService_1.0_Java"/>
+          <g:option g:value="urn:ogc:serviceType:GridCoverage:1.0:COM" g:label="$i18nBase.urn_ogc_serviceType_GridCoverage_1.0_COM"/>
+          <g:option g:value="urn:ogc:serviceType:GridCoverage:1.0:CORBA" g:label="$i18nBase.urn_ogc_serviceType_GridCoverage_1.0_CORBA"/>
+          <g:option g:value="urn:ogc:serviceType:OpenLSCoreServices:1.0" g:label="$i18nBase.urn_ogc_serviceType_OpenLSCoreServices_1.0"/>
+          <g:option g:value="urn:ogc:serviceType:OpenLSCoreServices:1.0:SOAP" g:label="$i18nBase.urn_ogc_serviceType_OpenLSCoreServices_1.0_SOAP"/>
+          <g:option g:value="urn:ogc:serviceType:OpenLSCoreServices:1.1" g:label="$i18nBase.urn_ogc_serviceType_OpenLSCoreServices_1.1"/>
+          <g:option g:value="urn:ogc:serviceType:KML:2.2" g:label="$i18nBase.urn_ogc_serviceType_KML_2.2"/>
+          <g:option g:value="urn:ogc:serviceType:SimpleFeatureAccess:1.0:CORBA" g:label="$i18nBase.urn_ogc_serviceType_SimpleFeatureAccess_1.0_CORBA"/>
+          <g:option g:value="urn:ogc:serviceType:SimpleFeatureAccess:1.1:OLE/COM" g:label="$i18nBase.urn_ogc_serviceType_SimpleFeatureAccess_1.1_OLE_COM"/>
+          <g:option g:value="urn:ogc:serviceType:SimpleFeatureAccess:1.1:SQL" g:label="$i18nBase.urn_ogc_serviceType_SimpleFeatureAccess_1.1_SQL"/>
+          <g:option g:value="urn:ogc:serviceType:SimpleFeatureAccess:1.2:SQL" g:label="$i18nBase.urn_ogc_serviceType_SimpleFeatureAccess_1.2_SQL"/>
+          <g:option g:value="urn:ogc:serviceType:SensorObservationService:1.0" g:label="$i18nBase.urn_ogc_serviceType_SensorObservationService_1.0"/>         
+          <g:option g:value="urn:ogc:serviceType:WebCoverageService:1.0" g:label="$i18nBase.urn_ogc_serviceType_WebCoverageService_1.0"/>
+          <g:option g:value="urn:ogc:serviceType:WebCoverageService:1.1.0" g:label="$i18nBase.urn_ogc_serviceType_WebCoverageService_1.1.0"/>
+          <g:option g:value="urn:ogc:serviceType:WebFeatureService:1.0" g:label="$i18nBase.urn_ogc_serviceType_WebFeatureService_1.0"/>
+          <g:option g:value="urn:ogc:serviceType:WebFeatureService:1.1" g:label="$i18nBase.urn_ogc_serviceType_WebFeatureService_1.1"/>
+          <g:option g:value="urn:ogc:serviceType:WebMapService:1.0" g:label="$i18nBase.urn_ogc_serviceType_WebMapService_1.0"/>
+          <g:option g:value="urn:ogc:serviceType:WebMapService:1.1" g:label="$i18nBase.urn_ogc_serviceType_WebMapService_1.1"/>
+          <g:option g:value="urn:ogc:serviceType:WebMapService:1.1.1" g:label="$i18nBase.urn_ogc_serviceType_WebMapService_1.1.1"/>
+          <g:option g:value="urn:ogc:serviceType:WebMapService:1.3.0" g:label="$i18nBase.urn_ogc_serviceType_WebMapService_1.3.0"/>
+          <g:option g:value="urn:ogc:serviceType:WebMapService:Post:0.0.3" g:label="$i18nBase.urn_ogc_serviceType_WebMapService_Post_0.0.3"/>
+          <g:option g:value="urn:ogc:serviceType:WebProcessingService:0.4" g:label="$i18nBase.urn_ogc_serviceType_WebProcessingService_0.4"/>
+        </g:options>
+      </g:input>
+    </g:element>
+
+  </g:body>
+</g:element>

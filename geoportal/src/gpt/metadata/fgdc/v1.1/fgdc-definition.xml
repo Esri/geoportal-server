@@ -1,0 +1,1078 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<schema key="fgdc" templateFile="gpt/metadata/fgdc/fgdc-template.xml" toEsriItemInfoXslt="gpt/metadata/fgdc/fgdc-toEsriItemInfo.xslt">
+
+<!-- schema label -->
+<label resourceKey="catalog.mdParam.schema.fgdc.bestpractice"/>
+  
+<!-- schema interrogation -->
+<interrogation count="count(/metadata/idinfo/citation/*[name()='citeinfo']) * (not(count(/metadata/Esri)))"/>
+
+<!-- indexables -->
+<indexables fileName="gpt/metadata/fgdc/fgdc-indexables.xml"/>
+  
+<!-- START FGDC MINIMUM -->
+<!-- SECTION: Identification Information -->
+<!-- Idetification_Information -->
+<section key="identification">
+    <label resourceKey="fgdc.identification.caption"/>
+    <!-- Citation  cation -->
+    <!-- Citation_Information citeinfo -->
+    <!-- Title -->    
+    <parameter key="identification.title"> 
+        <label resourceKey="fgdc.identification.title"/>
+        <input type="text" maxlength="4000" defaultValue="Untitled"/>
+        <validation required="true"/>
+        <content useSelectForUpdate="true"
+            select="/metadata/idinfo/citation/citeinfo/title" deleteIfEmpty="false"/>
+    </parameter>  
+    <!-- Originator  1:N  origin-->
+    <parameter key="identification.originator"> 
+        <label resourceKey="fgdc.citation.originator"/>
+        <input type="text"/>
+        <validation required="true"/>
+        <content useSelectForUpdate="true"
+             select="/metadata/idinfo/citation/citeinfo/origin" deleteIfEmpty="false"/>
+    </parameter>          
+    <!-- Publication Informantion pubinfo [optional]-->
+    <!-- Publication Place pubplace -->
+    <parameter key="identification.publInfo.publPlac"> 
+        <label resourceKey="fgdc.citation.publInfo.place"/>
+        <input type="text"/>
+        <validation required="false"/>
+        <content useSelectForUpdate="true"
+             select="/metadata/idinfo/citation/citeinfo/pubinfo/pubplace" deleteIfEmpty="false"/>
+    </parameter>
+    <!-- Publisher publish [optional] -->
+      <parameter key="identification.publInfo.publish"> 
+        <label resourceKey="fgdc.citation.publInfo.publish"/>
+        <input type="text"/>
+        <validation required="false"/>
+        <content useSelectForUpdate="true"
+             select="/metadata/idinfo/citation/citeinfo/pubinfo/publish" deleteIfEmpty="false"/>
+    </parameter>
+    <!-- Publication Date pubdate -->
+    <parameter key="identification.publicationDate"> 
+        <label resourceKey="fgdc.citation.publicationDate"/>
+        <input type="text" size="20" maxlength="10" 
+           hintResourceKey="catalog.general.inputDateFormat"
+           defaultValue="#{EditMetadataController.now}"/>
+        <validation required="true" valueType="date"/>
+        <content useSelectForUpdate="true"
+            select="/metadata/idinfo/citation/citeinfo/pubdate" deleteIfEmpty="false"/>
+    </parameter>
+    <!-- Online Linkage onlink [optional]-->
+    <parameter key="identification.onlineLinkage.website">
+        <label resourceKey="fgdc.citation.onlineLinkage.website"/>
+        <input type="text" maxlength="4000"/>
+        <validation required="false" valueType="string"/>
+        <content useSelectForUpdate="true"
+            select="/metadata/idinfo/citation/citeinfo/onlink[1]" deleteIfEmpty="false"/>          
+    </parameter>
+    <parameter key="identification.onlineLinkage.resource">
+        <label resourceKey="fgdc.citation.onlineLinkage.resource"/>
+        <input type="text" maxlength="4000" testResourceKey="catalog.publication.editMetadata.button.test.service"/>
+        <validation required="false" valueType="string"/>
+        <content useSelectForUpdate="true"
+            select="/metadata/idinfo/citation/citeinfo/onlink[2]" deleteIfEmpty="false"/>
+    </parameter>      
+    <!-- Description descript -->
+    <!-- Abstract  abstract-->
+    <parameter key="identification.abstract">
+      <label resourceKey="fgdc.description.abstract"/>
+      <input type="textArea"/>
+      <validation required="true"/>
+      <content useSelectForUpdate="true"
+           select="/metadata/idinfo/descript/abstract" deleteIfEmpty="false"/>
+    </parameter>
+    <!-- Purpose  purpose-->
+    <parameter key="identification.purpose">
+      <label resourceKey="fgdc.description.purpose"/>
+      <input type="textArea"/>
+      <validation required="true"/>
+      <content useSelectForUpdate="true"
+           select="/metadata/idinfo/descript/purpose" deleteIfEmpty="false"/>
+    </parameter>
+
+    <!-- Time_Period_of_Content  timeperd -->
+    <!-- Time_Period_Information  timeinfo -->
+    <!--[ single data/time | multiple date/times | range date/times ] -->    
+    <section key="identification.timePeriod">
+    <label resourceKey="fgdc.timePeriod.catption"/>
+    <!-- single date/time -->
+    <section key="identification.timePeriod.singDate" obligation="exclusive" open="true" select="/metadata/idinfo/timeperd/timeinfo/sngdate">
+    <label resourceKey="fgdc.timePeriod.singDate"/>
+        <parameter key="identification.timePeriod.singDate.caleDate">
+            <label resourceKey="fgdc.timePeriod.singDate.caleDate"/>
+            <input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat"/>
+            <validation required="true" valueType="date"/>
+            <content useSelectForUpdate="true" select="/metadata/idinfo/timeperd/timeinfo/sngdate/caldate" deleteIfEmpty="false" />
+        </parameter>
+    </section>
+    <!-- multiple date/time -->
+    <section key="identification.timePeriod.multDate" obligation="exclusive" open="false" select="/metadata/idinfo/timeperd/timeinfo/mdattim">
+    <label resourceKey="fgdc.timePeriod.multDate"/>
+        <parameter key="identification.timePeriod.multDate1.singDate.caleDate">
+            <label resourceKey="fgdc.timePeriod.singDate.caleDate"/>
+            <input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat"/>
+            <validation required="true" valueType="date"/>
+            <content useSelectForUpdate="true" select="/metadata/idinfo/timeperd/timeinfo/mdattim/sngdate[1]/caldate" deleteIfEmpty="false" />
+        </parameter>
+        <parameter key="identification.timePeriod.multDate2.singDate.caleDate">
+            <label resourceKey="fgdc.timePeriod.singDate.caleDate"/>
+            <input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat"/>
+            <validation required="true" valueType="date"/>
+            <content useSelectForUpdate="true" select="/metadata/idinfo/timeperd/timeinfo/mdattim/sngdate[2]/caldate" deleteIfEmpty="false"/>
+        </parameter>
+        <parameter key="identification.timePeriod.multDate3.singDate.caleDate">
+            <label resourceKey="fgdc.timePeriod.singDate.caleDate"/>
+            <input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat"/>
+            <validation required="false" valueType="date"/>
+            <content useSelectForUpdate="true" select="/metadata/idinfo/timeperd/timeinfo/mdattim/sngdate[3]/caldate" deleteIfEmpty="false"/>
+        </parameter>
+        <parameter key="identification.timePeriod.multDate4.singDate.caleDate">
+            <label resourceKey="fgdc.timePeriod.singDate.caleDate"/>
+            <input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat"/>
+            <validation required="false" valueType="date"/>
+            <content useSelectForUpdate="true" select="/metadata/idinfo/timeperd/timeinfo/mdattim/sngdate[4]/caldate" deleteIfEmpty="false"/>
+        </parameter>
+    </section>            
+    <!-- range date/time -->
+    <section key="identification.timePeriod.rangOfDate" obligation="exclusive" open="false" select="/metadata/idinfo/timeperd/timeinfo/rngdates">
+    <label resourceKey="fgdc.timePeriod.rangOfDate"/>
+        <parameter key="identification.timePeriod.beginDate"> 
+          <label resourceKey="fgdc.timePeriod.beginDate"/>
+          <input type="text" size="20" maxlength="10" 
+             hintResourceKey="catalog.general.inputDateFormat"/>
+          <validation required="true" valueType="date"/>
+          <content useSelectForUpdate="true"
+               select="/metadata/idinfo/timeperd/timeinfo/rngdates/begdate" deleteIfEmpty="false" />
+        </parameter>
+        <parameter key="identification.timePeriod.endDate">
+          <label resourceKey="fgdc.timePeriod.endDate"/>
+          <input type="text" size="20" maxlength="10" 
+             hintResourceKey="catalog.general.inputDateFormat"/>
+          <validation required="true" valueType="date"/>
+          <content useSelectForUpdate="true"
+               select="/metadata/idinfo/timeperd/timeinfo/rngdates/enddate" deleteIfEmpty="false"/>
+        </parameter>
+    </section>
+</section>
+    <section key="identification.timePeriod.section"> 
+        <!--Correntness_Reference :current -->
+        <parameter key="identification.timePeriod.currentness"> 
+          <label resourceKey="fgdc.timePeriod.currentness"/>
+          <input type="text"/>
+          <validation required="true"/>
+          <content useSelectForUpdate="true"
+               select="/metadata/idinfo/timeperd/current" deleteIfEmpty="false" />
+        </parameter>        
+    </section>
+    <!-- Status -->
+    <!-- Progress : progress -->
+    <parameter key="identification.status.progress">
+        <label resourceKey="fgdc.status.progress"/>
+        <input type="selectOneMenu" size="30"/>
+        <validation required="true"/>
+        <content useSelectForUpdate="true"
+            select="/metadata/idinfo/status/progress" deleteIfEmpty="false">
+            <codes>
+                <code key="Complete" resourceKey="fgdc.mdCode.progress.completed"/>
+                <code key="In work" resourceKey="fgdc.mdCode.progress.inWork"/>
+                <code key="Planned" resourceKey="fgdc.mdCode.progress.planned"/>               
+            </codes>
+        </content>
+    </parameter>
+    <!-- Maintenance_and_Update_Frequency : update -->
+    <parameter key="identification.status.frequency">
+        <label resourceKey="fgdc.status.frequency"/>
+        <input type="selectWithOther" otherCodeKey="otherCodeKey" size="30" />
+        <validation required="true"/>
+        <content useSelectForUpdate="true"
+           select="/metadata/idinfo/status/update" deleteIfEmpty="false">
+            <codes>
+                <code key="Continually" resourceKey="fgdc.mdCode.frequency.continual"/>
+                <code key="Daily" resourceKey="fgdc.mdCode.frequency.daily"/>
+                <code key="Weekly" resourceKey="fgdc.mdCode.frequency.weekly"/>                
+                <code key="Monthly" resourceKey="fgdc.mdCode.frequency.monthly"/>                
+                <code key="Annually" resourceKey="fgdc.mdCode.frequency.annually"/>                
+                <code key="Unknown" resourceKey="fgdc.mdCode.frequency.unknown"/>                
+                <code key="As needed" resourceKey="fgdc.mdCode.frequency.asNeeded"/>
+                <code key="Irregular" resourceKey="fgdc.mdCode.frequency.irregular"/>                
+                <code key="None planned" resourceKey="fgdc.mdCode.frequency.notPlanned"/>
+                <code key="otherCodeKey" resourceKey="fgdc.mdCode.other"/>               
+            </codes>
+        </content>     
+    </parameter>      
+      
+    <!-- Spatial_Domain  spdom -->
+    <section key="identification.envelope" select="/metadata/idinfo/spdom/bounding">
+    <!-- Bounding_Coordinates bounding -->
+        <!-- West_Bounding_Coordinate  westbc-->
+        <parameter key="identification.envelope.west" meaning="envelope.west"> 
+            <label resourceKey="fgdc.envelope.west"/>
+            <input type="text" size="24" maxlength="24" defaultValue="-180"
+                hintResourceKey="catalog.general.inputLongitudeFormat"/>
+            <validation required="true" valueType="double"/>
+            <content useSelectForUpdate="true"
+                select="/metadata/idinfo/spdom/bounding/westbc" deleteIfEmpty="false"/> 
+        </parameter>
+        <!-- East_Bounding_Coordinate  eastbc-->
+        <parameter key="identification.envelope.east" meaning="envelope.east"> 
+            <label resourceKey="fgdc.envelope.east"/>
+            <input type="text" size="24" maxlength="24" defaultValue="180"
+                hintResourceKey="catalog.general.inputLongitudeFormat"/>
+            <validation required="true" valueType="double"/>
+            <content useSelectForUpdate="true"
+                select="/metadata/idinfo/spdom/bounding/eastbc" deleteIfEmpty="false"/> 
+        </parameter>          
+        <!-- North_Bounding_Coordinate  northbc -->
+        <parameter key="identification.envelope.north" meaning="envelope.north"> 
+            <label resourceKey="fgdc.envelope.north"/>
+            <input type="text" size="24" maxlength="24" defaultValue="90"
+                hintResourceKey="catalog.general.inputLatitudeFormat"/>
+            <validation required="true" valueType="double"/>
+            <content useSelectForUpdate="true"
+                select="/metadata/idinfo/spdom/bounding/northbc" deleteIfEmpty="false"/> 
+        </parameter>
+        <!-- South_Bounding_Coordinate  southbc -->     
+        <parameter key="identification.envelope.south" meaning="envelope.south"> 
+            <label resourceKey="fgdc.envelope.south"/>
+            <input type="text" size="24" maxlength="24" defaultValue="-90"
+                hintResourceKey="catalog.general.inputLatitudeFormat"/>
+            <validation required="true" valueType="double" />
+            <content useSelectForUpdate="true"
+                select="/metadata/idinfo/spdom/bounding/southbc" deleteIfEmpty="false"/>  
+        </parameter>
+        <section key="envelope.map.container">
+            <parameter key="envelope.map"> 
+               <input type="map"/>
+            </parameter>
+        </section>
+    </section>    
+    <!-- Point_of_Contact  ptcontac -->
+    <section key="idenInfo.poinOfCont" open="false" obligation="optional" select="/metadata/idinfo/ptcontac">
+        <label resourceKey="fgdc.idenInfo.poinOfCont"/> 
+        <!-- Contact Information  cntinfo -->
+        <!-- Contact Organization Primary cntorgp -->
+
+        <!-- Contact Organization  cntorg -->
+        <parameter key="identification.contactinfo.cntorgp.cntorg"> 
+            <label resourceKey="fgdc.standard.organization"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="true"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/idinfo/ptcontac/cntinfo/cntorgp/cntorg" deleteIfEmpty="false"/>
+        </parameter>
+        <!-- Contact Person  cntper -->          
+        <parameter key="identification.contactinfo.cntorgp.cntper"> 
+            <label resourceKey="fgdc.standard.contactPerson"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="false"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/idinfo/ptcontac/cntinfo/cntorgp/cntper" deleteIfEmpty="false"/>
+        </parameter>        
+        <!-- Contact Position cntpos  -->
+        <parameter key="identification.contactinfo.contactperprim.contPosi"> 
+            <label resourceKey="fgdc.standard.contactPosition"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="false"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/idinfo/ptcontac/cntinfo/cntpos" deleteIfEmpty="false"/>
+        </parameter>              
+        <!-- Contact Address  cntaddr -->
+        <!-- Address_Type  addrtype -->
+        <parameter key="identification.contactinfo.cntaddress.addrtype"> 
+            <label resourceKey="fgdc.standard.address.type"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="true"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/idinfo/ptcontac/cntinfo/cntaddr/addrtype" deleteIfEmpty="false"/>
+        </parameter>        
+        <!-- Address  address -->
+        <parameter key="identification.contactinfo.cntaddress.address"> 
+            <label resourceKey="fgdc.standard.address.address"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="true"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/idinfo/ptcontac/cntinfo/cntaddr/address" deleteIfEmpty="false"/>
+        </parameter>        
+        <!-- City  city -->
+        <parameter key="identification.contactinfo.cntaddress.city"> 
+            <label resourceKey="fgdc.standard.address.city"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="true"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/idinfo/ptcontac/cntinfo/cntaddr/city" deleteIfEmpty="false"/>
+        </parameter>        
+        <!-- State_or_Province   state -->
+        <parameter key="identification.contactinfo.cntaddress.state"> 
+            <label resourceKey="fgdc.standard.address.state"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="true"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/idinfo/ptcontac/cntinfo/cntaddr/state" deleteIfEmpty="false"/>
+        </parameter>        
+        <!-- Postal_Code  postal -->
+        <parameter key="identification.contactinfo.cntaddress.postal"> 
+            <label resourceKey="fgdc.standard.postal"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="true"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/idinfo/ptcontac/cntinfo/cntaddr/postal" deleteIfEmpty="false"/>
+        </parameter>            
+        <!-- Contact Voice Telephone  cntvoice -->
+        <parameter key="identification.contactinfo.cntvoice"> 
+            <label resourceKey="fgdc.standard.voiceTelephone"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="true"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/idinfo/ptcontac/cntinfo/cntvoice" deleteIfEmpty="false"/>
+        </parameter>
+        <!-- Contact_Facsimile_Telephone cntfax [optional]-->
+        <parameter key="identification.contactinfo.cntfax"> 
+            <label resourceKey="fgdc.standard.fax"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="false"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/idinfo/ptcontac/cntinfo/cntfax" deleteIfEmpty="false"/>
+        </parameter>      
+        <!-- Contact_Electronic_Mail_Address cntemail [optional]-->                    
+        <parameter key="identification.contactinfo.cntemail"> 
+            <label resourceKey="fgdc.standard.email"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="false"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/idinfo/ptcontac/cntinfo/cntemail" deleteIfEmpty="false"/>
+        </parameter>
+        <!-- Contact Instruction cntinst [optional] -->
+        <parameter key="identification.contactinfo.cntinst"> 
+            <label resourceKey="fgdc.standard.contInst"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="false"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/idinfo/ptcontac/cntinfo/cntinst" deleteIfEmpty="false"/>
+        </parameter>
+    </section>
+    
+    <!-- thumbnail section optional-->
+    <section key="idenInfo.thumbnail" open="false" obligation="optional" select="/metadata/idinfo/browse">
+        <label resourceKey="catalog.mdParam.thumbnail.caption"/>
+        <parameter key="idenInfo.thumbnail.url">
+            <label resourceKey="catalog.mdParam.thumbnail.url"/>
+            <input type="text" maxlength="2048"/>
+            <validation required="true"/>
+            <content useSelectForUpdate="true"
+                select="/metadata/idinfo/browse/browsen" deleteIfEmpty="false"/>
+        </parameter>        
+        <parameter key="idenInfo.thumbnail.description">
+          <label resourceKey="catalog.mdParam.thumbnail.description" />
+          <input type="text"/>
+          <validation required="true"/>
+          <content useSelectForUpdate="true"
+                   select="/metadata/idinfo/browse/browsed" deleteIfEmpty="false"/> 
+        </parameter>        
+        <parameter key="idenInfo.thumbnail.type">
+          <label resourceKey="catalog.mdParam.thumbnail.type"/>
+          <input type="text" size="10"/>
+          <validation required="true"/>
+          <content useSelectForUpdate="true"
+                   select="/metadata/idinfo/browse/browset" deleteIfEmpty="false"/> 
+        </parameter>        
+    </section>
+    
+    <section key="idenInfo.constraints" open="true">
+        <label resourceKey="catalog.mdParam.constraint.caption"/>
+        <!-- Access_Constraints  accconst -->
+        <parameter key="identification.constraint.access">
+            <label resourceKey="fgdc.constraint.access"/>
+            <input type="text"  defaultValue="None"/>
+            <validation required="true"/>
+            <content useSelectForUpdate="true" select="/metadata/idinfo/accconst" deleteIfEmpty="false" />
+        </parameter>
+        <!-- Use_Constraints  useconst -->
+        <parameter key="identification.constraint.use">
+            <label resourceKey="fgdc.constraint.use"/>
+            <input type="text"  defaultValue="None"/>
+            <validation required="true"/>
+            <content useSelectForUpdate="true"
+                 select="/metadata/idinfo/useconst" deleteIfEmpty="false">
+            </content>
+        </parameter>
+        <!-- Security Information secinfo -->
+        <!-- Security Classification System  secsys [optional] -->
+        <parameter key="identification.secuInfo.secuClasSyst">
+            <label resourceKey="fgdc.secuInfo.secuClasSyst"/>
+            <input type="text"  maxlength="4000" defaultValue=""/>
+            <validation required="false"/>
+            <content useSelectForUpdate="true" select="/metadata/idinfo/secinfo/secsys" deleteIfEmpty="false" />
+        </parameter>            
+        <!-- Security Classification  secclass  [optional] -->
+        <parameter key="identification.secuInfo.secuClas">
+            <label resourceKey="fgdc.secuInfo.secuClas"/>              
+            <input type="selectWithOther" otherCodeKey="otherCodeKey" size="30" />
+            <validation required="false"/>
+            <content useSelectForUpdate="true" select="/metadata/idinfo/secinfo/secclass" deleteIfEmpty="false">
+                <codes> 
+                  <code key="Top secret" resourceKey="fgdc.mdCode.topSecret"/>                
+                  <code key="Secret" resourceKey="fgdc.mdCode.secret"/>
+                  <code key="Confidential" resourceKey="fgdc.mdCode.confidential"/>
+                  <code key="Restricted" resourceKey="fgdc.mdCode.restricted"/>
+                  <code key="Unclassified" resourceKey="fgdc.mdCode.unclassified"/>
+                  <code key="Sensitive" resourceKey="fgdc.mdCode.sensitive"/>     
+                  <code key="otherCodeKey" resourceKey="fgdc.mdCode.other"/>               
+                </codes>                  
+            </content>    
+        </parameter>            
+        <!-- Security Handling Description  sechandl [optional] -->
+        <parameter key="identification.secuInfo.secuHandDesc">
+            <label resourceKey="fgdc.secuInfo.secuHandDesc"/>
+            <input type="text"  maxlength="4000" defaultValue=""/>
+            <validation required="false"/>
+            <content useSelectForUpdate="true" select="/metadata/idinfo/secinfo/sechandl" deleteIfEmpty="false" />
+        </parameter>        
+    </section>
+</section>
+
+<!-- Data Themes-->
+<section key="dataThemes">
+<label resourceKey="fgdc.theme.caption"/>
+    <!-- Data Category -->
+    <!-- Theme  theme-->
+    <!-- Data keyword Thesaurus  themekt -->
+    <parameter key="identification.theme.topics.reference"> 
+        <label resourceKey="fgdc.keywords.theme.reference"/>
+        <input type="text" defaultValue="None" />
+        <validation required="true"/>
+        <content useSelectForUpdate="false"
+            select="/metadata/idinfo/keywords/theme[1]/themekt[.!='']" 
+               update="/metadata/idinfo/keywords/theme[1]/themekt" deleteIfEmpty="false"/>          
+    </parameter>
+    <parameter key="theme.topics">
+        <label resourceKey="fgdc.theme.topics"/>
+        <input type="selectManyCheckbox"/>
+        <validation required="true"/>
+        <content nodeType="list" useSelectForUpdate="true"
+             select="/metadata/idinfo/keywords/theme[1]/themekey" deleteIfEmpty="false">
+            <codes>
+                <code key="boundaries"                       
+                    resourceKey="fgdc.mdCode.topic.boundaries"/>
+                <code key="farming"                          
+                    resourceKey="fgdc.mdCode.topic.farming"/>
+                <code key="climatologyMeteorologyAtmosphere" 
+                    resourceKey="fgdc.mdCode.topic.climatologyMeteorologyAtmosphere"/>
+                <code key="biota"                            
+                    resourceKey="fgdc.mdCode.topic.biota"/>
+                <code key="economy"                          
+                    resourceKey="fgdc.mdCode.topic.economy"/>
+                <code key="planningCadastre"                 
+                    resourceKey="fgdc.mdCode.topic.planningCadastre"/>
+                <code key="society"                          
+                    resourceKey="fgdc.mdCode.topic.society"/>
+                <code key="elevation"                        
+                    resourceKey="fgdc.mdCode.topic.elevation"/>
+                <code key="environment"                      
+                    resourceKey="fgdc.mdCode.topic.environment"/>
+                <code key="structure"                        
+                    resourceKey="fgdc.mdCode.topic.structure"/>
+                <code key="geoscientificInformation"         
+                    resourceKey="fgdc.mdCode.topic.geoscientificInformation"/>
+                <code key="health"                           
+                    resourceKey="fgdc.mdCode.topic.health"/>
+                <code key="imageryBaseMapsEarthCover"        
+                    resourceKey="fgdc.mdCode.topic.imageryBaseMapsEarthCover"/>
+                <code key="inlandWaters"                     
+                    resourceKey="fgdc.mdCode.topic.inlandWaters"/>
+                <code key="location"                         
+                    resourceKey="fgdc.mdCode.topic.location"/>
+                <code key="intelligenceMilitary"             
+                    resourceKey="fgdc.mdCode.topic.intelligenceMilitary"/>
+                <code key="oceans"                           
+                    resourceKey="fgdc.mdCode.topic.oceans"/>
+                <code key="transportation"                   
+                    resourceKey="fgdc.mdCode.topic.transportation"/>
+                <code key="utilitiesCommunication"           
+                    resourceKey="fgdc.mdCode.topic.utilitiesCommunication"/>
+            </codes>
+        </content>
+    </parameter>
+</section>
+
+<!-- Keywords -->
+<section key="themeKeywords">
+<label resourceKey="fgdc.keywords.caption"/>       
+    <!-- Theme  theme-->
+    <!-- Theme_Keyword_Thesaurus  themekt is NOT displayed-->
+    <parameter key="identification.keywords.theme.reference"> 
+        <label resourceKey="fgdc.keywords.theme.reference"/>
+        <input type="text" defaultValue="None" />
+        <validation required="false"/>
+        <content useSelectForUpdate="false"
+            select="/metadata/idinfo/keywords/theme[2]/themekt[.!='']" 
+            update="/metadata/idinfo/keywords/theme[2]/themekt"  deleteIfEmpty="false"/>
+    </parameter>
+    <!-- Theme_Keyword  1:N  themekey -->
+    <parameter key="identification.keywords.theme"> 
+      <label resourceKey="fgdc.keywords.theme"/>
+      <input type="delimitedTextArea"/>
+      <validation required="false"/>
+      <content nodeType="list" useSelectForUpdate="true"
+           select="/metadata/idinfo/keywords/theme[2]/themekey" deleteIfEmpty="false"/>
+    </parameter>
+    <!-- Place place  [optional]-->
+    <!-- Place_Keyword_Thesaurus [optional] -->
+    <parameter key="identification.keywords.place.placKeywThes">
+        <label resourceKey="fgdc.keywords.placeKeywordThesaurus"/>              
+        <input type="selectWithOther" otherCodeKey="otherCodeKey" size="30" />
+        <validation required="false"/>
+            <content useSelectForUpdate="true" 
+                select="/metadata/idinfo/keywords/place/placekt" deleteIfEmpty="false">
+                <codes>   
+                    <code key="None" resourceKey="fgdc.mdCode.none"/>                
+                    <code key="Geographic Names Information System" resourceKey="fgdc.mdCode.geographicNamesInformationSystem"/>
+                    <code key="otherCodeKey" resourceKey="fgdc.mdCode.other"/>               
+                  </codes>                
+              </content>      
+    </parameter>            
+    <!-- Place_Keyword placekey  [optional] -->
+    <parameter key="identification.keywords.place.placKeyw">
+        <label resourceKey="fgdc.keywords.placeKeyword"/>
+        <input type="delimitedTextArea"/>
+        <validation required="false"/>
+        <content nodeType="list" useSelectForUpdate="true" 
+            select="/metadata/idinfo/keywords/place/placekey" deleteIfEmpty="false"/>
+    </parameter>                      
+</section>      
+
+
+<!-- ++++++++++++++++++++++++++++++++++++ -->
+<!-- 0{Data Quality Information Section}1 -->
+<!-- ++++++++++++++++++++++++++++++++++++ -->
+<section key="dataQualInfo" open="false" obligation="optional" select="/metadata/dataqual">
+    <label resourceKey="fgdc.dataQualInfo.caption"/>
+
+    <!-- Logical_Consistency_Report  logic-->
+    <parameter key="dataQualInfo.logiConsRepo" >
+        <label resourceKey="fgdc.dataQualInfo.logiConsRepo"/>
+        <input type="text" maxlength="4000"  defaultValue=""/>
+        <validation required="true"/>
+        <content useSelectForUpdate="true" select="/metadata/dataqual/logic" deleteIfEmpty="false"/>      
+    </parameter>    
+
+    <!-- Completeness_Report complete-->
+    <parameter key="dataQualInfo.compRepo" >
+        <label resourceKey="fgdc.dataQualInfo.compRepo"/>
+        <input type="text" maxlength="4000" defaultValue=""/>
+        <validation required="true" />
+        <content useSelectForUpdate="true" select="/metadata/dataqual/complete" deleteIfEmpty="false"/>
+    </parameter>
+
+    <!-- 0{Positional_Accuracy}1  posacc -->
+    <section key="dataQualInfo.posiAccu" open="false" obligation="optional" select="/metadata/dataqual/posacc">
+    <label resourceKey="fgdc.dataQualInfo.posiAccu.section"/>
+        <!-- Horizontal_Positional_Accuracy_Report  horizpar-->
+        <parameter key="dataQualInfo.posiAccu.horiPosiAccu.horiPosiAccuRepo" >
+            <label resourceKey="fgdc.dataQualInfo.posiAccu.horiPosiAccu.horiPosiAccuRepo"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="true"/>
+            <content useSelectForUpdate="true" select="/metadata/dataqual/posacc/horizpa/horizpar" deleteIfEmpty="false"/>              
+        </parameter>
+        <!-- *** QUESTION *** : HOW TO DEAL WITH 1:N in this case -->
+        <!-- 1{Quantative_Horizontal_Positional_Accuracy_Assessment}n  qhorizpa-->                                  
+        <!-- Horizontal_Positional_Accuracy_Value  horizpav "free real"-->
+        <parameter key="dataQualInfo.posiAccu.horiPosiAccu.quanHoriPosiAccuAsse.horiPosiAccuValu" >
+            <label resourceKey="fgdc.dataQualInfo.posiAccu.horiPosiAccu.quanHoriPosiAccuAsse.horiPosiAccuValu"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+                <validation required="false" valueType="double" />
+                <content useSelectForUpdate="true" select="/metadata/dataqual/posacc/horizpa/qhorizpa/horizpav" deleteIfEmpty="false"/>
+        </parameter>
+        <!-- Horizontal_Positional_Accuracy_Explanation  horizpae -->
+        <parameter key="dataQualInfo.posiAccu.horiPosiAccu.quanHoriPosiAccuAsse.horiPosiAccuExpl" >
+            <label resourceKey="fgdc.dataQualInfo.posiAccu.horiPosiAccu.quanHoriPosiAccuAsse.horiPosiAccuExpl"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="false" valueType="string" />
+            <content useSelectForUpdate="true" select="/metadata/dataqual/posacc/horizpa/qhorizpa/horizpae" deleteIfEmpty="false"/>
+        </parameter>
+        <!-- Vertical_Positional_Accuracy_Report  vertaccr-->
+        <parameter key="dataQualInfo.posiAccu.vertPosiAccu.vertPosiAccuRepo" >
+            <label resourceKey="fgdc.dataQualInfo.posiAccu.vertPosiAccu.vertPosiAccuRepo"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="false"/>
+            <content useSelectForUpdate="true" select="/metadata/dataqual/posacc/vertacc/vertaccr" deleteIfEmpty="false"/>
+        </parameter>
+        <!-- 1{Quantative_Vertical_Positional_Accuracy_Assessment}n  qvertpa -->
+        <!-- Vertical_Positional_Accuracy_Value  vertaccv "free real"-->
+        <parameter key="dataQualInfo.posiAccu.verPosiAccu.quanVertPosiAccuAsse.vertPosiAccuValu">
+            <label resourceKey="fgdc.dataQualInfo.posiAccu.verPosiAccu.quanVertPosiAccuAsse.vertPosiAccuValu"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="false"/>
+            <content useSelectForUpdate="true" select="/metadata/dataqual/posacc/vertacc/qvertpa/vertaccv" deleteIfEmpty="false"/>
+        </parameter>
+        <!-- Vertical_Positional_Accuracy_Explannation  vertacce -->
+        <parameter key="dataQualInfo.posiAccu.verPosiAccu.quanVertPosiAccuAsse.vertPosiAccuExpl" >
+            <label resourceKey="fgdc.dataQualInfo.posiAccu.verPosiAccu.quanVertPosiAccuAsse.vertPosiAccuExpl"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="false"/>
+            <content useSelectForUpdate="true" select="/metadata/dataqual/posacc/vertacc/qvertpa/vertacce" deleteIfEmpty="false"/>
+        </parameter>
+    </section>  
+  
+    <section key="dataQualInfo.line" open="true" optional="false" select="/metadata/dataqual/lineage">
+    <label resourceKey="fgdc.dataQualInfo.line.section"/>
+    <!-- Process_Description   procdesc -->
+    <parameter key="dataQualInfo.line.procStep1.procDesc" >
+        <label resourceKey="fgdc.dataQualInfo.line.procStep1.procDesc"/>
+        <input type="text" maxlength="4000" defaultValue=""/>
+        <validation required="true" valueType="string"/>
+        <content useSelectForUpdate="true" select="/metadata/dataqual/lineage/procstep[1]/procdesc" deleteIfEmpty="false"/>              
+    </parameter>          
+    <!-- Process_Date  procdate -->
+    <parameter key="dataQualInfo.line.procStep1.procDate" >
+        <label resourceKey="fgdc.dataQualInfo.line.procStep1.procDate"/>
+        <input type="text" maxlength="4000" defaultValue=""/>
+        <validation required="true" valueType="string"/>
+        <content useSelectForUpdate="true" select="/metadata/dataqual/lineage/procstep[1]/procdate" deleteIfEmpty="false"/>
+    </parameter> 
+    <!-- Process_Description   procdesc -->
+    <parameter key="dataQualInfo.line.procStep2.procDesc" >
+        <label resourceKey="fgdc.dataQualInfo.line.procStep2.procDesc"/>
+        <input type="text" maxlength="4000" defaultValue=""/>
+        <validation required="false" valueType="string"/>
+        <content useSelectForUpdate="true" select="/metadata/dataqual/lineage/procstep[2]/procdesc" deleteIfEmpty="false"/>              
+    </parameter>          
+    <!-- Process_Date  procdate -->
+    <parameter key="dataQualInfo.line.procStep2.procDate" >
+        <label resourceKey="fgdc.dataQualInfo.line.procStep2.procDate"/>
+        <input type="text" maxlength="4000" defaultValue=""/>
+        <validation required="false" valueType="string"/>
+        <content useSelectForUpdate="true" select="/metadata/dataqual/lineage/procstep[2]/procdate" deleteIfEmpty="false"/>
+    </parameter> 
+    <!-- Process_Description   procdesc -->
+    <parameter key="dataQualInfo.line.procStep3.procDesc" >
+        <label resourceKey="fgdc.dataQualInfo.line.procStep3.procDesc"/>
+        <input type="text" maxlength="4000" defaultValue=""/>
+        <validation required="false" valueType="string"/>
+        <content useSelectForUpdate="true" select="/metadata/dataqual/lineage/procstep[3]/procdesc" deleteIfEmpty="false"/>              
+    </parameter>          
+    <!-- Process_Date  procdate -->
+    <parameter key="dataQualInfo.line.procStep3.procDate" >
+        <label resourceKey="fgdc.dataQualInfo.line.procStep3.procDate"/>
+        <input type="text" maxlength="4000" defaultValue=""/>
+        <validation required="false" valueType="string"/>
+        <content useSelectForUpdate="true" select="/metadata/dataqual/lineage/procstep[3]/procdate" deleteIfEmpty="false"/>
+    </parameter> 
+  </section>
+</section>  
+<!-- End of Data Quality Information-->
+
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++ -->
+<!-- 0{Entity and Attribute Information}1 eainfo -->
+<!-- +++++++++++++++++++++++++++++++++++++++++++ -->
+<section key="entiAndAttrInfo" open="false" obligation="optional" select="/metadata/eainfo">
+    <label resourceKey="fgdc.entiAndAttrInfo.caption"/>
+    <!-- Overview_Description overview -->
+    <!-- Entity_and_Attribute_Overview eaover -->
+    <parameter key="entiAndAttrInfo.overDesc.entiAndAttrOver" >
+        <label resourceKey="fgdc.entiAndAttrInfo.overDesc.entiAndAttrOver"/>
+        <input type="text" maxlength="4000" defaultValue=""/>
+        <validation required="false" valueType="string"/>
+        <content useSelectForUpdate="true" select="/metadata/eainfo/overview/eaover" deleteIfEmpty="false"/>              
+    </parameter>                
+    <!-- Entity_and_Attribute_Detail_Citation eadetcit -->
+    <parameter key="entiAndAttrInfo.overDesc.entiAndAttrDetaCita" >
+        <label resourceKey="fgdc.entiAndAttrInfo.overDesc.entiAndAttrDetaCita"/>
+        <input type="text" maxlength="4000" defaultValue=""/>
+        <validation required="false" valueType="string"/>
+        <content useSelectForUpdate="true" select="/metadata/eainfo/overview/eadetcit" deleteIfEmpty="false"/>              
+    </parameter>
+</section>
+
+<!-- End of Entity and Attribute Information -->
+
+<!-- +++++++++++++++++++++++++++++++++++++++ -->
+<!-- 0{Spatial Reference Information}1 spref -->
+<!-- +++++++++++++++++++++++++++++++++++++++ -->
+<section key="spatRefeInfo" open="false" obligation="optional" select="/metadata/spref">
+    <label resourceKey="fgdc.spatRefeInfo.caption"/>
+    <!-- Horizontal Cooridate System Definition  horizsys -->   
+        <!-- Geographic geograph -->
+            <!-- Latitude Resolution  latres -->
+            <parameter key="spatRefeInfo.horiCoorSystDefi.geog.latiReso"> 
+              <label resourceKey="fgdc.spatRefeInfo.horiCoorSystDefi.geog.latiReso"/>
+              <input type="text" size="24" maxlength="24" defaultValue="" />
+              <validation required="true" valueType="double"/>
+              <content useSelectForUpdate="true"
+                   select="/metadata/spref/horizsys/geograph/latres" deleteIfEmpty="false"/> 
+            </parameter>            
+            <!-- Longitude Resolution  longres -->
+            <parameter key="spatRefeInfo.horiCoorSystDefi.geog.longReso"> 
+              <label resourceKey="fgdc.spatRefeInfo.horiCoorSystDefi.geog.longReso"/>
+              <input type="text" size="24" maxlength="24" defaultValue="" />
+              <validation required="true" valueType="double"/>
+              <content useSelectForUpdate="true"
+                   select="/metadata/spref/horizsys/geograph/longres" deleteIfEmpty="false"/> 
+            </parameter>    
+            <!-- Geographic Coordinate Units  geogunit -->
+            <parameter key="spatRefeInfo.horiCoorSystDefi.geog.geogCoorUnit">
+              <label resourceKey="fgdc.spatRefeInfo.horiCoorSystDefi.geog.geogCoorUnit"/>
+              <input type="selectOneMenu" size="30"/>
+              <validation required="true"/>
+              <content useSelectForUpdate="true"
+                   select="/metadata/spref/horizsys/geograph/geogunit" deleteIfEmpty="false">
+                  <codes>
+                      <code key="Decimal degrees" resourceKey="fgdc.mdCode.decimalDegrees"/>
+                      <code key="Decimal minutes" resourceKey="fgdc.mdCode.decimalMinutes"/>
+                      <code key="Decimal seconds" resourceKey="fgdc.mdCode.decimalSeconds"/> 
+                      <code key="Degrees and decimal minutes" resourceKey="fgdc.mdCode.degreesAndDecimalMinutes"/> 
+                      <code key="Degrees, minutes, and decimal seconds" resourceKey="fgdc.mdCode.degreesMinutesAndDecimalSeconds"/> 
+                      <code key="Radiands" resourceKey="fgdc.mdCode.radians"/> 
+                      <code key="Grads" resourceKey="fgdc.mdCode.grads"/>               
+                  </codes>
+              </content>
+            </parameter>            
+        <!-- Geodetic Model geodetic -->
+        <section key="spatRefeInfo.horiCoorSystDefi.geodetic" open="false" obligation="optional" select="/metadata/spref/horizsys/geodetic">
+            <label resourceKey="fgdc.spatRefeInfo.horiCoorSystDefi.geodMode"/>              
+            <!-- Horizontal Datum Name  horizdn -->
+            <parameter key="spatRefeInfo.horiCoorSystDefi.geodMode.horiDatuName">
+              <label resourceKey="fgdc.spatRefeInfo.horiCoorSystDefi.geodMode.horiDatuName"/>
+              <input type="selectWithOther" otherCodeKey="otherCodeKey" size="30" />
+              <validation required="false"/>
+              <content useSelectForUpdate="true"
+                   select="/metadata/spref/horizsys/geodetic/horizdn" deleteIfEmpty="false">
+                <codes>
+                    <code key="North American Datum of 1927" resourceKey="fgdc.mdCode.northAmericanDatumOf1927"/>
+                    <code key="North American Datum of 1983" resourceKey="fgdc.mdCode.northAmericanDatumOf1983"/>
+                    <code key="otherCodeKey" resourceKey="fgdc.mdCode.other"/>               
+                </codes>
+              </content>     
+            </parameter>                
+            <!-- Ellipsoid Name  ellips -->
+            <parameter key="spatRefeInfo.horiCoorSystDefi.geodMode.elliName">
+              <label resourceKey="fgdc.spatRefeInfo.horiCoorSystDefi.geodMode.elliName"/>
+              <input type="selectWithOther" otherCodeKey="otherCodeKey" size="30" />
+              <validation required="true"/>
+              <content useSelectForUpdate="true"
+                   select="/metadata/spref/horizsys/geodetic/ellips" deleteIfEmpty="false">
+                <codes>
+                    <code key="Clarke 1866" resourceKey="fgdc.mdCode.clarke1866"/>
+                    <code key="Geodetic Reference System 80" resourceKey="fgdc.mdCode.geodeticReferenceSystem80"/>
+                    <code key="otherCodeKey" resourceKey="fgdc.mdCode.other"/>               
+                </codes>
+              </content>     
+            </parameter>                        
+            <!-- Semi-major Axis  semiaxis -->
+            <parameter key="spatRefeInfo.horiCoorSystDefi.geodMode.semiAxis"> 
+              <label resourceKey="fgdc.spatRefeInfo.horiCoorSystDefi.geodMode.semiAxis"/>
+              <input type="text" size="24" maxlength="24" defaultValue="" />
+              <validation required="true" valueType="double"/>
+              <content useSelectForUpdate="true"
+                   select="/metadata/spref/horizsys/geodetic/semiaxis" deleteIfEmpty="false"/> 
+            </parameter>            
+            <!-- Denominator of Flatterning Ratio  denflat -->
+            <parameter key="spatRefeInfo.horiCoorSystDefi.geodMode.denoOfFlatRati"> 
+              <label resourceKey="fgdc.spatRefeInfo.horiCoorSystDefi.geodMode.denoOfFlatRati"/>
+              <input type="text" size="24" maxlength="24" defaultValue="" />
+              <validation required="true" valueType="double"/>
+              <content useSelectForUpdate="true"
+                   select="/metadata/spref/horizsys/geodetic/denflat" deleteIfEmpty="false"/> 
+            </parameter>
+        </section>              
+</section>
+<!-- End of Spatial Reference Information -->
+
+<!-- +++++++++++++++++++++++++++++++++++++ -->
+<!-- 0{Distribution Information}1 distinfo -->
+<!-- +++++++++++++++++++++++++++++++++++++ -->
+<section key="distInfo" open="false" obligation="optional" select="/metadata/distinfo">
+  <label resourceKey="fgdc.distInfo.caption"/>
+    <!-- Resource Description  resdesc -->
+  <parameter key="distInfo.resoDesc">
+    <label resourceKey="fgdc.distInfo.resoDesc"/>
+    <input type="selectWithOther" otherCodeKey="otherCodeKey" size="30"/>
+    <validation required="false" valueType="string"/>
+    <content useSelectForUpdate="true" select="/metadata/distinfo/resdesc" deleteIfEmpty="false">
+        <codes>
+            <code key="Live Data and Maps" resourceKey="fgdc.mdCode.resType.liveData"/>
+            <code key="Downloadable Data" resourceKey="fgdc.mdCode.resType.downloadableData"/>
+            <code key="Offline Data" resourceKey="fgdc.mdCode.resType.offlineData"/>
+            <code key="Static Map Images" resourceKey="fgdc.mdCode.resType.staticMapImages"/>
+            <code key="Other Documents" resourceKey="fgdc.mdCode.resType.document"/>
+            <code key="Applications" resourceKey="fgdc.mdCode.resType.application"/>
+            <code key="Geographic Services" resourceKey="fgdc.mdCode.resType.geographicService"/>
+            <code key="Clearinghouses" resourceKey="fgdc.mdCode.resType.clearingHouse"/>
+            <code key="Map Files" resourceKey="fgdc.mdCode.resType.mapFiles"/>
+            <code key="Geographic Activities" resourceKey="fgdc.mdCode.resType.geographicActivies"/>
+            <code key="otherCodeKey" resourceKey="fgdc.mdCode.other"/>
+        </codes>
+    </content>              
+  </parameter>      
+    <!-- Distribution Liability  distliab -->
+  <parameter key="distInfo.distLiab" >
+    <label resourceKey="fgdc.distInfo.distLiab"/>
+    <input type="text" maxlength="4000" defaultValue=""/>
+    <validation required="true" valueType="string"/>
+    <content useSelectForUpdate="true" select="/metadata/distinfo/distliab" deleteIfEmpty="false"/>              
+  </parameter>      
+    <!-- Distributor  distrib -->
+        <!-- Contact Information  cntinfo -->
+        <!-- Contact Organization Primary cntorgp -->
+        <!-- Contact Organization  cntorg -->
+        <parameter key="metadataref.distInfo.contactinfo.contorgp.cntorg"> 
+            <label resourceKey="fgdc.standard.organization"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="true"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/distinfo/distrib/cntinfo/cntorgp/cntorg" deleteIfEmpty="false"/>
+        </parameter>
+        <!-- Contact Person  cntper -->
+        <parameter key="metadataref.distInfo.contactinfo.cntorgp.cntper"> 
+            <label resourceKey="fgdc.standard.contactPerson"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="false"/>
+            <content useSelectForUpdate="true"
+                select="/metadata/distinfo/distrib/cntinfo/cntorgp/cntper" deleteIfEmpty="false"/>
+        </parameter>  
+      
+
+        <!-- Contact Position cntpos  -->
+        <parameter key="metadataref.distInfo.contactinfo.contactperprim.contPosi"> 
+            <label resourceKey="fgdc.standard.contactPosition"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="false"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/distinfo/distrib/cntinfo/cntpos" deleteIfEmpty="false"/>
+        </parameter>
+        <!-- Contact Address  cntaddr -->
+            <!-- Address_Type  addrtype -->
+            <parameter key="metadataref.distInfo.contactinfo.cntaddress.addrtype"> 
+                <label resourceKey="fgdc.standard.address.type"/>
+                <input type="text" maxlength="4000" defaultValue=""/>
+                <validation required="true"/>
+                <content useSelectForUpdate="true"
+                    select="/metadata/distinfo/distrib/cntinfo/cntaddr/addrtype" deleteIfEmpty="false"/>
+            </parameter>        
+            <!-- Address  address -->
+            <parameter key="metadataref.distInfo.contactinfo.cntaddress.address"> 
+                <label resourceKey="fgdc.standard.address.address"/>
+                <input type="text" maxlength="4000" defaultValue=""/>
+                <validation required="true"/>
+                <content useSelectForUpdate="true"
+                    select="/metadata/distinfo/distrib/cntinfo/cntaddr/address" deleteIfEmpty="false"/>
+            </parameter>        
+            <!-- City  city -->
+            <parameter key="metadataref.distInfo.contactinfo.cntaddress.city"> 
+                <label resourceKey="fgdc.standard.address.city"/>
+                <input type="text" maxlength="4000" defaultValue=""/>
+                <validation required="true"/>
+                <content useSelectForUpdate="true"
+                   select="/metadata/distinfo/distrib/cntinfo/cntaddr/city" deleteIfEmpty="false"/>
+            </parameter>        
+            <!-- State_or_Province   state -->
+            <parameter key="metadataref.distInfo.contactinfo.cntaddress.state"> 
+                <label resourceKey="fgdc.standard.address.state"/>
+                <input type="text" maxlength="4000" defaultValue=""/>
+                <validation required="true"/>
+                <content useSelectForUpdate="true"
+                   select="/metadata/distinfo/distrib/cntinfo/cntaddr/state" deleteIfEmpty="false"/>
+            </parameter>        
+            <!-- Postal_Code  postal -->
+            <parameter key="metadataref.distInfo.contactinfo.cntaddress.postal"> 
+                <label resourceKey="fgdc.standard.postal"/>
+                <input type="text" maxlength="4000" defaultValue=""/>
+                <validation required="true"/>
+                <content useSelectForUpdate="true"
+                   select="/metadata/distinfo/distrib/cntinfo/cntaddr/postal" deleteIfEmpty="false"/>
+            </parameter>            
+            <!-- Contact Voice Telephone  cntvoice -->
+            <parameter key="metadataref.distInfo.contactinfo.cntvoice"> 
+                <label resourceKey="fgdc.standard.voiceTelephone"/>
+                <input type="text" maxlength="4000" defaultValue=""/>
+                <validation required="true"/>
+                <content useSelectForUpdate="true"
+                   select="/metadata/distinfo/distrib/cntinfo/cntvoice" deleteIfEmpty="false"/>
+            </parameter>
+            <!-- Contact_Facsimile_Telephone cntfax [optional]-->
+            <parameter key="metadataref.distInfo.contactinfo.cntfax"> 
+                <label resourceKey="fgdc.standard.fax"/>
+                <input type="text" maxlength="4000" defaultValue=""/>
+                <validation required="false"/>
+                <content useSelectForUpdate="true"
+                   select="/metadata/distinfo/distrib/cntinfo/cntfax" deleteIfEmpty="false"/>
+            </parameter>      
+            <!-- Contact_Electronic_Mail_Address cntemail [optional]-->                    
+            <parameter key="metadataref.distInfo.contactinfo.cntemail"> 
+                <label resourceKey="fgdc.standard.email"/>
+                <input type="text" maxlength="4000" defaultValue=""/>
+                <validation required="false"/>
+                <content useSelectForUpdate="true"
+                   select="/metadata/distinfo/distrib/cntinfo/cntemail" deleteIfEmpty="false"/>
+            </parameter>
+            <!-- Contact Instruction cntinst [optional] -->
+            <parameter key="metadataref.distInfo.contactinfo.cntinst"> 
+                <label resourceKey="fgdc.standard.contInst"/>
+                <input type="text" maxlength="4000" defaultValue=""/>
+                <validation required="false"/>
+                <content useSelectForUpdate="true"
+                   select="/metadata/distinfo/distrib/cntinfo/cntinst" deleteIfEmpty="false"/>
+            </parameter>
+</section>
+<!-- End of Distribution Information -->
+ 
+<!-- SECTION Metadata_Reference_Information -->
+    <section key="metadataref">
+    <label resourceKey="fgdc.metaRefe.caption"/>
+    <!-- Metadata_Date : metd -->
+      <parameter key="metaRefe.date"> 
+        <label resourceKey="fgdc.metaRefe.date"/>
+        <input type="text" maxlength="4000" editable="false" 
+            hintResourceKey="catalog.general.inputDateFormat" 
+            defaultValue="#{EditMetadataController.now}" />
+        <validation required="true"/>
+        <content useSelectForUpdate="true"
+             select="/metadata/metainfo/metd" deleteIfEmpty="false"/>
+      </parameter>
+    <!-- Metadata_Review_Date date [optional] -->
+      <parameter key="metadata.reviewDate"> 
+        <label resourceKey="fgdc.metadata.reviewDate"/>
+        <input type="text" maxlength="4000" hintResourceKey="catalog.general.inputDateFormat" 
+            defaultValue="" />
+        <validation required="false"/>
+        <content useSelectForUpdate="true"
+             select="/metadata/metainfo/metfrd" deleteIfEmpty="false"/>
+      </parameter>      
+    
+    <!-- Metadata_Contact : metc -->
+        <!-- Contact Information  cntinfo -->
+        <!-- Contact Organization Primary cntorgp -->
+        <!-- Contact Organization cntorg -->
+        <parameter key="metadataref.contactinfo.cntorgp.cntorg"> 
+            <label resourceKey="fgdc.standard.organization"/>            
+            <input type="text" maxlength="4000" defaultValue="#{EditMetadataController.userProfile['organization'].value}"/>
+            <validation required="true"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/metainfo/metc/cntinfo/cntorgp/cntorg" deleteIfEmpty="false"/>
+        </parameter>
+        <!-- Contact Person cntper -->
+        <parameter key="metadataref.contactinfo.cntorgp.cntper"> 
+            <label resourceKey="fgdc.standard.contactPerson"/>
+            <input type="text" maxlength="4000" defaultValue="#{EditMetadataController.userProfile['firstName'].value} #{EditMetadataController.userProfile['lastName'].value}"/>
+            <validation required="true"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/metainfo/metc/cntinfo/cntorgp/cntper" deleteIfEmpty="false"/>
+        </parameter>
+        <!-- Contact Position cntpos  -->
+        <parameter key="metadataref.contactinfo.contPosi"> 
+            <label resourceKey="fgdc.standard.contactPosition"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="false"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/metainfo/metc/cntinfo/cntpos" deleteIfEmpty="false"/>
+        </parameter>              
+        <!-- Contact Address  cntaddr -->
+            <!-- Address_Type  addrtype -->
+            <parameter key="metadataref.contactinfo.cntaddress.addrtype"> 
+            <label resourceKey="fgdc.standard.address.type"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="true"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/metainfo/metc/cntinfo/cntaddr/addrtype" deleteIfEmpty="false"/>
+            </parameter>        
+            <!-- Address  address -->
+            <parameter key="metadataref.contactinfo.cntaddress.address"> 
+                <label resourceKey="fgdc.standard.address.address"/>
+                <input type="text" maxlength="4000" defaultValue="#{EditMetadataController.userProfile['street'].value}"/>
+                <validation required="true"/>
+                <content useSelectForUpdate="true"
+                   select="/metadata/metainfo/metc/cntinfo/cntaddr/address" deleteIfEmpty="false"/>
+            </parameter>        
+            <!-- City  city -->
+            <parameter key="metadataref.contactinfo.cntaddress.city"> 
+                <label resourceKey="fgdc.standard.address.city"/>
+                <input type="text" maxlength="4000" defaultValue="#{EditMetadataController.userProfile['city'].value}"/>
+                <validation required="true"/>
+                <content useSelectForUpdate="true"
+                   select="/metadata/metainfo/metc/cntinfo/cntaddr/city" deleteIfEmpty="false"/>
+            </parameter>        
+            <!-- State_or_Province   state -->
+            <parameter key="metadataref.contactinfo.cntaddress.state"> 
+                <label resourceKey="fgdc.standard.address.state"/>
+                <input type="text" maxlength="4000" defaultValue="#{EditMetadataController.userProfile['stateOrProv'].value}"/>
+                <validation required="true"/>
+                <content useSelectForUpdate="true"
+                   select="/metadata/metainfo/metc/cntinfo/cntaddr/state" deleteIfEmpty="false"/>
+            </parameter>        
+            <!-- Postal_Code  postal -->
+            <parameter key="metadataref.contactinfo.cntaddress.postal"> 
+                <label resourceKey="fgdc.standard.postal"/>
+                <input type="text" maxlength="4000" defaultValue="#{EditMetadataController.userProfile['postalCode'].value}"/>
+                <validation required="true"/>
+                <content useSelectForUpdate="true"
+                   select="/metadata/metainfo/metc/cntinfo/cntaddr/postal" deleteIfEmpty="false"/>
+            </parameter>            
+        <!-- Contact Voice Telephone  cntvoice -->
+        <parameter key="metadataref.contactinfo.cntvoice"> 
+            <label resourceKey="fgdc.standard.voiceTelephone"/>
+            <input type="text" maxlength="4000" defaultValue="#{EditMetadataController.userProfile['phone'].value}"/>
+            <validation required="true"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/metainfo/metc/cntinfo/cntvoice" deleteIfEmpty="false"/>
+        </parameter>
+        <!-- Contact_Facsimile_Telephone cntfax [optional]-->
+        <parameter key="metadataref.contactinfo.cntfax"> 
+            <label resourceKey="fgdc.standard.fax"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="false"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/metainfo/metc/cntinfo/cntfax" deleteIfEmpty="false"/>
+        </parameter>      
+        <!-- Contact_Electronic_Mail_Address cntemail [optional]-->                    
+        <parameter key="metadataref.contactinfo.cntemail"> 
+            <label resourceKey="fgdc.standard.email"/>            
+            <input type="text" maxlength="4000" defaultValue="#{EditMetadataController.userProfile['email'].value}"/>
+            <validation required="false"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/metainfo/metc/cntinfo/cntemail" deleteIfEmpty="false"/>
+        </parameter>
+        <!-- Contact Instruction cntinst [optional] -->
+        <parameter key="metadataref.contactinfo.cntinst"> 
+            <label resourceKey="fgdc.standard.contInst"/>
+            <input type="text" maxlength="4000" defaultValue=""/>
+            <validation required="false"/>
+            <content useSelectForUpdate="true"
+               select="/metadata/metainfo/metc/cntinfo/cntinst" deleteIfEmpty="false"/>
+        </parameter>
+    <!-- Metadata_Standard_Name : metstdn -->
+    <parameter key="metadataref.metadatastdname"> 
+        <label resourceKey="fgdc.standard.name"/>
+        <input type="text" maxlength="4000" defaultValue="FGDC Content Standards for Digital Geospatial" editable="false" />
+        <validation required="true"/>
+        <content useSelectForUpdate="true"
+             select="/metadata/metainfo/metstdn" deleteIfEmpty="false"/>
+    </parameter>
+    <!-- Metadata_Standard_Version : metstdv -->
+    <parameter key="metadataref.metadatastdversion"> 
+        <label resourceKey="fgdc.standard.version"/>
+        <input type="text" maxlength="4000" defaultValue="FGDC-STD-001-1998" editable="false" />
+        <validation required="true"/>
+        <content useSelectForUpdate="true"
+             select="/metadata/metainfo/metstdv" deleteIfEmpty="false"/>
+    </parameter>
+</section>
+<!-- END FGDC BEST PRACTICE -->      
+</schema>

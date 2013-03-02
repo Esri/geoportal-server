@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Source Information 
+		(srcinfo, /metadata/dataqual/lineage/srcinfo) 
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect02.xsd
+		http://www.fgdc.gov/metadata/csdgm/02.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="srcinfo"
+	g:i18nBase="catalog.fgdc.dataqual.lineage.srcinfo" g:label="$i18nBase"
+	g:extends="$base/core/xml/Element.xml">
+	<g:body>
+
+		<!-- Source Citation -->
+		<g:element g:targetName="srccite" g:extends="$base/core/xml/Element.xml">
+			<g:body>
+				<g:element g:targetName="citeinfo"
+					g:extends="$base/schema/citeinfo/citeinfo.xml"/>
+			</g:body>
+		</g:element>
+
+		<!-- Source Scale Denominator -->
+		<g:element g:targetName="srcscale" g:minOccurs="0"
+			g:valueType="xs:integer" g:tip="$i18nBase.srcscale.tip"
+			g:extends="$base/core/xml/ElementTextOnly.xml">
+			<g:restriction>
+				<g:minExclusive g:value="1"/>
+			</g:restriction>
+		</g:element>
+
+		<!-- Type of Source Media -->
+		<g:element g:targetName="typesrc" g:extends="$base/core/xml/ElementTextOnly.xml">
+			<g:body>
+				<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+					<g:options g:i18nBase="catalog.fgdc.dataqual.typesrc.option">
+						<g:option g:value="" g:label=""/>
+						<g:option g:value="paper" g:label="$i18nBase.paper"/>
+						<g:option g:value="stable-base material" g:label="$i18nBase.stableBaseMaterial"/>
+						<g:option g:value="microfiche" g:label="$i18nBase.microfiche"/>
+						<g:option g:value="microfilm" g:label="$i18nBase.microfilm"/>
+						<g:option g:value="audiocassette" g:label="$i18nBase.audiocassette"/>
+						<g:option g:value="chart" g:label="$i18nBase.chart"/>
+						<g:option g:value="filmstrip" g:label="$i18nBase.filmstrip"/>
+						<g:option g:value="transparency" g:label="$i18nBase.transparency"/>
+						<g:option g:value="videocassette" g:label="$i18nBase.videocassette"/>
+						<g:option g:value="videodisc" g:label="$i18nBase.videodisc"/>
+						<g:option g:value="videotape" g:label="$i18nBase.videotape"/>
+						<g:option g:value="physical model" g:label="$i18nBase.physicalModel"/>
+						<g:option g:value="computer program" g:label="$i18nBase.computerProgram"/>
+						<g:option g:value="disc" g:label="$i18nBase.disc"/>
+						<g:option g:value="cartridge tape" g:label="$i18nBase.cartridgeTape"/>
+						<g:option g:value="magnetic tape" g:label="$i18nBase.magneticTape"/>
+						<g:option g:value="online" g:label="$i18nBase.online"/>
+						<g:option g:value="CD-ROM" g:label="$i18nBase.cdrom"/>
+						<g:option g:value="electronic bulletin board" g:label="$i18nBase.electronicBulletinBoard"/>
+						<g:option g:value="electronic mail system" g:label="$i18nBase.electronicMailSystem"/>
+						<g:option g:value="_other_" g:label="$i18n.catalog.mdCode.other"
+							g:isOther="true"/>
+					</g:options>
+				</g:input>
+			</g:body>
+		</g:element>
+
+		<!-- Source Time Period of Content -->
+		<g:element g:targetName="srctime" g:extends="$base/core/xml/Element.xml">
+			<g:body>
+
+				<!-- Source Time Period of Content -->
+				<g:element g:targetName="timeinfo"
+					g:extends="$base/schema/timeinfo/timeinfo.xml"/>
+
+				<!-- Source Currentness Reference -->
+				<g:element g:targetName="srccurr"
+					g:label="$i18n.catalog.fgdc.dataqual.lineage.srcinfo.srctime.srccurr"
+					g:extends="$base/core/xml/ElementTextOnly.xml">
+					<g:body>
+						<g:input g:extends="$base/core/ui/InputSelectOne.xml">
+							<g:options g:i18nBase="catalog.fgdc.dataqual.srccurr.option">
+								<g:option g:value="" g:label=""/>
+								<g:option g:value="ground condition" g:label="$i18nBase.groundCondition"/>
+								<g:option g:value="publication date" g:label="$i18nBase.publicationDate"/>
+								<g:option g:value="_other_" g:label="$i18n.catalog.mdCode.other"
+									g:isOther="true"/>
+							</g:options>
+						</g:input>
+					</g:body>
+				</g:element>
+
+			</g:body>
+		</g:element>
+
+		<!-- Source Citation Abbreviation -->
+		<g:element g:targetName="srccitea" g:valueType="xs:token"
+			g:extends="$base/core/xml/ElementTextOnly.xml"/>
+
+		<!-- Source Contribution -->
+		<g:element g:targetName="srccontr" g:extends="$base/core/xml/ElementTextOnly.xml">
+			<g:body>
+				<g:input g:extends="$base/core/ui/InputTextArea.xml"/>
+			</g:body>
+		</g:element>
+
+	</g:body>
+</g:element>
+
+

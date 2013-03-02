@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<schema key="dc" templateFile="gpt/metadata/dc/dc-template.xml" toEsriItemInfoXslt="gpt/metadata/dc/dc-toEsriItemInfo.xslt">
+        
+  <!-- schema label -->
+  <label resourceKey="catalog.mdParam.schema.dc"/>
+ 
+  <!-- schema namespaces -->
+  <namespace prefix="rdf" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+  <namespace prefix="dc" uri="http://purl.org/dc/elements/1.1/"/>
+  <namespace prefix="dct" uri="http://purl.org/dc/terms/"/>
+  <namespace prefix="ows" uri="http://www.opengis.net/ows"/>
+  <namespace prefix="dcmiBox" uri="http://dublincore.org/documents/2000/07/11/dcmi-box/" />
+ 
+  <!-- schema interrogation -->
+  <interrogation count="count(/rdf:RDF/rdf:Description/dc:title)"/>
+  
+  <!-- indexables -->
+  <indexables fileName="gpt/metadata/dc/dc-indexables.xml"/>
+  
+  <!-- Geoportal XML editor -->
+  <!-- <editor fileName="gpt/gxe/dc/dc-editor.xml"/>  -->
+  
+  <!-- identification section -->
+  <section key="identification">
+    <label resourceKey="catalog.mdParam.identification.caption"/>
+    
+  	<parameter key="identification.fileIdentifier">
+  		<label resourceKey="catalog.mdParam.general.fileIdentifier"/>
+  		<input type="text" size="50" maxlength="50" editable="false" 
+             defaultValue="#{EditMetadataController.newUuid}"/>
+  		<validation required="false"/>
+  		<content useSelectForUpdate="true"
+               select="/rdf:RDF/rdf:Description/dc:identifier"/> 
+  	</parameter>
+
+    <parameter key="identification.title"> 
+      <label resourceKey="catalog.mdParam.identification.title"/>
+      <input type="text" maxlength="4000"/>
+      <validation required="true"/>
+      <content useSelectForUpdate="true"
+               select="/rdf:RDF/rdf:Description/dc:title"/>
+    </parameter>
+    
+    <parameter key="description.abstract">
+      <label resourceKey="catalog.mdParam.description.abstract"/>
+      <input type="textArea"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/rdf:RDF/rdf:Description/dc:description"/>
+    </parameter>
+    
+    <parameter key="identification.resourceURL">
+      <label resourceKey="catalog.mdParam.identification.service.connectPoint"/>
+      <input type="text" size="50" maxlength="4000" testResourceKey="catalog.publication.editMetadata.button.test.service"/>
+      <validation required="false" valueType="string"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/rdf:RDF/rdf:Description/dct:references" />
+    </parameter> 
+        
+  	<parameter key="contentInfo.resourceType">
+  		<label resourceKey="catalog.mdParam.contentInfo.resourceType"/>
+  		<input type="selectOneMenu"/>
+  		<validation required="false"/>
+  		<content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/rdf:RDF/rdf:Description/dc:type">
+  			<codes>
+  				<code key="" />
+  				<code key="urn:x-esri:specification:ServiceType:ArcIMS" resourceKey="catalog.mdCode.resourceType.urn_x_esri_specification_ServiceType_ArcIMS"/>
+  				<code key="urn:x-esri:specification:ServiceType:ArcGIS" resourceKey="catalog.mdCode.resourceType.urn_x_esri_specification_ServiceType_ArcGIS"/>
+  				<code key="urn:ogc:dataFormat:GML:2.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_dataFormat_GML_2.0"/>
+  				<code key="urn:ogc:dataFormat:GML:2.1.1" resourceKey="catalog.mdCode.resourceType.urn_ogc_dataFormat_GML_2.1.1"/>
+  				<code key="urn:ogc:dataFormat:GML:2.1.2" resourceKey="catalog.mdCode.resourceType.urn_ogc_dataFormat_GML_2.1.2"/>
+  				<code key="urn:ogc:dataFormat:GML:3.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_dataFormat_GML_3.0"/>
+  				<code key="urn:ogc:dataFormat:GML:3.1.1" resourceKey="catalog.mdCode.resourceType.urn_ogc_dataFormat_GML_3.1.1"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.1:CORBA" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.1_CORBA"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.1:HTTP" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.1_HTTP"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.1:HTTP:ebRIM" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.1_HTTP_ebRIM"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.1:HTTP:EO" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.1_HTTP_EO"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.1:HTTP:FGDC-CSDGM" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.1_HTTP_FGDC_CSDGM"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.1:HTTP:ISO19115/19119" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.1_HTTP_ISO19115_19119"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.1:Z39.50" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.1_Z39.50"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.1:Z39.50:GEOProfile" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.1_Z39.50_GEOProfile"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.1:Z39.50:SRU" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.1_Z39.50_SRU"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.2:CORBA" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.2_CORBA"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.2:HTTP" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.2_HTTP"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.2:HTTP:ebRIM" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.2_HTTP_ebRIM"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.2:HTTP:EO" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.2_HTTP_EO"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.2:HTTP:FGDC-CSDGM" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.2_HTTP_FGDC_CSDGM"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.2:HTTP:ISO19115/19119" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.2_HTTP_ISO19115_19119"/>
+  				<code key="urn:ogc:serviceType:CatalogueService:2.0.2:Z39.50" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CatalogueService_2.0.2_Z39.50"/>
+  				<code key="urn:ogc:serviceType:CoordinateTransformationService:1.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CoordinateTransformationService_1.0"/>
+  				<code key="urn:ogc:serviceType:CoordinateTransformationService:1.0:COM" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CoordinateTransformationService_1.0_COM"/>
+  				<code key="urn:ogc:serviceType:CoordinateTransformationService:1.0:CORBA" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CoordinateTransformationService_1.0_CORBA"/>
+  				<code key="urn:ogc:serviceType:CoordinateTransformationService:1.0:Java" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_CoordinateTransformationService_1.0_Java"/>
+  				<code key="urn:ogc:serviceType:GridCoverage:1.0:COM" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_GridCoverage_1.0_COM"/>
+  				<code key="urn:ogc:serviceType:GridCoverage:1.0:CORBA" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_GridCoverage_1.0_CORBA"/>
+  				<code key="urn:ogc:serviceType:OpenLSCoreServices:1.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_OpenLSCoreServices_1.0"/>
+  				<code key="urn:ogc:serviceType:OpenLSCoreServices:1.0:SOAP" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_OpenLSCoreServices_1.0_SOAP"/>
+  				<code key="urn:ogc:serviceType:OpenLSCoreServices:1.1" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_OpenLSCoreServices_1.1"/>
+  				<code key="urn:ogc:serviceType:KML:2.2" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_KML_2.2"/>
+  				<code key="urn:ogc:serviceType:SimpleFeatureAccess:1.0:CORBA" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_SimpleFeatureAccess_1.0_CORBA"/>
+  				<code key="urn:ogc:serviceType:SimpleFeatureAccess:1.1:OLE/COM" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_SimpleFeatureAccess_1.1_OLE_COM"/>
+  				<code key="urn:ogc:serviceType:SimpleFeatureAccess:1.1:SQL" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_SimpleFeatureAccess_1.1_SQL"/>
+  				<code key="urn:ogc:serviceType:SimpleFeatureAccess:1.2:SQL" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_SimpleFeatureAccess_1.2_SQL"/>
+          <code key="urn:ogc:serviceType:SensorObservationService:1.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_SensorObservationService_1.0"/>
+  				<code key="urn:ogc:serviceType:WebCoverageService:1.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebCoverageService_1.0"/>
+  				<code key="urn:ogc:serviceType:WebCoverageService:1.1.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebCoverageService_1.1.0"/>
+  				<code key="urn:ogc:serviceType:WebFeatureService:1.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebFeatureService_1.0"/>
+  				<code key="urn:ogc:serviceType:WebFeatureService:1.1" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebFeatureService_1.1"/>
+  				<code key="urn:ogc:serviceType:WebMapService:1.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebMapService_1.0"/>
+  				<code key="urn:ogc:serviceType:WebMapService:1.1" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebMapService_1.1"/>
+  				<code key="urn:ogc:serviceType:WebMapService:1.1.1" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebMapService_1.1.1"/>
+  				<code key="urn:ogc:serviceType:WebMapService:1.3.0" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebMapService_1.3.0"/>
+  				<code key="urn:ogc:serviceType:WebMapService:Post:0.0.3" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebMapService_Post_0.0.3"/>
+  				<code key="urn:ogc:serviceType:WebProcessingService:0.4" resourceKey="catalog.mdCode.resourceType.urn_ogc_serviceType_WebProcessingService_0.4"/>
+  			</codes>
+      </content>
+    </parameter>
+    
+    <!-- Originator  1:N  origin-->
+    <parameter key="identification.originator"> 
+      <label resourceKey="catalog.mdParam.citation.originator"/>
+			<input type="text" maxlength="255" defaultValue="#{EditMetadataController.userProfile['firstName'].value} #{EditMetadataController.userProfile['lastName'].value}"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/rdf:RDF/rdf:Description/dc:creator"/>
+    </parameter>
+  
+    <!-- Publication Date pubdate -->
+    <parameter key="identification.publicationDate"> 
+      <label resourceKey="catalog.mdParam.citation.publicationDate"/>
+      <input type="text" size="20" maxlength="10" 
+             hintResourceKey="catalog.general.inputDateFormat"
+             defaultValue="#{EditMetadataController.now}"/>
+      <validation required="false" valueType="date"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/rdf:RDF/rdf:Description/dc:date"/>
+    </parameter> 
+           
+		<parameter key="metadata.language">
+			<label resourceKey="catalog.mdParam.general.metadataLanguage"/>
+			<input type="selectOneMenu" defaultValue="eng" />
+			<validation required="false"/>
+			<content useSelectForUpdate="true" deleteIfEmpty="true"
+			         select="/rdf:RDF/rdf:Description/dc:language">
+				<codes>
+					<code key="ger" resourceKey="catalog.mdCode.language.iso639_2.ger"/>
+					<code key="dut" resourceKey="catalog.mdCode.language.iso639_2.dut"/>
+					<code key="eng" resourceKey="catalog.mdCode.language.iso639_2.eng"/>
+					<code key="fre" resourceKey="catalog.mdCode.language.iso639_2.fre"/>
+					<code key="ita" resourceKey="catalog.mdCode.language.iso639_2.ita"/>
+					<code key="kor" resourceKey="catalog.mdCode.language.iso639_2.kor"/>
+					<code key="lit" resourceKey="catalog.mdCode.language.iso639_2.lit"/>
+					<code key="nor" resourceKey="catalog.mdCode.language.iso639_2.nor"/>
+					<code key="pol" resourceKey="catalog.mdCode.language.iso639_2.pol"/>
+					<code key="por" resourceKey="catalog.mdCode.language.iso639_2.por"/>
+					<code key="rus" resourceKey="catalog.mdCode.language.iso639_2.rus"/>
+					<code key="spa" resourceKey="catalog.mdCode.language.iso639_2.spa"/>
+					<code key="swe" resourceKey="catalog.mdCode.language.iso639_2.swe"/>
+					<code key="tur" resourceKey="catalog.mdCode.language.iso639_2.tur"/>
+					<code key="chi" resourceKey="catalog.mdCode.language.iso639_2.chi"/>
+				</codes>
+			</content>
+		</parameter>			
+  </section>
+
+  <!-- theme section -->
+	 <section key="theme">
+    <label resourceKey="catalog.mdParam.theme.caption"/>
+
+    <parameter key="theme.topics">
+      <label resourceKey="catalog.mdParam.theme.topics"/>
+      <input type="selectManyCheckbox"/>
+      <validation required="false"/>
+      <content nodeType="list" useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/rdf:RDF/rdf:Description/dc:subject">
+        <codes>
+          <code key="boundaries"                       
+                resourceKey="catalog.mdCode.topic.boundaries"/>
+          <code key="farming"                          
+                resourceKey="catalog.mdCode.topic.farming"/>
+          <code key="climatologyMeteorologyAtmosphere" 
+                resourceKey="catalog.mdCode.topic.climatologyMeteorologyAtmosphere"/>
+          <code key="biota"                            
+                resourceKey="catalog.mdCode.topic.biota"/>
+          <code key="economy"                          
+                resourceKey="catalog.mdCode.topic.economy"/>
+          <code key="planningCadastre"                 
+                resourceKey="catalog.mdCode.topic.planningCadastre"/>
+          <code key="society"                          
+                resourceKey="catalog.mdCode.topic.society"/>
+          <code key="elevation"                        
+                resourceKey="catalog.mdCode.topic.elevation"/>
+          <code key="environment"                      
+                resourceKey="catalog.mdCode.topic.environment"/>
+          <code key="structure"                        
+                resourceKey="catalog.mdCode.topic.structure"/>
+          <code key="geoscientificInformation"         
+                resourceKey="catalog.mdCode.topic.geoscientificInformation"/>
+          <code key="health"                           
+                resourceKey="catalog.mdCode.topic.health"/>
+          <code key="imageryBaseMapsEarthCover"        
+                resourceKey="catalog.mdCode.topic.imageryBaseMapsEarthCover"/>
+          <code key="inlandWaters"                     
+                resourceKey="catalog.mdCode.topic.inlandWaters"/>
+          <code key="location"                         
+                resourceKey="catalog.mdCode.topic.location"/>
+          <code key="intelligenceMilitary"             
+                resourceKey="catalog.mdCode.topic.intelligenceMilitary"/>
+          <code key="oceans"                           
+                resourceKey="catalog.mdCode.topic.oceans"/>
+          <code key="transportation"                   
+                resourceKey="catalog.mdCode.topic.transportation"/>
+          <code key="utilitiesCommunication"           
+                resourceKey="catalog.mdCode.topic.utilitiesCommunication"/>
+        </codes>
+      </content>
+    </parameter> 
+        
+  </section>  
+ 
+  <!-- envelope section -->
+	<section key="envelope">
+    <label resourceKey="catalog.mdParam.envelope.caption"/> 
+    
+    <parameter key="envelope.west" meaning="envelope.west"> 
+      <label resourceKey="catalog.mdParam.envelope.west"/>
+      <input type="text" size="24" maxlength="24" defaultValue="-180"
+             hintResourceKey="catalog.general.inputLongitudeFormat"/>
+      <validation required="false" valueType="double"/>
+      <content nodeType="pairLeftValue"
+               select="concat(/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/westbc ,  substring-before(/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/ows:LowerCorner, ' '))"
+               update="/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/ows:LowerCorner"/> 
+    </parameter>
+    
+    <parameter key="envelope.east" meaning="envelope.east"> 
+      <label resourceKey="catalog.mdParam.envelope.east"/>
+      <input type="text" size="24" maxlength="24" defaultValue="180"
+             hintResourceKey="catalog.general.inputLongitudeFormat"/>
+      <validation required="false" valueType="double"/>
+      <content nodeType="pairLeftValue"
+               select="concat(/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/eastbc ,  substring-before(/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/ows:UpperCorner, ' '))"
+               update="/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/ows:UpperCorner"/> 
+    </parameter>
+    
+    <parameter key="envelope.north" meaning="envelope.north"> 
+      <label resourceKey="catalog.mdParam.envelope.north"/>
+      <input type="text" size="24" maxlength="24" defaultValue="90"
+             hintResourceKey="catalog.general.inputLatitudeFormat"/>
+      <validation required="false" valueType="double"/>
+      <content nodeType="pairRightValue"
+               select="concat(/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/northbc , substring-after(/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/ows:UpperCorner,' '))"
+               update="/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/ows:UpperCorner"/> 
+    </parameter>
+
+    <parameter key="envelope.south" meaning="envelope.south"> 
+      <label resourceKey="catalog.mdParam.envelope.south"/>
+      <input type="text" size="24" maxlength="24" defaultValue="-90"
+             hintResourceKey="catalog.general.inputLatitudeFormat"/>
+      <validation required="false" valueType="double" />
+      <content nodeType="pairRightValue"
+               select="concat(/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/southbc, substring-after(/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/ows:LowerCorner,' '))"
+               update="/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/ows:LowerCorner"/>  
+    </parameter>
+    
+    <!--  interactive map -->
+    <section key="envelope.map.container">
+      <parameter key="envelope.map"> 
+        <input type="map"/>
+      </parameter>
+    </section>
+
+  </section>
+  
+</schema>

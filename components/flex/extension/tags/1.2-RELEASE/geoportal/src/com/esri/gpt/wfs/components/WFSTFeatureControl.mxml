@@ -1,0 +1,716 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright 2008 ESRI
+
+All rights reserved under the copyright laws of the United States
+and applicable international laws, treaties, and conventions.
+
+You may freely redistribute and use this sample code, with or
+without modification, provided you include the original copyright
+notice and use restrictions.
+See use restrictions at http://resources.esri.com/help/9.3/usagerestrictions.htm.
+-->
+<mx:Box direction="vertical"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:esri="http://www.esri.com/2008/ags"
+	creationComplete="init()">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.SortField;
+			import mx.collections.Sort;
+			import com.esri.ags.layers.GraphicsLayer;
+			import com.esri.gpt.wfs.utils.WFSUtil;
+			import com.esri.ags.events.MapEvent;
+			import com.esri.ags.layers.Layer;
+			import com.esri.ags.events.DrawEvent;
+			import com.esri.ags.Map;
+			import com.esri.ags.geometry.Geometry;
+			import com.esri.gpt.wfs.events.WFSTEvent;
+			import com.esri.gpt.wfs.layers.WFSTLayer;
+			
+			private var m_mapChanged :Boolean = false;
+			private var m_wfsLayerChanged :Boolean = false;
+			
+			private var m_map :Map = null;
+			private var m_wfsLayer :WFSTLayer = null;
+			private var m_wfsLayerIDs :ArrayCollection = new ArrayCollection();
+			
+			[Bindable]
+			private var m_canSelectLayer :Boolean = true;
+						
+			[Bindable]
+			/** The Map this control is currently bound to. */
+			public function get map() :Map
+			{
+				return m_map;
+			}
+			
+			/** @private */
+			public function set map( value :Map ) :void
+			{
+				if( m_map != value )
+				{
+					unregisterMapListeners();
+					m_map = value;
+					m_mapChanged = true;
+					registerMapListeners();
+					invalidateProperties();
+				}
+			}
+			
+			[Bindable]
+			/** The WFSTransactionalLayer this control is currently bound to. */
+			public function get wfsLayer() :WFSTLayer
+			{
+				return m_wfsLayer;
+			}
+			
+			/** @private */
+			public function set wfsLayer( layer :WFSTLayer ) :void
+			{
+				if( m_wfsLayer != layer )
+				{
+					unregisterLayerListeners();
+					if( m_wfsLayer != null )
+					{
+						m_wfsLayer.clearSelection();
+						m_wfsLayer.mouseChildren = false;
+					}
+					m_wfsLayer = layer;
+					if( m_wfsLayer != null )
+					{
+						m_wfsLayer.mouseChildren = true;
+					}
+					m_wfsLayerChanged = true;
+					determineLayerState();
+					registerLayerListeners();					
+					invalidateProperties();
+				}
+			}
+			
+			[Bindable]
+			/** If true, shows the WFS layer combo box, false hides it. */
+			public var showWFSLayerChoices :Boolean = false;
+			
+			/** Initialize the application specifics that need to happen on creation complete. */
+			private function init() :void
+			{
+				var sort :Sort = new Sort();
+				sort.fields = [new SortField( "Name" )];
+				wfsLayers.sort = sort;
+				wfsLayers.refresh();
+			}
+			
+			/**
+			 * @private
+			 * Finds the WFSTransactionalLayers available through the bound map.
+			 */
+			private function findWFSLayers() :void
+			{
+				if( map )
+				{ 
+					for each( var layerID :String in map.layerIds )
+					{
+						var layer :Layer = map.getLayer( layerID );
+						if( layer is WFSTLayer )
+						{
+							var label :String = WFSTLayer( layer ).label;
+							if( label == null || label == "" )
+							{
+								label = layer.name;
+							}
+							
+							// if the layer hasn't already been added, add it now
+							if( !WFSUtil.containsString( label, m_wfsLayerIDs ) )
+							{
+								layer.mouseChildren = false; 
+								wfsLayers.addItem( { Name: label, Layer: layer } );
+								m_wfsLayerIDs.addItem( label );
+							}
+						}
+					}
+				}
+				else if( wfsLayer )
+				{
+					for each( layerID in wfsLayer.map.layerIds )
+					{
+						layer = map.getLayer( layerID );
+						if( layer is WFSTLayer )
+						{
+							label = WFSTLayer( layer ).label;
+							if( label == null || label == "" )
+							{
+								label = layer.name;
+							}
+							
+							// if the layer hasn't already been added, add it now
+							if( !WFSUtil.containsString( label, m_wfsLayerIDs ) )
+							{
+								layer.mouseChildren = false;
+								wfsLayers.addItem( { Name: label, Layer: layer } );
+								m_wfsLayerIDs.addItem( label );
+							}
+						}
+					}
+				}
+			}
+			
+			/** @private */
+			override protected function commitProperties() :void
+			{
+				super.commitProperties();
+				// map or layer changed
+				if( m_mapChanged || m_wfsLayerChanged )
+				{
+					// if the map changed, find the WFS layers
+					if( m_mapChanged )
+					{
+						// a new layer wasn't chosen, choose a new one
+						if( !m_wfsLayerChanged )
+						{
+							allLayersRemoved();
+						}
+						findWFSLayers();
+					}
+					
+					m_mapChanged = false;
+					m_wfsLayerChanged = false;
+				}
+			}
+			
+			/**
+			 * @private
+			 * Handles switching the WFS layer.
+			 */
+			private function onLayerChange() :void
+			{
+				var selectedLayer :Object = wfsLayerComboBox.selectedItem;
+				if( selectedLayer )
+				{
+					wfsLayer = selectedLayer.Layer as WFSTLayer;
+				}
+			}
+			
+			/**
+			 * @private
+			 * Registers the control with the current map.
+			 */
+			private function registerMapListeners() :void
+			{
+				if( map )
+				{
+					m_map.addEventListener( MapEvent.LAYER_ADD, layerAdded );
+					m_map.addEventListener( MapEvent.LAYER_REMOVE, layerRemoved );
+					m_map.addEventListener( MapEvent.LAYER_REMOVE_ALL, allLayersRemoved );
+				}
+			}
+			
+			/**
+			 * @private
+			 * Unregisters the control with the current map.
+			 */
+			private function unregisterMapListeners() :void
+			{
+				if( map )
+				{
+					m_map.removeEventListener( MapEvent.LAYER_ADD, layerAdded );
+					m_map.removeEventListener( MapEvent.LAYER_REMOVE, layerRemoved );
+					m_map.removeEventListener( MapEvent.LAYER_REMOVE_ALL, allLayersRemoved );
+				}
+			}
+			
+			/**
+			 * @private
+			 * Registers the control with the current WFST layer.
+			 */
+			private function registerLayerListeners() :void
+			{
+				if( wfsLayer )
+				{
+					m_wfsLayer.addEventListener( WFSTEvent.EDIT_BEGUN, editBegun );
+					m_wfsLayer.addEventListener( WFSTEvent.EDIT_SAVED, editSaved );
+					m_wfsLayer.addEventListener( WFSTEvent.EDIT_CANCELED, editCanceled );
+					m_wfsLayer.addEventListener( WFSTEvent.FEATURE_INSERTED, featureInserted );
+					m_wfsLayer.addEventListener( WFSTEvent.FEATURE_DELETED, featureDeleted );
+					m_wfsLayer.addEventListener( WFSTEvent.FEATURE_SELECTED, featureSelected );
+					m_wfsLayer.addEventListener( WFSTEvent.FEATURE_DESELECTED, featureDeselected );
+					m_wfsLayer.addEventListener( WFSTEvent.TRANSACTION_STARTED, transactionStarted );
+					m_wfsLayer.addEventListener( WFSTEvent.TRANSACTION_COMMITTED, transactionEnded );
+					m_wfsLayer.addEventListener( WFSTEvent.TRANSACTION_FAILED, transactionEnded );
+				}
+			}
+			
+			/**
+			 * @private
+			 * Unregisters the control with the current WFST layer.
+			 */
+			private function unregisterLayerListeners() :void
+			{
+				if( wfsLayer )
+				{
+					m_wfsLayer.removeEventListener( WFSTEvent.EDIT_BEGUN, editBegun );
+					m_wfsLayer.removeEventListener( WFSTEvent.EDIT_SAVED, editSaved );
+					m_wfsLayer.removeEventListener( WFSTEvent.EDIT_CANCELED, editCanceled );
+					m_wfsLayer.removeEventListener( WFSTEvent.FEATURE_INSERTED, featureInserted );
+					m_wfsLayer.removeEventListener( WFSTEvent.FEATURE_DELETED, featureDeleted );
+					m_wfsLayer.removeEventListener( WFSTEvent.FEATURE_SELECTED, featureSelected );
+					m_wfsLayer.removeEventListener( WFSTEvent.FEATURE_DESELECTED, featureDeselected );
+					m_wfsLayer.removeEventListener( WFSTEvent.TRANSACTION_STARTED, transactionStarted );
+					m_wfsLayer.removeEventListener( WFSTEvent.TRANSACTION_COMMITTED, transactionEnded );
+					m_wfsLayer.removeEventListener( WFSTEvent.TRANSACTION_FAILED, transactionEnded );
+				}
+			}
+			
+			/**
+			 * @private
+			 * Clears the selected feature.
+			 */
+			private function clearSelection() :void
+			{
+				if( wfsLayer )
+				{
+					wfsLayer.clearSelection();
+				}
+			}
+			
+			/**
+			 * @private
+			 * Begins editing the selected feature.
+			 */
+			private function beginEdit() :void
+			{
+				if( wfsLayer )
+				{
+					wfsLayer.beginEdit();
+					m_canSelectLayer = false;
+				}
+			}
+			
+			/**
+			 * @private
+			 * Saves the current edits.
+			 */
+			private function saveEdit() :void
+			{
+				if( wfsLayer )
+				{
+					allButtonsOff();
+					wfsLayer.saveEdit();
+					m_canSelectLayer = true;
+				}
+			}
+			
+			/**
+			 * @private
+			 * Cancels the current edits.
+			 */
+			private function cancelEdit() :void
+			{
+				if( wfsLayer )
+				{
+					wfsLayer.cancelEdit();
+					m_canSelectLayer = true;
+				}
+			}
+			
+			/**
+			 * @private
+			 * Deletes the selected feature.
+			 */
+			private function deleteFeature() :void
+			{
+				if( wfsLayer )
+				{
+					wfsLayer.deleteFeature();
+					m_canSelectLayer = false;
+				}
+			}
+			
+			/**
+			 * @private
+			 * Handles a WFSTransactionalLayer being added to the Map.
+			 */
+			private function layerAdded( event :MapEvent ) :void
+			{
+				if( event.layer is WFSTLayer )
+				{
+					var notContained :Boolean = true;
+					var transLayer :WFSTLayer = event.layer as WFSTLayer;
+					var label :String = transLayer.label;
+					if( label == null || label == "" )
+					{
+						label = transLayer.name;
+					}
+					if( !WFSUtil.containsString( label, m_wfsLayerIDs ) )
+					{
+						transLayer.mouseChildren = false;
+						var layerEntry :Object = { Name: label, Layer: transLayer }; 
+						wfsLayers.addItem( layerEntry );
+						if( !wfsLayer )
+						{
+							wfsLayer = transLayer;
+							wfsLayerComboBox.selectedIndex = wfsLayers.getItemIndex( layerEntry );
+						}
+					}
+				}
+			}
+			
+			/**
+			 * @private
+			 * Handles a WFSTransactionalLayer being removed from the Map.
+			 */
+			private function layerRemoved( event :MapEvent ) :void
+			{
+				if( event.layer is WFSTLayer )
+				{
+					var transLayer :WFSTLayer = event.layer as WFSTLayer;
+					transLayer.mouseChildren = true;
+					var label :String = transLayer.label;
+					if( label == null || label == "" )
+					{ 
+						label = transLayer.name;
+					}
+					var index :int = WFSUtil.getStringIndex( label, m_wfsLayerIDs );
+					if( index > -1 )
+					{
+						if( wfsLayerComboBox.selectedIndex == index )
+						{
+							wfsLayerComboBox.selectedIndex = -1;
+						}
+						// TODO - test this, ComboBox might manage this for us
+						else if( wfsLayerComboBox.selectedIndex > index )
+						{
+							wfsLayerComboBox.selectedIndex -= 1; // decrease selected index by one
+							//WFSUtils.getStringIndex( label, m_wfsLayerIDs );
+						}
+						wfsLayers.removeItemAt( index );
+						m_wfsLayerIDs.removeItemAt( index );
+					}
+				}
+			}
+			
+			/**
+			 * @private
+			 * Handles the removal of all layers from the Map.
+			 */
+			private function allLayersRemoved( event :MapEvent = null ) :void
+			{
+				// reenable mouse handling
+				for each( var layer :WFSTLayer in wfsLayers )
+				{
+					layer.mouseChildren = true;
+				}
+				
+				wfsLayer = null;
+				wfsLayers.removeAll();
+				m_wfsLayerIDs.removeAll();
+			}
+			
+			/**
+			 * @private
+			 * Handles the selection of a feature in the WFST layer.
+			 * @see WFSTEvent.FEATURE_SELECTED
+			 */
+			private function featureSelected( event :WFSTEvent ) :void
+			{
+				allButtonsOff();
+				clearButton.enabled = true;
+				deleteButton.enabled = true;
+				editButton.enabled = true;
+			}
+			
+			/**
+			 * @private
+			 * Handles the deselection of a feature in the WFST layer.
+			 * @see WFSTEvent.FEATURE_DESELECTED
+			 */
+			private function featureDeselected( event :WFSTEvent ) :void
+			{
+				resetButtonState();
+			}
+			
+			/**
+			 * @private
+			 * Handles the state of the control after an edit has begun.
+			 * @see WFSTEvent.EDIT_BEGUN
+			 */
+			private function editBegun( event :WFSTEvent ) :void
+			{
+				allButtonsOff();
+				cancelButton.enabled = true;
+				saveButton.enabled = true;				
+			}
+			
+			/**
+			 * @private
+			 * Handles the state of the control after an edit has been saved.
+			 * @see WFSTEvent.EDIT_SAVED
+			 */
+			private function editSaved( event :WFSTEvent ) :void
+			{
+			}
+			
+			/**
+			 * @private
+			 * Handles the state of the control after an edit has been canceled.
+			 * @see WFSTEvent.EDIT_CANCELED
+			 */
+			private function editCanceled( event :WFSTEvent ) :void
+			{
+				allButtonsOff();
+				if( wfsLayer.selectedFeature )
+				{
+					editButton.enabled = true;
+					deleteButton.enabled = true;
+				}
+				else
+				{
+					insertButton.enabled = true;
+				}
+			}
+			
+			/**
+			 * @private
+			 * Handles the state of the control after a feature has been deleted.
+			 * @see WFSTEvent.FEATURE_DELETED
+			 */
+			private function featureDeleted( event :WFSTEvent ) :void
+			{
+				allButtonsOff();
+				saveButton.enabled = true;
+				cancelButton.enabled = true;
+			}			
+			
+			/**
+			 * @private
+			 * Handles the state of the control once a feature has been inserted.
+			 * @see WFSTEvent.FEATURE_INSERTED
+			 */
+			private function featureInserted( event :WFSTEvent ) :void
+			{
+				allButtonsOff();
+				saveButton.enabled = true;
+				cancelButton.enabled = true;
+			}
+			
+			
+			/**
+			 * @private
+			 * Handles the state of the control once a transaction has been started.
+			 * @see WFSTEvent.TRANSACTION_STARTED
+			 */
+			 private function transactionStarted( event :WFSTEvent ) :void
+			 {
+			 	 allButtonsOff();
+			 }
+			 
+			 /**
+			 * @private
+			 * Handles the state of the control once a transaction has been started.
+			 * @see WFSTEvent.TRANSACTION_COMPLETED
+			 * @see WFSTEvent.TRANSACTION_FAILED
+			 */
+			 private function transactionEnded( event :WFSTEvent ) :void
+			 {
+			 	 determineLayerState();
+			 }
+			
+			/**
+			 * @private
+			 * Handles beginning the process of inserting a feature.
+			 */
+			private function insertFeature() :void
+			{
+				var activated :Boolean = false;
+				if( wfsLayer )
+				{
+					switch( wfsLayer.geometryType )
+					{
+						case Geometry.MAPPOINT:
+							wfsDrawToolbar.activate( Draw.MAPPOINT );
+							activated = true;
+							break;
+						case Geometry.POLYGON:
+							wfsDrawToolbar.activate( Draw.POLYGON );
+							activated = true;
+							break;
+						case Geometry.POLYLINE:
+							wfsDrawToolbar.activate( Draw.POLYLINE );
+							activated = true;
+							break;
+					}
+				}
+				
+				if( activated )
+				{
+					insertButton.enabled = false;
+				}
+			}
+			
+			/**
+			 * @private
+			 * Handles inserting the drawn feature into the WFST layer.
+			 * @param event The DrawEvent.
+			 */
+			private function onDrawEnd( event :DrawEvent ) :void
+			{
+				var geometry :Geometry = event.graphic.geometry;
+				if( geometry != null )
+				{
+					geometry.spatialReference = map.spatialReference;
+				}
+				
+				if( wfsLayer )
+				{
+					wfsLayer.insertFeature( geometry );
+				}
+				
+				// disable the draw tool
+				wfsDrawToolbar.deactivate();
+			}
+			
+			/**
+			 * @private
+			 * Determines the current state of the WFSTransactionalLayer and updates the controls to reflect that.
+			 */
+			private function determineLayerState() :void
+			{
+				resetButtonState();
+				if( wfsLayer.featureSelected )
+				{
+					insertButton.enabled = false;
+					clearButton.enabled = true;
+					deleteButton.enabled = true;
+					if( wfsLayer.editing )
+					{
+						cancelButton.enabled = true;
+						saveButton.enabled = true;
+					}
+					else
+					{
+						editButton.enabled = true;
+					}
+				}
+			}
+			
+			/**
+			 * @private
+			 * Resets all control buttons to the default state.
+			 */
+			private function resetButtonState() :void
+			{
+				allButtonsOff();
+				insertButton.enabled = true;
+			}
+			
+			/**
+			 * @private
+			 * Turns all control buttons off.
+			 */
+			private function allButtonsOff() :void
+			{
+				clearButton.enabled = false;
+				insertButton.enabled = false;
+				deleteButton.enabled = false;
+				editButton.enabled = false;
+				cancelButton.enabled = false;
+				saveButton.enabled = false;
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Style>
+		.clearButton {
+			icon: Embed(source='../library/icons/clear.png');
+			disabledIcon: Embed(source='../library/icons/clear-disabled.png');
+		}
+		
+		.insertButton {
+			icon: Embed(source='../library/icons/insert.png');
+			disabledIcon: Embed(source='../library/icons/insert-disabled.png');	
+		}
+		
+		.deleteButton {
+			 icon: Embed(source='../library/icons/delete.png');
+			 disabledIcon: Embed(source='../library/icons/delete-disabled.png');
+		}
+		
+		.editButton {
+			icon: Embed(source='../library/icons/edit.png');
+			disabledIcon: Embed(source='../library/icons/edit-disabled.png');
+		}
+		
+		.cancelButton {
+			 icon: Embed(source='../library/icons/discard.png');
+			 disabledIcon: Embed(source='../library/icons/discard-disabled.png');
+		}
+		
+		.saveButton {
+			 icon: Embed(source='../library/icons/save.png');
+			 disabledIcon: Embed(source='../library/icons/save-disabled.png');
+		}
+		
+		.cancelTransButton {
+			 icon: Embed(source='../library/icons/cancel.png');
+			 disabledIcon: Embed(source='../library/icons/cancel-disabled.png');
+		}
+		
+		.commitTransButton {
+			 icon: Embed(source='../library/icons/commit.png');
+			 disabledIcon: Embed(source='../library/icons/commit-disabled.png');
+		}
+	</mx:Style>
+	
+	<esri:Draw id="wfsDrawToolbar" map="{map}" drawEnd="onDrawEnd(event)">
+		<esri:fillSymbol>
+			<esri:SimpleFillSymbol color="0x00FF00" alpha="0.75">
+				<esri:outline>
+					<esri:SimpleLineSymbol color="0x00FF00" alpha="1.0" width="2"/>
+				</esri:outline>
+			</esri:SimpleFillSymbol>
+		</esri:fillSymbol>
+		<esri:lineSymbol>
+			<esri:SimpleLineSymbol color="0x00FF00" alpha="1.0" width="2"/>
+		</esri:lineSymbol>
+		<esri:markerSymbol>
+			<esri:SimpleMarkerSymbol color="0x00FF00" alpha="0.75" size="13">
+				<esri:outline>
+					<esri:SimpleLineSymbol color="0x00FF00" alpha="1.0" width="2"/>
+				</esri:outline>
+			</esri:SimpleMarkerSymbol>
+		</esri:markerSymbol>
+	</esri:Draw>
+	
+	<mx:Label text="Available WFS-T Layers" visible="{showWFSLayerChoices}"/>
+	<mx:HBox width="100%" horizontalAlign="center">
+		<mx:ComboBox id="wfsLayerComboBox" labelField="Name" prompt="Select a layer" valueCommit="onLayerChange()" visible="{showWFSLayerChoices}" enabled="{m_canSelectLayer}">
+			<mx:ArrayCollection id="wfsLayers" />
+		</mx:ComboBox>
+	</mx:HBox>
+	<mx:HRule width="100%"/>
+	<mx:Label text="Feature Controls"/>
+	<mx:Grid width="100%" horizontalAlign="center">
+		<mx:GridRow>
+			<mx:GridItem>
+				<mx:Button id="clearButton" toolTip="Clear Selection" click="clearSelection()" enabled="false" styleName="clearButton" label="Clear" width="100%"/>
+			</mx:GridItem>
+			<mx:GridItem>
+				<mx:Button id="deleteButton" toolTip="Delete Feature" click="deleteFeature()" enabled="false" styleName="deleteButton" label="Delete" width="100%"/>
+			</mx:GridItem>
+			<mx:GridItem>
+				<mx:Button id="insertButton" toolTip="Insert Feature" click="insertFeature()" styleName="insertButton" label="Insert" width="100%"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow>
+			<mx:GridItem>
+				<mx:Button id="editButton" toolTip="Edit Feature" click="beginEdit()" enabled="false" styleName="editButton" label="Edit" width="100%"/>
+			</mx:GridItem>
+			<mx:GridItem>
+				<mx:Button id="cancelButton" toolTip="Discard Changes" click="cancelEdit()" enabled="false" styleName="cancelButton" label="Discard" width="100%"/>
+			</mx:GridItem>
+			<mx:GridItem>
+				<mx:Button id="saveButton" toolTip="Save Changes" click="saveEdit()" enabled="false" styleName="saveButton" label="Save" width="100%"/>
+			</mx:GridItem>
+		</mx:GridRow>
+	</mx:Grid>
+</mx:Box>

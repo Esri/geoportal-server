@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  simplified acquisition information gmi:MI_Metadata/gmi:acquisitionInformation (gmi:MI_AcquisitionInformation) -->      
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gmi:acquisitionInformation" g:minOccurs="0" g:maxOccurs="unbounded"
+           g:label="$i18n.catalog.iso19139-2.MI_Metadata.acquisition"
+           g:extends="$base/xtn/ui/UI_Element.xml"> 
+  <g:body>
+    <g:element g:targetName="gmi:MI_AcquisitionInformation" g:minOccurs="0" g:maxOccurs="unbounded"
+      g:i18nBase="catalog.iso19139-2.MI_AcquisitionInformation"
+      h:tag="div" g:jsClass="gxe.control.Element">
+	    <g:tabs g:extends="$base/xtn/ui/UI_Tabs.xml">
+	      <g:body>
+
+          <!-- Requirement tab - MI_Requirement, the user requirements used to derive the acquisition plan-->
+          <h:div g:label="$i18n.catalog.iso19139-2.MI_Metadata.section.acuisition.requirement">
+            <g:element g:extends="$base/xtn/gmi/acquisition/XTN_Tab_Requirement.xml"/>
+          </h:div>
+
+          <!-- Objective tab - MI_Objective, the characteristics and geometry of the intended object to be observed-->
+          <h:div g:label="$i18n.catalog.iso19139-2.MI_Metadata.section.acuisition.objective">
+            <g:element g:extends="$base/xtn/gmi/acquisition/XTN_Tab_Objective.xml"/>
+          </h:div>
+          
+          <!-- Instrument tab -  MI_Instrument, designations of the measuring instruments used to acquire the data; -->
+          <h:div g:label="$i18n.catalog.iso19139-2.MI_Metadata.section.acuisition.instrument">
+            <g:element g:extends="$base/xtn/gmi/acquisition/XTN_Tab_Instrument.xml"/>
+          </h:div>
+
+          <!-- Plan tab - MI_Plan, the acquisition plan that was implemented to acquire the data.-->
+          <h:div g:label="$i18n.catalog.iso19139-2.MI_Metadata.section.acuisition.plan">
+            <g:element g:extends="$base/xtn/gmi/acquisition/XTN_Tab_Plan.xml"/>
+          </h:div>
+          
+          <!-- Operation tab - MI_Operation, designations of the overall data gathering program to which the data contribute;-->
+               <h:div g:label="$i18n.catalog.iso19139-2.MI_Metadata.section.acuisition.operation">
+            <g:element g:extends="$base/xtn/gmi/acquisition/XTN_Tab_Operation.xml"/>
+          </h:div>
+
+		      <!-- Platform tab - MI_Platform, designations of the platform from which the data were taken -->
+          <h:div g:label="$i18n.catalog.iso19139-2.MI_Metadata.section.acuisition.platform">
+            <g:element g:extends="$base/xtn/gmi/acquisition/XTN_Tab_Platform.xml"/>
+          </h:div>     
+          
+     <!-- EnvironmentalRecord tab -  MI_EnvironmentalRecord Information about the environmental conditions during the acquisition -->
+      <!--   <h:div g:label="$i18n.catalog.iso19139-2.MI_Metadata.section.acuisition.environmentalRecord">
+       <g:element g:extends="$base/xtn/gmi/acquisition/XTN_Tab_EnvironmentalRecord.xml"/>
+      </h:div> -->
+      
+        </g:body>
+      </g:tabs>
+    </g:element>
+  </g:body>
+</g:element>

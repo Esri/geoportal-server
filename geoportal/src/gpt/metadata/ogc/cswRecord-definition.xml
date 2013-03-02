@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<!-- Supports the interrogation parsing and indexing of csw Records. No editor support is provided. -->
+<schema key="cswRecord" editable="false">
+
+  <!-- schema namespaces -->
+  <namespace prefix="csw" uri="http://www.opengis.net/cat/csw/2.0.2"/>
+  <namespace prefix="dc" uri="http://purl.org/dc/elements/1.1/"/>
+  <namespace prefix="dct" uri="http://purl.org/dc/terms/"/>
+  <namespace prefix="ows" uri="http://www.opengis.net/ows"/>
+  
+  <!-- schema interrogation -->
+  <interrogation count="count(/csw:Record)"/> 
+  
+  <!-- all parameters section -->
+  <section key="all">
+  
+    <parameter key="fileIdentifier" meaning="fileIdentifier">
+      <label resourceKey="catalog.mdParam.general.fileIdentifier"/>
+      <validation required="false"/>
+      <content select="/csw:Record/dc:identifier"/> 
+    </parameter>
+    
+    <parameter key="title" meaning="title">
+      <label resourceKey="catalog.mdParam.identification.title"/>
+      <validation required="false"/>
+      <content select="/csw:Record/dc:title"/> 
+    </parameter>
+    
+    <parameter key="abstract" meaning="abstract">
+      <label resourceKey="catalog.mdParam.description.abstract"/>
+      <validation required="false"/>
+      <content select="/csw:Record/dct:abstract"/>
+    </parameter>
+    
+    <!--  @scheme ?? 
+          dc:subject scheme="http://www.digest.org/2.1">Vegetation-Cropland</dc:subject> -->
+    <parameter key="subject" meaning="subject">
+      <validation required="false"/>
+      <content select="/csw:Record/dc:subject"/> 
+    </parameter>
+    
+    <!-- <dc:type>http://purl.org/dc/dcmitype/Text</dc:type> -->
+    <parameter key="type" meaning="type">
+      <validation required="false"/>
+      <content select="/csw:Record/dc:type"/> 
+    </parameter>
+    
+    <!-- <dc:format>application/xhtml+xml</dc:format> -->
+    <parameter key="format" meaning="format">
+      <validation required="false"/>
+      <content select="/csw:Record/dc:format"/> 
+    </parameter>
+    
+    <!-- <dc:date>2005-10-24Z</dc:date> -->
+    <parameter key="date" meaning="date">
+      <validation required="false"/>
+      <content select="/csw:Record/dc:date"/> 
+    </parameter>
+    
+    <!-- <dct:spatial>GR-22</dct:spatial> -->
+    <parameter key="spatial" meaning="keywords">
+      <validation required="false"/>
+      <content select="/csw:Record/dct:spatial"/> 
+    </parameter>
+            
+    <!-- <dc:relation>urn:uuid:88247b56-4cbc-4df9-9860-db3f8042e357</dc:relation> -->
+    <parameter key="relation" meaning="relation">
+      <validation required="false"/>
+      <content select="/csw:Record/dc:relation"/> 
+    </parameter>
+    
+    <parameter key="envelope.west" meaning="envelope.west"> 
+      <label resourceKey="catalog.mdParam.envelope.west"/>
+      <validation required="false" valueType="double"/>
+      <content select="substring-before(/csw:Record/ows:BoundingBox/ows:LowerCorner,' ')"/> 
+    </parameter>
+    
+    <parameter key="envelope.east" meaning="envelope.east"> 
+      <label resourceKey="catalog.mdParam.envelope.east"/>
+      <validation required="false" valueType="double"/>
+      <content nodeType="pairLeftValue"
+               select="substring-before(/csw:Record/ows:BoundingBox/ows:UpperCorner,' ')"/> 
+    </parameter>
+    
+    <parameter key="envelope.north" meaning="envelope.north"> 
+      <label resourceKey="catalog.mdParam.envelope.north"/>
+      <validation required="false" valueType="double"/>
+      <content select="substring-after(/csw:Record/ows:BoundingBox/ows:UpperCorner,' ')"/> 
+    </parameter>
+
+    <parameter key="envelope.south" meaning="envelope.south"> 
+      <label resourceKey="catalog.mdParam.envelope.south"/>
+      <validation required="false" valueType="double" />
+      <content select="substring-after(/csw:Record/ows:BoundingBox/ows:LowerCorner,' ')"/>  
+    </parameter>
+    
+  </section>
+       
+</schema>
+	

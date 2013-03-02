@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<schema key="iso-19115" 
+        templateFile="gpt/metadata/iso/iso-19115-template.xml"
+        cswOutputSchema="http://www.isotc211.org/2005/gmd" 
+        cswBriefXslt="gpt/metadata/iso/apiso-brief.xslt" 
+        cswSummaryXslt="gpt/metadata/iso/apiso-summary.xslt" 
+        xsdLocation="http://www.isotc211.org/2005/gmd/metadataEntity.xsd[GML32]http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmd/metadataEntity.xsd"
+        toEsriItemInfoXslt="gpt/metadata/iso/iso-toEsriItemInfo.xslt"
+        detailsXslt="gpt/metadata/iso/iso-details.xslt" >
+  
+  <!-- schema label -->
+  <label resourceKey="catalog.mdParam.schema.iso19139.coregeog"/>
+
+  <!-- schema namespaces -->
+  <namespace prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
+  <namespace prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
+  <namespace prefix="gml" uri="http://www.opengis.net/gml"/>
+  
+  <!-- schema interrogation -->
+  <interrogation count="count(/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification)"/>
+  
+  <!-- indexables -->
+  <indexables fileName="gpt/metadata/iso/apiso-indexables.xml"/>
+  
+  <!-- Geoportal XML editor -->
+  <editor fileName="gpt/gxe/iso/iso19139/iso19139-dataset-editor.xml"/>
+  
+  <!-- general section -->
+  <section key="general">
+    <label resourceKey="catalog.mdParam.general.caption"/>  
+    
+   <parameter key="general.fileIdentifier" meaning="fileIdentifier">
+      <label resourceKey="catalog.mdParam.general.fileIdentifier"/>
+      <input type="text" size="50" maxlength="2048"
+             defaultValue="#{EditMetadataController.newUuid}"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString"/>
+    </parameter>
+     
+    <!-- language used for documenting metadata -->
+    <parameter key="general.language" meaning="language">
+      <label resourceKey="catalog.mdParam.general.metadataLanguage"/>
+      <input type="text" size="50" maxlength="2048"
+             defaultValue="en"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:language/gco:CharacterString"/>
+    </parameter>
+    
+     <!--"date that the metadata was created " as per ISO 19115 standard -->
+            <parameter key="general.datestamp" meaning="datestamp"> 
+            <label resourceKey="catalog.mdParam.general.metadataDateStamp"/>
+            <input type="text" size="20" maxlength="10" 
+               hintResourceKey="catalog.general.inputDateFormat"
+               defaultValue="#{EditMetadataController.now}"/>
+            <validation required="true" valueType="date"/>
+            <content useSelectForUpdate="true"
+                 select="/gmd:MD_Metadata/gmd:dateStamp/gco:Date | /gmd:MD_Metadata/gmd:dateStamp/gco:DateTime"
+                 update="/gmd:MD_Metadata/gmd:dateStamp/gco:Date"/>
+          </parameter>  
+  
+       <!--party responsible for the metadata information-->
+    <parameter key="general.organization">
+      <label resourceKey="catalog.mdParam.general.organization"/>
+      <input type="text" defaultValue="#{EditMetadataController.userProfile['organization'].value}"/>
+      <validation required="true"/>
+      <content useSelectForUpdate="true" 
+               select="/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+    </parameter>
+    
+    <!-- "custodian" role: party that accepts accountability and responsibility for the data and ensures appropriate care and maintenance of the resource", as per ISO 19115 standard -->
+    <parameter key="general.custodian">
+      <label resourceKey="catalog.mdParam.general.custodian"/>
+      <input type="text" editable="false" defaultValue="custodian"/>
+      <validation required="true"/>
+      <content nodeType="isoCodeListValue" useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue"/>     
+        </parameter>
+		</section>
+
+<!-- identification section -->
+  <section key="identification">
+    <label resourceKey="catalog.mdParam.identification.caption"/>
+    
+    <parameter key="identification.title" meaning="title"> 
+      <label resourceKey="catalog.mdParam.identification.title"/>
+      <input type="text"/>
+      <validation required="true"/>
+      <content useSelectForUpdate="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
+    </parameter>
+    
+    <parameter key="identification.publicationDate"> 
+      <label resourceKey="catalog.mdParam.identification.datasetPublicationDate"/>
+      <input type="text" size="20" maxlength="10" 
+             hintResourceKey="catalog.general.inputDateFormat"
+             defaultValue="#{EditMetadataController.now}"/>
+      <validation required="true" valueType="date"/>
+      <content useSelectForUpdate="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date | gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:DateTime"
+               update="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date"/>
+    </parameter>
+    
+    <parameter key="identification.datasetInfo.datasetLanguage"> 
+      <label resourceKey="catalog.mdParam.datasetInfo.datasetLanguage"/>
+      <input type="text" size="20" maxlength="10" defaultValue="en"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language/gco:CharacterString"/>
+    </parameter>
+    
+    <parameter key="identification.abstract" meaning="abstract">
+      <label resourceKey="catalog.mdParam.identification.abstract"/>
+      <input type="textArea"/>
+      <validation required="true"/>
+      <content useSelectForUpdate="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString"/>
+    </parameter>
+    
+    <parameter key="general.hierarchyLevel">
+      <label resourceKey="catalog.mdParam.general.hierarchyLevel"/>
+      <input type="selectOneMenu" defaultValue="dataset"/>
+      <validation/>
+      <content nodeType="isoCodeListValue" useSelectForUpdate="true"
+        select="/gmd:MD_Metadata/gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue"
+        delete="/gmd:MD_Metadata/gmd:hierarchyLevel">
+        <codes>
+          <code key=""/>
+          <code key="attribute" resourceKey="catalog.mdCode.hierarchyLevel.attribute"/>
+          <code key="attributeType" resourceKey="catalog.mdCode.hierarchyLevel.attributeType"/>
+          <code key="collectionHardware" resourceKey="catalog.mdCode.hierarchyLevel.collectionHardware"/>
+          <code key="collectionSession" resourceKey="catalog.mdCode.hierarchyLevel.collectionSession"/>
+          <code key="dataset" resourceKey="catalog.mdCode.hierarchyLevel.dataset"/>
+          <code key="series" resourceKey="catalog.mdCode.hierarchyLevel.series"/>
+          <code key="nonGeographicDataset" resourceKey="catalog.mdCode.hierarchyLevel.nonGeographicDataset"/>
+          <code key="dimensionGroup" resourceKey="catalog.mdCode.hierarchyLevel.dimensionGroup"/>
+          <code key="feature" resourceKey="catalog.mdCode.hierarchyLevel.feature"/>
+          <code key="featureType" resourceKey="catalog.mdCode.hierarchyLevel.featureType"/>
+          <code key="propertyType" resourceKey="catalog.mdCode.hierarchyLevel.propertyType"/>
+          <code key="fieldSession" resourceKey="catalog.mdCode.hierarchyLevel.fieldSession"/>
+          <code key="software" resourceKey="catalog.mdCode.hierarchyLevel.software"/>
+          <code key="model" resourceKey="catalog.mdCode.hierarchyLevel.model"/>
+          <code key="tile" resourceKey="catalog.mdCode.hierarchyLevel.tile"/>
+        </codes>
+      </content>
+    </parameter>
+    
+    <!--spatial representation section: subset of identification section -->
+    <parameter key="data.type">
+      <label resourceKey="catalog.mdParam.data.type"/>
+      <input type="selectOneMenu"/>
+      <validation required="false"/>
+      <content nodeType="isoCodeListValue" useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialRepresentationType/gmd:MD_SpatialRepresentationTypeCode">
+        <codes>
+          <code key=""/>
+          <code key="vector"      
+                resourceKey="catalog.mdCode.dataType.vector"/>
+          <code key="grid"        
+                resourceKey="catalog.mdCode.dataType.grid"/>
+          <code key="textTable"   
+                resourceKey="catalog.mdCode.dataType.textTable"/>
+          <code key="tin"         
+                resourceKey="catalog.mdCode.dataType.tin"/>
+          <code key="stereoModel" 
+                resourceKey="catalog.mdCode.dataType.stereoModel"/>
+          <code key="video"       
+                resourceKey="catalog.mdCode.dataType.video"/>
+        </codes> 
+      </content>       
+    </parameter>
+
+ <parameter key="data.equivalentScale"> 
+      <label resourceKey="catalog.mdParam.data.equivalentScale"/>
+      <input type="text" size="20" maxlength="24"/>
+      <validation required="false" valueType="integer"/>
+      <content useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer"
+               delete="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale/../.."/>
+    </parameter>
+    </section>
+    
+      <!-- thumbnail section -->
+  <section key="thumbnail" open="false" obligation="optional" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic">
+    <label resourceKey="catalog.mdParam.thumbnail.caption"/>
+
+    <parameter key="thumbnail.url" meaning="thumbnail.url">
+      <label resourceKey="catalog.mdParam.thumbnail.url"/>
+      <input type="text" maxlength="2048"/>
+      <validation required="true"/>
+      <content useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
+    </parameter>
+    
+    <parameter key="thumbnail.description">
+      <label resourceKey="catalog.mdParam.thumbnail.description"/>
+      <input type="text"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString"/> 
+    </parameter>
+    
+    <parameter key="thumbnail.type">
+      <label resourceKey="catalog.mdParam.thumbnail.type"/>
+      <input type="text" size="10"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileType/gco:CharacterString"/> 
+    </parameter>    
+  </section> 
+ 
+      <!-- theme section -->
+  <section key="theme">
+    <label resourceKey="catalog.mdParam.theme.caption"/>
+    
+     <parameter key="theme.topics" meaning="dataTheme">
+      <label resourceKey="catalog.mdParam.theme.topics"/>
+      <input type="selectManyCheckbox"/>
+      <validation required="true"/>
+      <content nodeType="gcoList" useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode">
+        <codes>
+          <code key="boundaries"                       
+                resourceKey="catalog.mdCode.topic.boundaries"/>
+          <code key="farming"                          
+                resourceKey="catalog.mdCode.topic.farming"/>
+          <code key="climatologyMeteorologyAtmosphere" 
+                resourceKey="catalog.mdCode.topic.climatologyMeteorologyAtmosphere"/>
+          <code key="biota"                            
+                resourceKey="catalog.mdCode.topic.biota"/>
+          <code key="economy"                          
+                resourceKey="catalog.mdCode.topic.economy"/>
+          <code key="planningCadastre"                 
+                resourceKey="catalog.mdCode.topic.planningCadastre"/>
+          <code key="society"                          
+                resourceKey="catalog.mdCode.topic.society"/>
+          <code key="elevation"                        
+                resourceKey="catalog.mdCode.topic.elevation"/>
+          <code key="environment"                      
+                resourceKey="catalog.mdCode.topic.environment"/>
+          <code key="structure"                        
+                resourceKey="catalog.mdCode.topic.structure"/>
+          <code key="geoscientificInformation"         
+                resourceKey="catalog.mdCode.topic.geoscientificInformation"/>
+          <code key="health"                           
+                resourceKey="catalog.mdCode.topic.health"/>
+          <code key="imageryBaseMapsEarthCover"        
+                resourceKey="catalog.mdCode.topic.imageryBaseMapsEarthCover"/>
+          <code key="inlandWaters"                     
+                resourceKey="catalog.mdCode.topic.inlandWaters"/>
+          <code key="location"                         
+                resourceKey="catalog.mdCode.topic.location"/>
+          <code key="intelligenceMilitary"             
+                resourceKey="catalog.mdCode.topic.intelligenceMilitary"/>
+          <code key="oceans"                           
+                resourceKey="catalog.mdCode.topic.oceans"/>
+          <code key="transportation"                   
+                resourceKey="catalog.mdCode.topic.transportation"/>
+          <code key="utilitiesCommunication"           
+                resourceKey="catalog.mdCode.topic.utilitiesCommunication"/>
+        </codes>
+      </content>
+    </parameter>  
+    </section>
+
+<!-- reference system information -->
+<section key="referenceSystemInfo" open="false" obligation="optional" select="/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier">
+    <label resourceKey="catalog.mdParam.referenceSystemInfo.caption"/>
+    
+    <parameter key="referenceSystemInfo.code">
+      <label resourceKey="catalog.mdParam.referenceSystemInfo.code"/>
+      <input type="text" editable="true" maxlength="100" defaultValue="4326"/>
+      <validation required="true"/>
+      <content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
+    </parameter>
+    
+    <parameter key="referenceSystemInfo.codespace">
+      <label resourceKey="catalog.mdParam.referenceSystemInfo.codespace"/>
+      <input type="text" editable="true"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString"/>
+    </parameter>    
+</section>
+    
+    <!-- envelope section -->
+  <section key="envelope">
+    <label resourceKey="catalog.mdParam.envelope.caption"/> 
+    
+    <parameter key="envelope.west" meaning="envelope.west"> 
+      <label resourceKey="catalog.mdParam.envelope.west"/>
+      <input type="text" size="24" maxlength="24" defaultValue="-180"
+             hintResourceKey="catalog.general.inputLongitudeFormat"/>
+      <validation required="true" valueType="double"/>
+      <content useSelectForUpdate="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal"/> 
+    </parameter>
+    
+    <parameter key="envelope.south" meaning="envelope.south"> 
+      <label resourceKey="catalog.mdParam.envelope.south"/>
+      <input type="text" size="24" maxlength="24" defaultValue="-90"
+             hintResourceKey="catalog.general.inputLatitudeFormat"/>
+      <validation required="true" valueType="double"/>
+      <content useSelectForUpdate="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude/gco:Decimal"/>  
+    </parameter>  
+
+    <parameter key="envelope.east" meaning="envelope.east"> 
+      <label resourceKey="catalog.mdParam.envelope.east"/>
+      <input type="text" size="24" maxlength="24" defaultValue="180"
+             hintResourceKey="catalog.general.inputLongitudeFormat"/>
+      <validation required="true" valueType="double"/>
+      <content useSelectForUpdate="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude/gco:Decimal"/> 
+    </parameter>
+    
+    <parameter key="envelope.north" meaning="envelope.north"> 
+      <label resourceKey="catalog.mdParam.envelope.north"/>
+      <input type="text" size="24" maxlength="24" defaultValue="90"
+             hintResourceKey="catalog.general.inputLatitudeFormat"/>
+      <validation required="true" valueType="double"/>
+      <content useSelectForUpdate="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude/gco:Decimal"/> 
+    </parameter>
+
+    <section key="envelope.map.container">
+      <parameter key="envelope.map"> 
+        <input type="map"/>
+      </parameter>
+    </section>
+    
+ </section>
+ 
+ <!-- data quality section -->
+ <section key="dataQuality" open="false" obligation="optional" select="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality">
+    <label resourceKey="catalog.mdParam.dataQualityInfo.caption"/>
+    
+  <parameter key="dataQualityInfo.scope">
+      <label resourceKey="catalog.mdParam.dataQualityInfo.scope"/>
+      <input type="selectOneMenu"/>
+      <validation required="true"/>
+      <content nodeType="isoCodeListValue" useSelectForUpdate="true" 
+               select="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue">
+		<codes>
+		<code key=""/>
+		<code key="attribute"                    
+                resourceKey="catalog.mdCode.scope.attribute"/>
+         <code key="attributeType"                       
+                resourceKey="catalog.mdCode.scope.attributeType"/>
+         <code key="collectionHardware"                       
+                resourceKey="catalog.mdCode.scope.collectionHardware"/>
+         <code key="collectionSession"                       
+                resourceKey="catalog.mdCode.scope.collectionSession"/>
+         <code key="dataset"                       
+                resourceKey="catalog.mdCode.scope.dataset"/>
+         <code key="series"                       
+                resourceKey="catalog.mdCode.scope.series"/>
+         <code key="nonGeographicDataset"                       
+                resourceKey="catalog.mdCode.scope.nonGeographicDataset"/>
+         <code key="dimensionGroup"                       
+                resourceKey="catalog.mdCode.scope.dimensionGroup"/>
+         <code key="feature"                       
+                resourceKey="catalog.mdCode.scope.feature"/>
+         <code key="featureType"                       
+                resourceKey="catalog.mdCode.scope.featureType"/>
+         <code key="propertyType"                       
+                resourceKey="catalog.mdCode.scope.propertyType"/>
+         <code key="fieldSession"                       
+                resourceKey="catalog.mdCode.scope.fieldSession"/>
+         <code key="software"                       
+                resourceKey="catalog.mdCode.scope.software"/>
+         <code key="service"                       
+                resourceKey="catalog.mdCode.scope.service"/>
+         <code key="model"                       
+                resourceKey="catalog.mdCode.scope.model"/>
+         <code key="tile"                       
+                resourceKey="catalog.mdCode.scope.tile"/>
+ 		</codes>
+		</content>
+    </parameter>
+      
+	 <parameter key="dataQualityInfo.lineage">
+      <label resourceKey="catalog.mdParam.dataQualityInfo.lineage"/>
+      <input type="textArea"/>
+      <validation required="true"/>
+      <content useSelectForUpdate="true" 
+               select="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement/gco:CharacterString"/>
+    </parameter>   
+  </section>
+   
+<!-- contact section, a subset of the identification section) -->
+  <section key="contact" open="false" obligation="optional" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact">
+    <label resourceKey="catalog.mdParam.contact.caption"/>
+        
+<!--point of contact:identification of, and means of communication with, person(s) and organization(s) associated with the resource(s)" -->
+	<parameter key="contact.organization">
+      <label resourceKey="catalog.mdParam.contact.organization"/>
+      <input type="text" defaultValue="#{EditMetadataController.userProfile['organization'].value}"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+    </parameter>
+    
+    <parameter key="contact.position">
+      <label resourceKey="catalog.mdParam.contact.position"/>
+      <input type="text"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:positionName/gco:CharacterString"/>
+    </parameter>
+
+    <parameter key="contact.address.address">
+      <label resourceKey="catalog.mdParam.contact.address.address"/>
+      <input type="text" defaultValue="#{EditMetadataController.userProfile['street'].value}"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:deliveryPoint/gco:CharacterString"/>
+    </parameter>
+    
+    <parameter key="contact.address.city">
+      <label resourceKey="catalog.mdParam.contact.address.city"/>
+      <input type="text" defaultValue="#{EditMetadataController.userProfile['city'].value}"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:city/gco:CharacterString"/>
+    </parameter>
+    
+    <parameter key="contact.address.state">
+      <label resourceKey="catalog.mdParam.contact.address.state"/>
+      <input type="text" defaultValue="#{EditMetadataController.userProfile['stateOrProv'].value}"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:administrativeArea/gco:CharacterString"/>
+    </parameter>
+    
+    <parameter key="contact.address.postalCode">
+      <label resourceKey="catalog.mdParam.contact.address.postalCode"/>
+      <input type="text" defaultValue="#{EditMetadataController.userProfile['postalCode'].value}"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:postalCode/gco:CharacterString"/>
+    </parameter>
+    
+	<parameter key="contact.address.country">
+      <label resourceKey="catalog.mdParam.contact.address.country"/>
+      <input type="text"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:country/gco:CharacterString"/>
+    </parameter>
+    
+    <parameter key="contact.email">
+      <label resourceKey="catalog.mdParam.contact.email"/>
+      <input type="text" defaultValue="#{EditMetadataController.userProfile['email'].value}"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"/>
+    </parameter>
+    
+    <parameter key="contact.onlineResource" meaning="website.url">
+      <label resourceKey="catalog.mdParam.contact.onlineResource"/>
+      <input type="text"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" 
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL"
+               delete="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource"/>
+    </parameter>
+       <parameter key="contact.phoneNumber">
+      <label resourceKey="catalog.mdParam.contact.phoneNumber"/>
+      <input type="text" defaultValue="#{EditMetadataController.userProfile['phone'].value}"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:phone/gmd:CI_Telephone/gmd:voice/gco:CharacterString"/>
+    </parameter>
+    
+    <parameter key="contact.faxNumber">
+      <label resourceKey="catalog.mdParam.contact.faxNumber"/>
+      <input type="text"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:phone/gmd:CI_Telephone/gmd:facsimile/gco:CharacterString"/>
+    </parameter>
+  </section>
+	
+  <!-- distribution section -->
+  <section key="distribution" open="false" obligation="optional" select="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution">
+    <label resourceKey="catalog.mdParam.distribution.caption"/>
+    
+    <parameter key="distribution.format.name">
+      <label resourceKey="catalog.mdParam.distribution.format.name"/>
+      <input type="text"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" 
+               delete="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"
+               select="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString"/>
+    </parameter>
+    
+    <parameter key="distribution.format.version">
+      <label resourceKey="catalog.mdParam.distribution.format.version"/>
+      <input type="text"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" 
+               delete="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"
+               select="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:version/gco:CharacterString"/>
+    </parameter>
+    
+    <parameter key="distribution.transferOptions.onLine.linkage" meaning="resource.url">
+      <label resourceKey="catalog.mdParam.distribution.transferOptions.onLine.linkage"/>
+      <input type="text" testResourceKey="catalog.publication.editMetadata.button.test.service"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/gmd:URL" delete="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions"/>
+    </parameter>
+    
+    <parameter key="distribution.transferOptions.onLine.function" meaning="resource.type">
+      <label resourceKey="catalog.mdParam.distribution.transferOptions.onLine.function"/>
+      <input type="selectOneMenu"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteParentIfEmpty="true"
+               select="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:function/gmd:CI_OnLineFunctionCode">
+		    <codes>
+		      <code key=""/>
+		      <code key="download"                    
+                resourceKey="catalog.mdCode.onLineFunctionCode.download"/>
+          <code key="information"                    
+                resourceKey="catalog.mdCode.onLineFunctionCode.information"/>
+          <code key="offlineAccess"                    
+                resourceKey="catalog.mdCode.onLineFunctionCode.offlineAccess"/>
+          <code key="order"                    
+                resourceKey="catalog.mdCode.onLineFunctionCode.order"/>
+          <code key="search"                    
+                resourceKey="catalog.mdCode.onLineFunctionCode.search"/>                
+		    </codes>
+		  </content>
+    </parameter>
+</section>
+  
+  <!-- metadata standard section -->
+  <section key="standard" open="false">
+    <label resourceKey="catalog.mdParam.standard.caption"/>
+    
+    <parameter key="standard.name">
+      <label resourceKey="catalog.mdParam.standard.name"/>
+      <input type="text" editable="false" 
+             defaultValue="ISO 19139/19115 Metadata for Datasets"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+               select="/gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString"/>
+    </parameter>
+ 
+    <parameter key="standard.version">
+      <label resourceKey="catalog.mdParam.standard.version"/>
+      <input type="text" editable="false" 
+             defaultValue="2003"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+               select="/gmd:MD_Metadata/gmd:metadataStandardVersion/gco:CharacterString"/>
+    </parameter>
+       
+  </section>
+  
+</schema>

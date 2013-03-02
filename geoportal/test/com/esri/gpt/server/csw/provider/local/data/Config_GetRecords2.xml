@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Config_GetRecords2.xml -->
+<items>
+  
+  <!-- missing property name -->
+  <item shouldPass="false" owsLocator="PropertyName" owsCode="MissingParameterValue">
+    <url><![CDATA[
+      service=CSW&request=GetRecords&constraint=<Filter><PropertyIsEqualTo><Literal>a</Literal></PropertyIsEqualTo></Filter>
+    ]]></url>
+    <url><![CDATA[
+      service=CSW&request=GetRecords&namespace=xmlns(ogc=http://www.opengis.net/ogc),xmlns(gml=http://www.opengis.net/gml)&constraint=<ogc:Filter><ogc:Intersects><gml:Envelope><gml:lowerCorner>14.05 46.46</gml:lowerCorner><gml:upperCorner>17.24 48.42</gml:upperCorner></gml:Envelope></ogc:Intersects></ogc:Filter>
+    ]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:Literal>a</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml>  
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+               <ogc:Intersects>
+                  <gml:Envelope>
+                     <gml:lowerCorner>14.05 46.46</gml:lowerCorner>
+                     <gml:upperCorner>17.24 48.42</gml:upperCorner>
+                  </gml:Envelope>
+               </ogc:Intersects>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml>  
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>a</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+          <ogc:SortBy>
+            <ogc:SortProperty>
+              <ogc:SortOrder>DESC</ogc:SortOrder>
+            </ogc:SortProperty>
+          </ogc:SortBy>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- invalid property name -->
+  <item shouldPass="false" owsLocator="PropertyName" owsCode="InvalidParameterValue">
+    <url><![CDATA[
+      service=CSW&request=GetRecords&constraint=<Filter><PropertyIsEqualTo><PropertyName>invalidPropertyName</PropertyName><Literal>a</Literal></PropertyIsEqualTo></Filter>
+    ]]></url>
+    <url><![CDATA[
+      service=CSW&request=GetRecords&sortby=invalidSortByProperty:D&constraint=<Filter><PropertyIsEqualTo><PropertyName>title</PropertyName><Literal>a</Literal></PropertyIsEqualTo></Filter>
+    ]]></url>
+    <url><![CDATA[
+      service=CSW&request=GetRecords&namespace=xmlns(ogc=http://www.opengis.net/ogc),xmlns(gml=http://www.opengis.net/gml)&constraint=<ogc:Filter><ogc:Intersects><ogc:PropertyName>invalidGeometryProperty</ogc:PropertyName><gml:Envelope><gml:lowerCorner>14.05 46.46</gml:lowerCorner><gml:upperCorner>17.24 48.42</gml:upperCorner></gml:Envelope></ogc:Intersects></ogc:Filter>
+    ]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>invalidPropertyName</ogc:PropertyName>
+                  <ogc:Literal>a</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml>  
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+               <ogc:Intersects>
+                  <ogc:PropertyName>invalidGeometryProperty</ogc:PropertyName>
+                  <gml:Envelope>
+                     <gml:lowerCorner>14.05 46.46</gml:lowerCorner>
+                     <gml:upperCorner>17.24 48.42</gml:upperCorner>
+                  </gml:Envelope>
+               </ogc:Intersects>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml>  
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>a</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+          <ogc:SortBy>
+            <ogc:SortProperty>
+              <ogc:PropertyName>invalidSortByProperty</ogc:PropertyName>
+              <ogc:SortOrder>DESC</ogc:SortOrder>
+            </ogc:SortProperty>
+          </ogc:SortBy>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- missing literal -->
+  <item shouldPass="false" owsLocator="Literal" owsCode="MissingParameterValue">
+    <url><![CDATA[
+      service=CSW&request=GetRecords&constraint=<Filter><PropertyIsEqualTo><PropertyName>title</PropertyName></PropertyIsEqualTo></Filter>
+    ]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                </ogc:PropertyIsEqualTo>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml>  
+  </item> 
+ 
+  <!-- invalid literal -->
+  <item shouldPass="false" owsLocator="Literal" owsCode="InvalidParameterValue">
+    <url><![CDATA[
+      service=CSW&request=GetRecords&constraint=<Filter><PropertyIsEqualTo><PropertyName>title</PropertyName><Literal></Literal></PropertyIsEqualTo></Filter>
+    ]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal></ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml>  
+  </item> 
+  
+  <!-- invalid sort order -->
+  <item shouldPass="false" owsLocator="SortOrder" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>a</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+          <ogc:SortBy>
+            <ogc:SortProperty>
+              <ogc:PropertyName>title</ogc:PropertyName>
+              <ogc:SortOrder>invalidSortOrder</ogc:SortOrder>
+            </ogc:SortProperty>
+          </ogc:SortBy>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+ <!-- invalid upper/lower boundaries for PropertyIsBetween -->
+  <item shouldPass="false" owsLocator="PropertyIsBetween" owsCode="MissingParameterValue">
+    <url><![CDATA[
+      service=CSW&request=GetRecords&namespace=xmlns(myogc=http://www.opengis.net/ogc)&constraint=<myogc:Filter><myogc:PropertyIsBetween><myogc:PropertyName>dc:title</myogc:PropertyName></myogc:PropertyIsBetween></myogc:Filter>
+    ]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:myogc="http://www.opengis.net/ogc" service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <myogc:Filter>
+              <myogc:And>
+               <myogc:PropertyIsBetween>
+                 <myogc:PropertyName>dc:title</myogc:PropertyName>
+               </myogc:PropertyIsBetween>
+              </myogc:And>
+            </myogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml>  
+  </item> 
+  <item shouldPass="false" owsLocator="PropertyIsBetween" owsCode="InvalidParameterValue">
+    <url><![CDATA[
+      service=CSW&request=GetRecords&namespace=xmlns(ogc=http://www.opengis.net/ogc)&constraint=<ogc:Filter><ogc:PropertyIsBetween><ogc:PropertyName>dc:title</ogc:PropertyName><ogc:LowerBoundary></ogc:LowerBoundary><ogc:UpperBoundary></ogc:UpperBoundary></ogc:PropertyIsBetween></ogc:Filter>
+    ]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+               <ogc:PropertyIsBetween>
+                 <ogc:PropertyName>dc:title</ogc:PropertyName>
+                 <ogc:LowerBoundary></ogc:LowerBoundary>
+                 <ogc:UpperBoundary></ogc:UpperBoundary>
+               </ogc:PropertyIsBetween>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml>  
+  </item> 
+  
+  <!-- invalid spatial operand -->
+  <item shouldPass="false" owsLocator="Intersects" owsCode="InvalidParameterValue">
+    <url><![CDATA[
+      service=CSW&request=GetRecords&namespace=xmlns(ogc=http://www.opengis.net/ogc),xmlns(gml=http://www.opengis.net/gml)&constraint=<ogc:Filter><ogc:Intersects><ogc:PropertyName>Geometry</ogc:PropertyName></ogc:Intersects></ogc:Filter>
+    ]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+               <ogc:Intersects>
+                 <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+               </ogc:Intersects>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml>  
+  </item> 
+  <item shouldPass="false" owsLocator="Beyond" owsCode="InvalidParameterValue">
+    <url><![CDATA[
+      service=CSW&request=GetRecords&namespace=xmlns(ogc=http://www.opengis.net/ogc),xmlns(gml=http://www.opengis.net/gml)&constraint=<ogc:Filter><ogc:Beyond><ogc:PropertyName>Geometry</ogc:PropertyName><gml:Envelope><gml:lowerCorner>14.05 46.46</gml:lowerCorner><gml:upperCorner>17.24 48.42</gml:upperCorner></gml:Envelope></ogc:Beyond></ogc:Filter>
+    ]]></url>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+               <ogc:Beyond>
+                 <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                  <gml:Envelope>
+                     <gml:lowerCorner>14.05 46.46</gml:lowerCorner>
+                     <gml:upperCorner>17.24 48.42</gml:upperCorner>
+                  </gml:Envelope>
+               </ogc:Beyond>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml>  
+  </item>
+  
+  <!-- anytext queries are only supported for PropertyIsLike -->
+  <item shouldPass="false" owsLocator="PropertyName" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+               <ogc:PropertyIsEqualTo>
+                 <ogc:PropertyName>anytext</ogc:PropertyName>
+                 <ogc:Literal>a</ogc:Literal>
+               </ogc:PropertyIsEqualTo>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml>  
+  </item> 
+  
+  <!-- invalid filter namespace -->
+  <item shouldPass="false" owsLocator="ogc:Filter" owsCode="NoApplicableCode">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter xmlns:ogc="http://www.opengis.net/foo">
+              <ogc:And>
+                <ogc:PropertyIsLike wildCard="*" escapeChar="\" singleChar="?">
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idDelete?</ogc:Literal>
+                </ogc:PropertyIsLike>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>    
+    ]]></xml>  
+  </item>
+  
+  <!-- invalid operator -->
+  <item shouldPass="false" owsLocator="PropertyIsInvalid" owsCode="InvalidParameterValue">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsInvalid>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idDelete?</ogc:Literal>
+                </ogc:PropertyIsInvalid>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>    
+    ]]></xml>  
+  </item>
+  
+</items>

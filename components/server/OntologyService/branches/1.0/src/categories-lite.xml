@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<categories>
+  <category key="agriculture" value="Agriculture and Farming"/>
+  <category key="ecology" value="Biology and Ecology"/>
+  <category key="administrative boundary" value="Administrative and Political Boundaries"/>
+  <category key="atmosphere" value="Atmosphere and Climatic"/>
+  <category key="business" value="Business and Economic"/>
+  <category key="altitude" value="Elevation and Derived Products"/>
+  <category key="environment" value="Environment and Conservation"/>
+  <category key="geology" value="Geological and Geophysical"/>
+  <category key="health" value="Human Health and Disease"/>
+  <category key="map" value="Imagery and Base Maps"/>
+  <category key="military activities" value="Military"/>
+  <category key="inland water" value="Inland Water Resource"/>
+  <category key="ocean" value="Oceans and Estuaries"/>
+  <category key="land use plan" value="Cadastral"/>
+  <category key="demography" value="Cultural, Society and Demography"/>
+  <category key="building" value="Facilities and Structures"/>
+  <category key="road" value="Transportation Networks"/>
+  <category key="communication" value="Utilities and Communication"/>
+</categories>

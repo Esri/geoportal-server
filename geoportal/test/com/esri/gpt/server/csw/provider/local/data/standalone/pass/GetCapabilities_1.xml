@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- http://urbanm:8080/GPT9/csw/discovery/request=GetCapabilities&service=CSW&version=2.0.2 -->
+<csw:GetCapabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+  service="CSW" version="2.0.2">
+</csw:GetCapabilities>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.MD_GridSpatialRepresentation" g:label="$i18nBase"
+           g:extends="$base/schema/gmd/spatialRepresentation/AbstractMD_SpatialRepresentation_Type.xml">
+  <g:annotation>
+    <g:documentation>Types and numbers of raster spatial objects in the dataset</g:documentation>
+  </g:annotation>
+  <g:body>
+  
+    <g:element g:targetName="gmd:numberOfDimensions" g:minOccurs="1" g:maxOccurs="1"
+      g:label="$i18n.catalog.iso19139.MD_GridSpatialRepresentation.numberOfDimensions"
+      g:extends="$base/schema/gco/basicTypes/Integer_PropertyType.xml"/>
+    
+    <g:element g:targetName="gmd:axisDimensionProperties" g:minOccurs="0" g:maxOccurs="unbounded"
+      g:label="$i18n.catalog.iso19139.MD_GridSpatialRepresentation.axisDimensionProperties"
+      g:extends="$base/schema/gmd/spatialRepresentation/MD_Dimension_PropertyType.xml"/>
+
+    <g:element g:targetName="gmd:cellGeometry" g:minOccurs="1" g:maxOccurs="1"
+      g:label="$i18n.catalog.iso19139.MD_GridSpatialRepresentation.cellGeometry"
+      g:extends="$base/schema/gmd/spatialRepresentation/MD_CellGeometryCode_PropertyType.xml"/>
+      
+    <g:element g:targetName="gmd:transformationParameterAvailability" g:minOccurs="1" g:maxOccurs="1"
+      g:label="$i18n.catalog.iso19139.MD_GridSpatialRepresentation.transformationParameterAvailability"
+      g:extends="$base/schema/gco/basicTypes/Boolean_PropertyType.xml"/>
+
+  </g:body>
+</g:element>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Browse Graphic 
+		browse (/metadata/idinfo/browse) 
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect01.xsd
+		http://www.fgdc.gov/metadata/csdgm/01.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="browse"
+	g:i18nBase="catalog.fgdc.idinfo.browse" g:label="$i18nBase"
+	g:extends="$base/core/xml/Element.xml">
+	<g:body>
+
+		<!-- Browse Graphic File Name (URL) -->
+		<g:element g:targetName="browsen" g:extends="$base/core/xml/ElementTextOnly.xml"/>
+		
+		<!-- Browse Graphic File Description -->
+		<g:element g:targetName="browsed" g:extends="$base/core/xml/ElementTextOnly.xml"/>
+		
+		<!-- Browse Graphic File Type -->
+		<g:element g:targetName="browset" g:extends="$base/core/xml/ElementTextOnly.xml"/>
+
+	</g:body>
+</g:element>

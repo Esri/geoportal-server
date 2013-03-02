@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Attribute Accuracy 
+		(attracc, /metadata/dataqual/attracc) 
+		
+		From:
+		http://www.fgdc.gov/schemas/metadata/fgdc-std-001-1998-sect02.xsd
+		http://www.fgdc.gov/metadata/csdgm/02.html
+	-->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+	xmlns:h="http://www.esri.com/geoportal/gxe/html" 
+	g:targetName="attracc"
+	g:i18nBase="catalog.fgdc.dataqual.attracc" g:label="$i18nBase"
+	g:extends="$base/core/xml/Element.xml">
+	<g:body>
+
+		<!-- Attribute Accuracy Report -->
+		<g:element g:targetName="attraccr" g:extends="$base/core/xml/ElementTextOnly.xml">
+			<g:body>
+				<g:input g:extends="$base/core/ui/InputTextArea.xml"/>
+			</g:body>
+		</g:element>
+
+		<!-- Quantitative Attribute Accuracy Assessment -->
+		<g:element g:targetName="qattracc" g:minOccurs="0"
+			g:i18nBase="catalog.fgdc.dataqual.attracc.qattracc" g:label="$i18nBase"
+			g:maxOccurs="unbounded" g:extends="$base/core/xml/Element.xml">
+			<g:body>
+
+				<!-- Attribute Accuracy Value -->
+				<g:element g:targetName="attraccv"
+					g:extends="$base/core/xml/ElementTextOnly.xml">
+					<g:body>
+					  <h:a h:href="javascript:void(0);" h:class="gxeInputTool"
+					    h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='Unknown';_o.fireInputChanged();"
+					    >$i18n.catalog.fgdc.general.unknown</h:a>
+					</g:body>
+				</g:element>
+
+				<!-- Attribute Accuracy Explanation -->
+				<g:element g:targetName="attracce"
+					g:extends="$base/core/xml/ElementTextOnly.xml">
+					<g:body>
+						<g:input g:extends="$base/core/ui/InputTextArea.xml"/>
+					</g:body>
+				</g:element>
+
+			</g:body>
+		</g:element>
+
+	</g:body>
+</g:element>
+
+

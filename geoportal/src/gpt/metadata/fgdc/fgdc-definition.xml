@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<schema key="fgdc" detailsXslt="gpt/metadata/fgdc/fgdc-details.xslt"
+  toEsriItemInfoXslt="gpt/metadata/fgdc/fgdc-toEsriItemInfo.xslt">
+
+  <!-- schema label -->
+  <label resourceKey="catalog.mdParam.schema.fgdc"/>
+
+  <!-- schema interrogation -->
+  <interrogation count="count(/metadata/idinfo/citation/*[name()='citeinfo'])"/>
+
+  <!-- indexables -->
+  <indexables fileName="gpt/metadata/fgdc/fgdc-indexables.xml"/>
+
+  <!-- Geoportal XML editor -->
+  <editor fileName="gpt/gxe/fgdc/fgdc-editor.xml"/>
+
+  <!-- SECTION: Identification Information -->
+  <!-- Idetification_Information -->
+  <section key="identification">
+    <label resourceKey="fgdc.identification.caption"/>
+    <!-- Citation  cation -->
+    <!-- Citation_Information citeinfo -->
+    <!-- Title -->
+    <parameter key="identification.title">
+      <label resourceKey="fgdc.identification.title"/>
+      <input type="text" maxlength="4000" defaultValue="Untitled"/>
+      <validation required="true"/>
+      <content useSelectForUpdate="true"
+          select="/metadata/idinfo/citation/citeinfo/title" deleteIfEmpty="false"/>
+    </parameter>
+    <!-- Originator  1:N  origin-->
+    <parameter key="identification.originator">
+      <label resourceKey="fgdc.citation.originator"/>
+      <input type="text"/>
+      <validation required="true"/>
+      <content useSelectForUpdate="true"
+           select="/metadata/idinfo/citation/citeinfo/origin" deleteIfEmpty="false"/>
+    </parameter>
+    <!-- Publication Informantion pubinfo [optional]-->
+
+    <!-- Publication Date pubdate -->
+    <parameter key="identification.publicationDate">
+      <label resourceKey="fgdc.citation.publicationDate"/>
+      <input type="text" size="20" maxlength="10"
+         hintResourceKey="catalog.general.inputDateFormat"
+         defaultValue="#{EditMetadataController.now}"/>
+      <validation required="true" valueType="string"/>
+      <content useSelectForUpdate="true"
+          select="/metadata/idinfo/citation/citeinfo/pubdate" deleteIfEmpty="false"/>
+    </parameter>
+
+    <!-- Description descript -->
+    <!-- Abstract  abstract-->
+    <parameter key="identification.abstract">
+      <label resourceKey="fgdc.description.abstract"/>
+      <input type="textArea"/>
+      <validation required="true"/>
+      <content useSelectForUpdate="true"
+           select="/metadata/idinfo/descript/abstract" deleteIfEmpty="false"/>
+    </parameter>
+    <!-- Purpose  purpose-->
+    <parameter key="identification.purpose">
+      <label resourceKey="fgdc.description.purpose"/>
+      <input type="textArea"/>
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+           select="/metadata/idinfo/descript/purpose" deleteIfEmpty="false"/>
+    </parameter>
+
+    <!-- Time_Period_of_Content  timeperd -->
+    <!-- Time_Period_Information  timeinfo -->
+    <!--[ single data/time | multiple date/times | range date/times ] -->
+    <section key="identification.timePeriod">
+      <label resourceKey="fgdc.timePeriod.catption"/>
+      <!-- single date/time -->
+      <section key="identification.timePeriod.singDate" obligation="exclusive" open="true" select="/metadata/idinfo/timeperd/timeinfo/sngdate">
+        <label resourceKey="fgdc.timePeriod.singDate"/>
+        <parameter key="identification.timePeriod.singDate.caleDate">
+          <label resourceKey="fgdc.timePeriod.singDate.caleDate"/>
+          <input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat"/>
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+          <validation required="false" valueType="string"/>
+          <content useSelectForUpdate="true" select="/metadata/idinfo/timeperd/timeinfo/sngdate/caldate" deleteIfEmpty="false" />
+        </parameter>
+      </section>
+      <!-- multiple date/time -->
+      <section key="identification.timePeriod.multDate" obligation="exclusive" open="false" select="/metadata/idinfo/timeperd/timeinfo/mdattim">
+        <label resourceKey="fgdc.timePeriod.multDate"/>
+        <parameter key="identification.timePeriod.multDate1.singDate.caleDate">
+          <label resourceKey="fgdc.timePeriod.singDate.caleDate"/>
+          <input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat"/>
+          <validation required="true" valueType="string"/>
+          <content useSelectForUpdate="true" select="/metadata/idinfo/timeperd/timeinfo/mdattim/sngdate[1]/caldate" deleteIfEmpty="false" />
+        </parameter>
+        <parameter key="identification.timePeriod.multDate2.singDate.caleDate">
+          <label resourceKey="fgdc.timePeriod.singDate.caleDate"/>
+          <input type="text" size="20" maxlength="10" hintResourceKey="catalog.general.inputDateFormat"/>
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+          <validation required="false" valueType="string"/>
+          <content useSelectForUpdate="true" select="/metadata/idinfo/timeperd/timeinfo/mdattim/sngdate[2]/caldate" deleteIfEmpty="false"/>
+        </parameter>
+      </section>
+      <!-- range date/time -->
+      <section key="identification.timePeriod.rangOfDate" obligation="exclusive" open="false" select="/metadata/idinfo/timeperd/timeinfo/rngdates">
+        <label resourceKey="fgdc.timePeriod.rangOfDate"/>
+        <parameter key="identification.timePeriod.beginDate">
+          <label resourceKey="fgdc.timePeriod.beginDate"/>
+          <input type="text" size="20" maxlength="10"
+             hintResourceKey="catalog.general.inputDateFormat"/>
+          <validation required="true" valueType="string"/>
+          <content useSelectForUpdate="true"
+               select="/metadata/idinfo/timeperd/timeinfo/rngdates/begdate" deleteIfEmpty="false" />
+        </parameter>
+        <parameter key="identification.timePeriod.endDate">
+          <label resourceKey="fgdc.timePeriod.endDate"/>
+          <input type="text" size="20" maxlength="10"
+             hintResourceKey="catalog.general.inputDateFormat"/>
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+          <validation required="false" valueType="string"/>
+          <content useSelectForUpdate="true"
+               select="/metadata/idinfo/timeperd/timeinfo/rngdates/enddate" deleteIfEmpty="false"/>
+        </parameter>
+      </section>
+    </section>
+    <section key="identification.timePeriod.section">
+      <!--Correntness_Reference :current -->
+      <parameter key="identification.timePeriod.currentness">
+        <label resourceKey="fgdc.timePeriod.currentness"/>
+        <input type="text"/>
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+        <validation required="false"/>
+        <content useSelectForUpdate="true"
+             select="/metadata/idinfo/timeperd/current" deleteIfEmpty="false" />
+      </parameter>
+    </section>
+    <!-- Status -->
+    <!-- Progress : progress -->
+    <parameter key="identification.status.progress">
+      <label resourceKey="fgdc.status.progress"/>
+      <input type="selectOneMenu" size="30"/>
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+          select="/metadata/idinfo/status/progress" deleteIfEmpty="false">
+        <codes>
+          <code key="Complete" resourceKey="fgdc.mdCode.progress.completed"/>
+          <code key="In work" resourceKey="fgdc.mdCode.progress.inWork"/>
+          <code key="Planned" resourceKey="fgdc.mdCode.progress.planned"/>
+        </codes>
+      </content>
+    </parameter>
+    <!-- Maintenance_and_Update_Frequency : update -->
+    <parameter key="identification.status.frequency">
+      <label resourceKey="fgdc.status.frequency"/>
+      <input type="selectWithOther" otherCodeKey="otherCodeKey" size="30" />
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+         select="/metadata/idinfo/status/update" deleteIfEmpty="false">
+        <codes>
+          <code key="Continually" resourceKey="fgdc.mdCode.frequency.continual"/>
+          <code key="Daily" resourceKey="fgdc.mdCode.frequency.daily"/>
+          <code key="Weekly" resourceKey="fgdc.mdCode.frequency.weekly"/>
+          <code key="Monthly" resourceKey="fgdc.mdCode.frequency.monthly"/>
+          <code key="Annually" resourceKey="fgdc.mdCode.frequency.annually"/>
+          <code key="Unknown" resourceKey="fgdc.mdCode.frequency.unknown"/>
+          <code key="As needed" resourceKey="fgdc.mdCode.frequency.asNeeded"/>
+          <code key="Irregular" resourceKey="fgdc.mdCode.frequency.irregular"/>
+          <code key="None planned" resourceKey="fgdc.mdCode.frequency.notPlanned"/>
+          <code key="otherCodeKey" resourceKey="fgdc.mdCode.other"/>
+        </codes>
+      </content>
+    </parameter>
+
+    <!-- Spatial_Domain  spdom -->
+    <section key="identification.envelope" select="/metadata/idinfo/spdom/bounding">
+      <!-- Bounding_Coordinates bounding -->
+      <!-- West_Bounding_Coordinate  westbc-->
+      <parameter key="identification.envelope.west" meaning="envelope.west">
+        <label resourceKey="fgdc.envelope.west"/>
+        <input type="text" size="24" maxlength="24" defaultValue="-180"
+            hintResourceKey="catalog.general.inputLongitudeFormat"/>
+        <validation required="true" valueType="double"/>
+        <content useSelectForUpdate="true"
+            select="/metadata/idinfo/spdom/bounding/westbc" deleteIfEmpty="false"/>
+      </parameter>
+      <!-- East_Bounding_Coordinate  eastbc-->
+      <parameter key="identification.envelope.east" meaning="envelope.east">
+        <label resourceKey="fgdc.envelope.east"/>
+        <input type="text" size="24" maxlength="24" defaultValue="180"
+            hintResourceKey="catalog.general.inputLongitudeFormat"/>
+        <validation required="true" valueType="double"/>
+        <content useSelectForUpdate="true"
+            select="/metadata/idinfo/spdom/bounding/eastbc" deleteIfEmpty="false"/>
+      </parameter>
+      <!-- North_Bounding_Coordinate  northbc -->
+      <parameter key="identification.envelope.north" meaning="envelope.north">
+        <label resourceKey="fgdc.envelope.north"/>
+        <input type="text" size="24" maxlength="24" defaultValue="90"
+            hintResourceKey="catalog.general.inputLatitudeFormat"/>
+        <validation required="true" valueType="double"/>
+        <content useSelectForUpdate="true"
+            select="/metadata/idinfo/spdom/bounding/northbc" deleteIfEmpty="false"/>
+      </parameter>
+      <!-- South_Bounding_Coordinate  southbc -->
+      <parameter key="identification.envelope.south" meaning="envelope.south">
+        <label resourceKey="fgdc.envelope.south"/>
+        <input type="text" size="24" maxlength="24" defaultValue="-90"
+            hintResourceKey="catalog.general.inputLatitudeFormat"/>
+        <validation required="true" valueType="double" />
+        <content useSelectForUpdate="true"
+            select="/metadata/idinfo/spdom/bounding/southbc" deleteIfEmpty="false"/>
+      </parameter>
+      <section key="envelope.map.container">
+        <parameter key="envelope.map">
+          <input type="map"/>
+        </parameter>
+      </section>
+    </section>
+
+    <section key="idenInfo.constraints" open="true">
+      <label resourceKey="catalog.mdParam.constraint.caption"/>
+      <!-- Access_Constraints  accconst -->
+      <parameter key="identification.constraint.access">
+        <label resourceKey="fgdc.constraint.access"/>
+        <input type="text"  defaultValue="None"/>
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+        <validation required="false"/>
+        <content useSelectForUpdate="true" select="/metadata/idinfo/accconst" deleteIfEmpty="false" />
+      </parameter>
+      <!-- Use_Constraints  useconst -->
+      <parameter key="identification.constraint.use">
+        <label resourceKey="fgdc.constraint.use"/>
+        <input type="text"  defaultValue="None"/>
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+        <validation required="false"/>
+        <content useSelectForUpdate="true"
+             select="/metadata/idinfo/useconst" deleteIfEmpty="false">
+        </content>
+      </parameter>
+    </section>
+  </section>
+
+  <!-- Data Themes-->
+  <section key="dataThemes">
+    <label resourceKey="fgdc.theme.caption"/>
+    <!-- Data Category -->
+    <!-- Theme  theme-->
+    <parameter key="theme.topics">
+      <label resourceKey="fgdc.theme.topics"/>
+      <input type="selectManyCheckbox"/>
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+      <validation required="false"/>
+      <content nodeType="list" useSelectForUpdate="true"
+           select="/metadata/idinfo/keywords/theme[1]/themekey" deleteIfEmpty="false">
+        <codes>
+          <code key="boundaries"
+              resourceKey="fgdc.mdCode.topic.boundaries"/>
+          <code key="farming"
+              resourceKey="fgdc.mdCode.topic.farming"/>
+          <code key="climatologyMeteorologyAtmosphere"
+              resourceKey="fgdc.mdCode.topic.climatologyMeteorologyAtmosphere"/>
+          <code key="biota"
+              resourceKey="fgdc.mdCode.topic.biota"/>
+          <code key="economy"
+              resourceKey="fgdc.mdCode.topic.economy"/>
+          <code key="planningCadastre"
+              resourceKey="fgdc.mdCode.topic.planningCadastre"/>
+          <code key="society"
+              resourceKey="fgdc.mdCode.topic.society"/>
+          <code key="elevation"
+              resourceKey="fgdc.mdCode.topic.elevation"/>
+          <code key="environment"
+              resourceKey="fgdc.mdCode.topic.environment"/>
+          <code key="structure"
+              resourceKey="fgdc.mdCode.topic.structure"/>
+          <code key="geoscientificInformation"
+              resourceKey="fgdc.mdCode.topic.geoscientificInformation"/>
+          <code key="health"
+              resourceKey="fgdc.mdCode.topic.health"/>
+          <code key="imageryBaseMapsEarthCover"
+              resourceKey="fgdc.mdCode.topic.imageryBaseMapsEarthCover"/>
+          <code key="inlandWaters"
+              resourceKey="fgdc.mdCode.topic.inlandWaters"/>
+          <code key="location"
+              resourceKey="fgdc.mdCode.topic.location"/>
+          <code key="intelligenceMilitary"
+              resourceKey="fgdc.mdCode.topic.intelligenceMilitary"/>
+          <code key="oceans"
+              resourceKey="fgdc.mdCode.topic.oceans"/>
+          <code key="transportation"
+              resourceKey="fgdc.mdCode.topic.transportation"/>
+          <code key="utilitiesCommunication"
+              resourceKey="fgdc.mdCode.topic.utilitiesCommunication"/>
+        </codes>
+      </content>
+    </parameter>
+  </section>
+
+  <!-- +++++++++++++++++++++++++++++++++++++ -->
+  <!-- 0{Distribution Information}1 distinfo -->
+  <!-- +++++++++++++++++++++++++++++++++++++ -->
+  <section key="distInfo" open="false" obligation="optional" select="/metadata/distinfo">
+    <label resourceKey="fgdc.distInfo.caption"/>
+    <!-- Distribution Liability  distliab -->
+    <parameter key="distInfo.distLiab" >
+      <label resourceKey="fgdc.distInfo.distLiab"/>
+      <input type="text" maxlength="4000" defaultValue=""/>
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+      <validation required="false" valueType="string"/>
+      <content useSelectForUpdate="true" select="/metadata/distinfo/distliab" deleteIfEmpty="false"/>
+    </parameter>
+
+    <!-- Distributor  distrib -->
+    <!-- Contact Information  cntinfo -->
+    <!-- Contact Address  cntaddr -->
+    <!-- Address_Type  addrtype -->
+    <parameter key="metadataref.distInfo.contactinfo.cntaddress.addrtype">
+      <label resourceKey="fgdc.standard.address.type"/>
+      <input type="text" maxlength="4000" defaultValue=""/>
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+          select="/metadata/distinfo/distrib/cntinfo/cntaddr/addrtype" deleteIfEmpty="false"/>
+    </parameter>
+    <!-- City  city -->
+    <parameter key="metadataref.distInfo.contactinfo.cntaddress.city">
+      <label resourceKey="fgdc.standard.address.city"/>
+      <input type="text" maxlength="4000" defaultValue=""/>
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+         select="/metadata/distinfo/distrib/cntinfo/cntaddr/city" deleteIfEmpty="false"/>
+    </parameter>
+    <!-- State_or_Province   state -->
+    <parameter key="metadataref.distInfo.contactinfo.cntaddress.state">
+      <label resourceKey="fgdc.standard.address.state"/>
+      <input type="text" maxlength="4000" defaultValue=""/>
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+         select="/metadata/distinfo/distrib/cntinfo/cntaddr/state" deleteIfEmpty="false"/>
+    </parameter>
+    <!-- Postal_Code  postal -->
+    <parameter key="metadataref.distInfo.contactinfo.cntaddress.postal">
+      <label resourceKey="fgdc.standard.postal"/>
+      <input type="text" maxlength="4000" defaultValue=""/>
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+         select="/metadata/distinfo/distrib/cntinfo/cntaddr/postal" deleteIfEmpty="false"/>
+    </parameter>
+    <!-- Contact Voice Telephone  cntvoice -->
+    <parameter key="metadataref.distInfo.contactinfo.cntvoice">
+      <label resourceKey="fgdc.standard.voiceTelephone"/>
+      <input type="text" maxlength="4000" defaultValue=""/>
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+         select="/metadata/distinfo/distrib/cntinfo/cntvoice" deleteIfEmpty="false"/>
+    </parameter>
+  </section>
+  <!-- End of Distribution Information -->
+
+  <!-- SECTION Metadata_Reference_Information -->
+  <section key="metadataref">
+    <label resourceKey="fgdc.metaRefe.caption"/>
+
+    <!-- Metadata contact -->
+
+    <!-- Address_Type  addrtype -->
+    <parameter key="metadataref.contactinfo.cntaddress.addrtype">
+      <label resourceKey="fgdc.standard.address.type"/>
+      <input type="text" maxlength="4000" defaultValue=""/>
+      <validation required="true"/>
+      <content useSelectForUpdate="true"
+         select="/metadata/metainfo/metc/cntinfo/cntaddr/addrtype" deleteIfEmpty="false"/>
+    </parameter>
+    <!-- City  city -->
+    <parameter key="metadataref.contactinfo.cntaddress.city">
+      <label resourceKey="fgdc.standard.address.city"/>
+      <input type="text" maxlength="4000" defaultValue="#{EditMetadataController.userProfile['city'].value}"/>
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+         select="/metadata/metainfo/metc/cntinfo/cntaddr/city" deleteIfEmpty="false"/>
+    </parameter>
+    <!-- State_or_Province   state -->
+    <parameter key="metadataref.contactinfo.cntaddress.state">
+      <label resourceKey="fgdc.standard.address.state"/>
+      <input type="text" maxlength="4000" defaultValue="#{EditMetadataController.userProfile['stateOrProv'].value}"/>
+      <validation required="true"/>
+      <content useSelectForUpdate="true"
+         select="/metadata/metainfo/metc/cntinfo/cntaddr/state" deleteIfEmpty="false"/>
+    </parameter>
+    <!-- Postal_Code  postal -->
+    <parameter key="metadataref.contactinfo.cntaddress.postal">
+      <label resourceKey="fgdc.standard.postal"/>
+      <input type="text" maxlength="4000" defaultValue="#{EditMetadataController.userProfile['postalCode'].value}"/>
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+         select="/metadata/metainfo/metc/cntinfo/cntaddr/postal" deleteIfEmpty="false"/>
+    </parameter>
+    <!-- Contact Voice Telephone  cntvoice -->
+    <parameter key="metadataref.contactinfo.cntvoice">
+      <label resourceKey="fgdc.standard.voiceTelephone"/>
+      <input type="text" maxlength="4000" defaultValue="#{EditMetadataController.userProfile['phone'].value}"/>
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+         select="/metadata/metainfo/metc/cntinfo/cntvoice" deleteIfEmpty="false"/>
+    </parameter>
+
+    <!-- Metadata_Standard_Name : metstdn -->
+    <parameter key="metadataref.metadatastdname">
+      <label resourceKey="fgdc.standard.name"/>
+      <input type="text" maxlength="4000" defaultValue="FGDC Content Standards for Digital Geospatial" editable="false" />
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+           select="/metadata/metainfo/metstdn" deleteIfEmpty="false"/>
+    </parameter>
+    <!-- Metadata_Standard_Version : metstdv -->
+    <parameter key="metadataref.metadatastdversion">
+      <label resourceKey="fgdc.standard.version"/>
+      <input type="text" maxlength="4000" defaultValue="FGDC-STD-001-1998" editable="false" />
+	  <!-- Changed to required="false" for relaxed FGDC harvesting; 11/16/2011 -->
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+           select="/metadata/metainfo/metstdv" deleteIfEmpty="false"/>
+    </parameter>
+  </section>
+
+</schema>

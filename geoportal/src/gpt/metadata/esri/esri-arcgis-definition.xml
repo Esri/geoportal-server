@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<schema key="esri-arcgis" editable="false">
+      
+  <!-- schema label -->
+  <label resourceKey="catalog.mdParam.schema.esriarcgis"/>
+  
+  <!-- schema interrogation -->
+  <interrogation count="count(/metadata/Esri/ArcGISFormat)"/>
+  
+  <!-- indexables -->
+  <indexables fileName="gpt/metadata/esri/esri-arcgis-indexables.xml"/>
+  
+   
+  <!-- identification section -->
+  <section key="general">
+    <label resourceKey="catalog.mdParam.general.caption"/>
+            
+    <parameter key="identification.esriDocID" meaning="esriDocID" visible="true">
+      <label resourceKey="catalog.mdParam.general.publishedDocId"/>
+      <input type="text" size="50" maxlength="2048" editable="false" 
+             defaultValue="#{EditMetadataController.newUuid}"/>
+      <validation required="false" />
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/metadata/Esri/PublishedDocID"/> 
+    </parameter>
+    
+     <!-- language used for documenting metadata -->
+      <parameter key="general.language">
+      <label resourceKey="catalog.mdParam.general.metadataLanguage"/>
+      <input type="text" size="50" maxlength="2048" defaultValue="en"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true" 
+               select="/metadata/mdLang"/>
+    </parameter>
+    
+     <!-- date that the metadata was created, as per ISO 19115 standard -->
+    <parameter key="general.datestamp"> 
+      <label resourceKey="catalog.mdParam.general.metadataDateStamp"/>
+      <input type="text" size="20" maxlength="10" 
+             hintResourceKey="catalog.general.inputDateFormat"
+             defaultValue="#{EditMetadataController.now}"/>
+      <validation required="false" valueType="date"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/metadata/mdDateSt"/>
+    </parameter>  
+   
+    <!--party responsible for the metadata information-->
+    <parameter key="general.organization">
+      <label resourceKey="catalog.mdParam.general.organization"/>
+      <input type="text"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true"  deleteIfEmpty="true"
+               select="/metadata/dataIdInfo/idPoC/rpOrgName" />
+    </parameter>    
+    
+        
+     <!-- "custodian" role: party that accepts accountability and responsibility for the data and ensures appropriate care and maintenance of the resource", as per ISO 19115 standard -->
+    <parameter key="general.custodian">
+      <label resourceKey="catalog.mdParam.general.custodian"/>
+      <input type="text" editable="true" defaultValue="custodian"/>
+      <validation required="false"/>
+      <content nodeType="isoCodeListValue" useSelectForUpdate="true"
+                delete="/metadata/mdContact/role"
+                select="/metadata/mdContact/role/RoleCd/@value"/>     
+    </parameter>                       
+  </section>
+ 
+  <!-- identification section -->
+  <section key="identification">
+    <label resourceKey="catalog.mdParam.identification.caption"/>
+    
+    <parameter key="identification.title"> 
+      <label resourceKey="catalog.mdParam.identification.title"/>
+      <input type="text" maxlength="4000"/>
+      <validation required="true"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/metadata/dataIdInfo/idCitation/resTitle"/>
+    </parameter>
+    
+    <!-- dataset publication date, default is today's date -->
+    <parameter key="identification.publicationDate"> 
+      <label resourceKey="catalog.mdParam.identification.datasetPublicationDate"/>
+      <input type="text" size="20" maxlength="10" 
+             hintResourceKey="catalog.general.inputDateFormat"
+             defaultValue="#{EditMetadataController.now}"/>
+      <validation required="false" valueType="date"/>
+      <content useSelectForUpdate="true"
+               delete="/metadata/dataIdInfo/idCitation/resRefDate"
+               select="/metadata/dataIdInfo/idCitation/resRefDate/refDate"/>                        
+    </parameter>
+              
+     <parameter key="identification.datasetInfo.datasetLanguage"> 
+      <label resourceKey="catalog.mdParam.datasetInfo.datasetLanguage"/>
+      <input type="text" size="20" maxlength="10" defaultValue="en"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true" 
+               select="/metadata/dataIdInfo/dataLang"/>
+    </parameter>
+    
+    <!-- abstract section: subset of identification section -->
+     <parameter key="identification.abstract">
+      <label resourceKey="catalog.mdParam.identification.abstract"/>
+      <input type="textArea"/>
+      <validation required="true"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/metadata/dataIdInfo/idAbs"/>
+    </parameter>
+    
+    <!--spatial representation section: subset of identification section -->
+     <parameter key="identification.type">
+      <label resourceKey="catalog.mdParam.identification.dataType"/>
+      <input type="selectOneMenu"/>
+      <validation required="false"/>
+      <content nodeType="isoCodeListValue" useSelectForUpdate="true"
+               delete="/metadata/dataIdInfo/spatRpType"
+               select="/metadata/dataIdInfo/spatRpType/SpatRepTypCd/@value">
+        <codes>
+          <code key=""/>
+          <code key="001"      
+                resourceKey="catalog.mdCode.dataType.vector"/>
+          <code key="002"        
+                resourceKey="catalog.mdCode.dataType.grid"/>
+          <code key="003"   
+                resourceKey="catalog.mdCode.dataType.textTable"/>
+          <code key="004"         
+                resourceKey="catalog.mdCode.dataType.tin"/>
+          <code key="005" 
+                resourceKey="catalog.mdCode.dataType.stereoModel"/>
+          <code key="006"       
+                resourceKey="catalog.mdCode.dataType.video"/>
+        </codes> 
+      </content>       
+    </parameter> 
+   
+
+    <parameter key="identification.equivalentScale"> 
+      <label resourceKey="catalog.mdParam.identification.equivalentScale"/>
+      <input type="text" size="20" maxlength="24"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+               delete="/metadata/dataIdInfo/dataScale"
+               select="/metadata/dataIdInfo/dataScale/equScale/rfDenom"/>
+    </parameter>
+    
+     <!-- publisher -->
+    <parameter key="identification.publisher"> 
+      <label resourceKey="catalog.mdParam.identification.publisher"/>
+      <input type="text" size="20" maxlength="24"/>
+      <validation required="false" />
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/metadata/dataIdInfo/idCitation/citRespParty/rpOrgName"/>
+    </parameter>
+    
+  </section>
+  <!-- End of identification section -->  
+
+  <!-- Browse grapihc/thumbnail section -->
+  <section key="thumbnail">
+    <label resourceKey="catalog.mdParam.thumbnail.caption"/>
+
+    <parameter key="thumbnail.url">
+      <label resourceKey="catalog.mdParam.thumbnail.url"/>
+      <input type="text" maxlength="2048"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/metadata/dataIdInfo/graphOver/bgFileName"/>
+    </parameter>
+               
+    <parameter key="thumbnail.description">
+      <label resourceKey="catalog.mdParam.thumbnail.description"/>
+      <input type="text"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/metadata/dataIdInfo/graphOver/bgFileDesc"/> 
+    </parameter>
+    
+    <parameter key="thumbnail.type">
+      <label resourceKey="catalog.mdParam.thumbnail.type"/>
+      <input type="text" size="10"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/metadata/dataIdInfo/graphOver/bgFileType"/> 
+    </parameter>
+        
+  </section> 
+  
+  <section key="contentType">
+  	<label resourceKey="catalog.mdParam.contentType.caption" />
+
+  	<parameter key="contentType.content">
+  		<label resourceKey="catalog.mdParam.contentType.content" />
+  		<input type="selectOneMenu" />
+  		<validation required="false" />
+  		<content useSelectForUpdate="false" deleteParentIfEmpty="false"
+  			select="/metadata/Esri/resourceType | /metadata/distInfo/distributor/distorTran/onLineSrc/orDesc"
+        update="/metadata/distInfo/distributor/distorTran/onLineSrc/orDesc">
+  			<codes>
+  				<code key="" />
+  				<code key="001"
+  					resourceKey="catalog.mdParam.contentType.content.liveData" />
+  				<code key="002"
+  					resourceKey="catalog.mdParam.contentType.content.downloadableData" />
+  				<code key="003"
+  					resourceKey="catalog.mdParam.contentType.content.offlineData" />
+  				<code key="004"
+  					resourceKey="catalog.mdParam.contentType.content.staticMapImage" />
+  				<code key="005"
+  					resourceKey="catalog.mdParam.contentType.content.other" />
+  				<code key="006"
+  					resourceKey="catalog.mdParam.contentType.content.application" />
+  				<code key="007"
+  					resourceKey="catalog.mdParam.contentType.content.geographicService" />
+  				<code key="008"
+  					resourceKey="catalog.mdParam.contentType.content.clearinghouse" />
+  				<code key="009"
+  					resourceKey="catalog.mdParam.contentType.content.mapFiles" />
+  				<code key="010"
+  					resourceKey="catalog.mdParam.contentType.content.geographicActivities" />
+  			</codes>
+  		</content>
+  	</parameter>
+  	
+  </section>
+
+  <!-- Data Theme section -->
+  <section key="theme">
+  	<label resourceKey="catalog.mdParam.theme.caption" />
+
+  	<parameter key="theme.topics">
+  		<label resourceKey="catalog.mdParam.theme.topics" />
+  		<input type="selectManyCheckbox" />
+  		<validation required="true" />
+  		<content nodeType="list" useSelectForUpdate="true"
+        delete="/metadata/dataIdInfo/tpCat"
+  			select="/metadata/dataIdInfo/tpCat/TopicCatCd/@value">
+  			<codes>
+  				<code key="003"
+  					resourceKey="catalog.mdCode.topic.boundaries" />
+  				<code key="001"
+  					resourceKey="catalog.mdCode.topic.farming" />
+  				<code key="004"
+  					resourceKey="catalog.mdCode.topic.climatologyMeteorologyAtmosphere" />
+  				<code key="002"
+  					resourceKey="catalog.mdCode.topic.biota" />
+  				<code key="005"
+  					resourceKey="catalog.mdCode.topic.economy" />
+  				<code key="015"
+  					resourceKey="catalog.mdCode.topic.planningCadastre" />
+  				<code key="016"
+  					resourceKey="catalog.mdCode.topic.society" />
+  				<code key="006"
+  					resourceKey="catalog.mdCode.topic.elevation" />
+  				<code key="007"
+  					resourceKey="catalog.mdCode.topic.environment" />
+  				<code key="017"
+  					resourceKey="catalog.mdCode.topic.structure" />
+  				<code key="008"
+  					resourceKey="catalog.mdCode.topic.geoscientificInformation" />
+  				<code key="009"
+  					resourceKey="catalog.mdCode.topic.health" />
+  				<code key="010"
+  					resourceKey="catalog.mdCode.topic.imageryBaseMapsEarthCover" />
+  				<code key="012"
+  					resourceKey="catalog.mdCode.topic.inlandWaters" />
+  				<code key="013"
+  					resourceKey="catalog.mdCode.topic.location" />
+  				<code key="011"
+  					resourceKey="catalog.mdCode.topic.intelligenceMilitary" />
+  				<code key="014"
+  					resourceKey="catalog.mdCode.topic.oceans" />
+  				<code key="018"
+  					resourceKey="catalog.mdCode.topic.transportation" />
+  				<code key="019"
+  					resourceKey="catalog.mdCode.topic.utilitiesCommunication" />
+  			</codes>
+  		</content>
+  	</parameter>
+
+  </section>
+
+
+  <!-- reference system information -->
+  <section key="referenceSystemInfo">
+  	<label resourceKey="catalog.mdParam.referenceSystemInfo.caption" />
+
+  	<parameter key="referenceSystemInfo.code">
+  		<label resourceKey="catalog.mdParam.referenceSystemInfo.code" />
+  		<input type="text" editable="true" maxlength="4" defaultValue="4326" />
+  		<validation required="false" />
+  		<content useSelectForUpdate="true" deleteIfEmpty="true"
+  			       select="/metadata/refSysInfo/RefSystem/refSysID/identCode" />
+  	</parameter>
+
+  	<parameter key="referenceSystemInfo.codespace">
+  		<label resourceKey="catalog.mdParam.referenceSystemInfo.codespace" />
+  		<input type="text" editable="true" defaultValue="EPSG" />
+  		<validation required="false" />
+  		<content useSelectForUpdate="true" deleteIfEmpty="true"
+  			       select="/metadata/refSysInfo/RefSystem/refSysID/identCodeSpace" />
+  	</parameter>
+  </section>
+
+  <!-- envelope section -->
+  <section key="envelope">
+  	<label resourceKey="catalog.mdParam.envelope.caption" />
+
+  	<parameter key="envelope.west" meaning="envelope.west">
+  		<label resourceKey="catalog.mdParam.envelope.west" />
+  		<input type="text" size="24" maxlength="24"
+  			defaultValue="-180"
+  			hintResourceKey="catalog.general.inputLongitudeFormat" />
+  		<validation required="false" valueType="double" />
+  		<content useSelectForUpdate="true" deleteIfEmpty="true"
+  			select="/metadata/dataIdInfo/geoBox/westBL" />
+  	</parameter>
+
+
+  	<parameter key="envelope.south" meaning="envelope.south">
+  		<label resourceKey="catalog.mdParam.envelope.south" />
+  		<input type="text" size="24" maxlength="24" defaultValue="-90"
+  			hintResourceKey="catalog.general.inputLatitudeFormat" />
+  		<validation required="false" valueType="double" />
+  		<content useSelectForUpdate="true" deleteIfEmpty="true"
+  			select="/metadata/dataIdInfo/geoBox/southBL" />
+  	</parameter>
+
+  	<parameter key="envelope.east" meaning="envelope.east">
+  		<label resourceKey="catalog.mdParam.envelope.east" />
+  		<input type="text" size="24" maxlength="24" defaultValue="180"
+  			hintResourceKey="catalog.general.inputLongitudeFormat" />
+  		<validation required="false" valueType="double" />
+  		<content useSelectForUpdate="true" deleteIfEmpty="true"
+  			select="/metadata/dataIdInfo/geoBox/eastBL" />
+  	</parameter>
+
+  	<parameter key="envelope.north" meaning="envelope.north">
+  		<label resourceKey="catalog.mdParam.envelope.north" />
+  		<input type="text" size="24" maxlength="24" defaultValue="90"
+  			hintResourceKey="catalog.general.inputLatitudeFormat" />
+  		<validation required="false" valueType="double" />
+  		<content useSelectForUpdate="true" deleteIfEmpty="true"
+  			select="/metadata/dataIdInfo/geoBox/northBL" />
+  	</parameter>
+
+  	<!--  interactive map -->
+  	<section key="envelope.map.container">
+  		<parameter key="envelope.map">
+  			<input type="map" />
+  		</parameter>
+  	</section>
+  </section>
+
+
+  <!-- data quality section -->
+  <section key="dataQuality">
+    <label resourceKey="catalog.mdParam.dataQualityInfo.caption"/>
+    
+    <parameter key="dataQualityInfo.scope">
+      <label resourceKey="catalog.mdParam.dataQualityInfo.scope"/>
+      <input type="selectOneMenu"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" 
+               delete="/metadata/dqInfo/dqScope" 
+               select="/metadata/dqInfo/dqScope/scpLvl/ScopeCd/@value">
+  		<codes>
+  		  <code key=""/>
+  		  <code key="attribute"                       
+              resourceKey="catalog.mdParam.dataQualityInfo.scope.attribute"/>
+        <code key="attributeType"                       
+              resourceKey="catalog.mdParam.dataQualityInfo.scope.attributeType"/>
+        <code key="collectionHardware"                       
+              resourceKey="catalog.mdParam.dataQualityInfo.scope.collectionHardware"/>
+        <code key="collectionSession"                       
+              resourceKey="catalog.mdParam.dataQualityInfo.scope.collectionSession"/>
+        <code key="dataset"                       
+              resourceKey="catalog.mdParam.dataQualityInfo.scope.dataset"/>
+        <code key="series"                       
+              resourceKey="catalog.mdParam.dataQualityInfo.scope.series"/>
+        <code key="nonGeographicDataset"                       
+              resourceKey="catalog.mdParam.dataQualityInfo.scope.nonGeographicDataset"/>
+        <code key="dimensionGroup"                       
+              resourceKey="catalog.mdParam.dataQualityInfo.scope.dimensionGroup"/>
+        <code key="feature"                       
+              resourceKey="catalog.mdParam.dataQualityInfo.scope.feature"/>
+        <code key="featureType"                       
+              resourceKey="catalog.mdParam.dataQualityInfo.scope.featureType"/>
+        <code key="propertyType"                       
+              resourceKey="catalog.mdParam.dataQualityInfo.scope.propertyType"/>
+        <code key="fieldSession"                       
+              resourceKey="catalog.mdParam.dataQualityInfo.scope.fieldSession"/>
+        <code key="software"                       
+              resourceKey="catalog.mdParam.dataQualityInfo.scope.software"/>
+        <code key="service"                       
+              resourceKey="catalog.mdParam.dataQualityInfo.scope.service"/>
+        <code key="model"                       
+              resourceKey="catalog.mdParam.dataQualityInfo.scope.model"/>
+        <code key="tile"                       
+              resourceKey="catalog.mdParam.dataQualityInfo.scope.tile"/>
+   		</codes>
+		</content>
+    </parameter>
+      
+	 <parameter key="dataQualityInfo.lineage">
+      <label resourceKey="catalog.mdParam.dataQualityInfo.lineage"/>
+      <input type="textArea"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" 
+               delete="/metadata/dqInfo/dataLineaget" 
+               select="/metadata/dqInfo/dataLineage/statement"/>
+    </parameter>   
+  </section>
+  
+    
+  <!-- contact section -->
+  <section key="contact">
+    <label resourceKey="catalog.mdParam.contact.caption"/>
+    
+    <parameter key="contact.organization">
+      <label resourceKey="catalog.mdParam.contact.organization"/>
+      <input type="text" defaultValue="#{EditMetadataController.userProfile['organization'].value}"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true" 
+               select="/metadata/mdContact/rpOrgName"/>
+    </parameter>      
+    
+    <parameter key="contact.position">
+      <label resourceKey="catalog.mdParam.contact.position"/>
+      <input type="text"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/metadata/dataIdInfo/idCitation/citRespParty/rpPosName"/>
+    </parameter>
+  
+    <parameter key="contact.address">
+      <label resourceKey="catalog.mdParam.contact.address.address"/>
+      <input type="text" defaultValue="#{EditMetadataController.userProfile['street'].value}"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true" 
+               select="/metadata/mdContact/rpCntInfo/cntAddress/delPoint"/>  
+    </parameter>           
+
+    <parameter key="contact.city">
+      <label resourceKey="catalog.mdParam.contact.address.city"/>
+      <input type="text" defaultValue="#{EditMetadataController.userProfile['city'].value}"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true" 
+               select="/metadata/mdContact/rpCntInfo/cntAddress/city"/> 
+    </parameter>
+ 
+    <parameter key="contact.state">
+      <label resourceKey="catalog.mdParam.contact.address.state"/>
+      <input type="text" defaultValue="#{EditMetadataController.userProfile['stateOrProv'].value}"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true" 
+               select="/metadata/mdContact/rpCntInfo/cntAddress/adminArea"/>  
+    </parameter>
+            
+    <parameter key="contact.postalCode">
+      <label resourceKey="catalog.mdParam.contact.address.postalCode"/>
+      <input type="text"  defaultValue="#{EditMetadataController.userProfile['postalcode'].value}"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/metadata/mdContact/rpCntInfo/cntAddress/postCode"/> 
+    </parameter>
+         
+    <parameter key="contact.country">
+      <label resourceKey="catalog.mdParam.contact.address.country"/>
+      <input type="text"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/metadata/mdContact/rpCntInfo/cntAddress/country"/>
+    </parameter>
+
+     <parameter key="contact.email">
+      <label resourceKey="catalog.mdParam.contact.email"/>
+      <input type="text" defaultValue="#{EditMetadataController.userProfile['email'].value}"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true" 
+               select="/metadata/mdContact/rpCntInfo/cntAddress/eMailAdd"/>
+    </parameter>
+    
+     <parameter key="contact.onlineResource">
+      <label resourceKey="catalog.mdParam.contact.onlineResource"/>
+      <input type="text"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" 
+               delete="/metadata/dataIdInfo/idPoC/rpCntInfo/cntOnlineRes"
+               select="/metadata/dataIdInfo/idPoC/rpCntInfo/cntOnlineRes/linkage"/>
+    </parameter>
+    
+    <parameter key="contact.phoneNumber">
+      <label resourceKey="catalog.mdParam.contact.phoneNumber"/>
+      <input type="text" defaultValue="#{EditMetadataController.userProfile['phone'].value}"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+               deleteIfEmpty="true"
+               select="/metadata/mdContact/rpCntInfo/cntPhone/voiceNum"/>
+    </parameter>
+
+    <parameter key="contact.faxNumber">
+      <label resourceKey="catalog.mdParam.contact.faxNumber"/>
+      <input type="text"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+               deleteIfEmpty="true"
+               select="/metadata/mdContact/rpCntInfo/cntPhone/faxNum"/>  
+    </parameter>
+    
+  </section>
+   
+  <!-- distribution section -->
+  <section key="distribution">
+    <label resourceKey="catalog.mdParam.distribution.caption"/>
+    
+    <parameter key="distribution.format.name">
+      <label resourceKey="catalog.mdParam.distribution.format.name"/>
+      <input type="text"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/metadata/distInfo/distributor/distorFormat/formatName"/>
+    </parameter>
+    
+    <parameter key="distribution.format.version">
+      <label resourceKey="catalog.mdParam.distribution.format.version"/>
+      <input type="text"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/metadata/distInfo/distributor/distorFormat/formatVer"/>
+    </parameter>
+    
+   <parameter key="distribution.transferOptions.onLine.linkage">
+      <label resourceKey="catalog.mdParam.distribution.transferOptions.onLine.linkage"/>
+      <input type="text" testResourceKey="catalog.publication.editMetadata.button.test.service"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/metadata/distInfo/distributor/distorTran/onLineSrc/linkage"/>
+    </parameter>
+  </section>  
+ 
+  <!-- metadata standard section -->
+  <section key="standard">
+    <label resourceKey="catalog.mdParam.standard.caption"/>
+    
+    <parameter key="standard.name">
+      <label resourceKey="catalog.mdParam.standard.name"/>
+      <input type="text" editable="false" 
+             defaultValue="ISO 19115 Geographic Information - Metadata"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/metadata/mdStanName"/>
+    </parameter>
+ 
+    <parameter key="standard.version">
+      <label resourceKey="catalog.mdParam.standard.version"/>
+      <input type="text" editable="false" defaultValue="DIS"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/metadata/mdStanVer"/>
+    </parameter>       
+  </section>
+  
+</schema>

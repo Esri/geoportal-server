@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:elementChoice xmlns:g="http://www.esri.com/geoportal/gxe" 
+                 xmlns:h="http://www.esri.com/geoportal/gxe/html"
+                 h:tag="div" h:class="gxeTabs" 
+                 g:label="$i18n.catalog.gxe.general.choose" 
+                 g:labelNone="$i18n.catalog.gxe.general.choose.none"
+                 g:jsClass="gxe.control.ElementChoice">
+                 
+  <g:header g:extensible="true" h:tag="div" h:class="gxeTabsHeader">
+  
+    <g:label g:extensible="true" h:tag="label" h:class="gxeElementChoiceCaption"/>
+    
+    <!-- 
+    <g:label g:extensible="true" h:tag="label" h:class="gxeElementChoiceCaption" >
+      $i18n.catalog.gxe.general.choose
+    </g:label>
+     -->
+       
+    <g:tabArray h:tag="ul" h:class="gxeTabArray" g:jsClass="gxe.control.TabArray"/>
+    
+  </g:header>  
+        
+  <g:body g:extensible="true" h:tag="div" h:class="gxeTabsBody" 
+    g:jsClass="gxe.control.ElementChoiceBody"/>
+  
+</g:elementChoice>

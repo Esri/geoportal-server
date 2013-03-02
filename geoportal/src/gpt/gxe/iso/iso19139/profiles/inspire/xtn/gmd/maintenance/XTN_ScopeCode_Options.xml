@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- Scope code options (Service) -->
+<g:options xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:i18nBase="catalog.iso19139.MD_ScopeCode">
+	<g:option g:label="$i18nBase.dataset" g:value="dataset"/>
+	<g:option g:label="$i18nBase.series" g:value="series"/>  
+</g:options>
+ 
