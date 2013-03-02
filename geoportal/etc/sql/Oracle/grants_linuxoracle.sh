@@ -17,24 +17,24 @@
 # ------------------------------------------
 # Basic Explanation on what this does ...
 # ------------------------------------------
-function Usage ()
+Usage ()
 	{
 	echo
 	echo Usage : grants_linuxoracle [sys username] [sys password] [geoportal username]
 	echo Where [sys username] is the username of the sys user in Oracle.
 	echo       [sys password] is the password of the sys user in Oracle.
 	echo       [geoportal username] is the geoportal user
-	echo e.g. grants_linuxoracle  sys sys geoportal10
+	echo e.g. grants_linuxoracle  sys sys geoportal
 	exit 1
 }
 
-function Run ()
+Run ()
 	{
 	echo "$(date)" >> grants.txt
 	echo  Running grants_oracle.sql ...   >> grants.txt
 	sqlplus /nolog @grants_oracle.sql $SYSUSER $SYSPWD $GEOPORTALUSER >>  grants.txt
 	echo  ... All done.   >> grants.txt
-	sudo gedit grants.txt
+	vi grants.txt
 }
 
 
