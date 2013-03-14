@@ -17,23 +17,23 @@
 # ------------------------------------------
 # Basic Explanation on what this does ...
 # ------------------------------------------
-function Usage ()
+Usage ()
 	{
 	echo
 	echo Usage : create_schema_oracle [geoportal username] [geoportal password] 
 	echo Where [geoportal username] is the geoportal user
 	echo       [geoportal password] is the password of the geoportal user
-	echo e.g. create_schema_oracle geoportal10 geoportal10pwd
+	echo e.g. create_schema_oracle geoportal geoportalpwd
 	exit 1
 }
 
-function Run ()
+Run ()
 	{
 	echo "$(date)" >> GPT_schema.txt
 	echo  Running schema_oracle.sql ...   >> GPT_Schema.txt
 	sqlplus /nolog @schema_oracle.sql $GEOPORTALUSER $GEOPORTALPWD >> GPT_Schema.txt
 	echo  ... All done.   >> GPT_Schema.txt
-	sudo gedit GPT_Schema.txt
+	vi GPT_Schema.txt
 }
 
 
