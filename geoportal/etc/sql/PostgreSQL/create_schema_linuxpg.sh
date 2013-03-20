@@ -25,7 +25,7 @@ Usage ()
 	echo       [port] is the port number of postgreSQL
 	echo       [geoportal database] is the geoportal database name
 	echo       [geoportal user] is the geoportal user.
-	echo e.g. create_schema_pg localhost 5432 geoportal geoportalpwd
+	echo e.g. create_schema_pg localhost 5432 geoportal geoportal
 	exit 1
 }
 

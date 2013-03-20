@@ -26,9 +26,9 @@ Usage ()
 	echo       [port] is the port number of postgreSQL
 	echo       [database] is the database name
 	echo       [geoportal schema] is the geoportal schema name
-	echo       [geoportalUser] is the geoportal user name
 	echo       [postgresUser] is the user name to connect as, not the user name to create
-	echo eg. grants_linuxpg.sh localhost 5432 postgres geoportal postgres geoportalpwd
+	echo       [geoportalUser] is the geoportal user name
+	echo eg. grants_linuxpg.sh localhost 5432 postgres geoportal postgres geoportal
 	exit 1
 }
 
