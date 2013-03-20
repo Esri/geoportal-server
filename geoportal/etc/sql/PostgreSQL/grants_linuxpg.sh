@@ -17,7 +17,7 @@
 # ------------------------------------------
 # Basic Explanation on what this does ...
 # ------------------------------------------
-function Usage ()
+Usage ()
 {
         echo
 	echo Usage : grants_linuxpg.sh [host] [port] [database] [geoportal schema] [postgresUser] [geoportalUser]
@@ -32,7 +32,7 @@ function Usage ()
 	exit 1
 }
 
-function Run ()
+Run ()
 {
         echo "$(date)" >> grants_pg.txt
 	echo  Running grants_pg.sql ...   >> grants_pg.txt
