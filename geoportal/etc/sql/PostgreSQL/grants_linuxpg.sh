@@ -17,7 +17,7 @@
 # ------------------------------------------
 # Basic Explanation on what this does ...
 # ------------------------------------------
-function Usage ()
+Usage ()
 {
         echo
 	echo Usage : grants_linuxpg.sh [host] [port] [database] [geoportal schema] [postgresUser] [geoportalUser]
@@ -26,13 +26,13 @@ function Usage ()
 	echo       [port] is the port number of postgreSQL
 	echo       [database] is the database name
 	echo       [geoportal schema] is the geoportal schema name
-	echo       [geoportalUser] is the geoportal user name
 	echo       [postgresUser] is the user name to connect as, not the user name to create
-	echo eg. grants_linuxpg.sh localhost 5432 postgres geoportal postgres geoportalpwd
+	echo       [geoportalUser] is the geoportal user name
+	echo eg. grants_linuxpg.sh localhost 5432 postgres geoportal postgres geoportal
 	exit 1
 }
 
-function Run ()
+Run ()
 {
         echo "$(date)" >> grants_pg.txt
 	echo  Running grants_pg.sql ...   >> grants_pg.txt
