@@ -17,6 +17,8 @@ With the Geoportal Server you can:
 
 Want to learn more? Try our [sandbox site](http://gptogc.esri.com)!
 
+Want to get started right away? Download the [zip/tar ball](http://esri.github.io/geoportal-server/).
+
 
 ## Documentation
 
