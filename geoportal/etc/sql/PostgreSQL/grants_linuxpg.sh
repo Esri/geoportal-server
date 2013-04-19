@@ -20,14 +20,14 @@
 Usage ()
 {
         echo
-	echo Usage : grants_linuxpg.sh [host] [port] [database] [geoportal schema] [postgresUser] [geoportalUser]
+	echo Usage : grants_linuxpg.sh [host] [port] [database] [geoportal schema] [postgres user] [geoportal user]
 
 	echo Where [host] is the host name
 	echo       [port] is the port number of postgreSQL
 	echo       [database] is the database name
 	echo       [geoportal schema] is the geoportal schema name
-	echo       [postgresUser] is the user name to connect as, not the user name to create
-	echo       [geoportalUser] is the geoportal user name
+	echo       [postgres user] is the user name to connect as, not the user name to create
+	echo       [geoportal user] is the geoportal user name
 	echo eg. grants_linuxpg.sh localhost 5432 postgres geoportal postgres geoportal
 	exit 1
 }
