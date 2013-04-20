@@ -49,12 +49,12 @@ rem ------------------------------------------
 rem Basic Explanation on what this does ...
 rem ------------------------------------------
 ECHO.
-ECHO Usage : create_schema_pg.cmd [host] [port] [Geoportal database] [geoportal10 user] 
+ECHO Usage : create_schema_pg.cmd [host] [port] [geoportal database] [geoportal user] 
 ECHO Where [host] is the machine name hosting PostgreSQL
 ECHO       [port] is the port number of postgreSQL
-ECHO       [Geoportal database] is the database that contains the Geoportal Schema
-ECHO       [geoportal10 user] is the geoportal10 user.
-ECHO e.g. create_schema_pg localhost 5432 postgres geoportal10
+ECHO       [geoportal database] is the database that contains the Geoportal Schema
+ECHO       [geoportal user] is the geoportal user.
+ECHO e.g. create_schema_pg localhost 5432 postgres geoportal
 goto END
 
 

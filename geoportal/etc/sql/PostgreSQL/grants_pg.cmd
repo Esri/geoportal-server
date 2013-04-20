@@ -54,14 +54,14 @@ rem ------------------------------------------
 rem Basic Explanation on what this does ...
 rem ------------------------------------------
 ECHO.
-ECHO Usage : grants_pg.cmd [host] [port] [database] [geoportal schema] [Databaseuser] [geoportalUser]
+ECHO Usage : grants_pg.cmd [host] [port] [database] [geoportal schema] [database user] [geoportal user]
 ECHO Where [host] is the machine name hosting PostgreSQL
 ECHO       [port] is the port number of postgreSQL
 ECHO       [database] is the database name for the geoportal tables
 ECHO       [geoportal schema] is the geoportal schema name
-ECHO       [Databaseuser] User to connect to the database as
-ECHO       [geoportalUser] is the geoportal user name
-ECHO e.g. grants_pg localhost 5432 postgres geoportal10 postgres geoportal10
+ECHO       [database user] is the user to connect to the database as
+ECHO       [geoportal user] is the geoportal user name
+ECHO e.g. grants_pg localhost 5432 postgres geoportal postgres geoportal
 goto END
 
 
