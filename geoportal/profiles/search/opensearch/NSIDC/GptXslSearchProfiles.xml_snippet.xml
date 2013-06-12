@@ -21,7 +21,7 @@
 	<Name>National Snow and Ice Data Center</Name>
 	<GetRecords>
 		<XSLTransformations>
-			<Request expectedGptXmlOutput="FULL_NATIVE_GPTXML">nsidc_GetRecords_Request.xslt</Request>
+			<Request expectedGptXmlOutput="FULL_NATIVE_GPTXML">OpenSearchXmlParams_1.0_GetRecords_Request.xslt</Request>
 			<Response>NSIDC_GetRecords_Response.xslt</Response>
 		</XSLTransformations>
 	</GetRecords>
