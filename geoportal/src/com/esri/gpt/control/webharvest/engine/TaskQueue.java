@@ -108,20 +108,16 @@ public boolean complete(RequestContext context, String uuid) {
  * Gets next taskDescriptor in the queue.
  * @param context request context
  * @return task descriptor or <code>null</code> if no more tasks
+ * @throws SQLException if accessing database fails
  */
-public Task next(RequestContext context) {
-  try {
-    HjGetNextRequest request = new HjGetNextRequest(context);
-    request.execute();
-    HjRecords records = request.getQueryResult().getRecords();
-    if (records.size() != 1) {
-      return null;
-    }
-    return new Task(records.get(0));
-  } catch (SQLException ex) {
-    LOGGER.log(Level.WARNING, "[SYNCHRONIZER] Error fetching next task", ex);
+public Task next(RequestContext context) throws SQLException {
+  HjGetNextRequest request = new HjGetNextRequest(context);
+  request.execute();
+  HjRecords records = request.getQueryResult().getRecords();
+  if (records.size() != 1) {
     return null;
   }
+  return new Task(records.get(0));
 }
 
 /**

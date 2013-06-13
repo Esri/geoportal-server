@@ -624,6 +624,10 @@ public class GxeServlet extends BaseServlet {
     if (sContentType.toLowerCase().startsWith("multipart/form-data;")) {
       String sMultipartAttribute = "uploadedfiles[]";
       Object oFile = request.getAttribute(sMultipartAttribute);
+      if (oFile == null) {
+      	sMultipartAttribute = "uploadedfile";
+      	oFile = request.getAttribute(sMultipartAttribute);
+      }
       if ((oFile != null) && (oFile instanceof FileItem)) {
         FileItem item = (FileItem)oFile;
         sXml = Val.chkStr(Val.removeBOM(item.getString("UTF-8")));

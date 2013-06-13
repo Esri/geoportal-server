@@ -14,18 +14,6 @@
  */
 package com.esri.gpt.control.rest;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.esri.gpt.catalog.schema.MetadataDocument;
 import com.esri.gpt.catalog.schema.SchemaException;
 import com.esri.gpt.catalog.search.ASearchEngine;
@@ -37,9 +25,11 @@ import com.esri.gpt.catalog.search.SearchResultRecord;
 import com.esri.gpt.catalog.search.SearchResultRecords;
 import com.esri.gpt.control.georss.JsonFeedWriter;
 import com.esri.gpt.control.georss.KmlFeedWriter;
+import com.esri.gpt.control.georss.KmlFeedWriter.KmlSignatureProvider;
 import com.esri.gpt.control.georss.RecordSnippetWriter;
 import com.esri.gpt.control.georss.RestQueryServlet;
-import com.esri.gpt.control.georss.KmlFeedWriter.KmlSignatureProvider;
+import com.esri.gpt.control.georss.SearchResultRecordAdapter;
+import com.esri.gpt.control.georss.SearchResultRecordsAdapter;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.BaseServlet;
 import com.esri.gpt.framework.context.RequestContext;
@@ -47,6 +37,16 @@ import com.esri.gpt.framework.jsf.FacesContextBroker;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.LogUtil;
 import com.esri.gpt.framework.util.Val;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * REST servlet.
@@ -277,7 +277,7 @@ private void printHtmlFragment(MessageBroker msgBroker,
   snippetWriter.setShowTitle(true);
   snippetWriter.setShowIcon(true);
   snippetWriter.setClipText(true);
-  snippetWriter.write(record);
+  snippetWriter.write(new SearchResultRecordAdapter(record));
 }
 
 /**
@@ -342,7 +342,7 @@ private void printKml(MessageBroker msgBroker, PrintWriter writer, final SearchR
       return record.getAbstract();
     }
   });
-  kmlWriter.write(records);
+  kmlWriter.write(new SearchResultRecordsAdapter(records));
 }
 
 
@@ -357,7 +357,7 @@ private void printPjson(MessageBroker msgBroker, PrintWriter writer, final Searc
   records.add(record);
   JsonFeedWriter jsonWriter = new JsonFeedWriter(writer, null, format == Format.pjson );
   jsonWriter.setMessageBroker(msgBroker);  
-  jsonWriter.write(records);
+  jsonWriter.write(new SearchResultRecordsAdapter(records));
 }
 // enums =======================================================================
 /**

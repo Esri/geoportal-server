@@ -15,11 +15,7 @@
 package com.esri.gpt.control.georss;
 
 import com.esri.gpt.catalog.search.OpenSearchProperties;
-import com.esri.gpt.catalog.search.SearchResultRecord;
-import com.esri.gpt.catalog.search.SearchResultRecords;
 import com.esri.gpt.framework.jsf.MessageBroker;
-import com.esri.gpt.framework.util.Val;
-
 import java.io.PrintWriter;
 
 /**
@@ -78,7 +74,7 @@ public void setTarget(RecordSnippetWriter.Target target) {
  * Writers records.
  * @param records records to write
  */
-public void write(SearchResultRecords records) {
+public void write(IFeedRecords records) {
 	
   // add OpenSearch response elements as hidden elements
   OpenSearchProperties osProps = records.getOpenSearchProperties();
@@ -95,7 +91,7 @@ public void write(SearchResultRecords records) {
   snippetWriter.setShowIcon(true);
   snippetWriter.setClipText(true);
   snippetWriter.setTarget(_target);
-  for (SearchResultRecord record : records) {
+  for (IFeedRecord record : records) {
     writeRecord(snippetWriter, record);
   }
 }
@@ -106,7 +102,7 @@ public void write(SearchResultRecords records) {
  * @param record records to writeTag
  */
 protected void writeRecord(
-  RecordSnippetWriter snippetWriter, SearchResultRecord record) {
+  RecordSnippetWriter snippetWriter, IFeedRecord record) {
   snippetWriter.write(record);
   _writer.flush();
 }

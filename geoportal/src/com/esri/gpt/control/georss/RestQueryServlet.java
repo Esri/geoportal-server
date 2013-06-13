@@ -13,16 +13,6 @@
  * limitations under the License.
  */
 package com.esri.gpt.control.georss;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.esri.gpt.catalog.discovery.SpatialClause;
 import com.esri.gpt.catalog.discovery.rest.RestQuery;
@@ -52,6 +42,16 @@ import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
+import com.esri.gpt.server.csw.provider.local.CoreQueryables;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Servlet end-point for rest based catalog query requests.
@@ -61,107 +61,154 @@ public class RestQueryServlet extends BaseServlet {
   public final static String EXTRA_REST_ARGS_MAP = "EXTRA_REST_ARGS_MAP";
   public final static String PARAM_KEY_SHOW_THUMBNAIL = "showThumbnail";
   public final static String PARAM_KEY_SHOW_RELATIVE_URLS = "showRelativeUrl";
-  public final static String PARAM_KEY_IS_JSFREQUEST = "isJsfRequest";      
-  /** constructors ============================================================ */
-  
-  /** Default constructor. */
-  public RestQueryServlet() {}
+  public final static String PARAM_KEY_IS_JSFREQUEST = "isJsfRequest";
 
-  /** methods ================================================================= */
-  
+  /**
+   * constructors ============================================================
+   */
+  /**
+   * Default constructor.
+   */
+  public RestQueryServlet() {
+  }
+
+  /**
+   * methods =================================================================
+   */
   /**
    * Processes the HTTP request.
+   *
    * @param request the HTTP request.
    * @param response HTTP response.
    * @param context request context
    * @throws Exception if an exception occurs
    */
   @Override
-protected void execute(HttpServletRequest request, 
-                         HttpServletResponse response,
-                         RequestContext context)
-    throws Exception {
-    getLogger().finer("Handling rest query string="+request.getQueryString());
-    MessageBroker msgBroker = new FacesContextBroker(request,response).extractMessageBroker();
-    
+  protected void execute(HttpServletRequest request,
+          HttpServletResponse response,
+          RequestContext context)
+          throws Exception {
+    getLogger().finer("Handling rest query string=" + request.getQueryString());
+    MessageBroker msgBroker = new FacesContextBroker(request, response).extractMessageBroker();
+
     // extra params
-    Map<String,String> extraMap = new HashMap<String,String>();
-    extraMap.put(PARAM_KEY_SHOW_THUMBNAIL, 
-    		request.getParameter(PARAM_KEY_SHOW_THUMBNAIL));
-    extraMap.put(PARAM_KEY_SHOW_RELATIVE_URLS, 
-    		request.getParameter(PARAM_KEY_SHOW_RELATIVE_URLS));
-    extraMap.put(PARAM_KEY_IS_JSFREQUEST, 
-    		request.getParameter(PARAM_KEY_IS_JSFREQUEST));
+    Map<String, String> extraMap = new HashMap<String, String>();
+    extraMap.put(PARAM_KEY_SHOW_THUMBNAIL,
+            request.getParameter(PARAM_KEY_SHOW_THUMBNAIL));
+    extraMap.put(PARAM_KEY_SHOW_RELATIVE_URLS,
+            request.getParameter(PARAM_KEY_SHOW_RELATIVE_URLS));
+    extraMap.put(PARAM_KEY_IS_JSFREQUEST,
+            request.getParameter(PARAM_KEY_IS_JSFREQUEST));
     context.getObjectMap().put(EXTRA_REST_ARGS_MAP, extraMap);
-    if(request.getScheme().toLowerCase().equals("https")
-    		&& extraMap.get(PARAM_KEY_SHOW_THUMBNAIL) == null) {
-    	String agent = request.getHeader("user-agent");
+    if (request.getScheme().toLowerCase().equals("https")
+            && extraMap.get(PARAM_KEY_SHOW_THUMBNAIL) == null) {
+      String agent = request.getHeader("user-agent");
       if (agent != null && agent.toLowerCase().indexOf("msie") > -1) {
-      	extraMap.put(PARAM_KEY_SHOW_THUMBNAIL, "false");
+        extraMap.put(PARAM_KEY_SHOW_THUMBNAIL, "false");
       }
     }
-    
+
     // parse the query
     RestQuery query = null;
     try {
-      query = parseRequest(request,context);
+      query = parseRequest(request, context);
     } catch (Throwable t) {
-      getLogger().log(Level.SEVERE,"Error parsing request.",t);
+      getLogger().log(Level.SEVERE, "Error parsing request.", t);
     }
-    if (query == null) query = new RestQuery();
-    
-       
+    if (query == null) {
+      query = new RestQuery();
+    }
+
+
     // establish the response content type, print writer and feed writer
-    ResponseFormat format = getResponseFormat(request, query);
-    String sFormat = getRequestParameter(request,"f");
+    RestQueryServlet.ResponseFormat format = getResponseFormat(request, query);
+    String sFormat = getRequestParameter(request, "f");
     FeedWriter2 feedWriter2 = WriterFactory.createWriter(
-        sFormat, msgBroker, query, request, response, context);
+            sFormat, msgBroker, query, request, response, context);
     FeedWriter feedWriter = null;
     PrintWriter printWriter = null;
-    if(feedWriter2 != null) {
+    if (feedWriter2 != null) {
       feedWriter = (FeedWriter) feedWriter2;
     } else {
-      this.setResponseContentType(request,response,query);
+      this.setResponseContentType(request, response, query);
       printWriter = response.getWriter();
-      feedWriter = makeFeedWriter(request,context,printWriter,msgBroker,query);
+      feedWriter = makeFeedWriter(request, context, printWriter, msgBroker, query);
     }
     // execute the query, write the response
-  try {
-      SearchResult result = executeQuery1(request,context,msgBroker,query);
-      if(feedWriter instanceof FeedWriter2) {
-        ((FeedWriter2)feedWriter).write(result);
-      } else if(feedWriter instanceof HtmlAdvancedWriter) {
-        ((HtmlAdvancedWriter)feedWriter).write(result);
-      } else  {
-        feedWriter.write(result.getRecords());
-      }
-  } catch (Exception e) {
-  	getLogger().log(Level.SEVERE, "Error executing query.", e);
-    if (feedWriter instanceof FeedWriter2) {
-      ((FeedWriter2) feedWriter).writeError(e);
-    } else {
-      
-      // feedWriter.write(new SearchResultRecords());
-      String msg = Val.chkStr(e.getMessage());
-      if (msg.length() == 0)
-        msg = e.toString();
-      printWriter = null;
-      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, msg);
-    }
-  } finally {
     try {
-      if (printWriter != null && (feedWriter instanceof FeedWriter2) == false)
-        printWriter.flush();
-    } catch (Exception ef) {
-      getLogger().log(Level.INFO,"Error while flushing printwriter",ef);
+      if (format == RestQueryServlet.ResponseFormat.xjson) {
+        String callback = request.getParameter("callback");
+        if (callback != null) {
+          printWriter.print(callback + "(");
+        }
+
+        // init query
+        query.setReturnables(new CoreQueryables(context).getFull());
+        toSearchCriteria(request, context, query);
+        
+        
+        feedWriter.write(JsonSearchEngine.createInstance().search(request, response, context, query));
+
+        if (callback != null) {
+          printWriter.print(")");
+        }
+
+      }else if (format == RestQueryServlet.ResponseFormat.dcat) {
+        String callback = request.getParameter("callback");
+        if (callback != null) {
+          printWriter.print(callback + "(");
+        }
+
+        // init query
+        query.setReturnables(new CoreQueryables(context).getFull());
+        toSearchCriteria(request, context, query);
+        
+        
+        feedWriter.write(DcatJsonSearchEngine.createInstance().search(request, response, context, query));
+
+        if (callback != null) {
+          printWriter.print(")");
+        }
+
+      } else {
+        SearchResult result = executeQuery1(request, context, msgBroker, query);
+        if (feedWriter instanceof FeedWriter2) {
+          ((FeedWriter2) feedWriter).write(result);
+        } else if (feedWriter instanceof HtmlAdvancedWriter) {
+          ((HtmlAdvancedWriter) feedWriter).write(result);
+        } else {
+          feedWriter.write(new SearchResultRecordsAdapter(result.getRecords()));
+        }
+      }
+    } catch (Exception e) {
+      getLogger().log(Level.SEVERE, "Error executing query.", e);
+      if (feedWriter instanceof FeedWriter2) {
+        ((FeedWriter2) feedWriter).writeError(e);
+      } else {
+
+        // feedWriter.write(new SearchResultRecords());
+        String msg = Val.chkStr(e.getMessage());
+        if (msg.length() == 0) {
+          msg = e.toString();
+        }
+        printWriter = null;
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, msg);
+      }
+    } finally {
+      try {
+        if (printWriter != null && (feedWriter instanceof FeedWriter2) == false) {
+          printWriter.flush();
+        }
+      } catch (Exception ef) {
+        getLogger().log(Level.INFO, "Error while flushing printwriter", ef);
+      }
     }
   }
-}
-  
+
   /**
-   * Execute Query that returns a SearchResult object (SearchResult as
-   * opposed to the SearchResultRecord which executeQuery does).
-   * 
+   * Execute Query that returns a SearchResult object (SearchResult as opposed
+   * to the SearchResultRecord which executeQuery does).
+   *
    * @param request the request
    * @param context the context
    * @param messageBroker the message broker
@@ -169,46 +216,46 @@ protected void execute(HttpServletRequest request,
    * @return the search result
    * @throws SearchException the search exception
    */
-  protected SearchResult executeQuery1(HttpServletRequest request, 
-      RequestContext context,
-      MessageBroker messageBroker,
-      RestQuery query) throws SearchException {
-    
- // make the search engine
+  protected SearchResult executeQuery1(HttpServletRequest request,
+          RequestContext context,
+          MessageBroker messageBroker,
+          RestQuery query) throws SearchException {
+
+    // make the search engine
     ASearchEngine engine = null;
-    SearchCriteria criteria = this.toSearchCriteria(request,context,query);
+    SearchCriteria criteria = this.toSearchCriteria(request, context, query);
     SearchResult result = new SearchResult();
     String rid = Val.chkStr(query.getRepositoryId());
-    ResponseFormat format = getResponseFormat(request,query);
+    RestQueryServlet.ResponseFormat format = getResponseFormat(request, query);
 
-    boolean isJavascriptEnabled =  
-      Val.chkBool(request.getParameter("isJavascriptEnabled"), false);
-    if(format.toString().toLowerCase().startsWith("searchpage") || 
-        isJavascriptEnabled == true ) {
-    
-			if (format.toString().toLowerCase().startsWith("searchpage")) {
-				@SuppressWarnings("unchecked")
-				Map<String, String> extraArgs = (Map<String, String>) context
-				    .getObjectMap().get(EXTRA_REST_ARGS_MAP);
-				if (extraArgs != null) {
-					if(extraArgs.get(PARAM_KEY_SHOW_RELATIVE_URLS) == null) {
-					  extraArgs.put(PARAM_KEY_SHOW_RELATIVE_URLS, "true");
-					}
-					extraArgs.put(PARAM_KEY_IS_JSFREQUEST, "true");
-				}
-			}
+    boolean isJavascriptEnabled =
+            Val.chkBool(request.getParameter("isJavascriptEnabled"), false);
+    if (format.toString().toLowerCase().startsWith("searchpage")
+            || isJavascriptEnabled == true) {
+
+      if (format.toString().toLowerCase().startsWith("searchpage")) {
+        @SuppressWarnings("unchecked")
+        Map<String, String> extraArgs = (Map<String, String>) context
+                .getObjectMap().get(EXTRA_REST_ARGS_MAP);
+        if (extraArgs != null) {
+          if (extraArgs.get(PARAM_KEY_SHOW_RELATIVE_URLS) == null) {
+            extraArgs.put(PARAM_KEY_SHOW_RELATIVE_URLS, "true");
+          }
+          extraArgs.put(PARAM_KEY_IS_JSFREQUEST, "true");
+        }
+      }
       context.setViewerExecutesJavascript(true);
     } else {
-      context.setViewerExecutesJavascript(false);;
+      context.setViewerExecutesJavascript(false);
     }
-    ResourceLinkBuilder rBuild = ResourceLinkBuilder.newBuilder(context, 
-        request, messageBroker);
-    
-    
-    
+    ResourceLinkBuilder rBuild = ResourceLinkBuilder.newBuilder(context,
+            request, messageBroker);
+
+
+
     // handle a request against the local repository
     if ((rid.length() == 0) || rid.equalsIgnoreCase("local")) {
-      
+
       // generate the CSW request string
       String cswRequest = "";
       try {
@@ -217,31 +264,31 @@ protected void execute(HttpServletRequest request,
       } catch (Exception e) {
         throw new SearchException(e);
       }
-      
+
       // execute the query
-      engine = SearchEngineFactory.createSearchEngine(criteria,result,context,messageBroker);
-      SearchEngineCSW csw = (SearchEngineCSW)engine;
+      engine = SearchEngineFactory.createSearchEngine(criteria, result, context, messageBroker);
+      SearchEngineCSW csw = (SearchEngineCSW) engine;
       csw.setResourceLinkBuilder(rBuild);
       csw.doSearch(cswRequest);
-      
-    // handle a request against a remote repository
+
+      // handle a request against a remote repository
     } else {
-      
+
       // create the criteria, execute the query
       int iSearchTime = Val.chkInt(request.getParameter("maxSearchTimeMilliSec"), -1);
-      engine = SearchEngineFactory.createSearchEngine(criteria,result,context,rid,messageBroker);
+      engine = SearchEngineFactory.createSearchEngine(criteria, result, context, rid, messageBroker);
       engine.setResourceLinkBuilder(rBuild);
-      if(iSearchTime > 0) {
+      if (iSearchTime > 0) {
         engine.setConnectionTimeoutMs(iSearchTime);
         engine.setResponseTimeout(iSearchTime);
       }
       engine.doSearch();
-      
+
     }
-    
+
     // set the OpenSearch properties
     String basePath = RequestContext.resolveBaseContextPath(request);
-    String osURL = basePath+"/openSearchDescription";
+    String osURL = basePath + "/openSearchDescription";
     //String osURL = request.getRequestURL().toString();
     //osURL = osURL.replaceAll("/rest/find/document","/openSearchDescription");
     OpenSearchProperties osProps = new OpenSearchProperties();
@@ -250,13 +297,14 @@ protected void execute(HttpServletRequest request,
     osProps.setNumberOfHits(result.getMaxQueryHits());
     osProps.setStartRecord(query.getFilter().getStartRecord());
     osProps.setRecordsPerPage(query.getFilter().getMaxRecords());
-    result.getRecords().setOpenSearchProperties(osProps);  
+    result.getRecords().setOpenSearchProperties(osProps);
     return result;
-    
+
   }
-  
+
   /**
    * Executes the query.
+   *
    * @param request the HTTP request
    * @param context the request context
    * @param messageBroker the resource message broker
@@ -264,19 +312,20 @@ protected void execute(HttpServletRequest request,
    * @return the resultant records
    * @throws SearchException if an exception occurs
    */
-  protected SearchResultRecords executeQuery(HttpServletRequest request, 
-                                             RequestContext context,
-                                             MessageBroker messageBroker,
-                                             RestQuery query)
-    throws SearchException {
-    
+  protected SearchResultRecords executeQuery(HttpServletRequest request,
+          RequestContext context,
+          MessageBroker messageBroker,
+          RestQuery query)
+          throws SearchException {
+
     return this.executeQuery1(request, context, messageBroker, query)
-      .getRecords();
-   
+            .getRecords();
+
   }
 
   /**
    * Gets the HTTP request parameter value associated with a key.
+   *
    * @param request the HTTP request
    * @param parameterKey the parameter key
    * @return parameter value (empty string if not found, trimmed never null)
@@ -294,21 +343,22 @@ protected void execute(HttpServletRequest request,
     }
     return "";
   }
-  
+
   /**
    * Sets the HTTP content type for the response.
+   *
    * @param request the HTTP request
-   * @param response  the HTTP response
+   * @param response the HTTP response
    * @param query the rest query
    */
   protected void setResponseContentType(HttpServletRequest request, HttpServletResponse response, RestQuery query) {
     String fmt = Val.chkStr(query.getResponseFormat());
-    if (fmt.equalsIgnoreCase("sitemap") || fmt.toLowerCase().startsWith("sitemap."))  {
+    if (fmt.equalsIgnoreCase("sitemap") || fmt.toLowerCase().startsWith("sitemap.")) {
       response.setContentType("text/xml;charset=UTF-8");
       return;
     }
-    
-    switch (getResponseFormat(request,query)) {      
+
+    switch (getResponseFormat(request, query)) {
       case georss:
         response.setContentType("application/rss+xml;charset=UTF-8");
         break;
@@ -319,43 +369,50 @@ protected void execute(HttpServletRequest request,
         response.setContentType("text/html;charset=UTF-8");
         break;
       case atom:
-        response.setContentType("application/atom+xml;charset=UTF-8");  
+        response.setContentType("application/atom+xml;charset=UTF-8");
+        break;
+      case dcat:
+        response.setContentType("application/json;charset=UTF-8");
+        response.setHeader("Content-disposition", "attachment; filename=\"dcat.json\"");
         break;
       case json:
         response.setContentType("application/json;charset=UTF-8");
         response.setHeader("Content-disposition", "attachment; filename=\"document.json\"");
         break;
       case pjson:
+      case xjson:
         response.setContentType("text/plain;charset=UTF-8");
         break;
       default:
       case kml:
         response.setContentType("application/vnd.google-earth.kml+xml;charset=UTF-8");
-        response.setHeader("Content-Disposition","attachment; filename=\"document.kml\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"document.kml\"");
         break;
     }
   }
-  
+
   /**
    * Determines the response format.
+   *
    * @param request the HTTP request
    * @param query the rest query
    * @return the response format
    */
-  protected ResponseFormat getResponseFormat(HttpServletRequest request, RestQuery query) {
+  protected RestQueryServlet.ResponseFormat getResponseFormat(HttpServletRequest request, RestQuery query) {
     String sFormat = "";
     if (query != null) {
       sFormat = Val.chkStr(query.getResponseFormat());
     }
     if (sFormat.length() == 0) {
-      sFormat = getRequestParameter(request,"f");
+      sFormat = getRequestParameter(request, "f");
     }
-    return ResponseFormat.checkValueOf(sFormat);
+    return RestQueryServlet.ResponseFormat.checkValueOf(sFormat);
   }
-  
+
   /**
-   * Initializes the servlet.
-   * <br/>Init parameter "bundleBaseName" is read for message configuration.
+   * Initializes the servlet. <br/>Init parameter "bundleBaseName" is read for
+   * message configuration.
+   *
    * @param config the servlet configuration
    * @throws ServletException if an exception occurs
    */
@@ -365,8 +422,9 @@ protected void execute(HttpServletRequest request,
   }
 
   /**
-   * Makes a writer capable of generating an appropriate response based upon 
-   * the requested response format.
+   * Makes a writer capable of generating an appropriate response based upon the
+   * requested response format.
+   *
    * @param request the HTTP request
    * @param context the request context
    * @param printWriter the underlying print writer
@@ -375,122 +433,134 @@ protected void execute(HttpServletRequest request,
    * @return the appropriate writer
    */
   protected FeedWriter makeFeedWriter(HttpServletRequest request,
-                                      RequestContext context,
-                                      PrintWriter printWriter,
-                                      MessageBroker messageBroker,
-                                      RestQuery query) {
-    
+          RequestContext context,
+          PrintWriter printWriter,
+          MessageBroker messageBroker,
+          RestQuery query) {
+
     String fmt = Val.chkStr(query.getResponseFormat());
-    if (fmt.equalsIgnoreCase("sitemap") || 
-        fmt.toLowerCase().startsWith("sitemap."))  {
+    if (fmt.equalsIgnoreCase("sitemap")
+            || fmt.toLowerCase().startsWith("sitemap.")) {
       context.getObjectMap().put(
-          "com.esri.gpt.catalog.search.isSitemapRequest","true");
-      return new SitemapWriter(request,context,printWriter,messageBroker,query);
-    } 
-    
-    ResponseFormat format = getResponseFormat(request,query);
+              "com.esri.gpt.catalog.search.isSitemapRequest", "true");
+      return new SitemapWriter(request, context, printWriter, messageBroker, query);
+    }
+
+    RestQueryServlet.ResponseFormat format = getResponseFormat(request, query);
     String sTarget = query.getResponseTarget();
     RecordSnippetWriter.Target target = RecordSnippetWriter.Target.checkValueOf(sTarget);
-    
+
     // HTML writer
-    if (format.equals(ResponseFormat.html)) {
+    if (format.equals(RestQueryServlet.ResponseFormat.html)) {
       HtmlFeedWriter htmlFeedWriter = new HtmlFeedWriter(
-          messageBroker,printWriter);
+              messageBroker, printWriter);
       htmlFeedWriter.setTarget(target);
       String[] responseStyle = query.getResponseStyle().split(",");
       htmlFeedWriter.setStyleUrl(responseStyle);
       return htmlFeedWriter;
-      
-    // HTML fragment writer
-    } else if (format.equals(ResponseFormat.htmlfragment)) {
+
+      // HTML fragment writer
+    } else if (format.equals(RestQueryServlet.ResponseFormat.htmlfragment)) {
       HtmlFragmentFeedWriter htmlFeedWriter = new HtmlFragmentFeedWriter(
-          messageBroker,printWriter);
+              messageBroker, printWriter);
       htmlFeedWriter.setTarget(target);
       return htmlFeedWriter;
-      
-    // KML writer
-    } else if (format.equals(ResponseFormat.kml)) {
+
+      // KML writer
+    } else if (format.equals(RestQueryServlet.ResponseFormat.kml)) {
       KmlFeedWriter kmlFeedWriter = new KmlFeedWriter(
-          messageBroker,printWriter);
+              messageBroker, printWriter);
       kmlFeedWriter.setTarget(target);
       String responseGeometry = query.getResponseGeometry();
       kmlFeedWriter.setGeometry(KmlFeedWriter.Geometry.checkValueOf(responseGeometry));
       return kmlFeedWriter;
-      
-    // ATOM writer  
-    } else if (format.equals(ResponseFormat.atom)){
+
+      // ATOM writer  
+    } else if (format.equals(RestQueryServlet.ResponseFormat.atom)) {
       AtomFeedWriter atomWriter = new AtomFeedWriter(printWriter);
       atomWriter.setEntryBaseUrl(query.getRssProviderUrl());
       atomWriter.set_messageBroker(messageBroker);
       atomWriter.setTarget(target);
       return atomWriter;
 
-    // JSON and PJSON writer
-    } else if (format.equals(ResponseFormat.json) || format.equals(ResponseFormat.pjson)) {
-      JsonFeedWriter jsonWriter = new JsonFeedWriter(printWriter, query, format==ResponseFormat.pjson);
+      // JSON and PJSON writer
+    } else if (format.equals(RestQueryServlet.ResponseFormat.json) || format.equals(RestQueryServlet.ResponseFormat.pjson)) {
+      JsonFeedWriter jsonWriter = new JsonFeedWriter(printWriter, query, format == RestQueryServlet.ResponseFormat.pjson);
+      jsonWriter.setCallback(request.getParameter("callback"));
       jsonWriter.setMessageBroker(messageBroker);
       return jsonWriter;
-    
-    // Advanced html writer
-    } else if(format.equals(ResponseFormat.searchpageresults) ||
-        format.equals(ResponseFormat.searchpage)) {
+      
+      // Normalized DCAT JSON writer
+    } else if (format.equals(RestQueryServlet.ResponseFormat.dcat)) {
+      DcatJsonFeedWriter jsonWriter = new DcatJsonFeedWriter(request, context, printWriter, query, true);
+      jsonWriter.setMessageBroker(messageBroker);
+      return jsonWriter;
+      
+      // Normalized JSON writer
+    } else if (format.equals(RestQueryServlet.ResponseFormat.xjson)) {
+      ExtJsonFeedWriter jsonWriter = ExtJsonFeedWriter.createInstance(request, context, printWriter, query, true);
+      jsonWriter.setMessageBroker(messageBroker);
+      return jsonWriter;
+      // Advanced html writer
+    } else if (format.equals(RestQueryServlet.ResponseFormat.searchpageresults)
+            || format.equals(RestQueryServlet.ResponseFormat.searchpage)) {
       HtmlAdvancedWriter htmlAdvWriter = new HtmlAdvancedWriter();
       htmlAdvWriter.setRequestContext(context);
       htmlAdvWriter.setCriteria(this.toSearchCriteria(request, context, query));
       htmlAdvWriter.setResultsOnly(
-          format.equals(ResponseFormat.searchpageresults));
+              format.equals(RestQueryServlet.ResponseFormat.searchpageresults));
       return htmlAdvWriter;
-    // default: GEORSS writer
+      // default: GEORSS writer
     } else {
       GeorssFeedWriter rssWriter = new GeorssFeedWriter(
-          messageBroker,printWriter,query.getRssProviderUrl(),query.getRssSourceUrl());
+              messageBroker, printWriter, query.getRssProviderUrl(), query.getRssSourceUrl());
       rssWriter.setTarget(target);
       String responseGeometry = query.getResponseGeometry();
       rssWriter.setGeometry(GeorssFeedWriter.Geometry.checkValueOf(responseGeometry));
       return rssWriter;
     }
-   
+
   }
-    
+
   /**
    * Parses the request and generates a populated query suitable for execution.
    * <p/>
-   * This method essentially uses URL key-value pairs to generate filter and response
-   * components for a rest based query.
+   * This method essentially uses URL key-value pairs to generate filter and
+   * response components for a rest based query.
    * <p/>
-   * This method is the primary extensibility point for the rest API. Code 
+   * This method is the primary extensibility point for the rest API. Code
    * example for this method given below for reference during extension.
-   *<code>
-   *<pre>
+   * <code>
+   * <pre>
    *RestQuery query = new RestQuery();
-    RestQueryParser parser = new RestQueryParser(request,context,query);
-   
-    parser.parseRepositoryId("rid");
-    parser.parseResponseFormat("f");
-    parser.parseResponseGeometry("geometryType");
-    parser.parseResponseStyle("style");
-    parser.parseResponseTarget("target");
-    parser.parseStartRecord("start",1);
-    parser.parseMaxRecords("max",10);
-    parser.parsePropertyIsEqualTo("uuid","uuid");
-    parser.parsePropertyIsLike("searchText","anytext");
-    parser.parsePropertyList("contentType","dc:type",",",true);
-    parser.parsePropertyList("dataCategory","dc:subject",",",true);
-    parser.parsePropertyRange("after","before","dct:modified");
-    parser.parseSpatialClause("bbox","spatialRel","geometry");
-    parser.parseSortables("orderBy");
-    return query;
-    </pre>
-    </code>
-   * 
+   * RestQueryParser parser = new RestQueryParser(request,context,query);
+   *
+   * parser.parseRepositoryId("rid");
+   * parser.parseResponseFormat("f");
+   * parser.parseResponseGeometry("geometryType");
+   * parser.parseResponseStyle("style");
+   * parser.parseResponseTarget("target");
+   * parser.parseStartRecord("start",1);
+   * parser.parseMaxRecords("max",10);
+   * parser.parsePropertyIsEqualTo("uuid","uuid");
+   * parser.parsePropertyIsLike("searchText","anytext");
+   * parser.parsePropertyList("contentType","dc:type",",",true);
+   * parser.parsePropertyList("dataCategory","dc:subject",",",true);
+   * parser.parsePropertyRange("after","before","dct:modified");
+   * parser.parseSpatialClause("bbox","spatialRel","geometry");
+   * parser.parseSortables("orderBy");
+   * return query;
+   * </pre>
+   * </code>
+   *
    * @param request the HTTP request
    * @param context the request context
    * @return the populated rest query
    */
   protected RestQuery parseRequest(HttpServletRequest request, RequestContext context) {
     RestQuery query = new RestQuery();
-    RestQueryParser parser = new RestQueryParser(request,context,query);
-   
+    RestQueryParser parser = new RestQueryParser(request, context, query);
+
     parser.parseResponseFormat("f");
     String requestURI = Val.chkStr(request.getRequestURI());
     if (requestURI.toLowerCase().endsWith("/sitemap")) {
@@ -499,43 +569,44 @@ protected void execute(HttpServletRequest request,
         query.setResponseFormat("sitemap");
       }
     }
-    
+
     parser.parseRepositoryId("rid");
     parser.parseResponseFormat("f");
     parser.parseResponseGeometry("geometryType");
     parser.parseResponseStyle("style");
     parser.parseResponseTarget("target");
-    parser.parseStartRecord("start",1);
-    parser.parseMaxRecords("max",10);
-    parser.parsePropertyIsEqualTo("uuid","uuid");
-    parser.parsePropertyIsLike("searchText","anytext");
-    parser.parsePropertyList("contentType","dc:type",",",true);
-    parser.parsePropertyList("dataCategory","dc:subject",",",true);
-    parser.parsePropertyRange("after","before","dct:modified");
-    parser.parseSpatialClause("bbox","spatialRel","geometry");
+    parser.parseStartRecord("start", 1);
+    parser.parseMaxRecords("max", 10);
+    parser.parsePropertyIsEqualTo("uuid", "uuid");
+    parser.parsePropertyIsLike("searchText", "anytext");
+    parser.parsePropertyList("contentType", "dc:type", ",", true);
+    parser.parsePropertyList("dataCategory", "dc:subject", ",", true);
+    parser.parsePropertyRange("after", "before", "dct:modified");
+    parser.parseSpatialClause("bbox", "spatialRel", "geometry");
     parser.parseSortables("orderBy");
-    
+
     //parser.parsePropertyRange("validAfter","validBefore","dct:valid"); // date valid
-    parser.parsePropertyIsEqualTo("publisher","dc:publisher"); // publisher
-    parser.parsePropertyIsEqualTo("source","dc:source"); // harvesting id (uuid)
-    parser.parsePropertyIsEqualTo("isPartOf","dct:isPartOf"); // collection subset
+    parser.parsePropertyIsEqualTo("publisher", "dc:publisher"); // publisher
+    parser.parsePropertyIsEqualTo("source", "dc:source"); // harvesting id (uuid)
+    parser.parsePropertyIsEqualTo("isPartOf", "dct:isPartOf"); // collection subset
     //parser.parsePropertyList("hasFormat","dct:hasFormat",",",true);
-    
+
     return query;
   }
-  
+
   /**
    * Generates a search critera object from the request.
+   *
    * @param request the HTTP request
    * @param context the request context
    * @param query the pre-populated rest query
    * @return the search criteria object
    */
-  protected SearchCriteria toSearchCriteria(HttpServletRequest request, 
-      RequestContext context, RestQuery query) {
+  protected SearchCriteria toSearchCriteria(HttpServletRequest request,
+          RequestContext context, RestQuery query) {
     SearchCriteria criteria = new SearchCriteria();
-    RestQueryParser parser = new RestQueryParser(request,context,new RestQuery());
-    
+    RestQueryParser parser = new RestQueryParser(request, context, new RestQuery());
+
     // keyword filter
     String sKeyword = Val.chkStr(parser.getRequestParameter("searchText"));
     if (sKeyword.length() > 0) {
@@ -543,9 +614,9 @@ protected void execute(HttpServletRequest request,
       fKeyword.setSearchText(sKeyword);
       criteria.setSearchFilterKeyword(fKeyword);
     }
-    
+
     // spatial filter
-    SpatialClause bbox = parser.extractSpatialClause("bbox","spatialRel","geometry");
+    SpatialClause bbox = parser.extractSpatialClause("bbox", "spatialRel", "geometry");
     if (bbox != null) {
       SearchFilterSpatial fSpatial = new SearchFilterSpatial();
       fSpatial.setSelectedEnvelope(bbox.getBoundingEnvelope());
@@ -556,23 +627,23 @@ protected void execute(HttpServletRequest request,
       }
       criteria.setSearchFilterSpatial(fSpatial);
     }
-     
+
     // content type filter
     String sContentType = Val.chkStr(parser.getRequestParameter("contentType"));
     try {
       if (sContentType.length() > 0) {
         SearchFilterContentTypes fContentTypes = new SearchFilterContentTypes();
         fContentTypes.setSelectedContentType(
-            SearchEngineCSW.AimsContentTypes.valueOf(sContentType).name());
+                SearchEngineCSW.AimsContentTypes.valueOf(sContentType).name());
         criteria.setSearchFilterContentTypes(fContentTypes);
       }
     } catch (IllegalArgumentException ex) {
       // if invalid content type simply do not create filter
     }
-    
+
     // data category filter
     String delimitedThemes = Val.chkStr(parser.getRequestParameter("dataCategory"));
-    String[] themes = Val.tokenize(delimitedThemes,",");
+    String[] themes = Val.tokenize(delimitedThemes, ",");
     if (themes != null && themes.length > 0) {
       ArrayList<String> alThemes = new ArrayList<String>();
       for (String theme : themes) {
@@ -582,7 +653,7 @@ protected void execute(HttpServletRequest request,
       fThemes.setSelectedThemes(alThemes);
       criteria.setSearchFilterThemes(fThemes);
     }
-    
+
     // temporal filter
     String sAfter = Val.chkStr(parser.getRequestParameter("after"));
     String sBefore = Val.chkStr(parser.getRequestParameter("before"));
@@ -591,20 +662,20 @@ protected void execute(HttpServletRequest request,
       fTemporal.setDateModifiedFrom(sAfter);
       fTemporal.setDateModifiedTo(sBefore);
       fTemporal.setSelectedModifiedDateOption(
-            SearchFilterTemporal.SelectedTimePeriod.beforeAndOrAfterPeriod.name());
+              SearchFilterTemporal.SelectedTimePeriod.beforeAndOrAfterPeriod.name());
       criteria.setSearchFilterTemporal(fTemporal);
     }
-    
+
     // pagination filter
     SearchFilterPagination fPagination = new SearchFilterPagination();
     fPagination.setStartPostion(query.getFilter().getStartRecord());
     fPagination.setRecordsPerPage(query.getFilter().getMaxRecords());
     int startRecord = query.getFilter().getStartRecord();
-    int maxRecords =query.getFilter().getMaxRecords();
-    double page = (((double)startRecord) /  ((double)maxRecords));
+    int maxRecords = query.getFilter().getMaxRecords();
+    double page = (((double) startRecord) / ((double) maxRecords));
     fPagination.setCurrentPage((new Double(Math.ceil(page))).intValue());
     criteria.setSearchFilterPageCursor(fPagination);
-    
+
     // sort filter
     String sOrderBy = Val.chkStr(parser.getRequestParameter("orderBy"));
     try {
@@ -616,7 +687,7 @@ protected void execute(HttpServletRequest request,
     } catch (IllegalArgumentException ex) {
       // if invalid content type simply do not create filter
     }
-    
+
     // Distributed search
     String rid = parser.getRequestParameter("rid");
     SearchFilterHarvestSites harvestSites = new SearchFilterHarvestSites();
@@ -627,12 +698,14 @@ protected void execute(HttpServletRequest request,
     return criteria;
   }
 
-  /** enumerations ============================================================ */
-  
+  /**
+   * enumerations ============================================================
+   */
   /**
    * Enumeration of response formats.
    */
   protected enum ResponseFormat {
+  	dcat,
     georss,
     kml,
     html,
@@ -640,24 +713,39 @@ protected void execute(HttpServletRequest request,
     atom,
     json,
     pjson,
-    searchpage,
-    searchpageresults;
-  
+    xjson,
+    searchpage {
+      @Override
+      public boolean isApi() {
+        return false;
+      }
+    },
+    searchpageresults {
+      @Override
+      public boolean isApi() {
+        return false;
+      }
+    };
+
     /**
-     * Checks then returns the format associated with a value.
-     * <br/>If the value is invalid, the default is returned.
+     * Checks then returns the format associated with a value. <br/>If the value
+     * is invalid, the default is returned.
+     *
      * @param value the value to check.
      * @return the format Default: {@link ResponseFormat#georss}
      */
-    protected static ResponseFormat checkValueOf(String value) {
+    protected static RestQueryServlet.ResponseFormat checkValueOf(String value) {
       value = Val.chkStr(value);
-      for (ResponseFormat f : values()) {
+      for (RestQueryServlet.ResponseFormat f : values()) {
         if (f.name().equalsIgnoreCase(value)) {
           return f;
         }
       }
       return georss;
     }
+    
+    public boolean isApi() {
+      return true;
+    }
   }
-
 }

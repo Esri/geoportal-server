@@ -24,12 +24,18 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *
- * @author Esri
+ * EROS query parser.
  */
 public class ErosQueryParser extends RestQueryParser {
   private Map<String, String[]> mixedParameters;
 
+  /**
+   * Creates an instance of the parser.
+   * @param request HTTP request
+   * @param context request context
+   * @param query query
+   * @param defaultParameters map of default parameters
+   */
   public ErosQueryParser(HttpServletRequest request, RequestContext context, RestQuery query, Map<String, String[]> defaultParameters) {
     super(request, context, query);
     mixedParameters = mixParameters(defaultParameters, request.getParameterMap());

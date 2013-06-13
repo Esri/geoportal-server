@@ -17,8 +17,6 @@ package com.esri.gpt.control.georss;
 import com.esri.gpt.catalog.search.OpenSearchProperties;
 import com.esri.gpt.catalog.search.ResourceLink;
 import com.esri.gpt.catalog.search.ResourceLinkBuilder;
-import com.esri.gpt.catalog.search.SearchResultRecord;
-import com.esri.gpt.catalog.search.SearchResultRecords;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.geometry.Envelope;
@@ -116,7 +114,7 @@ public void setGeometry(Geometry geometry) {
  * Writers records.
  * @param records records to write
  */
-public void write(SearchResultRecords records) {
+public void write(IFeedRecords records) {
   
   String sTitle = _messageBroker.retrieveMessage("catalog.rest.title");
   String sDescription = _messageBroker.retrieveMessage("catalog.rest.description");
@@ -197,7 +195,7 @@ public void write(SearchResultRecords records) {
   // writeTag items
   RecordSnippetWriter snippetWriter = new RecordSnippetWriter(_messageBroker, _writer);
   snippetWriter.setTarget(_target);
-  for (SearchResultRecord record : records) {
+  for (IFeedRecord record : records) {
     writeRecord(snippetWriter, record, sTitle);
   }
 
@@ -214,7 +212,7 @@ public void write(SearchResultRecords records) {
  */
 private void writeRecord(
   RecordSnippetWriter snippetWriter, 
-  SearchResultRecord record,
+  IFeedRecord record,
   String sSourceTitle) {
   
   _writer.println("<item>");
@@ -273,7 +271,7 @@ private void writeRecord(
   }
 
   // record type thumbnail
-  ResourceLink contentTypeLink = record.getContentTypeLink();
+  ResourceLink contentTypeLink = record.getResourceLinks().findByTag(ResourceLink.TAG_CONTENTTYPE);
   String recordTypeThumbnail = Val.chkUrl(contentTypeLink!=null? contentTypeLink.getUrl(): "");
   if (url.length()>0 || recordTypeThumbnail.length() > 0) {
     _writer.print("<media:thumbnail url=\"");
@@ -307,7 +305,7 @@ private void writeRecord(
  * Writes geometry.
  * @param envelope envelope
  */
-private void writeGeometry(SearchResultRecord record) {
+private void writeGeometry(IFeedRecord record) {
   if (record.getEnvelope()!=null && record.getEnvelope().isValid()) {
     switch (getGeometry()) {
       case esriGeometryPoint:

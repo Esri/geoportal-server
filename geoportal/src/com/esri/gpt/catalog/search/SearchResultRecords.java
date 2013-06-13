@@ -13,6 +13,8 @@
  * limitations under the License.
  */
 package com.esri.gpt.catalog.search;
+import com.esri.gpt.control.georss.IFeedRecord;
+import com.esri.gpt.control.georss.IFeedRecords;
 import com.esri.gpt.framework.request.Records;
 
 /**
@@ -28,6 +30,12 @@ public class SearchResultRecords extends Records<SearchResultRecord> {
     super();
   }
 
+  public SearchResultRecords(IFeedRecords records) {
+    super();
+    for (IFeedRecord record: records) {
+      add(new SearchResultRecord(record));
+    }
+  }
   /** properties ============================================================== */
   
   /**

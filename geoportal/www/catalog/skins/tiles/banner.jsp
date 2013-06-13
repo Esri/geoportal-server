@@ -86,7 +86,7 @@
 		styleClass="#{PageContext.menuStyleMap['catalog.identity.login']}"
 		rendered="#{PageContext.roleMap['anonymous'] && PageContext.identitySupport.supportsLogin}"/> 
 	
-	<h:commandLink id="identityLogout" action="catalog.main.home" 
+	<h:commandLink id="identityLogout" action="catalog.identity.logout" 
 		value="#{gptMsg['catalog.identity.logout.menuCaption']}" 
 		rendered="#{not PageContext.roleMap['anonymous'] && PageContext.identitySupport.supportsLogout}"
 		actionListener="#{LoginController.processLogout}"/>

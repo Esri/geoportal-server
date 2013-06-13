@@ -24,6 +24,7 @@ String VER112 = "v1.1.2";
 String VER12 = "v1.2";
 String VER121 = "v1.2.1";
 String VER122 = "v1.2.2";
+String VER123 = "v1.2.3";
 %>
 
 <link rel="stylesheet" type="text/css" href="http://serverapi.arcgisonline.com/jsapi/arcgis/2.5/js/dojo/dijit/themes/tundra/tundra.css" />
@@ -44,7 +45,7 @@ String VER122 = "v1.2.2";
 <script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER+ "/ui.datepicker.packed.js"%>"></script>
 <script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER12+ "/gpt.js"%>"></script>
 <script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER+ "/Utils.js"%>"></script>
-<script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER121+ "/livedata.js"%>"></script>
+<script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER123+ "/livedata.js"%>"></script>
 <script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER+ "/gpt-asn.js"%>"></script>
 <script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER122+ "/gpt-browse.js"%>"></script>
 

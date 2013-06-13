@@ -1,16 +1,14 @@
 package com.esri.gpt.control.georss;
 
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.esri.gpt.catalog.discovery.rest.RestQuery;
 import com.esri.gpt.catalog.search.SearchResult;
 import com.esri.gpt.catalog.search.SearchResultRecords;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.MessageBroker;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * The Class FeedWriter2.
@@ -155,7 +153,7 @@ public abstract void writeError(Throwable err);
  */
 @Override
 public  void write(SearchResult result) {
-  write(result.getRecords());
+  write(new SearchResultRecordsAdapter(result.getRecords()));
 }
 
 /**

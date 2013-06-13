@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    Esri Inc. licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<gptConfig version="1.2.3">
+
+
+   <!-- Base map configuration. (used in search page, preview, details page, editor)
+        - jsapiUrl: URL to the JavaScript API
+        - mapServiceUrl: URL for a map service 
+           Types: ArcGIS REST, WMS, WMTS. (This can be empty for openstreet map).
+        - mapServiceType: A type of map service 
+           Values: dynamic | tiled | wms | wmts | openstreet
+        - mapVisibleLayers: An array of visible WMS layer names. 
+           This parameter should be defined when WMS is used as a map service. 
+           (from <name> element of WMS GetCapabilities xml)  
+           Example: "['name1','name2','name3','name4']"
+        - geometryServiceUrl: REST URL to an ArcGIS Server GeometryServer service.
+        - locatorUrl: REST URL to an ArcGIS Server GeocodeServer service
+        - locatorSingleFieldParameter: field for the GeocodeServer service upon which locations can be searched 
+    -->
+    
+    <interactiveMap
+        jsapiUrl="http://serverapi.arcgisonline.com/jsapi/arcgis/?v=2.5"
+        mapServiceUrl="http://server.arcgisonline.com/ArcGIS/rest/services/ESRI_Imagery_World_2D/MapServer"
+        mapServiceType="dynamic" 
+        geometryServiceUrl="http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer"
+        locatorUrl="http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Locators/ESRI_Geocode_USA/GeocodeServer"
+        locatorSingleFieldParameter = "city"/>
+  
+    <catalog>       
+    
+      <parameter key="catalog.echoConfigOnStartup" value="false"/>
+      <parameter key="catalog.loadSchemasOnStartup" value="true"/>
+      <parameter key="lucene.useLocalWriter" value="false"/>
+      <parameter key="webharvester.active" value="false"/>
+
+    </catalog>
+
+</gptConfig>
+

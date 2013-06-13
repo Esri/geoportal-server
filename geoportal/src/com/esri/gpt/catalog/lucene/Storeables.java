@@ -172,6 +172,9 @@ public class Storeables implements IStoreables {
         
       } else if (valueType.equals(PropertyValueType.GEOMETRY)) {
         storable = new GeometryProperty(fieldName);
+
+      } else if (valueType.equals(PropertyValueType.TIMEPERIOD)) {
+        storable = new TimeperiodProperty(fieldName);
         
       } else if (valueType.equals(PropertyValueType.LONG)) {
         field = new LongField(fieldName);

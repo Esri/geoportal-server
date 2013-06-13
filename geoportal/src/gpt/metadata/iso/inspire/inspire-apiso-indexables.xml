@@ -144,21 +144,21 @@
   <property meaning="apiso:TempExtent_end"
     xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:endPosition"/>
   <property meaning="apiso:TempExtent_begin"
-    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:begin/gml:TimeInstant/gml:timePosition"/>
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:begin/gml:TimeInstant/gml:timePosition"/>
   <property meaning="apiso:TempExtent_begin"
-    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:begin/gml32:TimeInstant/gml32:timePosition"/>
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:begin/gml32:TimeInstant/gml32:timePosition"/>
   <property meaning="apiso:TempExtent_begin"
-    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition"/>
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition"/>
   <property meaning="apiso:TempExtent_begin"
-    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:beginPosition"/>
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:beginPosition"/>
   <property meaning="apiso:TempExtent_end"
-    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:end/gml:TimeInstant/gml:timePosition"/>
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:end/gml:TimeInstant/gml:timePosition"/>
   <property meaning="apiso:TempExtent_end"
-    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:end/gml32:TimeInstant/gml32:timePosition"/>
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:end/gml32:TimeInstant/gml32:timePosition"/>
   <property meaning="apiso:TempExtent_end"
-    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition"/>
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition"/>
   <property meaning="apiso:TempExtent_end"
-    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:endPosition"/>
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:endPosition"/>
 
 
   <!-- table 14 (page 49) for service  -->
@@ -245,5 +245,29 @@
   <property meaning="contentType"
     xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:function/gmd:CI_OnLineFunctionCode"/>
 
+  <!-- time period of the content -->
+  <property xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent">
+    <property xpath="gml:TimePeriod">
+      <property meaning="timeperiod.analyze" xpathType="STRING"
+        xpath="concat('tp.begin.',gml:beginPosition,'.indeterminate.',gml:beginPosition/@indeterminatePosition,'.end.',gml:endPosition,'.indeterminate.',gml:endPosition/@indeterminatePosition)"/>
+      <property meaning="timeperiod.analyze" xpathType="STRING"
+        xpath="concat('tp.begin.',gml:begin/gml:TimeInstant/gml:timePosition,'.indeterminate.',gml:begin/gml:TimeInstant/gml:timePosition/@indeterminatePosition,'.end.',gml:end/gml:TimeInstant/gml:timePosition,'.indeterminate.',gml:end/gml:TimeInstant/gml:timePosition/@indeterminatePosition)"/>
+    </property>
+    <property xpath="gml:TimeInstant">
+      <property meaning="timeperiod.analyze" xpathType="STRING"
+        xpath="concat('tp.position.',gml:timePosition,'.indeterminate.',gml:timePosition/@indeterminatePosition)"/>
+    </property>
+    <property xpath="gml32:TimePeriod">
+      <property meaning="timeperiod.analyze" xpathType="STRING"
+        xpath="concat('tp.begin.',gml32:beginPosition,'.indeterminate.',gml32:beginPosition/@indeterminatePosition,'.end.',gml32:endPosition,'.indeterminate.',gml32:endPosition/@indeterminatePosition)"/>
+      <property meaning="timeperiod.analyze" xpathType="STRING"
+        xpath="concat('tp.begin.',gml32:begin/gml32:TimeInstant/gml32:timePosition,'.indeterminate.',gml32:begin/gml32:TimeInstant/gml32:timePosition/@indeterminatePosition,'.end.',gml32:end/gml32:TimeInstant/gml32:timePosition,'.indeterminate.',gml32:end/gml32:TimeInstant/gml32:timePosition/@indeterminatePosition)"/>
+    </property>
+    <property xpath="gml32:TimeInstant">
+      <property meaning="timeperiod.analyze" xpathType="STRING"
+        xpath="concat('tp.position.',gml32:timePosition,'.indeterminate.',gml32:timePosition/@indeterminatePosition)"/>
+    </property>
+  </property>
+  
 </indexables>
 

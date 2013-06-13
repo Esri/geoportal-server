@@ -18,9 +18,9 @@ import com.esri.gpt.catalog.search.SearchEngineCSW.Scheme;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.ConfigurationException;
 import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.context.UrnMap;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.server.csw.client.CswRecord;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -277,37 +277,61 @@ public class ResourceIdentifier {
    * @return the service type
    */
   public String guessServiceTypeFromUrl(String url) {
-    String serviceType = "";
+    ServiceInfo si = guessServiceFromUrl(url);
+    return si!=null? si.getServiceType(): "";
+  }
+
+  /**
+   * Guesses an URN of service type from a URL.
+   * @param url the url
+   * @return URN of service type
+   */
+  public String guessServiceUrnFromUrl(String url) {
+    ServiceInfo si = guessServiceFromUrl(url);
+    return si!=null? si.getServiceUrn(): "";
+  }
+
+  /**
+   * Guesses a service info from a URL.
+   * @param url the url
+   * @return service info
+   */
+  private ServiceInfo guessServiceFromUrl(String url) {
     url = Val.chkStr(url).toLowerCase();
     if (url.contains("service=wms") || url.contains("wmsserver")
         || url.contains("com.esri.wms.esrimap")) {
-      serviceType = "wms";
+      return createServiceInfoFor("wms");
     } else if (url.contains("service=wfs") || url.contains("wfsserver")) {
-      serviceType = "wfs";
+      return createServiceInfoFor("wfs");
     } else if (url.contains("service=wcs") || url.contains("wcsserver")) {
-      serviceType = "wcs";
+      return createServiceInfoFor("wcs");
     } else if (url.contains("com.esri.esrimap.esrimap")) {
-      serviceType = "aims";
+      return createServiceInfoFor("aims");
     } else if (url.contains("arcgis/rest") || url.contains("arcgis/services") ||
                url.contains("rest/services")) {
-      serviceType = "ags";
+      return createServiceInfoFor("ags");
     } else if (url.indexOf("service=csw") > 0) {
-      serviceType = "csw";
+      return createServiceInfoFor("csw");
     } else if (url.indexOf("service=sos") > 0) {
-      serviceType = "sos";
+      return createServiceInfoFor("sos");
     } else if (url.endsWith(".nmf")) {
-      serviceType = "ArcGIS:nmf";
+      return createServiceInfoFor("ArcGIS:nmf");
     } else if (url.endsWith(".lyr")) {
-      serviceType = "ArcGIS:lyr";
+      return createServiceInfoFor("ArcGIS:lyr");
     } else if (url.endsWith(".mxd")) {
-      serviceType = "ArcGIS:mxd";
+      return createServiceInfoFor("ArcGIS:mxd");
     } else if (url.endsWith(".kml")) {
-      serviceType = "kml";
+      return createServiceInfoFor("kml");
+    } else if (url.endsWith(".kmz")) {
+      return createServiceInfoFor("kml");
     }
-    if (serviceType.equals("image") || serviceType.equals("feature")) {
-      serviceType = "aims";
-    }
-    return serviceType;
+    return null;
+  }
+  
+  private ServiceInfo createServiceInfoFor(String name) {
+    UrnMap urnMap = UrnMap.getInstance();
+    String urn = urnMap.getUrn("", name);
+    return new ServiceInfo(name, urn);
   }
   
   /**
@@ -357,4 +381,24 @@ public class ResourceIdentifier {
     }
   }
   
+  /**
+   * Service info.
+   */
+  private static class ServiceInfo {
+    private String serviceType;
+    private String serviceUrn;
+    
+    public ServiceInfo(String serviceType, String serviceUrn) {
+      this.serviceType = Val.chkStr(serviceType);
+      this.serviceUrn = Val.chkStr(serviceUrn);
+    }
+    
+    public String getServiceType() {
+      return serviceType;
+    }
+    
+    public String getServiceUrn() {
+      return serviceUrn;
+    }
+  }
 }

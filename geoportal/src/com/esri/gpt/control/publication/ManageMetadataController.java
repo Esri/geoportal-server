@@ -19,8 +19,6 @@ import com.esri.gpt.catalog.harvest.jobs.HjRecord;
 import com.esri.gpt.catalog.harvest.repository.HrCriteria;
 import com.esri.gpt.catalog.harvest.repository.HrHarvestRequest;
 import com.esri.gpt.catalog.harvest.repository.HrResult;
-import java.util.ArrayList;
-
 import com.esri.gpt.catalog.management.CollectionDao;
 import com.esri.gpt.catalog.management.MmdActionCriteria;
 import com.esri.gpt.catalog.management.MmdActionRequest;
@@ -31,19 +29,24 @@ import com.esri.gpt.catalog.management.MmdQueryRequest;
 import com.esri.gpt.catalog.management.MmdQueryResult;
 import com.esri.gpt.catalog.management.MmdRecord;
 import com.esri.gpt.catalog.management.MmdResult;
-import com.esri.gpt.framework.security.metadata.MetadataAccessPolicy;
 import com.esri.gpt.control.view.PageCursorPanel;
 import com.esri.gpt.control.view.SelectablePublishers;
+import com.esri.gpt.control.webharvest.protocol.ProtocolFactories;
+import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
+import com.esri.gpt.control.webharvest.protocol.factories.AgpProtocolFactory;
+import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.collection.StringSet;
+import com.esri.gpt.framework.context.ApplicationConfiguration;
+import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.BaseActionListener;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.security.identity.NotAuthorizedException;
 import com.esri.gpt.framework.security.identity.local.SimpleIdentityAdapter;
+import com.esri.gpt.framework.security.metadata.MetadataAccessPolicy;
 import com.esri.gpt.framework.security.principal.Publisher;
 import com.esri.gpt.framework.util.Val;
-import com.esri.gpt.framework.collection.StringAttributeMap;
-import com.esri.gpt.framework.collection.StringSet;
-
+import java.util.ArrayList;
 import javax.faces.component.UIComponent;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
@@ -66,21 +69,6 @@ private SelectableGroups      _candidateGroups;
 private MetadataAccessPolicy  _metadataAccessPolicyConfig;
 private MmdQueryCriteria      _queryCriteriaForAction = new MmdQueryCriteria();
 private boolean               _useCollections = false;
-
-/** protocol definitions */
-private static final ProtocolDef [] protocolDefs = {
-  new ProtocolDef("", "catalog.harvest.manage.edit.protocol.any", false),
-  new ProtocolDef("res", "catalog.harvest.manage.edit.protocol.resource", false),
-  new ProtocolDef("arcgis", "catalog.harvest.manage.edit.protocol.arcgis", true),
-  new ProtocolDef("arcims", "catalog.harvest.manage.edit.protocol.arcims", false),
-  new ProtocolDef("oai", "catalog.harvest.manage.edit.protocol.oai", false),
-  new ProtocolDef("waf", "catalog.harvest.manage.edit.protocol.waf", false),
-  new ProtocolDef("csw", "catalog.harvest.manage.edit.protocol.csw", false),
-  new ProtocolDef("thredds", "catalog.harvest.manage.edit.protocol.thredds", false),
-  /* NOTE! This is EXPERIMENTAL feature. It might be removed at any time in the future.
-  new ProtocolDef("agp", "catalog.harvest.manage.edit.protocol.agp", false),
-   */
-};
 
 // constructors ================================================================
 /** Default constructor. */
@@ -601,13 +589,18 @@ public void setQueryCriteriaAsEncrypedString(String content) {
  * @return collection of protocols eligible to choose
  */
 public ArrayList<SelectItem> getProtocols() {
-  MessageBroker msgBroker = getContextBroker().extractMessageBroker();
   ArrayList<SelectItem> protocols = new ArrayList<SelectItem>();
-  for (ProtocolDef pdef : protocolDefs) {
-    if (AGSProcessorConfig.isAvailable() || !pdef.getArcgis()) {
-      SelectItem item = new SelectItem(pdef.getId(), msgBroker.retrieveMessage(pdef.getResource()));
-      protocols.add(item);
-    }
+  MessageBroker msgBroker = getContextBroker().extractMessageBroker();
+  ApplicationContext appCtx = ApplicationContext.getInstance();
+  ApplicationConfiguration appCfg = appCtx.getConfiguration();
+  ProtocolFactories protocolFactories = appCfg.getProtocolFactories();
+  protocols.add(new SelectItem("", msgBroker.retrieveMessage("catalog.harvest.manage.edit.protocol.any")));
+  for (String key: protocolFactories.getKeys()) {
+    ProtocolFactory pf = protocolFactories.get(key);
+    if (pf instanceof AgpProtocolFactory && !AGSProcessorConfig.isAvailable()) continue;
+    String resourceKey = protocolFactories.getResourceKey(key);
+    SelectItem item = new SelectItem(key.toLowerCase(), msgBroker.retrieveMessage(resourceKey));
+    protocols.add(item);
   }
   return protocols;
 }
@@ -673,51 +666,5 @@ protected void processSubAction(ActionEvent event, RequestContext context)
 
   // always execute the search for metadata records
   executeSearch(event, context, publisher);
-}
-
-/**
- * Protocol definition.
- */
-private static final class ProtocolDef {
-  private String id;
-  private String resource;
-  private boolean arcgis;
-
-  /**
-   * Creates instance of the protocol definition.
-   * @param id protocol id (name)
-   * @param resource resource key
-   * @param arcgis <code>true</code> to indicate this is ArcGIS protocol
-   */
-  public ProtocolDef(String id, String resource, boolean arcgis) {
-    this.id = id;
-    this.resource = resource;
-    this.arcgis = arcgis;
-  }
-
-  /**
-   * Gets id.
-   * @return id
-   */
-  public String getId() {
-    return id;
-  }
-
-  /**
-   * Gets resource key.
-   * @return resource key
-   */
-  public String getResource() {
-    return resource;
-  }
-
-  /**
-   * Checks if protocol is ArcGIS protocol
-   * @return <code>true</code> if protocol is ArcGIS protocol
-   */
-  public boolean getArcgis() {
-    return arcgis;
-  }
-
 }
 }

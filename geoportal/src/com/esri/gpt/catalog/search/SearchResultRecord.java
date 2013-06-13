@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.esri.gpt.control.georss.IFeedRecord;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.request.Record;
 import com.esri.gpt.framework.util.Val;
@@ -55,6 +56,32 @@ public class SearchResultRecord extends Record {
   private boolean       _defaultGeometry = false; 
   private final Map<String,Object> _objectMap = new HashMap<String,Object>();
  
+public SearchResultRecord() {
+    
+  }
+  
+  public SearchResultRecord(IFeedRecord record) {
+    _abstract = record.getAbstract();
+    _contentType = record.getContentType();
+    _envelope = record.getEnvelope();
+//    _external = false;
+//    _externalId = "";
+//    _fileIdentifier = "";
+    _modifiedDate = record.getModfiedDate();
+    _resourceLinks = record.getResourceLinks();
+    _resourceUrl = record.getResourceUrl();
+//    _service = "";
+    _serviceType = record.getServiceType();
+    _title = record.getTitle();
+    _uuid = record.getUuid();
+//    _supportsViewMetadata = true;
+//    _defaultGeometry = false; 
+    _objectMap.putAll(getResourceLinksAsMap(record.getResourceLinks()));
+  }
+  
+  private Map<String,String> getResourceLinksAsMap(ResourceLinks rLinks) {
+    return rLinks!=null && rLinks.getUrlsByTag()!=null? rLinks.getUrlsByTag(): new HashMap<String, String>();
+  }
   /** properties ============================================================== */
   
   /**

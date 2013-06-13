@@ -289,9 +289,6 @@
 			</dt>
 			<dt>
         <xsl:apply-templates select="gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox"/></dt>							
-			<dt>
-				<div id="interactiveMap" style="width:600px; height:300px; cursor:hand; cursor:pointer; margin: 20px;"></div>
-			</dt>
 			</xsl:if>
 			<xsl:if test="srv:serviceType/gco:LocalName">
 			<dt>
@@ -320,10 +317,7 @@
 			</dt>
 			<dt>
 		        <xsl:apply-templates select="srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox"/>
-			</dt>
-			<dt>
-				<div id="interactiveMap" style="width:600px; height:300px; cursor:hand; cursor:pointer; margin: 20px;"></div>
-			</dt>       
+			</dt>			       
 			</xsl:if>					
 			<xsl:for-each select="srv:containsOperations/srv:SV_OperationMetadata">			
 			<dt>

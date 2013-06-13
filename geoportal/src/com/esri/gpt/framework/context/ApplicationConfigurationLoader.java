@@ -14,24 +14,6 @@
  */
 package com.esri.gpt.framework.context;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
-import org.apache.lucene.search.BooleanQuery;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import com.esri.gpt.catalog.arcims.ImsService;
 import com.esri.gpt.catalog.context.CatalogConfiguration;
 import com.esri.gpt.catalog.lucene.LuceneIndexObserver;
@@ -76,7 +58,22 @@ import com.esri.gpt.framework.util.TimePeriod;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.NodeListAdapter;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+import org.apache.lucene.search.BooleanQuery;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Application configuration loader.
@@ -91,6 +88,8 @@ public class ApplicationConfigurationLoader {
   
 /** Main XML configuration file location. */
 private static final String MAIN_FILE = "gpt/config/gpt.xml";
+
+private static final String MAIN_FILE_DEV = "gpt/config/gpt_dev.xml";
 
 /** Default constructor. */
 public ApplicationConfigurationLoader() {
@@ -117,10 +116,22 @@ private Logger getLogger() {
 public void load(ApplicationConfiguration appConfig) throws Exception {
 
   // load the dom
-  String sConfigFile = MAIN_FILE;
-  getLogger().log(Level.FINE, "Loading configuration file: {0}", sConfigFile);
-  Document dom = DomUtil.makeDomFromResourcePath(sConfigFile, false);
+	String sConfigFile = null;
+	Document dom = null;
+	try {
+		sConfigFile = MAIN_FILE_DEV;
+		dom = DomUtil.makeDomFromResourcePath(sConfigFile, false);
+		getLogger().log(Level.FINE, "Loaded configuration file: {0}", sConfigFile);
+	} catch (Throwable e) {
+    // Dev config not found
+	}
+	if (dom == null) {
+		sConfigFile = MAIN_FILE;
+		getLogger().log(Level.FINE, "Loading configuration file: {0}", sConfigFile);
+		dom = DomUtil.makeDomFromResourcePath(sConfigFile, false);
+	}
   XPath xpath = XPathFactory.newInstance().newXPath();
+
 
   try {
     Node root = (Node) xpath.evaluate("/gptConfig", dom, XPathConstants.NODE);
@@ -177,7 +188,12 @@ public void load(ApplicationConfiguration appConfig) throws Exception {
     e.printStackTrace(System.err);
   }
 
-  getLogger().info(appConfig.toString());
+  StringAttributeMap params = appConfig.getCatalogConfiguration().getParameters();
+  String param = Val.chkStr(params.getValue("catalog.echoConfigOnStartup"));
+  boolean bEchoConfig = !param.equalsIgnoreCase("false");
+  if (bEchoConfig) {
+  	getLogger().info(appConfig.toString());
+  }
 }
 
 /**
@@ -390,6 +406,12 @@ private void loadCatalog(ApplicationConfiguration appConfig, Document dom,
 
   loadMetadataAccessPolicyConfiguration(appConfig, root);
 
+  StringAttributeMap params = appConfig.getCatalogConfiguration().getParameters();
+  String param = Val.chkStr(params.getValue("catalog.loadSchemasOnStartup"));
+  boolean bLoadSchemas = param.equalsIgnoreCase("true");
+  if (bLoadSchemas) {
+  	appConfig.getCatalogConfiguration().getConfiguredSchemas();
+  }
 }
 
 /**
@@ -1122,7 +1144,8 @@ private void loadProtocolFactories(ApplicationConfiguration appConfig, Document 
         Class fc = Class.forName(factoryClass);
         ProtocolFactory factory = (ProtocolFactory) fc.newInstance();
         ProtocolInitializer.init(factory, ndProto);
-        factories.put(factory.getName(), factory);
+        String resourceKey = Val.chkStr((String) xpath.evaluate("@resourceKey", ndProto, XPathConstants.STRING));
+        factories.put(factory.getName(), factory, resourceKey);
       } catch (Exception ex) {
         getLogger().log(Level.WARNING, "Error loading protocol: "+factoryClass, ex);
       }

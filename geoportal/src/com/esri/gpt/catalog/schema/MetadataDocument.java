@@ -462,7 +462,7 @@ public class MetadataDocument {
 			    Node ndWhen = nlWhen.item(i);        
 			    String key = Val.chkStr(ndWhen.getTextContent());
 			    if(key.startsWith("i18n.catalog.")){            	            	 
-			      String value = Val.escapeXml(mb.retrieveMessage(key.replace("i18n.", "")));
+			      String value = mb.retrieveMessage(key.replace("i18n.", ""));
 			      ndWhen.setTextContent(value);
 			    }
 			  }

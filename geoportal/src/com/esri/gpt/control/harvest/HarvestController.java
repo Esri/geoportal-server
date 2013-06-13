@@ -14,6 +14,11 @@
  */
 package com.esri.gpt.control.harvest;
 
+import com.esri.gpt.agp.client.AgpCountRequest;
+import com.esri.gpt.agp.client.AgpFetchFoldersRequest;
+import com.esri.gpt.agp.client.AgpFetchUsersRequest;
+import com.esri.gpt.agp.sync.AgpDestination;
+import com.esri.gpt.agp.sync.AgpSource;
 import com.esri.gpt.catalog.arcgis.metadata.AGSProcessorConfig;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRConnectionException;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidProtocolException;
@@ -21,6 +26,7 @@ import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidResponseExceptio
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRTimeoutException;
 import com.esri.gpt.catalog.harvest.history.HeCriteria;
 import com.esri.gpt.catalog.harvest.jobs.HjRecord;
+import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolArcIms;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolResource;
 import com.esri.gpt.catalog.harvest.repository.HrActionCriteria;
@@ -33,18 +39,25 @@ import com.esri.gpt.catalog.harvest.repository.HrRecord;
 import com.esri.gpt.catalog.harvest.repository.HrRecord.HarvestFrequency;
 import com.esri.gpt.catalog.harvest.repository.HrRecord.RecentJobStatus;
 import com.esri.gpt.catalog.harvest.repository.HrRecords;
-import com.esri.gpt.catalog.harvest.repository.HrSelectRequest;
 import com.esri.gpt.catalog.harvest.repository.HrResult;
+import com.esri.gpt.catalog.harvest.repository.HrSelectRequest;
 import com.esri.gpt.catalog.harvest.repository.HrTestRequest;
 import com.esri.gpt.catalog.management.MmdEnums.ApprovalStatus;
 import com.esri.gpt.catalog.schema.Schema;
 import com.esri.gpt.catalog.schema.ValidationException;
+import com.esri.gpt.control.publication.ManageMetadataController;
 import com.esri.gpt.control.view.BaseSortDirectionStyleMap;
 import com.esri.gpt.control.view.SelectablePublishers;
 import com.esri.gpt.control.view.SortDirectionStyle;
 import com.esri.gpt.control.webharvest.engine.Statistics;
+import com.esri.gpt.control.webharvest.protocol.Protocol;
+import com.esri.gpt.control.webharvest.protocol.ProtocolFactories;
+import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
+import com.esri.gpt.control.webharvest.protocol.factories.AgpProtocolFactory;
 import com.esri.gpt.framework.collection.StringSet;
+import com.esri.gpt.framework.context.ApplicationConfiguration;
+import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
 import com.esri.gpt.framework.jsf.MessageBroker;
@@ -60,6 +73,7 @@ import com.esri.gpt.framework.util.UuidUtil;
 import com.esri.gpt.framework.util.Val;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -100,21 +114,8 @@ public class HarvestController extends BaseHarvestController {
   private String synchronizationStatus = "none";
   /** info enabled */
   private boolean infoEnabled = false;
-  /** protocol definitions */
-  private static final ProtocolDef [] protocolDefs = {
-  new ProtocolDef("res", "catalog.harvest.manage.edit.protocol.resource", false),
-  new ProtocolDef("arcgis", "catalog.harvest.manage.edit.protocol.arcgis", true),
-  new ProtocolDef("arcims", "catalog.harvest.manage.edit.protocol.arcims", false),
-  new ProtocolDef("oai", "catalog.harvest.manage.edit.protocol.oai", false),
-  new ProtocolDef("waf", "catalog.harvest.manage.edit.protocol.waf", false),
-  new ProtocolDef("csw", "catalog.harvest.manage.edit.protocol.csw", false),
-  new ProtocolDef("thredds", "catalog.harvest.manage.edit.protocol.thredds", false),
-  /* NOTE! This is EXPERIMENTAL feature. It might be removed at any time in the future.
-  new ProtocolDef("agp", "catalog.harvest.manage.edit.protocol.agp", false),
-   */
-  };
 
-
+  private ManageMetadataController mmController;
 
 // constructors ================================================================
   /**
@@ -125,6 +126,14 @@ public class HarvestController extends BaseHarvestController {
     _pageCursorPanel.setPageCursor(getResult().getQueryResult().getPageCursor());
   }
 // properties ==================================================================
+
+  public ManageMetadataController getMmController() {
+    return mmController;
+  }
+
+  public void setMmController(ManageMetadataController mmController) {
+    this.mmController = mmController;
+  }
 
   /**
    * Gets harvest criteria.
@@ -397,6 +406,11 @@ public class HarvestController extends BaseHarvestController {
 
   }
 
+  public void handleUpdateRepositoryAndClose(ActionEvent event) throws AbortProcessingException {
+    handleUpdateRepository(event);
+    getMmController().processAction(event);
+  }
+  
   /**
    * Updates repository repository.
    * @param event the associated JSF action event
@@ -420,7 +434,7 @@ public class HarvestController extends BaseHarvestController {
         boolean creating = req.execute();
 
         extractMessageBroker().addSuccessMessage(
-          creating ? "catalog.harvest.manage.message.create" : "catalog.harvest.manage.message.update");
+          creating ? "catalog.harvest.manage.message.create.2" : "catalog.harvest.manage.message.update.2");
       }
 
     } catch (ValidationException e) {
@@ -542,7 +556,94 @@ public class HarvestController extends BaseHarvestController {
     }
 
   }
+  
+  public void handleTestAgp2AgpQuery(ActionEvent event)
+    throws AbortProcessingException {
+    try {
+      // start execution phase
+      RequestContext context = onExecutionPhaseStarted();
+      Protocol protocol = this.getEditor().getRepository().getProtocol();
+      if (protocol instanceof HarvestProtocolAgp2Agp) {
+        HarvestProtocolAgp2Agp agp2agp = (HarvestProtocolAgp2Agp)protocol;
+        AgpSource source = agp2agp.getSource();
+        
+        boolean stop = false;
+        if (source.getConnection().getHost().isEmpty()) {
+          extractMessageBroker().addErrorMessage(
+            "catalog.harvest.manage.test.err.agp2agp.src.nohost");
+          stop = true;
+        }
+        
+        if (source.getConnection().getTokenCriteria().getCredentials().getUsername().isEmpty() || source.getConnection().getTokenCriteria().getCredentials().getPassword().isEmpty()) {
+          extractMessageBroker().addErrorMessage(
+            "catalog.harvest.manage.test.err.agp2agp.src.nocredentials");
+          stop = true;
+        }
 
+        if (source.getSearchCriteria().getQ().isEmpty()) {
+          extractMessageBroker().addErrorMessage(
+            "catalog.harvest.manage.test.err.agp2agp.src.noquery");
+          stop = true;
+        }
+        
+        if (!stop) {
+          source.getConnection().generateToken();
+          AgpCountRequest sourceRequest = new AgpCountRequest();
+          long count = sourceRequest.count(source.getConnection(),source.getSearchCriteria());
+          String srcM = getEditor().getRepository().getProtocol().getAttributeMap().getValue("src-m");
+          long max = Val.chkLong(srcM, 0);
+          long apx = Math.min(count, max);
+          
+          extractMessageBroker().addSuccessMessage(
+            "catalog.harvest.manage.test.msg.agp2agp.success", new Object[]{apx});
+        }
+      }
+    } catch (Exception ex) {
+          extractMessageBroker().addErrorMessage(
+            "catalog.harvest.manage.test.err.agp2agp.connect",new Object[]{ex.getMessage()});
+    } finally {
+      onExecutionPhaseCompleted();
+    }
+  }
+  
+  public void handleTestAgp2AgpClient(ActionEvent event)
+    throws AbortProcessingException {
+    try {
+      // start execution phase
+      RequestContext context = onExecutionPhaseStarted();
+      Protocol protocol = this.getEditor().getRepository().getProtocol();
+      if (protocol instanceof HarvestProtocolAgp2Agp) {
+        HarvestProtocolAgp2Agp agp2agp = (HarvestProtocolAgp2Agp)protocol;
+        AgpDestination destination = agp2agp.getDestination();
+        
+        boolean stop = false;
+        if (destination.getConnection().getHost().isEmpty()) {
+          extractMessageBroker().addErrorMessage(
+            "catalog.harvest.manage.test.err.agp2agp.dst.nohost");
+          stop = true;
+        }
+        
+        if (destination.getConnection().getTokenCriteria().getCredentials().getUsername().isEmpty() || destination.getConnection().getTokenCriteria().getCredentials().getPassword().isEmpty()) {
+          extractMessageBroker().addErrorMessage(
+            "catalog.harvest.manage.test.err.agp2agp.dst.nocredentials");
+          stop = true;
+        }
+        
+        if (!stop) {
+          destination.getConnection().generateToken();
+          extractMessageBroker().addSuccessMessage(
+            "catalog.harvest.manage.test.msg.agp2agp.confirmed");
+        }
+      }
+    } catch (Exception ex) {
+          extractMessageBroker().addErrorMessage(
+            "catalog.harvest.manage.test.err.agp2agp.connect",new Object[]{ex.getMessage()});
+    } finally {
+      onExecutionPhaseCompleted();
+    }
+  }  
+  
+  
   /**
    * <i>Execute</i> button action handler.
    * @return navigation outcome
@@ -835,13 +936,17 @@ public class HarvestController extends BaseHarvestController {
    * @return collection of protocols eligible to choose
    */
   public ArrayList<SelectItem> getProtocols() {
-    MessageBroker msgBroker = getContextBroker().extractMessageBroker();
     ArrayList<SelectItem> protocols = new ArrayList<SelectItem>();
-    for (ProtocolDef pdef : protocolDefs) {
-      if (AGSProcessorConfig.isAvailable() || !pdef.getArcgis()) {
-        SelectItem item = new SelectItem(pdef.getId(), msgBroker.retrieveMessage(pdef.getResource()));
-        protocols.add(item);
-      }
+    MessageBroker msgBroker = getContextBroker().extractMessageBroker();
+    ApplicationContext appCtx = ApplicationContext.getInstance();
+    ApplicationConfiguration appCfg = appCtx.getConfiguration();
+    ProtocolFactories protocolFactories = appCfg.getProtocolFactories();
+    for (String key: protocolFactories.getKeys()) {
+      ProtocolFactory pf = protocolFactories.get(key);
+      if (pf instanceof AgpProtocolFactory && !AGSProcessorConfig.isAvailable()) continue;
+      String resourceKey = protocolFactories.getResourceKey(key);
+      SelectItem item = new SelectItem(key.toLowerCase(), msgBroker.retrieveMessage(resourceKey));
+      protocols.add(item);
     }
     return protocols;
   }
@@ -858,6 +963,9 @@ public class HarvestController extends BaseHarvestController {
 
     HrRecord record = null;
 
+    boolean doInit = false;
+    boolean doClear = false;
+    
     if (UuidUtil.isUuid(uuid)) {
       if (!getEditor().getRepository().getUuid().equals(uuid) || reload) {
         RequestContext rc = new FacesContextBroker().extractRequestContext();
@@ -866,11 +974,15 @@ public class HarvestController extends BaseHarvestController {
         HrRecords records = request.getQueryResult().getRecords();
         if (records.size() == 1) {
           record = records.get(0);
+          doInit = true;
         } else {
+          doClear = true;
           extractMessageBroker().addErrorMessage(
             "catalog.harvest.manage.message.err.missing");
         }
       }
+    } else {
+      doClear = true;
     }
 
     if (record == null) {
@@ -1098,51 +1210,5 @@ public class HarvestController extends BaseHarvestController {
     public SortOption getSortOption() {
       return getCriteria().getQueryCriteria().getSortOption();
     }
-  }
-
-  /**
-   * Protocol definition.
-   */
-  private static final class ProtocolDef {
-    private String id;
-    private String resource;
-    private boolean arcgis;
-
-    /**
-     * Creates instance of the protocol definition.
-     * @param id protocol id (name)
-     * @param resource resource key
-     * @param arcgis <code>true</code> to indicate this is ArcGIS protocol
-     */
-    public ProtocolDef(String id, String resource, boolean arcgis) {
-      this.id = id;
-      this.resource = resource;
-      this.arcgis = arcgis;
-    }
-
-    /**
-     * Gets id.
-     * @return id
-     */
-    public String getId() {
-      return id;
-    }
-
-    /**
-     * Gets resource key.
-     * @return resource key
-     */
-    public String getResource() {
-      return resource;
-    }
-
-    /**
-     * Checks if protocol is ArcGIS protocol
-     * @return <code>true</code> if protocol is ArcGIS protocol
-     */
-    public boolean getArcgis() {
-      return arcgis;
-    }
-
   }
 }

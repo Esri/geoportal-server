@@ -14,11 +14,13 @@
  */
 package com.esri.gpt.catalog.harvest.repository;
 
+import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
 import com.esri.gpt.catalog.publication.PublicationRequest;
 import com.esri.gpt.catalog.schema.Schema;
 import com.esri.gpt.control.view.SelectablePublishers;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
+import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.resource.api.Native;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
@@ -164,7 +166,12 @@ public class HrCompleteUpdateRequest extends HrRequest {
       }
       if (title.length() == 0) {
         // if no title, create one using host URL
-        title = record.getHostUrl();
+        if (!(record.getProtocol() instanceof HarvestProtocolAgp2Agp)) {
+          title = record.getHostUrl();
+        } else {
+          HarvestProtocolAgp2Agp p = (HarvestProtocolAgp2Agp)record.getProtocol();
+          title = p.getSourceHost() + " -> " + p.getDestinationHost();
+        }
         ProtocolInvoker.setLockTitle(record.getProtocol(), false);
       }
       record.setName(title);

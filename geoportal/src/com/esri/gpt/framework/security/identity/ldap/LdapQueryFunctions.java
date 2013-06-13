@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.naming.LimitExceededException;
+import javax.naming.NameNotFoundException;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.PartialResultException;
@@ -192,9 +193,13 @@ protected StringSet readAttribute(DirContext dirContext,
 	  if ((objectDN.length() > 0) && (attrubuteName.length() > 0)) {
 	    String[] aReturn = new String[1];
 	    aReturn[0] = attrubuteName;
+	    try{
 	    Attributes attributes = dirContext.getAttributes(objectDN,aReturn);
 	    if (attributes != null) {
 	      appendSubStringValues(attributes.get(attrubuteName),values);
+	    }
+	    }catch(NameNotFoundException nnfe){
+	    	LogUtil.getLogger().finer(nnfe.toString());
 	    }
 	  }	  
     } catch (PartialResultException pre) {

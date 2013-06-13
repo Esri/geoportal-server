@@ -1,0 +1,1424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Config_GetRecords9.xml -->
+<items>
+
+  <!-- time period queries -->
+  
+  <!-- make some test data -->
+  <item shouldPass="true">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+        <csw:Insert>
+					<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<!--***--><gmd:fileIdentifier><gco:CharacterString>idTpDelete1</gco:CharacterString></gmd:fileIdentifier>
+						<gmd:language><gco:CharacterString>en</gco:CharacterString></gmd:language>
+						<gmd:hierarchyLevel><gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode></gmd:hierarchyLevel>
+						<gmd:contact><gmd:CI_ResponsibleParty><gmd:organisationName><gco:CharacterString>q</gco:CharacterString></gmd:organisationName><gmd:role><gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</gmd:CI_RoleCode></gmd:role></gmd:CI_ResponsibleParty></gmd:contact>
+						<gmd:dateStamp><gco:Date>2012-07-10</gco:Date></gmd:dateStamp>
+						<gmd:metadataStandardName><gco:CharacterString>ISO 19139/19115 Metadata for Datasets</gco:CharacterString></gmd:metadataStandardName>
+						<gmd:metadataStandardVersion><gco:CharacterString>2003</gco:CharacterString></gmd:metadataStandardVersion>
+						<gmd:identificationInfo><gmd:MD_DataIdentification><gmd:citation><gmd:CI_Citation>
+						<!--***--><gmd:title><gco:CharacterString>idTpDelete1</gco:CharacterString></gmd:title><gmd:date><gmd:CI_Date><gmd:date><gco:Date>2012</gco:Date></gmd:date><gmd:dateType><gmd:CI_DateTypeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode></gmd:dateType></gmd:CI_Date></gmd:date></gmd:CI_Citation></gmd:citation>
+						<gmd:abstract><gco:CharacterString>q</gco:CharacterString></gmd:abstract><gmd:language><gco:CharacterString>en</gco:CharacterString></gmd:language>
+						<gmd:topicCategory><gmd:MD_TopicCategoryCode>boundaries</gmd:MD_TopicCategoryCode></gmd:topicCategory>
+						<gmd:extent><gmd:EX_Extent>
+						<gmd:geographicElement><gmd:EX_GeographicBoundingBox><gmd:westBoundLongitude><gco:Decimal>-180</gco:Decimal></gmd:westBoundLongitude><gmd:eastBoundLongitude><gco:Decimal>180</gco:Decimal></gmd:eastBoundLongitude><gmd:southBoundLatitude><gco:Decimal>-90</gco:Decimal></gmd:southBoundLatitude><gmd:northBoundLatitude><gco:Decimal>90</gco:Decimal></gmd:northBoundLatitude></gmd:EX_GeographicBoundingBox></gmd:geographicElement>
+						<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent>
+						<gml:TimePeriod gml:id="Temporal">
+						<gml:beginPosition>2012-02</gml:beginPosition>
+						<gml:endPosition>2012-07</gml:endPosition>
+						</gml:TimePeriod>
+						</gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement>
+						</gmd:EX_Extent></gmd:extent>
+						</gmd:MD_DataIdentification></gmd:identificationInfo>
+				  </gmd:MD_Metadata>
+        </csw:Insert>
+        <csw:Insert>
+					<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<!--***--><gmd:fileIdentifier><gco:CharacterString>idTpDelete2</gco:CharacterString></gmd:fileIdentifier>
+						<gmd:language><gco:CharacterString>en</gco:CharacterString></gmd:language>
+						<gmd:hierarchyLevel><gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode></gmd:hierarchyLevel>
+						<gmd:contact><gmd:CI_ResponsibleParty><gmd:organisationName><gco:CharacterString>q</gco:CharacterString></gmd:organisationName><gmd:role><gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</gmd:CI_RoleCode></gmd:role></gmd:CI_ResponsibleParty></gmd:contact>
+						<gmd:dateStamp><gco:Date>2012-07-10</gco:Date></gmd:dateStamp>
+						<gmd:metadataStandardName><gco:CharacterString>ISO 19139/19115 Metadata for Datasets</gco:CharacterString></gmd:metadataStandardName>
+						<gmd:metadataStandardVersion><gco:CharacterString>2003</gco:CharacterString></gmd:metadataStandardVersion>
+						<gmd:identificationInfo><gmd:MD_DataIdentification><gmd:citation><gmd:CI_Citation>
+						<!--***--><gmd:title><gco:CharacterString>idTpDelete2</gco:CharacterString></gmd:title><gmd:date><gmd:CI_Date><gmd:date><gco:Date>2012</gco:Date></gmd:date><gmd:dateType><gmd:CI_DateTypeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode></gmd:dateType></gmd:CI_Date></gmd:date></gmd:CI_Citation></gmd:citation>
+						<gmd:abstract><gco:CharacterString>q</gco:CharacterString></gmd:abstract><gmd:language><gco:CharacterString>en</gco:CharacterString></gmd:language>
+						<gmd:topicCategory><gmd:MD_TopicCategoryCode>boundaries</gmd:MD_TopicCategoryCode></gmd:topicCategory>
+						<gmd:extent><gmd:EX_Extent>
+						<gmd:geographicElement><gmd:EX_GeographicBoundingBox><gmd:westBoundLongitude><gco:Decimal>-180</gco:Decimal></gmd:westBoundLongitude><gmd:eastBoundLongitude><gco:Decimal>180</gco:Decimal></gmd:eastBoundLongitude><gmd:southBoundLatitude><gco:Decimal>-90</gco:Decimal></gmd:southBoundLatitude><gmd:northBoundLatitude><gco:Decimal>90</gco:Decimal></gmd:northBoundLatitude></gmd:EX_GeographicBoundingBox></gmd:geographicElement>
+						<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent>
+						<gml:TimePeriod gml:id="Temporal1">
+						<gml:beginPosition>2008-08-01</gml:beginPosition>
+						<gml:endPosition>2008-08-31</gml:endPosition>
+						</gml:TimePeriod>
+						</gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement>
+						<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent>
+						<gml:TimePeriod gml:id="Temporal2">
+						<gml:beginPosition>2009-07-01</gml:beginPosition>
+						<gml:endPosition>2009-07-31</gml:endPosition>
+						</gml:TimePeriod>
+						</gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement>
+						</gmd:EX_Extent></gmd:extent>
+						</gmd:MD_DataIdentification></gmd:identificationInfo>
+				  </gmd:MD_Metadata>
+        </csw:Insert>
+        <csw:Insert>
+					<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<!--***--><gmd:fileIdentifier><gco:CharacterString>idTpDelete3</gco:CharacterString></gmd:fileIdentifier>
+						<gmd:language><gco:CharacterString>en</gco:CharacterString></gmd:language>
+						<gmd:hierarchyLevel><gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode></gmd:hierarchyLevel>
+						<gmd:contact><gmd:CI_ResponsibleParty><gmd:organisationName><gco:CharacterString>q</gco:CharacterString></gmd:organisationName><gmd:role><gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</gmd:CI_RoleCode></gmd:role></gmd:CI_ResponsibleParty></gmd:contact>
+						<gmd:dateStamp><gco:Date>2012-07-10</gco:Date></gmd:dateStamp>
+						<gmd:metadataStandardName><gco:CharacterString>ISO 19139/19115 Metadata for Datasets</gco:CharacterString></gmd:metadataStandardName>
+						<gmd:metadataStandardVersion><gco:CharacterString>2003</gco:CharacterString></gmd:metadataStandardVersion>
+						<gmd:identificationInfo><gmd:MD_DataIdentification><gmd:citation><gmd:CI_Citation>
+						<!--***--><gmd:title><gco:CharacterString>idTpDelete3</gco:CharacterString></gmd:title><gmd:date><gmd:CI_Date><gmd:date><gco:Date>2012</gco:Date></gmd:date><gmd:dateType><gmd:CI_DateTypeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode></gmd:dateType></gmd:CI_Date></gmd:date></gmd:CI_Citation></gmd:citation>
+						<gmd:abstract><gco:CharacterString>q</gco:CharacterString></gmd:abstract><gmd:language><gco:CharacterString>en</gco:CharacterString></gmd:language>
+						<gmd:topicCategory><gmd:MD_TopicCategoryCode>boundaries</gmd:MD_TopicCategoryCode></gmd:topicCategory>
+						<gmd:extent><gmd:EX_Extent>
+						<gmd:geographicElement><gmd:EX_GeographicBoundingBox><gmd:westBoundLongitude><gco:Decimal>-180</gco:Decimal></gmd:westBoundLongitude><gmd:eastBoundLongitude><gco:Decimal>180</gco:Decimal></gmd:eastBoundLongitude><gmd:southBoundLatitude><gco:Decimal>-90</gco:Decimal></gmd:southBoundLatitude><gmd:northBoundLatitude><gco:Decimal>90</gco:Decimal></gmd:northBoundLatitude></gmd:EX_GeographicBoundingBox></gmd:geographicElement>
+						<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent>
+						<gml:TimeInstant gml:id="ID20">
+						<gml:timePosition indeterminatePosition="now"></gml:timePosition>
+						</gml:TimeInstant>
+						</gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement>
+						</gmd:EX_Extent></gmd:extent>
+						</gmd:MD_DataIdentification></gmd:identificationInfo>
+				  </gmd:MD_Metadata>
+        </csw:Insert>
+        <csw:Insert>
+					<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<!--***--><gmd:fileIdentifier><gco:CharacterString>idTpDelete4</gco:CharacterString></gmd:fileIdentifier>
+						<gmd:language><gco:CharacterString>en</gco:CharacterString></gmd:language>
+						<gmd:hierarchyLevel><gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode></gmd:hierarchyLevel>
+						<gmd:contact><gmd:CI_ResponsibleParty><gmd:organisationName><gco:CharacterString>q</gco:CharacterString></gmd:organisationName><gmd:role><gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</gmd:CI_RoleCode></gmd:role></gmd:CI_ResponsibleParty></gmd:contact>
+						<gmd:dateStamp><gco:Date>2012-07-10</gco:Date></gmd:dateStamp>
+						<gmd:metadataStandardName><gco:CharacterString>ISO 19139/19115 Metadata for Datasets</gco:CharacterString></gmd:metadataStandardName>
+						<gmd:metadataStandardVersion><gco:CharacterString>2003</gco:CharacterString></gmd:metadataStandardVersion>
+						<gmd:identificationInfo><gmd:MD_DataIdentification><gmd:citation><gmd:CI_Citation>
+						<!--***--><gmd:title><gco:CharacterString>idTpDelete4</gco:CharacterString></gmd:title><gmd:date><gmd:CI_Date><gmd:date><gco:Date>2012</gco:Date></gmd:date><gmd:dateType><gmd:CI_DateTypeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode></gmd:dateType></gmd:CI_Date></gmd:date></gmd:CI_Citation></gmd:citation>
+						<gmd:abstract><gco:CharacterString>q</gco:CharacterString></gmd:abstract><gmd:language><gco:CharacterString>en</gco:CharacterString></gmd:language>
+						<gmd:topicCategory><gmd:MD_TopicCategoryCode>boundaries</gmd:MD_TopicCategoryCode></gmd:topicCategory>
+						<gmd:extent><gmd:EX_Extent>
+						<gmd:geographicElement><gmd:EX_GeographicBoundingBox><gmd:westBoundLongitude><gco:Decimal>-180</gco:Decimal></gmd:westBoundLongitude><gmd:eastBoundLongitude><gco:Decimal>180</gco:Decimal></gmd:eastBoundLongitude><gmd:southBoundLatitude><gco:Decimal>-90</gco:Decimal></gmd:southBoundLatitude><gmd:northBoundLatitude><gco:Decimal>90</gco:Decimal></gmd:northBoundLatitude></gmd:EX_GeographicBoundingBox></gmd:geographicElement>
+						<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent>
+						<gml:TimePeriod gml:id="Temporal1">
+						<gml:beginPosition>2008-08-01</gml:beginPosition>
+						<gml:endPosition>2009-08-31</gml:endPosition>
+						</gml:TimePeriod>
+						</gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement>
+						<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent>
+						<gml:TimePeriod gml:id="Temporal2">
+						<gml:beginPosition>2009-09-01</gml:beginPosition>
+						<gml:endPosition>2010-04-15</gml:endPosition>
+						</gml:TimePeriod>
+						</gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement>
+						<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent>
+						<gml:TimePeriod gml:id="Temporal3">
+						<gml:beginPosition>2010-04-16</gml:beginPosition>
+						<gml:endPosition indeterminatePosition="now"/>
+						</gml:TimePeriod>
+						</gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement>
+						</gmd:EX_Extent></gmd:extent>
+						</gmd:MD_DataIdentification></gmd:identificationInfo>
+				  </gmd:MD_Metadata>
+        </csw:Insert>
+        
+        <!-- some variations on ISO input -->
+        <csw:Insert>
+					<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<!--***--><gmd:fileIdentifier><gco:CharacterString>idTpDelete5</gco:CharacterString></gmd:fileIdentifier>
+						<gmd:language><gco:CharacterString>en</gco:CharacterString></gmd:language>
+						<gmd:hierarchyLevel><gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode></gmd:hierarchyLevel>
+						<gmd:contact><gmd:CI_ResponsibleParty><gmd:organisationName><gco:CharacterString>q</gco:CharacterString></gmd:organisationName><gmd:role><gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</gmd:CI_RoleCode></gmd:role></gmd:CI_ResponsibleParty></gmd:contact>
+						<gmd:dateStamp><gco:Date>2012-07-10</gco:Date></gmd:dateStamp>
+						<gmd:metadataStandardName><gco:CharacterString>ISO 19139/19115 Metadata for Datasets</gco:CharacterString></gmd:metadataStandardName>
+						<gmd:metadataStandardVersion><gco:CharacterString>2003</gco:CharacterString></gmd:metadataStandardVersion>
+						<gmd:identificationInfo><gmd:MD_DataIdentification><gmd:citation><gmd:CI_Citation>
+						<!--***--><gmd:title><gco:CharacterString>idTpDelete5</gco:CharacterString></gmd:title><gmd:date><gmd:CI_Date><gmd:date><gco:Date>2012</gco:Date></gmd:date><gmd:dateType><gmd:CI_DateTypeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode></gmd:dateType></gmd:CI_Date></gmd:date></gmd:CI_Citation></gmd:citation>
+						<gmd:abstract><gco:CharacterString>q</gco:CharacterString></gmd:abstract><gmd:language><gco:CharacterString>en</gco:CharacterString></gmd:language>
+						<gmd:topicCategory><gmd:MD_TopicCategoryCode>boundaries</gmd:MD_TopicCategoryCode></gmd:topicCategory>
+						<gmd:extent><gmd:EX_Extent>
+						<gmd:geographicElement><gmd:EX_GeographicBoundingBox><gmd:westBoundLongitude><gco:Decimal>-180</gco:Decimal></gmd:westBoundLongitude><gmd:eastBoundLongitude><gco:Decimal>180</gco:Decimal></gmd:eastBoundLongitude><gmd:southBoundLatitude><gco:Decimal>-90</gco:Decimal></gmd:southBoundLatitude><gmd:northBoundLatitude><gco:Decimal>90</gco:Decimal></gmd:northBoundLatitude></gmd:EX_GeographicBoundingBox></gmd:geographicElement>
+						<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent>
+						<gml:TimePeriod gml:id="Temporal1">
+						  <gml:begin><gml:TimeInstant gml:id="ID20">
+						    <gml:timePosition>2008</gml:timePosition>
+						  </gml:TimeInstant></gml:begin>
+						  <gml:end><gml:TimeInstant gml:id="ID21">
+						    <gml:timePosition>2010</gml:timePosition>
+						  </gml:TimeInstant></gml:end>						
+						</gml:TimePeriod>
+						</gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement>
+						</gmd:EX_Extent></gmd:extent>
+						<gmd:extent><gmd:EX_Extent>
+						<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent>
+						<gml:TimePeriod gml:id="Temporal2">
+						  <gml:begin><gml:TimeInstant gml:id="ID30">
+						    <gml:timePosition indeterminatePosition="now"/>
+						  </gml:TimeInstant></gml:begin>
+						  <gml:end><gml:TimeInstant gml:id="ID31">
+						    <gml:timePosition indeterminatePosition="now"/>
+						  </gml:TimeInstant></gml:end>						
+						</gml:TimePeriod>
+						</gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement>
+						</gmd:EX_Extent></gmd:extent>
+						<gmd:extent><gmd:EX_Extent>
+						<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent>
+						<gml:TimePeriod gml:id="Temporal22">
+						  <gml:begin><gml:TimeInstant gml:id="ID40">
+						    <gml:timePosition>2007-04</gml:timePosition>
+						  </gml:TimeInstant></gml:begin>
+						  <gml:end><gml:TimeInstant gml:id="ID41">
+						    <gml:timePosition>2007-05</gml:timePosition>
+						  </gml:TimeInstant></gml:end>						
+						</gml:TimePeriod>
+						</gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement>
+						<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent>
+						<gml:TimeInstant gml:id="ID50">
+						  <gml:timePosition>2007-08-04</gml:timePosition>
+						</gml:TimeInstant>
+						</gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement>
+						<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent>
+						<gml:TimeInstant gml:id="ID51">
+						  <gml:timePosition>2007-08-14</gml:timePosition>
+						</gml:TimeInstant>
+						</gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement>
+						<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent>
+						<gml:TimeInstant gml:id="ID51">
+						  <gml:timePosition>2003-05-02T08:14:26.123-08:00</gml:timePosition>
+						</gml:TimeInstant>
+						</gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement>
+						</gmd:EX_Extent></gmd:extent>
+						</gmd:MD_DataIdentification></gmd:identificationInfo>
+				  </gmd:MD_Metadata>
+        </csw:Insert>
+        
+        <!-- some variations on FGDC input -->
+        <csw:Insert>
+					<metadata>
+					<Esri><PublishedDocID>{F6F53C66-4F6E-471B-9A1B-917B955B2F4C}</PublishedDocID></Esri>
+					<idinfo><citation><citeinfo><origin>q</origin><pubdate>2012</pubdate>
+					<title>idTpDelete5b</title></citeinfo></citation><descript><abstract>q</abstract><purpose>p</purpose></descript>
+					<timeperd>
+					  <timeinfo>
+					    <!-- FROM the XSD, it's really a choice between 
+					         <sngdate> <mdattim> <rngdates> so we shouldn't
+					         really see a doc that looks like this,
+					         but we'll do it to simplify the test -->
+							<sngdate><caldate>2004</caldate></sngdate>
+							<sngdate><caldate>20050201</caldate><time>101010Z</time></sngdate>
+						  <mdattim>
+								<sngdate><caldate>2006</caldate></sngdate>
+								<sngdate><caldate>2007</caldate></sngdate>
+								<sngdate><caldate>20050301</caldate><time>101010Z</time></sngdate>
+							  <sngdate><caldate>2003-05-02T08:14:26.123-08:00</caldate></sngdate>
+							</mdattim>
+				      <rngdates>
+					      <begdate>20080804</begdate>
+					      <enddate>20080905</enddate>
+				      </rngdates>
+				      <rngdates>
+					      <begdate>20050401</begdate>
+					      <begtime>101010Z</begtime>
+					      <enddate>20050402</enddate>
+					      <endtime>101010Z</endtime>
+				      </rngdates>
+						</timeinfo>
+						<current>ground condition</current>
+					</timeperd>
+					<status><progress>Complete</progress><update>Continually</update></status><spdom><bounding><westbc>-180</westbc><eastbc>180</eastbc><northbc>90</northbc><southbc>-90</southbc></bounding></spdom><keywords><theme><themekt>None</themekt><themekey>q</themekey></theme></keywords><accconst>None</accconst><useconst>None</useconst></idinfo><metainfo><metd>20120710</metd><metc><cntinfo><cntorgp><cntorg>q</cntorg></cntorgp><cntaddr><addrtype>mailing</addrtype><city>q</city><state>q</state><postal>q</postal></cntaddr><cntvoice>q</cntvoice></cntinfo></metc><metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn><metstdv>FGDC-STD-001-1998</metstdv></metainfo>
+					</metadata>
+				</csw:Insert>
+				
+				<!-- Dublin Core -->
+        <csw:Insert>
+					<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/">
+					  <rdf:Description rdf:about="idTpDelete6">
+					    <dc:identifier>idTpDelete6</dc:identifier>
+					    <dc:title>idTpDelete6</dc:title>
+					    <dct:valid>2008-06</dct:valid>
+					  </rdf:Description>
+					</rdf:RDF>
+			  </csw:Insert>
+        
+        <csw:Insert>
+					<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/">
+					  <rdf:Description rdf:about="idTpDelete7">
+					    <dc:identifier>idTpDelete7</dc:identifier>
+					    <dc:title>idTpDelete7</dc:title>
+					    <dct:valid>1998-04</dct:valid>
+					    <dct:valid>1998-08</dct:valid>
+					  </rdf:Description>
+					</rdf:RDF>
+			  </csw:Insert>
+			  
+        <csw:Insert>
+					<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/">
+					  <rdf:Description rdf:about="idTpDelete8">
+					    <dc:identifier>idTpDelete8</dc:identifier>
+					    <dc:title>idTpDelete8</dc:title>
+					  </rdf:Description>
+					</rdf:RDF>
+			  </csw:Insert>
+			  
+			  <!-- Just to ensure that we don't see warning 
+			       messages when there are not time periods 
+			       to analyze -->
+        <csw:Insert>
+					<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<!--***--><gmd:fileIdentifier><gco:CharacterString>idTpDelete9</gco:CharacterString></gmd:fileIdentifier>
+						<gmd:language><gco:CharacterString>en</gco:CharacterString></gmd:language>
+						<gmd:hierarchyLevel><gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode></gmd:hierarchyLevel>
+						<gmd:contact><gmd:CI_ResponsibleParty><gmd:organisationName><gco:CharacterString>q</gco:CharacterString></gmd:organisationName><gmd:role><gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</gmd:CI_RoleCode></gmd:role></gmd:CI_ResponsibleParty></gmd:contact>
+						<gmd:dateStamp><gco:Date>2012-07-10</gco:Date></gmd:dateStamp>
+						<gmd:metadataStandardName><gco:CharacterString>ISO 19139/19115 Metadata for Datasets</gco:CharacterString></gmd:metadataStandardName>
+						<gmd:metadataStandardVersion><gco:CharacterString>2003</gco:CharacterString></gmd:metadataStandardVersion>
+						<gmd:identificationInfo><gmd:MD_DataIdentification><gmd:citation><gmd:CI_Citation>
+						<!--***--><gmd:title><gco:CharacterString>idTpDelete9</gco:CharacterString></gmd:title><gmd:date><gmd:CI_Date><gmd:date><gco:Date>2012</gco:Date></gmd:date><gmd:dateType><gmd:CI_DateTypeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode></gmd:dateType></gmd:CI_Date></gmd:date></gmd:CI_Citation></gmd:citation>
+						<gmd:abstract><gco:CharacterString>q</gco:CharacterString></gmd:abstract><gmd:language><gco:CharacterString>en</gco:CharacterString></gmd:language>
+						<gmd:topicCategory><gmd:MD_TopicCategoryCode>boundaries</gmd:MD_TopicCategoryCode></gmd:topicCategory>
+						<gmd:extent><gmd:EX_Extent>
+						<gmd:geographicElement><gmd:EX_GeographicBoundingBox><gmd:westBoundLongitude><gco:Decimal>-180</gco:Decimal></gmd:westBoundLongitude><gmd:eastBoundLongitude><gco:Decimal>180</gco:Decimal></gmd:eastBoundLongitude><gmd:southBoundLatitude><gco:Decimal>-90</gco:Decimal></gmd:southBoundLatitude><gmd:northBoundLatitude><gco:Decimal>90</gco:Decimal></gmd:northBoundLatitude></gmd:EX_GeographicBoundingBox></gmd:geographicElement>
+						</gmd:EX_Extent></gmd:extent>
+						</gmd:MD_DataIdentification></gmd:identificationInfo>
+				  </gmd:MD_Metadata>
+        </csw:Insert>
+        <csw:Insert>
+					<metadata>
+					<Esri><PublishedDocID>{F6F53C66-4F6E-471B-9A1B-917B955B2F4F}</PublishedDocID></Esri>
+					<idinfo><citation><citeinfo><origin>q</origin><pubdate>2012</pubdate>
+					<title>idTpDelete11</title></citeinfo></citation><descript><abstract>q</abstract><purpose>p</purpose></descript>
+					<timeperd>
+						<current>ground condition</current>
+					</timeperd>
+					<status><progress>Complete</progress><update>Continually</update></status><spdom><bounding><westbc>-180</westbc><eastbc>180</eastbc><northbc>90</northbc><southbc>-90</southbc></bounding></spdom><keywords><theme><themekt>None</themekt><themekey>q</themekey></theme></keywords><accconst>None</accconst><useconst>None</useconst></idinfo><metainfo><metd>20120710</metd><metc><cntinfo><cntorgp><cntorg>q</cntorg></cntorgp><cntaddr><addrtype>mailing</addrtype><city>q</city><state>q</state><postal>q</postal></cntaddr><cntvoice>q</cntvoice></cntinfo></metc><metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn><metstdv>FGDC-STD-001-1998</metstdv></metainfo>
+					</metadata>
+				</csw:Insert>
+				
+				<!-- ISO service -->
+				<csw:Insert>
+					<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<!--***--><gmd:fileIdentifier><gco:CharacterString>idTpDelete12</gco:CharacterString></gmd:fileIdentifier>
+						<gmd:language><gco:CharacterString>en</gco:CharacterString></gmd:language>
+						<gmd:hierarchyLevel><gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode></gmd:hierarchyLevel>
+						<gmd:contact><gmd:CI_ResponsibleParty><gmd:organisationName><gco:CharacterString>q</gco:CharacterString></gmd:organisationName><gmd:role><gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</gmd:CI_RoleCode></gmd:role></gmd:CI_ResponsibleParty></gmd:contact>
+						<gmd:dateStamp><gco:Date>2012-07-10</gco:Date></gmd:dateStamp>
+						<gmd:metadataStandardName><gco:CharacterString>ISO 19139/19115 Metadata for Datasets</gco:CharacterString></gmd:metadataStandardName>
+						<gmd:metadataStandardVersion><gco:CharacterString>2003</gco:CharacterString></gmd:metadataStandardVersion>
+						<gmd:identificationInfo><srv:SV_ServiceIdentification><gmd:citation><gmd:CI_Citation>
+						<!--***--><gmd:title><gco:CharacterString>idTpDelete12</gco:CharacterString></gmd:title><gmd:date><gmd:CI_Date><gmd:date><gco:Date>2012</gco:Date></gmd:date><gmd:dateType><gmd:CI_DateTypeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode></gmd:dateType></gmd:CI_Date></gmd:date></gmd:CI_Citation></gmd:citation>
+						<gmd:abstract><gco:CharacterString>q</gco:CharacterString></gmd:abstract>
+						<srv:serviceType><gco:LocalName>urn:x-esri:specification:ServiceType:ArcGIS</gco:LocalName></srv:serviceType>
+						<srv:extent><gmd:EX_Extent>
+						<gmd:geographicElement><gmd:EX_GeographicBoundingBox><gmd:westBoundLongitude><gco:Decimal>-180</gco:Decimal></gmd:westBoundLongitude><gmd:eastBoundLongitude><gco:Decimal>180</gco:Decimal></gmd:eastBoundLongitude><gmd:southBoundLatitude><gco:Decimal>-90</gco:Decimal></gmd:southBoundLatitude><gmd:northBoundLatitude><gco:Decimal>90</gco:Decimal></gmd:northBoundLatitude></gmd:EX_GeographicBoundingBox></gmd:geographicElement>
+						<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent>
+						<gml:TimePeriod gml:id="Temporal1">
+						<gml:beginPosition>2008-08-01</gml:beginPosition>
+						<gml:endPosition>2008-08-31</gml:endPosition>
+						</gml:TimePeriod>
+						</gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement>
+						<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent>
+						<gml:TimePeriod gml:id="Temporal2">
+						<gml:beginPosition>2009-07-01</gml:beginPosition>
+						<gml:endPosition>2009-07-31</gml:endPosition>
+						</gml:TimePeriod>
+						</gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement>
+						</gmd:EX_Extent></srv:extent>
+						<srv:couplingType><srv:SV_CouplingType codeSpace="ISOTC211/19115" codeList="http://schemas.opengis.net/iso19119/couplingType" codeListValue="tight">tight</srv:SV_CouplingType></srv:couplingType><srv:containsOperations><srv:SV_OperationMetadata><srv:operationName><gco:CharacterString>opname1</gco:CharacterString></srv:operationName><srv:DCP><srv:DCPList codeSpace="ISOTC211/19115" codeList="http://www.fgdc.gov/nap/metadata/register/codelists.html#IC_112" codeListValue="WebServices">WebServices</srv:DCPList></srv:DCP><srv:connectPoint><gmd:CI_OnlineResource><gmd:linkage><gmd:URL>http://none</gmd:URL></gmd:linkage></gmd:CI_OnlineResource></srv:connectPoint></srv:SV_OperationMetadata></srv:containsOperations>
+						</srv:SV_ServiceIdentification></gmd:identificationInfo>
+				  </gmd:MD_Metadata>
+        </csw:Insert>
+        
+        <!-- ISO 19115-2 -->
+        <csw:Insert>
+					<gmi:MI_Metadata xmlns:gmi="http://www.isotc211.org/2005/gmi" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<!--***--><gmd:fileIdentifier><gco:CharacterString>idTpDelete13</gco:CharacterString></gmd:fileIdentifier>
+						<gmd:language><gco:CharacterString>en</gco:CharacterString></gmd:language>
+						<gmd:hierarchyLevel><gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode></gmd:hierarchyLevel>
+						<gmd:contact><gmd:CI_ResponsibleParty><gmd:organisationName><gco:CharacterString>q</gco:CharacterString></gmd:organisationName><gmd:role><gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</gmd:CI_RoleCode></gmd:role></gmd:CI_ResponsibleParty></gmd:contact>
+						<gmd:dateStamp><gco:Date>2012-07-10</gco:Date></gmd:dateStamp>
+						<gmd:metadataStandardName><gco:CharacterString>ISO 19139/19115 Metadata for Datasets</gco:CharacterString></gmd:metadataStandardName>
+						<gmd:metadataStandardVersion><gco:CharacterString>2003</gco:CharacterString></gmd:metadataStandardVersion>
+						<gmd:identificationInfo><gmd:MD_DataIdentification><gmd:citation><gmd:CI_Citation>
+						<!--***--><gmd:title><gco:CharacterString>idTpDelete13</gco:CharacterString></gmd:title><gmd:date><gmd:CI_Date><gmd:date><gco:Date>2012</gco:Date></gmd:date><gmd:dateType><gmd:CI_DateTypeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode></gmd:dateType></gmd:CI_Date></gmd:date></gmd:CI_Citation></gmd:citation>
+						<gmd:abstract><gco:CharacterString>q</gco:CharacterString></gmd:abstract><gmd:language><gco:CharacterString>en</gco:CharacterString></gmd:language>
+						<gmd:topicCategory><gmd:MD_TopicCategoryCode>boundaries</gmd:MD_TopicCategoryCode></gmd:topicCategory>
+						<gmd:extent><gmd:EX_Extent>
+						<gmd:geographicElement><gmd:EX_GeographicBoundingBox><gmd:westBoundLongitude><gco:Decimal>-180</gco:Decimal></gmd:westBoundLongitude><gmd:eastBoundLongitude><gco:Decimal>180</gco:Decimal></gmd:eastBoundLongitude><gmd:southBoundLatitude><gco:Decimal>-90</gco:Decimal></gmd:southBoundLatitude><gmd:northBoundLatitude><gco:Decimal>90</gco:Decimal></gmd:northBoundLatitude></gmd:EX_GeographicBoundingBox></gmd:geographicElement>
+						<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent>
+						<gml:TimePeriod gml:id="Temporal1">
+						<gml:beginPosition>2008-08-01</gml:beginPosition>
+						<gml:endPosition>2008-08-31</gml:endPosition>
+						</gml:TimePeriod>
+						</gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement>
+						<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent>
+						<gml:TimePeriod gml:id="Temporal2">
+						<gml:beginPosition>2009-07-01</gml:beginPosition>
+						<gml:endPosition>2009-07-31</gml:endPosition>
+						</gml:TimePeriod>
+						</gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement>
+						</gmd:EX_Extent></gmd:extent>
+						</gmd:MD_DataIdentification></gmd:identificationInfo>
+				  </gmi:MI_Metadata>
+        </csw:Insert>
+				
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+  
+  <!--  upper boundary is less than lower, should return no result -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="0.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete1</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2012-04</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2000</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- intersects (determinate) -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete1</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:LowerBoundary>2011</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2014</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:LowerBoundary>1310000000000</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>1350000000000</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:Not>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2000</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2001</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+                </ogc:Not>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- intersects (determinate) -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete2</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:LowerBoundary>2008-08-06</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2008-08-07</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2008-02-06</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2008-08-07</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:LowerBoundary>2008-08-06</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2008-09-07</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:LowerBoundary>2008-02-06</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2008-09-07</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:LowerBoundary>2009-07-03</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2009-07-05</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:LowerBoundary>2002-01-03</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2014-11-05</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:LowerBoundary>2009-01-03</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2014-11-05</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:LowerBoundary>2009-06-15</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2009-07-01T00:00:00-07:00</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:LowerBoundary>2009-07-31T23:59:59.999-07:00</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2009-08-02</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item>
+  
+  <!-- doesn't intersect (determinate) -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="0.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete2</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2000-02</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2000-03</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2009-02</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2009-03</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+	              	<ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2020-02</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2020-03</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>	                
+                </ogc:Or>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- An interval in the gap should not intersect -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="0.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete2</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:LowerBoundary>2009-02</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2009-03</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- within (determinate) -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete1</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+                  <ogc:LowerBoundary>2011</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2014</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:Not>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2000</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2001</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+	              </ogc:Not>
+	              <ogc:Not>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2015</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2016</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+                </ogc:Not>
+	              <ogc:Not>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2011</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2012-04</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+                </ogc:Not>
+	              <ogc:Not>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2012-04</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2014-04</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+                </ogc:Not>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- within (determinate) -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete2</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+                  <ogc:LowerBoundary>2006-08-06</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2016-08-16</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+                  <ogc:LowerBoundary>2008-08-01T00:00:00-07:00</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2009-07-31T23:59:59.999-07:00</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>  
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+                  <ogc:LowerBoundary>2008-08-01T00:00:00-07:00</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2009-08-01T00:00:00-07:00</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>                
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item>
+  
+  <!-- not within (determinate) -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="0.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete2</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2000-02</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2000-03</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2009-02</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2009-03</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+	              	<ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2020-02</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2020-03</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>	 
+	              	<ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2000-02</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2009-01</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+	              	<ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2008-10</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2009-10</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+	              	<ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2000-02</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2009-07-31T23:59:59.998-07:00</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>	
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2008-08-01T00:00:00.001-07:00</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2009-11</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>  	               
+                </ogc:Or>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- indeterminate matched, one interval = now -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete3</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2011</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2154</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+                  <ogc:LowerBoundary>2011</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2154</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- indeterminate not matched, one interval = now -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="0.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete3</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2010</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2011</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2010</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2011</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2154</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2155</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2154</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2155</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- indeterminate matched, 
+       2008-08-01..2009-08-31 , 2009-09-01..2010-04-15 , 2010-04-16..now -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete4</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2008</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2154</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2012</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2154</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2008-08-03</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2008-08-04</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                 <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2008-002</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2008-08-04</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                
+                <!-- this within is works because it's a sequential 
+                     set of intervals ending with now -->
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+                  <ogc:LowerBoundary>2000</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2155</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+ 
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- indeterminate not matched, 
+       2008-08-01..2009-08-31 , 2009-09-01..2010-04-15 , 2010-04-16..now -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="0.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete4</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2154</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2155</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2000</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2001</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2000</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2012-06</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- variation on iso time period input, 
+       check to ensure that the xpath indexables are being analyzed -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete5</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2008</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2011</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2012-02</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2155</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2007-04-15</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2007-04-16</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2007-08-04</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2007-08-04</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2007-08-14</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2007-08-14</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2003-05-02T08:14:26.12-08:00</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2003-05-02T08:14:26.13-08:00</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:Not>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2000</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2001</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+                </ogc:Not>
+                <ogc:Not>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2007-08-16</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2007-08-16</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+                </ogc:Not>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- variation on fgdc time period input, 
+       check to ensure that the xpath indexables are being analyzed -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete5b</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2006-01</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2006-02</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2007-01</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2007-02</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2008-08</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2008-09</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+                  <ogc:LowerBoundary>2000</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2014</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2005-02-01T10:00:00Z</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2005-02-01T11:00:00Z</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2005-03-01T10:00:00Z</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2005-03-01T11:00:00Z</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2005-04-01T10:00:00Z</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2005-04-02T11:00:00Z</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                  <ogc:LowerBoundary>2003-05-02T08:14:26.12-08:00</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2003-05-02T08:14:26.13-08:00</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:Not>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2000</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2001</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+                </ogc:Not>
+                <ogc:Not>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+	                  <ogc:LowerBoundary>2011-08-16</ogc:LowerBoundary>
+	                  <ogc:UpperBoundary>2011-08-16</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+                </ogc:Not>
+                <ogc:Not>
+	                <ogc:PropertyIsBetween>
+	                  <ogc:PropertyName>timeperiod.intersects</ogc:PropertyName>
+                    <ogc:LowerBoundary>2005-06-01T10:00:00Z</ogc:LowerBoundary>
+                    <ogc:UpperBoundary>2005-06-01T11:00:00Z</ogc:UpperBoundary>
+	                </ogc:PropertyIsBetween>
+                </ogc:Not>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item> 
+  
+  <!-- Some Dublin Core checks + CSW Property clauses -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete6</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:Literal>2008-06</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsNotEqualTo>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:Literal>2008-09</ogc:Literal>
+                </ogc:PropertyIsNotEqualTo>
+                
+                <ogc:PropertyIsGreaterThanOrEqualTo>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:Literal>2007</ogc:Literal>
+                </ogc:PropertyIsGreaterThanOrEqualTo>
+                <ogc:PropertyIsGreaterThanOrEqualTo>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:Literal>2008-06</ogc:Literal>
+                </ogc:PropertyIsGreaterThanOrEqualTo>
+                <ogc:PropertyIsGreaterThan>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:Literal>2007</ogc:Literal>
+                </ogc:PropertyIsGreaterThan>
+                <ogc:Not>
+	                <ogc:PropertyIsGreaterThanOrEqualTo>
+                    <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                    <ogc:Literal>2008-06-04</ogc:Literal>
+	                </ogc:PropertyIsGreaterThanOrEqualTo>
+                </ogc:Not>
+                <ogc:Not>
+	                <ogc:PropertyIsGreaterThan>
+                    <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                    <ogc:Literal>2008-06</ogc:Literal>
+	                </ogc:PropertyIsGreaterThan>
+                </ogc:Not>
+                
+                <ogc:PropertyIsLessThanOrEqualTo>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:Literal>2009</ogc:Literal>
+                </ogc:PropertyIsLessThanOrEqualTo>
+                <ogc:PropertyIsLessThanOrEqualTo>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:Literal>2008-06</ogc:Literal>
+                </ogc:PropertyIsLessThanOrEqualTo>
+                <ogc:PropertyIsLessThan>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:Literal>2009</ogc:Literal>
+                </ogc:PropertyIsLessThan>
+                 <ogc:Not>
+	                <ogc:PropertyIsLessThanOrEqualTo>
+                    <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                    <ogc:Literal>2008-06-04</ogc:Literal>
+	                </ogc:PropertyIsLessThanOrEqualTo>
+                </ogc:Not>
+                <ogc:Not>
+	                <ogc:PropertyIsLessThan>
+                    <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                    <ogc:Literal>2008-06</ogc:Literal>
+	                </ogc:PropertyIsLessThan>
+                </ogc:Not>
+                
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item>
+  
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete7</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:LowerBoundary>1998-03-15</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>1998-04-15</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:LowerBoundary>1998-07-15</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>1998-08-15</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.meta</ogc:PropertyName>
+                  <ogc:Literal>isdeterminate</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item>
+  
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete8</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsNull>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                </ogc:PropertyIsNull>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item>
+  
+  <!-- Can't evaluate ogc:PropertyIsLike 
+  <item shouldPass="false">
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete8</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsLike>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:Literal>2008</ogc:Literal>
+                </ogc:PropertyIsLike>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item>
+  -->
+  
+  <!-- an ISO service check -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete12</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:LowerBoundary>2008-08-06</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2008-08-07</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+                  <ogc:LowerBoundary>2008-02-01</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2010-02-01</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item>
+  
+  <!-- an ISO 19115-2 check -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="1.0" src="xpath-number:count(/csw:GetRecordsResponse/csw:SearchResults/csw:SummaryRecord)"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+        service="CSW" resultType="RESULTS">
+        <csw:Query>
+          <csw:ElementSetName>summary</csw:ElementSetName>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>title</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete13</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod</ogc:PropertyName>
+                  <ogc:LowerBoundary>2008-08-06</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2008-08-07</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+                <ogc:PropertyIsBetween>
+                  <ogc:PropertyName>timeperiod.within</ogc:PropertyName>
+                  <ogc:LowerBoundary>2008-02-01</ogc:LowerBoundary>
+                  <ogc:UpperBoundary>2010-02-01</ogc:UpperBoundary>
+                </ogc:PropertyIsBetween>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+    ]]></xml> 
+  </item>
+  
+  <!-- delete the test data -->
+  <item shouldPass="true">
+    <assertion type="assertEquals" 
+      expected="13" src="xpath-string:/csw:TransactionResponse/csw:TransactionSummary/csw:totalDeleted"/>
+    <xml><![CDATA[
+      <?xml version="1.0" encoding="UTF-8"?>
+      <csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+        xmlns:ogc="http://www.opengis.net/ogc" service="CSW">
+        <csw:Delete>
+          <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+              <ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete1</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete2</ogc:Literal>
+                </ogc:PropertyIsEqualTo>    
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete3</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete4</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete5</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>{F6F53C66-4F6E-471B-9A1B-917B955B2F4C}</ogc:Literal>
+                </ogc:PropertyIsEqualTo> 
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete6</ogc:Literal>
+                </ogc:PropertyIsEqualTo>   
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete7</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete8</ogc:Literal>
+                </ogc:PropertyIsEqualTo>  
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete9</ogc:Literal>
+                </ogc:PropertyIsEqualTo> 
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>{F6F53C66-4F6E-471B-9A1B-917B955B2F4F}</ogc:Literal>
+                </ogc:PropertyIsEqualTo> 
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete12</ogc:Literal>
+                </ogc:PropertyIsEqualTo> 
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>Id</ogc:PropertyName>
+                  <ogc:Literal>idTpDelete13</ogc:Literal>
+                </ogc:PropertyIsEqualTo> 
+              </ogc:Or>
+             </ogc:Filter>
+          </csw:Constraint>
+        </csw:Delete>
+      </csw:Transaction>
+    ]]></xml> 
+  </item>
+  
+</items>

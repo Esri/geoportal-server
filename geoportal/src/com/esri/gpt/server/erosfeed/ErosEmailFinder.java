@@ -29,7 +29,9 @@ import java.util.logging.Logger;
 import javax.naming.NamingException;
 
 /**
- *
+ * Finds email of the record owner.
+ * Uses identity adapter (typically: LDAP) to find email of the user who owns 
+ * the record.
  */
 public class ErosEmailFinder {
   private static final Logger LOGGER = Logger.getLogger(ErosEmailFinder.class.getCanonicalName());
@@ -37,11 +39,21 @@ public class ErosEmailFinder {
   private RequestContext requestContext;
   private IdentityAdapter idAdapter;
   
+  /**
+   * Creates instance of the finder.
+   * @param requestContext request context
+   * @param idAdapter identity adapter
+   */
   public ErosEmailFinder(RequestContext requestContext, IdentityAdapter idAdapter) {
     this.requestContext = requestContext;
     this.idAdapter = idAdapter;
   }
 
+  /**
+   * Finds email of the owner of the record.
+   * @param recordUuid record UUID
+   * @return email address of the owner or empty string if user has no email
+   */
   public String findEmail(String recordUuid) {
     try {
       String owner = findRecordOwner(recordUuid);

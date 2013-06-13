@@ -14,9 +14,10 @@
  */
 package com.esri.gpt.control.webharvest.protocol;
 
-import com.esri.gpt.control.webharvest.protocol.factories.AgpProtocolFactory;
+import com.esri.gpt.control.webharvest.protocol.factories.Agp2AgpProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.ArcGISProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.ArcImsProtocolFactory;
+import com.esri.gpt.control.webharvest.protocol.factories.AtomProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.CswProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.OaiProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.ResourceProtocolFactory;
@@ -26,6 +27,7 @@ import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +41,50 @@ import org.xml.sax.SAXException;
 
 /**
  * Collection of protocol factories.
+ * <p/>
+ * Protocol factories is a collection (a map) initialized during application
+ * configuration loading. The default behavior is to load all protocol factories
+ * known at the compilation time. However, this can be altered by providing 
+ * configuration information in <i>gpt.xml</i> configuration file.
+ * <p/>
+ * Example of the configuration:
+ * <code><pre>
+    &lt;gptConfig>
+      ...
+      &lt;protocols default="false">
+        &lt;protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.ArcImsProtocolFactory"
+                  resourceKey="catalog.harvest.manage.edit.protocol.arcims"/>
+        &lt;protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.CswProtocolFactory"
+                  resourceKey="catalog.harvest.manage.edit.protocol.csw"/>
+        &lt;protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.OaiProtocolFactory"
+                  resourceKey="catalog.harvest.manage.edit.protocol.oai"/>
+        &lt;protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.WafProtocolFactory"
+                  resourceKey="catalog.harvest.manage.edit.protocol.waf"/>
+        &lt;protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.ResourceProtocolFactory"
+                  resourceKey="catalog.harvest.manage.edit.protocol.resource"/>
+        &lt;protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.ArcGISProtocolFactory"
+                  resourceKey="catalog.harvest.manage.edit.protocol.arcgis"/>
+        &lt;protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.ThreddsProtocolFactory"
+                  resourceKey="catalog.harvest.manage.edit.protocol.thredds"/>
+        &lt;protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.AtomProtocolFactory"
+                  resourceKey="catalog.harvest.manage.edit.protocol.atom"/>
+        &lt;protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.Agp2AgpProtocolFactory"
+                  resourceKey="catalog.harvest.manage.edit.protocol.agp2agp"/>
+      &lt;/protocols>
+    &lt;/gptConfig>
+ * </pre></code>
+ * <p>
+ * Description: <br/><br/>
+ * default - if <code>true</code> a default configuration will be loaded first,<br/>
+ * factoryClass - canonical name of the factory class,<br/>
+ * resourceKey - resource key referring to the string in <i>gpt.resources</i> file.<br/>
+ * 
+ * @see com.esri.gpt.framework.context.ApplicationConfigurationLoader
  */
 public class ProtocolFactories extends TreeMap<String, ProtocolFactory> {
+
+private ArrayList<String> keys = new ArrayList<String>();  
+private Map<String,String> resourceKeys = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
 
 /**
  * Creates instance of the factories.
@@ -53,14 +97,57 @@ public ProtocolFactories() {
  * Initializes collection with default protocol factories.
  */
 public void initDefault() {
-  put("ArcIms" , new ArcImsProtocolFactory());
-  put("CSW"    , new CswProtocolFactory());
-  put("OAI"    , new OaiProtocolFactory());
-  put("WAF"    , new WafProtocolFactory());
-  put("RES"    , new ResourceProtocolFactory());
-  put("ARCGIS" , new ArcGISProtocolFactory());
-  put("AGP"    , new AgpProtocolFactory());
-  put("THREDDS", new ThreddsProtocolFactory());
+  keys.clear();
+  resourceKeys.clear();
+  
+  put("ArcIms" , new ArcImsProtocolFactory(),   "catalog.harvest.manage.edit.protocol.arcims");
+  put("CSW"    , new CswProtocolFactory(),      "catalog.harvest.manage.edit.protocol.csw");
+  put("OAI"    , new OaiProtocolFactory(),      "catalog.harvest.manage.edit.protocol.oai");
+  put("WAF"    , new WafProtocolFactory(),      "catalog.harvest.manage.edit.protocol.waf");
+  put("RES"    , new ResourceProtocolFactory(), "catalog.harvest.manage.edit.protocol.resource");
+  put("ARCGIS" , new ArcGISProtocolFactory(),   "catalog.harvest.manage.edit.protocol.arcgis");
+  put("THREDDS", new ThreddsProtocolFactory(),  "catalog.harvest.manage.edit.protocol.thredds");
+  put("ATOM"   , new AtomProtocolFactory(),     "catalog.harvest.manage.edit.protocol.atom");
+  put("AGP2AGP", new Agp2AgpProtocolFactory(),  "catalog.harvest.manage.edit.protocol.agp2agp");
+  /* NOTE! This is EXPERIMENTAL feature. It might be removed at any time in the future.
+  put("AGP"    , new AgpProtocolFactory(),      "catalog.harvest.manage.edit.protocol.agp");
+  */
+}
+
+@Override
+public ProtocolFactory put(String key, ProtocolFactory value) {
+  keys.add(key);
+  return super.put(key, value);
+}
+
+
+/**
+ * Stores a protocol value.
+ * @param key protocol key
+ * @param value protocol value
+ * @param resourceKey resource key
+ */
+public ProtocolFactory put(String key, ProtocolFactory value, String resourceKey) {
+  ProtocolFactory result = put(key,value);
+  resourceKeys.put(key, resourceKey);
+  return result;
+}
+
+/**
+ * Gets all keys.
+ * @return list of keys
+ */
+public List<String> getKeys() {
+  return keys;
+}
+
+/**
+ * Gets resource key of a given protocol.
+ * @param protocolKey protocol key
+ * @return resource key
+ */
+public String getResourceKey(String protocolKey) {
+  return Val.chkStr(resourceKeys.get(protocolKey));
 }
 
 /**

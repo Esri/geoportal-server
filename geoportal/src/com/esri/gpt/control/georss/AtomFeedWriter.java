@@ -151,7 +151,8 @@ public void set_messageBroker(MessageBroker broker) {
  * 
  * @param records records to write
  */
-public void write(SearchResultRecords records) {
+@Override
+public void write(IFeedRecords records) {
   if (_writer == null)
     return;
   AtomFeed af = new AtomFeed();
@@ -175,7 +176,7 @@ public void write(SearchResultRecords records) {
   af.setId(getEntryBaseUrl());
   af.setUpdated(new Date());
   af.setOsProps(records.getOpenSearchProperties());
-  for (SearchResultRecord record : records) {
+  for (IFeedRecord record : records) {
     AtomEntry ae = new AtomEntry();
     ae.setId(record.getUuid());
     ae.setPublished(record.getModfiedDate());

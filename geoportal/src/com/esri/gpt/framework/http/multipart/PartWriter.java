@@ -35,6 +35,9 @@ public interface PartWriter {
    * Uploads a file.
    * @param name part name
    * @param file file to upload
+   * @param fileName disposition file name
+   * @param contentType content type
+   * @param charset character set
    * @param deleteAfterUpload <code>true</code> to delete file after upload
    * @throws IOException if writing fails
    */
@@ -43,8 +46,10 @@ public interface PartWriter {
   /**
    * Uploads bytes.
    * @param name part name
-   * @param fileName file name to store bytes
    * @param bytes bytes to upload
+   * @param fileName disposition file name
+   * @param contentType content type
+   * @param charset character set
    * @throws IOException if writing fails
    */
   void write(String name, byte[] bytes, String fileName, String contentType, String charset) throws IOException;

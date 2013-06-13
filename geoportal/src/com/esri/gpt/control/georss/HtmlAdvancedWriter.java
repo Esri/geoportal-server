@@ -14,22 +14,6 @@
  */
 package com.esri.gpt.control.georss;
 
-import java.io.IOException;
-import java.util.ConcurrentModificationException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.faces.FactoryFinder;
-import javax.faces.application.Application;
-import javax.faces.application.NavigationHandler;
-import javax.faces.application.ViewHandler;
-import javax.faces.context.FacesContext;
-import javax.faces.lifecycle.Lifecycle;
-import javax.faces.lifecycle.LifecycleFactory;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-
 import com.esri.gpt.catalog.search.ISearchFilter;
 import com.esri.gpt.catalog.search.SearchConfig;
 import com.esri.gpt.catalog.search.SearchCriteria;
@@ -42,6 +26,18 @@ import com.esri.gpt.control.search.SearchController;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
 import com.esri.gpt.framework.util.Val;
+import java.util.ConcurrentModificationException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.faces.FactoryFinder;
+import javax.faces.application.Application;
+import javax.faces.application.NavigationHandler;
+import javax.faces.application.ViewHandler;
+import javax.faces.context.FacesContext;
+import javax.faces.lifecycle.Lifecycle;
+import javax.faces.lifecycle.LifecycleFactory;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * The Class HtmlAdvancedWriter.  Generates the JSF page from rest.
@@ -141,9 +137,10 @@ public void setRequestContext(RequestContext requestContext) {
  * @param records the records
  * @see com.esri.gpt.control.georss.FeedWriter#write(com.esri.gpt.catalog.search.SearchResultRecords)
  */
-public void write(SearchResultRecords records) {
+  @Override
+  public void write(IFeedRecords records) {
   SearchController controller = this.readController();
-  controller.getSearchResult().setRecords(records);
+  controller.getSearchResult().setRecords(new SearchResultRecords(records));
   controller.setWasSearched(true);
   try {
     showResults();

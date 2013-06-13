@@ -44,6 +44,9 @@ private boolean pretty;
 /** message broker */
 private MessageBroker messageBroker;
 
+/** callback */
+private String callback = "";
+
 /**
  * Creates instance of the feed.
  * @param writer writer to write feed
@@ -60,7 +63,7 @@ public JsonFeedWriter(PrintWriter writer, RestQuery query, boolean pretty) {
 private int level = 0;
 
 @Override
-public void write(SearchResultRecords records) {
+public void write(IFeedRecords records) {
   String sTitle = messageBroker.retrieveMessage("catalog.rest.title");
   String sDescription = messageBroker.retrieveMessage("catalog.rest.description");
   String sCopyright = messageBroker.retrieveMessage("catalog.rest.copyright");
@@ -70,7 +73,12 @@ public void write(SearchResultRecords records) {
   if (sCopyright.startsWith("???")) sCopyright = "";
   if (sGenerator.startsWith("???")) sGenerator = "";
 
-  println("{");
+  if (!getCallback().isEmpty()) {
+    println(getCallback()+"({");
+  } else {
+    println("{");
+  }
+  
   levelUp();
 
   printArg("title", sTitle, true);
@@ -95,7 +103,28 @@ public void write(SearchResultRecords records) {
   printRecords(records, false);
 
   levelDown();
-  println("}");
+  
+  if (!getCallback().isEmpty()) {
+    println("})");
+  } else {
+    println("}");
+  }
+}
+
+/**
+ * Gets callback.
+ * @return callback or empty string if no callback
+ */
+public String getCallback() {
+  return callback;
+}
+
+/**
+ * Sets callback.
+ * @param callback callback name
+ */
+public void setCallback(String callback) {
+  this.callback = Val.chkStr(callback);
 }
 
 /**
@@ -117,7 +146,7 @@ private void levelDown() {
  * @param records records to print
  * @param more flag to indicate if there will be more arguments
  */
-private void printRecords(SearchResultRecords records, boolean more) {
+private void printRecords(IFeedRecords records, boolean more) {
   println("\"records\"" +sp()+ ":" +sp()+ "[");
   levelUp();
 
@@ -134,7 +163,7 @@ private void printRecords(SearchResultRecords records, boolean more) {
  * @param r record to print
  * @param more flag to indicate if there will be more arguments
  */
-private void printRecord(SearchResultRecord r, boolean more) {
+private void printRecord(IFeedRecord r, boolean more) {
   println("{");
   levelUp();
 

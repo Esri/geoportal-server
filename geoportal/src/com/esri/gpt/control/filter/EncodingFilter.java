@@ -86,8 +86,9 @@ public class EncodingFilter implements Filter {
         String contextPath = httpRequest.getContextPath();
         String requestURI = Val.chkStr(httpRequest.getRequestURI());
         boolean bCheck = (requestURI.indexOf("home.page")  == -1) &&
-        								 (requestURI.indexOf("browse.page")  == -1) &&
-        								 (requestURI.indexOf("/resource/")  == -1) &&
+		                 (requestURI.indexOf("search.page") == -1) &&
+        				 (requestURI.indexOf("browse.page")  == -1) &&
+        				 (requestURI.indexOf("/resource/")  == -1) &&
                          (requestURI.indexOf("download.page") == -1) &&
                          (requestURI.indexOf("viewMetadataDetails.page") == -1) &&
                          !(requestURI.indexOf("report.page")>=0 && httpRequest.getQueryString()!=null && httpRequest.getQueryString().indexOf("uuid=")>=0) &&

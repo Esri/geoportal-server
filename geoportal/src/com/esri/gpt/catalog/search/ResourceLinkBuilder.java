@@ -330,7 +330,8 @@ protected void buildAddToMapLink(SearchXslRecord xRecord, SearchResultRecord rec
 }
 
 /**
- * Builds a set of links associated with a rest based ArcGIS service map service.
+ * Builds a set of links associated with a rest based ArcGIS map, image or globe 
+ * service.
  * @param xRecord the underlying CSW record
  * @param record the search result record 
  */
@@ -346,23 +347,20 @@ protected void buildAGSLinks(SearchXslRecord xRecord, SearchResultRecord record)
   if ((restUrl.length() > 0) && serviceType.equals("ags")) {
 
     // kml
-    if (xRecord.getLinks().readShowLink(ResourceLink.TAG_AGSKML) &&
-        (restUrl.toLowerCase().endsWith("/mapserver")
-        )) {
+    if (xRecord.getLinks().readShowLink(ResourceLink.TAG_AGSKML)
+            && (restUrl.toLowerCase().endsWith("/mapserver") || restUrl.toLowerCase().endsWith("/imageserver"))) {
       url = restUrl + "/kml/mapImage.kmz";
       if (restUrl.toLowerCase().endsWith("/imageserver")) {
         url = restUrl + "/kml/image.kmz";
-      }     
+      }
       resourceKey = "catalog.rest.addToGlobeKml";
       link = this.makeLink(url, ResourceLink.TAG_AGSKML, resourceKey);
       record.getResourceLinks().add(link);
     }
 
     // nmf
-    if (xRecord.getLinks().readShowLink(ResourceLink.TAG_AGSNMF) &&
-        (restUrl.toLowerCase().endsWith("/mapserver")
-    		) 
-    ) {
+    if (xRecord.getLinks().readShowLink(ResourceLink.TAG_AGSNMF)
+            && (restUrl.toLowerCase().endsWith("/mapserver") || restUrl.toLowerCase().endsWith("/imageserver"))) {
       url = restUrl + "?f=nmf";
       resourceKey = "catalog.rest.addToGlobeNmf";
       link = this.makeLink(url, ResourceLink.TAG_AGSNMF, resourceKey);
@@ -370,9 +368,8 @@ protected void buildAGSLinks(SearchXslRecord xRecord, SearchResultRecord record)
     }
 
     // lyr
-    if (xRecord.getLinks().readShowLink(ResourceLink.TAG_AGSLYR) &&
-        (restUrl.toLowerCase().endsWith("/mapserver")
-        || restUrl.toLowerCase().endsWith("/globeserver"))) {
+    if (xRecord.getLinks().readShowLink(ResourceLink.TAG_AGSLYR)
+            && (restUrl.toLowerCase().endsWith("/mapserver") || restUrl.toLowerCase().endsWith("/imageserver") || restUrl.toLowerCase().endsWith("/globeserver"))) {
       url = restUrl + "?f=lyr";
       resourceKey = "catalog.rest.addToArcMap";
       link = this.makeLink(url, ResourceLink.TAG_AGSLYR, resourceKey);

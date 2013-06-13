@@ -15,12 +15,13 @@
  */
 package com.esri.gpt.control.webharvest.engine;
 
+import com.esri.gpt.catalog.context.CatalogIndexException;
 import com.esri.gpt.framework.resource.api.Publishable;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.transform.TransformerException;
-import org.xml.sax.SAXException;
+import javax.xml.transform.TransformerConfigurationException;
 
 /**
  * Data processor dispatcher.
@@ -52,7 +53,7 @@ class DataProcessorDispatcher implements DataProcessor {
   }
 
   @Override
-  public void onMetadata(ExecutionUnit unit, Publishable record) throws IOException, TransformerException, SAXException {
+  public void onMetadata(ExecutionUnit unit, Publishable record) throws IOException, SQLException, CatalogIndexException, TransformerConfigurationException {
     for (DataProcessor dp: getEligibleProcessors(unit)) {
       dp.onMetadata(unit, record);
     }

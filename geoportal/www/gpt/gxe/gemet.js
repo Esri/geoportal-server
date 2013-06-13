@@ -4,7 +4,7 @@ dojo.require("dojox.layout.TableContainer");
 dojo.require("dijit.form.TextBox");
 dojo.require("dojo.io.script");
 
-var data = [
+var gxeGemetLangData = [
             
             { name: "Arabic" ,id: "ar"},
             { name: "Bulgarian" ,id: "bg"},
@@ -204,17 +204,20 @@ dojo.declare(
             dojo.place(elSelect, elDialogControls);
 	        dojo.create("span", {innerHTML: '&nbsp;'}, elDialogControls);
             var elOptionSelected = null;
-	        for(var i = 0; i < data.length; i++) {
+            if(typeof(gxeLocale) == 'undefined' || gxeLocale == null) {
+            	var gxeLocale = "en";
+            }
+	        for(var i = 0; i < gxeGemetLangData.length; i++) {
 	      	   var elOption = dojo.create('option', 
-	      			   {  value: data[i].id,
-	      		          innerHTML: data[i].name
+	      			   {  value: gxeGemetLangData[i].id,
+	      		          innerHTML: gxeGemetLangData[i].name
 	      		       }, 
 	      			   elSelect);
-	      	   if( data[i].id == gxeLocale) {
-	      		   defaultLocale = data[i].id;
+	      	   if( gxeGemetLangData[i].id == gxeLocale) {
+	      		   defaultLocale = gxeGemetLangData[i].id;
 	      		   elOptionSelected = elOption;
-	      	   } else if(gxeLocale.indexOf(data[i].id) == 0 && defaultLocale == "") {
-	      		   defaultLocale = data[i].id;
+	      	   } else if(gxeLocale.indexOf(gxeGemetLangData[i].id) == 0 && defaultLocale == "") {
+	      		   defaultLocale = gxeGemetLangData[i].id;
 	      		   elOptionSelected = elOption;
 	      	   }
 	      	 

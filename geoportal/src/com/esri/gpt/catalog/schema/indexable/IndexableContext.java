@@ -21,6 +21,7 @@ import com.esri.gpt.catalog.lucene.Storeables;
 import com.esri.gpt.catalog.schema.EsriTags;
 import com.esri.gpt.catalog.schema.Meaning;
 import com.esri.gpt.catalog.schema.Schema;
+import com.esri.gpt.catalog.schema.indexable.tp.TpAnalyzer;
 import com.esri.gpt.catalog.search.ResourceIdentifier;
 import com.esri.gpt.framework.util.Val;
 
@@ -253,6 +254,7 @@ public class IndexableContext {
       if (storeable != null) {
         Object[] values = storeable.getValues();
         if ((values != null) && (values.length > 0)) {
+          boolean resourceUrlResolved = false;
           ResourceIdentifier ri = ensureResourceIdentifier();
           for (Object value: values) {
             if ((value != null) && (value instanceof String)) {
@@ -264,6 +266,27 @@ public class IndexableContext {
                 String aimsct = Val.chkStr(ri.guessArcIMSContentTypeFromUrl(sValue));
                 if (aimsct.length() > 0) {
                   String sResUrl = sValue;
+                  PropertyMeaning meaning2 = this.getPropertyMeanings().get(Meaning.MEANINGTYPE_RESOURCE_URL);
+                  IStoreable storeable2 = this.getStoreables().get(Meaning.MEANINGTYPE_RESOURCE_URL);
+                  if ((meaning2 != null) && (storeable2 != null)) {
+                    storeable2.setValue(sResUrl);
+                  } else if (meaning2 != null) {
+                    this.addStoreableValue(meaning2,sResUrl);
+                  }
+                  resourceUrlResolved = true;
+                  break;
+                }
+              }
+            }
+          }
+          if (!resourceUrlResolved) {
+            // if no resource.url has been resolved - take a first non empty
+            String sResUrl = null;
+            for (Object value: values) {
+              if ((value != null) && (value instanceof String)) {
+                String sValue = Val.chkStr((String)value);
+                if (sValue.length() > 0) {
+                  sResUrl = sValue;
                   PropertyMeaning meaning2 = this.getPropertyMeanings().get(Meaning.MEANINGTYPE_RESOURCE_URL);
                   IStoreable storeable2 = this.getStoreables().get(Meaning.MEANINGTYPE_RESOURCE_URL);
                   if ((meaning2 != null) && (storeable2 != null)) {
@@ -308,6 +331,10 @@ public class IndexableContext {
         }
       }
     }
+
+    // analyze the time period of the content
+    TpAnalyzer tp = new TpAnalyzer();
+    tp.analyze(this,schema,dom,sTitle);
     
   }
   

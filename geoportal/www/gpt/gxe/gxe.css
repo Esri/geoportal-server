@@ -372,3 +372,25 @@ p.gxeHeading {
 	margin-bottom: 4px;
 	font-weight: bold;
 }
+
+div#gemetDialogContent * span.resultsTitle {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+div#gemetDialogContent * .resultsContainer {
+    padding: 0;
+    width: 100%;
+}
+div#gemetDialogContent * .selectedResultRow {
+    background-color: #E8E8E8;
+    border: 1px solid #CCCCCC;
+}
+div#gemetDialogContent * .selectedResultRowLight {
+    background-color: #FFFFCC;
+    border: 1px solid #CCCCCC;
+}
+div#gemetDialogContent * .noneSelectedResultRow {
+    background-COLOR: #FFFFFF;
+    border: 1px solid #CCCCCC;
+}

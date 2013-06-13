@@ -14,10 +14,11 @@
  */
 package com.esri.gpt.control.webharvest.engine;
 
+import com.esri.gpt.catalog.context.CatalogIndexException;
 import com.esri.gpt.framework.resource.api.Publishable;
 import java.io.IOException;
-import javax.xml.transform.TransformerException;
-import org.xml.sax.SAXException;
+import java.sql.SQLException;
+import javax.xml.transform.TransformerConfigurationException;
 
 /**
  * Data processor.
@@ -47,10 +48,11 @@ public interface DataProcessor {
    * @param unit execution unit
    * @param record record to publish
    * @throws IOException if reading metadata fails
-   * @throws SAXException if processing metadata fails
-   * @throws TransformerException if processing metadata fails
+   * @throws SQLException if  processing metadata fails
+   * @throws CatalogIndexException if operation on index fails
+   * @throws TransformerConfigurationException if processing metadata fails
    */
-  void onMetadata(ExecutionUnit unit, Publishable record) throws IOException, TransformerException, SAXException;
+  void onMetadata(ExecutionUnit unit, Publishable record) throws IOException, SQLException, CatalogIndexException, TransformerConfigurationException;
 
   /**
    * Called upon the start of harvesting the resource.

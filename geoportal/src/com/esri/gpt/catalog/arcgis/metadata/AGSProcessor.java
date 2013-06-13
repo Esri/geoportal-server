@@ -318,11 +318,23 @@ public class AGSProcessor extends ResourceProcessor {
    * @return normalized URL
    */
   private String normalizeUrl(String url) {
+    Pattern wsdlPattern = Pattern.compile("\\?wsdl$", Pattern.CASE_INSENSITIVE);
+    Matcher wsdlMatcher = wsdlPattern.matcher(Val.chkStr(url));
+    String wsdlResult = wsdlMatcher.replaceFirst("");
+    
+    Pattern servicesPattern = Pattern.compile("services\\?wsdl/", Pattern.CASE_INSENSITIVE);
+    Matcher servicesMatcher = servicesPattern.matcher(wsdlResult);
+    String servicesResult = servicesMatcher.replaceAll("");
+    
+    return servicesResult.replaceAll("/+$", "");
+    
+    /*
     return Pattern.compile("services\\?wsdl/", Pattern.CASE_INSENSITIVE).matcher(
       Pattern.compile("\\?wsdl$", Pattern.CASE_INSENSITIVE).matcher(
         Val.chkStr(url)
       ).replaceFirst("")
     ).replaceFirst("");
+    */
   }
 
   /**

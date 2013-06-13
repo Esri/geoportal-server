@@ -17,8 +17,12 @@ package com.esri.gpt.control.webharvest.engine;
 import com.esri.gpt.catalog.harvest.repository.HrRecord;
 import com.esri.gpt.catalog.harvest.repository.HrRecords;
 import com.esri.gpt.catalog.harvest.repository.HrSelectRequest;
+import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.ApplicationConfiguration;
+import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.util.TimePeriod;
+import com.esri.gpt.framework.util.Val;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.Level;
@@ -28,6 +32,7 @@ import java.util.logging.Logger;
  * Schedules new harvesting task according to the repository harvest frequency.
  */
 abstract class AutoSelector implements Runnable {
+private static final int DEFAULT_MAX_ATTEMPTS = 1;  
 
 /** logger */
 private static final Logger LOGGER = Logger.getLogger(AutoSelector.class.getCanonicalName());
@@ -52,7 +57,8 @@ public AutoSelector(long autoSelectFrequency) {
 public void run() {
   workerThread = Thread.currentThread();
   LOGGER.info("[SYNCHRONIZER] AutoSelector activated.");
-
+  int attempt = 0;
+  
   do {
     long duration = autoSelectFrequency;
     if (!suspended) {
@@ -77,8 +83,15 @@ public void run() {
 
         // caluclate duration in milliseconds
         duration = nextDue != null ? nextDue.getNextHarvestDate().getTime() - (new Date()).getTime() : autoSelectFrequency;
+        
+        // clear attempt counter
+        attempt = 0;
       } catch (SQLException ex) {
         LOGGER.log(Level.SEVERE, "[SYNCHRONIZER] Error selecting harvesting sites for harvest.", ex);
+        attempt++;
+        if (attempt<=getMaxAttempts()) {
+          LOGGER.log(Level.SEVERE, "[SYNCHRONIZER] Error selecting harvesting sites for harvest.", ex);
+        }
       }
     }
 
@@ -173,5 +186,12 @@ private boolean isSuspendedWithAck() {
     LOGGER.info("[SYNCHRONIZER] AutoSelector acknowledged suspension");
   }
   return suspended;
+}
+  
+private int getMaxAttempts() {
+  ApplicationContext appCtx = ApplicationContext.getInstance();
+  ApplicationConfiguration appCfg = appCtx.getConfiguration();
+  StringAttributeMap parameters = appCfg.getCatalogConfiguration().getParameters();
+  return Val.chkInt(parameters.getValue("webharvester.maxAttempts"),DEFAULT_MAX_ATTEMPTS);
 }
 }

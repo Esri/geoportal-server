@@ -1436,7 +1436,6 @@ img.datepicker_trigger {
   font-size: xx-small;
 }
 
-// user role management page
 .user{
   border-style: solid;
 }
@@ -1496,4 +1495,10 @@ img.datepicker_trigger {
   color:#8A8E27;
   font-family:"Trebuchet MS",Helvetica,Arial,Geneva,sans-serif;
   font-weight:normal;
+}
+
+.agp2agpCaption {
+  font-weight: bold;
+  display: table-cell;
+  padding-top: 10px;
 }

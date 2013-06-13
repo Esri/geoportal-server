@@ -14,13 +14,11 @@
  */
 package com.esri.gpt.control.georss;
 
-import java.io.PrintWriter;
-
 import com.esri.gpt.catalog.search.ResourceLink;
 import com.esri.gpt.catalog.search.ResourceLinks;
-import com.esri.gpt.catalog.search.SearchResultRecord;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
+import java.io.PrintWriter;
 
 /**
  * HTML snippet writer.
@@ -189,7 +187,7 @@ public class RecordSnippetWriter {
    * Writes HTML snippet with metadata description.
    * @param record record to write as snippet
    */
-  public void write(SearchResultRecord record) {
+  public void write(IFeedRecord record) {
   
     // write
     if (_writer != null) {
@@ -219,7 +217,7 @@ public class RecordSnippetWriter {
    * Writes title section.
    * @param record record
    */
-  private void writeTitle(SearchResultRecord record) {
+  private void writeTitle(IFeedRecord record) {
     String sUuid = Val.chkStr(record.getUuid());
     String sTitle = Val.chkStr(record.getTitle());
     
@@ -252,7 +250,7 @@ public class RecordSnippetWriter {
    * Writes abstract section.
    * @param record record
    */
-  private void writeAbstract(SearchResultRecord record) {
+  private void writeAbstract(IFeedRecord record) {
     String sAbstract = Val.chkStr(record.getAbstract());
   
     if (sAbstract.length() > 0) {
@@ -280,7 +278,7 @@ public class RecordSnippetWriter {
    * Writes links section.
    * @param record record
    */
-  private void writeLinks(SearchResultRecord record) {
+  private void writeLinks(IFeedRecord record) {
     _writer.println("<div class=\"" + LINKS_STYLE_CLASS + "\">");
     
     ResourceLinks links = record.getResourceLinks();

@@ -17,6 +17,7 @@ import com.esri.gpt.catalog.discovery.DiscoveryClause;
 import com.esri.gpt.catalog.discovery.DiscoveryException;
 import com.esri.gpt.catalog.discovery.LogicalClause;
 import com.esri.gpt.catalog.discovery.PropertyClause;
+import com.esri.gpt.catalog.discovery.PropertyValueType;
 import com.esri.gpt.catalog.discovery.SpatialClause;
 
 import java.util.logging.Logger;
@@ -71,6 +72,12 @@ public class LogicalClauseAdapter extends DiscoveryClauseAdapter {
       } else if (clause instanceof PropertyClause) {
         PropertyClauseAdapter adapter = new PropertyClauseAdapter(getQueryAdapter());
         PropertyClause subClause = (PropertyClause)clause;
+        if ((subClause.getTarget() != null) && (subClause.getTarget().getMeaning() != null)) {
+          PropertyValueType pvt = subClause.getTarget().getMeaning().getValueType();
+          if ((pvt != null) && pvt.equals(PropertyValueType.TIMEPERIOD)) {
+            adapter = new TimeperiodClauseAdapter(getQueryAdapter());
+          }
+        }
         adapter.adaptPropertyClause(activeBooleanQuery,logicalClause,subClause);
         
       } else if (clause instanceof SpatialClause) {

@@ -43,6 +43,7 @@ import com.esri.gpt.framework.security.identity.IdentityAdapter;
 import com.esri.gpt.framework.security.identity.IdentityConfiguration;
 import com.esri.gpt.framework.security.identity.IdentityException;
 import com.esri.gpt.framework.security.identity.NotAuthorizedException;
+import com.esri.gpt.framework.security.identity.ldap.LdapConfiguration;
 import com.esri.gpt.framework.security.identity.ldap.LdapIdentityAdapter;
 import com.esri.gpt.framework.security.principal.Group;
 import com.esri.gpt.framework.security.principal.Groups;
@@ -63,6 +64,8 @@ public class ManageUserServlet extends BaseServlet {
 
 // class variables =============================================================
 private MessageBroker msgBroker = null;
+private String userDIT = "ou=users,ou=system";
+private String groupDIT = "ou=groups,ou=system";
 	
 /** Serialization key */
 private static final long serialVersionUID = 1L;
@@ -109,7 +112,14 @@ protected void execute(HttpServletRequest request,
 		return;
 	}
 	String[] parts = request.getRequestURI().toString().split("/");
-	
+	IdentityConfiguration idConfig = context.getIdentityConfiguration();
+	if(idConfig != null){
+		LdapConfiguration ldapConfig = idConfig.getLdapConfiguration();
+		if(ldapConfig != null){
+		    userDIT = ldapConfig.getUserProperties().getUserSearchDIT();
+			groupDIT = ldapConfig.getGroupProperties().getGroupSearchDIT();
+		}
+	}
 	if(parts.length >= 5 && parts[4].equals("users") && parts[5].equals("search")){
 		executeSearch(request,response,context); 	
 	}else if(parts.length >= 5 && parts[4].equals("users") && parts[5].equals("searchMembers")){
@@ -364,7 +374,7 @@ protected String serializeUserAsJson(RequestContext context,User user) throws Id
 	}
 	usersJson += " ] , ";
 	
-	usersJson += " \"userDn\" : \"" + Val.escapeStrForJson(user.getDistinguishedName()) + " \" , ";
+	usersJson += " \"userDn\" : \"" + user.getDistinguishedName() + " \" , ";
 	
 	String groupsJson = " \"groups\" : [";
 	Groups groups = user.getGroups();
@@ -445,7 +455,7 @@ protected void executeAddMember(HttpServletRequest request,
     		isAllowedToManage = checkIfAllowedToManage(context, groupIdentifier);
     		if(checkGroupConfigured){
     			if(isAllowedToManage){
-		    		if(groupIdentifier.startsWith("cn=")){
+		    		if(groupIdentifier.endsWith(groupDIT)){
 		    			idAdapter.addUserToGroup(user, groupIdentifier);   		    
 		    		}else{	  		
 		    			idAdapter.addUserToRole(user, groupIdentifier);	    
@@ -487,7 +497,7 @@ protected void executeRemoveMember(HttpServletRequest request,
     idAdapter.readUserProfile(user);
     if(parts.length > 0) {
 		String groupIdentifier = URLDecoder.decode(parts[5].trim(),"UTF-8");
-		if(!groupIdentifier.startsWith("cn=")){ 
+		if(!groupIdentifier.endsWith(groupDIT)){ 
 		    IdentityConfiguration idConfig = context.getIdentityConfiguration();   
 		    Roles configuredRoles = idConfig.getConfiguredRoles();     
 			Role roleRegistered = configuredRoles.get(groupIdentifier);    
@@ -537,7 +547,7 @@ private void executeDeleteUser(HttpServletRequest request,
 	String[] parts = request.getRequestURI().toString().split("/");
 	if(parts.length > 0) {
 		String userIdentifier = URLDecoder.decode(parts[5].trim(),"UTF-8");
-		if(userIdentifier.startsWith("cn=")){  
+		if(userIdentifier.endsWith(userDIT)){  
 			String attempt = Val.chkStr(request.getParameter("attempt"));
 		    IdentityAdapter idAdapter = context.newIdentityAdapter();
 		    User user = new User();
@@ -567,7 +577,7 @@ protected boolean checkIfConfigured(RequestContext context,String groupIdentifie
 	boolean isConfigured = false;		
 	Roles roles = buildSelectableRoles(context);
 	for (Role role : roles.values()){
-		if(groupIdentifier.startsWith("cn=")){
+		if(groupIdentifier.endsWith(groupDIT)){
 			if(role.getDistinguishedName().equalsIgnoreCase(groupIdentifier)) {
 				isConfigured = true;
 				break;
@@ -592,7 +602,7 @@ protected boolean checkIfAllowedToManage(RequestContext context,String groupIden
 	boolean isAllowedToManage = false;		
 	Roles roles = buildSelectableRoles(context);
 	for (Role role : roles.values()){
-		if(groupIdentifier.startsWith("cn=")){
+		if(groupIdentifier.endsWith(groupDIT)){
 			if(role.getDistinguishedName().equalsIgnoreCase(groupIdentifier) && role.isManage()) {
 				isAllowedToManage = true;
 				break;
@@ -685,7 +695,7 @@ protected String serializeUsersAsJson(RequestContext context, String filter,Stri
 		}else{
 			firstUser = false;
 		}
-		usersJson += " { \"dn\" : \"" + Val.escapeStrForJson(dn) + "\" , \"userName\" : \"" + Val.escapeStrForJson(userName) + "\" }";  
+		usersJson += " { \"dn\" : \"" + dn + "\" , \"userName\" : \"" + Val.escapeStrForJson(userName) + "\" }";  
 	}
 	usersJson += " ] }";
 	return usersJson;
@@ -862,8 +872,8 @@ protected User readUserProfile(RequestContext context,HttpServletRequest request
     }
 
 	if(parts.length > 0) {
-		String userIdentifier = URLDecoder.decode(parts[5].trim(),"UTF-8");
-		if(userIdentifier.startsWith("cn=")){
+		String userIdentifier = Val.chkStr(URLDecoder.decode(parts[5].trim(),"UTF-8"));
+		if(userIdentifier.endsWith(userDIT)){
 			user.setDistinguishedName(userIdentifier);
 			DistinguishedNameCredential dnCredential = new DistinguishedNameCredential();
 			dnCredential.setDistinguishedName(userIdentifier);

@@ -75,7 +75,7 @@
    
 <f:verbatim>
   <span id="browse-prompt" class="prompt"><%=brwPrompt %></span> 
-  <div dojoType="dojo.data.ItemFileReadStore" url="<%=brwTocUrl %>" jsid="popStore" requestMethod="get"/>
+  <div dojoType="dojo.data.ItemFileReadStore" url="<%=brwTocUrl %>" jsid="popStore" requestMethod="get" urlPreventCache="true"/>
   <div class="section" id="browse-splitter" dojoType="dijit.layout.SplitContainer"
     orientation="horizontal" sizerWidth="7" activeSizing="true" style="width: 100%; height: 500px;">	               	
     <div id="browse-toc" class="tundra" dojotype="dijit.Tree" store="popStore" labelattr="name" 

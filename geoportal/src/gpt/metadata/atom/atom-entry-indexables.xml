@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<!-- atom-indexables.xml -->
+<indexables>
+
+  <!-- namespaces -->
+  <namespace prefix="atom" uri="http://www.w3.org/2005/Atom" />
+  <namespace prefix="georss" uri="http://www.georss.org/georss" />
+  <namespace prefix="time" uri="http://a9.com/-/opensearch/extensions/time/1.0/" />
+  <namespace prefix="geo" uri="http://www.w3.org/2003/01/geo/wgs84_pos#" />
+  
+  <property meaning="fileIdentifier" xpath="/atom:entry/atom:id"/>
+  <property meaning="title" xpath="/atom:entry/atom:title"/>
+  <property meaning="date" xpath="/atom:entry/atom:updated"/>
+  <property meaning="publisher" xpath="/atom:entry/atom:author/atom:name"/>
+  <property meaning="abstract" xpath="/atom:entry/atom:summary"/>    
+  <property meaning="keywords" xpath="/atom:entry/atom:category"/>
+
+  <property meaning="resource.check.urls" xpathType="NODESET"
+     xpath="/atom:entry/atom:link/@href"/>
+  
+  <property meaning="envelope" xpath="/atom:entry/georss:box">
+	  <property meaning="envelope.west" xpathType="STRING" xpath="normalize-space(substring-before(normalize-space(./text()),' '))" />	
+	  <property meaning="envelope.south" xpathType="STRING" xpath="normalize-space(substring-before(normalize-space(substring-after(normalize-space(./text()),' ')),' '))" />	
+		<property meaning="envelope.east" xpathType="STRING" xpath="normalize-space(substring-before(normalize-space(substring-after(normalize-space(substring-after(normalize-space(./text()),' ')),' ')),' '))" />
+		<property meaning="envelope.north" xpathType="STRING" xpath="normalize-space(substring-after(normalize-space(substring-after(normalize-space(substring-after(normalize-space(./text()),' ')),' ')),' '))" />
+	</property>
+	
+	<property meaning="envelope" xpath="/atom:entry/georss:point">
+		<property meaning="envelope.west" xpathType="STRING" xpath="normalize-space(substring-before(normalize-space(./text()),' '))" />
+		<property meaning="envelope.south" xpathType="STRING" xpath="normalize-space(substring-after(normalize-space(./text()),' '))" />
+		<property meaning="envelope.east" xpathType="STRING" xpath="normalize-space(substring-before(normalize-space(./text()),' '))" />		
+		<property meaning="envelope.north" xpathType="STRING" xpath="normalize-space(substring-after(normalize-space(./text()),' '))" />
+	</property>	
+	
+		<property meaning="envelope.west" xpathType="STRING" xpath="normalize-space(substring-before(normalize-space(/atom:entry/geo:long/text()),' '))" />
+		<property meaning="envelope.south" xpathType="STRING" xpath="normalize-space(substring-after(normalize-space(/atom:entry/geo:lat/text()),' '))" />
+		<property meaning="envelope.east" xpathType="STRING" xpath="normalize-space(substring-before(normalize-space(/atom:entry/geo:long/text()),' '))" />		
+		<property meaning="envelope.north" xpathType="STRING" xpath="normalize-space(substring-after(normalize-space(/atom:entry/geo:lat/text()),' '))" />
+
+	
+	 <property meaning="timeperiod.analyze" xpathType="STRING"
+        xpath="concat('tp.begin.',/atom:entry/time:start,'.end.',/atom:entry/time:end)"/>
+	
+	<property meaning="body" xpathType="STRING" xpath="/*"/>
+</indexables>
+

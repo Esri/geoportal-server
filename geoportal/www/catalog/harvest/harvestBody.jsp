@@ -16,12 +16,36 @@
 <% // createBody.jsp - Manage harvest repositories page (JSF body) %>
 <%@taglib prefix="f" uri="http://java.sun.com/jsf/core"%>
 <%@taglib prefix="h" uri="http://java.sun.com/jsf/html"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt"%>
+<%@page import="com.esri.gpt.framework.context.RequestContext" %>
+
+<%
+String basePath = RequestContext.extract(request).resolveBaseContextPath(request);
+%>
 
 <f:verbatim>
+<fmt:setBundle basename="gpt.resources.gpt"/>  
 
 <style type="text/css">
 .harvestExtra {
   width: 100px;
+}
+.dijitDialog {
+  border-style: solid;
+  border-width: 1px;
+}
+#closeFoldersDialog, #closeOwnersDialog {
+  margin-top: 10px;
+  margin-left: 0px;
+}
+#ownersDiv, #foldersDiv {
+  min-height: 100px;
+  min-width: 350px;
+  border-style: solid;
+  border-width: 1px;
+  padding: 5px;
+  max-height: 300px;
+  overflow: scroll;
 }
 </style>
 <script type="text/javascript" >
@@ -228,6 +252,19 @@ function enableSection(section,enable) {
  * Enables sections.
  */
 function selectSection(section) {
+  
+  if (section=="agp2agp") {
+    dojo.query("#harvestCreate\\:repositoryMain > tbody > tr:nth-child(2)").style("display","none");
+  } else {
+    dojo.query("#harvestCreate\\:repositoryMain > tbody > tr:nth-child(2)").style("display","table-row");
+  }
+
+  if (section=="arcgis") {
+    dojo.byId("harvestCreate:hostUrlLabel").innerHTML = dojo.byId("restUrlLabelValue").value;
+  } else {
+    dojo.byId("harvestCreate:hostUrlLabel").innerHTML = dojo.byId("hostUrlLabelValue").value;
+  }
+  
   enableSection("res", section=="res");
   enableSection("arcgis", section=="arcgis");
   enableSection("arcims", section=="arcims");
@@ -236,12 +273,11 @@ function selectSection(section) {
   enableSection("csw", section=="csw");
   enableSection("agp", section=="agp");
   enableSection("thredds", section=="thredds");
-
-  if (section=="arcgis") {
-    dojo.byId("harvestCreate:hostUrlLabel").innerHTML = dojo.byId("restUrlLabelValue").value;
-  } else {
-    dojo.byId("harvestCreate:hostUrlLabel").innerHTML = dojo.byId("hostUrlLabelValue").value;
-  }
+  enableSection("atom", section=="atom");
+  
+  enableSection("agp2agp", section=="agp2agp");
+  
+  dojo.query(".onBehalfOf").style("display",section!="agp2agp"? "block": "none");
 
   adjustSearchable(section);
 }
@@ -380,6 +416,158 @@ dojo.addOnLoad(function() {
   }, null);
 });
 
+dojo.addOnLoad(function() {
+  var fetchOwners = dojo.byId("fetchOwners");
+  var fetchFolders = dojo.byId("fetchFolders");
+  var closeFoldersDialog = dojo.byId("closeFoldersDialog");
+  var foldersDiv = dojo.byId("foldersDiv");
+  var ownersDiv = dojo.byId("ownersDiv");
+  
+  
+  dojo.connect(fetchOwners,"onclick",function(evt){
+    var ownersDialog = dijit.byId("ownersDialog");
+    dojo.empty(ownersDiv);
+    var h = dojo.trim(dojo.attr("harvestCreate:dest-h","value"));
+    var u = dojo.trim(dojo.attr("harvestCreate:dest-u","value"));
+    var p = dojo.trim(dojo.attr("harvestCreate:dest-p","value"));
+    if (h.length>0 && u.length>0 && p.length>0) {
+      dojo.query("[data-type=search]").style("display","none");
+      ownersDialog.show();
+      getSelf();
+    } else {
+      alert("<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.alert"/>");
+    }
+  });
+  
+  dojo.connect(fetchFolders,"onclick",function(evt){
+    var foldersDialog = dijit.byId("foldersDialog");
+    dojo.empty(foldersDiv);
+    var h = dojo.trim(dojo.attr("harvestCreate:dest-h","value"));
+    var u = dojo.trim(dojo.attr("harvestCreate:dest-u","value"));
+    var p = dojo.trim(dojo.attr("harvestCreate:dest-p","value"));
+    var o = dojo.trim(dojo.attr("harvestCreate:dest-o","value"));
+    if (h.length>0 && u.length>0 && p.length>0 && o.length>0) {
+      foldersDialog.show();
+      searchFolders();
+    } else {
+      alert("<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.foldersDialog.alert"/>");
+    }
+  });
+
+  dojo.connect(closeFoldersDialog,"onclick",function(evt){
+    var foldersDialog = dijit.byId("foldersDialog");
+    foldersDialog.hide();
+  });
+
+  dojo.connect(closeOwnersDialog,"onclick",function(evt){
+    var ownersDialog = dijit.byId("ownersDialog");
+    ownersDialog.hide();
+  });
+
+  dojo.connect(searchOwnersDialog,"onclick",function(evt){
+    dojo.empty(ownersDiv);
+    searchOwners();
+  });
+  
+  
+  dojo.addClass(dijit.byId("foldersDialog").domNode,"tundra");
+  dojo.addClass(dijit.byId("ownersDialog").domNode,"tundra");
+});
+
+function getSelf() {
+  var ownersDiv = dojo.byId("ownersDiv");
+  esri.request({
+    url: "<%=basePath%>/catalog/harvest/getSelf.jsp",
+    content: {
+      h: dojo.trim(dojo.attr("harvestCreate:dest-h","value")),
+      u: dojo.trim(dojo.attr("harvestCreate:dest-u","value")),
+      p: dojo.trim(dojo.attr("harvestCreate:dest-p","value"))
+    },
+    handleAs: "json",
+    callbackParamName: "callback"
+  }).then(function(response){
+    if (response) {
+      if (response.role==="org_admin") {
+        dojo.query("[data-type=search]").style("display","inline");
+      } else {
+        var caption = response.fullName + " (" + response.username + ")";
+        var folderDiv = dojo.create("div",null,ownersDiv);
+        var folderLink = dojo.create("a",{href:"#", innerHTML: caption},folderDiv);
+        dojo.connect(folderLink,"onclick",function(evt){
+          dojo.attr("harvestCreate:dest-o","value",response.username);
+          var ownersDialog = dijit.byId("ownersDialog");
+          ownersDialog.hide();
+        });
+      }
+    }
+  });
+}
+
+function searchOwners() {
+  var ownersDiv = dojo.byId("ownersDiv");
+  esri.request({
+    url: "<%=basePath%>/catalog/harvest/searchOwners.jsp",
+    content: {
+      h: dojo.trim(dojo.attr("harvestCreate:dest-h","value")),
+      u: dojo.trim(dojo.attr("harvestCreate:dest-u","value")),
+      p: dojo.trim(dojo.attr("harvestCreate:dest-p","value")),
+      q: dojo.trim(dojo.attr("ownersSearchText","value"))
+    },
+    handleAs: "json",
+    callbackParamName: "callback"
+  }).then(function(response){
+    if (response==null || response.length==0) {
+      var folderDiv = dojo.create("div",{innerHTML: '<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.norecords"/>'},ownersDiv);
+    } else {
+      for (var i=0; i<response.length; i++) {
+        var owner = response[i];
+        var caption = owner.fullName + " (" + owner.username + ")";
+        var folderDiv = dojo.create("div",null,ownersDiv);
+        var folderLink = dojo.create("a",{href:"#", innerHTML: caption},folderDiv);
+        dojo.connect(folderLink,"onclick",function(evt){
+          dojo.attr("harvestCreate:dest-o","value",owner.username);
+          var ownersDialog = dijit.byId("ownersDialog");
+          ownersDialog.hide();
+        });
+      }
+    }
+  },function(error){
+    var folderDiv = dojo.create("div",{innerHTML: '<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.norecords"/>'},ownersDiv);
+  });
+}
+
+function searchFolders() {
+  var foldersDiv = dojo.byId("foldersDiv");
+  esri.request({
+    url: "<%=basePath%>/catalog/harvest/searchFolders.jsp",
+    content: {
+      h: dojo.trim(dojo.attr("harvestCreate:dest-h","value")),
+      u: dojo.trim(dojo.attr("harvestCreate:dest-u","value")),
+      p: dojo.trim(dojo.attr("harvestCreate:dest-p","value")),
+      o: dojo.trim(dojo.attr("harvestCreate:dest-o","value"))
+    },
+    handleAs: "json",
+    callbackParamName: "callback"
+  }).then(function(response){
+    if (response==null || response.length==0) {
+      var folderDiv = dojo.create("div",{innerHTML: '<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.norecords"/>'},foldersDiv);
+    } else {
+      for (var i=0; i<response.length; i++) {
+        var folder = response[i];
+        var caption = folder.title + " (" + folder.id + ")";
+        var folderDiv = dojo.create("div",null,foldersDiv);
+        var folderLink = dojo.create("a",{href:"#", innerHTML: caption},folderDiv);
+        dojo.connect(folderLink,"onclick",function(evt){
+          dojo.attr("harvestCreate:dest-f","value",folder.id);
+          var foldersDialog = dijit.byId("foldersDialog");
+          foldersDialog.hide();
+        });
+      }
+    }
+  },function(error){
+    var folderDiv = dojo.create("div",{innerHTML: '<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.norecords"/>'},foldersDiv);
+  });
+}
 </script>
 
 </f:verbatim>
@@ -431,7 +619,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <h:outputText escape="false" value="<hr align=\"center\"/>"/>
 
 <%-- General repository info -------------------------------------------------%>  
-<h:panelGrid columns="2" summary="#{gptMsg['catalog.general.designOnly']}"
+<h:panelGrid id="repositoryMain"  columns="2" summary="#{gptMsg['catalog.general.designOnly']}"
   styleClass="formTable" columnClasses="formLabelColumn harvestExtra,formInputColumn">
 
 <%-- Protocol Type --%>
@@ -515,13 +703,91 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 
 <%-- THREDDS specific properties ---------------------------------------------%>
 
+<%-- Atom specific properties ------------------------------------------------%>
+<h:outputLabel styleClass="atom" for="atomType" value="#{gptMsg['catalog.harvest.manage.edit.atomType']}"/>
+<h:selectOneMenu styleClass="atom" value="#{HarvestController.editor.attrs['atomInfoProcessorClassName']}" id="atomType">
+  <f:selectItem itemValue="" itemLabel="#{gptMsg['catalog.harvest.manage.edit.atomType.openSearch']}"/>
+	<f:selectItem itemValue="com.esri.gpt.control.webharvest.client.atom.AGPAtomInfoProcessor" itemLabel="#{gptMsg['catalog.harvest.manage.edit.atomType.agp']}"/>
+	<f:selectItem itemValue="com.esri.gpt.control.webharvest.client.atom.AGPAtomInfoProcessor2" itemLabel="#{gptMsg['catalog.harvest.manage.edit.atomType.agp2']}"/>	
+	<f:selectItem itemValue="com.esri.gpt.control.webharvest.client.atom.OpenSearchAtomInfoProcessor" itemLabel="#{gptMsg['catalog.harvest.manage.edit.atomType.file']}"/>
+</h:selectOneMenu>
+
+<%-- AGP-TO-AGP specific properties ------------------------------------------%>
+<h:outputText styleClass="agp2agp agp2agpCaption" value=""/>
+<h:outputText styleClass="agp2agp agp2agpCaption" value="#{gptMsg['catalog.harvest.manage.edit.src.caption']}"/>
+
+<%-- src host --%>
+<h:outputLabel styleClass="requiredField agp2agp" for="src-h" value="#{gptMsg['catalog.harvest.manage.edit.src.h']}"/>
+<h:inputText   styleClass="agp2agp" size="30" value="#{HarvestController.editor.attrs['src-h']}" id="src-h"/>
+
+<%-- src user name --%>
+<h:outputLabel styleClass="requiredField agp2agp" for="src-u" value="#{gptMsg['catalog.harvest.manage.edit.src.u']}"/>
+<h:inputText   styleClass="agp2agp" size="30" value="#{HarvestController.editor.attrs['src-u']}" id="src-u"/>
+
+<%-- src password --%>
+<h:outputLabel styleClass="requiredField agp2agp" for="src-p" value="#{gptMsg['catalog.harvest.manage.edit.src.p']}"/>
+<h:inputSecret redisplay="true" styleClass="agp2agp" size="30" value="#{HarvestController.editor.attrs['src-p']}" id="src-p"/>
+
+<%-- src query --%>
+<h:outputLabel styleClass="requiredField agp2agp" for="src-q" value="#{gptMsg['catalog.harvest.manage.edit.src.q']}"/>
+<h:panelGroup>
+<h:inputText   styleClass="agp2agp" size="30" value="#{HarvestController.editor.attrs['src-q']}" id="src-q"/>
+<h:commandButton 
+  id="testQuery"
+  value="#{gptMsg['catalog.harvest.manage.test.msg.agp2agp.button.testQuery']}" 
+  actionListener="#{HarvestController.handleTestAgp2AgpQuery}" />
+</h:panelGroup>
+
+<%-- src max items --%>
+<h:outputLabel styleClass="requiredField agp2agp" for="src-m" value="#{gptMsg['catalog.harvest.manage.edit.src.m']}"/>
+<h:inputText   styleClass="agp2agp" size="10" value="#{HarvestController.editor.attrs['src-m']}" id="src-m"/>
+
+<h:outputText styleClass="agp2agp agp2agpCaption" value=""/>
+<h:outputText styleClass="agp2agp agp2agpCaption" value="#{gptMsg['catalog.harvest.manage.edit.dest.caption']}"/>
+
+<%-- dest host --%>
+<h:outputLabel styleClass="requiredField agp2agp" for="dest-h" value="#{gptMsg['catalog.harvest.manage.edit.dest.h']}"/>
+<h:inputText   styleClass="agp2agp" size="30" value="#{HarvestController.editor.attrs['dest-h']}" id="dest-h"/>
+
+<%-- dest user name --%>
+<h:outputLabel styleClass="requiredField agp2agp" for="dest-u" value="#{gptMsg['catalog.harvest.manage.edit.dest.u']}"/>
+<h:inputText   styleClass="agp2agp" size="30" value="#{HarvestController.editor.attrs['dest-u']}" id="dest-u"/>
+
+<%-- dest password --%>
+<h:outputLabel styleClass="requiredField agp2agp" for="dest-p" value="#{gptMsg['catalog.harvest.manage.edit.dest.p']}"/>
+<h:panelGroup>
+<h:inputSecret redisplay="true" styleClass="agp2agp" size="30" value="#{HarvestController.editor.attrs['dest-p']}" id="dest-p"/>
+<h:commandButton 
+  id="testClient"
+  value="#{gptMsg['catalog.harvest.manage.test.msg.agp2agp.button.testClient']}" 
+  actionListener="#{HarvestController.handleTestAgp2AgpClient}" />
+</h:panelGroup>
+
+<%-- dest owner --%>
+<h:outputLabel styleClass="requiredField agp2agp" for="dest-o" value="#{gptMsg['catalog.harvest.manage.edit.dest.o']}"/>
+<h:panelGroup>
+<h:inputText styleClass="agp2agp" size="30" value="#{HarvestController.editor.attrs['dest-o']}" id="dest-o"/>
+<f:verbatim>
+  <input type="button" style="left: -4px;" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.button.fetchOwners"/>" id="fetchOwners"/>
+</f:verbatim>
+</h:panelGroup>
+
+<%-- dest folder ID --%>
+<h:outputLabel styleClass="requiredField agp2agp" for="dest-f" value="#{gptMsg['catalog.harvest.manage.edit.dest.f']}"/>
+<h:panelGroup>
+<h:inputText   styleClass="agp2agp" size="40" value="#{HarvestController.editor.attrs['dest-f']}" id="dest-f"/>
+<f:verbatim>
+  <input type="button" style="left: -4px;" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.button.fetchFolders"/>" id="fetchFolders"/>
+</f:verbatim>
+</h:panelGroup>
+
 <%-- End of the panel --%>
 </h:panelGrid>
 
 <f:verbatim><br/><hr/></f:verbatim>
 
 <h:panelGrid columns="2" summary="#{gptMsg['catalog.general.designOnly']}"
-  styleClass="formTable" columnClasses="formLabelColumn,formInputColumn">
+  styleClass="onBehalfOf formTable" columnClasses="formLabelColumn,formInputColumn">
 
 <% // on behalf of %>
 <h:outputLabel for="onBehalfOf" styleClass="requiredField"
@@ -533,7 +799,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 
 </h:panelGrid>
 
-<f:verbatim><hr/><br/></f:verbatim>
+<f:verbatim><hr class="onBehalfOf"/><br class="onBehalfOf"/></f:verbatim>
 
 <h:outputText value="#{gptMsg['catalog.harvest.manage.edit.purpose.title']}"/>
 <h:panelGrid columns="2" summary="#{gptMsg['catalog.general.designOnly']}"
@@ -596,13 +862,18 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 </h:selectOneRadio>
 
 <% // submit button %>
-<h:panelGrid columns="2" summary="#{gptMsg['catalog.general.designOnly']}"
+<h:panelGrid columns="3" summary="#{gptMsg['catalog.general.designOnly']}"
   styleClass="formTable" columnClasses="gptRepoLabel,formInputColumn">
 <h:outputText value=""/>
 <h:commandButton  
   id="hvSubmit"
-  value="#{gptMsg['catalog.harvest.manage.edit.button.submit']}" 
+  value="#{not empty HarvestController.editor.repository.uuid? gptMsg['catalog.harvest.manage.edit.button.submit.update']: gptMsg['catalog.harvest.manage.edit.button.submit.create']}" 
   actionListener="#{HarvestController.handleUpdateRepository}" />
+<h:commandButton
+  action="catalog.publication.manageMetadata" 
+  id="hvSubmitAndClose"
+  value="#{not empty HarvestController.editor.repository.uuid? gptMsg['catalog.harvest.manage.edit.button.submit.updateclose']: gptMsg['catalog.harvest.manage.edit.button.submit.createclose']}" 
+  actionListener="#{HarvestController.handleUpdateRepositoryAndClose}" />
 </h:panelGrid>
 
 <f:verbatim><br/></f:verbatim>
@@ -646,3 +917,15 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 
 <h:outputText escape="false" styleClass="requiredFieldNote"
   value="#{gptMsg['catalog.general.requiredFieldNote']}"/>
+
+<f:verbatim>
+  <div class="tundra" id="ownersDialog" data-dojo-type="dijit.Dialog" data-dojo-id="ownersDialog" title="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.caption"/>" style="min-width: 250px;">
+        <input type="text" id="ownersSearchText" data-type="search"/><input id="searchOwnersDialog" type="button" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.button.search"/>" data-type="search"/>
+        <div id="ownersDiv"></div>
+        <input id="closeOwnersDialog" type="button" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.button.close"/>"/>
+  </div>
+  <div class="tundra" id="foldersDialog" data-dojo-type="dijit.Dialog" data-dojo-id="foldersDialog" title="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.foldersDialog.caption"/>" style="min-width: 250px;">
+        <div id="foldersDiv"></div>
+        <input id="closeFoldersDialog" type="button" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.foldersDialog.button.close"/>"/>
+  </div>
+</f:verbatim>

@@ -266,7 +266,9 @@ public abstract class HarvestProtocol implements Protocol, Serializable {
     RES("RES"),
     /* ArcGIS Portal */
     /* NOTE! This is EXPERIMENTAL feature. It might be removed at any time in the future. */
-    AGP("AGP");
+    AGP("AGP"),
+    /** Atom */
+    ATOM("ATOM");
     /** protocol id */
     private String _id;
 

@@ -13,6 +13,7 @@
   <configFile>Config_GetRecords6.xml</configFile>
   <configFile>Config_GetRecords7.xml</configFile>
   <configFile>Config_GetRecords8.xml</configFile>
+  <configFile>Config_GetRecords9.xml</configFile>
   <configFile>Config_Transaction.xml</configFile>
   <configFile>Config_Insert.xml</configFile>
   <configFile>Config_Update.xml</configFile>

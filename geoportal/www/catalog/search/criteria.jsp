@@ -53,6 +53,33 @@
 
   </style>
 
+ <script type="text/javascript">
+    // &filter parameter based on window.location.href
+    function scAppendExtendedFilter(sUrlParams,bIsRemoteCatalog) {
+      if (bIsRemoteCatalog == false) {
+        var f = scGetExtendedFilter();
+        if ((typeof(f) != "undefined") && (f != null) && (f.length > 0)) {
+          if (sUrlParams.length > 0) sUrlParams += "&";
+          sUrlParams += "filter="+ encodeURIComponent(f);
+          console.debug("scAppendExtendedFilter="+sUrlParams);
+        }
+      }
+      return sUrlParams;
+    }
+    function scGetExtendedFilter() {
+      var q = dojo.queryToObject(window.location.search.slice(1));
+      var f = q.filter;
+      if ((typeof(f) != "undefined") && (f != null)) {
+        f = dojo.trim(f);
+        if (f.length > 0) {
+          console.debug("scGetExtendedFilter="+f);
+          return f;
+        }
+      }     
+      return null;
+    }
+  </script>
+
   <script type="text/javascript">
     // Results
     var srMapViewer = null;
@@ -283,6 +310,12 @@
 	  	  	    console.log("unable to fetch quality of service info : ", error);
 	  	  	}
       }
+	  
+	    // hide locator input if locator service is not configured
+	    if(typeof(gptMapConfig) != 'undefined' && typeof(gptMapConfig.locatorURL) != 'undefined' 
+	    		&& (gptMapConfig.locatorURL == null || dojo.trim(gptMapConfig.locatorURL).length == 0)){	    
+	  		dojo.byId("frmSearchCriteria:mapToolbar").style.display = "none";
+	    }
     }
     dojo.addOnLoad(scInitComponents);
     
@@ -781,6 +814,9 @@
     if(scText != "") {
       restParams += "&searchText=" +  encodeURIComponent(scText);
     }
+
+    // &filter parameter based on window.location.href
+    restParams = scAppendExtendedFilter(restParams,bIsRemoteCatalog);
    
     var scPage = dojo.byId("frmSearchCriteria:scCurrentPage").value;
     var scMaxResultsPerPage = dojo.byId("frmSearchCriteria:scRecordsPerPage").value;

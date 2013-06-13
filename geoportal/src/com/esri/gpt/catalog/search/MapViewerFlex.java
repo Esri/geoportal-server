@@ -117,7 +117,7 @@ public void setResourceUri(String resourceUri, String hintServiceType) {
  * 
  * @return the hint service type (trimmed, never null)
  */
-private String getHintServiceType() {
+protected String getHintServiceType() {
   return Val.chkStr(this._hintServiceType);
 }
 

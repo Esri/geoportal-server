@@ -121,7 +121,32 @@
   <property-meaning name="accessRights" valueType="String" comparisonType="keyword">
     <dc name="dct:accessRights" aliases="accessRights"/>
   </property-meaning>
-    
+
+  <!-- time period of the content (timeperiod.l.[n], timeperiod.u.[n] -->
+  <property-meaning name="timeperiod" valueType="timeperiod" comparisonType="value">
+    <gpt name="timeperiod"/>
+  </property-meaning>
+  <property-meaning name="timeperiod.analyze" valueType="String" comparisonType="value"/>
+  <!-- timeperiod.intersects to explicitly request an "intersects" operation from CSW, 
+       not stored as a separate index field -->
+  <property-meaning name="timeperiod.intersects" valueType="timeperiod" comparisonType="value">
+    <gpt name="timeperiod.intersects"/>
+  </property-meaning>
+  <!-- timeperiod.within to explicitly request an "within" operation from CSW, 
+       not stored as a separate index field -->
+  <property-meaning name="timeperiod.within" valueType="timeperiod" comparisonType="value">
+    <gpt name="timeperiod.within"/>
+  </property-meaning>
+  <property-meaning name="timeperiod.imeta" valueType="String" comparisonType="keyword">
+    <gpt name="timeperiod.imeta"/>
+  </property-meaning>
+  <property-meaning name="timeperiod.meta" valueType="String" comparisonType="keyword">
+    <gpt name="timeperiod.meta"/>
+  </property-meaning>
+  <property-meaning name="timeperiod.num" valueType="Long" comparisonType="value">
+    <gpt name="timeperiod.num"/>
+  </property-meaning>
+
   <!-- ================================================================================= -->
       
   <!--  Dublin Core response property sets (brief, summary, full) -->
@@ -329,5 +354,17 @@
   
   <property-meaning name="fgdc.multidate" valueType="Timestamp" comparisonType="value">
   </property-meaning>
+  
+  <property-meaning name="dcat.accessLevel" valueType="String" comparisonType="value">
+  </property-meaning>
+  <property-meaning name="dcat.mbox" valueType="String" comparisonType="value">
+  </property-meaning>
+  <property-meaning name="dcat.person" valueType="String" comparisonType="value">
+  </property-meaning>
+  <property-meaning name="dcat.license" valueType="String" comparisonType="value">
+  </property-meaning>
+  <property-meaning name="dcat.dataDictionary" valueType="String" comparisonType="value">
+  </property-meaning>
+  
         
 </property-meanings>

@@ -24,7 +24,6 @@ import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -65,6 +64,14 @@ public ExecutionUnit getExecutionUnit() {
 }
 
 /**
+ * Gets data processor.
+ * @return data processor
+ */
+protected DataProcessor getProcessor() {
+  return dataProcessor;
+}
+
+/**
  * Executes query.
  */
 public void execute() {
@@ -91,33 +98,23 @@ public void execute() {
         break;
       }
       count++;
-      try {
-        LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Harvested metadata #{0} of source URI: \"{1}\" through unit: {2}", new Object[]{rp.getHarvestedCount()+1, r.getSourceUri(), unit});
-        if (isSuspendedWithAck()) {
-          while (isSuspended()) {
-            try {
-              synchronized (this) {
-                wait();
-              }
-            } catch (InterruptedException ex) {
+      LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Harvested metadata #{0} of source URI: \"{1}\" through unit: {2}", new Object[]{rp.getHarvestedCount()+1, r.getSourceUri(), unit});
+      if (isSuspendedWithAck()) {
+        while (isSuspended()) {
+          try {
+            synchronized (this) {
+              wait();
+            }
+          } catch (InterruptedException ex) {
 
-            }
-            if (!isActive()) {
-              break;
-            }
+          }
+          if (!isActive()) {
+            break;
           }
         }
-        if (isActive()) {
-          dataProcessor.onMetadata(unit, r);
-        }
-      } catch (IOException ex) {
-        LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Failed harvesting metadata #{0} of source URI: \"{1}\" through unit: {2}. Cause: {3}", new Object[]{rp.getHarvestedCount()+1, r.getSourceUri(), unit, ex.getMessage()});
-        if (isActive()) {
-          if (unit.getCleanupFlag()) {
-            helper.getSourceUris().remove("uri", r.getSourceUri().asString());
-          }
-          dataProcessor.onIterationException(unit, ex);
-        }
+      }
+      if (isActive()) {
+        dataProcessor.onMetadata(unit, r);
       }
     }
     
@@ -130,6 +127,7 @@ public void execute() {
       updLastSyncDate.execute();
     }
   } catch (Exception ex) {
+    rp.setException(ex);
     unit.setCleanupFlag(false);
     LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Failed harvesting through unit: {0}. Cause: {1}", new Object[]{unit, ex.getMessage()});
     dataProcessor.onIterationException(unit, ex);
@@ -145,6 +143,10 @@ public void execute() {
   }
 }
 
+/**
+ * Executes query.
+ * @return result
+ */
 private Result executeQuery() {
   if (ProtocolInvoker.getUpdateContent(unit.getRepository().getProtocol())) {
     Query query = unit.getQuery();
@@ -181,6 +183,10 @@ public String toString() {
   return "Executor: {unit: "+unit+"}";
 }
 
+/**
+ * Checks if thread is suspended (with printed acknowledge to the log) 
+ * @return <code>true</code> if thread is in suspended mode
+ */
 private boolean isSuspendedWithAck() {
   boolean val = isSuspended();
   if (val) {

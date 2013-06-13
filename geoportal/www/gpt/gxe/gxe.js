@@ -4212,11 +4212,36 @@ dojo.declare("gxe.control.MessageArea",gxe.control.Control,{
    * @param {DOMNode} elItem the clicked item
    */
   scrollOnClick: function(elItem) {
+    //var elWrapper = this.ul.parentNode;
+    //var nItemOffset = elItem.offsetTop - this.ul.offsetTop;
+    //var nItemHeight = elItem.offsetHeight;
+    //var nClientHeight = elWrapper.clientHeight;
+    //elWrapper.scrollTop = nItemOffset - (nClientHeight / 2) + (nItemHeight / 2);
+
     var elWrapper = this.ul.parentNode;
     var nItemOffset = elItem.offsetTop - this.ul.offsetTop;
     var nItemHeight = elItem.offsetHeight;
     var nClientHeight = elWrapper.clientHeight;
-    elWrapper.scrollTop = nItemOffset - (nClientHeight / 2) + (nItemHeight / 2);
+    var nScrollHeight = elWrapper.scrollHeight;
+    var nScrollTop = elWrapper.scrollTop;
+    if (nScrollHeight == 0) return;
+
+    var nItemTop = nItemOffset - nScrollTop;
+    var nNewTop = nScrollTop + nItemHeight;
+    //console.log("nItemHeight", nItemHeight);
+    //console.log("nItemOffset", nItemOffset);
+    //console.log("nScrollTop", nScrollTop);
+    //console.log("nItemTop", nItemTop);
+    //console.log("nNewTop", nNewTop);
+    //console.log("nClientHeight", nClientHeight);
+    //console.log("nScrollHeight", nScrollHeight);
+    if (nItemTop > (nItemHeight * 2)) {
+        //console.log("checking max top");
+        if (nScrollTop < (nScrollHeight - nClientHeight - nItemHeight)) {
+            //console.log("setting top", nNewTop);
+            elWrapper.scrollTop = nNewTop;
+        }
+    }
   }
 
 });
@@ -4333,10 +4358,10 @@ dojo.declare("gxe.control.Section",gxe.control.Control,{
    */
   initializeLabelEvents: function(xmlNode,ctlMenu,ctlIndexedIabArray,domProcessor,domNode) {
     
-    var ctlHeader = this.findFirstChildControl(">[gxename='header']");
+    var ctlHeader = this.findFirstChildControl("> [gxename='header']");
     if (ctlHeader != null) {
       
-      var ctlLabel = ctlHeader.findFirstChildControl(">[gxename='label']");
+      var ctlLabel = ctlHeader.findFirstChildControl("> [gxename='label']");
       if (ctlLabel != null) {
         
         var cn = ctlLabel.htmlElement.childNodes;
@@ -4677,7 +4702,7 @@ dojo.declare("gxe.control.Element",gxe.control.Section,{
     var ctlMenu = null;
     var ctlIndexedIabArray = null;
     var sImages = this.context.contextPath+"/catalog/images/";
-    var ctlHeader = this.findFirstChildControl(">[gxename='header']");
+    var ctlHeader = this.findFirstChildControl("> [gxename='header']");
     if (ctlHeader != null) {
       
       var bBuildRepeatables = false;
@@ -5638,7 +5663,7 @@ dojo.provide("gxe.control.InputGemetKeyword");
 dojo.declare("gxe.control.InputGemetKeyword",gxe.control.InputText,{
   supportsMultipleValues: false,
   _gemetTool: null,
-  _gemet: new Gemet(),
+
   _isThemeSearch: false,
   
   /**
@@ -5700,7 +5725,7 @@ dojo.declare("gxe.control.InputGemetKeyword",gxe.control.InputText,{
 
 dojo.provide("gxe.control.InputGemetTheme");
 dojo.declare("gxe.control.InputGemetTheme", gxe.control.InputDelimitedTextArea,{
-	_gemet: new Gemet(),
+	
 	onHtmlChildrenCreated: function(domProcessor,domNode) {
         
 		this._isThemeSearch = true;

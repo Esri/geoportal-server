@@ -351,7 +351,7 @@ public class LuceneQueryAdapter extends DiscoveryQueryAdapter {
           }
           record.setResponseXml(responseXml);
         }
-        
+        onRecord(record, document);
         records.add(record);
       }
       int nPopulated = records.size();
@@ -360,6 +360,15 @@ public class LuceneQueryAdapter extends DiscoveryQueryAdapter {
     } finally {
       getIndexAdapter().closeSearcher(searcher);
     }
+  }
+  
+  /**
+   * Called before a record is being added to the collection
+   * @param record discovered record
+   * @param document Lucene document
+   */
+  protected void onRecord(DiscoveredRecord record, Document document) {
+    // TODO: override to customize behavior
   }
   
   /**

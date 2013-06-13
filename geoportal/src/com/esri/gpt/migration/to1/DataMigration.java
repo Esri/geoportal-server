@@ -614,8 +614,7 @@ public class DataMigration {
 						int owner = fromRs.getInt("owner");
 						String xml = "";
 						if (mds) {
-							xml = fetchMetadata(parameters, pstmt, docuuid, owner, fromRs
-									.getInt("userid"));
+							xml = fetchMetadata(parameters, pstmt, docuuid, owner);
 						} else {
 							owner = getNewUserId(owner, fromTablePrefix, fromConn,
 									toTablePrefix, toConn);
@@ -727,11 +726,12 @@ public class DataMigration {
 	 * @throws Exception
 	 */
 	private String fetchMetadata(HashMap<String, Object> parameters,
-			PreparedStatement pstmt, String docuuid, int owner, int userid)
+			PreparedStatement pstmt, String docuuid, int owner)
 			throws Exception {
 
 		PreparedStatement selectIdStmt = null;
 		String xml = "";
+		int userid = -1;
 		try {
 			Connection toConn = (Connection) parameters.get("toConn");
 			Connection fromConn = (Connection) parameters.get("fromConn");
@@ -758,6 +758,7 @@ public class DataMigration {
 				selectStmt.setString(1, userName);
 				ResultSet user = selectStmt.executeQuery();
 				if (user.next()) {
+					userid = user.getInt("userid");
 					userid = getNewUserId(userid, fromTablePrefix, fromConn,
 							toTablePrefix, toConn);
 					if (!exists(toConn, userName, toTablePrefix + "user", "username",
@@ -778,6 +779,8 @@ public class DataMigration {
 				closeStatement(selectStmt);
 				selectStmt = null;
 
+				if(userid == -1) throw new Exception("Userid match not found in GPT_" + metadataTableName + "u table for owner: " + owner);
+				
 				pstmt.setInt(3, userid);
 				pstmt.setTimestamp(4, arcxmlRequest.getUpdateDate());
 			}

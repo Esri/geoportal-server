@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<web-app id="WebApp_ID" version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <display-name>Geoportal Server</display-name>
+    <context-param>
+        <param-name>javax.faces.CONFIG_FILES</param-name>
+        <param-value>/WEB-INF/faces-config.xml, /WEB-INF/gpt-faces-config.xml</param-value>
+    </context-param>
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+  <servlet>
+    <servlet-name>InitializationServlet</servlet-name>
+    <servlet-class>com.esri.gpt.framework.context.InitializationServlet</servlet-class>
+    <load-on-startup>3</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.page</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>GxeServlet</servlet-name>
+        <servlet-class>com.esri.gpt.catalog.gxe.GxeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GxeServlet</servlet-name>
+        <url-pattern>/gxe</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GxeServlet</servlet-name>
+        <url-pattern>/gxe/definition/type</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GxeServlet</servlet-name>
+        <url-pattern>/gxe/definition/types</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GxeServlet</servlet-name>
+        <url-pattern>/gxe/echo/attachment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GxeServlet</servlet-name>
+        <url-pattern>/gxe/i18n</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GxeServlet</servlet-name>
+        <url-pattern>/gxe/interrogate</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GxeServlet</servlet-name>
+        <url-pattern>/gxe/interrogate/details</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GxeServlet</servlet-name>
+        <url-pattern>/gxe/interrogate/multipart</url-pattern>
+    </servlet-mapping>
+    <!-- The following GxeServlet endpoints are for backward compatibility. -->
+    <servlet-mapping>
+        <servlet-name>GxeServlet</servlet-name>
+        <url-pattern>/gxe/details</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GxeServlet</servlet-name>
+        <url-pattern>/gxe/definition</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GxeServlet</servlet-name>
+        <url-pattern>/gxe/types</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+      <session-timeout>30</session-timeout>
+    </session-config>
+</web-app>

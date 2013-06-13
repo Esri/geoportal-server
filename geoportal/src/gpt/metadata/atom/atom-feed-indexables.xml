@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<!-- atom-indexables.xml -->
+<indexables>
+
+  <!-- namespaces -->
+  <namespace prefix="atom" uri="http://www.w3.org/2005/Atom" />
+
+  <property meaning="fileIdentifier" xpath="/atom:feed/atom:id"/>
+  <property meaning="title" xpath="/atom:feed/atom:title"/>
+  <property meaning="date" xpath="/atom:feed/atom:updated"/>
+  <property meaning="publisher" xpath="/atom:feed/atom:author/atom:name"/>
+  <property meaning="abstract" xpath="/atom:feed/atom:subtitle"/>    
+  <property meaning="keywords" xpath="/atom:feed/atom:category"/>
+  <property meaning="resource.url" xpath="/atom:feed/atom:link/@href"/>
+  <property meaning="thumbnail.url" xpath="/atom:feed/atom:logo"/> 
+  <property meaning="body" xpathType="STRING" xpath="/*"/>
+</indexables>
+

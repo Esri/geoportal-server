@@ -14,11 +14,10 @@
  */
 package com.esri.gpt.control.georss;
 
-import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.catalog.search.OpenSearchProperties;
-import com.esri.gpt.catalog.search.SearchResultRecords;
-import java.io.PrintWriter;
 import com.esri.gpt.framework.jsf.MessageBroker;
+import com.esri.gpt.framework.util.Val;
+import java.io.PrintWriter;
 
 /**
  * HtmlFeedWriter
@@ -63,7 +62,7 @@ public HtmlFeedWriter(MessageBroker messageBroker, PrintWriter writer) {
  * @param records records to write
  */
 @Override
-public void write(SearchResultRecords records) {
+public void write(IFeedRecords records) {
   String sLang = _messageBroker.getLocale().getLanguage();
   String sTitle = _messageBroker.retrieveMessage("catalog.rest.title");
   

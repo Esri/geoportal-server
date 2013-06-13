@@ -17,6 +17,8 @@ package com.esri.gpt.server.erosfeed;
 
 import com.esri.gpt.catalog.search.*;
 import com.esri.gpt.control.georss.AtomFeedWriter;
+import com.esri.gpt.control.georss.IFeedRecord;
+import com.esri.gpt.control.georss.IFeedRecords;
 import com.esri.gpt.framework.util.Val;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -61,7 +63,7 @@ public class ErosAtomFeedWriter extends AtomFeedWriter {
   }
 
   @Override
-  public void write(SearchResultRecords records) {
+  public void write(IFeedRecords records) {
     AtomFeed af = new AtomFeed();
 
     af.addStringToXmlHeader(" xmlns:" + namespace + "=\"http://www.geodata.gov/" + namespace + "_atom\"");
@@ -93,7 +95,7 @@ public class ErosAtomFeedWriter extends AtomFeedWriter {
     af.setId(getEntryBaseUrl());
     af.setUpdated(new Date());
     af.setOsProps(records.getOpenSearchProperties());
-    for (SearchResultRecord record : records) {
+    for (IFeedRecord record : records) {
       ErosAtomEntry ae = new ErosAtomEntry();
       ae.setId(record.getUuid());
       ae.setPublished(record.getModfiedDate());
@@ -119,15 +121,27 @@ public class ErosAtomFeedWriter extends AtomFeedWriter {
     af.WriteTo(_writer);
   }
 
-  private String findEmailAddress(SearchResultRecord record) {
+  private String findEmailAddress(IFeedRecord record) {
     return emailFinder.findEmail(record.getUuid());
   }
 
-  private String findServiceType(SearchResultRecord record) {
-    return record.getServiceType().isEmpty() ? resourceIdentifier.guessServiceTypeFromUrl(record.getResourceUrl()) : record.getServiceType();
+  private String findServiceType(IFeedRecord record) {
+    String serviceType = record.getServiceType().isEmpty() ? resourceIdentifier.guessServiceTypeFromUrl(record.getResourceUrl()) : record.getServiceType();
+    if (serviceType.equals("ags") ) {
+      if (record.getResourceUrl().endsWith("MapServer")) {
+        serviceType += "mapserver";
+      }
+      if (record.getResourceUrl().endsWith("FeatureServer")) {
+        serviceType += "featureserver";
+      }
+      if (record.getResourceUrl().endsWith("ImageServer")) {
+        serviceType += "imageserver";
+      }
+    }
+    return serviceType;
   }
 
-  private String findMetadataUrl(SearchResultRecord record) {
+  private String findMetadataUrl(IFeedRecord record) {
     ResourceLinks rLinks = record.getResourceLinks();
     return rLinks != null ? Val.chkStr(rLinks.findUrlByTag(ResourceLink.TAG_METADATA)) : "";
   }

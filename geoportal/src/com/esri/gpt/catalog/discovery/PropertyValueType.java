@@ -22,6 +22,7 @@ import com.esri.gpt.framework.util.Val;
  * <p/>GEOMETRY: the bounding envelope for a document
  * <p/>LONG: a long integer
  * <p/>STRING: a string
+ * <p/>TIMEPERIOD: time period of content
  * <p/>TIMESTAMP: a timestamp
  */
 public enum PropertyValueType {
@@ -29,6 +30,7 @@ public enum PropertyValueType {
   GEOMETRY,
   LONG,
   STRING,
+  TIMEPERIOD,
   TIMESTAMP;
     
   /**

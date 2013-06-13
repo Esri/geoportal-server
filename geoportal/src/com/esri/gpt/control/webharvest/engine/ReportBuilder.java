@@ -66,6 +66,8 @@ private volatile long added;
 private volatile long updated;
 /** number of deleted records */
 private volatile long deleted;
+/** last excption */
+private Exception exception;
 /** directory */
 private File directory;
 /** storage file */
@@ -209,12 +211,12 @@ public synchronized long getAddedCount() {
   return this.added;
 }
 
-  @Override
+@Override
 public synchronized long getModifiedCount() {
   return this.updated;
 }
 
-  @Override
+@Override
 public synchronized long getDeletedCount() {
   return deleted;
 }  
@@ -223,7 +225,15 @@ public synchronized void setDeletedCount(long deletedCount) {
   this.deleted = deletedCount;
 }
 
-  @Override
+public synchronized Exception getException() {
+  return exception;
+}
+
+public synchronized void setException(Exception exception) {
+  this.exception = exception;
+}
+
+@Override
 public long getPublishedCount() {
   return getAddedCount() + getModifiedCount();
 }
@@ -412,6 +422,9 @@ private String getReportStats() {
   sb.append("<docsUpdated>").append(updated).append("</docsUpdated>");
   sb.append("<docsFailed>").append(harvested - (added + updated)).append("</docsFailed>");
   sb.append("<docsDeleted>").append(deleted).append("</docsDeleted>");
+  if (exception!=null) {
+    sb.append("<exception>").append(exception.toString()).append("</exception>");
+  }
   sb.append("<duration>").append(new TimePeriod(getDuration()).toString()).append("</duration>");
   sb.append("<average>").append(getPerformance()).append("rec/min</average>");
   if (maxRepRecords!=null && harvested>maxRepRecords) {

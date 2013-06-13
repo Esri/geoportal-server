@@ -16,6 +16,7 @@ package com.esri.gpt.catalog.lucene;
 import com.esri.gpt.catalog.discovery.Discoverable;
 import com.esri.gpt.catalog.discovery.DiscoveryException;
 import com.esri.gpt.catalog.discovery.LogicalClause;
+import com.esri.gpt.catalog.discovery.PropertyClause;
 import com.esri.gpt.catalog.discovery.PropertyComparisonType;
 import com.esri.gpt.catalog.discovery.PropertyMeaning;
 import com.esri.gpt.catalog.discovery.PropertyMeanings;
@@ -247,6 +248,13 @@ import org.apache.lucene.search.WildcardQuery;
           throw new ParseException("Error parsing expression: " + ex.getMessage());
         }
       }
+      if (type == PropertyComparisonType.VALUE && meaning.getValueType() == PropertyValueType.TIMEPERIOD) {
+        try {
+          q = this.makeTimeperiodQuery(meaning,part1,part2,inclusive);
+        } catch (DiscoveryException ex) {
+          throw new ParseException("Error parsing expression: " + ex.getMessage());
+        }
+      }
       if (type == PropertyComparisonType.VALUE && meaning.getValueType() == PropertyValueType.TIMESTAMP) {
         try {
           q = (new TimestampField(field)).makeRangeQuery(part1,part2,inclusive,inclusive);
@@ -255,15 +263,23 @@ import org.apache.lucene.search.WildcardQuery;
         }
       }
       if (type == PropertyComparisonType.VALUE && meaning.getValueType() == PropertyValueType.LONG) {
+        String sLower = part1;
+        String sUpper = part2;
+        if (Val.chkStr(sLower).equals("*")) sLower= "";
+        if (Val.chkStr(sUpper).equals("*")) sUpper= "";
         try {
-          q = (new LongField(field)).makeRangeQuery(part1,part2,inclusive,inclusive);
+          q = (new LongField(field)).makeRangeQuery(sLower,sUpper,inclusive,inclusive);
         } catch (DiscoveryException ex) {
           throw new ParseException("Error parsing expression: " + ex.getMessage());
         }
       }
       if (type == PropertyComparisonType.VALUE && meaning.getValueType() == PropertyValueType.DOUBLE) {
+        String sLower = part1;
+        String sUpper = part2;
+        if (Val.chkStr(sLower).equals("*")) sLower= "";
+        if (Val.chkStr(sUpper).equals("*")) sUpper= "";
         try {
-          q = (new LongField(field)).makeRangeQuery(part1,part2,inclusive,inclusive);
+          q = (new DoubleField(field,DoubleField.DEFAULT_PRECISION)).makeRangeQuery(sLower,sUpper,inclusive,inclusive);
         } catch (DiscoveryException ex) {
           throw new ParseException("Error parsing expression: " + ex.getMessage());
         }
@@ -520,6 +536,37 @@ import org.apache.lucene.search.WildcardQuery;
     target.setStoreable(new GeometryProperty(meaning.getName()));
     spatialClause.setTarget(target);
     return spatialClause;
+  }
+  
+  /**
+   * Makes a timeperiod query.
+   * @param meaning the property meaning
+   * @param the lower bound for the range
+   * @param the upper bound for the range
+   * @param inclusive true if the range is inclusive
+   * @return the query
+   * @throws ParseException 
+   * @throws DiscoveryException 
+   */
+  private Query makeTimeperiodQuery(PropertyMeaning meaning, 
+      String lower, String upper, boolean inclusive) 
+      throws DiscoveryException, ParseException {
+    
+    // make the clause
+    Discoverable target = new Discoverable(meaning.getName());
+    target.setMeaning(meaning);
+    target.setStoreable(new TimeperiodProperty(meaning.getName()));
+    PropertyClause.PropertyIsBetween clause = new PropertyClause.PropertyIsBetween();
+    clause.setTarget(target);
+    clause.setLowerBoundary(lower);
+    clause.setUpperBoundary(upper);
+    
+    // make the query
+    BooleanQuery query = new BooleanQuery();
+    TimeperiodClauseAdapter adaptor = new TimeperiodClauseAdapter(getLuceneQueryAdapter());
+    adaptor.setInclusive(inclusive);
+    adaptor.adaptPropertyClause(query,new LogicalClause.LogicalAnd(),clause);
+    return query;
   }
 
   /**

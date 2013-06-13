@@ -290,6 +290,46 @@ public static String escapeStrForJson(String text) {
     }
     return sb.toString();
 }
+
+/**
+ * Escapes arbitrary text into a ldap escaped string.
+ * @param text text to escape
+ * @return escaped text
+ */
+public static String escapeStrForLDAPSearch(String text) {
+    if (text == null) return null;
+
+    StringBuffer sb = new StringBuffer();
+    for(int i=0;i<text.length();i++){
+      char ch = text.charAt(i);
+      switch(ch){
+      case '\\':
+        sb.append("\\\\");
+        break;
+      case '#':
+        sb.append("\\#");
+        break;
+      case '+':
+        sb.append("\\+");
+        break;
+      case '<':
+        sb.append("\\<");
+        break;
+      case '>':
+        sb.append("\\>");
+        break;
+      case ';':
+        sb.append("\\;");
+        break;
+      case '"':
+          sb.append("\\\"");
+          break;
+      default:       
+          sb.append(ch);
+      }
+    }
+    return sb.toString();
+}
 /**
  * Escapes special xml characters within a string.
  * <br/> < > & " are escaped

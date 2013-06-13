@@ -126,7 +126,11 @@ private boolean isKmlOrKmz(String url) {
  */
 @Override
 public String readOpenDefaultMapViewerUrl() {
-  return this.getMapViewerConfigs().getUrl();
+	String s =  this.getMapViewerConfigs().getUrl();
+	//if(this.getUrlCanBeJscript() == true) {
+		s = "javascript:window.open('" + s + "')";
+	//}
+  return s;
 }
 
 }

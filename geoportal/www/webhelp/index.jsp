@@ -55,7 +55,7 @@ private static final String DEFAULT_LANG= "en";
 // CX help file
 private static final String CX_HELP = "cxhelp.xml";
 // REMOTE_HELP_SYSTEM is an absolute URL to the help system on the net.
-private static final String REMOTE_HELP_SYSTEM = "http://sourceforge.net/apps/mediawiki/geoportal/index.php?title=";
+private static final String REMOTE_HELP_SYSTEM = "https://github.com/Esri/geoportal-server/wiki";
 %>
 
 <%!
@@ -67,53 +67,53 @@ private static Map<String,String> mapping = null;
 // initialization table for translation mappings: CMD => help ID
 private static String INIT[][] = {
   // home page
-  {"catalog.main.home",                            "geoportal-welcome",            "Main_Page"},
+  {"catalog.main.home",                            "geoportal-welcome",            "/#welcome-to-the-esri-geoportal-server"},
   // identity/login
-  {"catalog.identity.changePassword",              "login-manage-password",        "How_to_Login_and_Manage_my_Password"},
-  {"catalog.identity.encryptPassword",             "security",                     "Security_Concepts"},
-  {"catalog.identity.feedback",                    "provide-feedback",             "Feedback"},
-  {"catalog.identity.forgotPassword",              "login-manage-password",        "How_to_Login_and_Manage_my_Password"},
-  {"catalog.identity.login",                       "login-manage-password",        "How_to_Login_and_Manage_my_Password"},
-  {"catalog.identity.myProfile",                   "create-manage-profile",        "How_to_Create_and_Manage_My_Profile"},
-  {"catalog.identity.userRegistration",            "create-account",               "Create_a_user_account"},
+  {"catalog.identity.changePassword",              "login-manage-password",        "/How-to-Login-and-Manage-my-Password"},
+  {"catalog.identity.encryptPassword",             "security",                     "/Security-Concepts"},
+  {"catalog.identity.feedback",                    "provide-feedback",             "/Feedback"},
+  {"catalog.identity.forgotPassword",              "login-manage-password",        "/How-to-Login-and-Manage-my-Password"},
+  {"catalog.identity.login",                       "login-manage-password",        "/How-to-Login-and-Manage-my-Password"},
+  {"catalog.identity.myProfile",                   "create-manage-profile",        "/How-to-Login-and-Manage-my-Password"},
+  {"catalog.identity.userRegistration",            "create-account",               "/Create-a-user-account"},
   // search
-  {"catalog.search.directedSearch",                "search-geoportal",             "How_to_Search_for_Resources"},
-  {"catalog.search.searchResult.viewFullMetadata", "",                             "Main_Page"},
-  {"catalog.search.directedSearch.extSite",        "",                             "Main_Page"},
-  {"catalog.search.home",                          "search-geoportal",             "How_to_Search_for_Resources"},
-  {"catalog.search.viewMetadataDetails",           "use-search-page-results",      "How_to_Use_Search_Page_Results"},
+  {"catalog.search.directedSearch",                "search-geoportal",             "/How-to-Search-for-Resources"},
+  {"catalog.search.searchResult.viewFullMetadata", "",                             "/#welcome-to-the-esri-geoportal-server"},
+  {"catalog.search.directedSearch.extSite",        "",                             "/#welcome-to-the-esri-geoportal-server"},
+  {"catalog.search.home",                          "search-geoportal",             "/How-to-Search-for-Resources"},
+  {"catalog.search.viewMetadataDetails",           "use-search-page-results",      "/How-to-Search-for-Resources"},
   // publication
-  {"catalog.publication.addMetadata",              "publish-resources",            "How_to_Publish_Resources"},
-  {"catalog.publication.createMetadata",           "publish-resources",            "How_to_Publish_Resources"},
-  {"catalog.publication.editMetadata",             "manage-resources",             "How_to_Manage_and_Edit_Resources"},
-  {"catalog.publication.manageMetadata",           "manage-resources",             "How_to_Manage_and_Edit_Resources"},
-  {"catalog.publication.uploadMetadata",           "publish-resources",            "How_to_Publish_Resources"},
-  {"catalog.publication.validateMetadata",         "publish-resources",            "How_to_Publish_Resources"},
+  {"catalog.publication.addMetadata",              "publish-resources",            "/How-to-Publish-Resources"},
+  {"catalog.publication.createMetadata",           "publish-resources",            "/How-to-Publish-Resources"},
+  {"catalog.publication.editMetadata",             "manage-resources",             "/How-to-Manage-and-Edit-Resources"},
+  {"catalog.publication.manageMetadata",           "manage-resources",             "/How-to-Manage-and-Edit-Resources"},
+  {"catalog.publication.uploadMetadata",           "publish-resources",            "/How-to-Publish-Resources"},
+  {"catalog.publication.validateMetadata",         "publish-resources",            "/How-to-Publish-Resources"},
   // harvest
-  {"catalog.harvest.manage.create",                "publish-resources",            "How_to_Publish_Resources"},
-  {"catalog.harvest.manage.edit",                  "manage-resources",             "How_to_Manage_and_Edit_Resources"},
-  {"catalog.harvest.manage.history",               "manage-resources",             "How_to_Manage_and_Edit_Resources"},
-  {"catalog.harvest.manage.report",                "manage-resources",             "How_to_Manage_and_Edit_Resources"},
+  {"catalog.harvest.manage.create",                "publish-resources",            "/How-to-Publish-Resources"},
+  {"catalog.harvest.manage.edit",                  "manage-resources",             "/How-to-Manage-and-Edit-Resources"},
+  {"catalog.harvest.manage.history",               "manage-resources",             "/How-to-Manage-and-Edit-Resources"},
+  {"catalog.harvest.manage.report",                "manage-resources",             "/How-to-Manage-and-Edit-Resources"},
   // pop-ups
-  {"catalog.harvest.iso.caption",                  "",                             "Main_Page"},
-  {"catalog.harvest.lookup.caption",               "",                             "Main_Page"},
+  {"catalog.harvest.iso.caption",                  "",                             "/#welcome-to-the-esri-geoportal-server"},
+  {"catalog.harvest.lookup.caption",               "",                             "/#welcome-to-the-esri-geoportal-server"},
   // download
-  {"catalog.download.download",                    "use-data-download",            "How_to_Use_the_Data_Download_Feature"},
+  {"catalog.download.download",                    "use-data-download",            "/How-to-Use-the-Data-Download-Feature"},
   // live data preview
-  {"catalog.livedata.preview",                     "geoportal-preview",            "Preview_Function"},
+  {"catalog.livedata.preview",                     "geoportal-preview",            "/Preview-Function"},
   // browse
-  {"catalog.browse",                               "geoportal-browse-resources",   "How_to_Browse_for_Resources"},
+  {"catalog.browse",                               "geoportal-browse-resources",   "/How-to-Browse-for-Resources"},
   // resource
-  {"catalog.search.resource.details",              "use-search-page-results",      "How_to_Use_Search_Page_Results"},
-  {"catalog.search.resource.review",               "geoportal-resource-review",    "How_to_Leave_a_Resource_Review"},
-  {"catalog.search.resource.relationships",        "geoportal-view-relationships", "How_to_View_Resource_Relationships"},
-  {"catalog.search.resource.preview",              "geoportal-preview",            "Preview_Function"},
+  {"catalog.search.resource.details",              "use-search-page-results",      "/How-to-Use-Search-Page-Results"},
+  {"catalog.search.resource.review",               "geoportal-resource-review",    "/How-to-Leave-a-Resource-Review"},
+  {"catalog.search.resource.relationships",        "geoportal-view-relationships", "/How-to-View-Resource-Relationships"},
+  {"catalog.search.resource.preview",              "geoportal-preview",            "/Preview-Function"},
   // migration
-  {"catalog.migration.migrateMetadata",            "",                             "Main_Page"},
+  {"catalog.migration.migrateMetadata",            "",                             "/#welcome-to-the-esri-geoportal-server"},
   // misc
-  {"catalog.content.about",                        "geoportal-welcome",            "Main_Page"},
-  {"catalog.content.disclaimer",                   "geoportal-welcome",            "Main_Page"},
-  {"catalog.content.privacy",                      "geoportal-welcome",            "Main_Page"},
+  {"catalog.content.about",                        "geoportal-welcome",            "/#welcome-to-the-esri-geoportal-server"},
+  {"catalog.content.disclaimer",                   "geoportal-welcome",            "/#welcome-to-the-esri-geoportal-server"},
+  {"catalog.content.privacy",                      "geoportal-welcome",            "/#welcome-to-the-esri-geoportal-server"},
 };
 
 // initializes of translation mappings: CMD => help page
@@ -144,7 +144,7 @@ private String concat(String ... elements) {
 }
 
 /**
- * Gets help ID based uppon command.
+ * Gets help ID based upon command.
  * @param cmd command received within request
  * @return help ID
  */
@@ -162,7 +162,7 @@ private String getRootContextPath(HttpServletRequest request) {
 }
 
 /**
- * Checks connectio to the given URL.
+ * Checks connection to the given URL.
  * @param URL URL to check
  * @return <code>true</code> if connection can be established
  */
@@ -251,7 +251,7 @@ String helpPage = pages.get(cmd);
 String helpFullUrl = "";
 
 
-// Only web help is awailable
+// Only web help is available
 helpFullUrl = REMOTE_HELP_SYSTEM + helpPage;
 
 // redirect to the page

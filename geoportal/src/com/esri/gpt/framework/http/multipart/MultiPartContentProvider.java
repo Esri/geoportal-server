@@ -64,8 +64,8 @@ public class MultiPartContentProvider extends ContentProvider {
   /**
    * Adds string attribute.
    *
-   * @param name name
-   * @param value value
+   * @param name attribute name
+   * @param value attribute value
    * @throws IOException if error setting attribute
    */
   public void add(final String name, final String value) throws IOException {
@@ -80,8 +80,11 @@ public class MultiPartContentProvider extends ContentProvider {
   /**
    * Adds file attribute.
    *
-   * @param name name
+   * @param name attribute name
    * @param file file
+   * @param fileName disposition file name
+   * @param contentType content type
+   * @param charset character set
    * @param deleteAfterUpload <code>true</code> to delete file after being uploaded
    * @throws IOException if error setting attribute
    */
@@ -98,8 +101,10 @@ public class MultiPartContentProvider extends ContentProvider {
    * Adds bytes attribute.
    *
    * @param name name
-   * @param fileName file name
    * @param bytes bytes
+   * @param fileName disposition file name
+   * @param contentType content type
+   * @param charset character set
    * @throws IOException if error setting attribute
    */
   public void add(final String name, final byte[] bytes, final String fileName, final String contentType, final String charset) throws IOException {

@@ -1,23 +1,14 @@
 package com.esri.gpt.control.georss;
 
+import com.esri.gpt.catalog.search.ResourceLink;
+import com.esri.gpt.catalog.search.SearchResultRecords;
+import com.esri.gpt.framework.jsf.MessageBroker;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.html.HTML;
-
-import org.apache.commons.codec.StringEncoder;
 import org.apache.commons.io.IOUtils;
-
-
-
-import com.esri.gpt.catalog.search.ResourceLink;
-import com.esri.gpt.catalog.search.SearchResult;
-import com.esri.gpt.catalog.search.SearchResultRecord;
-import com.esri.gpt.catalog.search.SearchResultRecords;
-import com.esri.gpt.framework.jsf.MessageBroker;
 
 /**
  * @author TM
@@ -45,7 +36,7 @@ private static final String DELIMETER = ",";
  * @see com.esri.gpt.control.georss.FeedWriter#write(com.esri.gpt.catalog.search.SearchResultRecords)
  */
 @Override
-public void write(SearchResultRecords records) {
+public void write(IFeedRecords records) {
   PrintWriter writer = null;
   try {
     
@@ -60,7 +51,7 @@ public void write(SearchResultRecords records) {
     String sRow = this.readHeader();
     writer.print(sRow);   
     
-    for (SearchResultRecord record : records) {
+    for (IFeedRecord record : records) {
       sRow = this.readRow(record);
       writer.print(sRow);
     }
@@ -148,21 +139,19 @@ protected String readHeader() {
  * @param record the record
  * @return the string
  */
-protected String readRow(SearchResultRecord record) {
+protected String readRow(IFeedRecord record) {
   StringBuffer row = new StringBuffer();
   MessageBroker mBrok = this.getMessageBroker();
   String contentType = mBrok.retrieveMessage(
       "catalog.search.filterContentTypes." + 
       record.getContentType());
   String resourceUrl = record.getResourceUrl();
-  String webSite = record.getResourceLinksAsMap().get(
-      ResourceLink.TAG_WEBSITE);
+  String webSite = record.getResourceLinks().findUrlByTag(ResourceLink.TAG_WEBSITE);
   if(!record.getContentType().toLowerCase().equals("livedata")) {
     resourceUrl = "";
   }
   if(record.getContentType().toLowerCase().contains("download")) {
-    webSite = record.getResourceLinksAsMap().get(
-       ResourceLink.TAG_OPEN);
+    webSite = record.getResourceLinks().findUrlByTag(ResourceLink.TAG_OPEN);
   }
   
   row

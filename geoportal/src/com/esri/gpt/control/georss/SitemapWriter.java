@@ -14,15 +14,11 @@
  */
 package com.esri.gpt.control.georss;
 import com.esri.gpt.catalog.discovery.rest.RestQuery;
-import com.esri.gpt.catalog.search.SearchResultRecord;
-import com.esri.gpt.catalog.search.SearchResultRecords;
-import com.esri.gpt.control.georss.FeedWriter;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ConfigurationException;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
-
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -181,7 +177,7 @@ public class SitemapWriter implements FeedWriter {
    * Writes the response.
    * @param records the response records
    */
-  public void write(SearchResultRecords records) {
+  public void write(IFeedRecords records) {
     boolean respondWithIndex = false;
     int hits = records.getOpenSearchProperties().getNumberOfHits();
     if (!hadStart && !hadMax) {
@@ -241,11 +237,11 @@ public class SitemapWriter implements FeedWriter {
    * Writes the response as a sitemap urlset.
    * @param records the response records
    */
-  private void writeSitemapRecords(SearchResultRecords records) {
+  private void writeSitemapRecords(IFeedRecords records) {
     printWriter.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     printWriter.println("<urlset xmlns=\""+this.namespaceUri+"\">");
     int nWritten = 0;
-    for (SearchResultRecord r : records) {
+    for (IFeedRecord r : records) {
       
       // determine the document URL
       String uuid = Val.chkStr(r.getUuid());

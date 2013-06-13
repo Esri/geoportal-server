@@ -357,8 +357,8 @@ function rsGetQualityOfService() {
           + "&id=" + encodeURIComponent(uuid)
           ;
         var infoUrl = 
-          serviceCheckerInfoUrl
-          + "?serviceType=" + encodeURIComponent(type)
+          serviceCheckerInfoUrl + "?auth=" + serviceCheckerToken
+          + "&serviceType=" + encodeURIComponent(type)
           + "&uId=" + encodeURIComponent(uuid)
         var context = {
           node: node,

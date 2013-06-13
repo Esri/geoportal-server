@@ -43,7 +43,11 @@
 
   <schema fileName="gpt/metadata/iso/iso-19115-2-definition.xml"/>
   
-  <schema fileName="gpt/metadata/ogc/ogc-definition.xml"/> 
+   <!-- ATOM 1.0 -->
+  <schema fileName="gpt/metadata/atom/atom-1-0-entry-definition.xml"/> 
+  <schema fileName="gpt/metadata/atom/atom-1-0-feed-definition.xml"/> 
+   
+  <!--schema fileName="gpt/metadata/ogc/ogc-definition.xml"/--> 
   <schema fileName="gpt/metadata/ogc/cswRecord-definition.xml"/>
   <schema fileName="gpt/metadata/other/georss-definition.xml"/> 
   <schema fileName="gpt/metadata/other/opensearch-definition.xml"/>

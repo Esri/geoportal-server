@@ -15,8 +15,6 @@
 
 package com.esri.gpt.control.georss;
 
-import com.esri.gpt.catalog.search.SearchResultRecords;
-
 /**
  * Feed writer.
  */
@@ -25,5 +23,5 @@ public interface FeedWriter {
  * Writers records.
  * @param records records to write
  */  
-void write(SearchResultRecords records);
+void write(IFeedRecords records);
 }

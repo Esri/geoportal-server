@@ -51,9 +51,12 @@
   <property meaning="dataTheme" xpath="/rdf:RDF/rdf:Description/dc:subject"/>
   <property meaning="relation" xpath="/rdf:RDF/rdf:Description/dc:relation"/>
 
+  <!-- time period of the content -->
+  <property meaning="timeperiod.analyze" xpathType="STRING"
+    xpath="concat('tp.position.',//dct:valid)"/>
+
   <!-- index all text content as part of the body field -->
   <property meaning="body" xpath="/rdf:RDF/rdf:Description/*"/>
-
   
 </indexables>
 

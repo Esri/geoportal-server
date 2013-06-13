@@ -44,13 +44,28 @@
 
   <property meaning="publisher" xpathType="NODESET"
     xpath="/metadata/metainfo/metc/cntinfo/cntperp/cntorg | /metadata/metainfo/metc/cntinfo/cntorgp/cntorg"/>
-  
-  <property meaning="fgdc.begdate" xpath="/metadata/idinfo/timeperd/timeinfo/rngdates/begdate"/>
-  <property meaning="fgdc.enddate" xpath="/metadata/idinfo/timeperd/timeinfo/rngdates/enddate"/>
-  <property meaning="fgdc.sngdate" xpath="/metadata/idinfo/timeperd/timeinfo/sngdate/caldate"/>
-  <property meaning="fgdc.multidate" xpath="/metadata/idinfo/timeperd/timeinfo/mdattim/sngdate/caldate"/>
+
+  <!-- time period of the content -->
+  <property xpath="/metadata/idinfo/timeperd/timeinfo/rngdates">
+    <property meaning="timeperiod.analyze" xpathType="STRING"
+      xpath="concat('tp.begin.',begdate,'.fgdctime.',begtime,'.end.',enddate,'.fgdctime.',endtime)"/>
+  </property>
+  <property xpath="/metadata/idinfo/timeperd/timeinfo/mdattim/sngdate">
+    <property meaning="timeperiod.analyze" xpathType="STRING"
+      xpath="concat('tp.position.',caldate,'.fgdctime.',time)"/>
+  </property>
+  <property xpath="/metadata/idinfo/timeperd/timeinfo/sngdate">
+    <property meaning="timeperiod.analyze" xpathType="STRING"
+      xpath="concat('tp.position.',caldate,'.fgdctime.',time)"/>
+  </property>
   
   <property meaning="body" xpathType="STRING" xpath="/*"/>
+  
+  <property meaning="dcat.accessLevel"    xpath="/metadata/idinfo/accconst"/>
+  <property meaning="dcat.mbox"           xpath="/metadata/idinfo/ptcontac/cntinfo/cntemail"/>
+  <property meaning="dcat.person"         xpath="/metadata/idinfo/ptcontac/cntinfo/cntorgp/cntper" />
+  <property meaning="dcat.license"        xpath="/metadata/distinfo/distliab" />
+  <property meaning="dcat.dataDictionary" xpath="/metadata/idinfo/keywords/theme/themekt" />
   
 </indexables>
 

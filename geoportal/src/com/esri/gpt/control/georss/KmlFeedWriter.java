@@ -14,8 +14,6 @@
  */
 package com.esri.gpt.control.georss;
 
-import com.esri.gpt.catalog.search.SearchResultRecord;
-import com.esri.gpt.catalog.search.SearchResultRecords;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
@@ -106,7 +104,7 @@ public void setKmlSignatureProvider(KmlSignatureProvider kmlSignatureProvider) {
  * Writers records.
  * @param records records to write
  */
-public void write(SearchResultRecords records) {
+public void write(IFeedRecords records) {
   String sTitle = getKmlSignatureProvider().getTitle();
   String sDescription = getKmlSignatureProvider().getDescription();
 
@@ -131,7 +129,7 @@ public void write(SearchResultRecords records) {
   RecordSnippetWriter snippetWriter =
     new RecordSnippetWriter(_messageBroker, _writer);
   snippetWriter.setTarget(_target);
-  for (SearchResultRecord record : records) {
+  for (IFeedRecord record : records) {
     writeRecord(snippetWriter, record);
   }
 
@@ -146,7 +144,7 @@ public void write(SearchResultRecords records) {
  * @param record records to writeTag
  */
 protected void writeRecord(
-  RecordSnippetWriter snippetWriter, SearchResultRecord record) {
+  RecordSnippetWriter snippetWriter, IFeedRecord record) {
 
   _writer.println("<Placemark>");
 
@@ -174,7 +172,7 @@ protected void writeRecord(
  * Writes geometry.
  * @param record record
  */
-protected void writeGeometry(SearchResultRecord record) {
+protected void writeGeometry(IFeedRecord record) {
   if (record.getEnvelope() != null && record.getEnvelope().isValid()) {
     switch (getGeometry()) {
       case esriGeometryPoint:

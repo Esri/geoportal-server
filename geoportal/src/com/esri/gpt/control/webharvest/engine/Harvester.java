@@ -165,10 +165,10 @@ public class Harvester implements HarvesterMBean {
         Thread thread = new Thread(watchDog, "Watch-dog");
         thread.start();
       }
-    }
 
-    // resetRunning from the last fail/shutdown
-    resetRunning();
+      // resetRunning from the last fail/shutdown
+      resetRunning();
+    }
   }
 
   @Override
