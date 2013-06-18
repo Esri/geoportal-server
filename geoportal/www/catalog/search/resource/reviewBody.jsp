@@ -39,7 +39,7 @@
 <%@page import="com.esri.gpt.framework.util.Val"%><h:form id="mdReview" styleClass="mdReview">
 
 <script type="text/javascript">
-
+  dojo.require("dojox.html.entities");
   function asnAddErr(sErr) {
     var el = dojo.byId("asn-err");
     el.appendChild(document.createTextNode(sErr));
@@ -77,7 +77,11 @@
     asnMain.enabled = <%=asnConfig.getAreAssertionsEnabled()%>;
     asnMain.baseContextPath = "<%=request.getContextPath()%>/assertion";
     asnMain.imagesPath = "<%=request.getContextPath()%>/catalog/images";
-    asnMain.resourceId = "<%=vmdUuid%>";
+    try{
+    	asnMain.resourceId = dojox.html.entities.decode("<%=vmdUuid%>");
+    }catch(error){
+    	console.log("Invalid uuid parameter value.")
+    }
     <% if (asnHasErr) { 
       out.println("    asnAddErr('"+asnErr+"');"); 
     } %>
