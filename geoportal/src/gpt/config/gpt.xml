@@ -396,6 +396,8 @@
         <parameter key="catalog.cart.maxItems" value="100"/>
         <parameter key="catalog.cart.processor" value="com.esri.gpt.control.cart.ZipXmls"/>
 
+				<!-- Mapping file to map dcat fields to lucene index fields -->
+				<parameter key="dcat.mappings" value="gpt/metadata/dcat-mappings.xml"/>
     </catalog>
     
     <!-- Download data configuration.
