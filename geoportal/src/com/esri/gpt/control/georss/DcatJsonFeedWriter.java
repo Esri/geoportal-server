@@ -183,7 +183,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     println("{");
     levelUp();
 
-    printAttributes(r, true);
+    printAttributes(r, false);
 
     levelDown();
     println("}" + (more ? "," : ""));
@@ -238,9 +238,8 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    * @param more <code>true</code> if more info will be printed after that
    * section
    */
-  protected void printAttributesUserDcatMappings(IFeedRecord r, boolean more) {
-
-    boolean before = false;
+  protected void printAttributesUserDcatMappings(IFeedRecord r, boolean before) {
+  	printTab();
     before = lookUpFieldFromDcat(r,"title",before);
     before = lookUpFieldFromDcat(r,"abstract",before);
     before = lookUpFieldFromDcat(r,"keyword",before);
@@ -255,7 +254,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     ResourceLinks links = r.getResourceLinks();
     printLinks(links, true, before);    
     before = false;
-    
+    printTab();
     before = lookUpFieldFromDcat(r,"webService",before);
     before = lookUpFieldFromDcat(r,"format",before);
     before = lookUpFieldFromDcat(r,"license",before);
@@ -270,16 +269,15 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    * @param more <code>true</code> if more info will be printed after that
    * section
    */
-  protected void printAttributes(IFeedRecord r, boolean more) {
+  protected void printAttributes(IFeedRecord r, boolean before) {
   	
   	if(this.dcatfields.size() > 0){
-  		printAttributesUserDcatMappings(r, more);
+  		printAttributesUserDcatMappings(r, before);
   		return;
   	}
   	
     Map<String, IFeedAttribute> index = r.getData(IFeedRecord.STD_COLLECTION_INDEX);
 
-    boolean before = false;
     String COMMA = ",";
     String SPACE = " ";
 
@@ -363,8 +361,9 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 		}
 	  println("\"distribution\"" +sp()+ ":" +sp()+ "[");
 	  levelUp();
+	  boolean moreLinks = false;
 	  for (int j = 0; j<links.size(); j++) {
-	  	boolean bPrintLink = false;
+	  	boolean bPrintLink = false;	  	
 	  	String format = "";
 	    ResourceLink link = links.get(j);
 	    if(link.getTag().equals(ResourceLink.TAG_OPEN)){
@@ -372,14 +371,24 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	    }
 	    if(link.getTag().equals(ResourceLink.TAG_METADATA)){
 	    	 bPrintLink = true;
+	    	 if(!moreLinks){
+	    		 moreLinks = true;
+	    	 }else{
+	    		 moreLinks = false;
+	    	 }
 		     format = "xml";
 	    }
 	    if(link.getTag().equals(ResourceLink.TAG_DETAILS)){
 	    	bPrintLink = true;
+	    	if(!moreLinks){
+	    		 moreLinks = true;
+	    	 }else{
+	    		 moreLinks = false;
+	    	 }
 	    	format = "html";
 	    }
 	    if(bPrintLink){
-	    	printLink(link, j<links.size()-1,format);
+	    	printLink(link, moreLinks,format);
 	    }
 	  }
 	  levelDown();
@@ -417,6 +426,11 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     }
   }
 	
+  /**
+   * Cleans value from lucene index
+   * @param value
+   * @return
+   */
 	private String cleanValue(String value){
 		if(value == null) return "";
 		if(value == "null") return "";
@@ -430,6 +444,14 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 		return value;
 	}
 	
+	/**
+	 * Writes fields value in response.
+	 * @param fieldValue the lucene field value
+	 * @param jsonKey the dcat field
+	 * @param delimiter the delimiter in lucene field
+	 * @param before the indentation flag
+	 * @return
+	 */
 	private boolean writeFieldValue(String fieldValue,String jsonKey, String delimiter, boolean before){
 		String cleanedVal = cleanValue(fieldValue);
     if (before) {
@@ -441,6 +463,16 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     return before;
 	}
 
+	/**
+	 * Writes fields value to response using field mappings.
+	 * @param index the lucene index records
+	 * @param fieldName the lucene field
+	 * @param jsonKey the dcat field
+	 * @param delimiter the delimiter in lucene field
+	 * @param before the indentation flag
+	 * @param isDate true if date field
+	 * @return
+	 */
 	private boolean writeField(Map<String, IFeedAttribute> index, String fieldName,String jsonKey, String delimiter, boolean before,
 			boolean isDate){
 		String fldValues = "";
