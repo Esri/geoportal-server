@@ -367,6 +367,7 @@ public class ManageDocumentServlet extends BaseServlet {
       }
       String json = Val.chkStr(request.getParameter("errorsAsJson"));
       if (json.length()>0) {
+      	json = Val.escapeXmlForBrowser(json);
         FacesContextBroker fcb = new FacesContextBroker(request, response);
         MessageBroker msgBroker = fcb.extractMessageBroker();
         
@@ -400,6 +401,7 @@ public class ManageDocumentServlet extends BaseServlet {
       sMsg = Val.chkStr(sMsg.substring(4));
       String json = Val.chkStr(request.getParameter("errorsAsJson"));
       if (json.length()>0) {
+      	json = Val.escapeXmlForBrowser(json);
         StringBuilder sb = new StringBuilder();
         sb.append(json).append(" = {\r\n");
         sb.append("message: \"").append(Val.escapeStrForJson(sMsg)).append("\",\r\n");
@@ -417,6 +419,7 @@ public class ManageDocumentServlet extends BaseServlet {
       String sMsg = t.toString();
       String json = Val.chkStr(request.getParameter("errorsAsJson"));
       if (json.length()>0) {
+      	json = Val.escapeXmlForBrowser(json);
         StringBuilder sb = new StringBuilder();
         sb.append(json).append(" = {\r\n");
         sb.append("message: \"").append(Val.escapeStrForJson(sMsg)).append("\",\r\n");
