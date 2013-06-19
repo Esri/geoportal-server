@@ -71,7 +71,7 @@
     el.appendChild(document.createTextNode(sPrompt));
     elDiv.appendChild(el);
   }
-  
+   
   function asnInit() {
     var asnMain = new AsnMain();
     asnMain.enabled = <%=asnConfig.getAreAssertionsEnabled()%>;
