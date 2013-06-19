@@ -20,6 +20,7 @@ import com.esri.gpt.catalog.lucene.LuceneConfig;
 import com.esri.gpt.catalog.schema.SchemaFactory;
 import com.esri.gpt.catalog.schema.Schemas;
 import com.esri.gpt.catalog.search.SearchConfig;
+import com.esri.gpt.control.georss.DcatFields;
 import com.esri.gpt.control.search.browse.TocCollection;
 import com.esri.gpt.control.search.browse.TocFactory;
 import com.esri.gpt.framework.collection.StringAttributeMap;
@@ -48,6 +49,7 @@ private StringAttributeMap _parameters = new StringAttributeMap();
 private SearchConfig       _searchConfig;
 private String             _tablePrefix = "GPT_";
 private TocCollection      _tocCollection = null;
+private DcatFields 				 _dcatFields = new DcatFields();
 
 private int                connectionTimeOut = HttpClientRequest.DEFAULT_CONNECTION_TIMEOUT;
 private int                responseTimeOut   = HttpClientRequest.DEFAULT_RESPONSE_TIMEOUT;      
@@ -315,6 +317,14 @@ public int getResponseTimeOutMs() {
  */
 public void setResponseTimeOutMs(int responseTimeOut) {
   this.responseTimeOut = responseTimeOut;
+}
+
+/**
+ * Gets the dcat fields
+ * @return the _dcatFields
+ */
+public DcatFields getDcatFields() {
+	return _dcatFields;
 }
 
 // methods =====================================================================
