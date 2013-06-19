@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<fields>
+	<field name="title"          index="title" />
+  <field name="title"          index="title" visible="true" schema="iso-19115,iso-19119" />
+  <field name="abstract"       index="abstract"/>
+  <field name="keyword"        index="keywords,dataTheme,apisoTopicCategory"/>
+  <field name="modified"       index="dateModified" isDate="true"/>
+  <field name="publisher" 		 index="apiso.OrganizationName,publisher"/>
+  <field name="person" 				 index="dcat.person"/>
+  <field name="mbox" 					 index="dcat.mbox"/>
+  <field name="identifier" 		 index="fileIdentifier" schema="iso-19115,iso-19119"/>  
+  <field name="accessLevel" 	 index="dcat.accessLevel"/>
+  <field name="dataDictionary" index="dcat.dataDictionary"/>
+  <field name="webService" 	   index="resource.url"/>
+  <field name="format" 				 index="contentType"/>
+  <field name="license" 			 index="dcat.license"/>
+  <field name="spatial" 			 index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy"/>
+  <field name="temporal" 			 index="timeperiod.l.0,timeperiod.u.0" isDate="true"/>
+  <field name="temporal" 			 index="apiso.TempExtent_begin,apiso.TempExtent_end" schema="iso-19115,iso-19119" isDate="true"/>
+</fields>
