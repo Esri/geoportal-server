@@ -1,10 +1,25 @@
+/* See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.esri.gpt.control.georss;
 
 import java.io.PrintWriter;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,15 +29,21 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 
 import com.esri.gpt.catalog.discovery.rest.RestQuery;
+import com.esri.gpt.catalog.schema.indexable.tp.TpUtil;
 import com.esri.gpt.catalog.search.ResourceLink;
 import com.esri.gpt.catalog.search.ResourceLinks;
+import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.util.Val;
 
+/**
+ * Writes Dcat json response of search results using dcat mappings.
+ */
 public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 
 	private HashMap<String,String> defaultValues =  new HashMap<String,String>();
+	private DcatFields dcatfields;
 	
 	protected DcatJsonFeedWriter(HttpServletRequest request,
 			RequestContext context, PrintWriter writer, RestQuery query,
@@ -142,6 +163,8 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
       for (IFeedRecord r : records) {
         envelopes.add(r.getEnvelope());
       }
+      
+      this.dcatfields = ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getDcatFields();
       for (int i = 0; i < records.size(); i++) {
         printRecord(records.get(i), envelopes.get(i), i < records.size() - 1);
       }
@@ -167,21 +190,98 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
   }
 	
 	/**
+	 * Looks up dcat mapping field for a give a record
+	 * and writes response.
+	 * @param r the record
+	 * @param name the name of dcat field
+	 * @param before the indentation boolean cursor
+	 * @return the indentation boolean cursor
+	 */
+	private boolean lookUpFieldFromDcat(IFeedRecord r,String name,boolean before){
+		String COMMA = ",";
+		String schemaKey = "";
+    Map<String, IFeedAttribute> index = r.getData(IFeedRecord.STD_COLLECTION_INDEX);
+    IFeedAttribute schemaKeyAttr = index.get("sys.schema.key");
+    if(schemaKeyAttr != null){
+    	schemaKey = cleanValue(schemaKeyAttr + "");    	
+    }
+		StringBuilder nameSchemaKey = new StringBuilder();
+		nameSchemaKey.append(name).append("-").append(schemaKey);
+		String key = "";
+		DcatField dcatField = null;
+		Set<String> keyset = this.dcatfields.keySet();
+		for(String k : keyset){
+			if(k.contains(nameSchemaKey.toString())){
+				key = nameSchemaKey.toString();
+				dcatField = this.dcatfields.get(k);
+				break;
+			}
+		}
+		if(key.length() == 0 && dcatField == null && this.dcatfields.containsKey(name)){
+			key = name;
+			dcatField = this.dcatfields.get(key);
+		}		
+		if(key.length() > 0){			
+    	if(dcatField.isVisible()){
+    		before = writeField(index,dcatField.getIndex(),dcatField.getName(),COMMA,before,dcatField.isDate());
+    	}
+    }else if(name.equalsIgnoreCase("identifier") && key.length() == 0){
+    	ResourceLinks links = r.getResourceLinks();
+    	before = writeFieldValue(getIdentifierUrl(links),"identifier",COMMA,before); 
+    }
+		return before;
+	}
+	
+	/**
+   * Prints attributes using dcat mappings
+   * @param r record
+   * @param more <code>true</code> if more info will be printed after that
+   * section
+   */
+  protected void printAttributesUserDcatMappings(IFeedRecord r, boolean more) {
+
+    boolean before = false;
+    before = lookUpFieldFromDcat(r,"title",before);
+    before = lookUpFieldFromDcat(r,"abstract",before);
+    before = lookUpFieldFromDcat(r,"keyword",before);
+    before = lookUpFieldFromDcat(r,"modified",before);
+    before = lookUpFieldFromDcat(r,"publisher",before);
+    before = lookUpFieldFromDcat(r,"person",before);
+    before = lookUpFieldFromDcat(r,"mbox",before);
+    before = lookUpFieldFromDcat(r,"identifier",before);                  
+    before = lookUpFieldFromDcat(r,"accessLevel",before);   
+    before = lookUpFieldFromDcat(r,"dataDictionary",before);
+    
+    ResourceLinks links = r.getResourceLinks();
+    printLinks(links, true, before);    
+    before = false;
+    
+    before = lookUpFieldFromDcat(r,"webService",before);
+    before = lookUpFieldFromDcat(r,"format",before);
+    before = lookUpFieldFromDcat(r,"license",before);
+    before = lookUpFieldFromDcat(r,"spatial",before);
+    before = lookUpFieldFromDcat(r,"temporal",before);    
+    print(false, "\r\n");
+  }
+  
+  /**
    * Prints attributes.
-   *
    * @param r record
    * @param more <code>true</code> if more info will be printed after that
    * section
    */
   protected void printAttributes(IFeedRecord r, boolean more) {
-
+  	
+  	if(this.dcatfields.size() > 0){
+  		printAttributesUserDcatMappings(r, more);
+  		return;
+  	}
+  	
     Map<String, IFeedAttribute> index = r.getData(IFeedRecord.STD_COLLECTION_INDEX);
-    //Map<String, IFeedAttribute> dbInfo = r.getData(IFeedRecord.STD_COLLECTION_CATALOG);
-  
+
     boolean before = false;
     String COMMA = ",";
     String SPACE = " ";
-    String DASH = "-";
 
     if (checkAttr("title")) {
       before = printAttr(before, "title", cleanValue(r.getTitle()));
@@ -190,34 +290,55 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
       before = printAttr(before, "abstract", cleanValue(r.getAbstract()));
     }
     
-    before = writeField(index,"keywords,dataTheme,apisoTopicCategory","keyword",COMMA,before);
+    before = writeField(index,"keywords,dataTheme,apisoTopicCategory","keyword",COMMA,before,false);
     
     if (checkAttr("dateModified") && r.getModfiedDate() instanceof Date) {
       before = printAttr(before, "modified", DF.format(r.getModfiedDate()));
     }
     
-    before = writeField(index,"apiso.OrganizationName,publisher","publisher",COMMA, before);
+    before = writeField(index,"apiso.OrganizationName,publisher","publisher",COMMA, before,false);
     
-    before = writeField(index,"dcat.person","person",COMMA,before);
-    before = writeField(index,"dcat.mbox","mbox",COMMA,before);
+    before = writeField(index,"dcat.person","person",COMMA,before,false);
+    before = writeField(index,"dcat.mbox","mbox",COMMA,before,false);
     ResourceLinks links = r.getResourceLinks();
-    before = writeFieldValue(getIdentifierUrl(links),"identifier",COMMA,before);
+    boolean  isIso = false;
+    IFeedAttribute schemaKey = index.get("sys.schema.key");
+    if(schemaKey != null){
+    	String sk = cleanValue(schemaKey + "");
+    	if(sk.equalsIgnoreCase("iso-19115")||sk.equalsIgnoreCase("iso-19119")){
+    		before = writeField(index,"fileIdentifier","identifier",COMMA,before,false);
+    		isIso = true;
+    	}else{    
+      	before = writeFieldValue(getIdentifierUrl(links),"identifier",COMMA,before);      	
+      }
+    }else{    
+    	before = writeFieldValue(getIdentifierUrl(links),"identifier",COMMA,before);
+    }
  
-    before = writeField(index,"dcat.accessLevel","accessLevel",COMMA,before);
-    before = writeField(index,"dcat.dataDictionary","dataDictionary",COMMA,before);
-    printLinks(links, true);
-
-    before = writeField(index,"resource.url","webService",COMMA,before);
+    before = writeField(index,"dcat.accessLevel","accessLevel",COMMA,before,false);
+    before = writeField(index,"dcat.dataDictionary","dataDictionary",COMMA,before,false);
+    printLinks(links, true, before);
+    before = false;
+    before = writeField(index,"resource.url","webService",COMMA,before,false);
     
-    before = writeField(index,"contentType", "format",COMMA,before);
-    before = writeField(index,"dcat.license","license",COMMA,before);
-    before = writeField(index,"envelope.minx,envelope.miny,envelope.maxx,envelope.maxy","spatial",SPACE,before);
-    before = writeField(index,"timeperiod.l.0,timeperiod.u.0","temporal",DASH,before);
+    before = writeField(index,"contentType", "format",COMMA,before,false);
+    before = writeField(index,"dcat.license","license",COMMA,before,false);
+    before = writeField(index,"envelope.minx,envelope.miny,envelope.maxx,envelope.maxy","spatial",SPACE,before,false);
+    if(isIso){    	
+    	before = writeField(index,"apiso.TempExtent_begin,apiso.TempExtent_end","temporal",COMMA,before,true);
+    } else {
+    	before = writeField(index,"timeperiod.l.0,timeperiod.u.0","temporal",COMMA,before,true);
+    }
   
     print(false, "\r\n");
 
   }
 	
+  /**
+   * Finds metadata url from resource links
+   * @param links the resource links
+   * @return the metadata url
+   */
 	private String getIdentifierUrl(ResourceLinks links){
 		 String identifierUrl = "";
 		 for (int j = 0; j<links.size(); j++) {
@@ -233,11 +354,13 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	/**
 	 * Prints all links.
 	 * @param links collection of resource links
-	 * @param more flag to indicate if there will be more arguments
+	 * @param before flag to indicate if there will be more arguments
 	 */
-	protected void printLinks(ResourceLinks links, boolean more) {
-		print(false, ",");
-		print(false, "\r\n");
+	protected void printLinks(ResourceLinks links, boolean more, boolean before) {
+		if (before) {
+			print(false, ",");
+			print(false, "\r\n");
+		}
 	  println("\"distribution\"" +sp()+ ":" +sp()+ "[");
 	  levelUp();
 	  for (int j = 0; j<links.size(); j++) {
@@ -249,7 +372,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	    }
 	    if(link.getTag().equals(ResourceLink.TAG_METADATA)){
 	    	 bPrintLink = true;
-		    	format = "xml";
+		     format = "xml";
 	    }
 	    if(link.getTag().equals(ResourceLink.TAG_DETAILS)){
 	    	bPrintLink = true;
@@ -260,7 +383,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	    }
 	  }
 	  levelDown();
-	  println("]");
+	  println("]" + (more ? "," : ""));
 	}
 	
 	/**
@@ -318,7 +441,8 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     return before;
 	}
 
-	private boolean writeField(Map<String, IFeedAttribute> index, String fieldName,String jsonKey, String delimiter, boolean before){
+	private boolean writeField(Map<String, IFeedAttribute> index, String fieldName,String jsonKey, String delimiter, boolean before,
+			boolean isDate){
 		String fldValues = "";
 		String[] flds = fieldName.split(",");
 		for(String fld: flds){
@@ -328,9 +452,9 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 				fldValues += delimiter;
 			}
 			String cleanedVal = cleanValue("" + indexValue);
-			/*if(cleanedVal != null && cleanedVal.length() >0 && delimiter == "-"){
-					cleanedVal =  DF.format(new Date(cleanedVal));
-			}*/
+			if(cleanedVal != null && cleanedVal.length() >0 && isDate){
+				cleanedVal = parseDateTime(cleanedVal);
+			}
 			fldValues += cleanedVal; 
 		}
 		if(fldValues.length() == 0){
@@ -338,7 +462,6 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 			if(fldValues == null) fldValues = "";
 		}
 		if(fldValues.length() > 0){
-			// fldValues = ensureValidSize(fldValues);
 	    if (before) {
 	      print(false, ",");
 	      print(false, "\r\n");
@@ -348,6 +471,52 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 		}
     return before;
 	}
+	
+	/**
+   * Parses a date/time string.
+   * @param dateTime the date/time
+   * @return the corresponding time
+   * @throws IllegalArgumentException if the input does not conform
+   */
+  private String parseDateTime(String dateTime) {
+    dateTime = Val.chkStr(dateTime);
+    String lc = dateTime.toLowerCase();
+    if (lc.equals("*")) {
+      return "";
+    } else if (lc.equals("now") || lc.equals("present")) {
+      return "";
+    } else if (lc.equals("unknown")) { 
+      return "";
+    } else {
+      
+      Calendar calendar = null;
+      String s = dateTime;
+      if (s.startsWith("-")) s = s.substring(1);
+      if (s.length() >= "1000000000".length()) {
+        boolean bChkMillis = true;
+        char[] ca = s.toCharArray();
+        for (char c: ca) {
+          if (!Character.isDigit(c)) {
+            bChkMillis = false;
+            break;
+          }
+        }
+        if (bChkMillis) {
+          try {
+            long l = Long.valueOf(dateTime);
+            calendar = new GregorianCalendar();
+            calendar.setTimeInMillis(l);
+          } catch (NumberFormatException nfe) {
+            calendar = null;
+          }
+        }
+      }
+      if (calendar == null) {
+        calendar = TpUtil.parseIsoDateTime(dateTime);
+      }
+      return TpUtil.printIsoDateTime(calendar);
+    }
+  }
 	
 	/**
    * Checks if attribute of a given name can be printed.
