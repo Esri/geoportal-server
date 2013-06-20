@@ -342,11 +342,11 @@ public class AGSProcessor extends ResourceProcessor {
    * @param url URL
    * @return root URL
    */
-  private String extractRootUrl(String url) {
+  private static String extractRootUrl(String url) {
     url = Val.chkStr(url);
     try {
       URI uri = new URI(url);
-      Matcher matcher = Pattern.compile("^/[^/]*(/services)?",Pattern.CASE_INSENSITIVE).matcher(uri.getPath());
+      Matcher matcher = Pattern.compile("^/([^/]+[/])*(services)?",Pattern.CASE_INSENSITIVE).matcher(uri.getPath());
       if (matcher.find()) {
         return uri.getScheme() + "://" + uri.getAuthority() + matcher.group();
       } else {
@@ -356,7 +356,7 @@ public class AGSProcessor extends ResourceProcessor {
       return url;
     }
   }
-
+  
   /**
    * Creates resource folders.
    * @param context iteration context
