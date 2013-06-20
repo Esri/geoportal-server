@@ -89,6 +89,7 @@ private static String INIT[][] = {
   {"catalog.publication.manageMetadata",           "manage-resources",             "/How-to-Manage-and-Edit-Resources"},
   {"catalog.publication.uploadMetadata",           "publish-resources",            "/How-to-Publish-Resources"},
   {"catalog.publication.validateMetadata",         "publish-resources",            "/How-to-Publish-Resources"},
+  {"catalog.publication.manage.user.role",         "geoportal-welcome",            "/User-Management-Interface"},
   // harvest
   {"catalog.harvest.manage.create",                "publish-resources",            "/How-to-Publish-Resources"},
   {"catalog.harvest.manage.edit",                  "manage-resources",             "/How-to-Manage-and-Edit-Resources"},
@@ -114,7 +115,7 @@ private static String INIT[][] = {
   {"catalog.content.about",                        "geoportal-welcome",            "/#welcome-to-the-esri-geoportal-server"},
   {"catalog.content.disclaimer",                   "geoportal-welcome",            "/#welcome-to-the-esri-geoportal-server"},
   {"catalog.content.privacy",                      "geoportal-welcome",            "/#welcome-to-the-esri-geoportal-server"},
-};
+ };
 
 // initializes of translation mappings: CMD => help page
 static {
