@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2013 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:viewer="com.esri.viewer.*"
+                   xmlns:esri="http://www.esri.com/2008/ags"
+                   initialize="basewidget_initializeHandler(event)"
+                   widgetConfigLoaded="basewidget_widgetConfigLoaded()">
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.Units;
+            import com.esri.ags.components.supportClasses.DirectionsGeocoderOptions;
+            import com.esri.ags.components.supportClasses.DirectionsRouteOptions;
+            import com.esri.ags.components.supportClasses.GeocoderLocatorOptions;
+            import com.esri.ags.components.supportClasses.GeocoderMapService;
+            import com.esri.viewer.AppEvent;
+
+            import mx.collections.*;
+            import mx.events.FlexEvent;
+
+            protected function basewidget_initializeHandler(event:FlexEvent):void
+            {
+                if (isPartOfPanel) // if widget is part of "left", "right" or "bottom" panel
+                {
+                    this.percentWidth = this.percentHeight = 100;
+                    wTemplate.percentWidth = wTemplate.percentHeight = 100;
+                }
+                else
+                {
+                    wTemplate.height = map.height - map.height / 100 - Number(this.top);
+                    wTemplate.minHeight = 800;
+                    wTemplate.width = wTemplate.minWidth = 300;
+                }
+            }
+
+            private function basewidget_widgetConfigLoaded():void
+            {
+                // hide map infowindow if any               
+                map.infoWindow.hide();
+                if (configXML)
+                {
+                    var url:String = configXML.url[0];
+                    if (url)
+                    {
+                        directions.url = url;
+                    }
+                    var useProxyForDirections:Boolean = configXML.useproxy[0] && configXML.useproxy == "true";
+                    if (useProxyForDirections && configData.proxyUrl)
+                    {
+                        directions.proxyURL = configData.proxyUrl;
+                    }
+
+                    var locatorURL:String = configXML.locatorurl[0];
+                    if (locatorURL)
+                    {
+                        directions.locatorURL = locatorURL;
+                    }
+                    var useProxyForLocator:Boolean = configXML.useproxyforlocator[0] && configXML.useproxyforlocator == "true";
+                    if (useProxyForLocator && configData.proxyUrl)
+                    {
+                        directions.locatorProxyURL = configData.proxyUrl;
+                    }
+
+                    // geocoder options
+                    if (configXML.geocoderoptions.length() > 0)
+                    {
+                        var locatorDisabled:Boolean = (configXML.geocoderoptions.usemapservicesonly[0] == "true");
+                        if (locatorDisabled)
+                        {
+                            directions.locatorURL = null;
+                        }
+
+                        var geocoderOptionsXML:XMLList = configXML.geocoderoptions as XMLList;
+                        var directionsGeocoderOptions:DirectionsGeocoderOptions = new DirectionsGeocoderOptions;
+
+                        const configMinScore:Number = parseFloat(geocoderOptionsXML.minscore[0]);
+                        directionsGeocoderOptions.minScore = (configMinScore > 0) ? configMinScore : 40;
+
+                        directionsGeocoderOptions.autoComplete = geocoderOptionsXML.autocomplete != "false";
+
+                        const configMaxLocations:int = parseInt(geocoderOptionsXML.maxlocations[0])
+                        if (!isNaN(configMaxLocations) && configMaxLocations > 0)
+                        {
+                            directionsGeocoderOptions.maxLocations = configMaxLocations;
+                        }
+
+                        const configMinChars:int = parseInt(geocoderOptionsXML.minchars[0])
+                        if (configMinChars && configMinChars > 0)
+                        {
+                            directionsGeocoderOptions.minCharacters = configMinChars;
+                        }
+
+                        const configSearchDelay:int = parseInt(geocoderOptionsXML.searchdelay[0])
+                        if (configSearchDelay && configSearchDelay > 0)
+                        {
+                            directionsGeocoderOptions.searchDelay = configSearchDelay;
+                        }
+                        if (geocoderOptionsXML.locatoroptions.length() > 0 && !locatorDisabled)
+                        {
+                            directionsGeocoderOptions.locatorOptions = parseLocatorOptions(configXML.locatoroptions[0]);
+                        }
+                        if (geocoderOptionsXML.mapservices.length() > 0 && geocoderOptionsXML.mapservices.@enabled != "false")
+                        {
+                            directionsGeocoderOptions.mapServices = configureMapServices(geocoderOptionsXML.mapservices);
+                        }
+
+                        directions.geocoderOptions = directionsGeocoderOptions;
+                    }
+
+                    var directionsRouteOptions:DirectionsRouteOptions = new DirectionsRouteOptions;
+                    directionsRouteOptions.directionsLanguage = resourceManager.localeChain[0]; // always set directionsLanguage     
+                    //route options
+                    if (configXML.routeoptions.length() > 0)
+                    {
+                        var routeOptionsXML:XMLList = configXML.routeoptions;
+
+                        var directionsLanguage:String = routeOptionsXML.directionslanguage.toString();
+                        if (directionsLanguage)
+                        {
+                            directionsRouteOptions.directionsLanguage = directionsLanguage;
+                        }
+
+                        var directionsLengthUnits:String = routeOptionsXML.directionslengthunits.toString();
+                        if (directionsLengthUnits)
+                        {
+                            directionsRouteOptions.directionsLengthUnits = toDirectionsLengthUnits(directionsLengthUnits);
+                        }
+
+                        var directionsOutputType:String = routeOptionsXML.directionsoutputtype.toString();
+                        if (directionsOutputType)
+                        {
+                            directionsRouteOptions.directionsOutputType = toDirectionsOutputType(directionsOutputType);
+                        }
+
+                        var impedanceAttribute:String = routeOptionsXML.impedanceattribute.toString();
+                        if (impedanceAttribute)
+                        {
+                            directionsRouteOptions.impedanceAttribute = impedanceAttribute;
+                        }
+                    }
+                    directions.routeOptions = directionsRouteOptions;
+                }
+                AppEvent.addListener(AppEvent.DATA_PUBLISH, sharedDataUpdated);
+            }
+
+            private function parseLocatorOptions(locatorOptionsXML:XML):GeocoderLocatorOptions
+            {
+                var locatorOptions:GeocoderLocatorOptions = new GeocoderLocatorOptions();
+
+                locatorOptions.name = locatorOptionsXML.name.toString();
+                locatorOptions.sourceCountry = locatorOptionsXML.sourcecountry.toString();
+                locatorOptions.prefix = locatorOptionsXML.prefix.toString();
+                locatorOptions.suffix = locatorOptionsXML.suffix.toString();
+
+                var configOutFields:String = locatorOptionsXML.outfields.toString();
+                if (configOutFields)
+                {
+                    locatorOptions.outFields = configOutFields.split(',');
+                }
+
+                var singleLineAddressField:String = locatorOptionsXML.singlelineaddressfield.toString();
+                if (singleLineAddressField)
+                {
+                    locatorOptions.singleLineAddressFieldName = singleLineAddressField;
+                }
+
+                return locatorOptions;
+            }
+
+            private function configureMapServices(mapServicesXMLList:XMLList):Array
+            {
+                var mapServices:Array = [];
+
+                var mapService:GeocoderMapService;
+                var useMapServiceProxy:Boolean;
+                var mapServiceProxyURL:String;
+
+                for each (var mapServiceXML:XML in mapServicesXMLList.mapservice)
+                {
+                    mapService = new GeocoderMapService();
+                    mapService.layerIds = mapServiceXML.layerids.toString().split(",");
+                    mapService.url = mapServiceXML.url.toString();
+                    mapService.searchFields = mapServiceXML.searchfields.toString().split(",");
+                    mapService.name = mapServiceXML.name.toString();
+                    useMapServiceProxy = mapServiceXML.useproxy[0] == "true";
+
+                    if (useMapServiceProxy && configData.proxyUrl)
+                    {
+                        mapService.proxyURL = configData.proxyUrl;
+                    }
+
+                    mapServices.push(mapService);
+                }
+
+                return mapServices
+            }
+
+            private function toDirectionsLengthUnits(lengthUnits:String):String
+            {
+                switch (lengthUnits)
+                {
+                    case "kilometers":
+                    {
+                        return Units.KILOMETERS;
+                    }
+                    case "miles":
+                    default:
+                    {
+                        return Units.MILES;
+                    }
+                }
+            }
+
+            private function toDirectionsOutputType(outputType:String):String
+            {
+                switch (outputType)
+                {
+                    case "complete":
+                    {
+                        return "esriDOTComplete";
+                    }
+                    case "completenoevents":
+                    {
+                        return "esriDOTCompleteNoEvents";
+                    }
+                    case "instructionsonly":
+                    {
+                        return "esriDOTInstructionsOnly";
+                    }
+                    case "summaryonly":
+                    {
+                        return "esriDOTSummaryOnly";
+                    }
+                    case "standard":
+                    default:
+                    {
+                        return "esriDOTStandard";
+                    }
+                }
+            }
+
+            private function sharedDataUpdated(event:AppEvent):void
+            {
+                var data:Object = event.data;
+                if (data.key == "Deactivate_DrawTool")
+                {
+                    setMapAction(null, null, null, null);
+                }
+            }
+
+            private function widgetClosedHandler(event:Event):void
+            {
+                directions.clear();
+            }
+        ]]>
+    </fx:Script>
+    <viewer:WidgetTemplate id="wTemplate" closed="widgetClosedHandler(event)">
+        <esri:Directions id="directions"
+                         width="100%" height="100%"
+                         directionsComplete="{map.infoWindow.hide()}"
+                         map="{map}"/>
+    </viewer:WidgetTemplate>
+</viewer:BaseWidget>

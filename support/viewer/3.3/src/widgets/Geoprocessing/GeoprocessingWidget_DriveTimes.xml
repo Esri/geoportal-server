@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<configuration label="Drive time analysis">
+    <taskurl>http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Network/ESRI_DriveTime_US/GPServer/CreateDriveTimePolygons</taskurl>
+    <helpurl>http://sampleserver1.arcgisonline.com/arcgisoutput/Network_ESRI_DriveTime_US/CreateDriveTimePolygons.htm</helpurl>
+    <inputparams>
+        <param name="Input_Location"
+               geometrytype="point"
+               label="Start location"
+               required="true"
+               type="featurerecordset"
+               visible="true">
+            <simplerenderer>
+                <simplemarkersymbol color="0xBEEFEE" size="15">
+                    <outline width="2" color="0x00AADD"/>
+                </simplemarkersymbol>
+            </simplerenderer>
+        </param>
+        <param name="Drive_Times"
+               defaultvalue="5 10 15"
+               label="Drive times"
+               required="false"
+               type="string"
+               visible="false"/>
+    </inputparams>
+    <outputparams>
+        <param name="Output_Drive_Time_Polygons"
+               geometrytype="polygon"
+               label="Output Drive Time Polygons"
+               required="true"
+               type="featurerecordset"
+               visible="true">
+            <popup>
+                <title>{Name}</title>
+                <fields>
+                    <field name="FromBreak"
+                           alias="From Break"
+                           visible="true"/>
+                    <field name="ToBreak"
+                           alias="To Break"
+                           visible="true"/>
+                </fields>
+            </popup>
+            <uniquevaluerenderer field="ToBreak">
+                <simplefillsymbol alpha="0.5" color="0xFF00FF">
+                    <outline color="0x000000"/>
+                </simplefillsymbol>
+                <uniquevalueinfo value="5">
+                    <simplefillsymbol color="0xFF0000">
+                        <outline color="0x000000"/>
+                    </simplefillsymbol>
+                </uniquevalueinfo>
+                <uniquevalueinfo value="10">
+                    <simplefillsymbol color="0x00FF00">
+                        <outline color="0x000000"/>
+                    </simplefillsymbol>
+                </uniquevalueinfo>
+                <uniquevalueinfo value="15">
+                    <simplefillsymbol color="0x0000FF">
+                        <outline color="0x000000"/>
+                    </simplefillsymbol>
+                </uniquevalueinfo>
+            </uniquevaluerenderer>
+        </param>
+    </outputparams>
+    <layerorder>Input_Location,Output_Drive_Time_Polygons</layerorder>
+</configuration>
+
+<!--
+    See Geoprocessing widget tag reference at
+    http://links.esri.com/geoprocessingwidget
+-->

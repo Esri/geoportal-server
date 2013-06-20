@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<s:Group xmlns:s="library://ns.adobe.com/flex/spark"
+         xmlns:fx="http://ns.adobe.com/mxml/2009"
+         xmlns:esri="http://www.esri.com/2008/ags"
+         xmlns:Navigation="widgets.Navigation.*">
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.Map;
+            import com.esri.viewer.AppEvent;
+            import com.esri.viewer.utils.LocalizationUtil;
+
+            import mx.events.FlexEvent;
+
+            import spark.events.IndexChangeEvent;
+
+            [Bindable]
+            public var map:Map;
+
+            [Bindable]
+            public var panwheelItem:NavToolItem;
+
+            [Bindable]
+            public var zoomFullextItem:NavToolItem;
+
+            [Bindable]
+            public var panupItem:NavToolItem;
+
+            [Bindable]
+            public var pandownItem:NavToolItem;
+
+            [Bindable]
+            public var panleftItem:NavToolItem;
+
+            [Bindable]
+            public var panrightItem:NavToolItem;
+
+            [Bindable]
+            public var prevextItem:NavToolItem;
+
+            [Bindable]
+            public var nextextItem:NavToolItem;
+
+            [Bindable]
+            public var zoominItem:NavToolItem;
+
+            [Bindable]
+            public var zoomoutItem:NavToolItem;
+
+            [Bindable]
+            public var panItem:NavToolItem;
+
+            protected function buttonbar1_changeHandler(event:IndexChangeEvent):void
+            {
+                doNavAction(event.currentTarget.dataProvider[event.newIndex].action,
+                            event.currentTarget.dataProvider[event.newIndex].label);
+            }
+
+            protected function buttonbar1_valueCommitHandler(event:FlexEvent):void
+            {
+                if (event.currentTarget.selectedIndex != -1)
+                {
+                    doNavAction(event.currentTarget.dataProvider[event.currentTarget.selectedIndex].action,
+                                event.currentTarget.dataProvider[event.currentTarget.selectedIndex].label);
+                }
+            }
+
+            private function doNavAction(action:String, label:String):void
+            {
+                var data:Object =
+                    {
+                        tool: action,
+                        status: label
+                }
+                AppEvent.dispatch(AppEvent.SET_MAP_NAVIGATION, data);
+            }
+
+            public function initButtonBar():void
+            {
+                var navAC:ArrayCollection = new ArrayCollection();
+
+                if (panItem.toolVisible == true)
+                {
+                    navAC.addItem({ label: panItem.toolName, action: "pan", imageIcon: panItem.toolIcon });
+                }
+
+                if (zoominItem.toolVisible == true)
+                {
+                    navAC.addItem({ label: zoominItem.toolName, action: "zoomin", imageIcon: zoominItem.toolIcon });
+                }
+
+                if (zoomoutItem.toolVisible == true)
+                {
+                    navAC.addItem({ label: zoomoutItem.toolName, action: "zoomout", imageIcon: zoomoutItem.toolIcon });
+                }
+
+                if (zoominItem.toolVisible == false && zoomoutItem.toolVisible == false && panItem.toolVisible == false)
+                {
+                    btnBar.visible = false;
+                }
+
+                btnBar.dataProvider = navAC;
+            }
+        ]]>
+    </fx:Script>
+    <s:layout>
+        <s:VerticalLayout gap="3" horizontalAlign="center"/>
+    </s:layout>
+    <s:filters>
+        <s:DropShadowFilter alpha="0.5"
+                            blurX="10"
+                            blurY="10"/>
+    </s:filters>
+    <s:Group enabled="{map.loaded}"
+             includeInLayout="{panwheelItem.toolVisible}"
+             layoutDirection="ltr"
+             visible="{panwheelItem.toolVisible}">
+        <s:Button id="nwButton"
+                  x="2" y="2"
+                  click="map.panUpperLeft()"
+                  skinClass="widgets.Navigation.nwButtonSkin"/>
+        <s:Button id="wButton"
+                  x="0" y="19"
+                  click="map.panLeft()"
+                  skinClass="widgets.Navigation.wButtonSkin"
+                  toolTip="{panleftItem.toolName}"/>
+        <s:Button id="swButton"
+                  x="2" y="36"
+                  click="map.panLowerLeft()"
+                  skinClass="widgets.Navigation.swButtonSkin"/>
+        <s:Button id="sButton"
+                  x="18" y="43"
+                  click="map.panDown()"
+                  skinClass="widgets.Navigation.sButtonSkin"
+                  toolTip="{pandownItem.toolName}"/>
+        <s:Button id="seButton"
+                  x="35" y="35"
+                  click="map.panLowerRight()"
+                  skinClass="widgets.Navigation.seButtonSkin"/>
+        <s:Button id="eButton"
+                  x="43" y="18"
+                  click="map.panRight()"
+                  skinClass="widgets.Navigation.eButtonSkin"
+                  toolTip="{panrightItem.toolName}"/>
+        <s:Button id="neButton"
+                  x="35" y="2"
+                  click="map.panUpperRight()"
+                  skinClass="widgets.Navigation.neButtonSkin"/>
+        <s:Button id="nButton"
+                  x="18" y="0"
+                  click="map.panUp()"
+                  skinClass="widgets.Navigation.nButtonSkin"
+                  toolTip="{panupItem.toolName}"/>
+        <Navigation:IconButton id="innerButton"
+                               x="18" y="18"
+                               click="doNavAction('zoomfull', zoomFullextItem.toolName)"
+                               iconUp="{zoomFullextItem.toolIcon}"
+                               skinClass="widgets.Navigation.InnerButtonSkin"
+                               toolTip="{zoomFullextItem.toolName}"
+                               visible="{zoomFullextItem.toolVisible}"/>
+    </s:Group>
+    <s:HGroup enabled="{map.loaded}" gap="0">
+        <s:Button id="prevExt"
+                  x="0" y="19"
+                  click="doNavAction('zoomprevious', prevextItem.toolName)"
+                  includeInLayout="{prevextItem.toolVisible}"
+                  skinClass="widgets.Navigation.wButtonSkin"
+                  toolTip="{prevextItem.toolName}"
+                  visible="{prevextItem.toolVisible}"/>
+        <s:Button id="nextExt"
+                  x="0" y="19"
+                  click="doNavAction('zoomnext', nextextItem.toolName)"
+                  includeInLayout="{nextextItem.toolVisible}"
+                  skinClass="widgets.Navigation.eButtonSkin"
+                  toolTip="{nextextItem.toolName}"
+                  visible="{nextextItem.toolVisible}"/>
+    </s:HGroup>
+    <esri:Navigation top="0"
+                     map="{map}"
+                     skinClass="widgets.Navigation.NavigationSkin"/>
+    <s:VGroup enabled="{map.loaded}" paddingTop="3">
+        <s:ButtonBar id="btnBar"
+                     change="buttonbar1_changeHandler(event)"
+                     requireSelection="true"
+                     selectedIndex="0"
+                     skinClass="widgets.Navigation.VerticalButtonBarSkin"
+                     valueCommit="buttonbar1_valueCommitHandler(event)">
+            <s:layout>
+                <s:VerticalLayout gap="0"/>
+            </s:layout>
+            <s:dataProvider>
+                <s:ArrayCollection>
+                    <fx:Object action="pan"
+                               imageIcon="assets/images/i_pan.png"
+                               label="{LocalizationUtil.getDefaultString('panLabel')}"/>
+                    <fx:Object action="zoomin"
+                               imageIcon="assets/images/i_zoomin.png"
+                               label="{LocalizationUtil.getDefaultString('zoomInLabel')}"
+                               visible="false"/>
+                    <fx:Object action="zoomout"
+                               imageIcon="assets/images/i_zoomout.png"
+                               label="{LocalizationUtil.getDefaultString('zoomOutLabel')}"/>
+                </s:ArrayCollection>
+            </s:dataProvider>
+        </s:ButtonBar>
+    </s:VGroup>
+</s:Group>

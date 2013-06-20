@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:viewer="com.esri.viewer.*"
+                   xmlns:ThematicQuery="widgets.Samples.ThematicQuery.*"
+                   xmlns:esri="http://www.esri.com/2008/ags"
+                   widgetConfigLoaded="init()">
+
+    <fx:Declarations>
+        <s:RadioButtonGroup id="themeType"/>
+        <esri:SimpleMarkerSymbol id="selectionMarkerSymbol" color="#FF0000"/>
+
+        <esri:SimpleLineSymbol id="selectionOutline"
+                               width="3"
+                               color="#FF0000"/>
+        <esri:SimpleFillSymbol id="selectionPolygonSymbol"
+                               alpha="0"
+                               outline="{selectionOutline}"/>
+        <esri:Query id="selectionQuery"
+                    returnGeometry="true"
+                    spatialRelationship="esriSpatialRelWithin"/>
+        <esri:FeatureLayer id="featureLayer" name="Thematic Selection Layer"
+                           load="featureLayer_loadHandler(event)"
+                           mode="selection"
+                           selectionColor="0xFF0000"
+                           selectionComplete="featureLayer_selectionCompleteHandler(event)"/>
+    </fx:Declarations>
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.FeatureSet;
+            import com.esri.ags.events.ExtentEvent;
+            import com.esri.ags.events.FeatureLayerEvent;
+            import com.esri.ags.events.LayerEvent;
+            import com.esri.ags.events.MapMouseEvent;
+            import com.esri.ags.geometry.Geometry;
+            import com.esri.ags.geometry.MapPoint;
+            import com.esri.ags.layers.FeatureLayer;
+            import com.esri.ags.symbols.SimpleFillSymbol;
+            import com.esri.ags.symbols.SimpleLineSymbol;
+            import com.esri.ags.symbols.SimpleMarkerSymbol;
+            import com.esri.ags.tasks.supportClasses.Query;
+            import com.esri.viewer.AppEvent;
+            import com.esri.viewer.IInfowindowTemplate;
+            import com.esri.viewer.ViewerContainer;
+            import com.esri.viewer.utils.Hashtable;
+
+            import mx.collections.ArrayCollection;
+            import mx.collections.ArrayList;
+            import mx.core.UIComponent;
+            import mx.events.ModuleEvent;
+
+            private const ICON_URL:String = "assets/images/icons/";
+
+            //labels
+            private var loadingLabel:String;
+            private var textFilterClear:String;
+            private var textFilterLabel:String;
+
+            private var fldAliases:Object;
+            private var filterField:String;
+            private var infowidgetReady:Boolean = false;
+            private var infoUrl:String;
+
+            [Bindable]
+            private var msgVisible:Boolean = false;
+
+            [Bindable]
+            private var themeList:ArrayList = new ArrayList();
+
+            private var themeHT:Hashtable = new Hashtable();
+
+            private var ht:Hashtable = new Hashtable(); // for preventing looping.
+            private var oplList:Array;
+
+            private var currentQueryParameter:Object;
+            private var currentTheme:Object;
+            private var previousMapScale:Number; // holds previous map scale. Used for checking if the extent has change.
+
+            private function init():void
+            {
+                map.addLayer(featureLayer);
+                previousMapScale = map.scale;
+                AppEvent.dispatch(AppEvent.DATA_OPT_LAYERS, null, getOplayers);
+            }
+
+            private function getOplayers(event:AppEvent):void
+            {
+                oplList = event.data as Array;
+                var firstVisibleLayer:Boolean = false;
+                for each (var opsLayer:Object in oplList)
+                {
+                    ht.add(opsLayer.label, opsLayer);
+                }
+
+                //Create themes that matches operational layers.
+                if (configXML)
+                {
+                    infoUrl = configXML.info;
+                    var themes:XMLList = configXML..theme;
+                    var labelref:String;
+                    var legendurl:String;
+                    var operationalLayerData:Object;
+                    for (var i:Number = 0; i < themes.length(); i++)
+                    {
+                        if (themes[i].@labelref)
+                        {
+                            labelref = themes[i].@labelref;
+                        }
+
+                        operationalLayerData = ht.find(labelref);
+                        if (operationalLayerData)
+                        {
+                            var queryList:XMLList = themes[i]..query;
+                            var queryParameters:Array = [];
+                            for each (var queryItem:XML in queryList)
+                            {
+                                var layer:String = queryItem.@layer;
+                                if (queryItem.@legendurl)
+                                {
+                                    legendurl = queryItem.@legendurl;
+                                }
+                                var minScale:String = queryItem.@minscale;
+                                var maxScale:String = queryItem.@maxscale;
+
+                                var listFieldsList:XMLList = queryItem.listfields..field
+                                var listFields:Array = [];
+                                for each (var listField:XML in listFieldsList)
+                                {
+                                    var listFieldObj:Object =
+                                        {
+                                            name: listField.@name,
+                                            alias: listField.@alias
+                                    }
+                                    listFields.push(listFieldObj);
+                                }
+                                var columnChartFieldsList:XMLList = queryItem.columnchartfields..field
+                                var columnChartFields:Array = [];
+                                for each (var columnChartField:XML in columnChartFieldsList)
+                                {
+                                    var columnChartFieldObj:Object =
+                                        {
+                                            name: columnChartField.@name,
+                                            alias: columnChartField.@alias
+                                    }
+                                    columnChartFields.push(columnChartFieldObj);
+                                }
+
+                                var queryParameter:Object =
+                                    {
+                                        layer: layer,
+                                        legendurl: legendurl,
+                                        minscale: minScale,
+                                        maxscale: maxScale,
+                                        listfields: listFields,
+                                        columnchartfields: columnChartFields
+                                }
+                                queryParameters.push(queryParameter);
+                            }
+                            var theme:Object =
+                                {
+                                    labelref: labelref,
+                                    themeType: themeType, // for radio button grouping within item renderer
+                                    themeUrl: operationalLayerData.url,
+                                    visible: operationalLayerData.visible,
+                                    queryParameters: queryParameters
+                                };
+
+                            themeList.addItem(theme);
+                            themeHT.add(theme.labelref, theme);
+                            if (operationalLayerData.visible == true)
+                            {
+                                if (firstVisibleLayer == false)
+                                {
+                                    firstVisibleLayer = true;
+                                    currentTheme = theme;
+                                    previousOperationalLayer = currentOperationalLayer = operationalLayerData.label;
+                                    currentQueryParameter = getCurrentQueryParameter(currentOperationalLayer);
+                                    if (currentQueryParameter)
+                                    {
+                                        sendLegendURL(currentQueryParameter.legendurl);
+                                    }
+                                    else
+                                    {
+                                        sendLegendURL("");
+                                    }
+                                }
+                                else
+                                {
+                                    operationalLayerData.visible = false
+                                    theme.visible = false;
+                                    AppEvent.dispatch(AppEvent.MAP_LAYER_VISIBLE, operationalLayerData);
+                                }
+                            }
+                        }
+                    }
+
+                    if ((firstVisibleLayer == false) && (themeList.length > 0))
+                    {
+                        currentTheme = themeList.getItemAt(0);
+
+                        operationalLayerData = ht.find(currentTheme.labelref);
+                        if (operationalLayerData)
+                        {
+                            operationalLayerData.visible = true
+                            currentTheme.visible = true;
+                            previousOperationalLayer = currentOperationalLayer = operationalLayerData.label;
+                            currentQueryParameter = getCurrentQueryParameter(currentOperationalLayer);
+                            if (currentQueryParameter)
+                            {
+                                sendLegendURL(currentQueryParameter.legendurl);
+                            }
+                            else
+                            {
+                                sendLegendURL("");
+                            }
+                        }
+                        AppEvent.dispatch(AppEvent.MAP_LAYER_VISIBLE, operationalLayerData);
+
+                    }
+
+
+                    var data:Object = {
+                            id: String(this.widgetId),
+                            url: infoUrl,
+                            config: null
+                        };
+                    AppEvent.dispatch(AppEvent.DATA_CREATE_INFOWIDGET, data, infoReady);
+                }
+            }
+
+            private var infoTemplate:IInfowindowTemplate;
+
+            private function infoReady(event:AppEvent):void
+            {
+                var id:Number = Number(event.data.id);
+                if (id == this.widgetId)
+                {
+                    infoTemplate = event.data.infoWidget;
+                    map.addEventListener(MapMouseEvent.MAP_CLICK, onMapClick);
+                    map.addEventListener(ExtentEvent.EXTENT_CHANGE, onExtentChange);
+                }
+            }
+
+            private function onExtentChange(event:ExtentEvent):void
+            {
+                if (previousMapScale != map.scale)
+                {
+                    var previousQueryLayer:String;
+                    if (currentQueryParameter)
+                    {
+                        previousQueryLayer = currentQueryParameter.layer
+                    }
+                    currentQueryParameter = getCurrentQueryParameter(currentOperationalLayer);
+                    //if matching query layer found, do query.
+                    if (currentQueryParameter)
+                    {
+                        if (previousQueryLayer != currentQueryParameter.layer)
+                        {
+                            clearSelectionAndHideInfoWindow();
+                            sendLegendURL(currentQueryParameter.legendurl);
+                        }
+                    }
+                    else
+                    {
+                        sendLegendURL("");
+                    }
+                    previousMapScale = map.scale;
+                }
+            }
+
+            private function onMapClick(event:MapMouseEvent):void
+            {
+                clearSelectionAndHideInfoWindow();
+                var currentLocation:MapPoint = event.mapPoint;
+                currentQueryParameter = getCurrentQueryParameter(currentOperationalLayer);
+                //if matching query layer found, do query.
+                if (currentQueryParameter)
+                {
+                    doQuery(currentLocation, currentQueryParameter);
+                }
+            }
+
+            private function getCurrentQueryParameter(currentOpsLayer:String):Object
+            {
+                var mapScale:Number = map.scale;
+                var queryLayerMinScale:Number;
+                var queryLayerMaxScale:Number;
+
+                //Check which query to use based on min and max scale of the map.
+                if (currentTheme)
+                {
+                    for each (var queryParameter:Object in currentTheme.queryParameters)
+                    {
+                        queryLayerMinScale = ((queryParameter.minscale) && (queryParameter.minscale != 0)) ? queryParameter.minscale : Number.POSITIVE_INFINITY
+                        queryLayerMaxScale = ((queryParameter.maxscale) && (queryParameter.maxscale != 0)) ? queryParameter.maxscale : Number.NEGATIVE_INFINITY
+
+                        //Set query fields and urls only if map scale is with specified scale range.
+                        if (mapScale <= queryLayerMinScale && mapScale >= queryLayerMaxScale)
+                        {
+                            return queryParameter;
+                        }
+                    }
+                }
+                return null;
+            }
+
+            private function doQuery(currentLocation:MapPoint, queryParam:Object):void
+            {
+                var outFields:Array = [];
+
+                // Out fields is union of list fields and chart fields.
+                for each (var fld:Object in queryParam.listfields)
+                {
+                    outFields.push(fld.name);
+                }
+                for each (var columnChartFld:Object in queryParam.columnchartfields)
+                {
+                    outFields.push(columnChartFld.name);
+                }
+
+                featureLayer.outFields = outFields;
+                selectionQuery.geometry = currentLocation;
+                var currentQueryURL:String = currentTheme.themeUrl + "/" + queryParam.layer
+                if (featureLayer.url == currentQueryURL) // do not wait for load event.
+                {
+                    featureLayer.selectFeatures(selectionQuery);
+                }
+                else // set the url and perform select query on FeatureLayer Load Complete.
+                {
+                    featureLayer.url = currentTheme.themeUrl + "/" + queryParam.layer;
+                }
+            }
+
+            protected function featureLayer_selectionCompleteHandler(event:FeatureLayerEvent):void
+            {
+                if (event.featureLayer.selectedFeatures.length > 0)
+                {
+                    var thematicQueryResult:ThematicQueryResult = new ThematicQueryResult();
+                    thematicQueryResult.point = selectionQuery.geometry as MapPoint;
+                    thematicQueryResult.attributes = new FeatureSet(event.featureLayer.selectedFeatures).attributes;
+                    thematicQueryResult.title = currentOperationalLayer;
+                    thematicQueryResult.listFields = currentQueryParameter.listfields;
+                    thematicQueryResult.columnChartFields = currentQueryParameter.columnchartfields;
+
+                    map.infoWindow.content = infoTemplate as UIComponent;
+                    infoTemplate.data = thematicQueryResult;
+                    map.infoWindow.show(thematicQueryResult.point);
+                }
+            }
+
+            protected function featureLayer_loadHandler(event:LayerEvent):void
+            {
+                switch (FeatureLayer(event.layer).layerDetails.geometryType)
+                {
+                    case Geometry.MAPPOINT:
+                    case Geometry.MULTIPOINT:
+                    {
+                        featureLayer.symbol = selectionMarkerSymbol;
+                        break;
+                    }
+                    case Geometry.POLYLINE:
+                    {
+                        featureLayer.symbol = selectionOutline;
+                        break;
+                    }
+                    case Geometry.POLYGON:
+                    {
+                        featureLayer.symbol = selectionPolygonSymbol;
+                        break;
+                    }
+                }
+                featureLayer.selectFeatures(selectionQuery);
+            }
+
+            private function widgetClosedHandler(event:Event):void
+            {
+                clearSelectionAndHideInfoWindow();
+                featureLayer.visible = false;
+                sendLegendURL("");
+                map.removeEventListener(MapMouseEvent.MAP_CLICK, onMapClick);
+                map.removeEventListener(ExtentEvent.EXTENT_CHANGE, onExtentChange);
+                var operationalLayerData:Object = ht.find(currentTheme.labelref);
+                operationalLayerData = ht.find(currentTheme.labelref);
+                if (operationalLayerData)
+                {
+                    operationalLayerData.visible = false
+                    currentTheme.visible = false;
+                    previousOperationalLayer = currentOperationalLayer = operationalLayerData.label;
+                }
+                AppEvent.dispatch(AppEvent.MAP_LAYER_VISIBLE, operationalLayerData);
+
+
+            }
+
+            private function widgetOpenedHandler(event:Event):void
+            {
+                if (featureLayer)
+                {
+                    featureLayer.visible = true;
+                }
+
+
+                var currentOperationLayerData:Object = ht.find(currentOperationalLayer);
+                if (currentOperationLayerData)
+                {
+                    currentTheme.visible = true;
+                    currentOperationLayerData.visible = true;
+                    AppEvent.dispatch(AppEvent.MAP_LAYER_VISIBLE, currentOperationLayerData);
+                }
+
+
+                var currentQueryParameter:Object = getCurrentQueryParameter(currentOperationalLayer);
+                if (currentQueryParameter)
+                {
+                    sendLegendURL(currentQueryParameter.legendurl);
+                }
+                else
+                {
+                    sendLegendURL("");
+                }
+                map.addEventListener(MapMouseEvent.MAP_CLICK, onMapClick);
+                map.addEventListener(ExtentEvent.EXTENT_CHANGE, onExtentChange);
+            }
+
+            private var currentOperationalLayer:String;
+            private var previousOperationalLayer:String;
+
+            private function showTheme(event:Event):void
+            {
+                clearSelectionAndHideInfoWindow();
+                if (!previousOperationalLayer)
+                {
+                    previousOperationalLayer = currentOperationalLayer = ThematicItemRenderer(event.target).data.labelref;
+
+                }
+                else
+                {
+                    previousOperationalLayer = currentOperationalLayer;
+                    currentOperationalLayer = ThematicItemRenderer(event.target).data.labelref;
+
+                    var previousOperationLayerData:Object = ht.find(previousOperationalLayer);
+                    if (previousOperationLayerData)
+                    {
+                        previousOperationLayerData.visible = false;
+                        AppEvent.dispatch(AppEvent.MAP_LAYER_VISIBLE, previousOperationLayerData);
+                    }
+                }
+                currentTheme = themeHT.find(currentOperationalLayer);
+                var currentOperationLayerData:Object = ht.find(currentOperationalLayer);
+                if (currentOperationLayerData)
+                {
+                    currentOperationLayerData.visible = true;
+                    currentQueryParameter = getCurrentQueryParameter(currentOperationalLayer);
+                    if (currentQueryParameter)
+                    {
+                        sendLegendURL(currentQueryParameter.legendurl);
+                    }
+                    else
+                    {
+                        sendLegendURL("");
+                    }
+                    AppEvent.dispatch(AppEvent.MAP_LAYER_VISIBLE, currentOperationLayerData);
+                }
+            }
+
+            private function clearSelectionAndHideInfoWindow():void
+            {
+                featureLayer.clearSelection();
+                map.infoWindow.hide();
+            }
+
+            private function sendLegendURL(legendURL:String):void
+            {
+                this.addSharedData("imageurl", new ArrayCollection([ legendURL ]));
+            }
+        ]]>
+    </fx:Script>
+
+    <viewer:WidgetTemplate id="wTemplate"
+                           width="300" height="200"
+                           closed="widgetClosedHandler(event)"
+                           open="widgetOpenedHandler(event)">
+        <viewer:layout>
+            <s:VerticalLayout/>
+        </viewer:layout>
+        <s:Label text="Click on the map to see details"/>
+        <s:Scroller width="100%" height="100%">
+            <ThematicQuery:ThematicDataGroup id="themeDataGroup"
+                                             dataProvider="{themeList}"
+                                             themeClick="showTheme(event)">
+                <ThematicQuery:layout>
+                    <s:VerticalLayout gap="1"
+                                      horizontalAlign="justify"
+                                      useVirtualLayout="true"/>
+                </ThematicQuery:layout>
+            </ThematicQuery:ThematicDataGroup>
+        </s:Scroller>
+    </viewer:WidgetTemplate>
+
+</viewer:BaseWidget>

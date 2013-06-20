@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<configuration>
+    <title>{type}</title>
+    <fields>
+        <field name="type"/>
+        <field name="description" alias="Description" visible="true"/>
+    </fields>
+</configuration>
+
+<!--
+    Pop-up configuration file for:
+    http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Fire/Sheep/FeatureServer/0
+
+    See pop-up documentation at
+    http://links.esri.com/flexviewer/popups
+-->

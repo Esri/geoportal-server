@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<configuration>
+    <title>{NAME}</title>
+    <description>
+        <![CDATA[<b>Hurricane {NAME}</b> was a <i>category {CAT}</i> hurricane that occurred in {BASIN} on {TRACK_DATE}. It had a wind speed of {WIND_KTS} knots.]]>
+    </description>
+    <fields>
+        <field name="NAME"/>
+        <field name="WIND_KTS"/>
+        <field name="CAT"/>
+        <field name="BASIN"/>
+        <field name="TRACK_DATE">
+            <format dateformat="shortDateShortTime"/>
+        </field>
+    </fields>
+</configuration>
+
+<!--
+    Pop-up configuration file for:
+    http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Hurricanes/NOAA_Tracks_1851_2007/MapServer/0
+
+    See pop-up documentation at
+    http://links.esri.com/flexviewer/popups
+-->

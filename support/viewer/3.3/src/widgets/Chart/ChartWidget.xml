@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<configuration label="Charts (example)">
+    <highlightcolor>0x336699</highlightcolor>
+    <layers>
+        <!-- The label of this layers refer to a layer added in the main configuration file-->
+        <layer label="USA Diversity Index">
+            <labelfield>NAME</labelfield>
+            <fields>
+                <field name="NAME"/>
+                <field name="DIVINDX_CY"/>
+            </fields>
+            <medias>
+                <media chartfields="DIVINDX_CY"
+                       title="Diversity Index"
+                       type="barchart"/>
+            </medias>
+        </layer>
+        <layer label="Age statistics" url="http://server.arcgisonline.com/ArcGIS/rest/services/Demographics/USA_Median_Age/MapServer/4">
+            <labelfield>NAME</labelfield>
+            <fields>
+                <field name="NAME"/>
+                <field name="MEDAGE_CY"/>
+                <field name="POPU5_CY"/>
+                <field name="POP85_CY"/>
+            </fields>
+            <medias>
+                <media chartfields="MEDAGE_CY"
+                       title="Median Age"
+                       type="columnchart"/>
+                <media chartfields="POPU5_CY"
+                       title="2010 Population, Age 0-4 Years"
+                       type="barchart"/>
+                <media chartfields="POP85_CY"
+                       title="2010 Population, Age 85 Years or Older"
+                       type="barchart"/>
+            </medias>
+        </layer>
+
+        <!-- This layer from a MapService is not drawn on the map but can still be selected from. -->
+        <layer label="Income by state" url="http://server.arcgisonline.com/ArcGIS/rest/services/Demographics/USA_Median_Household_Income/MapServer/4">
+            <labelfield>NAME</labelfield>
+            <fields>
+                <field name="NAME"/>
+                <field name="TOTPOP_CY"/>
+                <field name="MEDHINC_CY"/>
+            </fields>
+            <medias>
+                <!-- This example shows the four different types of chart: "barchart", "columnchart", "linechart", "piechart" -->
+                <media chartfields="TOTPOP_CY"
+                       title="Total Population (pie chart)"
+                       type="piechart"/>
+                <media chartfields="MEDHINC_CY"
+                       title="Median Household Income (bar chart)"
+                       type="barchart"/>
+                <media chartfields="MEDHINC_CY"
+                       title="Median Household Income (line chart)"
+                       type="linechart"/>
+                <media chartfields="MEDHINC_CY"
+                       title="Median Household Income (column chart)"
+                       type="columnchart"/>
+            </medias>
+        </layer>
+    </layers>
+</configuration>

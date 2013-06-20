@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////
+//
+// CONFIGURATION:
+// aioSelectionMethod can be "extent" or "draw."
+// dataExtractionService is the url to the GP service.
+//
+////////////////////////////////////////////////////////////////////////////////
+-->
+<configuration label="Extract incident data">
+    <dataextractionservice>http://sampleserver4.arcgisonline.com/ArcGIS/rest/services/HomelandSecurity/Incident_Data_Extraction/GPServer/Extract%20Data%20Task</dataextractionservice>
+    <aioselectionmethod>draw</aioselectionmethod>
+</configuration>
+
+<!--
+    See Data Extract widget tag reference at
+    http://links.esri.com/dataextractwidget
+-->

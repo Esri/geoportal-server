@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<configuration>
+    <title>{incident_number}</title>
+    <fields>
+        <field name="incident_number"/>
+        <field name="ftype" alias="Type" visible="true"/>
+        <field name="collection_time" alias="Collection Time" visible="true"/>
+    </fields>
+    <showattachments>true</showattachments>
+</configuration>
+
+<!--
+    Pop-up configuration file for:
+    http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/HomelandSecurity/operations/FeatureServer/0
+
+    See pop-up documentation at
+    http://links.esri.com/flexviewer/popups
+-->

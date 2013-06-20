@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:viewer="com.esri.viewer.*"
+                   creationComplete="init()"
+                   implements="com.esri.viewer.IInfowindowTemplate"
+                   widgetConfigLoaded="initConfig()">
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.geometry.MapPoint;
+
+            import mx.collections.ArrayCollection;
+            import mx.events.FlexEvent;
+            import mx.logging.ILogger;
+            import mx.logging.Log;
+
+            [Bindable]
+            private var contentList:ArrayCollection;
+            private var fields:Array;
+            private var datefields:Array;
+            private var titleField:String;
+            [Bindable]
+            private var zoomLabel:String;
+            private var zoomScale:Number = 5000;
+
+            private var _logger:ILogger;
+
+            private function init():void
+            {
+                this.addEventListener(FlexEvent.DATA_CHANGE, setInfoParameters);
+                setInfoParameters(null);
+                infoClass = SimpleInfoWinWidget;
+            }
+
+            private function initConfig():void
+            {
+                if (configXML)
+                {
+                    titleField = configXML.titlefield;
+                    var fds:String = configXML.fields;
+                    var dfd:String = configXML.datefields;
+
+                    if (fds)
+                    {
+                        fields = fds.split(",");
+                    }
+
+                    if (dfd)
+                    {
+                        datefields = dfd.split(",");
+                    }
+
+                    if (Number(configXML.zoomscale) > 0)
+                    {
+                        zoomScale = Number(configXML.zoomscale);
+                    }
+
+                    zoomLabel = configXML.labels.zoomlabel[0] || getDefaultString("zoomLabel");
+                }
+            }
+
+            private function get logger():ILogger
+            {
+                if (_logger === null)
+                {
+                    _logger = Log.getLogger("SimpleInfoWinWidget");
+                }
+                return _logger;
+            }
+
+            public function set infoConfig(value:XML):void
+            {
+                configXML = value;
+                initConfig();
+            }
+
+            private function setInfoParameters(event:FlexEvent):void
+            {
+                if (data && fields)
+                {
+                    try
+                    {
+                        contentList = new ArrayCollection();
+                        var title:String = data[titleField];
+
+                        for (var i:int; i < fields.length; i++)
+                        {
+                            var attrvalue:Object = data[fields[i]];
+
+                            if (datefields && datefields.indexOf(fields[i]) != -1 && attrvalue is Number)
+                            {
+                                var df:Date = new Date(attrvalue);
+                                if (df.milliseconds == 999) // workaround for REST bug
+                                {
+                                    df.milliseconds++;
+                                }
+                                attrvalue = df.toLocaleString();
+                            }
+
+                            var item:Object =
+                                {
+                                    field: fields[i],
+                                    value: attrvalue
+                                };
+
+                            contentList.addItem(item);
+                        }
+                        this.label = title;
+                        dispatchEvent(new Event("infoWindowLabelChanged", true));
+                    }
+                    catch (err:Error)
+                    {
+                        if (Log.isError())
+                        {
+                            logger.error(err.toString());
+                        }
+                    }
+                }
+            }
+
+            private var _infoClass:Class = SimpleInfoWinWidget;
+
+            public function set infoClass(value:Class):void
+            {
+                _infoClass = value;
+            }
+
+            public function get infoClass():Class
+            {
+                return _infoClass;
+            }
+
+            protected function zoom_clickHandler(event:MouseEvent):void
+            {
+                var here:MapPoint = map.toMap(new Point(map.infoWindow.anchorX, map.infoWindow.anchorY));
+                if (map.scale > zoomScale)
+                {
+                    map.scale = zoomScale;
+                }
+                map.centerAt(here);
+            }
+        ]]>
+    </fx:Script>
+
+    <s:VGroup id="infoCanvas"
+              horizontalAlign="center"
+              minHeight="90"
+              paddingTop="5">
+        <s:Scroller width="100%" height="100%">
+            <s:DataGroup id="dataGroup"
+                         dataProvider="{contentList}"
+                         itemRenderer="widgets.InfoTemplates.InfoContentItemRenderer">
+                <s:layout>
+                    <s:VerticalLayout gap="2"
+                                      horizontalAlign="contentJustify"
+                                      useVirtualLayout="true"/>
+                </s:layout>
+            </s:DataGroup>
+        </s:Scroller>
+        <s:Button buttonMode="true"
+                  click="zoom_clickHandler(event)"
+                  label="{zoomLabel}"
+                  useHandCursor="true"/>
+    </s:VGroup>
+</viewer:BaseWidget>

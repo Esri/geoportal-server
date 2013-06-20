@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:esri="http://www.esri.com/2008/ags"
+                   xmlns:viewer="com.esri.viewer.*"
+                   initialize="basewidget_initializeHandler()"
+                   widgetConfigLoaded="basewidget_widgetConfigLoaded()">
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.events.MapEvent;
+            import com.esri.ags.layers.ArcGISDynamicMapServiceLayer;
+            import com.esri.ags.layers.ArcGISTiledMapServiceLayer;
+            import com.esri.ags.layers.FeatureLayer;
+            import com.esri.ags.layers.KMLLayer;
+            import com.esri.ags.layers.Layer;
+            import com.esri.viewer.AppEvent;
+
+            import mx.collections.ArrayCollection;
+
+            private var legendLayers:Array;
+            private var excludeLayers:Array;
+
+            private var useBaseMaps:Boolean;
+            private var useOperationalLayers:Boolean = true;
+
+            [Bindable]
+            private var respectCurrentMapScale:Boolean = true;
+
+            private function basewidget_initializeHandler():void
+            {
+                if (isPartOfPanel) // if widget is part of "left", "right" or "bottom" panel
+                {
+                    this.percentWidth = this.percentHeight = 100;
+                    wTemplate.percentWidth = wTemplate.percentHeight = 100;
+                }
+                else
+                {
+                    wTemplate.width = wTemplate.height = wTemplate.minWidth = wTemplate.minHeight = 300;
+                }
+            }
+
+            private function basewidget_widgetConfigLoaded():void
+            {
+                if (configXML)
+                {
+                    // respectcurrentmapscale
+                    if (configXML.respectcurrentmapscale.length() > 0)
+                    {
+                        respectCurrentMapScale = configXML.respectcurrentmapscale == "true";
+                    }
+
+                    //usebasemaps
+                    if (configXML.usebasemaps.length() > 0)
+                    {
+                        useBaseMaps = configXML.usebasemaps == "true";
+                    }
+
+                    //useoperationallayers
+                    if (configXML.useoperationallayers.length() > 0)
+                    {
+                        useOperationalLayers = configXML.useoperationallayers == "true";
+                    }
+
+                    //excludeLayers
+                    excludeLayers = [];
+                    var layers:XMLList = configXML.excludelayer as XMLList;
+                    for (var n:Number = 0; n < layers.length(); n++)
+                    {
+                        excludeLayers.push(layers[n].toString());
+                    }
+                }
+                legendLayers = [];
+                for each (var layer:Layer in map.layers as ArrayCollection)
+                {
+                    if (isLayerShownInLegend(layer))
+                    {
+                        legendLayers.push(layer);
+                    }
+                }
+                AppEvent.addListener(AppEvent.REFRESH_LEGEND, legendRefreshHandler, false, 1);
+                map.addEventListener(MapEvent.LAYER_ADD, mapLayerAddHandler, false, 1);
+                map.addEventListener(MapEvent.LAYER_REMOVE, mapLayerRemoveHandler, false, 1);
+                populateLegend();
+                myLegend.map = map;
+            }
+
+            private function populateLegend():void
+            {
+                var layers:Array = [];
+                // Put layers to the legend in the reverse order
+                for (var i:int = legendLayers.length; i-- != 0; )
+                {
+                    layers.push(legendLayers[i]);
+                }
+                myLegend.layers = layers;
+            }
+
+            private function mapLayerAddHandler(event:MapEvent):void
+            {
+                if (isLayerShownInLegend(event.layer))
+                {
+                    legendLayers.push(event.layer);
+                    populateLegend();
+                }
+            }
+
+            private function mapLayerRemoveHandler(event:MapEvent):void
+            {
+                if (isLayerShownInLegend(event.layer))
+                {
+                    var i:int = legendLayers.indexOf(event.layer);
+                    if (i != -1)
+                    {
+                        legendLayers.splice(i, 1);
+                        populateLegend();
+                    }
+                }
+            }
+
+            private function legendRefreshHandler(event:AppEvent):void
+            {
+                myLegend.refresh();
+            }
+
+            private function isLayerShownInLegend(layer:Layer):Boolean
+            {
+                // filter layers which can't be shown in legend
+                if (!(layer.name.indexOf("hiddenLayer_") == -1 && (layer is FeatureLayer || layer is ArcGISDynamicMapServiceLayer || layer is ArcGISTiledMapServiceLayer || layer is KMLLayer)))
+                {
+                    return false;
+                }
+
+                // check if the given layer is a base map layer                
+                var isBaseMapLayer:Boolean = false;
+                for each (var baseMapLayer:Object in configData.basemaps)
+                {
+                    if (baseMapLayer.label == layer.id)
+                    {
+                        isBaseMapLayer = true;
+                        break;
+                    }
+                }
+
+                // check if the given layer should be skipped.
+                if (!(useOperationalLayers && !isBaseMapLayer || useBaseMaps && isBaseMapLayer))
+                {
+                    return false;
+                }
+
+                // filter the layer through the list of names of excluded layers.
+                for each (var excludeName:String in excludeLayers)
+                {
+                    if (excludeName == layer.id)
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        ]]>
+    </fx:Script>
+
+    <viewer:WidgetTemplate id="wTemplate">
+        <esri:Legend id="myLegend"
+                     width="100%" height="100%"
+                     top="10"
+                     respectCurrentMapScale="{respectCurrentMapScale}"/>
+    </viewer:WidgetTemplate>
+</viewer:BaseWidget>

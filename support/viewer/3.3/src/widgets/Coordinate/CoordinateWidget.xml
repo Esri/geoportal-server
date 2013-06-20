@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<configuration label="Coordinates (default)">
+    <!-- geo, dms, mercator -->
+    <outputunit>geo</outputunit>
+</configuration>
+
+<!--
+    See Coordinate widget tag reference at
+    http://links.esri.com/coordinatewidget
+-->

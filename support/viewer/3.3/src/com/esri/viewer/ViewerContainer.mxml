@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<!---
+    Main application container.
+-->
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+         xmlns:s="library://ns.adobe.com/flex/spark"
+         width="100%" height="100%"
+         creationComplete="creationCompleteHandler(event)"
+         initialize="initializeHandler(event)">
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.components.IdentityManager;
+            import com.esri.viewer.components.ErrorWindow;
+            import com.esri.viewer.managers.ConfigManager;
+            import com.esri.viewer.managers.DataManager;
+            import com.esri.viewer.managers.EventBus;
+            import com.esri.viewer.managers.MapManager;
+            import com.esri.viewer.managers.ScriptingManager;
+            import com.esri.viewer.managers.SecurityManager;
+            import com.esri.viewer.managers.UIManager;
+            import com.esri.viewer.managers.WidgetManager;
+            import com.esri.viewer.utils.LocalizationUtil;
+
+            import mx.controls.Alert;
+            import mx.core.FlexGlobals;
+            import mx.core.IVisualElement;
+            import mx.events.FlexEvent;
+            import mx.events.ModuleEvent;
+            import mx.logging.Log;
+            import mx.logging.LogEventLevel;
+            import mx.logging.targets.TraceTarget;
+            import mx.managers.PopUpManager;
+            import mx.modules.IModuleInfo;
+            import mx.modules.ModuleManager;
+
+            //==============================================
+            // Viewer default values
+            //==============================================
+            public static const VERSION:String = "ArcGIS Viewer for Flex";
+
+            // name of default configuration file
+            public static const DEFAULT_CONFIG_FILE:String = "config.xml";
+
+            public static const DEFAULT_WIDGET_CONTAINER_WIDGET:String = "widgets/WidgetContainer/WidgetContainerWidget.swf";
+
+            public static const DEFAULT_WIDGET_LAYOUT:String = "horizontal";
+
+            public static const DEFAULT_WIDGET_ICON:String = "assets/images/i_widget.png";
+
+            public static const DEFAULT_WIDGET_GROUP_ICON:String = "assets/images/i_folder.png";
+
+            public static const CONTAINER_INITIALIZED:String = "containerInitilized";
+
+            public static const NAVIGATION_ZOOM_FULL:String = "zoomfull";
+
+            public static const NAVIGATION_ZOOM_PREVIOUS:String = "zoomprevious";
+
+            public static const NAVIGATION_ZOOM_NEXT:String = "zoomnext";
+
+            private static const VIEWER_CONTAINER:String = "ViewerContainer";
+
+            public static var configFile:String = ViewerContainer.DEFAULT_CONFIG_FILE;
+
+            public static var urlConfigParams:Object = {}; // holds url parameters as key/value pairs
+
+            private static var m_instance:ViewerContainer;
+
+            public var mapManager:MapManager;
+
+            public var uiManager:UIManager;
+
+            public var widgetManager:WidgetManager;
+
+            public var dataManager:DataManager;
+
+            public var configManager:ConfigManager;
+
+            public var configData:ConfigData;
+
+            public var securityManager:SecurityManager;
+
+            public var scriptingManager:ScriptingManager;
+
+            ForcedImports; // make sure these classes are defined in the root application
+
+            public static function getInstance():ViewerContainer
+            {
+                return m_instance;
+            }
+
+            private function initializeHandler(event:FlexEvent):void
+            {
+                IdentityManager.instance.enabled = true;
+
+                Alert.yesLabel = LocalizationUtil.getDefaultString('yesLabel');
+                Alert.noLabel = LocalizationUtil.getDefaultString('noLabel');
+                Alert.okLabel = LocalizationUtil.getDefaultString('okLabel');
+                Alert.cancelLabel = LocalizationUtil.getDefaultString('cancelLabel');
+            }
+
+            private function creationCompleteHandler(event:FlexEvent):void
+            {
+                m_instance = this;
+
+                initLogging();
+
+                //prepare to show error message
+                AppEvent.addListener(AppEvent.APP_ERROR, errorHandler);
+
+                setUrlConfigParams();
+
+                setConfigFile();
+
+                startLocalConnection();
+
+                AppEvent.addListener(AppEvent.CONFIG_LOADED, configLoadedHandler);
+
+                if (mapManager.map)
+                {
+                    mapManager.map.setFocus();
+                }
+
+                AppEvent.dispatch(ViewerContainer.CONTAINER_INITIALIZED);
+            }
+
+            private function setUrlConfigParams():void
+            {
+                if (!ExternalInterface.available)
+                {
+                    return;
+                }
+
+                //retrieve config parameters from URL
+                try
+                {
+                    var queryStringFromUrl:String = ExternalInterface.call("window.location.search.substring", 1);
+                    if (queryStringFromUrl)
+                    {
+                        var params:Array = queryStringFromUrl.split('&');
+                        var length:uint = params.length;
+
+                        for (var i:uint = 0, index:int = -1; i < length; i++)
+                        {
+                            var kvPair:String = params[i];
+                            if ((index = kvPair.indexOf("=")) > 0)
+                            {
+                                var key:String = kvPair.substring(0, index);
+                                var value:String = kvPair.substring(index + 1);
+                                if (key)
+                                {
+                                    urlConfigParams[key] = decodeURIComponent(value);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (error:Error)
+                {
+                    AppEvent.showError(LocalizationUtil.getDefaultString("standalonePlayerExternalInterfaceErrorText"), VIEWER_CONTAINER);
+                }
+            }
+
+            private function setConfigFile():void
+            {
+                //retrieve FlashVars.
+                var flashvarConfig:String = FlexGlobals.topLevelApplication.parameters.config;
+                if (flashvarConfig)
+                {
+                    configFile = flashvarConfig;
+                }
+
+                //retrieve config from URL and override FlashVar
+                if (urlConfigParams.config)
+                {
+                    configFile = urlConfigParams.config;
+                }
+            }
+
+            private function configLoadedHandler(event:AppEvent):void
+            {
+                configData = event.data as ConfigData;
+                var ui:Array = configData.viewerUI;
+                var splash:Object = {};
+
+                for (var i:int = 0; i < ui.length; i++)
+                {
+                    if (ui[i].id === "splashpage")
+                    {
+                        splash.url = ui[i].value;
+                        splash.config = ui[i].config;
+                        splash.configXML = ui[i].configXML;
+                        splash.title = ui[i].title;
+                        break;
+                    }
+                }
+
+                if (splash.url)
+                {
+                    loadSplash(splash);
+                }
+            }
+
+            private var m_moduleInfo:IModuleInfo;
+
+            private function loadSplash(splash:Object):void
+            {
+                // setting securityDomain is not allowed on non-REMOTE sandboxes
+                var securityDomain:SecurityDomain =
+                    Security.sandboxType == Security.REMOTE ? SecurityDomain.currentDomain : null;
+
+                m_moduleInfo = ModuleManager.getModule(splash.url);
+                m_moduleInfo.data = splash;
+                m_moduleInfo.addEventListener(ModuleEvent.READY, splashModule_readyHandler);
+                m_moduleInfo.addEventListener(ModuleEvent.ERROR, splashModule_errorHandler);
+                m_moduleInfo.load(null, securityDomain);
+
+                this.cursorManager.setBusyCursor();
+            }
+
+            private function splashModule_errorHandler(event:ModuleEvent):void
+            {
+                this.cursorManager.removeBusyCursor();
+
+                AppEvent.showError(event.errorText, VIEWER_CONTAINER);
+            }
+
+            private function splashModule_readyHandler(event:ModuleEvent):void
+            {
+                this.cursorManager.removeBusyCursor();
+
+                var moduleInfo:IModuleInfo = event.module;
+                var moduleData:Object = moduleInfo.data;
+                var config:String = moduleData.config as String;
+                var configXML:XML = moduleData.configXML;
+                var title:String = moduleData.title as String;
+
+                var widget:IBaseWidget = moduleInfo.factory.create() as IBaseWidget;
+                widget.config = config;
+                widget.configXML = configXML;
+                widget.widgetTitle = title;
+                addElement(widget as IVisualElement);
+            }
+
+            //to make sure the the children are visible.
+            private var isAddChild:Boolean = true;
+
+            protected override function commitProperties():void
+            {
+                super.commitProperties();
+
+                if (isAddChild)
+                {
+                    widgetManager.mapManager = this.mapManager;
+                    addElement(widgetManager);
+
+                    isAddChild = false;
+                }
+            }
+
+            /**
+             * Initialize the logging. As an example, the logging is set up to only
+             * log the fatal event during the RPC related network communication,
+             * such as HTTP call to obtain configuration file.
+             */
+            private function initLogging():void
+            {
+                // Create a target.
+                var logTarget:TraceTarget = new TraceTarget();
+
+                // Log only messages for the classes in the mx.rpc.* and
+                // mx.messaging packages.
+                logTarget.filters = [ "mx.rpc.*", "mx.messaging.*" ];
+
+                // Log on fatal levels.
+                logTarget.level = LogEventLevel.FATAL;
+
+                // Add date, time, category, and log level to the output.
+                logTarget.includeDate = true;
+                logTarget.includeTime = true;
+                logTarget.includeCategory = true;
+                logTarget.includeLevel = true;
+
+                // Begin logging.
+                Log.addTarget(logTarget);
+            }
+
+            private function errorHandler(event:AppEvent):void
+            {
+                var errorWindow:ErrorWindow = ErrorWindow(PopUpManager.createPopUp(this, ErrorWindow, true));
+                var errorMessage:ErrorMessage = event.data as ErrorMessage;
+                if (errorMessage)
+                {
+                    errorWindow.title = errorMessage.title;
+                    errorWindow.errorMessage = errorMessage.content;
+                }
+                else
+                {
+                    errorWindow.errorMessage = event.data as String;
+                }
+            }
+
+            //the following are the methods to allow modules access event bus via the contains.
+            [Deprecated(replacement="AppEvent.addListener")]
+            public static function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void
+            {
+                EventBus.instance.addEventListener(type, listener, useCapture, priority, useWeakReference);
+            }
+
+            [Deprecated(replacement="AppEvent.removeListener")]
+            public static function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void
+            {
+                EventBus.instance.removeEventListener(type, listener, useCapture);
+            }
+
+            //this is the simplest way of communicate. Just use a string.
+            [Deprecated(replacement="AppEvent.dispatch")]
+            public static function dispatch(message:String):Boolean
+            {
+                return AppEvent.dispatch(message);
+            }
+
+            [Deprecated(replacement="appEvent.dispatch")]
+            public static function dispatchEvent(event:Event):Boolean
+            {
+                return EventBus.instance.dispatchEvent(event);
+            }
+
+            [Deprecated(replacement="AppEvent.setStatus")]
+            public static function setStatus(status:String):void
+            {
+                AppEvent.dispatch(AppEvent.SET_STATUS, status);
+            }
+
+            [Deprecated(replacement="AppEvent.showError")]
+            public static function showError(value:String):void
+            {
+                AppEvent.showError(value, VIEWER_CONTAINER);
+            }
+
+            private var m_localConnection:LocalConnection;
+
+            private function startLocalConnection():void
+            {
+                const builderParam:String = FlexGlobals.topLevelApplication.parameters.builder;
+                const builderURL:String = urlConfigParams.builder;
+                if (builderParam === null && builderURL === null)
+                {
+                    return;
+                }
+
+                // Force a flashvar parameter
+                FlexGlobals.topLevelApplication.parameters.builder = true;
+
+                m_localConnection = new LocalConnection();
+                m_localConnection.allowDomain('*');
+                m_localConnection.client = {
+                        setPredefinedStyles: function(value:Object):void
+                        {
+                            AppEvent.dispatch(AppEvent.SET_PREDEFINED_STYLES, value);
+                        },
+                        setTextColor: function(value:uint):void
+                        {
+                            AppEvent.dispatch(AppEvent.SET_TEXT_COLOR, value);
+                        },
+                        setBackgroundColor: function(value:uint):void
+                        {
+                            AppEvent.dispatch(AppEvent.SET_BACKGROUND_COLOR, value);
+                        },
+                        setRolloverColor: function(value:uint):void
+                        {
+                            AppEvent.dispatch(AppEvent.SET_ROLLOVER_COLOR, value);
+                        },
+                        setSelectionColor: function(value:uint):void
+                        {
+                            AppEvent.dispatch(AppEvent.SET_SELECTION_COLOR, value);
+                        },
+                        setTitleColor: function(value:uint):void
+                        {
+                            AppEvent.dispatch(AppEvent.SET_TITLE_COLOR, value);
+                        },
+                        setApplicationBackgroundColor: function(value:uint):void
+                        {
+                            AppEvent.dispatch(AppEvent.SET_APPLICATION_BACKGROUND_COLOR, value);
+                        },
+                        setAlpha: function(value:Number):void
+                        {
+                            AppEvent.dispatch(AppEvent.SET_ALPHA, value);
+                        },
+                        setFontName: function(value:String):void
+                        {
+                            AppEvent.dispatch(AppEvent.SET_FONT_NAME, value);
+                        },
+                        setAppTitleFontName: function(value:String):void
+                        {
+                            AppEvent.dispatch(AppEvent.SET_APP_TITLE_FONT_NAME, value);
+                        },
+                        setSubTitleFontName: function(value:String):void
+                        {
+                            AppEvent.dispatch(AppEvent.SET_SUB_TITLE_FONT_NAME, value);
+                        },
+                        setTitles: function(title:String, subtitle:String):void
+                        {
+                            AppEvent.dispatch(AppEvent.SET_TITLES, { title: title, subtitle: subtitle });
+                        },
+                        setLogo: function(value:String):void
+                        {
+                            AppEvent.dispatch(AppEvent.SET_LOGO, value);
+                        },
+                        setLocale: function(value:String):void
+                        {
+                            resourceManager.localeChain = value.split(',');
+                        }
+                    };
+                m_localConnection.connect('_flexViewer');
+            }
+        ]]>
+    </fx:Script>
+</s:Group>

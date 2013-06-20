@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<configuration label="April - June 2010">
+
+    <dateformat>MMMM, YYYY</dateformat>
+    <loop>false</loop>
+    <singlethumbastimeinstant>false</singlethumbastimeinstant>
+    <thumbcount>1</thumbcount>
+    <thumbmovingrate>1000</thumbmovingrate>
+    <timeextent>
+        <starttime>2010/04/25 19:00:00 UTC</starttime>
+        <endtime>2010/06/04 19:00:00 UTC</endtime>
+    </timeextent>
+    <timestops>
+        <timestopsinterval>1</timestopsinterval>
+        <timestopsunits>days</timestopsunits>
+    </timestops>
+
+</configuration>
+
+<!--
+    See Time Slider widget tag reference at
+    http://links.esri.com/timesliderwidget
+-->

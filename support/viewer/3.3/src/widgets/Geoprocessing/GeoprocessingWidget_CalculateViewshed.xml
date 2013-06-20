@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<configuration label="Calculate viewshed">
+    <description/>
+    <taskurl>http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Elevation/ESRI_Elevation_World/GPServer/Viewshed</taskurl>
+    <helpurl>http://sampleserver1.arcgisonline.com/arcgisoutput/Elevation_ESRI_Elevation_World/Viewshed.htm</helpurl>
+    <inputparams>
+        <param name="Input_Observation_Point"
+               geometrytype="point"
+               label="Observation point"
+               required="true"
+               type="featurerecordset"
+               visible="true">
+            <renderer type="simple">
+                <defaultsymbol alpha="0.5"
+                               color="0x008844"
+                               size="15"
+                               type="simplemarker">
+                    <outline width="1" color="0x22DD00"/>
+                </defaultsymbol>
+            </renderer>
+        </param>
+        <param name="Viewshed_Distance"
+               defaultvalue="15000:Meters"
+               label="Viewshed distance"
+               required="true"
+               type="linearunit"
+               visible="true">
+            <choicelist>
+                <choice value="esriMeters"/>
+                <choice value="esriFeet"/>
+            </choicelist>
+        </param>
+    </inputparams>
+    <outputparams>
+        <param name="Viewshed_Result"
+               geometrytype="polygon"
+               label="Viewshed Result"
+               required="true"
+               type="featurerecordset"
+               visible="true">
+            <renderer type="simple">
+                <defaultsymbol alpha="0.5"
+                               color="0xFF00FF"
+                               type="simplefill">
+                    <outline width="1" color="0x000000"/>
+                </defaultsymbol>
+            </renderer>
+        </param>
+    </outputparams>
+    <layerorder>Input_Observation_Point,Viewshed_Result</layerorder>
+</configuration>
+
+<!--
+    See Geoprocessing widget tag reference at
+    http://links.esri.com/geoprocessingwidget
+-->

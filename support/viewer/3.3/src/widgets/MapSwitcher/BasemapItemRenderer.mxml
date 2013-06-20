@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:mx="library://ns.adobe.com/flex/mx"
+                width="110" height="110"
+                autoDrawBackground="false">
+    <fx:Script>
+        <![CDATA[
+            override public function set data(value:Object):void
+            {
+                super.data = value;
+
+                const basemap:Basemap = value as Basemap;
+                if (basemap)
+                {
+                    displayImage.source = basemap.thumbnail;
+                    displayLabel.text = basemap.label;
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="hovered"/>
+        <s:State name="selected"/>
+    </s:states>
+
+    <s:Rect left="0" right="0" top="0" bottom="0"
+            includeIn="hovered,selected">
+        <s:stroke>
+            <s:SolidColorStroke color.hovered="{getStyle('borderColor')}"
+                                color.selected="{getStyle('focusColor')}"
+                                weight="2"/>
+        </s:stroke>
+    </s:Rect>
+
+    <s:BitmapImage id="displayImage"
+                   width="100" height="67"
+                   top="5"
+                   horizontalCenter="0">
+        <s:filters>
+            <s:GlowFilter alpha="0.5"
+                          blurX="12"
+                          blurY="12"
+                          color="0x000000"/>
+        </s:filters>
+    </s:BitmapImage>
+
+    <s:Label id="displayLabel"
+             width="100"
+             top="75" bottom="0"
+             horizontalCenter="0"
+             maxDisplayedLines="2"
+             showTruncationTip="true"
+             textAlign="center"
+             verticalAlign="middle"/>
+</s:ItemRenderer>

@@ -1,0 +1,11 @@
+# Ant build files
+env.properties
+local.properties
+
+# Build and Release Folders
+bin-debug/
+bin-release/
+dist/
+
+# Other files
+*.swc

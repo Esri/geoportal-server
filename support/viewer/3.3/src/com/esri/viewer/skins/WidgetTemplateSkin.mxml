@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<!---
+@private
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+             xmlns:s="library://ns.adobe.com/flex/spark"
+             xmlns:mx="library://ns.adobe.com/flex/mx"
+             xmlns:components="com.esri.viewer.components.*"
+             creationComplete="init()"
+             preinitialize="preinitializeHandler(event)">
+
+    <fx:Declarations>
+        <s:Bounce id="bounce"/>
+    </fx:Declarations>
+
+    <fx:Metadata>
+        [HostComponent("com.esri.viewer.WidgetTemplate")]
+    </fx:Metadata>
+    <fx:Script>
+        <![CDATA[
+            import com.esri.viewer.utils.LocalizationUtil;
+
+            import flashx.textLayout.formats.TextAlign;
+
+            import mx.events.EffectEvent;
+            import mx.events.FlexEvent;
+
+            protected function effectEndHandler(event:EffectEvent):void
+            {
+                // when the state is changed from minimized to closed (which can be triggered by programmatic closing widget),
+                // restore the widget size in order that when the widget is opened again, no resize is needed.
+                hostComponent.width = hostComponent.widgetWidth;
+                hostComponent.height = hostComponent.widgetHeight;
+            }
+
+            private function init():void
+            {
+                //rtl label truncation causes RTE
+                if (layoutDirection == 'rtl')
+                {
+                    widgetLabel.maxDisplayedLines = 0;
+                }
+            }
+
+            protected function resizeButton_preinitializeHandler(event:FlexEvent):void
+            {
+                if (hostComponent.isRtl())
+                {
+                    resizeButton.source = "assets/images/w_resize_rtl.png";
+                }
+                else
+                {
+                    resizeButton.source = "assets/images/w_resize.png";
+                }
+            }
+
+            protected function preinitializeHandler(event:FlexEvent):void
+            {
+                if (hostComponent.isRtl())
+                {
+                    setStyle("textAlign", TextAlign.RIGHT);
+                }
+                else
+                {
+                    setStyle("textAlign", TextAlign.START);
+                }
+            }
+
+            private function minimizingEnded(event:EffectEvent):void
+            {
+                icon.tabFocusEnabled = true;
+                if (focusManager.showFocusIndicator)
+                {
+                    icon.setFocus();
+                }
+            }
+
+            private function openEnded(event:EffectEvent):void
+            {
+                icon.tabFocusEnabled = false;
+                if (focusManager.showFocusIndicator)
+                {
+                    focusManager.getNextFocusManagerComponent().setFocus();
+                }
+            }
+        ]]>
+    </fx:Script>
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="open"/>
+        <s:State name="minimized"/>
+        <s:State name="closed"/>
+        <s:State name="disabled"/>
+    </s:states>
+
+    <s:transitions>
+        <s:Transition fromState="open" toState="minimized">
+            <s:Sequence effectEnd="minimizingEnded(event)">
+                <s:Fade duration="100" target="{widgetLabel}"/>
+                <s:Fade duration="100" target="{headerToolGroup}"/>
+                <s:Fade duration="100" target="{contentGroup}"/>
+                <s:Fade duration="100" target="{widgetFrame}"/>
+                <!-- Use mx:Resize instead of s:Resize for minimize to work with Flex 4.5 sdk -->
+                <mx:Resize heightTo="30"
+                           target="{hostComponent}"
+                           widthTo="150"/>
+                <s:Move duration="100" target="{header}"/>
+                <s:Move easer="{bounce}" target="{icon}"/>
+            </s:Sequence>
+        </s:Transition>
+        <s:Transition fromState="minimized" toState="open">
+            <s:Sequence effectEnd="openEnded(event)">
+                <s:Fade duration="100" target="{widgetFrame}"/>
+                <s:Move target="{icon}"/>
+                <!-- Use mx:Resize instead of s:Resize for minimize to work with Flex 4.5 sdk -->
+                <mx:Resize heightTo="{hostComponent.widgetHeight}"
+                           target="{hostComponent}"
+                           widthTo="{hostComponent.widgetWidth}"/>
+                <s:Fade duration="100" target="{widgetLabel}"/>
+                <s:Fade duration="100" target="{contentGroup}"/>
+                <s:Fade duration="100" target="{headerToolGroup}"/>
+            </s:Sequence>
+        </s:Transition>
+        <s:Transition fromState="closed" toState="open">
+            <s:Sequence>
+                <s:Fade duration="100" target="{widgetFrame}"/>
+                <s:Move target="{icon}"/>
+                <s:Fade duration="100" target="{widgetLabel}"/>
+                <s:Fade duration="100" target="{contentGroup}"/>
+                <s:Fade duration="100" target="{headerToolGroup}"/>
+            </s:Sequence>
+        </s:Transition>
+        <s:Transition fromState="open" toState="closed">
+            <s:Sequence>
+                <s:Fade duration="100" target="{widgetLabel}"/>
+                <s:Fade duration="100" target="{headerToolGroup}"/>
+                <s:Fade duration="100" target="{contentGroup}"/>
+                <s:Fade duration="100" target="{widgetFrame}"/>
+            </s:Sequence>
+        </s:Transition>
+        <s:Transition fromState="minimized" toState="closed">
+            <s:Sequence effectEnd="effectEndHandler(event)">
+                <s:Fade duration="100" target="{widgetLabel}"/>
+                <s:Parallel duration="100">
+                    <s:Fade alphaTo="0" target="{contentBackground}"/>
+                    <s:Fade alphaTo="0" target="{border}"/>
+                    <s:Fade alphaTo="0" target="{headerBackground}"/>
+                    <s:Fade target="{widgetFrame}"/>
+                </s:Parallel>
+            </s:Sequence>
+        </s:Transition>
+    </s:transitions>
+
+    <!-- the widget template wireframe -->
+    <s:Group id="widgetFrame"
+             left="0" right="0" top="0" bottom="0"
+             alpha.closed="0">
+        <s:Rect width="100%" height="100%"
+                radiusX="5"
+                radiusY="5">
+            <s:fill>
+                <s:SolidColor id="contentBackground"
+                              alpha="{getStyle('contentBackgroundAlpha')}"
+                              alpha.minimized="0.5"
+                              color="{getStyle('contentBackgroundColor')}"/>
+            </s:fill>
+            <s:stroke>
+                <s:SolidColorStroke id="border"
+                                    alpha.minimized="0.5"
+                                    color="{getStyle('borderColor')}"/>
+            </s:stroke>
+        </s:Rect>
+        <s:Rect width="100%" height="{header.height}"
+                left="1" right="1" top="1"
+                topLeftRadiusX="5"
+                topRightRadiusX="5">
+            <s:fill>
+                <s:SolidColor id="headerBackground"
+                              alpha="{getStyle('contentBackgroundAlpha')}"
+                              alpha.minimized="0"
+                              color="{getStyle('contentBackgroundColor')}"/>
+            </s:fill>
+        </s:Rect>
+        <s:filters>
+            <s:DropShadowFilter alpha="0.5"
+                                blurX="10"
+                                blurY="10"/>
+        </s:filters>
+    </s:Group>
+
+    <s:Group id="header"
+             height="30"
+             left="25" left.minimized="55" right="{headerToolGroup.width + 60}" right.minimized="10" top="0">
+        <s:Label id="widgetLabel"
+                 width="100%"
+                 alpha.closed="0"
+                 alpha.minimized="1"
+                 alpha.open="1"
+                 maxDisplayedLines="1"
+                 showTruncationTip="true"
+                 styleName="WidgetTitle"
+                 text="{hostComponent.widgetTitle}"
+                 verticalCenter="0"/>
+    </s:Group>
+
+    <s:Group id="headerToolGroup"
+             height="30"
+             right="70" top="0"
+             alpha.closed="0"
+             hasFocusableChildren="true"
+             includeInLayout.minimized="false"
+             visible.minimized="false"
+             visible.open="true">
+        <s:layout>
+            <s:HorizontalLayout paddingLeft="10"/>
+        </s:layout>
+    </s:Group>
+
+    <s:Group id="minclose"
+             height="30"
+             right="3" top="0"
+             includeInLayout.minimized="false"
+             visible.closed="false"
+             visible.minimized="false">
+        <s:layout>
+            <s:HorizontalLayout gap="2"
+                                paddingLeft="2"
+                                verticalAlign="middle"/>
+        </s:layout>
+        <components:FocusableImage id="minimizeButton"
+                                   buttonMode="true"
+                                   focusEnabled="true"
+                                   includeInLayout="{hostComponent.enableMinimizeButton}"
+                                   source="assets/images/w_min.png"
+                                   toolTip="{LocalizationUtil.getDefaultString('minimize')}"
+                                   useHandCursor="true"
+                                   visible="{hostComponent.enableMinimizeButton}"/>
+        <components:FocusableImage id="closeButton"
+                                   buttonMode="true"
+                                   focusEnabled="true"
+                                   includeInLayout="{hostComponent.enableCloseButton}"
+                                   source="assets/images/w_close.png"
+                                   toolTip="{LocalizationUtil.getDefaultString('close')}"
+                                   useHandCursor="true"
+                                   visible="{hostComponent.enableCloseButton}"/>
+    </s:Group>
+
+    <components:FocusableImage id="icon"
+                               x.minimized="10" x.open="-20" y="12" y.minimized="-2" width="40" height="40"
+                               buttonMode="false"
+                               buttonMode.minimized="true"
+                               source="{hostComponent.widgetIcon}"
+                               tabFocusEnabled="false"
+                               useHandCursor="false"
+                               useHandCursor.minimized="true"
+                               visible="{hostComponent.enableIcon}"
+                               visible.closed="false">
+        <components:filters>
+            <s:DropShadowFilter blurX="10" blurY="10"/>
+        </components:filters>
+    </components:FocusableImage>
+
+    <s:Group id="contentGroup"
+             left="20" right="20" top="35" bottom="20"
+             alpha.closed="0"
+             alpha.minimized="0"
+             clipAndEnableScrolling="true"
+             visible.minimized="false"
+             visible.normal="true"
+             visible.open="true">
+        <s:layout>
+            <s:BasicLayout/>
+        </s:layout>
+    </s:Group>
+
+    <mx:Image id="resizeButton"
+              right="0" bottom="0"
+              preinitialize="resizeButton_preinitializeHandler(event)"
+              source="assets/images/w_resize.png"
+              visible.closed="false"
+              visible.minimized="false"
+              visible.open="{hostComponent.resizable}"/>
+</s:SparkSkin>
