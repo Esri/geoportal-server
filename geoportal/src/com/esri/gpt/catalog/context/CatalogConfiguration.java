@@ -14,13 +14,15 @@
  */
 package com.esri.gpt.catalog.context;
 
+import java.util.logging.Level;
+
 import com.esri.gpt.catalog.arcims.ImsCatalog;
 import com.esri.gpt.catalog.discovery.DiscoveryQueryAdapter;
 import com.esri.gpt.catalog.lucene.LuceneConfig;
 import com.esri.gpt.catalog.schema.SchemaFactory;
 import com.esri.gpt.catalog.schema.Schemas;
 import com.esri.gpt.catalog.search.SearchConfig;
-import com.esri.gpt.control.georss.DcatFields;
+import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.search.browse.TocCollection;
 import com.esri.gpt.control.search.browse.TocFactory;
 import com.esri.gpt.framework.collection.StringAttributeMap;
@@ -30,8 +32,6 @@ import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.util.LogUtil;
 import com.esri.gpt.framework.util.Val;
-
-import java.util.logging.Level;
 
 /**
  * Catalog configuration information.
@@ -49,7 +49,7 @@ private StringAttributeMap _parameters = new StringAttributeMap();
 private SearchConfig       _searchConfig;
 private String             _tablePrefix = "GPT_";
 private TocCollection      _tocCollection = null;
-private DcatFields 				 _dcatFields = new DcatFields();
+private DcatSchemas 			 _dcatSchemas = new DcatSchemas();
 
 private int                connectionTimeOut = HttpClientRequest.DEFAULT_CONNECTION_TIMEOUT;
 private int                responseTimeOut   = HttpClientRequest.DEFAULT_RESPONSE_TIMEOUT;      
@@ -320,11 +320,11 @@ public void setResponseTimeOutMs(int responseTimeOut) {
 }
 
 /**
- * Gets the dcat fields
- * @return the _dcatFields
+ * Gets the dcat schemas
+ * @return the _dcatSchemas
  */
-public DcatFields getDcatFields() {
-	return _dcatFields;
+public DcatSchemas getDcatSchemas() {
+	return _dcatSchemas;
 }
 
 // methods =====================================================================
