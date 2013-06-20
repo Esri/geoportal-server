@@ -128,13 +128,14 @@ public class ErosAtomFeedWriter extends AtomFeedWriter {
   private String findServiceType(IFeedRecord record) {
     String serviceType = record.getServiceType().isEmpty() ? resourceIdentifier.guessServiceTypeFromUrl(record.getResourceUrl()) : record.getServiceType();
     if (serviceType.equals("ags") ) {
-      if (record.getResourceUrl().endsWith("MapServer")) {
+      String resourceUrl = record.getResourceUrl().replaceAll("\\?.*$","");
+      if (resourceUrl.endsWith("MapServer")) {
         serviceType += "mapserver";
       }
-      if (record.getResourceUrl().endsWith("FeatureServer")) {
+      if (resourceUrl.endsWith("FeatureServer")) {
         serviceType += "featureserver";
       }
-      if (record.getResourceUrl().endsWith("ImageServer")) {
+      if (resourceUrl.endsWith("ImageServer")) {
         serviceType += "imageserver";
       }
     }
