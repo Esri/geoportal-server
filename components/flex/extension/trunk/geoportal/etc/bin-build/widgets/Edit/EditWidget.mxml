@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:esri="http://www.esri.com/2008/ags"
+                   xmlns:viewer="com.esri.viewer.*"
+                   xmlns:layers="com.esri.ags.layers.*"
+                   creationComplete="basewidget_creationCompleteHandler(event)"
+                   widgetConfigLoaded="basewidget_widgetConfigLoaded(event)">
+
+    <fx:Style>
+        @namespace s "library://ns.adobe.com/flex/spark";
+        @namespace mx "library://ns.adobe.com/flex/halo";
+        @namespace esri "http://www.esri.com/2008/ags";
+        @namespace viewer "com.esri.viewer.*";
+
+        esri|TemplatePicker
+        {
+            skin-class: ClassReference("widgets.Edit.EditWidgetTemplatePickerSkin");
+        }
+    </fx:Style>
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.Graphic;
+            import com.esri.ags.events.FeatureLayerEvent;
+            import com.esri.ags.layers.FeatureLayer;
+            import com.esri.ags.layers.supportClasses.Field;
+            import com.esri.ags.skins.supportClasses.AttachmentMouseEvent;
+            import com.esri.viewer.AppEvent;
+            import com.esri.viewer.ViewerContainer;
+
+            import mx.collections.ArrayCollection;
+            import mx.core.FlexGlobals;
+            import mx.events.FlexEvent;
+
+            [Bindable]
+            private var oplList:Array;
+            [Bindable]
+            private var featureLayers:Array;
+
+            private var deleteFeatures:Boolean = true;
+            private var dictionary:Dictionary = new Dictionary /*<featureLayer,infoWindowRenderer*/;
+            private var excludeLayers:Array;
+            private var lastState:String;
+
+            private var disablePanZoomNavigationWidget:Boolean;
+
+            private var attributesLabel:String;
+            private var attachmentsLabel:String;
+
+            [Bindable]
+            private var showAttributesText:String;
+
+            private function basewidget_widgetConfigLoaded(event:Event):void
+            {
+                // hide map infowindow if any
+                map.infoWindow.hide();
+
+                if (configXML)
+                {
+                    geometryService.url = configXML.geometryservice;
+
+                    const configToolbarVisible:Boolean = configXML.toolbarvisible == "true";
+                    editor.toolbarVisible = configToolbarVisible;
+
+                    const configToolbarCutVisible:Boolean = configXML.toolbarcutvisible == "true";
+                    editor.toolbarCutVisible = configToolbarCutVisible;
+
+                    const configToolbarMergeVisible:Boolean = configXML.toolbarmergevisible == "true";
+                    editor.toolbarMergeVisible = configToolbarMergeVisible;
+
+                    const configToolbarReshapeVisible:Boolean = configXML.toolbarreshapevisible == "true";
+                    editor.toolbarReshapeVisible = configToolbarReshapeVisible;
+
+                    if (configXML.createoptions.length() > 0)
+                    {
+                        createOptions.polygonDrawTools = new Array();
+                        createOptions.polylineDrawTools = new Array();
+
+                        if (configXML.createoptions.polygondrawtools.length() > 0)
+                        {
+                            const polygonDrawToolsList:Array = configXML.createoptions.polygondrawtools.split(",");
+                            for (var i:Number = 0; i < polygonDrawToolsList.length; i++)
+                            {
+                                createOptions.polygonDrawTools.push(polygonDrawToolsList[i]);
+                            }
+                        }
+
+                        if (configXML.createoptions.polylinedrawtools.length() > 0)
+                        {
+                            const polylineDrawToolsList:Array = configXML.createoptions.polylinedrawtools.split(",");
+                            for (var j:Number = 0; j < polylineDrawToolsList.length; j++)
+                            {
+                                createOptions.polylineDrawTools.push(polylineDrawToolsList[j]);
+                            }
+                        }
+                        editor.createOptions = createOptions;
+                    }
+                    //excludeLayers
+                    excludeLayers = [];
+                    var layers:XMLList = configXML.excludelayer as XMLList;
+                    for (var n:Number = 0; n < layers.length(); n++)
+                    {
+                        excludeLayers.push(layers[n].toString());
+                    }
+
+                    //deleteFeatures
+                    if (configXML.deletefeatures.length() > 0)
+                    {
+                        deleteFeatures = configXML.deletefeatures == "true";
+                    }
+                    editor.deleteEnabled = attachmentInspector.deleteEnabled = deleteFeatures;
+
+
+                    //labels
+                    attributesLabel = configXML.labels.attributeslabel[0] || getDefaultString("attributesLabel");
+                    attachmentsLabel = configXML.labels.attachmentslabel[0] || getDefaultString("attachmentsLabel");
+                    showAttributesText = configXML.showattributestext || getDefaultString("showAttributesText");
+                    EditWidgetTemplatePickerSkin.featureLayerNotVisibleText = configXML.featurelayernotvisibletext || getDefaultString("featureLayerNotVisibleText");
+                    EditWidgetAttributeInspectorSkin.showAttachmentsText = configXML.showattachmentstext || getDefaultString("showAttachmentsText");
+                    EditWidgetAttachmentInspectorSkin.layerNotSupportingAttachmentsText = configXML.layernotsupportingattchmentstext || getDefaultString("layerNotSupportingAttachmentsText");
+                    EditWidgetAttachmentInspectorSkin.noAttachmentsText = configXML.noattchmentstext || getDefaultString("noAttachmentsText");
+                    EditWidgetAttachmentInspectorSkin.chooseFileText = configXML.choosefiletext || getDefaultString("chooseFileText");
+                    EditWidgetAttachmentInspectorSkin.attachmentSubmitLabel = configXML.attachmentsubmitlabel || getDefaultString("attachmentSubmitLabel");
+                    EditWidgetAttachmentInspectorSkin.attachmentCancelLabel = configXML.attachmentcancellabel || getDefaultString("attachmentCancelLabel");
+                    EditWidgetAttributeInspectorSkin.deleteLabel = configXML.deletelabel || getDefaultString("deleteLabel");
+                    EditWidgetAttributeInspectorSkin.okLabel = configXML.oklabel || getDefaultString("okLabel");
+                }
+                map.infoWindow.addEventListener(Event.CLOSE, infoWindowCloseHandler);
+                ViewerContainer.dispatchEvent(new AppEvent(AppEvent.DATA_OPT_LAYERS, null, getOplayers));
+            }
+
+            private function basewidget_creationCompleteHandler(event:FlexEvent):void
+            {
+                editor.attributeInspector.setStyle("skinClass", EditWidgetAttributeInspectorSkin);
+
+                map.infoWindow.label = attributesLabel;
+                editor.attributeInspector.addEventListener("attachmentGroupClicked", attachmentGroupClickedHandler);
+                editor.attributeInspector.addEventListener("okButtonClicked", okButtonClickHandler);
+            }
+
+            private function getOplayers(event:AppEvent):void
+            {
+                oplList = event.data as Array;
+                populateEditor(oplList);
+            }
+
+            private function populateEditor(array:Array):void
+            {
+                featureLayers = [];
+
+                if (oplList && oplList.length > 0)
+                {
+                    for (var j:int = 0; j < oplList.length; j++)
+                    {
+                        var opLayerType:String = oplList[j].type
+
+                        var doNotAddFeatureLayer:Boolean = false;
+                        if (opLayerType.toLowerCase() == "feature")
+                        {
+                            // loop through all the excludeLayers
+                            for (var n:int = 0; n < excludeLayers.length; )
+                            {
+                                if (oplList[j].layer.name == excludeLayers[n])
+                                {
+                                    doNotAddFeatureLayer = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    n++;
+                                }
+                            }
+
+                            if (!doNotAddFeatureLayer)
+                            {
+                                // always turn the layer on by default
+                                oplList[j].visible = true;
+                                ViewerContainer.dispatchEvent(new AppEvent(AppEvent.MAP_LAYER_VISIBLE, oplList[j]));
+
+                                oplList[j].layer.removeEventListener(FeatureLayerEvent.SELECTION_COMPLETE, featureLayer_selectionComplete);
+                                oplList[j].layer.addEventListener(FeatureLayerEvent.SELECTION_COMPLETE, featureLayer_selectionComplete, false, 1);
+
+                                //store the infoWindowRendere foe each feature layer
+                                dictionary[oplList[j].layer] = oplList[j].layer.infoWindowRenderer;
+                                oplList[j].layer.infoWindowRenderer = null; // assign it to null, as editor overtakes now
+
+                                featureLayers.push(oplList[j].layer);
+                            }
+                        }
+                    }
+                }
+
+                // always call deactive first
+                deactivateEditor();
+                if (featureLayers.length > 0)
+                {
+                    editor.map = map;
+                    editor.featureLayers = featureLayers;
+                }
+            }
+
+            private function deactivateEditor():void
+            {
+                map.infoWindow.hide();
+                editor.templatePicker.clearSelection();
+
+                editor.featureLayers = null;
+                editor.map = null;
+                editor.drawTool.deactivate();
+                editor.editTool.deactivate();
+            }
+
+            private function featureLayer_selectionComplete(event:FeatureLayerEvent):void
+            {
+                for each (var field:Field in event.target.layerDetails.fields)
+                {
+                    if (field.type == Field.TYPE_DATE)
+                    {
+                        for each (var feature:Graphic in event.features)
+                        {
+                            var date:Date = new Date(feature.attributes[field.name]);
+                            if (date.milliseconds == 999)
+                            {
+                                date.milliseconds++; //Add 1ms to date values ending in 999 to workaround REST date bug
+                                feature.attributes[field.name] = date.time;
+                            }
+                        }
+                    }
+                }
+            }
+
+            private function infoWindowCloseHandler(event:Event):void
+            {
+                map.infoWindow.content = editor.attributeInspector;
+                map.infoWindow.label = attributesLabel;
+                if (attachmentInspector)
+                {
+                    attachmentInspector.clear();
+                }
+            }
+
+            private function okButtonClickHandler(event:Event):void
+            {
+                map.infoWindow.hide();
+            }
+
+            private function attachmentGroupClickedHandler(event:Event):void
+            {
+                map.infoWindow.label = attachmentsLabel;
+                map.infoWindow.content = attachmentInspectorContainer;
+
+                // queues an operation(showAttachments) to be performed for the next screen refresh, rather than in the current update.
+                // Without the callLater() method, you might try to access a property of a component
+                // that is not yet available.
+                callLater(showAttachments);
+
+                function showAttachments():void
+                {
+                    attachmentInspector.showAttachments(editor.attributeInspector.activeFeature, editor.attributeInspector.activeFeature.graphicsLayer as FeatureLayer);
+                }
+            }
+
+            private function attachmentInspector_initializeHandler(event:FlexEvent):void
+            {
+                super.initializationComplete();
+                attachmentInspector.addEventListener(AttachmentMouseEvent.ATTACHMENT_DOUBLE_CLICK, attachmentDoubleClickHandler);
+            }
+
+            private function attachmentDoubleClickHandler(event:AttachmentMouseEvent):void
+            {
+                navigateToURL(new URLRequest(event.attachmentInfo.url));
+            }
+
+            private function attributeGroup_clickHandler(event:MouseEvent):void
+            {
+                map.infoWindow.content = editor.attributeInspector;
+                map.infoWindow.label = attributesLabel;
+            }
+
+            private function widgetClosedHandler(event:Event):void
+            {
+                disablePanZoomNavigationWidget = false;
+                addSharedData("Edit_Widget", new ArrayCollection([ disablePanZoomNavigationWidget ])); // to be able to enable pan/zoomin/zoomout
+
+                lastState = "closed";
+
+                // clear feature layer selection and assign back the renderer
+                for each (var featureLayer:FeatureLayer in featureLayers)
+                {
+                    if (featureLayer.selectedFeatures.length > 0)
+                    {
+                        featureLayer.clearSelection();
+                    }
+                    featureLayer.infoWindowRenderer = dictionary[featureLayer];
+                }
+                deactivateEditor();
+            }
+
+            private function widgetOpenedHandler(event:Event):void
+            {
+                disablePanZoomNavigationWidget = true;
+                addSharedData("Edit_Widget", new ArrayCollection([ disablePanZoomNavigationWidget ])); // to be able to disable pan/zoomin/zoomout
+
+                // hide the infowindow if already there from other widget
+                if (lastState == "closed") // reset only if the widget was opened after being closed
+                {
+                    map.infoWindow.hide();
+                    populateEditor(oplList);
+                }
+            }
+
+            private function widgetMinimizedHandler(event:Event):void
+            {
+                lastState = "minimized";
+            }
+        ]]>
+    </fx:Script>
+
+    <fx:Declarations>
+        <esri:GeometryService id="geometryService" url="http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer"/>
+        <esri:CreateOptions id="createOptions"/>
+
+        <!-- Attachment Inspector Container -->
+        <s:VGroup id="attachmentInspectorContainer"
+                  width="280" height="280"
+                  horizontalAlign="center"
+                  paddingBottom="2"
+                  paddingTop="10">
+            <esri:AttachmentInspector id="attachmentInspector"
+                                      width="80%"
+                                      initialize="attachmentInspector_initializeHandler(event)"
+                                      skinClass="widgets.Edit.EditWidgetAttachmentInspectorSkin"/>
+            <mx:Spacer width="100%" height="100%"/>
+            <s:HGroup width="100%"
+                      horizontalAlign="left"
+                      verticalAlign="middle">
+                <mx:Image id="img1"
+                          width="25" height="25"
+                          buttonMode="true"
+                          click="attributeGroup_clickHandler(event)"
+                          source="@Embed('../../assets/images/edit_attributes.png')"/>
+                <s:Label buttonMode="true"
+                         click="attributeGroup_clickHandler(event)"
+                         fontWeight="bold"
+                         paddingLeft="2"
+                         text="{showAttributesText}"/>
+            </s:HGroup>
+        </s:VGroup>
+    </fx:Declarations>
+
+    <viewer:WidgetTemplate width="300" height="300"
+                           closed="widgetClosedHandler(event)"
+                           minHeight="300"
+                           minWidth="300"
+                           minimized="widgetMinimizedHandler(event)"
+                           open="widgetOpenedHandler(event)">
+        <viewer:layout>
+            <s:VerticalLayout paddingLeft="5" paddingTop="10"/>
+        </viewer:layout>
+        <s:Label text="{getDefaultString('selectTemplateText')}"/>
+        <mx:Spacer/>
+        <esri:Editor id="editor"
+                     width="100%" height="100%"
+                     geometryService="{geometryService}"/>
+    </viewer:WidgetTemplate>
+</viewer:BaseWidget>

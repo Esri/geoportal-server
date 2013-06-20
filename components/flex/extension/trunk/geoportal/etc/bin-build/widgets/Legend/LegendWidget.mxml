@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:esri="http://www.esri.com/2008/ags"
+                   xmlns:viewer="com.esri.viewer.*"
+                   widgetConfigLoaded="basewidget_widgetConfigLoaded(event)">
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.layers.Layer;
+            import com.esri.viewer.AppEvent;
+            import com.esri.viewer.ViewerContainer;
+
+            import mx.collections.ArrayCollection;
+
+            private var arrOperationalLayers:Array;
+            private var arrBaseMapLayers:Array;
+            private var mapLayers:ArrayCollection;
+            private var legendLayers:Array;
+            private var excludeLayers:Array;
+
+            private var useBaseMaps:Boolean;
+            private var useOperationalLayers:Boolean = true;
+
+            [Bindable]
+            private var respectCurrentMapScale:Boolean = true;
+
+            private function basewidget_widgetConfigLoaded(event:Event):void
+            {
+                if (configXML)
+                {
+                    // respectcurrentmapscale
+                    respectCurrentMapScale = configXML.respectcurrentmapscale == "true";
+
+                    //usebasemaps
+                    if (configXML.usebasemaps.length() > 0)
+                    {
+                        useBaseMaps = configXML.usebasemaps == "true";
+                    }
+
+                    //useoperationallayers
+                    if (configXML.useoperationallayers.length() > 0)
+                    {
+                        useOperationalLayers = configXML.useoperationallayers == "true";
+                    }
+
+                    //excludeLayers
+                    excludeLayers = [];
+                    var layers:XMLList = configXML.excludelayer as XMLList;
+                    for (var n:Number = 0; n < layers.length(); n++)
+                    {
+                        excludeLayers.push(layers[n].toString());
+                    }
+                }
+                ViewerContainer.dispatchEvent(new AppEvent(AppEvent.DATA_OPT_LAYERS, null, getOplayers));
+            }
+
+            private function getOplayers(event:AppEvent):void
+            {
+                arrOperationalLayers = event.data as Array;
+                getLayers(arrOperationalLayers);
+            }
+
+            private function getLayers(array:Array):void
+            {
+                if (useOperationalLayers && !useBaseMaps) // only use operational layers
+                {
+                    populateLegend(array.reverse());
+                }
+                else if (useBaseMaps && !useOperationalLayers)
+                {
+                    var arrBaseMapLayers:Array = [];
+                    var doNotIncludeLayer:Boolean = false;
+                    mapLayers = map.layers as ArrayCollection;
+                    for (var i:int = 0; i < mapLayers.length; i++)
+                    {
+                        for (var n:int = 0; n < array.length; )
+                        {
+                            if (array[n].layer.id == Layer(mapLayers.getItemAt(i)).id)
+                            {
+                                doNotIncludeLayer = true;
+                                break;
+                            }
+                            else
+                            {
+                                n++;
+                            }
+                        }
+                        if (!doNotIncludeLayer)
+                        {
+                            arrBaseMapLayers.push({ layer: mapLayers.getItemAt(i)});
+                        }
+                    }
+                    populateLegend(arrBaseMapLayers.reverse());
+                }
+                else if (useBaseMaps && useOperationalLayers)
+                {
+                    var arrAllLayers:Array = [];
+                    mapLayers = map.layers as ArrayCollection;
+                    for (var j:int = 0; j < mapLayers.length; j++)
+                    {
+                        arrAllLayers.push({ layer: mapLayers.getItemAt(j)});
+                    }
+                    populateLegend(arrAllLayers.reverse());
+                }
+            }
+
+            private function populateLegend(array:Array):void
+            {
+                legendLayers = [];
+
+                if (array && array.length > 0)
+                {
+                    for (var j:int = 0; j < array.length; j++)
+                    {
+                        var doNotAddLayer:Boolean = false;
+                        // loop through all the excludeLayers
+                        for (var n:int = 0; n < excludeLayers.length; )
+                        {
+                            if (array[j].layer.name == excludeLayers[n])
+                            {
+                                doNotAddLayer = true;
+                                break;
+                            }
+                            else
+                            {
+                                n++;
+                            }
+                        }
+
+                        if (!doNotAddLayer)
+                        {
+                            legendLayers.push(array[j].layer);
+                        }
+                    }
+                }
+
+                if (legendLayers.length > 0)
+                {
+                    myLegend.layers = legendLayers;
+                    myLegend.map = map;
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <viewer:WidgetTemplate width="300" height="300"
+                           minHeight="300"
+                           minWidth="300">
+        <esri:Legend id="myLegend"
+                     width="100%" height="100%"
+                     respectCurrentMapScale="false"/>
+    </viewer:WidgetTemplate>
+</viewer:BaseWidget>

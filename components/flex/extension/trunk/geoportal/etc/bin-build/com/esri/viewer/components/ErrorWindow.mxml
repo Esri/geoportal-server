@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+               xmlns:s="library://ns.adobe.com/flex/spark"
+               xmlns:mx="library://ns.adobe.com/flex/mx"
+               x="60" y="150" width="400" height="200"
+               close="close()"
+               title="Application Error">
+
+    <fx:Script>
+        <![CDATA[
+            import flashx.textLayout.conversion.TextConverter;
+            import flashx.textLayout.elements.TextFlow;
+
+            import mx.managers.PopUpManager;
+
+            [Bindable]
+            /**
+             * errorMessage is the message displayed in the Error Window.
+             */
+            public var errorMessage:String = "";
+
+            private function close():void
+            {
+                PopUpManager.removePopUp(this);
+            }
+
+            private function convertToTextFlow(value:String):TextFlow
+            {
+                if (!value)
+                {
+                    return null;
+                }
+                value = value.replace(/\n/g, "<br>"); // replace newlines
+                return TextConverter.importToFlow(value, TextConverter.TEXT_FIELD_HTML_FORMAT);
+            }
+        ]]>
+    </fx:Script>
+
+    <s:Scroller left="6" right="6" top="6" bottom="6">
+        <s:RichEditableText id="msg"
+                            editable="false"
+                            selectable="true"
+                            textFlow="{convertToTextFlow(errorMessage)}"/>
+    </s:Scroller>
+
+</s:TitleWindow>

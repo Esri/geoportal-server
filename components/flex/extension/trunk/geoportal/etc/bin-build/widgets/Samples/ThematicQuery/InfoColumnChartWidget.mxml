@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:viewer="com.esri.viewer.*"
+                   creationComplete="init()"
+                   implements="com.esri.viewer.IInfowindowTemplate">
+
+    <fx:Script>
+        <![CDATA[
+            import mx.collections.ArrayCollection;
+            import mx.events.FlexEvent;
+
+            [Bindable]
+            private var contentList:ArrayCollection;
+
+            [Bindable]
+            private var infoChartItemRenderer:ClassFactory = new ClassFactory(InfoColumnChartItemRenderer);
+
+            [Bindable]
+            private var title:String;
+            private var titleField:String;
+
+            [Bindable]
+            private var columnChartList:ArrayCollection;
+
+            private var _data:Object;
+
+            private var itemChart:Object = {};
+            private var item:Object = {};
+
+            private function init():void
+            {
+                this.addEventListener(FlexEvent.DATA_CHANGE, setInfoParameters);
+                infoClass = InfoColumnChartWidget;
+            }
+
+            public function set infoConfig(value:XML):void
+            {
+
+            }
+
+            private function setInfoParameters(event:FlexEvent):void
+            {
+                if (_data)
+                {
+                    contentList = new ArrayCollection();
+                    columnChartList = new ArrayCollection()
+                    //title = data[titleField];
+
+                    for each (var attribute:Object in _data.attributes)
+                    {
+                        for each (var field:Object in _data.listFields)
+                        {
+                            item = {
+                                    field: field.name,
+                                    value: attribute[field.name],
+                                    alias: field.alias
+                                };
+                            contentList.addItem(item);
+                        }
+
+                        for each (var columnChartField:Object in _data.columnChartFields)
+                        {
+                            itemChart = {
+                                    namefield: (columnChartField.alias != null ? columnChartField.alias : columnChartField.name),
+                                    field: attribute[columnChartField.name]
+                                }
+                            columnChartList.addItem(itemChart);
+                        }
+                    }
+                }
+            }
+
+            public override function set data(value:Object):void
+            {
+                _data = value;
+                setInfoParameters(null);
+            }
+
+            public override function get data():Object
+            {
+                return _data;
+            }
+
+            private var _infoClass:Class = InfoColumnChartWidget;
+
+            public function set infoClass(value:Class):void
+            {
+                _infoClass = value;
+            }
+
+            public function get infoClass():Class
+            {
+                return _infoClass;
+            }
+        ]]>
+    </fx:Script>
+
+    <s:VGroup id="infoCanvas"
+              width="250" height="100%"
+              minHeight="90"
+              visible="true">
+        <s:Scroller width="100%" height="100%">
+            <s:DataGroup id="dataGroup"
+                         dataProvider="{contentList}"
+                         itemRenderer="{infoChartItemRenderer}">
+                <s:layout>
+                    <s:VerticalLayout gap="1" useVirtualLayout="true"/>
+                </s:layout>
+            </s:DataGroup>
+        </s:Scroller>
+
+        <mx:HBox width="100%" height="100%"
+                 includeInLayout="{columnChartList.length > 0 ? true : false}"
+                 visible="{columnChartList.length > 0 ? true : false}">
+            <mx:ColumnChart id="myChart"
+                            width="95%" height="150"
+                            dataProvider="{columnChartList}">
+                <mx:horizontalAxis>
+                    <mx:CategoryAxis categoryField="namefield"/>
+                </mx:horizontalAxis>
+                <mx:series>
+                    <mx:ColumnSeries displayName="field"
+                                     xField="namefield"
+                                     yField="field"/>
+                </mx:series>
+            </mx:ColumnChart>
+
+            <!--<mx:PieChart id="myChart"
+                 dataProvider="{columnChartList}"
+                 showDataTips="true"
+                 width="150"
+                 height="150"
+                 >
+                 <mx:series>
+                 <mx:PieSeries
+                 field="field"
+                 nameField="namefield"
+                 labelPosition="callout"/>
+                 </mx:series>
+                 </mx:PieChart>
+            -->
+        </mx:HBox>
+    </s:VGroup>
+
+</viewer:BaseWidget>

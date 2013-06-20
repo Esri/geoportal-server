@@ -29,15 +29,14 @@
 		Target: main
 		Specifies the main target as running the following other targets: 
 		- clean: 			deletes the deployment directory
-    - pre-compile: making directories/files for compile
 		- compile:			compiles the main application SWF file
 		- compiles-modules:	compiles all the modules SWF files
 		- compile-css:		compiles the CSS into a SWF file
 		- compile-wrapper:	builds the HTML wrapper for the application
-    - post-compile: prepares final viewer files
+		- copy-images:		copies runtime images into the deployment directory
 		- clean-up:			deletes generated file after the build
 	-->
-	<target name="main" depends="clean, pre-compile, compile, compile-modules, compile-css, compile-wrapper, post-compile, clean-up, tfs-build" />
+	<target name="main" depends="clean, presetup, compile, compile-modules, compile-css, compile-wrapper, copy-images, clean-up" />
 	
 	<!--
 		Target: clean
@@ -46,14 +45,9 @@
 	<target name="clean">
 		<delete dir="${DEPLOY_DIR}"/>
 		<delete dir="${BUILD_DIR}"/>
-    <echo message="BaseDir: ${basedir}" />
 	</target>
-  
-  <!--
-    Target: pre-compile
-    Creates the precompilation
-  --> 
-	<target name="pre-compile">
+
+	<target name="presetup">
     <fail message=" Flex sdk ${FLEX_HOME}/lib/mxmlc.jar missing.  Download flex sdk to ${FLEX_HOME}">
       <condition>
         <not>
@@ -75,19 +69,12 @@
       </condition>
     </fail>
 	  <!-- move src files to build src files-->
-	  <copy todir="${BUILD_DIR}/geoportal">
-	    <fileset dir="${GEOPORTAL_ROOT_DIR}/src"></fileset>
-    </copy>
-    <copy todir="${BUILD_DIR}/viewer">
-      <fileset dir="${VIEWER_ROOT_DIR}/src"></fileset>
+	  <copy todir="${BUILD_DIR}">
+	    <fileset dir="${GEOPROTAL_ROOT_DIR}/src"></fileset>
     </copy>
     <copy todir="${BUILD_DIR}/">
-      <fileset dir="./">
-        <include name="flex-config.xml"/>
-       </fileset>
+      <fileset dir="${VIEWER_ROOT_DIR}/src"></fileset>
     </copy>
-    
-    <replace file="${BUILD_DIR}/flex-config.xml" token="@FLEX_HOME@" value="${FLEX_HOME}"/>
    
     <!-- Some source files in the viewer have a relative assets directory which works in 
 	  flex builder but not in the build.  Replace the assets directory string.
@@ -95,23 +82,15 @@
 	  <replaceregexp byline="true">
 	    <regexp pattern="\(source=&quot;assets\/images"/>
 	    <substitution expression="\(source=&quot;\..\/..\/..\/..\/assets\/images"/>
-	    <fileset dir="${BUILD_DIR}/viewer/com/esri/viewer/">
+	    <fileset dir="${BUILD_DIR}/com/esri/viewer/">
 	      <include name="*/*.as"/>
 	      <include name="*/*.mxml"/>
 	    </fileset>
 	  </replaceregexp>
-    <replaceregexp byline="true">
-      <regexp pattern="\(source=&quot;assets\/images"/>
-      <substitution expression="\(source=&quot;\..\/..\/..\/assets\/images"/>
-      <fileset dir="${BUILD_DIR}/viewer/com/esri/viewer/">
-        <include name="*.as"/>
-        <include name="*.mxml"/>
-      </fileset>
-    </replaceregexp>
 	  <replaceregexp byline="true">
 	    <regexp pattern="&apos;assets\/images"/>
 	    <substitution expression="&apos;\..\/..\/..\/..\/assets\/images"/>
-	    <fileset dir="${BUILD_DIR}/viewer/com/esri/viewer/">
+	    <fileset dir="${BUILD_DIR}/com/esri/viewer/">
 	      <include name="*/*.as"/>
 	      <include name="*/*.mxml"/>
 	    </fileset>
@@ -119,11 +98,11 @@
 	  <replaceregexp byline="true">
 	    <regexp pattern="&apos;assets\/images"/>
 	    <substitution expression="&apos;\..\/..\/assets\/images"/>
-	    <fileset dir="${BUILD_DIR}/viewer/widgets/Draw">
+	    <fileset dir="${BUILD_DIR}/widgets/Draw">
 	      <include name="**/*.as"/>
 	      <include name="**/*.mxml"/>
 	    </fileset>
-	    <fileset dir="${BUILD_DIR}/viewer/widgets/Edit">
+	    <fileset dir="${BUILD_DIR}/widgets/Edit">
 	      <include name="**/*.as"/>
 	      <include name="**/*.mxml"/>
 	    </fileset>
@@ -131,30 +110,11 @@
 	  <replaceregexp byline="true">
 	    <regexp pattern="&lt;s:states&gt;"/>
 	    <substitution expression="&lt;s:states&gt;&lt;s:State name=&quot;disabled&quot;/&gt;&lt;s:State name=&quot;normal&quot;/&gt;"/>
-	    <fileset dir="${BUILD_DIR}/viewer/widgets/HeaderController">
+	    <fileset dir="${BUILD_DIR}/widgets/HeaderController">
 	      <include name="HeaderGroupSkin.mxml"/>
 	    </fileset>
     </replaceregexp>
-
-    <exec executable="${FLEX_HOME}/bin/mxmlc.exe" outputproperty="TMP_SDK_VERSION">
-      <arg value="-version"/>
-    </exec>
-    <!--
-    <propertyregex property="SDK_VERSION"
-              input="${TMP_SDK_VERSION}"
-              regexp="([^\d]*)([\d\.]*)"
-              select="\2"
-              casesensitive="false" />
-    -->
-    <copy todir="${DEPLOY_DIR}" verbose="true" overwrite="true">
-      <fileset dir="${FLEX_HOME}/frameworks/rsls">
-        <include name="*.swf"/>
-        <include name="*.swz"/>
-      </fileset>
-    </copy>
-    
-
-  </target>
+	</target>
 	<!--
 		Target: compile
 		Compiles the main application SWF file. Generates a link report in order for modules to be later
@@ -163,72 +123,34 @@
 	<target name="compile">
 		<echo>${FLEX_HOME}/ant/lib/flexTasks.jar</echo>
 		<mxmlc 
-            file="${BUILD_DIR}/viewer/${APP_NAME}.mxml" 
+            file="${BUILD_DIR}/${APP_NAME}.mxml" 
 			      debug="false"
             output="${DEPLOY_DIR}/${APP_NAME}.swf"
             actionscript-file-encoding="UTF-8"
             keep-generated-actionscript="false"
-            keep-all-type-selectors="true"
-     	      link-report="MyReport.xml"
-            incremental="true"
-            static-rsls="false"
-            use-network="true"
-            locale="en_US,de_DE,es_ES,fr_FR,ja_JP,zh_CN"
-            >
+			      link-report="MyReport.xml"
+            incremental="true">
 						
             <!-- Get default compiler options. -->
-           <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml"/>
+            <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml"/>
 
-      <!-- load-config filename="${BUILD_DIR}/flex-config.xml"/ -->
             <!-- List of path elements that form the roots of ActionScript class hierarchies. -->
             <source-path path-element="${FLEX_HOME}/frameworks"/>
             <source-path path-element="${VIEWER_ROOT_DIR}/locale/{locale}"/>
-            
 
-            <!-- runtime-shared-library-path path-element="${FLEX_HOME}/frameworks/libs/textLayout.swc">
-              <url rsl-url="textLayout_${TEXTLAYOUT_VERSION}.swf" policy-file-url=""/>
-            </runtime-shared-library-path>
-            <runtime-shared-library-path path-element="${FLEX_HOME}/frameworks/libs/osmf.swc">
-              <url rsl-url="osmf_flex.${OSMF_VERSION}.swf" policy-file-url=""/>
-            </runtime-shared-library-path>
-            <runtime-shared-library-path path-element="${FLEX_HOME}/frameworks/libs/framework.swc">
-              <url rsl-url="framework_${SDK_VERSION}.swf" policy-file-url=""/>
-            </runtime-shared-library-path>
-            <runtime-shared-library-path path-element="${FLEX_HOME}/frameworks/libs/spark.swc">
-              <url rsl-url="spark_${SDK_VERSION}.swf" policy-file-url=""/>
-            </runtime-shared-library-path>
-            <runtime-shared-library-path path-element="${FLEX_HOME}/frameworks/libs/sparkskins.swc">
-              <url rsl-url="sparkskins_${SDK_VERSION}.swf" policy-file-url=""/>
-            </runtime-shared-library-path>
-            <runtime-shared-library-path path-element="${FLEX_HOME}/frameworks/libs/rpc.swc">
-              <url rsl-url="rpc_${SDK_VERSION}.swf" policy-file-url=""/>
-            </runtime-shared-library-path -->
-
-            
-            <jvmarg line="-Xms512m -Xmx700m -XX:MaxPermSize=700m -XX:PermSize=512m" />
-
-
-            <!--
-            -runtime-shared-library-path=$FLEX_HOME/frameworks/libs/framework.swc,framework_$release_build.swz,,framework_$release_build.swf \
-            -runtime-shared-library-path+=$FLEX_HOME/frameworks/libs/textLayout.swc,textLayout_1.1.0.604.swz,,textLayout_1.1.0.604.swf \
-            -runtime-shared-library-path+=$FLEX_HOME/frameworks/libs/spark.swc,spark_$release_build.swz,,spark_$release_build.swf \
-      -->
             <!-- List of SWC files or directories that contain SWC files. -->
             <compiler.library-path dir="${FLEX_HOME}/frameworks" append="true">
                 <include name="libs" />
                 <include name="../bundles/{locale}" />
             </compiler.library-path>
 			
-			      <library-path dir="${LIB_DIR}" append="true">
-				      <include name="*.swc" />
-			      </library-path>	
+			<library-path dir="${LIB_DIR}" append="true">
+				<include name="*.swc" />
+			</library-path>	
 
         </mxmlc>
 
-    
-
-
-  </target>
+	</target>
 	
 	<!--
 		Target: compile-modules
@@ -236,13 +158,18 @@
 		compile-module target in a for loop on all the file in the module directory.
 	-->
 	<target name="compile-modules">
-	        
+	        <propertyregex property="tmpModuleDir"
+		               input="${MODULE_DIR}"
+		               regexp="/"
+		               replace="."
+		               global="true" />
+                <echo>${tmpModuleDir}</echo>
 		<!-- 
 			This looks at the module directory and converts it to a list of module names separated by commas
 		 	and places it in the variable "flex.modules"
 		-->
-		<pathconvert property="flex.modules.viewer" pathsep=",">
-		    <fileset dir="${BUILD_DIR}/viewer">
+		<pathconvert property="flex.modules" pathsep=",">
+		    <fileset dir="${MODULE_DIR}">
 		    	<include name="**/*Widget.mxml"/>
 		    </fileset>
 			<!-- Strips the module name out of the full path to the module -->
@@ -251,50 +178,10 @@
 		       <mapper type="regexp" from="^(.*)${MODULE_DIR}(.*)(\.mxml)$$" to="\2"/>
 		    </mapper>
 		</pathconvert>
-    <pathconvert property="flex.modules.geoportal" pathsep=",">
-      <fileset dir="${BUILD_DIR}/geoportal">
-        <include name="**/*Widget.mxml"/>
-      </fileset>
-      <!-- Strips the module name out of the full path to the module -->
-
-      <mapper>
-        <mapper type="regexp" from="^(.*)${MODULE_DIR}(.*)(\.mxml)$$" to="\2"/>
-      </mapper>
-    </pathconvert>
-		
 		<!-- Calls the "compile-module" target and gives it the parameter "moduleName"  -->
-		<foreach list="${flex.modules.viewer}" delimiter="," parallel="false" param="moduleName" trim="true" target="compile-module-viewer"/>
-    <foreach list="${flex.modules.geoportal}" delimiter="," parallel="false" param="moduleName" trim="true" target="compile-module-geoportal"/>
+		<foreach list="${flex.modules}" delimiter="," parallel="false" param="moduleName" trim="true" target="compile-module"/>
 	</target>
-
-  <!--
-  Target: compile-module-viewer
-  Prepares parameters for viewer specific module compile
-  -->
-  <target name="compile-module-viewer">
-    <propertyregex property="swfName"
-             input="${moduleName}"
-             regexp=".*viewer(.*)"
-             select="\1"
-             casesensitive="false" />
-    <antcall target="compile-module">
-      <param name="moduleName" value="${moduleName}"/>
-      <param name="swfName" value="${swfName}"/>
-    </antcall>
-  </target>
-  
-  <!--
-  Target: compile-module-geoportal
-  Prepares parameters for geoportal specific module compile
-  -->
-  <target name="compile-module-geoportal">
-    
-    <antcall target="compile-module">
-      <param name="moduleName" value="${moduleName}"/>
-      <param name="swfName" value="${moduleName}"/>
-    </antcall>
-  </target>
-          
+	
 	<!--
 		Target: compile-module
 		Takes the full path to the module in the module.path variable, finds the module name, and compiles
@@ -303,42 +190,46 @@
 	<target name="compile-module">
 
 		<echo>Compiling ${moduleName}</echo>
-	
+		<!-- Get the package path to the module from the full path
+		<pathconvert property="module.path" pathsep=",">
+        	<fileset dir="${MODULE_DIR}">
+            	<include name="**/*.mxml"/>
+         	</fileset>
+         	<mapper>
+             	<mapper type="regexp" from="^(.*)[\\|/](src)[\\|/](.*)[\\|/](${moduleName}\.mxml)$$" to="\3"/>
+         	</mapper>
+     	        </pathconvert>
+     	        -->
 		<mxmlc 
             file="${BUILD_DIR}/${moduleName}.mxml" 
-            output="${DEPLOY_DIR}/${swfName}.swf"
+            output="${DEPLOY_DIR}/${moduleName}.swf"
             actionscript-file-encoding="UTF-8"
             keep-generated-actionscript="false"
-			      optimize="true"
-			      debug="false"
-			      fork="true"
-			      load-externs="MyReport.xml"
-            static-rsls="false"
-            keep-all-type-selectors="true"
-            incremental="false"
-            locale="en_US,de_DE,es_ES,fr_FR,ja_JP,zh_CN"
-            use-network="true">
+			optimize="true"
+			debug="false"
+			fork="true"
+			load-externs="MyReport.xml"
+            incremental="false">
             <!-- Get default compiler options. -->
             <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml"/>
 
             <!-- List of path elements that form the roots of ActionScript class hierarchies. -->
             <source-path path-element="${FLEX_HOME}/frameworks"/>
-			      <compiler.source-path path-element="${BUILD_DIR}/viewer"/>
-            <source-path path-element="${VIEWER_ROOT_DIR}/locale/{locale}"/>
-            <source-path path-element="${GEOPORTAL_ROOT_DIR}/locale/{locale}"/>
-            <source-path path-element="${BUILD_DIR}/geoportal"/>
-			 
+			
+			<compiler.source-path path-element="${BUILD_DIR}"/>
+			<compiler.source-path path-element="locale"/>
+			<compiler.source-path path-element="${MODULE_DIR}"/>
 
             <!-- List of SWC files or directories that contain SWC files. -->
             <compiler.library-path dir="${FLEX_HOME}/frameworks" append="true">
                 <include name="libs" />
                 
             </compiler.library-path>
-
-            <library-path dir="${LIB_DIR}" append="true">
-				      <include name="*.swc" />
-			      </library-path>	
-	          <jvmarg line="-Xms512m -Xmx700m -XX:MaxPermSize=700m -XX:PermSize=512m" />		
+			
+			<library-path dir="${LIB_DIR}" append="true">
+				<include name="*.swc" />
+			</library-path>	
+	    <jvmarg line="-Xms512m -Xmx700m -XX:MaxPermSize=700m -XX:PermSize=512m" />		
 
         </mxmlc>
 
@@ -349,12 +240,13 @@
 		Compiles the CSS file into a SWF file.
 	-->
 	<target name="compile-css">
-
+		<!-- copy the CSS to the root level because MXMLC will not find embedded relative assets elsewhere -->
+		<copy file="src/${STYLE_PATH}/${STYLE}.css" toDir="${BUILD_DIR}"/>
 				
 		<!-- compile the CSS SWF -->
 		<mxmlc 
-			file="${BUILD_DIR}/viewer/${STYLE}.css" 
-			output="${DEPLOY_DIR}/${STYLE}.swf"			
+			file="${BUILD_DIR}/${STYLE}.css" 
+			output="${DEPLOY_DIR}/${STYLE_PATH}/${STYLE}.swf"			
 			maxmemory="256m" fork="true">
 			<compiler.debug>false</compiler.debug>
 
@@ -369,63 +261,18 @@
 		</mxmlc>
 		
 		<!-- delete the copy of the CSS file at the root level -->
-		<delete file="${BUILD_DIR}/viewer/${STYLE}.css"/>
+		<delete file="${BUILD_DIR}/${STYLE}.css"/>
 	</target>
 	
 	<!--
-		Target: copy other files
-		Copies runtime files into the deployment directory
+		Target: copy-images
+		Copies runtime images into the deployment directory
 	-->
-	<target name="post-compile">
+	<target name="copy-images">
 
-		<!-- Copy supporting files to the viewer directory -->
-    <copy todir="${DEPLOY_DIR}">
-      <fileset dir="${VIEWER_ROOT_DIR}/src">
-        <exclude name="**/*.as"/>
-        <exclude name="**/*.mxml"/>
-        <exclude name="**/*.css"/>
-        <exclude name="**/*.scc"/>
-      </fileset>
-    </copy>
-    
-    <!-- Copy supporting files of the geoportal widget -->
-    <copy todir="${DEPLOY_DIR}/geoportal">
-      <fileset dir="${GEOPORTAL_ROOT_DIR}/src">
-        <exclude name="**/*.as"/>
-        <exclude name="**/*.mxml"/>
-        <exclude name="**/*.css"/>
-        <exclude name="**/*.scc"/>
-        <exclude name="**/com/**"/>
-      </fileset>
-    </copy>
-
-    <move file="${DEPLOY_DIR}/geoportal/widgets/FindData/FindDataWidget_Production.xml"
-          tofile="${DEPLOY_DIR}/geoportal/widgets/FindData/FindDataWidget.xml"
-          force="Yes"/>
-    
-    <!-- Relocate geoportal swf files to root geoportal directory 
-    <move todir="${DEPLOY_DIR}/geoportal/widgets">
-      <fileset dir="${DEPLOY_DIR}/widgets">
-        <include name="**/FindData/**"/>
-      </fileset>
-    </move>
-    -->
-    <!-- Copy gpt swf files to swf directory 
-    <copy todir="${SWF_DIR}">
-      <fileset dir="${DEPLOY_DIR}">
-        <include name="**/FindData/**"/>
-      </fileset>
-    </copy>
-    -->
-
-    <!-- Moving configuration file -->
-    <copy file="${DEPLOY_DIR}/config.xml" tofile="${DEPLOY_DIR}/config-viewer-original.xml"/>
-    <copy overwrite="Yes" force="Yes"
-          file="config-ant.xml" tofile="${DEPLOY_DIR}/config.xml"/>
-    <echo>Check ${DEPLOY_DIR} for results</echo>
-    
-    <copy overwrite="true" file="index.html" tofile="${DEPLOY_DIR}/index.html">
-    </copy>
+		<copy todir="${DEPLOY_DIR}/${IMAGE_PATH}">
+			<fileset dir="src/${IMAGE_PATH}"/>
+		</copy>
 	</target>
 	
 	<!--
@@ -433,12 +280,12 @@
 		Copies runtime images into the deployment directory
 	-->
 	<target name="compile-wrapper">
-		<copy file="html-template/swfobject.js" toFile="${DEPLOY_DIR}/swfobject.js" />
+		<copy file="${basedir}/html-template/AC_OETags.js" toFile="${DEPLOY_DIR}/AC_OETags.js" />
 		<copy todir="${DEPLOY_DIR}/history">
-			<fileset dir="html-template/history"/>
+			<fileset dir="${basedir}/html-template/history"/>
 
 		</copy>
-		<copy file="html-template/${HTML_TEMPLATE}" tofile="${DEPLOY_DIR}/${HTML_OUTPUT}" />
+		<copy file="${basedir}/html-template/${HTML_TEMPLATE}" tofile="${DEPLOY_DIR}/${HTML_OUTPUT}" />
 		<replace file="${DEPLOY_DIR}/${HTML_OUTPUT}" token="$${swf}" value="${APP_NAME}"/>
 		<replace file="${DEPLOY_DIR}/${HTML_OUTPUT}" token="$${width}" value="${WIDTH}"/>
 		<replace file="${DEPLOY_DIR}/${HTML_OUTPUT}" token="$${height}" value="${HEIGHT}"/>
@@ -446,6 +293,7 @@
 		<replace file="${DEPLOY_DIR}/${HTML_OUTPUT}" token="$${application}" value="${APP_NAME}"/>
 		<replace file="${DEPLOY_DIR}/${HTML_OUTPUT}" token="$${version_major}" value="9"/>
 		<replace file="${DEPLOY_DIR}/${HTML_OUTPUT}" token="$${version_minor}" value="0"/>
+
 		<replace file="${DEPLOY_DIR}/${HTML_OUTPUT}" token="$${version_revision}" value="124"/>
 		<replace file="${DEPLOY_DIR}/${HTML_OUTPUT}" token="$${title}" value="${TITLE}"/>
 		<!-- This is for configuring the endpoint -->
@@ -462,19 +310,5 @@
 
 		<delete file="MyReport.xml" />
 	</target>
-  
-  <!--
-    Target: tfs-build
-    Needed to publish files to TFS drop location
-  -->
-  <target name="tfs-build" if="BinariesRoot">
-    <property name="BIN_ROOT_DEPLOYDIR"
-            value="${BinariesRoot}/dist" />
-    <mkdir  dir="${BIN_ROOT_DEPLOYDIR}" />
-    <copy todir="${BIN_ROOT_DEPLOYDIR}">
-      <fileset dir="${DEPLOY_DIR}"/>
-    </copy>
-  </target>
-
-
+    
 </project>

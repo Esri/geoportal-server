@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:esri="http://www.esri.com/2008/ags"
+                   xmlns:viewer="com.esri.viewer.*"
+                   widgetConfigLoaded="init()">
+    <fx:Script>
+        <![CDATA[
+            //this function called when the widget's configuration is loaded
+            private function init():void
+            {
+                if (configXML) // checking for valid content in the configuration file
+                {
+                    lbl.text = configXML.content || getDefaultString("helloContent");
+                }
+            }
+        ]]>
+    </fx:Script>
+    <viewer:WidgetTemplate id="helloWorld"
+                           width="300" height="300">
+        <viewer:layout>
+            <s:VerticalLayout horizontalAlign="center" verticalAlign="middle"/>
+        </viewer:layout>
+
+        <s:Label id="lbl"
+                 fontSize="18"
+                 fontStyle="italic"
+                 fontWeight="bold"/>
+    </viewer:WidgetTemplate>
+</viewer:BaseWidget>

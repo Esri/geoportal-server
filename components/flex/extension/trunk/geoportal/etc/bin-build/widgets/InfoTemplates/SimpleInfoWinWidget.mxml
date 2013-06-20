@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:viewer="com.esri.viewer.*"
+                   creationComplete="init()"
+                   implements="com.esri.viewer.IInfowindowTemplate"
+                   widgetConfigLoaded="initConfig()">
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.geometry.MapPoint;
+
+            import mx.collections.ArrayCollection;
+            import mx.events.FlexEvent;
+
+            [Bindable]
+            private var contentList:ArrayCollection;
+            private var fields:Array;
+            private var datefields:Array;
+//            private var linkField:String;
+            private var titleField:String;
+            private var zoomScale:Number = 5000;
+
+            private function init():void
+            {
+                this.addEventListener(FlexEvent.DATA_CHANGE, setInfoParameters);
+                infoClass = SimpleInfoWinWidget;
+                setInfoParameters(null);
+            }
+
+            private function initConfig():void
+            {
+                if (configXML)
+                {
+                    titleField = configXML.titlefield;
+                    var fds:String = configXML.fields;
+                    var dfd:String = configXML.datefields;
+
+                    if (fds)
+                    {
+                        fields = fds.split(",");
+                    }
+
+                    if (dfd)
+                    {
+                        datefields = dfd.split(",");
+                    }
+
+//                    linkField = configXML.linkfield; TODO: Add support for link fields
+
+                    if (Number(configXML.zoomscale) > 0)
+                    {
+                        zoomScale = Number(configXML.zoomscale);
+                    }
+                }
+            }
+
+            public function set infoConfig(value:XML):void
+            {
+                configXML = value;
+                initConfig();
+            }
+
+            private function setInfoParameters(event:FlexEvent):void
+            {
+                if (data && fields)
+                {
+                    try
+                    {
+                        contentList = new ArrayCollection();
+                        var title:String = data[titleField];
+
+                        for (var i:int; i < fields.length; i++)
+                        {
+                            var attrvalue:Object = data[fields[i]];
+
+                            if (datefields && datefields.indexOf(fields[i]) != -1 && attrvalue is Number)
+                            {
+                                var df:Date = new Date(attrvalue);
+                                if (df.milliseconds == 999) // workaround for REST bug
+                                {
+                                    df.milliseconds++;
+                                }
+                                attrvalue = df.toLocaleString();
+                            }
+
+                            var item:Object =
+                                {
+                                    field: fields[i],
+                                    value: attrvalue
+                                };
+
+                            contentList.addItem(item);
+                        }
+                        map.infoWindow.label = title;
+                    }
+                    catch (err:Error)
+                    {
+                        trace(err.message);
+                    }
+                }
+            }
+
+            private var _infoClass:Class = SimpleInfoWinWidget;
+
+            public function set infoClass(value:Class):void
+            {
+                _infoClass = value;
+            }
+
+            public function get infoClass():Class
+            {
+                return _infoClass;
+            }
+
+            protected function zoom_clickHandler(event:MouseEvent):void
+            {
+                var here:MapPoint = map.toMap(new Point(map.infoWindow.anchorX, map.infoWindow.anchorY));
+                if (map.scale > zoomScale)
+                {
+                    map.scale = zoomScale;
+                }
+                map.centerAt(here);
+            }
+        ]]>
+    </fx:Script>
+
+    <s:VGroup id="infoCanvas"
+              horizontalAlign="center"
+              minHeight="90"
+              paddingTop="5">
+        <s:Scroller width="100%" height="100%">
+            <s:DataGroup id="dataGroup"
+                         dataProvider="{contentList}"
+                         itemRenderer="widgets.InfoTemplates.InfoContentItemRenderer">
+                <s:layout>
+                    <s:VerticalLayout gap="2"
+                                      horizontalAlign="contentJustify"
+                                      useVirtualLayout="true"/>
+                </s:layout>
+            </s:DataGroup>
+        </s:Scroller>
+        <s:Button buttonMode="true"
+                  click="zoom_clickHandler(event)"
+                  label="Zoom here"
+                  useHandCursor="true"/>
+    </s:VGroup>
+</viewer:BaseWidget>

@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<configuration>
+    <locator>bing</locator>
+    <zoomscale>150000</zoomscale>
+    <info>widgets/InfoTemplates/InfoPopupWidget.swf</info>
+</configuration>

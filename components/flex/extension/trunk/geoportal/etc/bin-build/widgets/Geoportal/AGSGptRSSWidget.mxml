@@ -1,0 +1,1476 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+Esri Inc. licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!--
+TM: Widget modified from the sample viewer GeoRSS widget
+-->
+<viewer:BaseWidget 
+        xmlns="com.esri.solutions.flexviewer.*" 
+        xmlns:mx="http://www.adobe.com/2006/mxml"
+		    xmlns:viewer="com.esri.viewer.*"
+        widgetConfigLoaded="init()" 
+        xmlns:widgets="widgets.Geoportal.*" 
+        xmlns:s="library://ns.adobe.com/flex/spark">
+      
+    <mx:Script>
+        
+<![CDATA[ 
+  import com.esri.ags.Graphic;
+  import com.esri.ags.Map;
+  import com.esri.ags.SpatialReference;
+  import com.esri.ags.components.supportClasses.InfoContainer;
+  import com.esri.ags.events.GeoprocessorEvent;
+  import com.esri.ags.events.LayerEvent;
+  import com.esri.ags.events.MapMouseEvent;
+  import com.esri.ags.geometry.Extent;
+  import com.esri.ags.geometry.Geometry;
+  import com.esri.ags.geometry.MapPoint;
+  import com.esri.ags.geometry.Polygon;
+  import com.esri.ags.layers.ArcGISDynamicMapServiceLayer;
+  import com.esri.ags.layers.ArcGISTiledMapServiceLayer;
+  import com.esri.ags.layers.ArcIMSMapServiceLayer;
+  import com.esri.ags.layers.GraphicsLayer;
+  import com.esri.ags.layers.Layer;
+  import com.esri.ags.layers.WMSLayer;
+  import com.esri.ags.symbols.LineSymbol;
+  import com.esri.ags.symbols.PictureMarkerSymbol;
+  import com.esri.ags.symbols.SimpleFillSymbol;
+  import com.esri.ags.symbols.SimpleLineSymbol;
+  import com.esri.ags.tasks.FindTask;
+  import com.esri.ags.tasks.Geoprocessor;
+  import com.esri.gpt.finddata.AGSGptEnumServiceTypes;
+  import com.esri.gpt.finddata.AGSGptRSSCriteria;
+  import com.esri.gpt.finddata.AGSGptRSSEndPoint;
+  import com.esri.gpt.finddata.AGSGptRSSEndPointEvent;
+  import com.esri.gpt.finddata.AGSGptRSSEndPoints;
+  import com.esri.gpt.finddata.AGSGptRSSModel;
+  import com.esri.gpt.finddata.AGSGptRSSParser;
+  import com.esri.gpt.finddata.AGSGptRSSRecord;
+  import com.esri.gpt.finddata.AGSGptRSSRecordList;
+  import com.esri.gpt.finddata.GeoProcessingViewerLayer;
+  import com.esri.gpt.finddata.GeoProcessingViewerLayerIdentify;
+  import com.esri.gpt.finddata.GeoProcessingViewerLayerInfo;
+  import com.esri.gpt.finddata.GeoRssLayer;
+  import com.esri.gpt.finddata.GptRSSEvent;
+  import com.esri.gpt.finddata.ProjectionHandler;
+  import com.esri.gpt.utils.Utils;
+  import com.esri.gpt.wms.WMSLayer;
+  import com.esri.viewer.AppEvent;
+  import com.esri.viewer.ViewerContainer;
+  
+  import flash.utils.clearInterval;
+  import flash.utils.clearTimeout;
+  import flash.utils.getQualifiedClassName;
+  import flash.utils.setInterval;
+  import flash.utils.setTimeout;
+  
+  import mx.collections.ArrayCollection;
+  import mx.containers.Canvas;
+  import mx.containers.Panel;
+  import mx.containers.TitleWindow;
+  import mx.controls.Alert;
+  import mx.controls.ProgressBar;
+  import mx.core.Container;
+  import mx.core.DragSource;
+  import mx.core.IFlexDisplayObject;
+  import mx.core.UIComponent;
+  import mx.effects.Fade;
+  import mx.events.CloseEvent;
+  import mx.events.DragEvent;
+  import mx.events.FlexEvent;
+  import mx.events.MoveEvent;
+  import mx.logging.ILogger;
+  import mx.logging.Log;
+  import mx.managers.DragManager;
+  import mx.managers.PopUpManager;
+  import mx.rpc.events.FaultEvent;
+  import mx.rpc.events.ResultEvent;
+  import mx.utils.ObjectUtil;
+
+// class variables =========================================================         
+public static var URL_TO_PROXY:String;      
+
+// instance variables ======================================================
+private var queryFields:String;
+[Bindable]      
+private var graphicsLayer:GraphicsLayer;
+private var queryTitleField:String;
+[Bindable]
+private var testStr:String; 
+[Bindable]
+public static var agsGptRssModel:AGSGptRSSModel; 
+private var uiMetadataInfoView:AGSGptRSSRecordView = 
+  new AGSGptRSSRecordView();
+private var uiMetadataInfoView1:AGSGptRSSRecordView = new AGSGptRSSRecordView();
+
+// TODO: Empty dictionary or give max length to dictioanry
+private var dctAddingService:Dictionary = new Dictionary();
+[Bindable]
+private var bDebug:Boolean = false;
+private var bUseProxy:Boolean = true;
+private var bRssWidgetAdded:Boolean = false;
+private var bUseShowHelpUsingFloatPane:Boolean = false;
+private var bUseEsriApiWmsObject:Boolean = false;
+
+private var nZoomFactor:Number = 3;
+[Bindable]
+private var nWidth:Number = 200;
+[Bindable]
+private var nHeight:Number = 440;
+[Bindable]
+private var nSearchTimeout:Number = 60;
+private var nAddLayerTimeout:Number = 60;
+[Bindable]
+private var msgVisible:Boolean = false;
+[Bindable]
+private var recAC:AGSGptRSSRecordList = new AGSGptRSSRecordList();
+private var rssButtons:ArrayCollection = new ArrayCollection();
+[Bindable]
+private var criteria:AGSGptRSSCriteria = new AGSGptRSSCriteria();
+
+private var msgSearching:String = "Searching";
+private var msgSearchSummary:String = "{0} matching documents found";
+private var msgNoResults:String = "";     
+
+[Bindable]          
+private var lblConfigSearch:String = "Configure Search";
+[Bindable]
+private var lblSearchResults:String = "Search Results";
+[Bindable]
+private var lblSearch:String = "Search";
+[Bindable]
+private var lblLiveData:String = "";
+[Bindable]
+private var lblOptAnywhere:String = "";
+[Bindable]
+private var lblOptIntersect:String = "";
+[Bindable]
+private var lblOptContains:String = "";
+[Bindable]
+private var lblErrCantSearch:String = "";
+
+private var lblHelp:String = "";
+
+private var lblErrGeneral:String = "";
+
+private var lblDataFileNotSupported:String = "";
+
+private var lblServiceLayerError:String = "";
+
+private var urlHelp:String = "";
+
+private var lblUrlNotUnderstood:String = "";
+
+private var userAlert:GptUserAlert = new GptUserAlert();
+
+private var gpShapeUrl:String = "";
+private var gpKmlUrl:String = "";
+private var gpShapeTimeout:Number = -1;
+private var gpKmlTimeout:Number = -1;
+
+private var agsGptRSSEndPoints:AGSGptRSSEndPoints;
+
+[Bindable]  
+private var graphicLineSym:SimpleLineSymbol = 
+new SimpleLineSymbol("solid", 0xFF0000, 1, 2);
+
+[Bindable]  
+private var graphicPolySym:SimpleFillSymbol = 
+new SimpleFillSymbol("solid", 0xFF0000, 0.005, 
+  graphicLineSym);
+
+[Bindable]  
+private var graphicPolySymHighlight:SimpleFillSymbol = 
+new SimpleFillSymbol("solid", 0xFF0000, 0.005, 
+  graphicLineSym);  
+
+private var projectionToMap:ProjectionHandler;  
+private var projectionToGpt:ProjectionHandler;  
+
+/** **/    
+private static const LOG:ILogger = 
+Log.getLogger("com.esri.gpt.finddata.finddata.flexviewer.widgets.AGSGptRSSWidget.mxml");
+
+[Bindable]
+private var endPoints:ArrayCollection = new ArrayCollection();
+
+private var numOfResultsPerPage:Number;
+      
+private var popUpRecordTitleWindow:TitleWindow;       
+// methods ===================================================================
+/** initialization.  Called during creation complete.
+ * */
+private function init():void
+{ 
+  if (configXML)
+  {
+ 
+    var isVisible:Boolean = 
+      Utils.chkBoolean(configXML.showWidgetInGui, true);
+    if(isVisible == false) {
+      this.setVisible(isVisible);
+    }
+    agsGptRssModel = new AGSGptRSSModel(configXML);
+      
+    lblConfigSearch = Utils.chkString(configXML.label.(@name=="lblConfigSearch").@value);
+    lblSearchResults = Utils.chkString(configXML.label.(@name=="lblSearchResults").@value);
+    lblSearch = Utils.chkString(configXML.label.(@name=="lblSearch").@value);
+    lblLiveData = Utils.chkString(configXML.label.(@name=="lblLiveData").@value);
+    lblOptAnywhere = Utils.chkString(configXML.label.(@name=="lblOptAnywhere").@value);
+    lblOptContains = Utils.chkString(configXML.label.(@name=="lblOptContains").@value);
+    lblOptIntersect = Utils.chkString(configXML.label.(@name=="lblOptIntersect").@value);
+    lblErrCantSearch = Utils.chkString(configXML.label.(@name=="lblErrCantSearch").@value);
+    lblErrGeneral = Utils.chkString(configXML.label.(@name=="lblErrGeneral").@value);
+    lblHelp = Utils.chkString(configXML.label.(@name=="lblHelp").@value);
+    lblUrlNotUnderstood = Utils.chkString(configXML.label.(@name=="lblUrlNotUnderstood").@value);
+    lblServiceLayerError = Utils.chkString(configXML.label.(@name=="lblServiceLayerError").@value);
+    lblDataFileNotSupported = Utils.chkString(configXML.label.(@name=="lblDataFileNotSupported").@value);
+    bUseShowHelpUsingFloatPane = Utils.chkBoolean(configXML.showHelpUsingFloatPane);
+    bDebug = Utils.chkBoolean(configXML.debug);
+    bUseProxy = Utils.chkBoolean(configXML.useProxy);
+    bUseEsriApiWmsObject = Utils.chkBoolean(configXML.useEsriApiWmsObject);
+    URL_TO_PROXY = Utils.chkString(configXML.useProxy.@proxyUrl);
+    
+    if(bUseProxy == true && URL_TO_PROXY == "") {
+      URL_TO_PROXY = Utils.chkString(this.configData.proxyUrl);
+    }
+    if(bUseProxy == true && URL_TO_PROXY == "") {
+       URL_TO_PROXY = root.loaderInfo.loaderURL.replace(/[^\/]*$/, "proxy.jsp");
+    } else if(bUseProxy == true && URL_TO_PROXY != ""
+       && URL_TO_PROXY.toLowerCase().indexOf("http:") < 0 
+       && URL_TO_PROXY.toLowerCase().indexOf("https:") < 0) {
+      // relative url
+      URL_TO_PROXY = root.loaderInfo.loaderURL.replace(/[^\/]*$/, URL_TO_PROXY);
+    }
+    LOG.debug("Proxy url set to " + URL_TO_PROXY);
+    agsGptRssModel.proxy = URL_TO_PROXY ;
+    //identifyWidget.useProxy = bUseProxy;
+    //identifyWidget.proxyUrl = URL_TO_PROXY;
+    
+    gpShapeUrl = Utils.chkString(configXML.gpShapefile.@url);   
+    gpShapeTimeout = Utils.chkNumber(configXML.gpKmlfile.@timeout, -1);
+    gpKmlUrl = Utils.chkString(configXML.gpKmlfile.@url);  
+    gpKmlTimeout = Utils.chkNumber(configXML.gpKmlfile.@timeout, -1);
+    
+    urlHelp = Utils.chkString(configXML.urlHelp);                        
+    msgSearching = configXML.label.(@name=="msgSearching").@value;
+    msgSearchSummary = configXML.label.(@name=="msgSearchSummary").@value;
+    msgNoResults = configXML.label.(@name=="msgNoResults").@value;
+    nZoomFactor = Utils.chkNumber(configXML.zoomFactor.text(), nZoomFactor);
+    nSearchTimeout = Utils.chkNumber(configXML.searchTimeout,nSearchTimeout); 
+    nAddLayerTimeout = Utils.chkNumber(configXML.addLayerTimeout,nAddLayerTimeout); 
+    
+    wTemplate.addTitlebarButton(
+      Utils.chkString(configXML.iconSearch), lblSearch, showTextSearch); 
+    wTemplate.addTitlebarButton(
+      Utils.chkString(configXML.iconResult), lblSearchResults, 
+      showResults);
+    urlHelp = Utils.chkString(configXML.urlHelp);
+    if(urlHelp != "") {
+      wTemplate.addTitlebarButton(
+        Utils.chkString(configXML.iconHelp), lblHelp, 
+        showHelp); 
+    } 
+    
+    var symbol:SimpleFillSymbol = null;
+    var xmlList:XMLList = configXML.color.(@id == "mainBboxesPlain");
+    symbol = readSymbol(configXML.color.(@id == "mainBboxesPlain")[0]);
+    if(symbol != null) {
+      graphicPolySym = symbol;
+    }
+    symbol = readSymbol(configXML.color.(@id == "mainBboxesHighlight")[0]);
+    if(symbol != null) {
+      graphicPolySymHighlight = symbol;
+    }
+    userAlert.xmlConfig = configXML;
+    
+    agsGptRSSEndPoints = new AGSGptRSSEndPoints(agsGptRssModel);
+    agsGptRSSEndPoints.addEventListener( 
+      AGSGptRSSEndPointEvent.EVENT_SEARCH_ENDPOINT, doAddSearchSite);
+    agsGptRSSEndPoints.readEndpoints();
+    
+    projectionToMap = new ProjectionHandler(map.spatialReference);
+    projectionToGpt = new ProjectionHandler(new SpatialReference(4326));
+    numOfResultsPerPage = Utils.chkNumber(configXML.numOfResultsPerPage, 10);
+  }
+  
+  graphicsLayer = new GraphicsLayer(); 
+  map.addLayer(graphicsLayer); 
+  
+  var urlVariables:URLVariables = new URLVariables();
+  var exFlashAvailable:Boolean  = flash.external.ExternalInterface.available;
+  if (exFlashAvailable == false)                   
+  {
+    return;
+  } 
+  
+  if (flash.external.ExternalInterface.available) {
+    
+    flash.external.ExternalInterface.addCallback("addResource",
+      addResource);   
+  }                         
+  var search:String = 
+    ExternalInterface.call("location.search.substring", 1);  
+  if (!search || !search.length)                         
+  {                            
+    return;                   
+  }         
+  if(search.length < 0) {
+    return;
+  }           
+  urlVariables.decode(search); 
+  this.readResourceUrl(urlVariables, search);
+  this.readUrlBbox(urlVariables);
+  
+  
+}
+
+/**
+ * Reads BBox from URL in case we want to start with an extent
+ * 
+ * @param result The url variables
+ * */ 
+private function readUrlBbox(result:URLVariables):void {
+  if(!result.bbox) {
+    return;
+  }
+  var bboxParam:String = result.bbox;
+  var bboxArr:Array =  bboxParam.split(",");
+  if(bboxArr.length < 4) {
+    return;
+  }
+  var xmin:Number = Utils.chkNumber(bboxArr[0], -180);
+  var xmax:Number = Utils.chkNumber(bboxArr[1], 180);
+  var ymin:Number = Utils.chkNumber(bboxArr[2], -90);
+  var ymax:Number = Utils.chkNumber(bboxArr[3], 90);
+  
+  var extent:Extent = new Extent(xmin, ymin, xmax, ymax, 
+    new SpatialReference(4326));
+  var projHandler:ProjectionHandler = 
+    new ProjectionHandler(map.spatialReference); 
+  map.extent = projHandler.reprojectExtent(extent);   
+
+} 
+
+/**
+ * Interogates url to find the type of url then calls function to add layer
+ * 
+ * @param title The title
+ * @param urlResource The url resource
+ * */   
+private function addResource(title:String, urlResource:String):void {
+  try                
+  {                   
+    //capsURL += getURLPrefix(capsURL);      
+    /*if( url == null || 
+    url.match(new RegExp(".*resource.*")) == null ||
+    url.match(new RegExp(".*resource.*")).length < 1) {
+    return;
+    }*/
+    var url:String = urlResource;
+    if( !Utils.chkStringMatch(url.match(new RegExp(/^\w*:\/\//))).length > 0) {
+      url = urlResource.replace(/[a-z0-9]*:/i, "");
+    } 
+    var resourceType:String = urlResource.replace(/:.*/, "");
+    if(Utils.chkString(resourceType) == "") {
+      var endPoint:AGSGptRSSEndPoint = new AGSGptRSSEndPoint("",
+        url, this.configXML, "");
+      var enum:AGSGptEnumServiceTypes =endPoint.extractServiceType(url);
+      if(enum != null) {   
+        resourceType = enum.serviceType; 
+      }
+    }
+    var k:String;
+    LOG.info("Title:" + title);
+    LOG.info("url " + url);
+    LOG.info("ResourceType" + resourceType);
+    //Alert.show("Title: " + title + "\n, url: "+ url + "\n, ResourceType: " + resourceType);
+    
+    var record:AGSGptRSSRecord = new AGSGptRSSRecord();
+    var endpoint:AGSGptRSSEndPoint = new AGSGptRSSEndPoint(url, 
+      url, configXML, "default" );
+    if(!resourceType && !url) {
+      throw new Error("No resourceType given or url given");
+      return;
+    }
+    if(resourceType.toLocaleLowerCase() == "wms") {
+      record.serviceType = AGSGptEnumServiceTypes.WMS;
+    } else if(resourceType.toLocaleLowerCase() == "aims") {
+      record.serviceType = AGSGptEnumServiceTypes.AIMS;
+    } /*else if(resourceType.toLocaleLowerCase() == "agsrest" ||
+      (url.toLowerCase().indexOf("/rest/services") > 0 
+      && url.toLowerCase().indexOf("/mapserver") > 
+      url.toLowerCase().indexOf("/rest/services")
+      )
+      ) {
+      record.serviceType = AGSGptEnumServiceTypes.AGS_REST;
+    }*/ else if(resourceType.toLowerCase() == "shape"  ||
+      url.toLowerCase().indexOf(".zip") > 0 || 
+      url.toLowerCase().indexOf(".tar.gz") > 0 || 
+      url.toLowerCase().indexOf(".tar") > 0 ||
+      url.toLowerCase().indexOf(".gzip") > 0) {
+      record.serviceType = AGSGptEnumServiceTypes.SHAPE;
+    } else if(resourceType.toLowerCase() == "kml" ||
+      resourceType.toLocaleLowerCase() == "kmz" ||  
+      url.toLowerCase().indexOf(".kml") > 0 ||
+      url.toLowerCase().indexOf(".kmz") > 0  ) {
+      record.serviceType = AGSGptEnumServiceTypes.KML;
+    } else if(resourceType.toLocaleLowerCase() == "rss" || 
+      url.toLowerCase().indexOf(".xml") > 0 ||
+      url.toLowerCase().indexOf("rss") > 0  || 
+      url.toLowerCase().indexOf("georss") > 0  ) {
+      record.serviceType = AGSGptEnumServiceTypes.RSS;
+    } else if(endpoint.extractServiceType(url) != null) {
+      record.serviceType = endpoint.extractServiceType(url);	
+    } else {
+      throw new Error(lblDataFileNotSupported);
+      return;
+    }
+    if(title) {
+      record.title = title;
+    } else { 
+      record.title = url;   
+    }
+    record.mapServiceUrl = url;
+    this.doAddToMap2(record, endpoint);
+    //wTemplate.widgetState  = BaseWidget.WIDGET_MINIMIZED;
+    //this.setState(BaseWidget.WIDGET_MINIMIZED);
+    
+    
+  } catch (error:Error) { 
+    
+    userAlert.show(this, lblUrlNotUnderstood, 
+      lblUrlNotUnderstood + 
+      "\n\n" + error.toString());                 
+    
+  } finally  {
+    map.removeLayer(graphicsLayer);
+    map.addLayer(graphicsLayer);
+  }            
+}
+
+/**
+ * Reads resource url from the url
+ * */
+private function readResourceUrl(result:URLVariables, url:String):void           
+{                
+
+  try                
+  {       
+    if(result.resource) {
+      this.addResource(result.title, result.resource);            
+    }
+  } catch (error:Error) { 
+    
+    userAlert.show(this, lblErrGeneral, 
+      "Could not parse/add url that determines a service to be preloaded" + 
+      "\n\n" + error.toString());                 
+    
+  }                
+
+}
+
+/**
+ * Reads the symbol from the xml file
+ * 
+ * @xml The xmlconfig
+ * */
+private function readSymbol(xml:XML):SimpleFillSymbol {
+
+  var fillColor:Number = Utils.chkNumber(xml.@fillColor, -1);
+  var fillAlpha:Number = Utils.chkNumber(xml.@fillAlpha, -1);
+  var fillStyle:String = Utils.chkString(xml.@fillStyle).toLowerCase();
+  var outlineColor:Number = Utils.chkNumber(xml.@outlineColor, -1);
+  var outlineWidth:Number = Utils.chkNumber(xml.@outlineWidth, -1);
+  var outlineStyle:String = Utils.chkString(xml.@outlineStyle).
+    toLowerCase();
+  var outlineAlpha:Number = Utils.chkNumber(xml.@outlineAlpha, -1);
+  
+  if(fillColor == -1 || fillAlpha == -1 || outlineColor == -1 || 
+    outlineWidth == -1 || outlineColor == -1 ) {
+    return null;
+  }
+  
+  var graphicLineSym:SimpleLineSymbol = 
+    new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, outlineColor, 
+      outlineAlpha, outlineWidth);
+  var graphicSymbol:SimpleFillSymbol = new SimpleFillSymbol(fillStyle,
+    fillColor, fillAlpha,  graphicLineSym);
+  
+  return graphicSymbol;
+}
+
+
+/**
+ * Used by the httpservice for search only. Do not use.
+ * 
+ * @param event The faultEvent
+ *  
+ * */
+private function faultHandlerRss(event:mx.rpc.events.FaultEvent):void   {
+  faultHandler(event, lblErrCantSearch);
+}
+
+/**
+ * Displays the fault to the user
+ * 
+ * @param event The faultEvent
+ * @param message Message to be displayed togather with the fault
+ * 
+ * */
+private function faultHandler(event:mx.rpc.events.FaultEvent,
+                            message:String):void   {
+  clearMessage();
+  var sInfo:String = "Error: ";
+  sInfo += message + "\n\n";
+  sInfo += "Event Target: " + event.target + "\n\n";
+  sInfo += "Event Type: " + event.type + "\n\n";
+  sInfo += "Fault Code: " + event.fault.faultCode + "\n\n";
+  sInfo += "Fault Code: " + event.fault.faultCode + "\n\n";
+  sInfo += "Fault Message: " + event.fault.message + "\n\n";
+  sInfo += "Fault Rootcause: " + event.fault.rootCause + "\n\n";
+  sInfo += "Fault Info: " + event.fault.faultString;
+  userAlert.show(this.map, lblErrGeneral, message + "\n\n" + sInfo);
+}
+
+/**
+ * Loads the RSS from the search
+ * 
+ * @param event The result event
+ * */
+private function loadRSSData(event:ResultEvent):void {
+  
+  try {  
+    if (event.result is XML) {
+      var x:XML = XML(event.result);
+      var rssObj:AGSGptRSSParser = AGSGptRSSParser.createRssParser(x, 
+        agsGptRssModel, cbSites.selectedItem as AGSGptRSSEndPoint);
+      recAC = rssObj.agsGptRssRecords;
+    } else {
+      userAlert.show(this.map, lblErrCantSearch, "HTTP Response is not XML");
+    }
+    
+    if(recAC.length > 0) {
+      showResults(null);
+      
+      if(resultsGroup != null) { 
+        resultsGroup.dataProvider = recAC;
+      }
+      cbExtents.selected = true;
+    } else {
+      cbExtents.selected = false;
+    }
+    clearMessage();
+    if(recAC.totalResults < 1) {
+      showMessage(msgNoResults, false);
+    } else {
+      showMessage(msgSearchSummary
+        .replace("{0}", recAC.startIndex)
+        .replace("{1}", recAC.startIndex + recAC.length - 1 )
+        .replace("{2}", recAC.totalResults), 
+        false);
+    }
+    this.graphicsLayer.clear();  
+    doZoomToResults(recAC); 
+    ViewerContainer.dispatchEvent(
+      new GptRSSEvent(GptRSSEvent.GPT_SEARCH_DONE, null));
+  } catch (error:Error) {
+    userAlert.show(this, lblErrCantSearch, 
+      "A problem occured while parsing the RSS feed: " + "\n" +
+      error.message + "\n\n" + error.getStackTrace());
+    trace(error.getStackTrace());                                       
+  }
+}
+
+
+
+//shows message on the GUI
+private function showMessage(msg:String, swfVisible:Boolean):void
+{
+  txtMessage.text = msg;
+  swfMessage.visible = swfVisible;
+  msgVisible = true;
+}           
+
+//clears message from gui
+private function clearMessage():void {
+  msgVisible = false;
+}
+
+
+
+/**
+ * Performs a search
+ * 
+ * */   
+private function doSearch():void {
+  try {
+    
+    map.infoWindow.hide();
+    showMessage(msgSearching, true);
+    var selectedItem:AGSGptRSSEndPoint;
+    selectedItem = cbSites.selectedItem as AGSGptRSSEndPoint;
+    var geoRssUrl:String = selectedItem.siteUrl;
+    graphicsLayer.clear(); 
+    recAC.removeAll(); 
+    //this.widgetRss.clear();
+    showMessage(msgSearching, true); 
+    var extent:Extent = map.extent;
+    if(extent.spatialReference == null) {
+      // extent in map does not have spatial reference defined
+      extent.spatialReference = map.spatialReference;
+    }
+    extent = projectionToGpt.reprojectExtent(extent);
+    if(extent == null) {
+      throw new Error("Could not get projected extent");
+      
+    }
+    criteria.extent = extent;
+    criteria.numOfResultsPerPage = numOfResultsPerPage;
+    
+    agsGptRssModel.connect(
+      agsGptRssModel.createUrlCriteria(criteria, geoRssUrl), rssService);
+    
+  } catch (error:Error) {
+    userAlert.show(this, lblErrCantSearch, error.message + "\n\n" 
+      + error.getStackTrace());
+    trace(error.getStackTrace());
+  } catch (event:FaultEvent) {
+    this.faultHandler(event, lblErrCantSearch );
+    trace(event.toString());
+  }
+
+}   
+
+
+/**
+ * Zoom to results
+ * 
+ * @param records ArrayCollection with AGSGptRSSRecord
+ * */
+private function doZoomToResults(records:ArrayCollection):void {
+  if(records == null || records.length <= 0) {
+    return;
+  }
+  
+  var tmpGraphicsArray:ArrayCollection = new ArrayCollection();
+  
+  var maxX:Number = Number.MIN_VALUE;
+  var minX:Number = Number.MAX_VALUE;
+  var minY:Number = Number.MAX_VALUE;
+  var maxY:Number = Number.MIN_VALUE;
+  var spatialRef:SpatialReference = new SpatialReference(4326);
+  var index:Number = 0;
+  
+  for(index = 0; index < records.length; index++) { 
+    var objRecord:Object = records.getItemAt(index);
+    var agsRecord:AGSGptRSSRecord = objRecord as AGSGptRSSRecord;
+    if(agsRecord == null) {
+      continue;
+    }
+    var graphic:Graphic = new Graphic(agsRecord.geom);
+    tmpGraphicsArray.addItem(graphic);  
+
+    var geomExtent:Extent = Utils.massageExtent(agsRecord.geom);
+    if((maxX == Number.MIN_VALUE || maxX < geomExtent.xmax) && 
+      !Utils.isExtremeNumber(geomExtent.xmax)) {
+      maxX = geomExtent.xmax;
+    }
+    if((minX == Number.MAX_VALUE || minX > geomExtent.xmin) &&
+      !Utils.isExtremeNumber(geomExtent.xmin)) {
+      minX = geomExtent.xmin;
+    }
+    if((maxY == Number.MIN_VALUE || maxY < geomExtent.ymax) &&
+      !Utils.isExtremeNumber(geomExtent.ymax)) {
+      maxY = geomExtent.ymax;
+    }
+    if((minY == Number.MAX_VALUE || minY > geomExtent.ymin) && 
+      !Utils.isExtremeNumber(geomExtent.ymin )) {
+      minY = geomExtent.ymin;
+    }
+  }
+  if(criteria.extentOption == AGSGptRSSCriteria.EXTENT_CONTAINS) {
+    return;
+  }
+  doZoomTo(new Extent(minX, minY, maxX, maxY, spatialRef), 
+    nZoomFactor);
+}
+
+
+
+
+/**
+ * Zooms to an extent
+ * 
+ * @param extent Extent to be zoomed to
+ * @param factor How much bigger the View Port should be than the extent in 
+ * 
+ * */
+private function doZoomTo(extent:Extent, factor:Number):void {
+  //extent.spatialReference = new SpatialReference(4326);
+  extent = Utils.massageExtent(extent);
+ // extent = agsGptRssModel.expandExtent(extent, factor);
+  var strExt:String = "xmin=" + extent.xmin;
+  strExt = strExt + ",xmax=" + extent.xmax;
+  strExt = strExt + ",ymin=" + extent.ymin;
+  strExt = strExt + ",ymax=" + extent.ymax;
+  var expandView:Number = 10;
+  var layer:Layer = new Layer();
+  
+  try {
+    /*  if(extent.xmin <= map.) {
+    extent.xmin = -180 - expandView;
+    }
+    if(extent.ymin <= -90) {
+    extent.ymin = -90 - expandView;
+    }
+    if(extent.xmax >= 180 ) {
+    extent.xmax = 180 + expandView;
+    }
+    if(extent.ymax >= 90) {
+    extent.ymax = 90 + expandView;
+    }*/
+    var project:ProjectionHandler =
+      new ProjectionHandler(map.spatialReference);
+    extent = project.reprojectExtent(extent);
+    extent = extent.expand(factor);
+    map.extent = extent;
+  } catch (error:Error) {
+    userAlert.show(this, lblErrGeneral, "error while zooming to "
+      + strExt + "\n\n" + error.getStackTrace());
+    trace(error.getStackTrace());
+  } catch (event:FaultEvent) {
+    this.faultHandler(event, "error while zooming to " + strExt );
+    trace(event.toString());
+  }
+}
+/**
+ * Show metadata info on map
+ * 
+ * @param obj The AGSGptRSSRecord associated with the metadata to be elaborated
+ * */
+private function doShowMoreMetaInfo(obj:Object):void {
+  try {
+    map.infoWindow.hide();
+    if(popUpRecordTitleWindow != null) {
+      PopUpManager.removePopUp(popUpRecordTitleWindow);
+    }
+    
+    var rssRecord:AGSGptRSSRecord =  obj as AGSGptRSSRecord;
+    if(rssRecord == null ) {
+      throw Error("RSSRecord object given is invalid: = " + obj);
+    }
+   
+       
+    if( rssRecord.hasDefaultGeometry == false && 
+      rssRecord != null && rssRecord.geom != null) {
+      var iContain:InfoContainer =  map.infoWindow as InfoContainer;
+      if(this.x  < (map.width / 2)) {
+        map.infoWindow.setStyle("infoPlacement", "lowerRight");
+      } else {
+        map.infoWindow.setStyle("infoPlacement", "lowerLeft");	
+      }
+      map.infoWindow.styleName = "WidgetCanvas";
+      uiMetadataInfoView.record = rssRecord;
+      uiMetadataInfoView.configXML = configXML;
+      uiMetadataInfoView.endPoint = cbSites.selectedItem as AGSGptRSSEndPoint;
+      uiMetadataInfoView.uiMainRssWidget = this;
+      uiMetadataInfoView.init();
+      uiMetadataInfoView.alpha = 0.9;
+      map.infoWindow.content = uiMetadataInfoView;
+      
+      
+      var geom:Geometry = projectionToMap.reprojectGeom(rssRecord.geom);
+      if(geom == null || geom.extent == null) {
+        geom = map.extent;
+      } 
+      map.infoWindow.
+      map.infoWindow.show(geom.extent.center);
+      doZoomTo( Utils.massageExtent(rssRecord.geom), nZoomFactor);
+    } else {
+      
+      uiMetadataInfoView1.record = rssRecord;
+      uiMetadataInfoView1.configXML = configXML;
+      uiMetadataInfoView1.endPoint = cbSites.selectedItem as AGSGptRSSEndPoint;
+      uiMetadataInfoView1.uiMainRssWidget = this;
+      uiMetadataInfoView1.init();
+      uiMetadataInfoView1.alpha = 0.9;
+      popUpRecordTitleWindow = new TitleWindow();
+      if(popUpRecordTitleWindow.contains(uiMetadataInfoView1) == false) {
+        popUpRecordTitleWindow.addChild(uiMetadataInfoView1);
+      }
+      popUpRecordTitleWindow.showCloseButton = true;
+      popUpRecordTitleWindow.addEventListener(CloseEvent.CLOSE, 
+        closeTitleWindow, false, 0, true);
+      PopUpManager.addPopUp(popUpRecordTitleWindow, this.map, false);
+      PopUpManager.centerPopUp(popUpRecordTitleWindow);
+      var layer:Layer = map.layers[0] as Layer;
+      doZoomTo( layer.initialExtent, nZoomFactor);
+    }
+  } catch (error:Error) {
+    userAlert.show(this, lblErrGeneral, 
+      "A problem occured while elaborating metadata : \n\n",
+      error.toString() + "\n\n" + error.getStackTrace());
+  } catch (evt:FaultEvent) {
+    this.faultHandler(evt, "A problem occured while elaborating metadata");
+  }
+}
+  
+/**
+ * Closes the elaborated metadata window
+ * 
+ * @event The window close event
+ * */      
+private function closeTitleWindow(event:Event):void {      
+  PopUpManager.removePopUp(popUpRecordTitleWindow);
+}
+
+/**
+ * Adds a record to the map
+ * 
+ * @param record The AGS record
+ * @param endPoint The endpoint
+ * */
+public function doAddToMap(record:AGSGptRSSRecord, 
+                         endPoint:AGSGptRSSEndPoint):void {
+  try {
+    this.doAddToMap2(record, endPoint);
+  } catch (error:Error) {
+    userAlert.show(this, lblErrGeneral, 
+      "A problem occured while adding the map service : \n\n" 
+      + error.message + ":" + "\n" + error.toString() + "\n"
+      + error.getStackTrace());
+  } catch (evt:FaultEvent) {
+    this.faultHandler(evt, "A problem occured while elaborating metadata");
+    trace(evt.toString()); 
+  } finally {
+    map.removeLayer(graphicsLayer);
+    map.addLayer(graphicsLayer);
+  }
+}
+
+/**
+ * Show All Metadata extents or hide them all
+ * 
+ * @parm show true = show, false = dont show
+ * 
+ * */
+private function showAllMetadataExtent(show:Boolean):void {
+  if(show == true) {
+    ViewerContainer.dispatchEvent(
+      new GptRSSEvent(GptRSSEvent.GPT_SHOW_ALL_GRAPHICS, null));
+  } else {
+    ViewerContainer.dispatchEvent(
+      new GptRSSEvent(GptRSSEvent.GPT_HIDE_ALL_GRAPHICS, null));
+  }
+}
+
+/**
+ * Assists the doAddToMap method.  Use the doAddToMap instead of this 
+ * method.ww
+ * 
+ * @param record associated with add to
+ * @param endPoint associated with add to
+ * 
+ * */
+private function doAddToMap2(record:AGSGptRSSRecord, endPoint:AGSGptRSSEndPoint, 
+                                                     visible:Boolean=true, 
+                                                     alpha:Number=1):void {
+
+  var eventObj:Object = {record:record, endPoint:endPoint};  
+  var mapServiceType:AGSGptEnumServiceTypes = record.serviceType;
+  var mapServiceUrl:String = record.mapServiceUrl;
+  var title:String = record.title;  
+  var randomizeId:String = " [" + Math.round(Math.random()*10000) + "]";
+  
+
+  //widgetRss.removeGraphicsLayerTemporary();
+  
+  if(mapServiceType == AGSGptEnumServiceTypes.AIMS) {
+    
+    var serviceHost:String = endPoint.extractAimsHost(mapServiceUrl);
+    var serviceName:String = endPoint.extractAimsServiceName(mapServiceUrl);
+    
+    if(serviceHost == "") {
+      userAlert.show(this.map, lblErrGeneral, 
+        "Could not find service host in ArcIMS service = "
+        + mapServiceUrl);
+      return;
+    }
+    if(serviceName == "") {
+      userAlert.show(this.map, lblErrGeneral, 
+        "Could not find servicename host in ArcIMS service = "
+        + mapServiceUrl);
+      return;
+    }
+    
+    var aimsLayer:ArcIMSMapServiceLayer = new ArcIMSMapServiceLayer();
+    aimsLayer.serviceHost = serviceHost;
+    aimsLayer.serviceName = serviceName;
+    aimsLayer.name = record.title + randomizeId;
+    aimsLayer.id = record.title + randomizeId;
+    aimsLayer.requestTimeout = nAddLayerTimeout;
+    aimsLayer.visible = visible;
+    aimsLayer.alpha = alpha;
+    aimsLayer.addEventListener(LayerEvent.LOAD_ERROR, showLoadLayerMessage);
+    aimsLayer.addEventListener(LayerEvent.LOAD, layerLoaded );
+    
+    if(bUseProxy) {
+      
+      aimsLayer.proxyURL = URL_TO_PROXY;
+    }
+    dctAddingService[aimsLayer] = eventObj;
+    ViewerContainer.dispatchEvent(new Event("START_MAP_LOAD_IMG"));
+    map.addLayer(aimsLayer);  
+    LOG.debug("Adding aimslayer " + "host = " + serviceHost 
+      + "serviceName=" + serviceName + " record = \n\n" + record.toString());
+    
+    
+  } else if(mapServiceType == AGSGptEnumServiceTypes.AGS_REST ||
+    mapServiceType == AGSGptEnumServiceTypes.AGS_SOAP) {
+    if(mapServiceUrl.indexOf("?") > 0) {
+      mapServiceUrl = 
+        mapServiceUrl.substring(0, mapServiceUrl.indexOf("?"));
+    }
+    mapServiceUrl = mapServiceUrl.substr(0 , 
+      mapServiceUrl.toLowerCase().indexOf("mapserver") + 9);
+    var agsLyr:ArcGISDynamicMapServiceLayer = 
+      new ArcGISDynamicMapServiceLayer();
+    agsLyr.url = mapServiceUrl;
+    agsLyr.name = record.title + randomizeId;
+    agsLyr.id = record.title + randomizeId;
+    agsLyr.requestTimeout = nAddLayerTimeout;
+    agsLyr.addEventListener(LayerEvent.LOAD_ERROR, showLoadLayerMessage,
+      false, 0, true);
+    agsLyr.addEventListener(LayerEvent.LOAD, layerLoaded,
+      false, 0, true);
+    agsLyr.imageTransparency = true;
+    agsLyr.visible = visible;
+    agsLyr.alpha = alpha;
+    if(bUseProxy) {
+      agsLyr.proxyURL = URL_TO_PROXY;
+    }
+    dctAddingService[agsLyr] = eventObj;
+    ViewerContainer.dispatchEvent(new Event("START_MAP_LOAD_IMG"));
+    map.addLayer(agsLyr);
+    LOG.debug("Adding agslayer " + agsLyr.url + 
+      " record = \n\n" + record.toString());
+    
+  } else if (mapServiceType == AGSGptEnumServiceTypes.WMS) {
+    if(bUseEsriApiWmsObject == false) {
+      var wmslayer:com.esri.gpt.wms.WMSLayer = 
+        new com.esri.gpt.wms.WMSLayer();
+      wmslayer.url = record.mapServiceUrl;
+      wmslayer.id = record.title + randomizeId;
+      wmslayer.name = record.title + randomizeId;
+      wmslayer.visible = visible;
+      wmslayer.alpha = alpha;
+      wmslayer.requestTimeout = nAddLayerTimeout;
+      wmslayer.addEventListener(LayerEvent.LOAD_ERROR, showLoadLayerMessage, 
+        false, 0, true);
+      wmslayer.addEventListener(com.esri.gpt.wms.WMSLayer.WMSEVENT_GETMAPERROR, 
+        showLayerMessage,
+        false, 0, true);
+      wmslayer.addEventListener(LayerEvent.LOAD, layerLoaded,
+        false, 0, true);
+      if(bUseProxy) {
+        wmslayer.proxyURL = URL_TO_PROXY;
+      }
+      dctAddingService[wmslayer] = eventObj;
+      ViewerContainer.dispatchEvent(new Event("START_MAP_LOAD_IMG"));
+      map.addLayer(wmslayer);
+      LOG.debug("Adding wmslayer" + wmslayer.url 
+        + " record = \n\n" + record.toString());
+    } else {
+      var wmslayerNative:com.esri.ags.layers.WMSLayer = 
+        new com.esri.ags.layers.WMSLayer();
+      wmslayerNative.url = record.mapServiceUrl;
+      wmslayerNative.id = record.title + randomizeId;
+      wmslayerNative.name = record.title + randomizeId;
+      wmslayerNative.visible = visible;
+      wmslayerNative.alpha = alpha;
+      wmslayerNative.requestTimeout = nAddLayerTimeout;
+      wmslayerNative.addEventListener(LayerEvent.LOAD_ERROR, showLoadLayerMessage, 
+        false, 0, true);
+      wmslayerNative.addEventListener(LayerEvent.LOAD, layerLoaded,
+        false, 0, true);
+      if(bUseProxy) {
+        wmslayerNative.proxyURL = URL_TO_PROXY;
+      }
+      dctAddingService[wmslayerNative] = eventObj;
+      ViewerContainer.dispatchEvent(new Event("START_MAP_LOAD_IMG"));
+      map.addLayer(wmslayerNative);
+      LOG.debug("Adding wmslayerNative" + wmslayerNative.url 
+        + " record = \n\n" + record.toString());
+    }
+  } else if(mapServiceType == AGSGptEnumServiceTypes.RSS) {
+    var geoRssLayer:GeoRssLayer = new GeoRssLayer();
+    geoRssLayer.url = record.mapServiceUrl;
+    geoRssLayer.id = record.title + randomizeId;
+    geoRssLayer.name = record.title + randomizeId;
+    geoRssLayer.visible = visible;
+    geoRssLayer.alpha = alpha;
+    geoRssLayer.title = record.title;
+    geoRssLayer.requestTimeout = nAddLayerTimeout;
+    geoRssLayer.addEventListener(LayerEvent.LOAD_ERROR, showLoadLayerMessage,
+      false, 0, true);
+    geoRssLayer.addEventListener(LayerEvent.LOAD, layerLoaded,
+      false, 0, true);
+    if(bUseProxy) {
+      geoRssLayer.proxyURL = URL_TO_PROXY;
+    }
+    dctAddingService[geoRssLayer] = eventObj;
+    ViewerContainer.dispatchEvent(new Event("START_MAP_LOAD_IMG"));
+    map.addLayer(geoRssLayer);
+    LOG.debug("Adding GeorssLayer" + geoRssLayer.url 
+      + " record = \n\n" + record.toString());
+    
+    /*var gWidget:GeoRSSWidget = widgetRss;
+    widgetRss.configData = this.configData;
+    widgetRss.init1(mapServiceUrl, bUseProxy, "title", "link", map, title);
+    
+    gWidget.initialize();
+    gWidget.init();
+    gWidget.visible = true;
+    gWidget.setVisible(true);
+    gWidget.setState(BaseWidget.STATE_MAXIMIZED);
+    
+    if(bRssWidgetAdded == false) {
+    var myIndex:Number = parent.getChildIndex(this);	
+    parent.addChildAt(gWidget, myIndex);
+    bRssWidgetAdded = true;
+    }
+    uiMetadataInfoView.doStopAddToMap(eventObj.record,
+    eventObj.endPoint);
+    LOG.debug("Adding Rss Layer" + mapServiceUrl 
+    + " record = \n\n" + record.toString());*/
+    
+  } else if(mapServiceType == AGSGptEnumServiceTypes.SHAPE ||
+    mapServiceType == AGSGptEnumServiceTypes.KML) {
+    var shapeLayer:GeoProcessingViewerLayer = 
+      new GeoProcessingViewerLayer(record.mapServiceUrl);
+    shapeLayer.url = record.mapServiceUrl;
+    shapeLayer.title = record.title;
+    if(mapServiceType == AGSGptEnumServiceTypes.KML) {
+      shapeLayer.urlGpService = gpKmlUrl;
+      shapeLayer.requestTimeout = gpKmlTimeout;
+    } else {
+      shapeLayer.urlGpService = gpShapeUrl;
+      shapeLayer.requestTimeout = gpKmlTimeout;
+    }
+    shapeLayer.id = record.title+ randomizeId;
+    shapeLayer.name = record.title+ randomizeId;
+    shapeLayer.visible = visible;
+    shapeLayer.alpha = alpha;
+    shapeLayer.requestTimeout = nAddLayerTimeout;
+    shapeLayer.graphicSymbol =  this.graphicPolySym;
+    shapeLayer.addEventListener(LayerEvent.LOAD_ERROR, showLoadLayerMessage,
+      false, 0, true);
+    shapeLayer.addEventListener(LayerEvent.LOAD, layerLoaded,
+      false, 0, true);
+    dctAddingService[shapeLayer] = eventObj;
+    if(bUseProxy) {
+      shapeLayer.proxyURL = URL_TO_PROXY;
+    }
+    ViewerContainer.dispatchEvent(new Event("START_MAP_LOAD_IMG"));
+    map.addLayer(shapeLayer);  
+    LOG.debug("Adding Shape File layer" + mapServiceUrl 
+      + " record = \n\n" + record.toString());
+    
+  }
+  
+  
+  //widgetRss.return();
+}
+
+/**
+ * Shows a layer event message
+ * 
+ * @param event
+ * 
+ * */      
+private function showLayerMessage(event:LayerEvent):void {
+  var msg:String = lblServiceLayerError;
+  if(event.layer is GeoProcessingViewerLayer && event.fault) {
+    msg = Utils.truncateString(msg + " : " + event.fault.message + 
+      ":" + event.fault.faultDetail, 300);
+    msg = msg.replace(/[\r\n]/g, "");
+  }
+  userAlert.show(this.map, msg, event.fault.message + "\n\n" 
+    + event.toString()); 
+  event.layer.setVisible(false);
+}      
+      
+/***
+ * Shows Error Messages from trying to enter a layer
+ *
+ * @param event The Event 
+ * */
+private function showLoadLayerMessage(event:LayerEvent):void {
+
+  var eventObj:Object = dctAddingService[event.layer];
+  try { 
+    
+    var msg:String = lblServiceLayerError;
+    showLayerMessage(event);
+    map.removeLayer(event.layer);
+    
+    if(eventObj != null) {
+      uiMetadataInfoView.doStopAddToMap(eventObj.record,
+        eventObj.endPoint); 
+    }
+  } catch(err:Error) {
+    // TODO: Delete layer from dctAddingService 
+    //var smallError:String = "";
+    //if(err.toString().length > 50) {
+    //	smallError = err.toString().substr(0, 50) + "...";
+    //}
+    var panel:UIComponent = new UIComponent();
+    var ui:Panel = new Panel();
+    panel.addChild(ui);
+    panel.addChild(userAlert);
+    userAlert.show(this.map, lblErrGeneral, err.toString() + 
+      "\n\n" + err.getStackTrace());
+    /*GptUserAlert.s(userAlert, this.map, lblErrGeneral, err.toString() + 
+      "\n\n" + err.getStackTrace());*/
+    
+  } finally {
+    if(eventObj != null) {
+      uiMetadataInfoView.doStopAddToMap(eventObj.record,
+        eventObj.endPoint);
+    }
+    delete dctAddingService[event.layer];
+    if(Utils.dictionarySize(dctAddingService) < 1) {
+      ViewerContainer.dispatchEvent(new Event("STOP_MAP_LOAD_IMG"));
+    }
+  }
+}  
+
+/**
+ * When a layer is added, this function is called
+ * 
+ * @param event The layerEvent that happened
+ * */
+private function layerLoaded(event:LayerEvent):void {
+
+  
+  var eventObj:Object = dctAddingService[event.layer];
+  try { 
+    
+    
+    if(event.layer && event.layer.initialExtent && event.layer.spatialReference 
+      && !isNaN(event.layer.spatialReference.wkid) && map.spatialReference 
+      && !isNaN(map.spatialReference.wkid) && 
+      (ProjectionHandler.isEqualWkids(map.spatialReference.wkid, 
+        event.layer.spatialReference.wkid) == true 
+      )) 
+    {
+      var projectionHandler:ProjectionHandler = new ProjectionHandler(
+        new SpatialReference(map.spatialReference.wkid)); 
+      map.extent = projectionHandler.reprojectExtent(
+        event.layer.initialExtent);
+    }
+    
+  } finally {
+    if(eventObj != null) {
+      uiMetadataInfoView.doStopAddToMap(eventObj.record,
+        eventObj.endPoint);
+    }
+    delete dctAddingService[event.layer];
+    if(Utils.dictionarySize(dctAddingService) < 1) {
+      ViewerContainer.dispatchEvent(new Event("STOP_MAP_LOAD_IMG"));
+    }
+    
+  }
+//map.extent = agsGptRssModel.expandExtent(
+//event.layer.initialExtent, nZoomFactor);
+}
+            
+            
+    
+  
+/**
+* Shows the search criteria Tab
+* */
+private function showTextSearch(event:MouseEvent=null):void {
+  this.clearMessage();
+  cbExtents.setVisible(false);
+	this.viewStack.selectedIndex = 0;  
+	wTemplate.selectedTitlebarButtonIndex = 0;
+  txtInSearchText.setFocus();
+   
+}
+		
+/**
+* Shows the Search Results Tab
+* */
+private function showResults(event:MouseEvent=null):void {
+  this.viewStack.selectedIndex = 1;
+	wTemplate.selectedTitlebarButtonIndex = 1;
+  if(recAC != null && recAC.length > 0) {
+    cbExtents.setVisible(true);
+    showMessage(msgSearchSummary
+      .replace("{0}", recAC.startIndex)
+      .replace("{1}", recAC.startIndex + recAC.length - 1 )
+      .replace("{2}", recAC.totalResults), 
+      false);
+  }
+}
+
+/**
+* Add Search Site
+* 
+* @param e Gpt rss end point event
+* */
+private function doAddSearchSite(e:AGSGptRSSEndPointEvent):void {
+  endPoints.addItem(e.agsGptRssEndpoint);
+}
+
+/**
+* Function that calls the help page
+* */    
+public function callHelp():void {
+      var s:String;
+      if (ExternalInterface.available) {
+         var wrapperFunction:String = "showHelp";
+         s = ExternalInterface.call(wrapperFunction,
+           Utils.chkString(configXML.label.(@name=="lblHelpTitle").@value),
+           this.urlHelp);
+      } else {
+         throw new Error("Wrapper not available");
+      }
+}
+  
+/**
+* Shows the help page
+* 
+* */
+private function showHelp(event:MouseEvent=null):void{
+  try {
+   
+   if(bUseShowHelpUsingFloatPane) {
+     this.callHelp();
+   } else {
+      var urlRequest:URLRequest = new URLRequest(urlHelp);
+      navigateToURL(urlRequest, "_blank");
+   }
+  } catch (err:Error) {
+    userAlert.show(this, lblErrGeneral, err.toString() + 
+      "\n\n" + err.getStackTrace());
+  }
+}
+
+
+/**
+* Handler to handle click event
+* 
+* @param event The gpt rss event associated with the click (has the recordIndex)
+* */    
+protected function resultsGroup_GptRSSRecordClickHandler(
+  event:GptRSSEvent):void {
+  var index:int = event.dataObject.recordIndex;
+  if(String(index) != "NaN" && index < recAC.length) {
+    doShowMoreMetaInfo(recAC.getItemAt(index));
+  }
+}
+      
+/**
+* Changes index to start from in the criteria and performs a search
+* 
+* @param event The event with the record index to start with
+* */    
+private function doRecordIndexCriteriaChange(event:GptRSSEvent):void {
+  event.stopPropagation();
+  var recordIndex:Number = Utils.chkNumber(event.dataObject.recordIndex, 
+    int.MIN_VALUE);
+  if(recordIndex > 0) {
+    criteria.startIndex = recordIndex;
+    doSearch();
+  }
+}
+  
+
+/**
+ * handler for when widget is closed
+ * 
+ * @param event widget closed event
+ * */      
+private function widgetClosedHandler(event:Event):void {
+  if(graphicsLayer != null) {
+    graphicsLayer.visible = false;
+    graphicsLayer.setVisible(false);
+  }
+}      
+
+/**
+ * handler for when widget opened
+ * 
+ * @param event widget opened event
+ * */      
+private function widgetOpenedHandler(event:Event):void {
+  if(graphicsLayer != null) {
+    graphicsLayer.visible = true;
+    graphicsLayer.setVisible(true);
+  }
+}      
+ 
+
+/**
+ * Pagination event listener intialization
+ * 
+ * @param event The pagination event
+ * */
+protected function paginator_creationCompleteHandler(event:FlexEvent):void
+{
+  paginator.addEventListener(GptRSSEvent.GPT_RECORD_INDEX, 
+    doRecordIndexCriteriaChange, false, 0, true);
+}
+
+/**
+ * Creation complete for the component showing the results
+ * 
+ * @param event The event associated with the action
+ * */      
+protected function resultgroups_creationCompleteHandler(event:FlexEvent):void
+{
+  resultsGroup.addEventListener(GptRSSEvent.GPT_RSS_RECORD_CLICK,
+    resultsGroup_GptRSSRecordClickHandler, false, 0, true);
+
+}      
+
+]]> 
+    </mx:Script>
+     
+  <mx:HTTPService   
+    id="rssService" 
+      result="{loadRSSData(event)}" 
+      fault="{faultHandlerRss(event)}" 
+      requestTimeout="{nSearchTimeout}"
+      resultFormat="e4x"/>
+                            
+    <viewer:WidgetTemplate id="wTemplate" width="300" height="350" 
+                           closed="widgetClosedHandler(event)"
+                           open="widgetOpenedHandler(event)">
+      
+	    <mx:VBox height="100%" width="100%">
+		 
+      <!-- Message area -->
+      <mx:HBox id="boxMessage" visible="{msgVisible}" width="100%">
+        <mx:CheckBox id="cbExtents" visible="false" change="{showAllMetadataExtent(cbExtents.selected)}"/>
+        <mx:SWFLoader id="swfMessage" source="assets/images/loader.swf" visible="false" />
+        <s:Label width="100%" height="20" id="txtMessage" text="" 
+                  maxDisplayedLines="-1"/>
+      </mx:HBox>
+      <mx:ViewStack id="viewStack" height="100%" width="100%">  
+        <mx:VBox width="100%">
+          <!-- Criteria -->
+            <mx:VBox width="100%">
+                <mx:TextInput id="txtInSearchText" 
+                  width="100%"
+                  creationComplete="txtInSearchText.focusEnabled = true"
+                  enter="{criteria.searchText = txtInSearchText.text; btnSearch.dispatchEvent(new MouseEvent(MouseEvent.CLICK))}" 
+                  text="{criteria.searchText}" 
+                  valueCommit="{criteria.searchText = txtInSearchText.text}"
+                  />
+                <mx:Button id="btnSearch" click="this.criteria.startIndex = 1; doSearch();" label="{lblSearch}"/>
+                <!-- mx:Button id="btnClearSearch" click="doCancelSearch();" label="{lblSearch}"/ -->
+            </mx:VBox>
+              <mx:HBox visible="true" width="100%">
+                <mx:ComboBox id="cbSites" dataProvider="{endPoints}"
+                   width="250"
+                   show="true"/>
+              </mx:HBox>
+              <mx:CheckBox
+                id="cbLiveDataOnly" 
+                label="{lblLiveData}"
+                selected="{criteria.liveData}"
+                valueCommit="{criteria.liveData = cbLiveDataOnly.selected}"/>
+              <mx:HBox width="100%">
+                <mx:RadioButtonGroup  
+                   id="spatialOpt"
+                   
+                 itemClick="{criteria.extentOption = spatialOpt.selectedValue.toString()}"/>
+              <mx:RadioButton 
+              	styleName="RoundButton"
+                groupName="spatialOpt" 
+                id="spatialOptAnywhere"
+                selected="true"
+                value="{AGSGptRSSCriteria.EXTENT_ANY}"
+                label="{lblOptAnywhere}"
+                />
+              <mx:RadioButton 
+                styleName="RoundButton"
+                groupName="spatialOpt" 
+                id="spatialOptIntersect"
+                value="{AGSGptRSSCriteria.EXTENT_INTERSECT}"
+                label="{lblOptIntersect}"
+                />
+              <mx:RadioButton 
+                styleName="RoundButton"
+                groupName="spatialOpt" 
+                id="spatialOptContain"
+                value="{AGSGptRSSCriteria.EXTENT_CONTAINS}"
+                label="{lblOptContains}"
+                />
+            </mx:HBox>
+        </mx:VBox>
+        <mx:VBox width="100%">
+           <!-- Results -->
+			<s:Scroller 
+			  width="100%" 
+			  height="100%"
+			  horizontalScrollPolicy="off">
+				<widgets:GptRSSFeedDataGroup 
+					id="resultsGroup"
+					graphicSymbol="{graphicPolySym}"
+          graphicSymbolHighlighted="{graphicPolySymHighlight}"
+          graphicsLayer="{graphicsLayer}"
+					dataProvider="{recAC}"
+          creationComplete="resultgroups_creationCompleteHandler(event)">
+					<widgets:layout>
+						<s:VerticalLayout
+							gap="2"
+						  horizontalAlign="justify"
+							useVirtualLayout="true"/>
+					</widgets:layout>
+				</widgets:GptRSSFeedDataGroup>
+			</s:Scroller>	
+      <s:Group
+        horizontalCenter="center"
+        width="100%">
+         <widgets:GptPaginator
+          id="paginator"
+          width="100%"
+          horizontalAlign="center"
+          creationComplete="paginator_creationCompleteHandler(event)"
+          configXml="{configXML}"
+          totalResults="{recAC.totalResults}"
+          startIndex="{recAC.startIndex}"
+          itemsPerPage="{recAC.itemsPerPage}">
+        </widgets:GptPaginator>   
+      </s:Group>   
+		</mx:VBox>
+		<mx:VBox/>
+   </mx:ViewStack>
+	</mx:VBox>
+   
+ </viewer:WidgetTemplate>
+    
+    
+</viewer:BaseWidget>
+

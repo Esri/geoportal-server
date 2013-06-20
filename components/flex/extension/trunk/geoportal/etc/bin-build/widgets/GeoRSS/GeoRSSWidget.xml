@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<configuration>
+    <source>http://earthquake.usgs.gov/eqcenter/catalogs/eqs7day-M5.xml</source>
+    <fields>
+        <field name="description" alias="Date"/>
+    </fields>
+    <titlefield>title</titlefield>
+    <linkfield>link</linkfield>
+    <refreshrate></refreshrate>
+    <zoomscale>150000</zoomscale>
+    <info>widgets/InfoTemplates/InfoPopupWidget.swf</info>
+</configuration>

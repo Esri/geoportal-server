@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<configuration>
+    <locator>http://tasks.arcgisonline.com/ArcGIS/rest/services/Locators/TA_Streets_US/GeocodeServer</locator>
+    <minscore>40</minscore>
+    <!-- by default every locator field is a text box, you can change one field to a dropdown
+         by specifying it as a <listfield> and its values in <listvalues> -->
+    <listfield>State</listfield>
+    <listvalues>AK,AL,AR,AZ,CA,CO,CT,DC,DE,FL,GA,HI,IA,ID,IL,IN,KS,KY,LA,MA,MD,ME,MI,MN,MO,MS,MT,NC,ND,NE,NH,NJ,NM,NV,NY,OH,OK,OR,PA,PR,RI,SC,SD,TN,TX,UT,VA,VI,VT,WA,WI,WV,WY</listvalues>
+    <zoomscale>5000</zoomscale>
+    <info>widgets/InfoTemplates/InfoPopupWidget.swf</info>
+</configuration>

@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<!-- If compiling this widget, make sure to add -keep-all-type-selectors=true to your compiler arguments in the FB project properties. -->
+<configuration>
+    <createoptions>
+        <polygondrawtools>polygon,freehandpolygon,extent,autoComplete</polygondrawtools>
+        <polylinedrawtools>polyline,freehandpolyline,line</polylinedrawtools>
+    </createoptions>
+    <deletefeatures>true</deletefeatures>
+    <geometryservice>http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer</geometryservice>
+    <toolbarvisible>false</toolbarvisible>
+    <toolbarcutvisible>false</toolbarcutvisible>
+    <toolbarmergevisible>false</toolbarmergevisible>
+    <toolbarreshapevisible>false</toolbarreshapevisible>
+</configuration>

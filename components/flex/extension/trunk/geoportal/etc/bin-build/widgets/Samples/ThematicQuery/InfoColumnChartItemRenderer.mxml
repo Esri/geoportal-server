@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:mx="library://ns.adobe.com/flex/mx"
+                autoDrawBackground="false"
+                dataChange="itemRenderer_dataChangeHandler(event)">
+
+    <fx:Script>
+        <![CDATA[
+            import mx.events.FlexEvent;
+
+            [Bindable]
+            private var fieldName:String;
+            [Bindable]
+            private var fieldValue:String;
+
+            private function itemRenderer_dataChangeHandler(event:FlexEvent):void
+            {
+                if (data)
+                {
+                    if (data.alias)
+                    {
+                        fieldName = data.alias;
+                    }
+                    else
+                    {
+                        fieldName = data.field;
+                    }
+                    fieldValue = data.value;
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <s:layout>
+        <s:HorizontalLayout/>
+    </s:layout>
+
+    <s:Label id="field"
+             width="100%"
+             text="{fieldName} : "/>
+    <s:Label id="value"
+             height="20"
+             text="{fieldValue}"/>
+
+</s:ItemRenderer>

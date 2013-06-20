@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:mx="library://ns.adobe.com/flex/mx"
+                autoDrawBackground="false"
+                dataChange="itemrenderer_dataChangeHandler(event)"
+                minHeight="18">
+
+    <fx:Script>
+        <![CDATA[
+            import mx.events.FlexEvent;
+
+            private function itemrenderer_dataChangeHandler(event:FlexEvent):void
+            {
+                field.text = data.field + ":";
+                value.text = data.value;
+            }
+        ]]>
+    </fx:Script>
+
+    <s:layout>
+        <s:HorizontalLayout/>
+    </s:layout>
+
+    <s:Label id="field" fontWeight="bold"/>
+    <s:Label id="value"
+             width="100%"
+             maxDisplayedLines="-1"/>
+</s:ItemRenderer>

@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<configuration>
+    <geometryservice>http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer</geometryservice>
+    <spatialref>102003</spatialref>
+    <distanceunits>
+        <distanceunit abbr="m" conversion="1">Meters</distanceunit>
+        <distanceunit abbr="km" conversion=".001">Kilometers</distanceunit>
+        <distanceunit abbr="ft" conversion="3.2808">Feet</distanceunit>
+        <distanceunit abbr="mi" conversion="0.000621">Miles</distanceunit>
+    </distanceunits>
+    <areaunits>
+        <areaunit abbr="sq m" conversion="1">Square Meters</areaunit>
+        <areaunit abbr="sq km" conversion="0.000001">Square Kilometers</areaunit>
+        <areaunit abbr="sq ft" conversion="10.763910417">Square Feet</areaunit>
+        <areaunit abbr="sq mi" conversion="0.0000003861021">Square Miles</areaunit>
+        <areaunit abbr="ac" conversion="0.00024710538147">Acres</areaunit>
+        <areaunit abbr="ha" conversion="0.0001">Hectares</areaunit>
+    </areaunits>
+</configuration>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+             xmlns:s="library://ns.adobe.com/flex/spark"
+             xmlns:mx="library://ns.adobe.com/flex/mx">
+    <fx:Script>
+        <![CDATA[
+            import mx.controls.TextInput;
+            import mx.core.FlexGlobals;
+
+            import spark.components.List;
+        ]]>
+    </fx:Script>
+
+    <fx:Declarations>
+        <s:Bounce id="bounce"/>
+    </fx:Declarations>
+
+    <fx:Metadata>
+        [HostComponent("com.esri.viewer.WidgetTemplate")]
+    </fx:Metadata>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="open"/>
+        <s:State name="minimized"/>
+        <s:State name="closed"/>
+        <s:State name="disabled"/>
+    </s:states>
+
+    <s:transitions>
+        <s:Transition fromState="open" toState="minimized">
+            <s:Sequence>
+                <s:Fade duration="100" target="{widgetLabel}"/>
+                <s:Fade duration="100" target="{headerToolGroup}"/>
+                <s:Fade duration="100" target="{contentGroup}"/>
+                <s:Fade duration="100" target="{widgetFrame}"/>
+                <s:Resize heightTo="30"
+                          target="{hostComponent}"
+                          widthTo="100"/>
+                <s:Move easer="{bounce}" target="{icon}"/>
+            </s:Sequence>
+        </s:Transition>
+        <s:Transition fromState="*" toState="open">
+            <s:Sequence>
+                <s:Move target="{icon}"/>
+                <s:Resize heightTo="{hostComponent.widgetHeight}"
+                          target="{hostComponent}"
+                          widthTo="{hostComponent.widgetWidth}"/>
+                <s:Fade duration="100" target="{widgetFrame}"/>
+                <s:Fade duration="200" target="{widgetLabel}"/>
+                <s:Fade duration="100" target="{contentGroup}"/>
+                <s:Fade duration="100" target="{headerToolGroup}"/>
+            </s:Sequence>
+        </s:Transition>
+        <s:Transition fromState="open" toState="closed">
+            <s:Sequence>
+                <s:Fade duration="100" target="{widgetFrame}"/>
+                <s:Fade duration="100" target="{widgetLabel}"/>
+                <s:Fade duration="100" target="{headerToolGroup}"/>
+                <s:Fade duration="100" target="{contentGroup}"/>
+            </s:Sequence>
+        </s:Transition>
+    </s:transitions>
+
+    <!-- the widget template wireframe -->
+    <s:Group id="widgetFrame"
+             left="0" right="0" top="0" bottom="0">
+    </s:Group>
+
+    <s:Group id="header"
+             height="30"
+             left="25" right="{headerToolGroup.width + 60}" top="0">
+        <s:Label id="widgetLabel"
+                 width="100%"
+                 alpha.closed="0"
+                 alpha.minimized="0"
+                 alpha.open="1"
+                 maxDisplayedLines="1"
+                 showTruncationTip="true"
+                 styleName="WidgetTitle"
+                 text="{hostComponent.widgetTitle}"
+                 verticalCenter="0"/>
+    </s:Group>
+
+    <s:Group id="headerToolGroup"
+             height="30"
+             right="70" top="0"
+             visible.closed="false"
+             visible.minimized="false"
+             visible.open="true">
+        <s:layout>
+            <s:HorizontalLayout paddingLeft="10" verticalAlign="middle"/>
+        </s:layout>
+    </s:Group>
+
+    <s:Group id="minclose"
+             height="30"
+             right="3" top="0"
+             visible.closed="false"
+             visible.minimized="false">
+        <s:layout>
+            <s:HorizontalLayout gap="2"
+                                paddingLeft="2"
+                                verticalAlign="middle"/>
+        </s:layout>
+        <mx:Image id="minimizeButton"
+                  buttonMode="true"
+                  includeInLayout="{hostComponent.enableMinimizeButton}"
+                  source="assets/images/w_min.png"
+                  toolTip="Minimize"
+                  useHandCursor="true"
+                  visible="{hostComponent.enableMinimizeButton}"/>
+        <mx:Image id="closeButton"
+                  buttonMode="true"
+                  includeInLayout="{hostComponent.enableCloseButton}"
+                  source="assets/images/w_close.png"
+                  toolTip="Close"
+                  useHandCursor="true"
+                  visible="{hostComponent.enableCloseButton}"/>
+    </s:Group>
+
+    <mx:Image id="icon"
+              x.minimized="50" x.open="-20" y="12" y.minimized="-2" width="40" height="40"
+              buttonMode="false"
+              buttonMode.minimized="true"
+              source="{hostComponent.widgetIcon}"
+              useHandCursor="false"
+              useHandCursor.minimized="true"
+              visible="{hostComponent.enableIcon}"
+              visible.closed="false">
+        <mx:filters>
+            <mx:DropShadowFilter blurX="10" blurY="10"/>
+        </mx:filters>
+    </mx:Image>
+
+    <s:Group id="contentGroup"
+             left="20" right="20" top="35" bottom="20"
+             clipAndEnableScrolling="true"
+             visible.closed="false"
+             visible.minimized="false"
+             visible.normal="true"
+             visible.open="true">
+        <!--s:layout>
+             <s:VerticalLayout/>
+             </s:layout-->
+    </s:Group>
+
+    <mx:Image id="resizeButton"
+              right="0" bottom="0"
+              source="assets/images/w_resize.png"
+              visible.closed="false"
+              visible.minimized="false"
+              visible.open="{hostComponent.resizable}"/>
+
+    <s:filters>
+        <s:DropShadowFilter alpha="0.5"
+                            blurX="10"
+                            blurY="10"/>
+    </s:filters>
+
+</s:SparkSkin>

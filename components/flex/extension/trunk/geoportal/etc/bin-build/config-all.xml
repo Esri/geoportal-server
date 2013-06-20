@@ -1,0 +1,135 @@
+<?xml version="1.0" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////
+//
+// Copyright (c) 2010 ESRI
+//
+// All rights reserved under the copyright laws of the United States.
+// You may freely redistribute and use this software, with or
+// without modification, provided you include the original copyright
+// and use restrictions.  See use restrictions in the file:
+// <install location>/License.txt
+//
+// Read more about ArcGIS Viewer for Flex 2.2 - http://links.esri.com/flexviewer
+//
+////////////////////////////////////////////////////////////////////////////////
+-->
+<configuration>
+    <title>ArcGIS Viewer for Flex</title>
+    <subtitle>a configurable web mapping application</subtitle>
+    <style>
+        <!-- Black Gold -->
+        <colors>0xFFFFFF,0x333333,0x101010,0x000000,0xFFD700</colors>
+    </style>
+    <bing key="Al0VE_jsmagxk4LFghXGlK5JSHfC0tk-eHRubZv_eMYm6wzgQaStYks8g-wWcgk3"/>
+
+    <splashpage label="ArcGIS Viewer for Flex" config="widgets/Splash/SplashWidget.xml" url="widgets/Splash/SplashWidget.swf"/>
+
+    <widget left="10" top="50" config="widgets/Navigation/NavigationWidget.xml" url="widgets/Navigation/NavigationWidget.swf"/>
+    <widget bottom="35" right="5" config="widgets/StaticImage/StaticImageWidget.xml" url="widgets/StaticImage/StaticImageWidget.swf"/>
+    <widget right="-2" bottom="-2" config="widgets/OverviewMap/OverviewMapWidget.xml" url="widgets/OverviewMap/OverviewMapWidget.swf"/>
+    <widget right="15" top="55" config="widgets/MapSwitcher/MapSwitcherWidget.xml" url="widgets/MapSwitcher/MapSwitcherWidget.swf"/>
+    <widget left="0" top="0" config="widgets/HeaderController/HeaderControllerWidget.xml" url="widgets/HeaderController/HeaderControllerWidget.swf"/>
+    <widget left="3" bottom="3" config="widgets/Coordinate/CoordinateWidget.xml" url="widgets/Coordinate/CoordinateWidget.swf"/>
+
+    <map initialextent="-14083000 3139000 -10879000 5458000" top="40">
+        <basemaps>
+            <layer label="Streets" type="tiled" visible="true"  alpha="1"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer"/>
+            <layer label="Aerial"  type="tiled" visible="false" alpha="1"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"/>
+            <layer label="Topo"    type="tiled" visible="false" alpha="1"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer"/>
+        </basemaps>
+        <operationallayers>
+            <layer label="Boundaries and Places" type="tiled" visible="false"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places_Alternate/MapServer"/>
+            <layer label="Fires" type="feature" visible="false" alpha="1"
+                   info="widgets/InfoTemplates/SimpleInfoWinWidget.swf"
+                   infoconfig="widgets/InfoTemplates/IWT_Fires.xml"
+                   url="http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Fire/Sheep/FeatureServer/0"/>
+            <layer label="San Francisco 3-1-1 Incidents" type="feature" visible="false" alpha="1"
+                   info="widgets/InfoTemplates/SimpleInfoWinWidget.swf"
+                   infoconfig="widgets/InfoTemplates/IWT_311.xml"
+                   url="http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/SanFrancisco/311Incidents/FeatureServer/0"/>
+            <layer label="Earthquakes" type="feature" visible="true"
+                   url="http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Earthquakes/Since_1970/MapServer/0"/>
+        </operationallayers>
+    </map>
+
+    <widgetcontainer layout="horizontal"> <!--horizontal(default)|float|vertical|fix-->
+        <widget label="Bookmarks"
+            icon="assets/images/i_bookmark.png"
+            config="widgets/Bookmark/BookmarkWidget.xml"
+            url="widgets/Bookmark/BookmarkWidget.swf"/>
+        <widget label="Draw and Measure"
+            icon="assets/images/i_draw2.png"
+            config="widgets/Draw/DrawWidget.xml"
+            url="widgets/Draw/DrawWidget.swf"/>
+        <widget label="Earthquakes (GeoRSS)"
+            icon="assets/images/i_rss.png"
+            config="widgets/GeoRSS/GeoRSSWidget.xml"
+            url="widgets/GeoRSS/GeoRSSWidget.swf"/>
+        <widget label="Print"
+            icon="assets/images/i_print.png"
+            config="widgets/Print/PrintWidget.xml"
+            url="widgets/Print/PrintWidget.swf"/>
+        <widget label="Traffic Camera (QueryWidget)"
+            icon="assets/images/i_camera.png"
+            config="widgets/Query/QueryWidget_Louisville_TrafficCams.xml"
+            url="widgets/Query/QueryWidget.swf"/>
+        <widget label="Louisville Police (QueryWidget)"
+            icon="assets/images/i_policestation.png"
+            config="widgets/Query/QueryWidget_Louisville_PoliceStations.xml"
+            url="widgets/Query/QueryWidget.swf"/>
+        <widget label="Search"
+            icon="assets/images/i_search.png"
+            config="widgets/Search/SearchWidget_Louisville.xml"
+            url="widgets/Search/SearchWidget.swf"/>
+        <widget label="Legend"
+            preload="open"
+            config="widgets/Legend/LegendWidget.xml"
+            icon="assets/images/Legend32.png"
+            url="widgets/Legend/LegendWidget.swf"/>
+        <widgetgroup label="Locators">
+            <widget label="Find U.S. address"
+                icon="assets/images/i_target.png"
+                config="widgets/Locate/LocateWidget_US.xml"
+                url="widgets/Locate/LocateWidget.swf"/>
+            <widget label="Find European addresses"
+                icon="assets/images/i_pin2.png"
+                config="widgets/Locate/LocateWidget_EU.xml"
+                url="widgets/Locate/LocateWidget.swf"/>
+            <widget label="Find address in Canada and USA"
+                icon="assets/images/i_pin3.png"
+                config="widgets/Locate/LocateWidget_NA.xml"
+                url="widgets/Locate/LocateWidget.swf"/>
+            <widget label="Find places around the world"
+                icon="assets/images/i_flag.png"
+                config="widgets/Locate/LocateWidget_WorldGaz.xml"
+                url="widgets/Locate/LocateWidget.swf"/>
+            <widget label="Find places with Bing"
+                icon="assets/images/i_target.png"
+                config="widgets/Locate/LocateWidget_Bing.xml"
+                url="widgets/Locate/LocateWidget.swf"/>
+        </widgetgroup>
+        <widgetgroup label="More widgets">
+            <widget label="Data Extract"
+                icon="assets/images/i_scissors.png"
+                config="widgets/DataExtract/DataExtractWidget.xml"
+                url="widgets/DataExtract/DataExtractWidget.swf"/>
+            <widget label="Edit"
+                icon="assets/images/i_edit.png"
+                config="widgets/Edit/EditWidget.xml"
+                url="widgets/Edit/EditWidget.swf"/>
+            <widget label="Layer List"
+                icon="assets/images/i_layers.png"
+                config="widgets/LayerList/LayerListWidget.xml"
+                url="widgets/LayerList/LayerListWidget.swf"/>
+            <widget label="Filter by Time"
+                icon="assets/images/i_clock.png"
+                config="widgets/Time/TimeWidget_QuakesSince1970.xml"
+                url="widgets/Time/TimeWidget.swf"/>
+        </widgetgroup>
+    </widgetcontainer>
+</configuration>

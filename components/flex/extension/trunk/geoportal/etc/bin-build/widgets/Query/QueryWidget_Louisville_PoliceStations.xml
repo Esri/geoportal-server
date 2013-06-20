@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<configuration>
+    <layer>http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Louisville/LOJIC_PublicSafety_Louisville/MapServer/3</layer>
+    <titlefield>PD_NAME</titlefield>
+    <fields all="false">
+        <field name="PD_NAME"/>
+        <field name="ADDRESS" alias="Address"/>
+    </fields>
+    <filterfield>
+        <name>ADDRESS</name>
+        <alias>Filter by ADDRESS (Example: 29TH ST )</alias>
+    </filterfield>
+    <linkfield></linkfield>
+    <refreshrate></refreshrate>
+    <zoomscale>5000</zoomscale>
+    <query>1=1</query>
+    <info>widgets/InfoTemplates/InfoPopupWidget.swf</info>
+</configuration>

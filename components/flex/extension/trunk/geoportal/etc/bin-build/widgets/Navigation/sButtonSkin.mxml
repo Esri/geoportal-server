@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+
+<s:Skin xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:d="http://ns.adobe.com/fxg/2008/dt">
+    <fx:Metadata>
+        [HostComponent("spark.components.Button")]
+    </fx:Metadata>
+    <s:states>
+        <s:State name="up"/>
+        <s:State name="over"/>
+        <s:State name="down"/>
+        <s:State name="disabled"/>
+    </s:states>
+    <s:Group id="group7"
+             x="0" y="0"
+             d:userLabel="sGroup">
+        <s:Path id="path49"
+                x="0.759" y="0.922"
+                data="M 6.195 0.814 C 6.195 0.814 6.195 0.814 6.194 0.814 L 0.649 14.75 L 0.649 14.75 C 8.353 17.816 16.561 17.472 23.61 14.437 L 17.675 0.657 C 14.15 2.175 10.046 2.347 6.195 0.814 Z"
+                winding="nonZero">
+            <s:fill>
+                <s:SolidColor alpha="{getStyle('contentBackgroundAlpha')}"
+                              alpha.down="1"
+                              color="{getStyle('contentBackgroundColor')}"
+                              color.down="{getStyle('selectionColor')}"
+                              color.over="{getStyle('rollOverColor')}"/>
+            </s:fill>
+        </s:Path>
+        <s:Path id="path56"
+                x="8.341" y="8.587" width="8" height="5"
+                data="M 9.166 11.696 L 15.772 1.5 M 9.166 11.696 L 1.5 1.5"
+                winding="nonZero">
+            <s:stroke>
+                <s:SolidColorStroke color="{getStyle('color')}"
+                                    color.disabled="#888888"
+                                    color.down="{getStyle('focusColor')}"
+                                    color.over="{getStyle('focusColor')}"
+                                    joints="miter"
+                                    miterLimit="10"
+                                    weight="2"/>
+            </s:stroke>
+        </s:Path>
+    </s:Group>
+</s:Skin>

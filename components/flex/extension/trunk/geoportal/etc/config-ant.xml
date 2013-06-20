@@ -41,8 +41,12 @@
         <operationallayers>
             <layer label="Boundaries and Places" type="tiled" visible="false"
                    url="http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places_Alternate/MapServer"/>
+            <layer label="Fires" type="feature" visible="false" alpha="1"
+                   info="widgets/InfoTemplates/SimpleInfoWinWidget.swf"
+                   infoconfig="widgets/InfoTemplates/IWT_Fires.xml"
+                   url="http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Fire/Sheep/FeatureServer/0"/>
         </operationallayers>
-    </map>
+    </map
 
     <!-- widgets organized into widget containers that manage close/open etc -->
     <!-- supported layout property options: horizontal(default)|float|vertical|fix-->
@@ -60,8 +64,8 @@
                 top="50"
                 preload="open"
                 icon="assets/images/i_search.png"
-                config="geoportal/widgets/FindData/FindDataWidget.xml"
-                url="geoportal/widgets/FindData/FindDataWidget.swf"/>    
+                config="widgets/GeoportalSearch/GeoportalSearchWidget.xml"
+                url="widgets/GeoportalSearch/GeoportalSearchWidget.swf"/>    
     </widgetcontainer>
 
 </configuration>

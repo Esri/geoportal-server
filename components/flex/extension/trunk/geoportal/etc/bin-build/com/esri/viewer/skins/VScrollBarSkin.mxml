@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark">
+
+    <fx:Metadata>
+        [HostComponent("spark.components.VScrollBar")]
+    </fx:Metadata>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="disabled"/>
+        <s:State name="inactive"/>
+    </s:states>
+
+    <s:Button id="track"
+              top="12" bottom="12"
+              focusEnabled="false"
+              horizontalCenter="0"
+              skinClass="com.esri.viewer.skins.VScrollBarTrackSkin"/>
+
+    <s:Button id="thumb"
+              focusEnabled="false"
+              horizontalCenter="0"
+              skinClass="com.esri.viewer.skins.VScrollBarThumbSkin"
+              visible.inactive="false"/>
+
+    <s:Button id="decrementButton"
+              top="0"
+              enabled.inactive="false"
+              focusEnabled="false"
+              skinClass="com.esri.viewer.skins.ScrollBarUpButtonSkin"/>
+
+    <s:Button id="incrementButton"
+              bottom="0"
+              enabled.inactive="false"
+              focusEnabled="false"
+              skinClass="com.esri.viewer.skins.ScrollBarDownButtonSkin"/>
+
+</s:SparkSkin>

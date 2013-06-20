@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<configuration>
+    <locator wkid="4326">http://tasks.arcgisonline.com/ArcGIS/rest/services/Locators/ESRI_Places_World/GeocodeServer</locator>
+    <minscore>40</minscore>
+    <zoomscale>150000</zoomscale>
+    <info>widgets/InfoTemplates/InfoPopupWidget.swf</info>
+</configuration>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:mx="library://ns.adobe.com/flex/mx">
+
+    <fx:Metadata>
+        /**
+         * A strongly typed property that references the component to which this skin is applied.
+         */
+        [HostComponent("com.esri.ags.components.Navigation")]
+    </fx:Metadata>
+
+    <fx:Declarations>
+        <!--- @private -->
+        <mx:NumberFormatter id="numberFormatter" rounding="nearest"/>
+    </fx:Declarations>
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.layers.supportClasses.LOD;
+
+            private function formatSliderDataTip(value:Number):String
+            {
+                const lod:LOD = hostComponent.map.lods[value];
+                return lod ? "1:" + numberFormatter.format(lod.scale) : resourceManager.getString('ViewerStrings', 'lodNotFoundError');
+            }
+        ]]>
+    </fx:Script>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="disabled"/>
+        <s:State name="normalWithSlider"/>
+        <s:State name="disabledWithSlider"/>
+    </s:states>
+
+    <s:Rect left="0" right="0" top="0" bottom="0"
+            radiusX="3"
+            radiusY="3">
+        <s:fill>
+            <s:SolidColor alpha="{getStyle('contentBackgroundAlpha')}" color="{getStyle('contentBackgroundColor')}"/>
+        </s:fill>
+    </s:Rect>
+
+    <s:VGroup gap="2"
+              horizontalAlign="center"
+              minHeight="34"
+              paddingBottom="5"
+              paddingLeft="3"
+              paddingRight="3"
+              paddingTop="4">
+
+        <s:Button id="zoomInButton"
+                  enabled.disabled="false"
+                  enabled.disabledWithSlider="false"
+                  skinClass="com.esri.ags.skins.NavigationZoomInButtonSkin"
+                  toolTip="{resourceManager.getString('ESRIMessages', 'zoomInTooltip')}"/>
+
+        <mx:VSlider id="slider"
+                    height="130"
+                    alpha="{getStyle('contentBackgroundAlpha')}"
+                    dataTipFormatFunction="formatSliderDataTip"
+                    dataTipPlacement="right"
+                    enabled.disabled="false"
+                    enabled.disabledWithSlider="false"
+                    enabled.normalWithSlider="true"
+                    includeIn="normalWithSlider,disabledWithSlider"
+                    liveDragging="false"
+                    maximum="{hostComponent.map.lods.length - 1}"
+                    showDataTip="true"
+                    snapInterval="1"
+                    tickColor="{getStyle('color')}"
+                    tickInterval="1"
+                    tickLength="3"
+                    tickOffset="-3"
+                    tickThickness="1"
+                    value="{hostComponent.map.level}"/>
+
+        <s:Button id="zoomOutButton"
+                  enabled.disabled="false"
+                  enabled.disabledWithSlider="false"
+                  skinClass="com.esri.ags.skins.NavigationZoomOutButtonSkin"
+                  toolTip="{resourceManager.getString('ESRIMessages', 'zoomOutTooltip')}"/>
+
+    </s:VGroup>
+
+</s:Skin>

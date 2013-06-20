@@ -1,0 +1,65 @@
+<?xml version="1.0" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////
+//
+// Copyright (c) 2010 ESRI
+//
+// All rights reserved under the copyright laws of the United States.
+// You may freely redistribute and use this software, with or
+// without modification, provided you include the original copyright
+// and use restrictions.  See use restrictions in the file:
+// <install location>/License.txt
+//
+// Read more about ArcGIS Viewer for Flex 2.2 - http://links.esri.com/flexviewer
+//
+////////////////////////////////////////////////////////////////////////////////
+-->
+<configuration>
+    <title>Thematic Mapping</title>
+    <subtitle>States, counties, tracks and block groups </subtitle>
+    <logo>assets/images/logo.png</logo>
+    <style>
+        <!-- Cobalt Blue -->
+        <colors>0xCEE7F4,0x39628C,0x355D89,0x294867,0xCEE7F4</colors>
+    </style>
+
+    <!-- UI elements -->
+    <widget left="10"  top="50"   config="widgets/Navigation/NavigationWidget.xml" url="widgets/Navigation/NavigationWidget.swf"/>
+    <widget right="20" top="85"  url="widgets/StaticImage/StaticImageWidget.swf"/>
+    <widget right="-2" bottom="-2" config="widgets/OverviewMap/OverviewMapWidget.xml" url="widgets/OverviewMap/OverviewMapWidget.swf"/>
+    <widget right="20" top="55"    config="widgets/Samples/ThematicQuery/MapSwitcherWidget_Thematic.xml" url="widgets/MapSwitcher/MapSwitcherWidget.swf"/>
+    <widget left="0"   top="0"     config="widgets/HeaderController/HeaderControllerWidget.xml" url="widgets/HeaderController/HeaderControllerWidget.swf"/>
+
+    <map initialextent="-14083000 3139000 -10879000 5458000" top="40">
+        <basemaps>
+            <layer label="Streets" type="tiled" visible="false"  alpha="1"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer"/>
+            <layer label="Aerial"  type="tiled" visible="true" alpha="1"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"/>
+            <layer label="Topo"    type="tiled" visible="false" alpha="1"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer"/>
+        </basemaps>
+        <operationallayers>
+            <layer label="Unemployment" type="tiled" visible="true" alpha="0.7"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/Demographics/USA_Unemployment_Rate/MapServer"/>
+            <layer label="Population Density" type="tiled" visible="false" alpha="0.7"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/Demographics/USA_Population_Density/MapServer"/>
+            <layer label="Census" type="dynamic" visible="false" alpha="0.7"
+                   url="http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Census_USA/MapServer"/>
+            <layer label="Boundaries and Places" type="tiled" visible="true"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places_Alternate/MapServer"/>
+        </operationallayers>
+    </map>
+
+    <!-- widgets organized into widget containers that manage close/open etc -->
+    <!-- supported layout property options: horizontal(default)|float|vertical|fix-->
+    <widgetcontainer layout="float">
+        <widget label="Pick a theme"
+                preload="open"
+                left="105" top="55"
+                icon="assets/images/i_thematic.png"
+                config="widgets/Samples/ThematicQuery/ThematicQueryWidget.xml"
+                url="widgets/Samples/ThematicQuery/ThematicQueryWidget.swf"/>
+    </widgetcontainer>
+
+</configuration>

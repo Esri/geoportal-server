@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<configuration>
+    <layers>
+        <layer>
+            <name>Louisville Parcels</name>
+            <url>http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Louisville/LOJIC_LandRecords_Louisville/MapServer/0</url>
+            <expression>PARCELID = '[value]'</expression>
+            <textsearchlabel>Search by Parcel ID  [ Example: 181001490000 ]:</textsearchlabel>
+            <titlefield>PARCELID</titlefield>
+            <linkfield></linkfield>
+            <fields all="false">
+                <field name="PARCELID"/>
+            </fields>
+        </layer>
+        <layer>
+            <name>Louisville Police Facilities</name>
+            <url>http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Louisville/LOJIC_PublicSafety_Louisville/MapServer/3</url>
+            <expression>PD_NAME = '[value]'</expression>
+            <textsearchlabel>Search Police Stations by name... [ Example: 2ND DIVISION ]</textsearchlabel>
+            <titlefield>PD_NAME</titlefield>
+            <linkfield></linkfield>
+            <fields all="false">
+                <field name="PD_NAME"/>
+                <field name="ADDRESS" alias="Address"/>
+            </fields>
+        </layer>
+    </layers>
+    <zoomscale>5000</zoomscale>
+    <info>widgets/InfoTemplates/InfoPopupWidget.swf</info>
+</configuration>

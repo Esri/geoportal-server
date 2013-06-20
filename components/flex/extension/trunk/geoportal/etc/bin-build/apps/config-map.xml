@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////
+//
+// Copyright (c) 2010 ESRI
+//
+// All rights reserved under the copyright laws of the United States.
+// You may freely redistribute and use this software, with or
+// without modification, provided you include the original copyright
+// and use restrictions.  See use restrictions in the file:
+// <install location>/License.txt
+//
+// Read more about ArcGIS Viewer for Flex 2.2 - http://links.esri.com/flexviewer
+//
+////////////////////////////////////////////////////////////////////////////////
+-->
+<configuration>
+    <title>ArcGIS Viewer for Flex</title>
+    <subtitle>... focused on the map</subtitle>
+    <logo>assets/images/logo.png</logo>
+    <style>
+        <!-- Sage Green -->
+        <colors>0x333333,0xAFCFAF,0xFFFFAB,0xEAEA9D,0x333333</colors>
+    </style>
+
+    <widget left="10"  top="50"   config="widgets/Navigation/NavigationWidget.xml" url="widgets/Navigation/NavigationWidget.swf"/>
+    <widget right="-2" bottom="-2" config="widgets/OverviewMapWidget.xml" url="widgets/OverviewMap/OverviewMapWidget.swf"/>
+    <widget right="5" top="3" config="widgets/MapSwitcher/MapSwitcherWidget.xml" url="widgets/MapSwitcher/MapSwitcherWidget.swf"/>
+
+    <map initialextent="-85.98 38.12 -85.51 38.38" fullextent="-150 -50 150 50" top="40">
+        <basemaps>
+            <layer label="Street Map" type="tiled" visible="true" alpha="1" icon="assets/images/i_highway.png"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer"/>
+            <layer label="Satellite Map" type="tiled" visible="false" alpha="1" icon="assets/images/i_shuttle.png"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/ESRI_Imagery_World_2D/MapServer"/>
+        </basemaps>
+        <operationallayers>
+            <layer label="Fires" type="feature" visible="true" alpha="1" icon=""
+                   info="widgets/InfoTemplates/SimpleInfoWinWidget.swf"
+                   infoconfig="widgets/InfoTemplates/IWT_Fires.xml"
+                   url="http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Fire/Sheep/FeatureServer/0"/>
+        </operationallayers>
+    </map>
+
+    <widgets layout="float">
+        <widget label="Traffic Camera (QueryWidget)"
+            config="widgets/Query/QueryWidget_Louisville_TrafficCams.xml"
+            icon="assets/images/i_camera.png"
+            left="100" top="100"
+            preload="open"
+            url="widgets/Query/QueryWidget.swf"/>
+    </widgets>
+
+</configuration>

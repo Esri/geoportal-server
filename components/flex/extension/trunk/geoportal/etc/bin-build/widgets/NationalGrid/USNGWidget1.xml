@@ -1,0 +1,86 @@
+<?xml version="1.0" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////
+//
+// Copyright © 2008 - 2009 ESRI
+//
+// All rights reserved under the copyright laws of the United States.
+// You may freely redistribute and use this software, with or
+// without modification, provided you include the original copyright
+// and use restrictions.  See use restrictions in the file:
+// <install location>/FlexViewer/License.txt
+//
+////////////////////////////////////////////////////////////////////////////////
+-->
+<configuration>
+	<graticule>
+		<numberOfGrids>4</numberOfGrids>
+		<line>
+			<color>0x770000</color>
+			<alpha>.3</alpha>
+			<width>1</width>
+			<dashArray>12,3,2,3</dashArray>
+		</line>
+		<text>
+			<color>0xff0000</color>
+			<background>true</background>
+			<backgroundColor>0xffffff</backgroundColor>
+			<border>true</border>
+			<borderColor>0x000000</borderColor>
+			<size>12</size>
+			<alpha>1</alpha>
+		</text>
+		<useDMM>true</useDMM>
+	</graticule>
+	<mgrsLayer>
+		<utm>
+			<maxScale>40000000</maxScale>
+			<minScale>0</minScale>
+			<line>
+				<color>0x007700</color>
+				<alpha>.2</alpha>
+				<width>3</width>
+			</line>
+			<text>
+				<color>0x00AA00</color>
+				<size>24</size>
+				<bold>true</bold>
+				<italic>true</italic>
+				<font>Arial</font>
+			</text>
+		</utm>
+		<mgrs>
+			<maxScale>10000000</maxScale>
+			<minScale>0</minScale>
+			<line>
+				<color>0x000077</color>
+				<alpha>.3</alpha>
+				<width>2</width>
+			</line>
+			<text>
+				<color>0x000077</color>
+				<size>12</size>
+				<bold>false</bold>
+				<italic>false</italic>
+				<font>Arial</font>
+			</text>
+		</mgrs>
+		<mgrsFineGrid>
+			<maxScale>2000000</maxScale>
+			<minScale>0</minScale>
+			<line>
+				<color>0x000077</color>
+				<alpha>.3</alpha>
+				<width>1</width>
+			</line>
+			<text>
+				<color>0x000077</color>
+				<size>9</size>
+				<bold>false</bold>
+				<italic>false</italic>
+				<font>Arial</font>
+			</text>
+		</mgrsFineGrid>
+	</mgrsLayer>
+</configuration>
+

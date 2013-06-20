@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:viewer="com.esri.viewer.*"
+                   xmlns:GeoRSS="widgets.GeoRSS.*"
+                   x="600" y="300"
+                   widgetConfigLoaded="init()">
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.Graphic;
+            import com.esri.ags.geometry.Geometry;
+            import com.esri.ags.geometry.MapPoint;
+            import com.esri.ags.geometry.Polygon;
+            import com.esri.ags.geometry.Polyline;
+            import com.esri.ags.layers.GraphicsLayer;
+            import com.esri.ags.symbols.PictureMarkerSymbol;
+            import com.esri.ags.symbols.SimpleFillSymbol;
+            import com.esri.ags.symbols.SimpleLineSymbol;
+            import com.esri.ags.symbols.Symbol;
+            import com.esri.ags.utils.WebMercatorUtil;
+            import com.esri.viewer.AppEvent;
+            import com.esri.viewer.IInfowindowTemplate;
+            import com.esri.viewer.ViewerContainer;
+            import com.esri.viewer.utils.GeoRSSUtil;
+            import com.esri.viewer.utils.Namespaces;
+
+            import mx.collections.ArrayCollection;
+            import mx.controls.Alert;
+            import mx.core.UIComponent;
+            import mx.events.FlexEvent;
+            import mx.rpc.events.ResultEvent;
+
+            import spark.components.supportClasses.ItemRenderer;
+
+            private static const ATOM:Namespace = Namespaces.ATOM_NS;
+
+            private static const RE:RegExp = /M[ ](?P<mag>[^,]+),\.*/;
+
+            //labels
+            private var loadingLabel:String;
+
+            private var querySource:String;
+            private var queryExpr:String;
+            private var queryFields:XMLList;
+            private var queryTitleField:String;
+            private var queryLinkField:String;
+            private var queryRefreshRate:String;
+            private var zoomScale:Number = 50000;
+
+            [Bindable]
+            private var msgVisible:Boolean = false;
+            [Bindable]
+            private var geoRSSFeedAC:ArrayCollection;
+
+            private var ac:ArrayCollection;
+            private var graphicsLayer:GraphicsLayer;
+            private var highlightTimer:uint;
+            private var infowidgetReady:Boolean = false;
+            private var infoUrl:String;
+            private var rsstype:String = "";
+            private var symbols:XML = null;
+            private var timer:Timer;
+            private var useProxy:Boolean;
+
+            // symbols
+            private var resultMarkerSymbol:Symbol;
+            private var resultLineSymbol:Symbol;
+            private var resultFillSymbol:Symbol;
+
+            private function init():void
+            {
+                if (configXML)
+                {
+                    infoUrl = configXML.info;
+                    //labels
+                    loadingLabel = configXML.labels.loadinglabel || getDefaultString("loadingLabel");
+
+                    querySource = configXML.source;
+                    queryExpr = configXML.query;
+                    queryFields = configXML.fields.field;
+                    queryTitleField = configXML.titlefield;
+                    queryLinkField = configXML.linkfield;
+                    queryRefreshRate = configXML.refreshrate;
+                    if (Number(configXML.zoomscale) > 0)
+                    {
+                        zoomScale = Number(configXML.zoomscale);
+                    }
+                    //marker symbol
+                    const resultMarkerSymbolURL:String = configXML.symbols.picturemarkersymbol.@url || widgetIcon;
+                    const resultMarkerSymbolHeight:Number = configXML.symbols.picturemarkersymbol.@height || 30;
+                    const resultMarkerSymbolWidth:Number = configXML.symbols.picturemarkersymbol.@width || 30;
+                    const resultMarkerSymbolXOffset:Number = configXML.symbols.picturemarkersymbol.@xoffset || 0;
+                    const resultMarkerSymbolYOffset:Number = configXML.symbols.picturemarkersymbol.@yoffset || 0;
+                    resultMarkerSymbol = new PictureMarkerSymbol(resultMarkerSymbolURL, resultMarkerSymbolWidth, resultMarkerSymbolHeight, resultMarkerSymbolXOffset, resultMarkerSymbolYOffset);
+
+                    //line symbol
+                    const resultLineSymbolColor:uint = configXML.symbols.simplelinesymbol.@color || 0xFF0000;
+                    const resultLineSymbolAlpha:Number = configXML.symbols.simplelinesymbol.@alpha || 0.8;
+                    const resultLineSymbolWidth:Number = configXML.symbols.simplelinesymbol.@width || 2;
+                    resultLineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, resultLineSymbolColor, resultLineSymbolAlpha, resultLineSymbolWidth);
+
+                    // fill symbol
+                    const resultFillSymbolColor:uint = configXML.symbols.simplefillsymbol.@color || 0xFF0000;
+                    const resultFillSymbolAlpha:Number = configXML.symbols.simplefillsymbol.@alpha || 0.5;
+                    const resultFillSymbolOutlineColor:uint = configXML.symbols.simplefillsymbol.outline.@color || 0xFF0000;
+                    const resultFillSymbolOutlineAlpha:Number = configXML.symbols.simplefillsymbol.outline.@alpha || 0.8;
+                    const resultFillSymbolOutlineWidth:Number = configXML.symbols.simplefillsymbol.outline.@width || 2;
+                    resultFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, resultFillSymbolColor, resultFillSymbolAlpha, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, resultFillSymbolOutlineColor, resultFillSymbolOutlineAlpha, resultFillSymbolOutlineWidth));
+
+                    graphicsLayer = new GraphicsLayer();
+                    graphicsLayer.name = "GeoRSS Feed";
+                    graphicsLayer.symbol = resultMarkerSymbol;
+                    graphicsLayer.addEventListener(FlexEvent.HIDE, graphicsLayer_hideHandler);
+                    map.addLayer(graphicsLayer);
+
+                    //useproxy
+                    if (configXML.useproxy.length() > 0)
+                    {
+                        useProxy = configXML.useproxy == "true";
+                    }
+
+                    var data:Object = {
+                            id: String(this.widgetId),
+                            url: infoUrl,
+                            config: null
+                        };
+
+                    ViewerContainer.dispatchEvent(new AppEvent(AppEvent.DATA_CREATE_INFOWIDGET, data, infoReady));
+                }
+            }
+
+            private function graphicsLayer_hideHandler(event:FlexEvent):void
+            {
+                if (map.infoWindow.content === infoTemplate)
+                {
+                    map.infoWindow.hide();
+                }
+            }
+
+            private var infoTemplate:IInfowindowTemplate;
+
+            private function infoReady(event:AppEvent):void
+            {
+                var id:Number = Number(event.data.id);
+                if (id == this.widgetId)
+                {
+                    infoTemplate = event.data.infoWidget;
+                    queryRSSData();
+                    startWidgetTimer();
+                }
+            }
+
+            //start widget timer
+            private function startWidgetTimer():void
+            {
+                if (queryRefreshRate)
+                {
+                    var seconds:Number = Number(queryRefreshRate);
+                    var rate:Number = seconds * 1000;
+                    stopWidgetTimer();
+                    timer = new Timer(rate);
+                    timer.addEventListener(TimerEvent.TIMER, timerTick);
+                    timer.start();
+                }
+            }
+
+            //stop widget timer
+            private function stopWidgetTimer():void
+            {
+                if (timer != null)
+                {
+                    if (timer.running)
+                    {
+                        timer.stop();
+                    }
+                }
+            }
+
+            //timer tick
+            private function timerTick(event:TimerEvent):void
+            {
+                queryRSSData();
+            }
+
+            //query rss data
+            private function queryRSSData():void
+            {
+                if (querySource)
+                {
+                    if (useProxy && configData.proxyUrl)
+                    {
+                        rssService.url = configData.proxyUrl + "?" + querySource;
+                    }
+                    else
+                    {
+                        rssService.url = querySource;
+                    }
+                    rssService.send();
+                    showMessage(loadingLabel, true);
+                }
+            }
+
+            //fault handler
+            private function faultHandler(event:mx.rpc.events.FaultEvent):void
+            {
+                var sInfo:String = getDefaultString("errorLabel") + ":";
+                sInfo += "Event Target: " + event.target + "\n\n";
+                sInfo += "Event Type: " + event.type + "\n\n";
+                sInfo += "Fault Code: " + event.fault.faultCode + "\n\n";
+                sInfo += "Fault Info: " + event.fault.faultString;
+                Alert.show(sInfo, wTemplate.widgetTitle);
+            }
+
+            //load RSS data
+            private function loadRSSData(event:ResultEvent):void
+            {
+                try
+                {
+                    if (event.result is XML)
+                    {
+                        var x:XML = XML(event.result);
+                        if (x.name() == "rss" && Number(x.@version) <= 2)
+                        {
+                            rsstype = "RSS";
+                            ac = parseRSS(x);
+                        }
+                        else if (x.namespace().uri.toLowerCase() == "http://www.w3.org/2005/atom")
+                        {
+                            rsstype = "ATOM";
+                            ac = parseAtom(x);
+                        }
+                        else
+                        {
+                            showMessage("Unable to determine RSS feed type.", false);
+                        }
+                    }
+                    else
+                    {
+                        showMessage("HTTP Response is not XML.", false);
+                    }
+                    geoRSSFeedAC = createGeoRSSFeed(ac);
+
+                    addSharedData(widgetTitle, geoRSSFeedAC);
+                    clearMessage();
+                }
+                catch (error:Error)
+                {
+                    showMessage("A problem occured while parsing the RSS feed. " + error.message, false);
+                }
+            }
+
+            //create record data
+            private function createGeoRSSFeed(ac:ArrayCollection):ArrayCollection
+            {
+                graphicsLayer.clear();
+                var result:ArrayCollection = new ArrayCollection();
+
+                for (var i:Number = 0; i < ac.length; i++)
+                {
+                    var recxml:XML = XML(ac.getItemAt(i));
+
+                    var geometry:Geometry = GeoRSSUtil.toGeometry(recxml);
+                    if (geometry == null)
+                    {
+                        continue;
+                    }
+
+                    var icon:String = widgetIcon;
+                    var title:String = "";
+                    if (queryTitleField)
+                    {
+                        title = recxml[queryTitleField];
+                    }
+                    if (!title)
+                    {
+                        title = widgetTitle;
+                    }
+                    var content:String = "";
+                    var j:Number = 0;
+                    for each (var fieldXML:XML in queryFields)
+                    {
+                        var value:String = recxml[fieldXML.@name[0]];
+                        if (value)
+                        {
+                            if (fieldXML.@alias[0])
+                            {
+                                content += fieldXML.@alias[0];
+                            }
+                            else
+                            {
+                                content += fieldXML.@name[0];
+                            }
+                            content += ": " + value + "\n";
+                        }
+                    }
+                    var link:String;
+                    if (queryLinkField)
+                    {
+                        link = recxml[queryLinkField];
+                    }
+
+                    if (map.spatialReference.wkid == 102113 || map.spatialReference.wkid == 102100 || map.spatialReference.wkid == 3857)
+                    {
+                        geometry = WebMercatorUtil.geographicToWebMercator(geometry);
+                    }
+
+                    var graphic:Graphic = new Graphic(geometry);
+                    graphic.addEventListener(MouseEvent.ROLL_OVER, mouseOverGraphic);
+
+                    var geoRSSFeed:GeoRSSFeed = new GeoRSSFeed;
+                    geoRSSFeed.title = title;
+                    geoRSSFeed.content = content;
+                    geoRSSFeed.point = getGeomCenter(geometry);
+                    geoRSSFeed.link = link;
+                    geoRSSFeed.geometry = geometry;
+                    switch (geometry.type)
+                    {
+                        case Geometry.POLYLINE:
+                        {
+                            graphic.symbol = geoRSSFeed.symbol = resultLineSymbol;
+                            break;
+                        }
+                        case Geometry.POLYGON:
+                        {
+                            graphic.symbol = geoRSSFeed.symbol = resultFillSymbol;
+                            break;
+                        }
+                        case Geometry.MAPPOINT:
+                        {
+                            graphic.symbol = geoRSSFeed.symbol = resultMarkerSymbol;
+                            break;
+                        }
+                    }
+                    graphic.attributes = geoRSSFeed;
+                    if (geoRSSFeed.point && !isNaN(geoRSSFeed.point.x) && !isNaN(geoRSSFeed.point.y)) // make sure it is a valid point
+                    {
+                        result.addItem(geoRSSFeed);
+                        graphicsLayer.add(graphic);
+                    }
+                }
+                return result;
+            }
+
+            //parse atom
+            private function parseAtom(x:XML):ArrayCollection
+            {
+                var ac:ArrayCollection = new ArrayCollection();
+                for each (var entryXML:XML in x.ATOM::entry)
+                {
+                    ac.addItem(entryXML);
+                }
+                return ac;
+            }
+
+            //parse rss
+            private function parseRSS(x:XML):ArrayCollection
+            {
+                var result:ArrayCollection = new ArrayCollection();
+                for each (var itemXML:XML in x.channel.item)
+                {
+                    result.addItem(itemXML);
+                }
+                return result;
+            }
+
+            // get a feed item icon or return the default
+            private function getFeedItemSymbol():String
+            {
+                return "";
+            }
+
+            //get geom center
+            private function getGeomCenter(geom:Geometry):MapPoint
+            {
+                var pt:MapPoint;
+                switch (geom.type)
+                {
+                    case Geometry.MAPPOINT:
+                    {
+                        pt = geom as MapPoint;
+                        break;
+                    }
+                    case Geometry.POLYLINE:
+                    {
+                        var pl:Polyline = geom as Polyline;
+                        var pathCount:Number = pl.paths.length;
+                        var pathIndex:int = int((pathCount / 2) - 1);
+                        var midPath:Array = pl.paths[pathIndex];
+                        var ptCount:Number = midPath.length;
+                        var ptIndex:int = int((ptCount / 2) - 1);
+                        pt = pl.getPoint(pathIndex, ptIndex);
+                        break;
+                    }
+                    case Geometry.POLYGON:
+                    {
+                        const poly:Polygon = geom as Polygon;
+                        pt = poly.extent.center;
+                        break;
+                    }
+                }
+                return pt;
+            }
+
+            //mouse over graphic
+            private function mouseOverGraphic(event:MouseEvent):void
+            {
+                var gra:Graphic = event.currentTarget as Graphic;
+                var infoData:Object = gra.attributes;
+                showHighlight([ infoData ]);
+            }
+
+            private function mouseOverGeoRSSFeed(event:Event):void
+            {
+                clearTimeout(highlightTimer);
+                highlightTimer = setTimeout(showHighlight, 800, [ ItemRenderer(event.target).data as GeoRSSFeed ]);
+            }
+
+            private function mouseOutGeoRSSFeed(event:Event):void
+            {
+                clearTimeout(highlightTimer);
+            }
+
+            private function clickGeoRSSFeed(event:Event):void
+            {
+                var geoRSSFeed:GeoRSSFeed = ItemRenderer(event.target).data as GeoRSSFeed;
+                if (map.scale > zoomScale)
+                {
+                    map.scale = zoomScale;
+                }
+                map.centerAt(geoRSSFeed.point);
+            }
+
+            private function showHighlight(params:Array):void
+            {
+                var infoData:Object = params[0];
+                if (infoData)
+                {
+                    map.infoWindow.content = infoTemplate as UIComponent;
+                    map.infoWindow.label = infoData.title || "";
+                    infoTemplate.data = infoData;
+                    map.infoWindow.show(infoData.point);
+                }
+                else
+                {
+                    map.infoWindow.hide();
+                }
+            }
+
+            private function showMessage(msg:String, swfVisible:Boolean):void
+            {
+                txtMessage.htmlText = msg;
+                swfMessage.visible = swfVisible;
+                msgVisible = true;
+            }
+
+            private function clearMessage():void
+            {
+                msgVisible = false;
+            }
+
+            private function widgetClosedHandler(event:Event):void
+            {
+                graphicsLayer.visible = false;
+                stopWidgetTimer();
+                showHighlight([ null ]);
+            }
+
+            private function widgetOpenedHandler(event:Event):void
+            {
+                if (graphicsLayer)
+                {
+                    graphicsLayer.visible = true;
+                }
+                startWidgetTimer();
+            }
+        ]]>
+    </fx:Script>
+
+    <fx:Declarations>
+        <!-- HTTP SERVICE -->
+        <mx:HTTPService id="rssService"
+                        fault="faultHandler(event)"
+                        result="loadRSSData(event)"
+                        resultFormat="e4x"/>
+    </fx:Declarations>
+
+    <viewer:WidgetTemplate id="wTemplate"
+                           width="330" height="300"
+                           closed="widgetClosedHandler(event)"
+                           minHeight="100"
+                           minWidth="300"
+                           open="widgetOpenedHandler(event)">
+        <s:NavigatorContent width="100%" height="100%">
+            <s:layout>
+                <s:VerticalLayout gap="1"/>
+            </s:layout>
+            <s:HGroup id="boxMessage"
+                      width="100%"
+                      includeInLayout="{msgVisible}"
+                      visible="{msgVisible}">
+                <mx:Image id="swfMessage"
+                          source="assets/images/loader.swf"
+                          visible="false"/>
+                <mx:Text id="txtMessage"
+                         width="90%"
+                         text=""/>
+            </s:HGroup>
+            <s:Scroller width="100%" height="100%"
+                        horizontalScrollPolicy="off">
+                <GeoRSS:GeoRSSFeedDataGroup id="geoRSSFeedDG"
+                                            dataProvider="{geoRSSFeedAC}"
+                                            geoRSSFeedClick="clickGeoRSSFeed(event)"
+                                            geoRSSFeedMouseOut="mouseOutGeoRSSFeed(event)"
+                                            geoRSSFeedMouseOver="mouseOverGeoRSSFeed(event)">
+                    <GeoRSS:layout>
+                        <s:VerticalLayout gap="2"
+                                          horizontalAlign="justify"
+                                          useVirtualLayout="true"/>
+                    </GeoRSS:layout>
+                </GeoRSS:GeoRSSFeedDataGroup>
+            </s:Scroller>
+        </s:NavigatorContent>
+    </viewer:WidgetTemplate>
+
+</viewer:BaseWidget>
