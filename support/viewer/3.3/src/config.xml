@@ -41,37 +41,18 @@
     <!-- widgets organized into widget containers that manage close/open etc -->
     <!-- supported layout property options: horizontal(default)|float|vertical|fix-->
     <widgetcontainer layout="float">
-        <widget label="Bookmarks"         left="430" top="90"
-                icon="assets/images/i_bookmark.png"
-                config="widgets/Bookmark/BookmarkWidget.xml"
-                url="widgets/Bookmark/BookmarkWidget.swf"/>
-        <widget label="Louisville Police" left="590" top="280"
-                icon="assets/images/i_police.png"
-                config="widgets/Query/QueryWidget_Louisville_PoliceStations.xml"
-                url="widgets/Query/QueryWidget.swf"/>
-        <widget label="Search" left="80" top="280"
+        <widget label="Layer List"
+                icon="assets/images/i_layers.png"
+                config="widgets/LayerList/LayerListWidget.xml"
+                url="widgets/LayerList/LayerListWidget.swf"/>    
+        
+        <widget label="Geoportal Search"
+                left="100"
+                top="50"
+                preload="open"
                 icon="assets/images/i_search.png"
-                config="widgets/Search/SearchWidget_Louisville.xml"
-                url="widgets/Search/SearchWidget.swf"/>
-        <widget label="Earthquakes (GeoRSS)" left="410" top="280"
-                icon="assets/images/i_rss.png"
-                config="widgets/GeoRSS/GeoRSSWidget.xml"
-                url="widgets/GeoRSS/GeoRSSWidget.swf"/>
-        <widget label="Draw" left="60" top="400"
-                icon="assets/images/i_draw2.png"
-                config="widgets/Draw/DrawWidget.xml"
-                url="widgets/Draw/DrawWidget.swf"/>
-        <widget label="Print" left="390" top="400"
-                icon="assets/images/i_print.png"
-                config="widgets/Print/PrintWidget.xml"
-                url="widgets/Print/PrintWidget.swf"/>
-
-        <!--
-        <widget label="My first widget"
-                icon="assets/images/i_widget.png"
-                config="widgets/Samples/HelloWorld/HelloWorldWidget.xml"
-                url="widgets/Samples/HelloWorld/HelloWorldWidget.swf"/>
-        -->
+                config="widgets/FindData/FindDataWidget.xml"
+                url="widgets/FindData/FindDataWidget.swf"/>  
     </widgetcontainer>
     
 </configuration>
