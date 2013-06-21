@@ -422,6 +422,7 @@ dojo.addOnLoad(function() {
   var closeFoldersDialog = dojo.byId("closeFoldersDialog");
   var foldersDiv = dojo.byId("foldersDiv");
   var ownersDiv = dojo.byId("ownersDiv");
+  var ownersSearchText = dojo.byId("ownersSearchText");
   
   
   dojo.connect(fetchOwners,"onclick",function(evt){
@@ -469,6 +470,12 @@ dojo.addOnLoad(function() {
     searchOwners();
   });
   
+  dojo.connect(ownersSearchText,"onkeydown",function(evt){
+    if (evt.keyCode==13) {
+      dojo.empty(ownersDiv);
+      searchOwners();
+    }
+  })
   
   dojo.addClass(dijit.byId("foldersDialog").domNode,"tundra");
   dojo.addClass(dijit.byId("ownersDialog").domNode,"tundra");
@@ -487,7 +494,7 @@ function getSelf() {
     callbackParamName: "callback"
   }).then(function(response){
     if (response) {
-      if (response.role==="org_admin") {
+      if (response.role==="org_admin" || response.role==="account_admin") {
         dojo.query("[data-type=search]").style("display","inline");
       } else {
         var caption = response.fullName + " (" + response.username + ")";
