@@ -494,7 +494,7 @@ function getSelf() {
     callbackParamName: "callback"
   }).then(function(response){
     if (response) {
-      if (response.role==="org_admin" || response.role==="account_admin") {
+      if (response.role==="account_admin") {
         dojo.query("[data-type=search]").style("display","inline");
       } else {
         var caption = response.fullName + " (" + response.username + ")";
