@@ -524,11 +524,11 @@ function searchOwners() {
         var caption = owner.fullName + " (" + owner.username + ")";
         var folderDiv = dojo.create("div",null,ownersDiv);
         var folderLink = dojo.create("a",{href:"#", innerHTML: caption},folderDiv);
-        dojo.connect(folderLink,"onclick",function(evt){
-          dojo.attr("harvestCreate:dest-o","value",owner.username);
+        dojo.connect(folderLink,"onclick",dojo.hitch({username: owner.username},function(evt){
+          dojo.attr("harvestCreate:dest-o","value",this.username);
           var ownersDialog = dijit.byId("ownersDialog");
           ownersDialog.hide();
-        });
+        }));
       }
     }
   },function(error){
@@ -557,11 +557,11 @@ function searchFolders() {
         var caption = folder.title + " (" + folder.id + ")";
         var folderDiv = dojo.create("div",null,foldersDiv);
         var folderLink = dojo.create("a",{href:"#", innerHTML: caption},folderDiv);
-        dojo.connect(folderLink,"onclick",function(evt){
-          dojo.attr("harvestCreate:dest-f","value",folder.id);
+        dojo.connect(folderLink,"onclick",dojo.hitch({folderId: folder.id},function(evt){
+          dojo.attr("harvestCreate:dest-f","value",this.folderId);
           var foldersDialog = dijit.byId("foldersDialog");
           foldersDialog.hide();
-        });
+        }));
       }
     }
   },function(error){
