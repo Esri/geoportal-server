@@ -25,6 +25,7 @@ import com.esri.gpt.agp.client.AgpSearchCriteria;
 import com.esri.gpt.agp.client.AgpSearchRequest;
 import com.esri.gpt.agp.client.AgpUtil;
 import com.esri.gpt.agp.multipart2.MultipartProvider;
+import com.esri.gpt.framework.http.HttpClientException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -616,9 +617,12 @@ push-working.jsp
       sourceRequest.search(this.source.getConnection(),this.source.getSearchCriteria(), 
         new AgpItemListener() {
           @Override
-          public void onItemLoaded(AgpConnection connection, AgpItem item)
-            throws Exception {
-            AgpPush.this.syncItem(item);
+          public void onItemLoaded(AgpConnection connection, AgpItem item) throws Exception {
+            try {
+              AgpPush.this.syncItem(item);
+            } catch (HttpClientException ex) {
+              LOGGER.log(Level.FINER,"Error publishing AGP item: "+item.getProperties().toString(), ex);
+            }
           }
         }
       );
