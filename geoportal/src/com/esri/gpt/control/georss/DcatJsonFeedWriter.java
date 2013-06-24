@@ -43,7 +43,7 @@ import com.esri.gpt.framework.util.Val;
 public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 
 	private HashMap<String,String> defaultValues =  new HashMap<String,String>();
-	private DcatFields dcatfields;
+	private DcatSchemas dcatSchemas;
 	
 	protected DcatJsonFeedWriter(HttpServletRequest request,
 			RequestContext context, PrintWriter writer, RestQuery query,
@@ -164,7 +164,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
         envelopes.add(r.getEnvelope());
       }
       
-      this.dcatfields = ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getDcatFields();
+      this.dcatSchemas = ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getDcatSchemas();
       for (int i = 0; i < records.size(); i++) {
         printRecord(records.get(i), envelopes.get(i), i < records.size() - 1);
       }
@@ -183,7 +183,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     println("{");
     levelUp();
 
-    printAttributes(r, false);
+    printAttributesUserDcatMappings(r, false);
 
     levelDown();
     println("}" + (more ? "," : ""));
@@ -193,39 +193,17 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	 * Looks up dcat mapping field for a give a record
 	 * and writes response.
 	 * @param r the record
-	 * @param name the name of dcat field
+	 * @param dcatField the dcat field
 	 * @param before the indentation boolean cursor
 	 * @return the indentation boolean cursor
 	 */
-	private boolean lookUpFieldFromDcat(IFeedRecord r,String name,boolean before){
+	private boolean lookUpFieldFromDcat(IFeedRecord r,DcatField dcatField,boolean before){
 		String COMMA = ",";
-		String schemaKey = "";
-    Map<String, IFeedAttribute> index = r.getData(IFeedRecord.STD_COLLECTION_INDEX);
-    IFeedAttribute schemaKeyAttr = index.get("sys.schema.key");
-    if(schemaKeyAttr != null){
-    	schemaKey = cleanValue(schemaKeyAttr + "");    	
-    }
-		StringBuilder nameSchemaKey = new StringBuilder();
-		nameSchemaKey.append(name).append("-").append(schemaKey);
-		String key = "";
-		DcatField dcatField = null;
-		Set<String> keyset = this.dcatfields.keySet();
-		for(String k : keyset){
-			if(k.contains(nameSchemaKey.toString())){
-				key = nameSchemaKey.toString();
-				dcatField = this.dcatfields.get(k);
-				break;
-			}
-		}
-		if(key.length() == 0 && dcatField == null && this.dcatfields.containsKey(name)){
-			key = name;
-			dcatField = this.dcatfields.get(key);
-		}		
-		if(key.length() > 0){			
-    	if(dcatField.isVisible()){
-    		before = writeField(index,dcatField.getIndex(),dcatField.getName(),COMMA,before,dcatField.isDate());
-    	}
-    }else if(name.equalsIgnoreCase("identifier") && key.length() == 0){
+		String indexKey = dcatField.getIndex();
+    Map<String, IFeedAttribute> index = r.getData(IFeedRecord.STD_COLLECTION_INDEX);	
+		if(indexKey.length() > 0){			    	
+    	before = writeField(index,indexKey,dcatField.getName(),COMMA,before,dcatField.isDate());
+    }else if(dcatField.getName().equalsIgnoreCase("identifier") && indexKey.length() == 0){
     	ResourceLinks links = r.getResourceLinks();
     	before = writeFieldValue(getIdentifierUrl(links),"identifier",COMMA,before); 
     }
@@ -239,99 +217,34 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    * section
    */
   protected void printAttributesUserDcatMappings(IFeedRecord r, boolean before) {
+  	
+  	String schemaKey = "";
+		Map<String, IFeedAttribute> index = r.getData(IFeedRecord.STD_COLLECTION_INDEX);
+	  IFeedAttribute schemaKeyAttr = index.get("sys.schema.key");
+	  if(schemaKeyAttr != null){
+	  	schemaKey = cleanValue(schemaKeyAttr + "");    	
+	  }
+	  DcatFields dcatFields = null;
+	  Set<String> keys = this.dcatSchemas.keySet();
+	  for(String key : keys){
+	  	if(key.contains(schemaKey)){
+	  		dcatFields = this.dcatSchemas.get(key);
+	  		break;
+	  	}
+	  }	   
+	  if(dcatFields == null){
+	  	dcatFields = this.dcatSchemas.get("others");
+	  }
+	  if(dcatFields == null) return;
+     
   	printTab();
-    before = lookUpFieldFromDcat(r,"title",before);
-    before = lookUpFieldFromDcat(r,"abstract",before);
-    before = lookUpFieldFromDcat(r,"keyword",before);
-    before = lookUpFieldFromDcat(r,"modified",before);
-    before = lookUpFieldFromDcat(r,"publisher",before);
-    before = lookUpFieldFromDcat(r,"person",before);
-    before = lookUpFieldFromDcat(r,"mbox",before);
-    before = lookUpFieldFromDcat(r,"identifier",before);                  
-    before = lookUpFieldFromDcat(r,"accessLevel",before);   
-    before = lookUpFieldFromDcat(r,"dataDictionary",before);
-    
+		for(DcatField dcatField : dcatFields){
+			before = lookUpFieldFromDcat(r,dcatField,before);
+		}
     ResourceLinks links = r.getResourceLinks();
-    printLinks(links, true, before);    
-    before = false;
-    printTab();
-    before = lookUpFieldFromDcat(r,"webService",before);
-    before = lookUpFieldFromDcat(r,"format",before);
-    before = lookUpFieldFromDcat(r,"license",before);
-    before = lookUpFieldFromDcat(r,"spatial",before);
-    before = lookUpFieldFromDcat(r,"temporal",before);    
-    print(false, "\r\n");
+    printLinks(links, false, before);   
   }
-  
-  /**
-   * Prints attributes.
-   * @param r record
-   * @param more <code>true</code> if more info will be printed after that
-   * section
-   */
-  protected void printAttributes(IFeedRecord r, boolean before) {
-  	
-  	if(this.dcatfields.size() > 0){
-  		printAttributesUserDcatMappings(r, before);
-  		return;
-  	}
-  	
-    Map<String, IFeedAttribute> index = r.getData(IFeedRecord.STD_COLLECTION_INDEX);
-
-    String COMMA = ",";
-    String SPACE = " ";
-
-    if (checkAttr("title")) {
-      before = printAttr(before, "title", cleanValue(r.getTitle()));
-    }
-    if (checkAttr("summary")) {
-      before = printAttr(before, "abstract", cleanValue(r.getAbstract()));
-    }
-    
-    before = writeField(index,"keywords,dataTheme,apisoTopicCategory","keyword",COMMA,before,false);
-    
-    if (checkAttr("dateModified") && r.getModfiedDate() instanceof Date) {
-      before = printAttr(before, "modified", DF.format(r.getModfiedDate()));
-    }
-    
-    before = writeField(index,"apiso.OrganizationName,publisher","publisher",COMMA, before,false);
-    
-    before = writeField(index,"dcat.person","person",COMMA,before,false);
-    before = writeField(index,"dcat.mbox","mbox",COMMA,before,false);
-    ResourceLinks links = r.getResourceLinks();
-    boolean  isIso = false;
-    IFeedAttribute schemaKey = index.get("sys.schema.key");
-    if(schemaKey != null){
-    	String sk = cleanValue(schemaKey + "");
-    	if(sk.equalsIgnoreCase("iso-19115")||sk.equalsIgnoreCase("iso-19119")){
-    		before = writeField(index,"fileIdentifier","identifier",COMMA,before,false);
-    		isIso = true;
-    	}else{    
-      	before = writeFieldValue(getIdentifierUrl(links),"identifier",COMMA,before);      	
-      }
-    }else{    
-    	before = writeFieldValue(getIdentifierUrl(links),"identifier",COMMA,before);
-    }
- 
-    before = writeField(index,"dcat.accessLevel","accessLevel",COMMA,before,false);
-    before = writeField(index,"dcat.dataDictionary","dataDictionary",COMMA,before,false);
-    printLinks(links, true, before);
-    before = false;
-    before = writeField(index,"resource.url","webService",COMMA,before,false);
-    
-    before = writeField(index,"contentType", "format",COMMA,before,false);
-    before = writeField(index,"dcat.license","license",COMMA,before,false);
-    before = writeField(index,"envelope.minx,envelope.miny,envelope.maxx,envelope.maxy","spatial",SPACE,before,false);
-    if(isIso){    	
-    	before = writeField(index,"apiso.TempExtent_begin,apiso.TempExtent_end","temporal",COMMA,before,true);
-    } else {
-    	before = writeField(index,"timeperiod.l.0,timeperiod.u.0","temporal",COMMA,before,true);
-    }
-  
-    print(false, "\r\n");
-
-  }
-	
+ 	
   /**
    * Finds metadata url from resource links
    * @param links the resource links
@@ -593,5 +506,4 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     return outFieldsSet;
   }
 	
-
 }

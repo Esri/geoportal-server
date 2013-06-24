@@ -14,6 +14,28 @@
  */
 package com.esri.gpt.framework.context;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.apache.lucene.search.BooleanQuery;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 import com.esri.gpt.catalog.arcims.ImsService;
 import com.esri.gpt.catalog.context.CatalogConfiguration;
 import com.esri.gpt.catalog.lucene.LuceneIndexObserver;
@@ -26,6 +48,7 @@ import com.esri.gpt.control.download.DownloadConfiguration;
 import com.esri.gpt.control.download.ItemInfo;
 import com.esri.gpt.control.georss.DcatField;
 import com.esri.gpt.control.georss.DcatFields;
+import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.webharvest.engine.DataProcessorFactory;
 import com.esri.gpt.control.webharvest.engine.HarvesterConfiguration;
 import com.esri.gpt.control.webharvest.engine.LocalDataProcessorFactory;
@@ -60,27 +83,6 @@ import com.esri.gpt.framework.util.TimePeriod;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.NodeListAdapter;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-import org.apache.lucene.search.BooleanQuery;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 /**
  * Application configuration loader.
@@ -241,7 +243,7 @@ private void loadCatalog(ApplicationConfiguration appConfig, Document dom,
     
     //load dcat fields
     if(cfg.getParameters().containsKey("dcat.mappings")){
-    	loadDcatMappings(cfg.getDcatFields(),cfg.getParameters().get("dcat.mappings").getValue());
+    	loadDcatMappings(cfg.getDcatSchemas(),cfg.getParameters().get("dcat.mappings").getValue());
     }
     
     // parse http timeouts
@@ -427,48 +429,40 @@ private void loadCatalog(ApplicationConfiguration appConfig, Document dom,
 }
 
 /**
- * Loads dcat mappings
- * @param dcatFields
- * @param dcatMappings
+ * Load configured dcat mappings 
+ * @param dcatSchemas the configured dcat schemas
+ * @param dcatMappings the path to dcat mapping file
  * @throws IOException 
  * @throws SAXException 
  * @throws ParserConfigurationException 
  */
-private void loadDcatMappings(DcatFields dcatFields, String dcatMappings) throws Exception {
+private void loadDcatMappings(DcatSchemas dcatSchemas, String dcatMappings) throws Exception {
 	getLogger().log(Level.FINE, "Loading dcat mapping file: {0}", dcatMappings);
 	Document dom = DomUtil.makeDomFromResourcePath(dcatMappings, false);
 	XPath xpath = XPathFactory.newInstance().newXPath();
-  Node fields = (Node) xpath.evaluate("/fields", dom, XPathConstants.NODE);
-  if(fields != null){
-  	NodeList flds = (NodeList) xpath.evaluate("field", fields, XPathConstants.NODESET);
-  	for (int i = 0; i < flds.getLength(); i++) {
-  		Node field = flds.item(i);
-  		DcatField df = new DcatField();
-  		String name = xpath.evaluate("@name", field);
-  		df.setName(name);
-  		df.setIndex(xpath.evaluate("@index", field));
-  		String schema = "";
-  		schema = xpath.evaluate("@schema", field);
-  		if(schema.length()  > 0){
-  			df.setSchema(schema);
-  		}
-			String visible = xpath.evaluate("@visible", field);
-			if(visible.length()  > 0){
-				df.setVisible(Boolean.parseBoolean(visible));
-			}
-  		String isDate = xpath.evaluate("@isDate", field);
-			if(isDate.length()  > 0){
-				df.setDate(Boolean.parseBoolean(isDate));
-			}  		
-  		StringBuilder key = new StringBuilder();
-  		if(schema.length() > 0){
-  			key.append(name).append("-").append(schema);
-  		}else{
-  			key.append(name);
-  		}
-  		dcatFields.put(key.toString(), df);
-  	}
-  }
+	Node dcat = (Node) xpath.evaluate("/dcat", dom, XPathConstants.NODE);
+	NodeList fields = (NodeList) xpath.evaluate("fields", dcat, XPathConstants.NODESET);
+	if(fields != null){		
+		for (int j = 0; j < fields.getLength(); j++) {	  
+	  	Node fld = fields.item(j);
+	  	DcatFields dcatFields = new DcatFields();
+	  	String schema = xpath.evaluate("@schema", fld);
+	  	NodeList flds = (NodeList) xpath.evaluate("field", fld, XPathConstants.NODESET);
+	  	for (int i = 0; i < flds.getLength(); i++) {
+	  		Node field = flds.item(i);
+	  		DcatField df = new DcatField();
+	  		String name = xpath.evaluate("@name", field);
+	  		df.setName(name);
+	  		df.setIndex(xpath.evaluate("@index", field));	 	  		
+	  		String isDate = xpath.evaluate("@isDate", field);
+				if(isDate.length()  > 0){
+					df.setDate(Boolean.parseBoolean(isDate));
+				}  			  		
+	  		dcatFields.add(df);
+	  	}
+	  	dcatSchemas.put(schema, dcatFields);
+	  }
+	}
 }
 
 /**

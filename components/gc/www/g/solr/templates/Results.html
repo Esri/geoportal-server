@@ -1,0 +1,25 @@
+<div class="gResults" data-dojo-attach-point="contentNode">
+<div>
+  <div class="gResultSummary" data-dojo-attach-point="summaryNode">
+    <span class="gResultCount" data-dojo-attach-point="summaryCountNode"></span>
+    <span class="gResultPager" data-dojo-attach-point="pagerNode">
+	    <button data-dojo-type="dijit/form/Button" type="button" 
+	            data-dojo-attach-point="__pagerFirst"
+	            data-dojo-attach-event="onClick: _onPagerFirstClicked"
+	            title="${i18n.Pager.FirstTip}"
+	            >${i18n.Pager.First}</button
+	    ><button data-dojo-type="dijit/form/Button" type="button" 
+	            data-dojo-attach-point="__pagerPrevious"
+	            data-dojo-attach-event="onClick: _onPagerPreviousClicked"
+	            title="${i18n.Pager.PreviousTip}"
+	            >${i18n.Pager.Previous}</button
+	    ><button data-dojo-type="dijit/form/Button" type="button" 
+	            data-dojo-attach-point="__pagerNext"
+	            data-dojo-attach-event="onClick: _onPagerNextClicked"
+	            title="${i18n.Pager.NextTip}"
+	            >${i18n.Pager.Next}</button>
+    </span>
+  </div>
+  </div>
+  <div class="gResultItems gLinks" data-dojo-attach-point="itemsNode"></div>
+</div>

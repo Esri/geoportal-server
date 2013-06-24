@@ -13,47 +13,17 @@
  * limitations under the License.
  */
 package com.esri.gpt.control.georss;
+
+import java.util.HashMap;
+
 /**
- * Dcat field mapped object
+ * Collection of DCAT schemas
  */
-public class DcatField {
-	private String name = "";
-	private String index= "";
-	private boolean isDate = false;	
+public class DcatSchemas extends HashMap<String, DcatFields> {
+
 	/**
-	 * @return the name
+	 * 
 	 */
-	public String getName() {
-		return name;
-	}
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-	/**
-	 * @return the index
-	 */
-	public String getIndex() {
-		return index;
-	}
-	/**
-	 * @param index the index to set
-	 */
-	public void setIndex(String index) {
-		this.index = index;
-	}
-	/**
-	 * @return the isDate
-	 */
-	public boolean isDate() {
-		return isDate;
-	}
-	/**
-	 * @param isDate the isDate to set
-	 */
-	public void setDate(boolean isDate) {
-		this.isDate = isDate;
-	}	
+	private static final long serialVersionUID = 1L;
+
 }

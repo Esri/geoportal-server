@@ -1,0 +1,114 @@
+<div>
+  <div data-dojo-attach-point="containerNode">
+	  <table>
+	    <tbody>
+	      <tr>
+	        <td><label for="${id}_field]">${i18n.FacetProperties.Field}</label></td>
+	        <td>
+	          <input id="${id}_field]"
+	            data-dojo-type="dijit/form/TextBox"
+	            data-dojo-attach-point="__field" 
+	            value="${qFacet.field}" />
+	        </td>
+	      </tr> 
+        <tr>
+          <td><label for="${id}_aliasKey]">${i18n.FacetProperties.AliasKey}</label></td>
+          <td>
+            <input id="${id}_aliasKey]"
+              data-dojo-type="dijit/form/TextBox"
+              data-dojo-attach-point="__aliasKey" 
+              value="${qFacet.aliasKey}" />
+          </td>
+        </tr>   
+        <tr>
+          <td><label for="${id}_mincount]">${i18n.FacetProperties.MinCount}</label></td>
+          <td>
+            <input id="${id}_mincount]"
+              data-dojo-type="dijit/form/NumberTextBox"
+              data-dojo-attach-point="__mincount" 
+              data-dojo-props="constraints:{min:0,max:10000000,places:0},
+                               invalidMessage:'${i18n.General.InvalidEntry}'"
+              value="${qFacet.mincount}" />
+          </td>
+        </tr> 
+        <tr>
+          <td><label for="${id}_limit]">${i18n.FacetProperties.Limit}</label></td>
+          <td>
+            <input id="${id}_limit]"
+              data-dojo-type="dijit/form/NumberTextBox"
+              data-dojo-attach-point="__limit" 
+              data-dojo-props="constraints:{min:0,max:10000,places:0},
+                               invalidMessage:'${i18n.General.InvalidEntry}'"
+              value="${qFacet.limit}" />
+          </td>
+        </tr> 
+        <tr>
+          <td><label for="${id}_prefix]">${i18n.FacetProperties.Prefix}</label></td>
+          <td>
+            <input id="${id}_prefix]"
+              data-dojo-type="dijit/form/TextBox"
+              data-dojo-attach-point="__prefix" 
+              value="${qFacet.prefix}" />
+          </td>
+        </tr>
+        <tr>
+          <td><label for="${id}_missing]">${i18n.FacetProperties.Missing}</label></td>
+          <td>
+            <select name="${id}_missing" data-dojo-type="dijit/form/Select"
+                    data-dojo-attach-point="__missing">
+              <option value="false">${i18n.FacetProperties.MissingOptions.No}</option>
+              <option value="true">${i18n.FacetProperties.MissingOptions.Yes}</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="${id}_sort]">${i18n.FacetProperties.Sort}</label></td>
+          <td>
+	          <select name="${id}_sort" data-dojo-type="dijit/form/Select"
+	                  data-dojo-attach-point="__sort">
+	            <option value="count">${i18n.FacetProperties.SortOptions.Count}</option>
+	            <option value="index">${i18n.FacetProperties.SortOptions.Index}</option>
+	          </select>
+          </td>
+        </tr>
+        <tr class="fRangeBased">
+          <td><label for="${id}_rangeStart]">${i18n.FacetProperties.RangeStart}</label></td>
+          <td>
+            <input id="${id}_rangeStart]"
+              data-dojo-type="dijit/form/TextBox"
+              data-dojo-attach-point="__rangeStart" 
+              value="${qFacet.rangeStart}" />
+          </td>
+        </tr> 
+        <tr class="fRangeBased">
+          <td><label for="${id}_rangeEnd]">${i18n.FacetProperties.RangeEnd}</label></td>
+          <td>
+            <input id="${id}_rangeEnd]"
+              data-dojo-type="dijit/form/TextBox"
+              data-dojo-attach-point="__rangeEnd" 
+              value="${qFacet.rangeEnd}" />
+          </td>
+        </tr> 
+         <tr class="fRangeBased">
+          <td><label for="${id}_rangeGap]">${i18n.FacetProperties.RangeGap}</label></td>
+          <td>
+            <input id="${id}_rangeGap]"
+              data-dojo-type="dijit/form/TextBox"
+              data-dojo-attach-point="__rangeGap" 
+              value="${qFacet.rangeGap}" />
+          </td>
+        </tr> 
+	    </tbody>
+	  </table>  
+    <div class="dijitDialogPaneActionBar">
+	    <button data-dojo-type="dijit/form/Button" type="submit" 
+	            data-dojo-attach-point="__okButton"
+	            data-dojo-attach-event="onClick: _okButtonClicked"
+	            >${i18n.General.OK}</button>
+	    <button data-dojo-type="dijit/form/Button" type="button" 
+	            data-dojo-attach-point="__cancelButton"
+	            data-dojo-attach-event="onClick: onCancel"
+	            >${i18n.General.Cancel}</button>
+    </div>
+  </div>
+</div>

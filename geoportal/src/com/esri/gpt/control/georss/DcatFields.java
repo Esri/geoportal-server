@@ -14,12 +14,12 @@
  */
 package com.esri.gpt.control.georss;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * Collection of dcat fields
  */
-public class DcatFields extends HashMap<String, DcatField> {
+public class DcatFields extends ArrayList<DcatField> {
 
 	/**
 	 * 
