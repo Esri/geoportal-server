@@ -8,4 +8,24 @@
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
+  <filter>
+	    <filter-name>SolrHttpRequestFilter</filter-name>
+	    <filter-class>gc.solr.proxy.SolrHttpRequestFilter</filter-class>
+  	</filter>
+  	<filter-mapping>
+	    <filter-name>SolrHttpRequestFilter</filter-name>
+	    <url-pattern>/solr/*</url-pattern>
+  	</filter-mapping>
+  	<servlet>
+	    <servlet-name>ProxyServlet</servlet-name>
+	    <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
+	    <init-param>
+	      <param-name>targetUri</param-name>
+	      <param-value>http://datagov:80/solr</param-value>
+	    </init-param>
+  	</servlet>
+  	<servlet-mapping>
+	    <servlet-name>ProxyServlet</servlet-name>
+	    <url-pattern>/solr/*</url-pattern>
+  	</servlet-mapping>
 </web-app>
