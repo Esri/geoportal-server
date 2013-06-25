@@ -41,6 +41,7 @@ package com.esri.gpt.finddata
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.http.HTTPService;
+	import com.esri.gpt.utils.ProjectionHandler;
 
 	public class GeoRssLayer extends ArcGISDynamicMapServiceLayer
 	{

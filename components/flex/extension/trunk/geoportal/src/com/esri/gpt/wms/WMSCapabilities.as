@@ -386,7 +386,7 @@ package com.esri.gpt.wms
 		  var flattenedLayers:ArrayCollection = new ArrayCollection();
 		  flattenedLayers.addItem(layerInfo);
 		  
-		  layerInfo.id = 0;
+		  layerInfo.layerId = 0;
 		  layerInfo.parentLayerId = -1;
 		  var idIndex:Number = 0;
 		  
@@ -397,12 +397,12 @@ package com.esri.gpt.wms
 		    	    
 		    for each ( var childLayerInfo:WMSLayerInfo in layerInfo.subLayers) {
 		      idIndex++;
-		      childLayerInfo.id = idIndex;
-		      childLayerInfo.parentLayerId = layerInfo.id;
+		      childLayerInfo.layerId = idIndex;
+		      childLayerInfo.parentLayerId = layerInfo.layerId;
 		      if(layerInfo.subLayerIds == null) {
 		        layerInfo.subLayerIds = new Array();
 		      }
-		      layerInfo.subLayerIds.push(childLayerInfo.id);
+		      layerInfo.subLayerIds.push(childLayerInfo.layerId);
 		      flattenedLayers.addItem(childLayerInfo);
 		    }
 		    

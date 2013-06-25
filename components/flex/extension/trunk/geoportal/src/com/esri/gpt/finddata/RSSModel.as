@@ -453,7 +453,8 @@ package com.esri.gpt.finddata
 		  		  
 			if (url) {
 					if(bUseProxy) {
-					  httpService.url = this.proxy + escape(url);
+					  
+						httpService.url = this.proxy + encodeURIComponent(url);
 					  
 					} else {
 					  httpService.url = url;
@@ -529,7 +530,7 @@ package com.esri.gpt.finddata
         } else {
           url = url + "&";
         }
-        url = url + key.toString() + "=" + params[key];
+        url = url + key.toString() + "=" + encodeURIComponent(params[key]);
       }
       
       return url;

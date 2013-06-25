@@ -16,6 +16,10 @@ package com.esri.gpt.wms
 {
 	import mx.messaging.channels.StreamingAMFChannel;
 	
+  /**
+  * Deprecated.  Use UrlUtils com.esri.gpt.utils.WMSUrl
+  * 
+  * **/
 	public class WMSUrl
 	{   
 		private var _validUrl:Boolean = false;

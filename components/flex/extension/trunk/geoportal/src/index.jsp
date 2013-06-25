@@ -3,10 +3,10 @@
     <head>
         <title>ArcGIS Viewer for Flex</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta name="description" content="ESRI ArcGIS viewer for Flex"/>
-        <meta name="keywords" content="ESRI, ArcGIS, Flex Viewer"/>
-        <meta name="author" content="ESRI"/>
-         
+        <meta name="description" content="Esri ArcGIS viewer for Flex"/>
+        <meta name="keywords" content="Esri, ArcGIS, Flex Viewer"/>
+        <meta name="author" content="Esri"/>
+
         <!-- Include CSS to eliminate any default margins/padding and set the height of the html element and
              the body element to 100%, because Firefox, or any Gecko based browser, interprets percentage as
              the percentage of the height of its parent container, which has to be set explicitly.  Fix for
@@ -27,44 +27,75 @@
         <script type="text/javascript" src="history/history.js"></script>
         <! END Browser History required section -->
 
+        <script type="text/javascript">
+            var isIElt9 = false;
+        </script>
+        <!--[if lt IE 9]>
+            <script type="text/javascript">
+                isIElt9 = true;
+            </script>
+        <![endif]-->
         <script type="text/javascript" src="swfobject.js"></script>
         <script type="text/javascript">
         
-            //ensure your flex project name is passed in properly
-            function getFlexApp(appName) {
-              if (navigator.appName.indexOf ("Microsoft") !=-1)
-              {
-                return window[appName];
-              }
-              else
-              {
-                return document[appName];
-              }
-            } 
-            
-            function addResource(title, resource) {
-              getFlexApp("index").addResource(title, resource); 
-            }
-            
+        <!-- Geoportal Function -->
+
+        function getFlexApp(appName) {
+          if (navigator.appName.indexOf ("Microsoft") !=-1)
+          {
+            return window[appName];
+          }
+          else
+          {
+            return document[appName];
+          }
+        }
+
+        function addResource(title, resource) {
+          getFlexApp("index").addResource(title, resource); 
+        }
+        <%
+          java.util.Locale locale = request.getLocale();
+          
+		  String sConfigFile = "config.xml";
+		  String sLocaleConfig = "config_" + locale.toString() + ".xml";
+		  String sCurrentDirectory = getServletContext().getRealPath("/") + "viewer";
+		  String sConfigFilePath = sCurrentDirectory + java.io.File.separator + sLocaleConfig;
+		  java.io.File file = new java.io.File(sConfigFilePath);
+          boolean exists = file.exists();
+		  if(exists){
+		    sConfigFile = sLocaleConfig;
+		  }
+		  
+          String sLocales = locale.toString();
+          int i = 0;
+          java.util.Enumeration e = request.getLocales();
+          while (e.hasMoreElements()) {
+            sLocales += "," + ((java.util.Locale)e.nextElement()).toString();
+
+          }
+          sLocales += ",en_US";
+          sLocales = sLocales.replaceAll(",,", ",");
+           
+        %>
             <!-- For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. -->
-            var swfVersionStr = "10.0.0";
+            var swfVersionStr = "10.2.0";
             <!-- To use express install, set to playerProductInstall.swf, otherwise the empty string. -->
             var xiSwfUrlStr = "playerProductInstall.swf";
             var flashvars = {};
-            //flashvars.localeChain = "en_US";
-            //flashvars.localeChain = "de_DE,en_US";
-            //flashvars.localeChain = "es_ES,en_US";
-            //flashvars.localeChain = "fr_FR,en_US";
-            //flashvars.localeChain = "ja_JP,en_US";
-            //flashvars.localeChain = "zh_CN,en_US";
+            flashvars.localeChain = "<%=sLocales%>";
+			flashvars.config = "<%=sConfigFile%>";
             var params = {};
             params.quality = "high";
             params.bgcolor = "#ffffff";
             params.allowscriptaccess = "sameDomain";
             params.allowfullscreen = "true";
-            if (swfobject.ua.ie && swfobject.ua.win) // http://code.google.com/p/swfobject/wiki/api
+            var isAIR = navigator.userAgent.indexOf("AdobeAIR") != -1;
+            if (isAIR || isIElt9)
             {
-                params.wmode = "opaque"; // workaround for cursor issue - https://bugs.adobe.com/jira/browse/SDK-26818
+                // workaround for overlaying tool tips and other content when loaded into an AIR app
+                // workaround for cursor issue - https://bugs.adobe.com/jira/browse/SDK-26818
+                params.wmode = "opaque";
             }
             var attributes = {};
             attributes.id = "index";
@@ -87,7 +118,7 @@
         <div id="flashContent">
             <p>
                 To view this page ensure that Adobe Flash Player version
-                10.0.0 or greater is installed.
+                10.2.0 or greater is installed.
             </p>
             <script type="text/javascript">
                 var pageHost = ((document.location.protocol == "https:") ? "https://" : "http://");
@@ -113,7 +144,7 @@
                 <!--[if gte IE 6]>-->
                     <p>
                         Either scripts and active content are not permitted to run or Adobe Flash Player version
-                        10.0.0 or greater is not installed.
+                        10.2.0 or greater is not installed.
                     </p>
                 <!--<![endif]-->
                     <a href="http://www.adobe.com/go/getflashplayer">

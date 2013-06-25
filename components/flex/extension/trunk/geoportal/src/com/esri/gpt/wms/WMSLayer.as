@@ -22,13 +22,17 @@ package com.esri.gpt.wms
 	import com.esri.ags.layers.ArcGISDynamicMapServiceLayer;
 	import com.esri.ags.layers.Layer;
 	import com.esri.ags.layers.WMSLayer;
-	import com.esri.gpt.finddata.ProjectionHandler;
+	import com.esri.gpt.utils.ProjectionHandler;
+	import com.esri.gpt.utils.UrlUtils;
 	import com.esri.gpt.utils.Utils;
 	
 	import flash.display.BitmapData;
 	import flash.display.Loader;
+	import flash.events.ErrorEvent;
+	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
+	import flash.events.UncaughtErrorEvent;
 	import flash.filters.ColorMatrixFilter;
 	import flash.geom.Rectangle;
 	import flash.net.URLRequest;
@@ -37,6 +41,7 @@ package com.esri.gpt.wms
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
+	import mx.controls.Alert;
 	import mx.core.BitmapAsset;
 	import mx.core.ByteArrayAsset;
 	import mx.events.FlexEvent;
@@ -69,7 +74,7 @@ package com.esri.gpt.wms
 	  * **************************************************************************/
 	    
 	  /** Class logger **/
-	  private static const LOG:ILogger = Log.getLogger("WMSError");
+	  private static const LOG:ILogger = Log.getLogger("WMS");
     
     [Embed(source="/assets/images/cross_cursor.png")]
     private var pngImage:Class;
@@ -111,15 +116,17 @@ package com.esri.gpt.wms
 		private var _numLayersShownInitially:uint = new uint(5);
 		private var _layers:String;
 		private var _styles:String;
+    private var _sldUrl:String;
 		private var _srs:String;
 		private var _imageFormat:String = "image/png";
 		private var _imageTransparency:Boolean = true;
 		private var _backgroundColor:String = "0xFFFFFF";
 		private var _exceptions:String;
 		private var _bFlattenned:Boolean = false;		
-		private var _visibleLayers:ArrayCollection = null;
+		private var _visibleLayers:IList = null;
 		private var _layerSpatialRefs:ArrayCollection;
 		private var _map:Map;
+    
 		
 		
 		
@@ -254,7 +261,13 @@ package com.esri.gpt.wms
 		
 		[Inspectable(category="Mapping")]
 		
-		
+		public function get sldUrl():String {
+      return this._sldUrl;
+    }
+    
+    public function set sldUrl(sSldUrl:String):void {
+      this._sldUrl = sSldUrl;
+    }
 		
 		//--------------------------------------------------------------------------
 		//  Property:  styles
@@ -461,7 +474,7 @@ package com.esri.gpt.wms
 			//capsURL = capsURL.replace(/&?request=GetCapabilities/i, "");
 			//capsURL = capsURL.replace(/&?version=(\d|\.)*/i, "");
 			
-			var wmsurl:WMSUrl = new WMSUrl(capsURL);
+			var wmsurl:UrlUtils = new UrlUtils(capsURL);
 			/*if (wmsurl.valid){
 				capsURL = wmsurl.rootURL() + "?" ;
 			}*/
@@ -474,6 +487,11 @@ package com.esri.gpt.wms
 			
 			capsURL = capsURL.replace(/&request=GetMap/i, "");
 			capsURL = capsURL.replace(/&request=GetFeatureInfo/i, "");
+      //Utils.chkStringMatch(
+      /*value = wmsurl.getParameterValue("sld");
+      this.sldUrl = value;
+      capsURL = capsURL.replace(/&sld=.*([^&])/i, "");*/
+      
 			//if(capsURL.indexOf("?") < capsURL.length - 1) {
 			//  capsURL += "&";
 			//}
@@ -533,7 +551,7 @@ package com.esri.gpt.wms
 	        	              if(layerInfo != null) {
 	        	        //layerInfo.defaultVisibility = index < 
 	        	        //this.numLayersShownInitially - 1;
-	        	                layerInfo.id = index;
+	        	                layerInfo.layerId = index;
 	        	 
 	        	                   index++;
 	        	               }
@@ -590,8 +608,13 @@ package com.esri.gpt.wms
          * @private
          */
 		override protected function loadMapImage( loader:Loader ):void  {
-			
-			loadMapImageWork(loader);
+			try {
+			   loadMapImageWork(loader);
+			} catch(error:Error) {
+				dispatchEvent(new LayerEvent(WMSEVENT_GETMAPERROR, 
+					this, new Fault("WMS", "Getmap Error", 
+						error.toString() )))		
+			}
 			
 		}
 		/**
@@ -689,6 +712,15 @@ package com.esri.gpt.wms
         // WMS relies on axis order defined by the projection.  will assume
         // epsg between 4000 & 5000 has lat, lon (not always true)
         var numRequestSr:Number =parseInt(requestSR);
+        if(requestSR != null && numRequestSr.toString() == "NaN" ) {
+          var numRequestSrArr:Array = Utils.chkStringMatch(
+            requestSR.match( new RegExp(/\d+/))
+          );
+          if(numRequestSrArr.length > 0) {
+            numRequestSr = numRequestSrArr[0];
+          }
+        }
+        
 				// This WMS version has axis order dependent on CRS authority (e.g. EPSG)
 				if (requestSR && requestSR.toUpperCase().indexOf("EPSG:") != -1 &&
           (!isNaN(numRequestSr)  && numRequestSr > 4000 && numRequestSr < 5000))
@@ -712,6 +744,10 @@ package com.esri.gpt.wms
 				// Axis order: (x,y) (lon,lat)
 				mapURL += "&bbox=" + extent.xmin+","+extent.ymin+","+extent.xmax+","+extent.ymax;
 			}
+      
+      if(Utils.chkString(this.sldUrl) != "") {
+        mapURL += "&sld=" + this.sldUrl;
+      }
 			
 			if (proxyURL)
 			{
@@ -728,10 +764,33 @@ package com.esri.gpt.wms
 				logger.debug("{0}::WMS GetMap URL: {1}", id, mapURL)
 			}
 			
+			
+			var urlReq:URLRequest = new URLRequest(mapURL);
+			try {
+			  loader.close();
+			} catch(err:Error) {
+				
+			}
+			loader.x = imageRect.x;
+			loader.y = imageRect.y;
+			
+			loader.uncaughtErrorEvents.removeEventListener(
+				UncaughtErrorEvent.UNCAUGHT_ERROR, 
+				imageLoadErrorHandler);
+			loader.uncaughtErrorEvents.addEventListener(
+				UncaughtErrorEvent.UNCAUGHT_ERROR, 
+				imageLoadErrorHandler, 
+				false, 0, true);
+			loader.removeEventListener(IOErrorEvent.IO_ERROR, 
+				imageLoadErrorHandler2);
+			loader.addEventListener(IOErrorEvent.IO_ERROR, 
+				imageLoadErrorHandler2, false, 0, true);
+			loader.load(urlReq);
+						
 			var httpService:HTTPService = new HTTPService();
 			httpService.resultFormat = "e4x";
 			httpService.requestTimeout = this.requestTimeout;
-			httpService.url = mapURL;
+			httpService.url = mapURL; 
 			var token:AsyncToken = httpService.send();
 			token.url = mapURL;
 			token.layer = this;
@@ -742,38 +801,41 @@ package com.esri.gpt.wms
 				    dispatchEvent(new LayerEvent(WMSEVENT_GETMAPERROR, 
 				      event.token.layer, new Fault("WMS",error + mapURL,error)));
             
-           /* var matrix:Array = new Array();
-            matrix=matrix.concat([0,1,0,0,0]);// red
-            matrix=matrix.concat([0,0,1,0,0]);// green
-            matrix=matrix.concat([1,0,0,0,0]);// blue
-            matrix=matrix.concat([0,0,0,0,0]);// alpha
-            var my_filter:ColorMatrixFilter=new ColorMatrixFilter(matrix);
-            var bitMapAsset:BitmapAsset  = new pngImage();
-            bitMapAsset.filters=[my_filter];
-            var pngEnc:PNGEncoder = new PNGEncoder();
-            loader.x = imageRect.x;
-            loader.y = imageRect.y;
-            loader.loadBytes(pngEnc.encode(bitMapAsset.bitmapData));*/
-            
-				  } else {
-				    // Load the image URL
-			        var urlReq:URLRequest = new URLRequest(mapURL);
-			        loader.x = imageRect.x;
-			        loader.y = imageRect.y;
-			        loader.load(urlReq);
-			        //loader.loaderInfo.addEventListener(ProgressEvent.PROGRESS, f
-			           //, false, 0, true);
-			        //loader.loaderInfo.addEventListener(IOErrorEvent.IO_ERROR, 
-			         // onFault, false, 0, true);
-			      
+                
 				  }
 				},
 				function onFault( event:FaultEvent, token:Object = null ):void {
-					dispatchEvent(new LayerEvent(LayerEvent.LOAD_ERROR, 
+					
+					/*var urlReq:URLRequest = new URLRequest(mapURL);
+					loader.close();
+					loader.x = imageRect.x;
+					loader.y = imageRect.y;
+					loader.uncaughtErrorEvents.removeEventListener(
+						UncaughtErrorEvent.UNCAUGHT_ERROR, 
+						imageLoadErrorHandler);
+					loader.uncaughtErrorEvents.addEventListener(
+						UncaughtErrorEvent.UNCAUGHT_ERROR, 
+						imageLoadErrorHandler, 
+						false, 0, true);
+					loader.removeEventListener(IOErrorEvent.IO_ERROR, 
+						imageLoadErrorHandler2);
+					loader.addEventListener(IOErrorEvent.IO_ERROR, 
+						imageLoadErrorHandler2, false, 0, true);
+						
+					try {
+						loader.load(urlReq);
+					} catch(error:Error) {
+						dispatchEvent(new LayerEvent(WMSEVENT_GETMAPERROR, 
+							this, new Fault("WMS", "Getmap Error", 
+								error.toString() )))		
+					}*/
+					
+					
+					/*dispatchEvent(new LayerEvent(LayerEvent.LOAD_ERROR, 
 					  event.token.layer, new Fault("WMS", event.message
 					  + ": Error while connecting to url" + event.token.url,
 					  event.message
-					  + ": Error while connecting to url" + event.token.url)));
+					  + ": Error while connecting to url" + event.token.url)));*/
 					if (Log.isError()) {
 						logger.error("{0}::{1}", id, ObjectUtil.toString(event));
 					}
@@ -783,6 +845,31 @@ package com.esri.gpt.wms
 			
 			
 			
+		}
+		
+		private function imageLoadErrorHandler(event:UncaughtErrorEvent):void {
+			
+			var strError:String = "Error during getmap: ";
+			if (event.error is Error)
+			{
+				var error:Error = event.error as Error;
+				strError += error.toString();
+				
+			}
+			else if (event.error is ErrorEvent)
+			{
+				var errorEvent:ErrorEvent = event.error as ErrorEvent;
+				strError += errorEvent.toString();
+				
+			}
+			dispatchEvent(new LayerEvent(WMSEVENT_GETMAPERROR, 
+				this, new Fault("WMS", strError, strError )))
+
+		}
+		
+		private function imageLoadErrorHandler2(event:Event):void {
+			dispatchEvent(new LayerEvent(WMSEVENT_GETMAPERROR, 
+				this, new Fault("WMS", "Getmap Error", event.toString() )))
 		}
 		
 		public function set map(map:Map):void {
@@ -796,12 +883,12 @@ package com.esri.gpt.wms
 		
 		/**
 		 * Clears the visible layers as defined in layers and resets to the default layers of the map service.
-		 */
+		 
 		override public function defaultVisibleLayers():void
 		{
       //this.visibleLayers = _defaultVisibleLayers;
       ;
-		}
+		}*/
 		
 		private function setDefaultVisibleLayers():void {
       
@@ -896,16 +983,16 @@ package com.esri.gpt.wms
 		 * 
 		 * @arr Array of visible layers, just contains their ids
 		 * */
-		override public function set visibleLayers(arr:ArrayCollection):void {
+		override public function set visibleLayers(arr:IList):void {
 		 
 		  this._visibleLayers = arr;
 		  for each (var layerInf:WMSLayerInfo in readLayersAsArray()) {
-		    layerInf.visible = this._visibleLayers.contains(layerInf.id);
+		    layerInf.visible = this._visibleLayers.toArray().indexOf(layerInf.layerId) >= 0;
         var parentLayerInfo:WMSLayerInfo = layerInf.parentLayer;
         while(layerInf.visible == true && parentLayerInfo != null) {
           parentLayerInfo.visible = layerInf.visible;
-          if(this._visibleLayers.contains(parentLayerInfo.id) == false) {
-            this._visibleLayers.addItem(parentLayerInfo.id);
+          if(this._visibleLayers.toArray().indexOf(parentLayerInfo.layerId) < 0) {
+            this._visibleLayers.addItem(parentLayerInfo.layerId);
           }
           parentLayerInfo = parentLayerInfo.parentLayer;
           
@@ -921,7 +1008,7 @@ package com.esri.gpt.wms
      * 
      * @return array of visible layers 
      * */		
-    override public function get visibleLayers():ArrayCollection {
+    override public function get visibleLayers():IList {
       return this._visibleLayers;
     }
 		

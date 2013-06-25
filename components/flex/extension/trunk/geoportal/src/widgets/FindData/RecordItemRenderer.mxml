@@ -121,7 +121,6 @@ limitations under the License.
         var graphic:Graphic = new Graphic(gptRSSRecord.geom);
         graphic.id = gptRSSRecord.id;
         graphic.symbol = symbol;
-        graphic.autoMoveToTop = false;
         graphic.checkForMouseListeners = false;
         
         return graphic;

@@ -12,14 +12,16 @@
   </mx:Metadata>
   <mx:Script>
     <![CDATA[
-      import com.esri.ags.Map;
-      import com.esri.gpt.utils.Utils;
-      import com.esri.viewer.BaseWidget;
-      
-      import mx.core.UIComponent;
-      import mx.logging.ILogger;
-      import mx.logging.Log;
-      import mx.managers.PopUpManager;
+		import com.esri.ags.Map;
+		import com.esri.gpt.utils.Utils;
+		import com.esri.viewer.BaseWidget;
+		import com.esri.viewer.utils.LocalizationUtil;
+		
+		import mx.controls.Alert;
+		import mx.core.UIComponent;
+		import mx.logging.ILogger;
+		import mx.logging.Log;
+		import mx.managers.PopUpManager;
       
       [Bindable]
       private var message:String = "";
@@ -76,7 +78,9 @@
         PopUpManager.addPopUp(this, UIComponent(map), true);
         PopUpManager.centerPopUp(this);
 		PopUpManager.bringToFront(this);
-        
+        this.showCloseButton = true;
+
+	
         this.title = (title == null)? 
            resourceManager.getString('gptStrings','finddata.lblErrorTitle') : 
            title;
@@ -122,7 +126,13 @@
       
       
       
-    ]]>
+		protected function button1_clickHandler(event:MouseEvent):void
+		{
+			PopUpManager.removePopUp(this);
+			
+		}
+		
+	]]>
   </mx:Script>
   
   <mx:states>
@@ -161,6 +171,9 @@
                      styleName="ControllerLinkButton"
                      visible="{bShowMoreOption}"/>
     </mx:HBox>
-    <mx:VBox id="contShowMore1"/>
+    <mx:VBox id="contShowMore1" horizontalCenter="0"/>
+	<mx:Button click="button1_clickHandler(event)" horizontalCenter="0" label="{LocalizationUtil.getDefaultString('okLabel')}">
+		
+	</mx:Button>  
   </mx:VBox>
 </mx:TitleWindow>
