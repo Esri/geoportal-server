@@ -94,12 +94,10 @@ DocProject/Help/Html2
 DocProject/Help/html
 
 # Click-Once directory
-publish
 
 # Others
 [Bb]in
 [Oo]bj
-sql
 TestResults
 *.Cache
 ClientBin
