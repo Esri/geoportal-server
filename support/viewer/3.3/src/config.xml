@@ -45,7 +45,10 @@
                 icon="assets/images/i_layers.png"
                 config="widgets/LayerList/LayerListWidget.xml"
                 url="widgets/LayerList/LayerListWidget.swf"/>    
-        
+        <widget label="Print"
+                icon="assets/images/i_print.png"
+                config="widgets/Print/PrintWidget.xml"
+                url="widgets/Print/PrintWidget.swf"/>
         <widget label="Geoportal Search"
                 left="100"
                 top="50"

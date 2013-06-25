@@ -53,3 +53,15 @@ mx|HScrollBar
     thumbOverSkin: Embed(source="assets/images/thumb.png");
     trackSkin: Embed(source="assets/images/track.png");
 }
+
+mx|TabNavigator {
+}
+
+esri|InfoSymbolWindow {
+	infoPlacementMode: none;
+	infoPlacement:top;
+	infoOffsetX: 12;
+	infoOffsetY: 12;
+	infoOffsetW: 6;
+	borderThickness: 2;
+}
