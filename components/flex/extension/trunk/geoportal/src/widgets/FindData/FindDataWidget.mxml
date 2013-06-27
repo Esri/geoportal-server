@@ -304,6 +304,7 @@ private function init():void
   if(search.length < 0) {
     return;
   }           
+  search = "&" + search;
   urlVariables.decode(search); 
   this.readResourceUrl(urlVariables, search);
   this.readUrlBbox(urlVariables);

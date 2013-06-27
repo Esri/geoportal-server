@@ -44,6 +44,8 @@ Required tools for project compilation and testing:
 2) If you are using the Flex Builder IDE 
   i)   Replace the contents of your ESRI Flex Viewer config.xml with geportal/config/eclipse.xml
   ii)  Configure your locale settings to point to geoportal/locale
+       (In Properties -> Flex Compiler -> additional arguments should look like 
+       "-source-path  locale/{locale} geoportal/locale/{locale} -locale en_US" without the quotes)
   iii) Add  the directory geoportal/src to your flex ide source path
 
 
