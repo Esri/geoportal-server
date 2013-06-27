@@ -18,7 +18,7 @@
 	<fields schema="others">
 		<field name="title"          index="title" />  
 	  <field name="abstract"       index="abstract" />
-	  <field name="keyword"        index="keywords,dataTheme,apisoTopicCategory" />
+	  <field name="keyword"        index="keywords,dataTheme,apiso.TopicCategory" />
 	  <field name="modified"       index="dateModified" isDate="true" />
 	  <field name="publisher" 		 index="apiso.OrganizationName,publisher" />
 	  <field name="person" 				 index="dcat.person" />
@@ -35,7 +35,7 @@
 	<fields schema="fgdc">
 		<field name="title"          index="title" />  
 	  <field name="abstract"       index="abstract" />
-	  <field name="keyword"        index="keywords,dataTheme,apisoTopicCategory" />
+	  <field name="keyword"        index="keywords,dataTheme,apiso.TopicCategory" />
 	  <field name="modified"       index="dateModified" isDate="true" />
 	  <field name="publisher" 		 index="apiso.OrganizationName,publisher" />
 	  <field name="person" 				 index="dcat.person" />
@@ -52,7 +52,7 @@
 	<fields schema="iso-19115,iso-19119"> 
 	  <field name="title"          index="title"  />  
 	  <field name="abstract"       index="abstract" />
-	  <field name="keyword"        index="keywords,dataTheme,apisoTopicCategory" />
+	  <field name="keyword"        index="keywords,dataTheme,apiso.TopicCategory" />
 	  <field name="modified"       index="dateModified" isDate="true" />
 	  <field name="publisher" 		 index="apiso.OrganizationName,publisher" />
 	  <field name="person" 				 index="dcat.person" />
