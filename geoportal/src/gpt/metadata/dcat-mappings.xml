@@ -31,7 +31,7 @@
 	  <field name="license" 			 index="dcat.license" />
 	  <field name="spatial" 			 index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" />
 	  <field name="temporal" 			 index="timeperiod.l.0,timeperiod.u.0" isDate="true" />
-	</fields>
+	</fields> 
 	<fields schema="fgdc">
 		<field name="title"          index="title" />  
 	  <field name="abstract"       index="abstract" />
