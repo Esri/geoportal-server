@@ -123,7 +123,7 @@ package com.esri.gpt.wms
 		private var _backgroundColor:String = "0xFFFFFF";
 		private var _exceptions:String;
 		private var _bFlattenned:Boolean = false;		
-		private var _visibleLayers:ArrayCollection = null;
+		private var _visibleLayers:IList = null;
 		private var _layerSpatialRefs:ArrayCollection;
 		private var _map:Map;
     
@@ -551,7 +551,7 @@ package com.esri.gpt.wms
 	        	              if(layerInfo != null) {
 	        	        //layerInfo.defaultVisibility = index < 
 	        	        //this.numLayersShownInitially - 1;
-	        	                layerInfo.id = index;
+	        	                layerInfo.layerId = index;
 	        	 
 	        	                   index++;
 	        	               }
@@ -883,12 +883,12 @@ package com.esri.gpt.wms
 		
 		/**
 		 * Clears the visible layers as defined in layers and resets to the default layers of the map service.
-		 */
+		 
 		override public function defaultVisibleLayers():void
 		{
       //this.visibleLayers = _defaultVisibleLayers;
       ;
-		}
+		}*/
 		
 		private function setDefaultVisibleLayers():void {
       
@@ -983,16 +983,16 @@ package com.esri.gpt.wms
 		 * 
 		 * @arr Array of visible layers, just contains their ids
 		 * */
-		override public function set visibleLayers(arr:ArrayCollection):void {
+		override public function set visibleLayers(arr:IList):void {
 		 
 		  this._visibleLayers = arr;
 		  for each (var layerInf:WMSLayerInfo in readLayersAsArray()) {
-		    layerInf.visible = this._visibleLayers.contains(layerInf.id);
+		    layerInf.visible = this._visibleLayers.toArray().indexOf(layerInf.layerId) >= 0;
         var parentLayerInfo:WMSLayerInfo = layerInf.parentLayer;
         while(layerInf.visible == true && parentLayerInfo != null) {
           parentLayerInfo.visible = layerInf.visible;
-          if(this._visibleLayers.contains(parentLayerInfo.id) == false) {
-            this._visibleLayers.addItem(parentLayerInfo.id);
+          if(this._visibleLayers.toArray().indexOf(parentLayerInfo.layerId) < 0) {
+            this._visibleLayers.addItem(parentLayerInfo.layerId);
           }
           parentLayerInfo = parentLayerInfo.parentLayer;
           
@@ -1008,7 +1008,7 @@ package com.esri.gpt.wms
      * 
      * @return array of visible layers 
      * */		
-    override public function get visibleLayers():ArrayCollection {
+    override public function get visibleLayers():IList {
       return this._visibleLayers;
     }
 		

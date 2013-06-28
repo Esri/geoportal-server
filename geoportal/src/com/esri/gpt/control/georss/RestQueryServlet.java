@@ -590,6 +590,9 @@ public class RestQueryServlet extends BaseServlet {
     parser.parsePropertyIsEqualTo("source", "dc:source"); // harvesting id (uuid)
     parser.parsePropertyIsEqualTo("isPartOf", "dct:isPartOf"); // collection subset
     //parser.parsePropertyList("hasFormat","dct:hasFormat",",",true);
+    
+	// addition filter parameter &filter
+	parser.parsePropertyIsLike("filter","anytext");
 
     return query;
   }

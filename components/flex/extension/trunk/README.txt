@@ -31,7 +31,7 @@ These are the flex extensions to the ESRI FLEX API and the ESRI Flex Viewer
 Required tools for project compilation and testing:
 ============================================================================
 
-1) Adobe Flex SDK 
+1) Adobe Flex SDK
 
 2) ESRI Flex Viewer
 

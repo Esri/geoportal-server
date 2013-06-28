@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+     ADOBE SYSTEMS INCORPORATED
+     Copyright 2008 Adobe Systems Incorporated
+     All Rights Reserved.
+
+     NOTICE: Adobe permits you to use, modify, and distribute this file
+     in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<!--- The default skin class for Spark TextArea component.
+
+     @see spark.components.TextArea
+
+     @langversion 3.0
+     @playerversion Flash 10
+     @playerversion AIR 1.5
+     @productversion Flex 4
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+             xmlns:s="library://ns.adobe.com/flex/spark"
+             xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
+             alpha.disabled="0.5"
+             blendMode="normal">
+
+    <fx:Metadata>
+        <![CDATA[ 
+        /** 
+         * @copy spark.skins.spark.ApplicationSkin#hostComponent
+         */
+        [HostComponent("spark.components.TextArea")]
+    ]]>
+    </fx:Metadata>
+
+    <fx:Script fb:purpose="styling">
+        private var lineBreakChanged:Boolean;
+        private var paddingChanged:Boolean;
+        private var verticalAlignChanged:Boolean;
+
+        /* Define the skin elements that should not be colorized.
+         For text area, the skin itself is colorized but the individual parts are not. */
+        static private const exclusions:Array = [ "background", "scroller" ];
+
+        /**
+         * @private
+         */
+        override public function get colorizeExclusions():Array
+        {
+            return exclusions;
+        }
+
+        /* Define the content fill items that should be colored by the "contentBackgroundColor" style. */
+        static private const contentFill:Array = [ "bgFill" ];
+
+        /**
+         *  @private
+         */
+        override public function get contentItems():Array
+        {
+            return contentFill
+        }
+        ;
+
+        /**
+         *  @private
+         */
+        override protected function commitProperties():void
+        {
+            super.commitProperties();
+
+            if (lineBreakChanged)
+            {
+                updateStringStyle("lineBreak");
+                lineBreakChanged = false;
+            }
+            if (paddingChanged)
+            {
+                updatePadding();
+                paddingChanged = false;
+            }
+            if (verticalAlignChanged)
+            {
+                updateStringStyle("verticalAlign");
+                verticalAlignChanged = false;
+            }
+        }
+
+        /**
+         * @private
+         */
+        override protected function initializationComplete():void
+        {
+            useChromeColor = true;
+            super.initializationComplete();
+        }
+
+        /**
+         *  @private
+         */
+        override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+        {
+            if (getStyle("borderVisible") == true)
+            {
+                border.visible = true;
+                shadow.visible = true;
+                background.left = background.top = background.right = background.bottom = 1;
+                textDisplay.left = textDisplay.top = textDisplay.right = textDisplay.bottom = 1;
+            }
+            else
+            {
+                border.visible = false;
+                shadow.visible = false;
+                background.left = background.top = background.right = background.bottom = 0;
+                textDisplay.left = textDisplay.top = textDisplay.right = textDisplay.bottom = 0;
+            }
+
+            borderStroke.color = getStyle("borderColor");
+            borderStroke.alpha = getStyle("borderAlpha");
+
+            super.updateDisplayList(unscaledWidth, unscaledHeight);
+        }
+
+        /**
+         *  @private
+         */
+        private function updatePadding():void
+        {
+            if (!textDisplay)
+            {
+                return;
+            }
+
+            // Push padding styles into the textDisplay
+            var padding:Number;
+
+            padding = getStyle("paddingLeft");
+            if (textDisplay.getStyle("paddingLeft") != padding)
+            {
+                textDisplay.setStyle("paddingLeft", padding);
+            }
+
+            padding = getStyle("paddingTop");
+            if (textDisplay.getStyle("paddingTop") != padding)
+            {
+                textDisplay.setStyle("paddingTop", padding);
+            }
+
+            padding = getStyle("paddingRight");
+            if (textDisplay.getStyle("paddingRight") != padding)
+            {
+                textDisplay.setStyle("paddingRight", padding);
+            }
+
+            padding = getStyle("paddingBottom");
+            if (textDisplay.getStyle("paddingBottom") != padding)
+            {
+                textDisplay.setStyle("paddingBottom", padding);
+            }
+        }
+
+        /**
+         *  @private
+         */
+        private function updateStringStyle(styleName:String):void
+        {
+            if (!textDisplay)
+            {
+                return;
+            }
+
+            // Push style into the textDisplay
+            var style:String;
+
+            style = getStyle(styleName);
+            if (textDisplay.getStyle(styleName) != style)
+            {
+                textDisplay.setStyle(styleName, style);
+            }
+        }
+
+        /**
+         *  @private
+         */
+        override public function styleChanged(styleProp:String):void
+        {
+            var allStyles:Boolean = !styleProp || styleProp == "styleName";
+
+            super.styleChanged(styleProp);
+
+            if (allStyles || styleProp.indexOf("lineBreak") == 0)
+            {
+                lineBreakChanged = true;
+                invalidateProperties();
+            }
+            if (allStyles || styleProp.indexOf("padding") == 0)
+            {
+                paddingChanged = true;
+                invalidateProperties();
+            }
+            if (allStyles || styleProp.indexOf("verticalAlign") == 0)
+            {
+                verticalAlignChanged = true;
+                invalidateProperties();
+            }
+        }
+    </fx:Script>
+
+    <fx:Script>
+        <![CDATA[
+            /**
+             * @private
+             */
+            private static const focusExclusions:Array = [ "textDisplay" ];
+
+            /**
+             *  @private
+             */
+            override public function get focusSkinExclusions():Array
+            {
+                return focusExclusions;
+            }
+            ;
+        ]]>
+    </fx:Script>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="disabled"/>
+    </s:states>
+
+    <!-- border -->
+    <!--- @private -->
+    <s:Rect id="border"
+            left="0" right="0" top="0" bottom="0">
+        <s:stroke>
+            <!--- @private -->
+            <s:SolidColorStroke id="borderStroke" weight="1"/>
+        </s:stroke>
+    </s:Rect>
+
+    <!-- fill -->
+    <!--- Defines the appearance of the TextArea component's background. -->
+    <s:Rect id="background"
+            left="1" right="1" top="1" bottom="1"
+            topLeftRadiusX="10"
+            topRightRadiusX="10">
+        <s:fill>
+            <!--- @private Defines the background fill color. -->
+            <s:SolidColor id="bgFill" color="0xFFFFFF"/>
+        </s:fill>
+    </s:Rect>
+
+    <!-- shadow -->
+    <!--- @private -->
+    <s:Rect id="shadow"
+            height="1"
+            left="1" right="1" top="1">
+        <s:fill>
+            <s:SolidColor alpha="0.12" color="0x000000"/>
+        </s:fill>
+    </s:Rect>
+
+    <!--- Defines the scroller that is used to scroll the TextArea control. -->
+    <s:Scroller id="scroller"
+                left="0" right="0" top="0" bottom="0"
+                hasFocusableChildren="false"
+                measuredSizeIncludesScrollBars="false"
+                minViewportInset="1">
+        <!--- @copy spark.components.supportClasses.SkinnableTextBase#textDisplay -->
+        <s:RichEditableText id="textDisplay"
+                            heightInLines="10"
+                            widthInChars="15"/>
+    </s:Scroller>
+
+</s:SparkSkin>

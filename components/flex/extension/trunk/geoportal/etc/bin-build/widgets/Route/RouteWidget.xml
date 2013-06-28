@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////
+//
+// Routing Widget developed by Robert Scheitlin (original developed by Imtiaz Ahmed
+// using the esri routing sample).
+//
+//  dirlengthunits: esriMiles or esriKilometers
+//  
+////////////////////////////////////////////////////////////////////////////////
+-->
+<configuration>
+	<routetasksolver>http://tasks.arcgisonline.com/ArcGIS/rest/services/NetworkAnalysis/ESRI_Route_NA/NAServer/Route</routetasksolver>
+	<reversegeocode>http://tasks.arcgisonline.com/ArcGIS/rest/services/Locators/TA_Address_NA/GeocodeServer</reversegeocode>
+	<dirlengthunits>esriMiles</dirlengthunits>
+	<!-- alttxtbgclr = Route directions alternating text background color -->
+	<alttxtbgclr>0xd7d7d7</alttxtbgclr><!-- pale gray -->
+	<routesegment color="0xfbec5b" animate="true" alpha="0.8" width="8" />
+	<showdirectionarrows>true</showdirectionarrows>
+	<manualaddtooltip>Click on Map to Add</manualaddtooltip>
+</configuration>

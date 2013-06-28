@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:mx="library://ns.adobe.com/flex/mx"
+                width="100%"
+                autoDrawBackground="false">
+    <fx:Script>
+        <![CDATA[
+            import flashx.textLayout.conversion.TextConverter;
+
+            [Bindable]
+            private var url:String;
+
+            override public function set data(value:Object):void
+            {
+                super.data = value;
+
+                if (value)
+                {
+                    var color:uint = getStyle('color');
+                    url = "<a href='" + value.defaultValue.url + "' target='_blank'><font color='#" + color.toString(16) + "'>" + value.defaultValue.url + "</font></a>";
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <s:layout>
+        <s:HorizontalLayout verticalAlign="middle"/>
+    </s:layout>
+
+    <s:RichEditableText editable="false"
+                        fontWeight="bold"
+                        text="{data.label}"/>
+
+    <s:RichEditableText editable="false"
+                        textFlow="{TextConverter.importToFlow(url, TextConverter.TEXT_FIELD_HTML_FORMAT)}"
+                        toolTip="{data.defaultValue.url}"/>
+</s:ItemRenderer>

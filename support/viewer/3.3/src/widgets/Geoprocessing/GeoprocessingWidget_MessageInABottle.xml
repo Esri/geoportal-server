@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<configuration label="Message in a bottle">
+    <description/>
+    <taskurl>http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle</taskurl>
+    <helpurl>http://sampleserver1.arcgisonline.com/arcgisoutput/Specialty_ESRI_Currents_World/MessageInABottle.htm</helpurl>
+    <inputparams>
+        <param name="Input_Point"
+               geometrytype="point"
+               label="Starting location"
+               required="true"
+               type="featurerecordset"
+               visible="true">
+            <renderer type="simple">
+                <defaultsymbol color="0x880000"
+                               size="25"
+                               type="simplemarker">
+                    <outline width="1" color="0xFF0000"/>
+                </defaultsymbol>
+            </renderer>
+        </param>
+        <param name="Days"
+               defaultvalue="150"
+               label="Days"
+               required="true"
+               type="double"
+               visible="true"/>
+    </inputparams>
+    <outputparams>
+        <param name="Output"
+               geometrytype="polyline"
+               label="Output"
+               required="false"
+               type="featurerecordset"
+               visible="true">
+            <renderer type="simple">
+                <defaultsymbol alpha="0.5"
+                               color="0xFFFFFF"
+                               type="simpleline">
+                    <outline width="2" color="0x000000"/>
+                </defaultsymbol>
+            </renderer>
+        </param>
+    </outputparams>
+    <layerorder>Input_Point,Output</layerorder>
+</configuration>
+
+<!--
+    See Geoprocessing widget tag reference at
+    http://links.esri.com/geoprocessingwidget
+-->

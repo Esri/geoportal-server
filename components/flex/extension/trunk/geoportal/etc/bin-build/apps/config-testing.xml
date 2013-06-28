@@ -1,0 +1,101 @@
+<?xml version="1.0" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////
+//
+// Copyright (c) 2010 ESRI
+//
+// All rights reserved under the copyright laws of the United States.
+// You may freely redistribute and use this software, with or
+// without modification, provided you include the original copyright
+// and use restrictions.  See use restrictions in the file:
+// <install location>/License.txt
+//
+// Read more about ArcGIS Viewer for Flex 2.2 - http://links.esri.com/flexviewer
+//
+////////////////////////////////////////////////////////////////////////////////
+-->
+<configuration>
+    <title>Testing Flex Viewer widgets</title>
+    <subtitle></subtitle>
+    <logo>assets/images/logo.png</logo>
+    <style>
+        <!-- Sage Green -->
+        <colors>0x333333,0xAFCFAF,0xFFFFAB,0xEAEA9D,0x333333</colors>
+    </style>
+
+    <!-- splashpage label="ArcGIS Viewer for Flex" config="widgets/Splash/SplashWidget.xml" url="widgets/Splash/SplashWidget.swf"/ -->
+
+    <widget left="10"  top="50"    config="widgets/Navigation/NavigationWidget.xml" url="widgets/Navigation/NavigationWidget.swf"/>
+    <widget right="-2" bottom="-2" config="widgets/OverviewMap/OverviewMapWidget.xml" url="widgets/OverviewMap/OverviewMapWidget.swf"/>
+    <widget right="20" top="55"    config="widgets/MapSwitcher/MapSwitcherWidget.xml" url="widgets/MapSwitcher/MapSwitcherWidget.swf"/>
+    <widget left="0"   top="0"     config="widgets/HeaderController/HeaderControllerWidget.xml" url="widgets/HeaderController/HeaderControllerWidget.swf"/>
+
+    <map initialextent="-14083000 3139000 -10879000 5458000" top="40">
+        <basemaps>
+            <layer label="Streets" type="tiled" visible="true"  alpha="1"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer"/>
+            <layer label="Aerial"  type="tiled" visible="false" alpha="1"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"/>
+            <layer label="Topo"    type="tiled" visible="false" alpha="1"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer"/>
+        </basemaps>
+        <operationallayers>
+            <layer label="Reference" type="tiled" visible="false"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Reference_Overlay/MapServer"/>
+            <layer label="Boundaries and Places" type="tiled" visible="false"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places_Alternate/MapServer"/>
+            <layer label="Fires" type="feature" visible="false" alpha="1"
+                   info="widgets/InfoTemplates/SimpleInfoWinWidget.swf"
+                   infoconfig="widgets/InfoTemplates/IWT_Fires.xml"
+                   url="http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Fire/Sheep/FeatureServer/0"/>
+            <layer label="San Francisco 3-1-1 Incidents" type="feature" visible="false" alpha="1"
+                   info="widgets/InfoTemplates/SimpleInfoWinWidget.swf"
+                   infoconfig="widgets/InfoTemplates/IWT_311.xml"
+                   url="http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/SanFrancisco/311Incidents/FeatureServer/0"/>
+        </operationallayers>
+    </map>
+
+    <widgetcontainer layout="float"> <!--horizontal(default)|float|vertical|fix-->
+        <widget label="Louisville Police" left="200" top="150"
+            config="widgets/Query/QueryWidget_Louisville_PoliceStations.xml"
+            icon="assets/images/i_policestation.png"
+            url="widgets/Query/QueryWidget.swf"/>
+        <widget label="Traffic Camera (QueryWidget)"
+            icon="assets/images/i_camera.png"
+            config="widgets/Query/QueryWidget_Louisville_TrafficCams.xml"
+            url="widgets/Query/QueryWidget.swf"/>
+        <widget label="Data Extract"   left="80" bottom="80"
+            config="widgets/DataExtract/DataExtractWidget.xml"
+            icon="assets/images/i_scissors.png"
+            url="widgets/DataExtract/DataExtractWidget.swf"/>
+        <widget label="Bookmarks"          left="100" bottom="100"
+            config="widgets/Bookmark/BookmarkWidget.xml"
+            icon="assets/images/i_bookmark.png"
+            url="widgets/Bookmark/BookmarkWidget.swf"/>
+        <widget label="Find a U.S. address"   left="120" bottom="120"
+            config="widgets/Locate/LocateWidget_US.xml"
+            icon="assets/images/i_target.png"
+            url="widgets/Locate/LocateWidget.swf"/>
+        <widget label="Find an address in Canada"   left="140" bottom="140"
+            config="widgets/Locate/LocateWidget_Canada.xml"
+            icon="assets/images/i_target.png"
+            url="widgets/Locate/LocateWidget.swf"/>
+        <widget label="Find an address in Canada or USA"   left="160" bottom="160"
+            config="widgets/Locate/LocateWidget_NA.xml"
+            icon="assets/images/i_target.png"
+            url="widgets/Locate/LocateWidget.swf"/>
+        <widget label="Find an address in Europe"   left="180" bottom="180"
+            config="widgets/Locate/LocateWidget_EU.xml"
+            icon="assets/images/i_target.png"
+            url="widgets/Locate/LocateWidget.swf"/>
+        <widget label="Find a place"   left="200" bottom="200"
+            config="widgets/Locate/LocateWidget_WorldGaz.xml"
+            icon="assets/images/i_flag.png"
+            url="widgets/Locate/LocateWidget.swf"/>
+        <widget label="Filter by Time"    left="200" top="100"
+            config="widgets/Time/TimeWidget.xml"
+            icon="assets/images/i_clock.png"
+            url="widgets/Time/TimeWidget.swf"/>
+    </widgetcontainer>
+
+</configuration>

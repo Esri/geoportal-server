@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (c) 2010 ESRI
+
+     All rights reserved under the copyright laws of the United States
+     and applicable international laws, treaties, and conventions.
+
+     You may freely redistribute and use this sample code, with or
+     without modification, provided you include the original copyright
+     notice and use restrictions.
+
+     See use restrictions in use_restrictions.txt.
+-->
+<!---
+     @private
+     Custom item renderer for custom TemplatePicker skin.
+-->
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:mx="library://ns.adobe.com/flex/mx"
+                name="EditWidgetTemplatePickerListItemRenderer"
+                width="230" height="38"
+                focusEnabled="false"
+                mouseChildren="false">
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="hovered"/>
+        <s:State name="selected"/>
+    </s:states>
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.geometry.Geometry;
+            import com.esri.ags.layers.FeatureLayer;
+            import com.esri.ags.symbols.SimpleFillSymbol;
+            import com.esri.ags.symbols.SimpleLineSymbol;
+            import com.esri.ags.symbols.SimpleMarkerSymbol;
+            import com.esri.ags.symbols.Symbol;
+
+            import flashx.textLayout.formats.TextAlign;
+
+            import mx.core.IVisualElement;
+
+            override public function set data(value:Object):void
+            {
+                super.data = value;
+
+                //First remove everything from the contentGroup
+                contentGroup.removeAllElements();
+
+                // set style on the label
+                templateLabel.setStyle("textAlign", TextAlign.CENTER);
+
+                if (value.featureTemplate)
+                {
+                    templateLabel.text = value.featureTemplate.name;
+                    toolTip = (value.featureTemplate.description != "") ? value.featureTemplate.name + ": " + value.featureTemplate.description : value.featureTemplate.name;
+                }
+
+                if (value.featureLayer.renderer)
+                {
+                    var symbol:Symbol = value.featureLayer.renderer.getSymbol(value.featureTemplate.prototype);
+                    if (symbol)
+                    {
+                        contentGroup.addElement(IVisualElement(symbol.createSwatch(contentGroup.width, contentGroup.height)));
+                    }
+                    else
+                    {
+                        enabled = false;
+                    }
+                }
+                else if (value.featureLayer.symbol)
+                {
+                    contentGroup.addElement(IVisualElement(Symbol(value.featureLayer.symbol).createSwatch(contentGroup.width, contentGroup.height)));
+                }
+                else
+                {
+                    contentGroup.addElement(IVisualElement(getDefaultSymbolBasedOnGeometry(value.featureLayer).createSwatch(contentGroup.width, contentGroup.height)));
+                }
+            }
+
+            private function getDefaultSymbolBasedOnGeometry(fLayer:FeatureLayer):Symbol
+            {
+                var sym:Symbol;
+                switch (fLayer.layerDetails.geometryType)
+                {
+                    case Geometry.MAPPOINT:
+                    {
+                        sym = new SimpleMarkerSymbol();
+                        break;
+                    }
+                    case Geometry.POLYLINE:
+                    {
+                        sym = new SimpleLineSymbol();
+                        break;
+                    }
+                    case Geometry.POLYGON:
+                    {
+                        sym = new SimpleFillSymbol();
+                        break;
+                    }
+                }
+                return sym;
+            }
+        ]]>
+    </fx:Script>
+
+    <!-- border/background rectangle -->
+    <s:Rect left="0" right="0" top="0" bottom="0">
+        <s:stroke>
+            <s:SolidColorStroke alpha.normal="0"
+                                color.hovered="{getStyle('rollOverColor')}"
+                                color.normal="{getStyle('contentBackgroundColor')}"
+                                color.selected="{getStyle('focusColor')}"/>
+        </s:stroke>
+    </s:Rect>
+
+    <s:HGroup paddingLeft="4"
+              paddingTop="4"
+              verticalAlign="middle">
+        <s:Group id="contentGroup"
+                 width="28" height="28"/>
+        <s:Label id="templateLabel"/>
+    </s:HGroup>
+</s:ItemRenderer>

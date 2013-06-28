@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<configuration>
+    <layer>http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Louisville/LOJIC_PublicSafety_Louisville/MapServer/2</layer>
+    <titlefield>DESCRIPTION</titlefield>
+    <linkfield>URL</linkfield>
+    <fields all="false">
+        <field name="DESCRIPTION"/>
+        <field name="URL"/>
+        <field name="LAST_UPDATED" alias="Updated"/>
+    </fields>
+    <filterfield>
+        <name></name>
+        <alias></alias>
+    </filterfield>
+    <refreshrate></refreshrate>
+    <zoomscale>5000</zoomscale>
+    <query>1=1</query>
+    <info>widgets/InfoTemplates/InfoPopupWidget.swf</info>
+</configuration>

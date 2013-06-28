@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<configuration label="Earthquakes (last 7 days)">
+    <layer>http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Earthquakes/EarthquakesFromLastSevenDays/MapServer/0</layer>
+    <query>magnitude&gt;3</query>
+    <titlefield>magnitude</titlefield>
+    <linkfield></linkfield>
+    <fields all="false">
+        <field name="magnitude"/>
+        <field name="depth"/>
+        <field name="region"/>
+        <field name="datetime" alias="Date"/>
+    </fields>
+    <filterfield>
+        <name>region</name>
+        <alias>Filter by region (e.g., California )</alias>
+    </filterfield>
+    <refreshrate></refreshrate>
+    <zoomscale>500000</zoomscale>
+</configuration>
+
+<!--
+    See Query widget tag reference at
+    http://links.esri.com/querywidget
+-->

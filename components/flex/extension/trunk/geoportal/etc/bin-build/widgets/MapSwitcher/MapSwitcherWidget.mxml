@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:viewer="com.esri.viewer.*"
+                   xmlns:toc="com.esri.viewer.components.toc.*"
+                   widgetConfigLoaded="init()">
+
+    <viewer:states>
+        <s:State name="normal"/>
+        <s:State name="noBasemapsBB"/>
+    </viewer:states>
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.viewer.AppEvent;
+            import com.esri.viewer.ViewerContainer;
+
+            import mx.collections.ArrayCollection;
+            import mx.core.FlexGlobals;
+            import mx.events.FlexEvent;
+
+            import spark.events.IndexChangeEvent;
+
+            private var hideTimer:Timer = new Timer(300, 1);
+
+            [Bindable]
+            private var mapList:ArrayCollection;
+
+            [Bindable]
+            private var opsLayerButtonLabel:String; // the label for the button showing the list of operational layers
+
+            private function init():void
+            {
+                if (configXML)
+                {
+                    opsLayerButtonLabel = configXML.layerlist.@label || getDefaultString("layerListLabel");
+                    if (configXML.layerlist.@visible[0])
+                    {
+                        if (configXML.layerlist.@visible == "true")
+                        {
+                            // check if there are any op layers
+                            ViewerContainer.dispatchEvent(new AppEvent(AppEvent.DATA_OPT_LAYERS, null, getOplayers));
+                        }
+                    }
+                    else
+                    {
+                        // check if there are any op layers
+                        ViewerContainer.dispatchEvent(new AppEvent(AppEvent.DATA_OPT_LAYERS, null, getOplayers));
+                    }
+                }
+
+                // base maps
+                mapList = new ArrayCollection();
+                var labels:Array = [];
+                for each (var basemap:Object in configData.basemaps)
+                {
+                    var label:String = basemap.label;
+                    if (labels.indexOf(label) == -1) // avoid duplicates using the labels
+                    {
+                        labels.push(label);
+                        mapList.addItem(basemap);
+                    }
+                }
+                if (mapList.length <= 1)
+                {
+                    this.currentState = "noBasemapsBB";
+                }
+                else
+                {
+                    setTbbSelectedIndex();
+                }
+
+                toc.map = map;
+                toc.isMapServiceOnly = false; //gotta get this from the config file
+                toc.excludeLayers = getExcludeLayers();
+                toc.excludeGraphicsLayers = true;
+
+                hideTimer.addEventListener(TimerEvent.TIMER_COMPLETE, hideTimer_timerCompleteHandler, false, 0, true);
+            }
+
+            private function getOplayers(event:AppEvent):void
+            {
+                var oplList:Array = event.data as Array;
+                if (oplList.length > 0)
+                {
+                    optLabel.visible = true;
+                }
+            }
+
+            private function getExcludeLayers():ArrayCollection
+            {
+                var result:ArrayCollection = new ArrayCollection();
+
+                if (configData && configData.basemaps)
+                {
+                    // exclude basemaps
+                    for (var i:int = 0; i < configData.basemaps.length; i++)
+                    {
+                        result.addItem(configData.basemaps[i].label);
+                    }
+                }
+
+                if (configXML)
+                {
+                    // exclude these layers
+                    var layers:XMLList = configXML.layerlist.excludelayer as XMLList;
+                    for (var j:int = 0; j < layers.length(); j++)
+                    {
+                        result.addItem(layers[j].toString());
+                    }
+                }
+
+                return result;
+            }
+
+            private function setTbbSelectedIndex():void
+            {
+                for (var i:int; i < mapList.length; i++)
+                {
+                    if (mapList[i].visible)
+                    {
+                        tbb.selectedIndex = i; // change the index of the toggle button bar to reflect the current base map.
+                    }
+                }
+            }
+
+            private function tbb_changeHandler(event:IndexChangeEvent):void
+            {
+                ViewerContainer.dispatchEvent(new AppEvent(AppEvent.BASEMAP_SWITCH, mapList[event.newIndex].id));
+            }
+
+            private function optLabel_rollOverHandler(event:MouseEvent):void
+            {
+                opBox.visible = true;
+                hideTimer.reset();
+
+                // make sure there's enough room for the opBox
+                var appWidth:Number = FlexGlobals.topLevelApplication.width;
+                var globalPt:Point = opBox.parent.localToGlobal(new Point(opBox.width, 0));
+                if (globalPt.x > appWidth)
+                {
+                    globalPt = optLabel.parent.localToGlobal(new Point(optLabel.width, 0));
+                    var localPt:Point = opBox.parent.globalToLocal(globalPt);
+                    opBox.x = -opBox.width + localPt.x;
+                }
+                else
+                {
+                    opBox.x = 0;
+                }
+            }
+
+            private function hideTimer_timerCompleteHandler(event:TimerEvent):void
+            {
+                opBox.visible = false;
+            }
+
+            private function startHideTimer():void
+            {
+                hideTimer.reset();
+                hideTimer.start();
+            }
+
+            protected function opBox_creationCompleteHandler(event:FlexEvent):void
+            {
+                opBox.setStyle("backgroundColor", getStyle("contentBackgroundColor"));
+                //Alpha doesnt seem to have effect.
+                //opBox.setStyle("backgroundAlpha", FlexGlobals.topLevelApplication.getStyle("backgroundAlpha"));
+                opBox.setStyle("skinClass", FlexGlobals.topLevelApplication.getStyle("skinClass"));
+            }
+        ]]>
+    </fx:Script>
+
+    <s:Group>
+
+        <s:HGroup id="mapBox" gap="9">
+            <s:Button id="optLabel"
+                      label="{opsLayerButtonLabel}"
+                      rollOut="startHideTimer()"
+                      rollOver="optLabel_rollOverHandler(event)"
+                      visible="false"/>
+            <s:ButtonBar id="tbb"
+                         change="tbb_changeHandler(event)"
+                         dataProvider="{mapList}"
+                         excludeFrom="noBasemapsBB"
+                         labelField="label"
+                         requireSelection="true"/>
+        </s:HGroup>
+
+        <s:BorderContainer id="opBox"
+                           y="{mapBox.height - 1}" width="265" height="180"
+                           creationComplete="opBox_creationCompleteHandler(event)"
+                           includeInLayout="false"
+                           rollOut="startHideTimer()"
+                           rollOver="hideTimer.reset()"
+                           visible="false">
+            <toc:TOC id="toc"
+                     left="2" right="2" top="3" bottom="3"/>
+        </s:BorderContainer>
+
+    </s:Group>
+
+</viewer:BaseWidget>

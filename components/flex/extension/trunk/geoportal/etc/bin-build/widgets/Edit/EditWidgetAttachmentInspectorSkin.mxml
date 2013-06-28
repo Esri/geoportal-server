@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (c) 2010 ESRI
+
+     All rights reserved under the copyright laws of the United States
+     and applicable international laws, treaties, and conventions.
+
+     You may freely redistribute and use this sample code, with or
+     without modification, provided you include the original copyright
+     notice and use restrictions.
+
+     See use restrictions in use_restrictions.txt.
+-->
+<!---
+     @private
+     Custom skin class for the AttachmentInspector component.
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+             xmlns:mx="library://ns.adobe.com/flex/mx"
+             xmlns:s="library://ns.adobe.com/flex/spark"
+             xmlns:supportClasses="com.esri.ags.skins.supportClasses.*"
+             xmlns:edit="widgets.Edit.*"
+             creationComplete="sparkskin1_creationCompleteHandler(event)"
+             initialize="sparkskin1_initializeHandler(event)">
+
+    <fx:Metadata>
+        [HostComponent("com.esri.ags.components.AttachmentInspector")]
+    </fx:Metadata>
+    <fx:Declarations>
+        <s:Animate id="animate" target="{attachmentLayout}">
+            <!--- @private -->
+            <s:SimpleMotionPath id="simpleMotionPath" property="horizontalScrollPosition"/>
+        </s:Animate>
+
+        <mx:NumberFormatter id="numberFormatter"
+                            precision="2"
+                            rounding="nearest"/>
+    </fx:Declarations>
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.components.supportClasses.AttachmentRemoveEvent;
+            import com.esri.ags.layers.supportClasses.AttachmentInfo;
+            import com.esri.ags.skins.supportClasses.AttachmentMouseEvent;
+
+            import mx.binding.utils.ChangeWatcher;
+            import mx.events.FlexEvent;
+            import mx.utils.StringUtil;
+
+            import spark.events.IndexChangeEvent;
+
+            [Bindable]
+            public static var layerNotSupportingAttachmentsText:String;
+            [Bindable]
+            public static var noAttachmentsText:String;
+            [Bindable]
+            public static var chooseFileText:String;
+            [Bindable]
+            public static var attachmentSubmitLabel:String;
+            [Bindable]
+            public static var attachmentCancelLabel:String;
+
+            private var _changeWatcher:ChangeWatcher;
+
+            protected function sparkskin1_initializeHandler(event:FlexEvent):void
+            {
+                _changeWatcher = ChangeWatcher.watch(hostComponent, "attachmentInfos", attachmentInfos_changeHandler);
+            }
+
+            protected function sparkskin1_creationCompleteHandler(event:FlexEvent):void
+            {
+                numAttachmentsText();
+            }
+
+            private function attachmentInfos_changeHandler(event:Event = null):void
+            {
+                numAttachmentsText();
+            }
+
+            protected function attachmentInfoList_caretChangeHandler(event:IndexChangeEvent):void
+            {
+                const scrollPoint:Point = attachmentInfoList.layout.getScrollPositionDeltaToElement(event.newIndex);
+
+                const duration:Number = (Math.max(scrollPoint.x, attachmentInfoList.layout.target.horizontalScrollPosition) - Math.min(scrollPoint.x, attachmentInfoList.layout.target.horizontalScrollPosition)) * 4;
+
+                simpleMotionPath.valueFrom = attachmentInfoList.layout.target.horizontalScrollPosition;
+                simpleMotionPath.valueTo = scrollPoint.x;
+
+                animate.duration = duration;
+                animate.play();
+
+                event.target.invalidateDisplayList();
+            }
+
+            protected function attachmentInfoList_keyUpHandler(event:KeyboardEvent):void
+            {
+                if (event.eventPhase === EventPhase.AT_TARGET && (event.keyCode === 46 || event.keyCode === 8) && hostComponent.deleteEnabled) // Delete
+                {
+                    const attachmentInfo:AttachmentInfo = attachmentInfoList.selectedItem as AttachmentInfo;
+                    if (attachmentInfo)
+                    {
+                        dispatchEvent(new AttachmentRemoveEvent(attachmentInfo));
+                    }
+                }
+            }
+
+            private function attachmentInfoList_clickHandler(event:MouseEvent):void
+            {
+                if (event.currentTarget === attachmentInfoList)
+                {
+                    const attachmentInfo:AttachmentInfo = attachmentInfoList.selectedItem as AttachmentInfo;
+                    if (attachmentInfo)
+                    {
+                        const type:String = event.type === MouseEvent.CLICK ? AttachmentMouseEvent.ATTACHMENT_CLICK : AttachmentMouseEvent.ATTACHMENT_DOUBLE_CLICK;
+                        const newEvent:AttachmentMouseEvent = new AttachmentMouseEvent(type, attachmentInfo);
+                        newEvent.copyProperties(event);
+                        dispatchEvent(newEvent);
+                        attachmentInfoList.setFocus();
+                    }
+                }
+            }
+
+            private function attachmentInfoList_creationCompleteHandler():void
+            {
+                attachmentInfoList.selectedIndex = 0;
+
+                const perspectiveProjection:PerspectiveProjection = new PerspectiveProjection();
+                perspectiveProjection.projectionCenter = new Point(attachmentInfoList.width * .5, attachmentInfoList.height * .5);
+                perspectiveProjection.fieldOfView = 20.0;
+
+                attachmentInfoList.transform.perspectiveProjection = perspectiveProjection;
+            }
+
+            private function numAttachmentsText():void
+            {
+                if (hostComponent.attachmentInfos.length > 0)
+                {
+                    if (hostComponent.attachmentInfos.length == 1)
+                    {
+                        numAttachments.text = StringUtil.substitute(resourceManager.getString('ViewerStrings', 'singleAttachmentText'), 1);
+                    }
+                    else
+                    {
+                        numAttachments.text = StringUtil.substitute(resourceManager.getString('ViewerStrings', 'multipleAttachmentsText'), hostComponent.attachmentInfos.length);
+                    }
+                }
+            }
+        ]]>
+    </fx:Script>
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="disabled"/>
+        <s:State name="queryAttachmentInfos"/>
+        <s:State name="attachmentLoaded" stateGroups="loadState"/>
+        <s:State name="attachmentLoadedNoAttachmentsInList" stateGroups="noAttachmentsState,loadState"/>
+        <s:State name="noAttachmentsInList" stateGroups="noAttachmentsState"/>
+    </s:states>
+    <s:layout>
+        <s:VerticalLayout horizontalAlign="center"/>
+    </s:layout>
+
+    <s:Label id="numAttachments"
+             excludeFrom="noAttachmentsState,disabled"
+             fontWeight="bold"/>
+    <mx:Spacer/>
+    <s:BorderContainer width="100%" height="100%"
+                       cornerRadius="3"
+                       excludeFrom="noAttachmentsState,disabled">
+        <s:borderStroke>
+            <mx:SolidColorStroke weight="2"/>
+        </s:borderStroke>
+        <mx:Image includeIn="queryAttachmentInfos" source="assets/images/loader.swf"/>
+        <edit:EditWidgetAttachmentInfoList id="attachmentInfoList"
+                                           width="100%" height="100%"
+                                           caretChange="attachmentInfoList_caretChangeHandler(event)"
+                                           click="attachmentInfoList_clickHandler(event)"
+                                           creationComplete="callLater(attachmentInfoList_creationCompleteHandler)"
+                                           dataProvider="{hostComponent.attachmentInfos}"
+                                           deleteEnabled="{hostComponent.deleteEnabled}"
+                                           doubleClick="attachmentInfoList_clickHandler(event)"
+                                           doubleClickEnabled="true"
+                                           enabled.disabled="false"
+                                           excludeFrom="noAttachmentsState,queryAttachmentInfos,disabled"
+                                           itemRenderer="widgets.Edit.EditWidgetAttachmentRenderer"
+                                           keyUp="attachmentInfoList_keyUpHandler(event)"
+                                           minHeight="140"
+                                           minWidth="200"
+                                           useVirtualLayout="false">
+            <edit:layout>
+                <supportClasses:AttachmentLayout id="attachmentLayout"
+                                                 distance="100"
+                                                 index="{attachmentInfoList.selectedIndex}"/>
+            </edit:layout>
+        </edit:EditWidgetAttachmentInfoList>
+    </s:BorderContainer>
+    <s:Label fontWeight="bold"
+             includeIn="disabled"
+             text="{layerNotSupportingAttachmentsText}"/>
+    <s:Label fontWeight="bold"
+             includeIn="noAttachmentsInList"
+             text="{noAttachmentsText}"/>
+    <mx:Spacer/>
+    <s:Button id="browseButton"
+              enabled.disabled="false"
+              enabled.queryAttachmentInfos="false"
+              excludeFrom="loadState"
+              label="{chooseFileText}"/>
+    <s:HGroup includeIn="loadState" verticalAlign="middle">
+        <s:Label text="{hostComponent.attachmentName}"/>
+        <s:Label text="{numberFormatter.format(hostComponent.attachmentSize / 1000.0)} KB"/>
+    </s:HGroup>
+    <s:HGroup width="100%"
+              horizontalAlign="center"
+              includeIn="loadState"
+              verticalAlign="middle">
+        <s:Button id="addButton"
+                  height="30"
+                  label="{attachmentSubmitLabel}"
+                  skinClass="widgets.Edit.EditWidgetAttachmentInspectorSubmitButtonSkin"/>
+        <s:Button id="cancelButton"
+                  height="30"
+                  label="{attachmentCancelLabel}"
+                  skinClass="widgets.Edit.EditWidgetAttachmentInspectorCancelButtonSkin"/>
+    </s:HGroup>
+</s:SparkSkin>

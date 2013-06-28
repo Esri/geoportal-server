@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:viewer="com.esri.viewer.*"
+                   xmlns:Bookmark="widgets.Bookmark.*"
+                   x="600" y="300"
+                   hasFocusableChildren="true"
+                   implements="mx.managers.IFocusManagerComponent"
+                   initialize="basewidget_initializeHandler()"
+                   layout="absolute"
+                   widgetConfigLoaded="basewidget_widgetConfigLoaded()">
+
+    <viewer:states>
+        <s:State name="bkmList"/>
+        <s:State name="bkmAdd"/>
+    </viewer:states>
+
+    <viewer:transitions>
+        <s:Transition autoReverse="true" toState="*">
+            <s:Fade targets="{[bkmList, bkmAdd]}"/>
+        </s:Transition>
+    </viewer:transitions>
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.geometry.Extent;
+
+            import mx.collections.ArrayList;
+            import mx.events.EffectEvent;
+            import mx.logging.ILogger;
+            import mx.logging.Log;
+
+            import spark.components.supportClasses.ItemRenderer;
+
+            private const BOOKMARKS:String = "bookmarks";
+            private const ICON_URL:String = "assets/images/";
+
+            private var canUserAddBookmarks:Boolean = true;
+
+            //labels
+            private var bookmarksLabel:String;
+            private var addbookmarksLabel:String;
+            [Bindable]
+            private var addLabel:String;
+            [Bindable]
+            private var submitLabel:String;
+            private var errorLabel:String;
+
+            [Bindable]
+            private var bookmarkAL:ArrayList; // used by BookmarkDataGroup
+            private var bookmarkSO:SharedObject;
+            private var bookmarkSOAL:ArrayList; // stored in bookmarkSO
+
+            private var selectedindex:int = 0;
+            private var _logger:ILogger;
+
+            private function get logger():ILogger
+            {
+                if (_logger === null)
+                {
+                    _logger = Log.getLogger(BOOKMARKS);
+                }
+                return _logger;
+            }
+
+            private function basewidget_initializeHandler():void
+            {
+                if (isPartOfPanel) // if widget is part of "left", "right" or "bottom" panel
+                {
+                    this.percentWidth = this.percentHeight = 100;
+                    wTemplate.percentWidth = wTemplate.percentHeight = 100;
+                }
+                else
+                {
+                    wTemplate.width = wTemplate.height = 300;
+                }
+            }
+
+            private function basewidget_widgetConfigLoaded():void
+            {
+                bookmarkAL = new ArrayList();
+
+                if (configXML)
+                {
+                    assignLabels();
+                    if (configXML.addbookmarks[0])
+                    {
+                        canUserAddBookmarks = (configXML.addbookmarks == "true");
+                    }
+                }
+
+                addTitleBarButtons();
+                loadBookmarkSO();
+                loadBookmarks();
+            }
+
+            private function assignLabels():void
+            {
+                bookmarksLabel = configXML.labels.bookmarkslabel || getDefaultString("bookmarksLabel");
+                addbookmarksLabel = configXML.labels.addbookmarkslabel || getDefaultString("addbookmarksLabel");
+                addLabel = configXML.labels.addlabel || getDefaultString("addLabel");
+                submitLabel = configXML.labels.submitlabel || getDefaultString("bookmarkSubmitLabel");
+                errorLabel = configXML.labels.errorlabel || getDefaultString("bookmarkMissingNameLabel");
+            }
+
+            private function addTitleBarButtons():void
+            {
+                wTemplate.addTitlebarButton(ICON_URL + "i_bookmark.png", bookmarksLabel, showBookmarksList);
+                if (canUserAddBookmarks)
+                {
+                    wTemplate.addTitlebarButton(ICON_URL + "i_bookmark_add.png", addbookmarksLabel, showBookmarkAdd);
+                }
+            }
+
+            private function showBookmarksList():void
+            {
+                this.currentState = "bkmList";
+                wTemplate.selectedTitlebarButtonIndex = 0; // used to indicate selected titlebar button when automatically switching state
+            }
+
+            private function showBookmarkAdd():void
+            {
+                this.currentState = "bkmAdd";
+            }
+
+            private function loadBookmarkSO():void
+            {
+                try
+                {
+                    bookmarkSO = SharedObject.getLocal(BOOKMARKS);
+                }
+                catch (err:Error)
+                {
+                    if (Log.isError())
+                    {
+                        logger.error(err.toString());
+                    }
+                }
+            }
+
+            private function loadBookmarks():void
+            {
+                if (configXML)
+                {
+                    const bookmarkList:XMLList = configXML..bookmark;
+                    if (bookmarkList.length() > 0)
+                    {
+                        addXMLBookmarks(bookmarkList);
+                    }
+                    else if (configData.webMapData && configData.webMapData.bookmarks)
+                    {
+                        addWebMapBookmarks();
+                    }
+                }
+
+                if (bookmarkSO)
+                {
+                    bookmarkSOAL = bookmarkSO.data[BOOKMARKS] as ArrayList;
+                    if (!bookmarkSOAL)
+                    {
+                        bookmarkSOAL = new ArrayList();
+                        bookmarkSO.data[BOOKMARKS] = bookmarkSOAL;
+                    }
+                    else
+                    {
+                        bookmarkAL.addAll(bookmarkSOAL);
+                    }
+                }
+            }
+
+            private function addXMLBookmarks(bookmarkList:XMLList):void
+            {
+                var bookmark:Bookmark;
+                for each (var bookmarkXML:XML in bookmarkList)
+                {
+                    bookmark = parseBookmark(bookmarkXML);
+                    if (bookmark)
+                    {
+                        bookmarkAL.addItem(bookmark);
+                    }
+                }
+            }
+
+            private function parseBookmark(bookmarkXML:XML):Bookmark
+            {
+                var bookmark:Bookmark;
+
+                const extentCoordinates:Array = bookmarkXML.toString().split(" ");
+                const parsedXMin:Number = parseFloat(extentCoordinates[0]);
+                const parsedYMin:Number = parseFloat(extentCoordinates[1]);
+                const parsedXMax:Number = parseFloat(extentCoordinates[2]);
+                const parsedYMax:Number = parseFloat(extentCoordinates[3]);
+
+                const hasValidMinMaxCoordinates:Boolean =
+                    !isNaN(parsedXMin) && !isNaN(parsedYMin)
+                    && !isNaN(parsedXMax) && !isNaN(parsedYMax);
+
+                if (hasValidMinMaxCoordinates)
+                {
+                    bookmark = new Bookmark();
+                    bookmark.name = bookmarkXML.@name;
+                    bookmark.icon = bookmarkXML.@icon;
+
+                    bookmark.xmin = Number(parsedXMin);
+                    bookmark.ymin = Number(parsedYMin);
+                    bookmark.xmax = Number(parsedXMax);
+                    bookmark.ymax = Number(parsedYMax);
+                }
+
+                return bookmark;
+            }
+
+            private function addWebMapBookmarks():void
+            {
+                const bookmarks:Array = configData.webMapData.bookmarks;
+                var bookmark:Bookmark;
+                for each (var bookmarkObject:Object in bookmarks)
+                {
+                    bookmark = new Bookmark();
+                    bookmark.name = bookmarkObject.name;
+                    bookmark.xmin = bookmarkObject.extent.xmin;
+                    bookmark.ymin = bookmarkObject.extent.ymin;
+                    bookmark.xmax = bookmarkObject.extent.xmax;
+                    bookmark.ymax = bookmarkObject.extent.ymax;
+                    bookmarkAL.addItem(bookmark);
+                }
+            }
+
+            private function addBookmark():void
+            {
+                var name:String = txtName.text;
+                if (name)
+                {
+                    var ext:Extent = map.extent;
+                    var bookmark:Bookmark = new Bookmark();
+                    bookmark.name = name;
+                    bookmark.userCreated = true;
+                    bookmark.xmin = Number(ext.xmin.toFixed(4));
+                    bookmark.ymin = Number(ext.ymin.toFixed(4));
+                    bookmark.xmax = Number(ext.xmax.toFixed(4));
+                    bookmark.ymax = Number(ext.ymax.toFixed(4));
+                    bookmarkAL.addItem(bookmark);
+                    bookmarkSOAL.addItem(bookmark);
+                    saveBookmarks();
+                    txtName.text = "";
+                    bkmList.addEventListener(EffectEvent.EFFECT_END, bkmList_effectEndHandler);
+                    showBookmarksList();
+                }
+                else
+                {
+                    showError(errorLabel);
+                }
+            }
+
+            private function bkmList_effectEndHandler(event:EffectEvent):void
+            {
+                bkmList.removeEventListener(EffectEvent.EFFECT_END, bkmList_effectEndHandler);
+                // scroll to the bottom
+                bookmarkDG.ensureIndexIsVisible(bookmarkAL.length - 1);
+            }
+
+            private function removeBookmark(event:Event):void
+            {
+                var bookmark:Bookmark = ItemRenderer(event.target).data as Bookmark;
+                bookmarkAL.removeItem(bookmark);
+                bookmarkSOAL.removeItem(bookmark);
+                saveBookmarks();
+                bookmarkDG.selectedIndex--;
+            }
+
+            private function saveBookmarks():void
+            {
+                if (bookmarkSO)
+                {
+                    try
+                    {
+                        bookmarkSO.flush();
+                    }
+                    catch (err:Error)
+                    {
+                        if (Log.isError())
+                        {
+                            logger.error(err.toString());
+                        }
+                    }
+                }
+            }
+
+            private function showBookmark(event:Event):void
+            {
+                var bookmark:Bookmark = ItemRenderer(event.target).data as Bookmark;
+                if (bookmark)
+                {
+                    map.extent = new Extent(bookmark.xmin, bookmark.ymin, bookmark.xmax, bookmark.ymax);
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <viewer:WidgetTemplate id="wTemplate">
+        <s:Group id="bkmList"
+                 width="100%" height="100%"
+                 visible="false"
+                 visible.bkmList="true">
+            <Bookmark:BookmarkDataGroup id="bookmarkDG"
+                                        width="100%" height="100%"
+                                        bookmarkClick="showBookmark(event)"
+                                        bookmarkDelete="removeBookmark(event)"
+                                        borderVisible="false"
+                                        contentBackgroundAlpha="0"
+                                        dataProvider="{bookmarkAL}">
+                <Bookmark:layout>
+                    <s:VerticalLayout gap="2"
+                                      horizontalAlign="justify"
+                                      useVirtualLayout="true"/>
+                </Bookmark:layout>
+            </Bookmark:BookmarkDataGroup>
+        </s:Group>
+        <s:Group id="bkmAdd"
+                 width="100%" height="100%"
+                 visible="false"
+                 visible.bkmAdd="true">
+            <s:layout>
+                <s:VerticalLayout gap="10"
+                                  horizontalAlign="center"
+                                  paddingTop="10"/>
+            </s:layout>
+            <s:Label width="100%" text="{addLabel}"/>
+            <s:TextInput id="txtName"
+                         width="98%"
+                         enter="addBookmark()"/>
+            <s:Button click="addBookmark()" label="{submitLabel}"/>
+        </s:Group>
+    </viewer:WidgetTemplate>
+
+</viewer:BaseWidget>

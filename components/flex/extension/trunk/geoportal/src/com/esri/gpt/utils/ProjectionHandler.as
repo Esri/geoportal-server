@@ -15,14 +15,22 @@ limitations under the License.
 package com.esri.gpt.utils {
 
 import com.esri.ags.SpatialReference;
+import com.esri.ags.events.GeometryServiceEvent;
 import com.esri.ags.geometry.Extent;
 import com.esri.ags.geometry.Geometry;
 import com.esri.ags.geometry.MapPoint;
 import com.esri.ags.geometry.Polygon;
+import com.esri.ags.tasks.GeometryService;
+import com.esri.ags.utils.JSONUtil;
 import com.esri.ags.utils.WebMercatorUtil;
+import com.esri.gpt.utils.Ajax;
+import com.esri.gpt.utils.AjaxRequestType;
 
 import mx.logging.ILogger;
 import mx.logging.Log;
+import mx.rpc.events.FaultEvent;
+
+import widgets.FindData.FindDataWidget;
     
 
 /**
@@ -44,6 +52,8 @@ public class ProjectionHandler
   /** Spatial Reference Being Projected To **/  
   private var spatialReferenceTo:SpatialReference;  
   
+  private static var geometryService:String;
+  
   // constructor ==============================================================/
   /**
   * Constructor
@@ -57,6 +67,22 @@ public class ProjectionHandler
   }
 
   // methods ==================================================================/
+  [Inspectable(category="Mapping")]
+  /**
+   * The geometryService request through.
+   */
+  public function get getGeometryService():String 
+  {
+	  return geometryService;
+  }
+  /**
+   * @private
+   */
+  public function set setGeometryService( value:String ):void
+  {	  
+	  geometryService = value;
+  }
+  
   /**
   * Reprojects Geometry.  
   * 
@@ -204,13 +230,11 @@ public class ProjectionHandler
         }
         
     } else {
-        // TODO: Reproject using Geometry service
-        throw new Error(
-          "Geometry services will be needed for this reprojectin. TBD");
+		tmpExtent = callSyncronRequest(extent);
     }
     return tmpExtent;
   }
-  
+    
   /**
   * Reprojects a point.  If spatial reference missing then its assumed the 
   * spatial reference is 4326.
@@ -253,7 +277,7 @@ public class ProjectionHandler
         
         rPoint = WebMercatorUtil.geographicToWebMercator(point) as MapPoint;
     } else {
-        //TODO: Use Geometry service
+		rPoint = callSyncronRequestForPoint(point);		
     }
     if(rPoint == null || isExtremeNumber(rPoint.x) || isExtremeNumber(rPoint.y)) 
     {
@@ -262,6 +286,43 @@ public class ProjectionHandler
         return null;
     }
     return rPoint;
+  }
+
+  private function callSyncronRequestForPoint(point:MapPoint):MapPoint
+  {                                	  	  
+	  var params:String = "/project?f=json&inSR="+this.spatialReferenceTo.wkid+"&outSR="+point.spatialReference.wkid + "&geometries=" +escape("{\"geometryType\":\"esriGeometryPoint\", \"geometries\":[{\"x\":"+ point.x +",\"y\":"+ point.y +"}]}");
+	  var url:String = geometryService + params;
+	  if(FindDataWidget.URL_TO_PROXY != "") {
+		  url =  FindDataWidget.URL_TO_PROXY + '?' + escape(url);
+		  //url = url.replace("??", "?");	  
+	  }
+	  var ajax:Ajax = new Ajax(url);
+	  ajax.requestType = AjaxRequestType.GET;
+	  ajax.async = false;               
+	  
+	  var response:String = ajax.send();
+	  var ro:Object = JSONUtil.decode(response);
+	  var pt:MapPoint = new MapPoint(ro.geometries[0].x,ro.geometries[0].y);
+	  return pt;
+  }
+  
+  private function callSyncronRequest(extent:Extent):Extent
+  {                                	  	  
+	  var params:String = "/project?f=json&inSR="+this.spatialReferenceTo.wkid+"&outSR="+extent.spatialReference.wkid+"&geometries=" + escape("{\"geometryType\":\"esriGeometryEnvelope\", \"geometries\":[{\"xmin\":"+ extent.xmin +",\"ymin\":"+ extent.ymin + ",\"xmax\":"+ extent.xmax +",\"ymax\":"+ extent.ymax +"}]}");
+	  var url:String = geometryService + params;
+	  if(FindDataWidget.URL_TO_PROXY != "") {
+	    url =  FindDataWidget.URL_TO_PROXY + '?' + escape(url);
+		//url = url.replace("??", "?");
+	  }
+	  var ajax:Ajax = new Ajax(url);
+	  ajax.requestType = AjaxRequestType.GET;
+	  ajax.async = false;               
+	  
+	  var response:String = ajax.send();
+	  
+	  var ro:Object = JSONUtil.decode(response);
+	  var ext:Extent = new Extent(ro.geometries[0].xmin,ro.geometries[0].ymin,ro.geometries[0].xmax,ro.geometries[0].ymax);
+	  return ext;
   }
   
   /**

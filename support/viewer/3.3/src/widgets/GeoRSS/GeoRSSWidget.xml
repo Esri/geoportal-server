@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<configuration label="Large Earthquakes (last 7 days)">
+    <source>http://earthquake.usgs.gov/earthquakes/feed/atom/4.5/week</source>
+    <fields>
+        <field name="description" alias="Date"/>
+    </fields>
+    <titlefield>title</titlefield>
+    <linkfield>link</linkfield>
+    <refreshrate></refreshrate>
+    <zoomscale>10000000</zoomscale>
+</configuration>
+
+<!--
+    See GeoRSS widget tag reference at
+    http://links.esri.com/georsswidget
+-->

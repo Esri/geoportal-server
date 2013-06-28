@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (c) 2010 Esri
+
+     All rights reserved under the copyright laws of the United States
+     and applicable international laws, treaties, and conventions.
+
+     You may freely redistribute and use this sample code, with or
+     without modification, provided you include the original copyright
+     notice and use restrictions.
+
+     See use restrictions in use_restrictions.txt.
+-->
+<!---
+     @private
+     Custom item renderer for custom TemplatePicker skin.
+-->
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:mx="library://ns.adobe.com/flex/mx"
+                name="EditWidgetTemplatePickerListItemRenderer"
+                width="100%" height="38"
+                focusEnabled="false"
+                mouseChildren="false">
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="hovered"/>
+        <s:State name="selected"/>
+    </s:states>
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.symbols.Symbol;
+
+            import flashx.textLayout.formats.TextAlign;
+
+            import mx.core.IVisualElement;
+
+            override public function set data(value:Object):void
+            {
+                super.data = value;
+
+                //First remove everything from the contentGroup
+                contentGroup.removeAllElements();
+
+                // set style on the label
+                templateLabel.setStyle("textAlign", TextAlign.CENTER);
+
+                var drawingToolShape:String;
+                if (value.featureTemplate)
+                {
+                    templateLabel.text = value.featureTemplate.name;
+                    toolTip = (value.featureTemplate.description != "") ? value.featureTemplate.name + ": " + value.featureTemplate.description : value.featureTemplate.name;
+                    drawingToolShape = value.featureTemplate.drawingTool; // show the swatch which matches the drawing tool shape
+                }
+                var symbol:Symbol = value.symbol;
+                if (symbol)
+                {
+                    contentGroup.addElement(IVisualElement(symbol.createSwatch(contentGroup.width, contentGroup.height, drawingToolShape)));
+                }
+                else
+                {
+                    enabled = false;
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <!-- border/background rectangle -->
+    <s:Rect left="0" right="0" top="0" bottom="0">
+        <s:stroke>
+            <s:SolidColorStroke alpha.normal="0"
+                                color.hovered="{getStyle('rollOverColor')}"
+                                color.normal="{getStyle('contentBackgroundColor')}"
+                                color.selected="{getStyle('focusColor')}"/>
+        </s:stroke>
+    </s:Rect>
+
+    <s:HGroup width="100%" height="100%"
+              paddingBottom="3"
+              paddingLeft="3"
+              paddingRight="3"
+              paddingTop="3"
+              verticalAlign="middle">
+        <s:Group id="contentGroup"
+                 width="28" height="28"/>
+        <s:Label id="templateLabel"/>
+    </s:HGroup>
+
+</s:ItemRenderer>

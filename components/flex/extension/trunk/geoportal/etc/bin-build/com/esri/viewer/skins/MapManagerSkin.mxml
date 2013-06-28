@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+             xmlns:s="library://ns.adobe.com/flex/spark"
+             xmlns:mx="library://ns.adobe.com/flex/mx"
+             xmlns:esri="http://www.esri.com/2008/ags"
+             xmlns:components="com.esri.viewer.components.*">
+
+    <fx:Metadata>
+        [HostComponent("com.esri.viewer.managers.MapManager")]
+    </fx:Metadata>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="decorated"/>
+        <s:State name="resized"/>
+        <s:State name="disabled"/>
+    </s:states>
+
+    <s:transitions>
+        <s:Transition id="toresize"
+                      fromState="*"
+                      toState="resized">
+            <s:Parallel>
+                <s:Move duration="500" target="{map}"/>
+            </s:Parallel>
+        </s:Transition>
+    </s:transitions>
+
+    <s:Group id="managerView"
+             width="100%" height="100%">
+        <esri:Map id="map"
+                  left.resized="{hostComponent.mapLeft}" right.resized="{hostComponent.mapRight}" top.resized="{hostComponent.mapTop}" bottom.resized="{hostComponent.mapBottom}"
+                  zoomSliderVisible="false"/>
+    </s:Group>
+
+</s:SparkSkin>

@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<configuration>
+    <layerlist visible="true">
+        <!-- <excludelayer>The Label Of Some Layer In Main Config File</excludelayer> -->
+    </layerlist>
+</configuration>
+
+<!--
+    See Map Switcher widget tag reference at
+    http://links.esri.com/mapswitcherwidget
+-->

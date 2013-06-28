@@ -31,6 +31,7 @@ package com.esri.gpt.finddata
 	import com.esri.ags.symbols.Symbol;
 	import com.esri.ags.tasks.Geoprocessor;
 	import com.esri.ags.tasks.supportClasses.ParameterValue;
+	import com.esri.gpt.utils.ProjectionHandler;
 	
 	import flash.display.DisplayObject;
 	import flash.display.Loader;
@@ -39,6 +40,7 @@ package com.esri.gpt.finddata
 	import flash.utils.Dictionary;
 	
 	import mx.collections.ArrayCollection;
+	import mx.collections.IList;
 	import mx.containers.HBox;
 	import mx.containers.TitleWindow;
 	import mx.containers.VBox;
@@ -53,7 +55,6 @@ package com.esri.gpt.finddata
 	import mx.managers.PopUpManager;
 	import mx.rpc.Fault;
 	import mx.rpc.events.FaultEvent;
-	import com.esri.gpt.utils.ProjectionHandler;
 	
 	/**
 	 * Layer that understands how to connecting to the geoprocessing event that
@@ -67,7 +68,7 @@ package com.esri.gpt.finddata
            
 		// instance variables ==================================================
 		private var _imageTransparency:Boolean;
-		private var _visibleLayers:ArrayCollection; 
+		private var _visibleLayers:IList; 
 		private var _defaultColor:uint;
 		private var _attribs:Dictionary = new Dictionary();
 		
@@ -488,7 +489,7 @@ package com.esri.gpt.finddata
          * 
          * @arr Array of visible layers, just contains their ids
          * */
-        override public function set visibleLayers(arr:ArrayCollection):void {
+        override public function set visibleLayers(arr:IList):void {
           
           this._visibleLayers = arr;
           if(arr && arr.length > 0) {
@@ -553,7 +554,7 @@ package com.esri.gpt.finddata
             
         }
       
-        override public function get visibleLayers():ArrayCollection{
+        override public function get visibleLayers():IList{
           return this._visibleLayers;
           
         }
@@ -576,7 +577,7 @@ package com.esri.gpt.finddata
               	layerInfo.title = lblPolygons;
               }
               layerInfo.name = layerInfo.title;
-              layerInfo.id = i;
+              layerInfo.layerId = i;
               layerInfo.defaultVisibility = true;
              
               arr.push(layerInfo)    

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:mx="library://ns.adobe.com/flex/mx"
+                width="100%"
+                autoDrawBackground="false">
+    <fx:Script>
+        <![CDATA[
+            import com.esri.viewer.utils.LocalizationUtil;
+
+            import flash.desktop.Clipboard;
+            import flash.desktop.ClipboardFormats;
+
+            import mx.core.FlexGlobals;
+            import mx.events.FlexEvent;
+
+            private function recordSetDataGrid_initializeHandler(event:FlexEvent):void
+            {
+                var backgroundColor:uint = FlexGlobals.topLevelApplication.styleManager.getStyleDeclaration("global").getStyle('contentBackgroundColor');
+                recordSetDataGrid.setStyle("alternatingItemColors", [ backgroundColor, backgroundColor ]);
+            }
+
+            private function copyRecordSetToClipboard():void
+            {
+                var tsvContent:String = recordSetToTSV(data.defaultValue.attributes);
+                Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, tsvContent);
+            }
+
+            private function recordSetToTSV(attributes:Object):String
+            {
+                var sortedKeys:Array = extractAndSortKeys(attributes[0]);
+                var tsvContent:String = buildTSVHeaderRow(sortedKeys) + "\n";
+
+                for each (var keyValueObject:Object in attributes)
+                {
+                    tsvContent += buildTSVRow(sortedKeys, keyValueObject) + "\n";
+                }
+
+                return tsvContent;
+            }
+
+            private function extractAndSortKeys(keyValueObject:Object):Array
+            {
+                var sortedKeys:Array = [];
+
+                for (var key:String in keyValueObject)
+                {
+                    if (key != "mx_internal_uid") //ignore dynamic property added by Flex
+                    {
+                        sortedKeys.push(key);
+                    }
+                }
+
+                sortedKeys.sort();
+
+                return sortedKeys;
+            }
+
+            private function buildTSVHeaderRow(keys:Array):String
+            {
+                var rowContent:String = "";
+                var totalKeys:int = keys.length;
+                var currentKey:String;
+                for (var i:int = 0; i < totalKeys; i++)
+                {
+                    currentKey = keys[i];
+                    rowContent += currentKey;
+
+                    if ((i + 1) < totalKeys) //if key not last
+                    {
+                        rowContent += "\t";
+                    }
+                }
+
+                return rowContent;
+            }
+
+            private function buildTSVRow(keys:Array, keyValueObject:Object):String
+            {
+                var rowContent:String = "";
+                var totalKeys:int = keys.length;
+                var currentKey:String;
+                for (var i:int = 0; i < totalKeys; i++)
+                {
+                    currentKey = keys[i];
+                    rowContent += keyValueObject[currentKey];
+
+                    if ((i + 1) < totalKeys) //if key not last
+                    {
+                        rowContent += "\t";
+                    }
+                }
+
+                return rowContent;
+            }
+
+            private function applyCopyIconHighlight():void
+            {
+                copyIcon.filters = [ glowFilter ];
+            }
+
+            private function removeCopyIconHighlight():void
+            {
+                copyIcon.filters = [];
+            }
+        ]]>
+    </fx:Script>
+
+    <fx:Declarations>
+        <mx:GlowFilter id="glowFilter"
+                       alpha="1"
+                       color="{getStyle('focusColor')}"
+                       inner="true"
+                       strength="2"/>
+    </fx:Declarations>
+
+    <s:layout>
+        <s:VerticalLayout verticalAlign="middle"/>
+    </s:layout>
+
+    <s:HGroup verticalAlign="middle">
+        <s:RichEditableText editable="false"
+                            fontWeight="bold"
+                            text="{data.label}"/>
+
+        <mx:Image id="copyIcon"
+                  height="24"
+                  click="copyRecordSetToClipboard()"
+                  maintainAspectRatio="true"
+                  rollOut="removeCopyIconHighlight()"
+                  rollOver="applyCopyIconHighlight()"
+                  source="assets/images/EditPaste32.png"
+                  toolTip="{LocalizationUtil.getDefaultString('copyToClipboard')}"/>
+    </s:HGroup>
+
+    <mx:DataGrid id="recordSetDataGrid"
+                 width="100%"
+                 dataProvider="{data.defaultValue.attributes}"
+                 initialize="recordSetDataGrid_initializeHandler(event)"
+                 selectable="true"/>
+</s:ItemRenderer>

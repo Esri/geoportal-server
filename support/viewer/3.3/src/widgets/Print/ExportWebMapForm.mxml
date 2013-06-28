@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Form xmlns:fx="http://ns.adobe.com/mxml/2009"
+         xmlns:s="library://ns.adobe.com/flex/spark"
+         xmlns:mx="library://ns.adobe.com/flex/mx"
+         xmlns:esri="http://www.esri.com/2008/ags"
+         width="100%" height="100%"
+         creationComplete="init()"
+         implements="widgets.Print.IPrintWidgetComponent">
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.events.PrintEvent;
+            import com.esri.ags.events.ZoomEvent;
+            import com.esri.ags.layers.ArcGISDynamicMapServiceLayer;
+            import com.esri.ags.layers.ArcGISTiledMapServiceLayer;
+            import com.esri.ags.layers.FeatureLayer;
+            import com.esri.ags.layers.GraphicsLayer;
+            import com.esri.ags.layers.Layer;
+            import com.esri.ags.layers.supportClasses.LayerInfo;
+            import com.esri.ags.tasks.supportClasses.DataFile;
+            import com.esri.ags.tasks.supportClasses.JobInfo;
+            import com.esri.ags.tasks.supportClasses.LegendLayer;
+            import com.esri.ags.tasks.supportClasses.LegendOptions;
+            import com.esri.ags.tasks.supportClasses.ParameterValue;
+            import com.esri.ags.tasks.supportClasses.PrintServiceInfo;
+            import com.esri.viewer.BaseWidget;
+            import com.esri.viewer.utils.ErrorMessageUtil;
+            import com.esri.viewer.utils.LabelUtil;
+
+            import mx.collections.IList;
+            import mx.rpc.Fault;
+            import mx.rpc.events.FaultEvent;
+
+            [Bindable]
+            private var title:String;
+            [Bindable]
+            private var author:String;
+            [Bindable]
+            private var copyright:String = "";
+
+            [Bindable]
+            private var shouldShowTitle:Boolean;
+            [Bindable]
+            private var shouldShowAuthor:Boolean;
+            [Bindable]
+            private var shouldShowCopyright:Boolean;
+            [Bindable]
+            private var shouldShowUseScale:Boolean;
+            [Bindable]
+            private var shouldShowTemplateOptions:Boolean;
+            [Bindable]
+            private var shouldShowFormatOptions:Boolean;
+
+            private var excludeLayersFromLegend:Array;
+
+            private var _hostBaseWidget:BaseWidget;
+
+            [Bindable]
+            public function get hostBaseWidget():BaseWidget
+            {
+                return _hostBaseWidget;
+            }
+
+            public function set hostBaseWidget(value:BaseWidget):void
+            {
+                _hostBaseWidget = value;
+            }
+
+            private var _configXML:XML;
+
+            public function get configXML():XML
+            {
+                return _configXML;
+            }
+
+            public function set configXML(value:XML):void
+            {
+                _configXML = value;
+            }
+
+            private function init():void
+            {
+                if (configXML)
+                {
+                    //excludeLayersFromLegend
+                    excludeLayersFromLegend = [];
+                    var layers:XMLList = configXML.excludelayerfromlegend as XMLList;
+                    for (var n:Number = 0; n < layers.length(); n++)
+                    {
+                        excludeLayersFromLegend.push(layers[n].toString());
+                    }
+
+                    printTask.url = configXML.taskurl;
+                    printTask.getServiceInfo();
+                    printButton.label = configXML.labels.submitlabel[0] || hostBaseWidget.getDefaultString("printSubmitLabel");
+                }
+            }
+
+            private function printButton_exportWebMapClickHandler(event:MouseEvent):void
+            {
+                swfMessage.visible = true;
+                layoutOptions.title = txtTitle.text;
+                layoutOptions.author = txtAuthor.text;
+                layoutOptions.copyright = txtCopyright.text;
+                layoutOptions.legendOptions = getLegendOptions();
+
+                var oldscale:Number;
+                var oldLODs:Array;
+                if (scaleCheckbox.selected)
+                {
+                    oldscale = hostBaseWidget.map.scale;
+                    oldLODs = hostBaseWidget.map.lods;
+
+                    hostBaseWidget.map.lods = null; //prevent LOD snapping
+                    hostBaseWidget.map.scale = Number(scaleInput.text);
+                }
+
+                if (printTask.getServiceInfoLastResult.isServiceAsynchronous)
+                {
+                    printTask.submitJob(printParameters);
+                }
+                else
+                {
+                    printTask.execute(printParameters);
+                }
+
+                if (scaleCheckbox.selected)
+                {
+                    hostBaseWidget.map.scale = oldscale;
+                    hostBaseWidget.map.lods = oldLODs;
+                }
+            }
+
+            private function getLegendOptions():LegendOptions
+            {
+                var result:LegendOptions = new LegendOptions();
+                var legendLayers:Array = [];
+
+                for each (var layer:Layer in hostBaseWidget.map.layers)
+                {
+                    if (layer.name.indexOf("hiddenLayer_") == -1 && !(layer is GraphicsLayer && !(layer is FeatureLayer)))
+                    {
+                        var isBaseMapLayer:Boolean = false;
+                        for each (var baseMapLayer:Object in hostBaseWidget.configData.basemaps)
+                        {
+                            if (baseMapLayer.label == layer.id)
+                            {
+                                isBaseMapLayer = true;
+                                break;
+                            }
+                        }
+                        if (!isBaseMapLayer)
+                        {
+                            // filter the layer through the list of names of excluded layers.
+                            var isExcludedLayer:Boolean = false;
+                            var excludedSublayers:Array = [];
+                            for each (var excludeName:String in excludeLayersFromLegend)
+                            {
+                                if (excludeName == layer.id)
+                                {
+                                    isExcludedLayer = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    const index:int = excludeName.indexOf("/");
+                                    if (index != -1)
+                                    {
+                                        const layerName:String = excludeName.substring(0, index);
+                                        const sublayerId:Number = Number(excludeName.substring(index + 1));
+                                        if (layerName == layer.id)
+                                        {
+                                            excludedSublayers.push(sublayerId);
+                                        }
+                                    }
+                                }
+                            }
+                            if (!isExcludedLayer)
+                            {
+                                var legendLayer:LegendLayer = new LegendLayer();
+                                legendLayer.layerId = layer.id;
+                                if ((layer is ArcGISDynamicMapServiceLayer || layer is ArcGISTiledMapServiceLayer) && excludedSublayers.length)
+                                {
+                                    var includedSublayers:Array = [];
+                                    const layerInfos:Array = layer is ArcGISDynamicMapServiceLayer ? ArcGISDynamicMapServiceLayer(layer).layerInfos : ArcGISTiledMapServiceLayer(layer).layerInfos;
+                                    for each (var layerInfo:LayerInfo in layerInfos)
+                                    {
+                                        if (excludedSublayers.indexOf(layerInfo.layerId) == -1)
+                                        {
+                                            includedSublayers.push(layerInfo.layerId);
+                                        }
+                                    }
+                                    legendLayer.subLayerIds = includedSublayers;
+                                }
+                                legendLayers.push(legendLayer);
+                            }
+                        }
+                    }
+                }
+
+                result.legendLayers = legendLayers;
+
+                return result;
+            }
+
+            private function map_zoomEndHandler(event:ZoomEvent):void
+            {
+                if (!scaleCheckbox.selected)
+                {
+                    updatePrintScale();
+                }
+            }
+
+            private function updatePrintScale():void
+            {
+                scaleInput.text = Math.round(hostBaseWidget.map.scale).toString();
+            }
+
+            private function printTask_executeCompleteHandler(event:PrintEvent):void
+            {
+                swfMessage.visible = false;
+                var paramValue:ParameterValue = event.executeResult.results[0];
+                var dataFile:DataFile = paramValue.value as DataFile;
+                navigateToURL(new URLRequest(dataFile.url));
+            }
+
+            protected function printTask_faultHandler(event:FaultEvent):void
+            {
+                var errorMessage:String = printTask.getServiceInfoLastResult ?
+                    createPrintExecutionErrorMessage(event.fault) : createPrintServiceInfoErrorMessage(event.fault);
+                hostBaseWidget.showError(errorMessage);
+                swfMessage.visible = false;
+            }
+
+            private function createPrintExecutionErrorMessage(fault:Fault):String
+            {
+                return hostBaseWidget.getDefaultString("printTaskExecutionError", ErrorMessageUtil.makeHTMLSafe(fault.toString()));
+            }
+
+            private function createPrintServiceInfoErrorMessage(fault:Fault):String
+            {
+                return hostBaseWidget.getDefaultString("gpServiceConnectionError",
+                                                       printTask.url,
+                                                       ErrorMessageUtil.getKnownErrorCauseMessage(fault),
+                                                       ErrorMessageUtil.makeHTMLSafe(fault.toString()));
+            }
+
+            private function printTask_getResultDataCompleteHandler(event:PrintEvent):void
+            {
+                swfMessage.visible = false;
+                var dataFile:DataFile = event.parameterValue.value as DataFile;
+                navigateToURL(new URLRequest(dataFile.url));
+            }
+
+            protected function printTask_getServiceInfoCompleteHandler(event:PrintEvent):void
+            {
+                initTitle();
+                initCopyright();
+                initAuthor();
+                initUseScale();
+                initLayoutTemplates(event.serviceInfo);
+                initFormats(event.serviceInfo);
+
+                printButton.enabled = true;
+            }
+
+            private function initTitle():void
+            {
+                shouldShowTitle = true;
+                titleFI.label = configXML.labels.titlelabel[0] || hostBaseWidget.getDefaultString("printTitleLabel");
+
+                if (configXML.title[0])
+                {
+                    title = configXML.title[0] || hostBaseWidget.getDefaultString("printTitle");
+                    if (configXML.title[0].@visible[0] == "false")
+                    {
+                        shouldShowTitle = false;
+                    }
+                }
+            }
+
+            private function initCopyright():void
+            {
+                shouldShowCopyright = true;
+                copyrightFI.label = configXML.labels.copyrightlabel[0] || hostBaseWidget.getDefaultString("printCopyrightLabel");
+
+                if (configXML.copyright[0])
+                {
+                    copyright = configXML.copyright.@defaultvalue[0] || configXML.copyright[0] || hostBaseWidget.getDefaultString("printCopyright");
+                    if (configXML.copyright[0].@visible[0] == "false")
+                    {
+                        shouldShowCopyright = false;
+                    }
+                }
+            }
+
+            private function initAuthor():void
+            {
+                shouldShowAuthor = true;
+                authorFI.label = configXML.labels.authorlabel[0] || hostBaseWidget.getDefaultString("printAuthorLabel");
+
+                if (configXML.author[0])
+                {
+                    author = configXML.author[0] || hostBaseWidget.getDefaultString("printAuthor");
+                    if (configXML.author[0].@visible[0] == "false")
+                    {
+                        shouldShowAuthor = false;
+                    }
+                }
+            }
+
+            private function initUseScale():void
+            {
+                shouldShowUseScale = true;
+                scaleFI.label = configXML.labels.scalelabel[0] || hostBaseWidget.getDefaultString("printScaleLabel");
+                hostBaseWidget.map.addEventListener(ZoomEvent.ZOOM_END, map_zoomEndHandler, false, 0, true);
+                updatePrintScale();
+
+                if (configXML.usescale[0])
+                {
+                    scaleCheckbox.selected = (configXML.usescale[0] == 'true');
+
+                    var scaleDefaultValue:Number = parseFloat(configXML.usescale[0].@defaultvalue);
+                    if (!isNaN(scaleDefaultValue))
+                    {
+                        scaleInput.text = scaleDefaultValue.toString();
+                    }
+
+                    if (configXML.usescale[0].@visible[0] == 'false')
+                    {
+                        shouldShowUseScale = false;
+                    }
+                }
+            }
+
+            private function initLayoutTemplates(serviceInfo:PrintServiceInfo):void
+            {
+                var layoutTemplatesVisibility:Boolean = true;
+                layoutTemplatesFI.label = configXML.labels.layouttemplateslabel[0] || hostBaseWidget.getDefaultString("printLayoutTemplatesLabel");
+                var layoutTemplates:IList = serviceInfo.layoutTemplates;
+
+                if (configXML.layouttemplates[0])
+                {
+                    var layoutTemplateWhitelist:Array = [];
+                    for each (var layoutTemplateXML:XML in configXML.layouttemplates.layouttemplate)
+                    {
+                        layoutTemplateWhitelist.push(layoutTemplateXML.toString());
+                    }
+
+                    if (layoutTemplates && layoutTemplateWhitelist.length > 0)
+                    {
+                        var totalLayoutTemplates:int = layoutTemplates.length;
+                        var layoutTemplate:String;
+                        //removing backwards to avoid problems altering index & items
+                        for (var i:int = totalLayoutTemplates - 1; i >= 0; i--)
+                        {
+                            layoutTemplate = layoutTemplates.getItemAt(i) as String;
+                            if (layoutTemplateWhitelist.indexOf(layoutTemplate) == -1)
+                            {
+                                layoutTemplates.removeItemAt(i);
+                            }
+                        }
+                    }
+
+                    var configDefaultLayoutTemplate:String = configXML.layouttemplates.@defaultvalue[0];
+                    if (configDefaultLayoutTemplate && isContained(configDefaultLayoutTemplate, layoutTemplates))
+                    {
+                        printParameters.layoutTemplate = configDefaultLayoutTemplate;
+                    }
+
+                    layoutTemplatesVisibility = configXML.layouttemplates[0].@visible[0] != "false";
+                }
+                shouldShowTemplateOptions = layoutTemplatesVisibility && (layoutTemplates && layoutTemplates.length > 1);
+
+                var shouldUseServiceInfoDefault:Boolean = (!printParameters.layoutTemplate
+                    && serviceInfo.defaultLayoutTemplate
+                    && isContained(serviceInfo.defaultLayoutTemplate, layoutTemplates));
+                if (shouldUseServiceInfoDefault)
+                {
+                    layoutTemplatesDDL.selectedItem = serviceInfo.defaultLayoutTemplate;
+                }
+                else if (printParameters.layoutTemplate)
+                {
+                    layoutTemplatesDDL.selectedItem = printParameters.layoutTemplate;
+                }
+
+                if (shouldShowTemplateOptions)
+                {
+                    layoutTemplatesDDL.typicalItem = LabelUtil.findLongestLabelItem(layoutTemplates.toArray());
+                }
+            }
+
+            private function isContained(item:*, list:IList):Boolean
+            {
+                return list && list.getItemIndex(item) > -1;
+            }
+
+            private function initFormats(serviceInfo:PrintServiceInfo):void
+            {
+                var formatsVisibility:Boolean = true;
+                formatsFI.label = configXML.labels.formatslabel[0] || hostBaseWidget.getDefaultString("printFormatsLabel");
+                var formats:IList = serviceInfo.formats;
+
+                if (configXML.formats[0])
+                {
+                    var formatTemplateWhitelist:Array = [];
+                    for each (var formatXML:XML in configXML.formats.format)
+                    {
+                        formatTemplateWhitelist.push(formatXML.toString());
+                    }
+
+                    if (formats && formatTemplateWhitelist.length > 0)
+                    {
+                        var totalFormats:int = formats.length;
+                        var format:String;
+                        //removing backwards to avoid problems altering index & items
+                        for (var i:int = totalFormats - 1; i >= 0; i--)
+                        {
+                            format = formats.getItemAt(i) as String;
+                            if (formatTemplateWhitelist.indexOf(format) == -1)
+                            {
+                                formats.removeItemAt(i);
+                            }
+                        }
+                    }
+
+                    var configDefaultFormat:String = configXML.formats.@defaultvalue[0];
+                    if (configDefaultFormat && isContained(configDefaultFormat, formats))
+                    {
+                        printParameters.format = configDefaultFormat;
+                    }
+
+                    formatsVisibility = configXML.formats[0].@visible[0] != "false";
+                }
+                shouldShowFormatOptions = formatsVisibility && (formats && formats.length > 1);
+
+                var shouldUseServiceInfoDefault:Boolean = (!printParameters.format
+                    && serviceInfo.defaultFormat
+                    && isContained(serviceInfo.defaultFormat, formats));
+                if (shouldUseServiceInfoDefault)
+                {
+                    formatsDDL.selectedItem = serviceInfo.defaultFormat;
+                }
+                else if (printParameters.format)
+                {
+                    formatsDDL.selectedItem = printParameters.format;
+                }
+
+                if (shouldShowFormatOptions)
+                {
+                    formatsDDL.typicalItem = LabelUtil.findLongestLabelItem(formats.toArray());
+                }
+            }
+
+            private function printTask_jobCompleteHandler(event:PrintEvent):void
+            {
+                var jobInfo:JobInfo = event.jobInfo;
+                if (jobInfo.jobStatus == JobInfo.STATUS_SUCCEEDED)
+                {
+                    printTask.getResultData(jobInfo.jobId);
+                }
+                else
+                {
+                    hostBaseWidget.showError(jobInfo.jobStatus);
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <fx:Declarations>
+        <esri:PrintTask id="printTask"
+                        executeComplete="printTask_executeCompleteHandler(event)"
+                        fault="printTask_faultHandler(event)"
+                        getResultDataComplete="printTask_getResultDataCompleteHandler(event)"
+                        getServiceInfoComplete="printTask_getServiceInfoCompleteHandler(event)"
+                        jobComplete="printTask_jobCompleteHandler(event)"
+                        showBusyCursor="true"/>
+
+        <esri:PrintParameters id="printParameters"
+                              format="{formatsDDL.selectedItem}"
+                              layoutTemplate="{layoutTemplatesDDL.selectedItem}"
+                              map="{hostBaseWidget.map}"
+                              preserveScale="{scaleCheckbox.selected}">
+            <esri:layoutOptions>
+                <esri:LayoutOptions id="layoutOptions"/>
+            </esri:layoutOptions>
+        </esri:PrintParameters>
+    </fx:Declarations>
+
+    <mx:FormItem id="titleFI"
+                 width="100%"
+                 includeInLayout="{shouldShowTitle}"
+                 visible="{shouldShowTitle}">
+        <s:TextInput id="txtTitle"
+                     width="100%"
+                     text="{title}"/>
+    </mx:FormItem>
+
+    <mx:FormItem id="authorFI"
+                 width="100%"
+                 includeInLayout="{shouldShowAuthor}"
+                 visible="{shouldShowAuthor}">
+        <s:TextInput id="txtAuthor"
+                     width="100%"
+                     text="{author}"/>
+    </mx:FormItem>
+
+    <mx:FormItem id="copyrightFI"
+                 width="100%"
+                 includeInLayout="{shouldShowCopyright}"
+                 visible="{shouldShowCopyright}">
+        <s:TextInput id="txtCopyright"
+                     width="100%"
+                     text="{copyright}"/>
+    </mx:FormItem>
+
+    <mx:FormItem id="layoutTemplatesFI"
+                 width="100%"
+                 includeInLayout="{shouldShowTemplateOptions}"
+                 visible="{shouldShowTemplateOptions}">
+        <s:DropDownList id="layoutTemplatesDDL"
+                        dataProvider="{printTask.getServiceInfoLastResult.layoutTemplates}"
+                        requireSelection="true"/>
+    </mx:FormItem>
+
+    <mx:FormItem id="formatsFI"
+                 width="100%"
+                 includeInLayout="{shouldShowFormatOptions}"
+                 visible="{shouldShowFormatOptions}">
+        <s:DropDownList id="formatsDDL"
+                        dataProvider="{printTask.getServiceInfoLastResult.formats}"
+                        requireSelection="true"/>
+    </mx:FormItem>
+
+    <mx:FormItem id="scaleFI"
+                 width="100%"
+                 direction="horizontal"
+                 horizontalGap="0"
+                 includeInLayout="{shouldShowUseScale}"
+                 visible="{shouldShowUseScale}">
+        <s:CheckBox id="scaleCheckbox"/>
+
+        <s:TextInput id="scaleInput"
+                     width="100%"
+                     enabled="{scaleCheckbox.selected}"
+                     restrict="0-9"/>
+    </mx:FormItem>
+
+
+    <s:HGroup width="100%" horizontalAlign="center">
+        <s:Button id="printButton"
+                  click="printButton_exportWebMapClickHandler(event)"
+                  enabled="false"/>
+
+        <mx:Image id="swfMessage"
+                  source="assets/images/loader.swf"
+                  visible="false"/>
+    </s:HGroup>
+</mx:Form>

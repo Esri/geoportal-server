@@ -1,0 +1,621 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                      xmlns:s="library://ns.adobe.com/flex/spark"
+                      xmlns:mx="library://ns.adobe.com/flex/mx"
+                      xmlns:utils="com.esri.viewer.utils.*"
+                      width="100%" height="100%"
+                      creationComplete="init()">
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.Map;
+            import com.esri.viewer.AppEvent;
+            import com.esri.viewer.ConfigData;
+            import com.esri.viewer.IBaseWidget;
+            import com.esri.viewer.IInfowindowTemplate;
+            import com.esri.viewer.IWidgetContainer;
+            import com.esri.viewer.ViewerContainer;
+            import com.esri.viewer.WidgetStates;
+            import com.esri.viewer.utils.Hashtable;
+
+            import mx.controls.Alert;
+            import mx.core.IVisualElement;
+            import mx.events.ModuleEvent;
+            import mx.managers.HistoryManager;
+            import mx.modules.IModuleInfo;
+            import mx.modules.ModuleManager;
+
+            import spark.components.Group;
+
+            private var hist:HistoryManager;
+
+            private var configData:ConfigData;
+
+            private var map:Map;
+
+            private var moduleTable:Hashtable = new Hashtable();
+            private var widgetTable:Hashtable = new Hashtable();
+            private var controlTable:Hashtable = new Hashtable();
+            private var containerTable:Hashtable = new Hashtable();
+            private var infowidgetTable:Hashtable = new Hashtable();
+
+            private var wgtInfo:IModuleInfo;
+            private var ctlInfo:IModuleInfo;
+            private var ctnInfo:IModuleInfo;
+
+            private var isDraggable:Boolean = true;
+            private var isResizeable:Boolean = true;
+
+            private var preloadArray:Array = [];
+            private var _refX:Number = 0;
+            private var _refY:Number = 0;
+
+            private var controlContainer:Group;
+
+            private function init():void
+            {
+                ViewerContainer.addEventListener(AppEvent.CONFIG_LOADED, config);
+                ViewerContainer.addEventListener(AppEvent.MAP_LOADED, onMapLoad);
+                ViewerContainer.addEventListener(AppEvent.WIDGET_RUN, onRunWidget);
+                ViewerContainer.addEventListener(AppEvent.WIDGET_ADDED, widgetAddedHandler);
+                ViewerContainer.addEventListener(AppEvent.DATA_CREATE_INFOWIDGET, onInfowidgetRequest);
+                ViewerContainer.addEventListener(AppEvent.WIDGET_FOCUS, focusWidgetHandler);
+                ViewerContainer.addEventListener(AppEvent.WIDGET_STATE_CHANGED, widgetClosedHandler);
+
+                //TODO: no real time change layout for V2.0
+                //ViewerContainer.addEventListener(AppEvent.CHANGE_LAYOUT, changeLayoutHandler); 
+
+                //TODO: no real time resizing for V2.0
+                //ViewerContainer.addEventListener(AppEvent.WIDGET_MGR_RESIZE, resizeManagerView);
+            }
+
+            private function config(event:AppEvent):void
+            {
+                configData = event.data as ConfigData;
+
+                startLoadWidgetContainers();
+
+            }
+
+            private function onMapLoad(event:AppEvent):void
+            {
+                map = event.data as Map;
+            }
+
+            //=====================================================================
+            // Load widget containers
+            //=====================================================================
+            private var containerList:Array = new Array();
+
+            private function startLoadWidgetContainers():void
+            {
+                var containers:Array = configData.widgetContainers;
+                if (containers)
+                {
+                    for (var i:int = 0; i < containers.length; i++)
+                    {
+                        containerList.push(containers[i].container);
+                    }
+                    loadNextContainer();
+                }
+            }
+
+            private function loadNextContainer():void
+            {
+                if (containerList.length)
+                {
+                    var ctn:Object = containerList[0];
+                    containerList.splice(0, 1);
+                    loadContainer(ctn);
+                }
+                else
+                {
+                    startLoadControls();
+                }
+            }
+
+            private function loadContainer(ctn:Object):void
+            {
+                ctnInfo = ModuleManager.getModule(ctn.url);
+                ctnInfo.data = ctn;
+                ctnInfo.addEventListener(ModuleEvent.READY, onContainerReady);
+                ctnInfo.addEventListener(ModuleEvent.ERROR, moduleErrorHandler);
+                ctnInfo.load(null, null, null, moduleFactory);
+            }
+
+            private function onContainerReady(event:ModuleEvent):void
+            {
+                var info:IModuleInfo = event.module;
+                var ctnData:Object = info.data;
+                containerTable.add(ctnData.url, info);
+
+                var bcontainer:IWidgetContainer = info.factory.create() as IWidgetContainer;
+
+                ctnData.obj = bcontainer;
+                bcontainer.configParams = ctnData;
+
+                var ctnIVE:IVisualElement = bcontainer as IVisualElement;
+
+                this.addElement(ctnIVE);
+                loadNextContainer();
+            }
+
+
+            //=====================================================================
+            // Load controllers
+            //=====================================================================
+            private var controllerList:Array = new Array();
+
+            private function startLoadControls():void
+            {
+                controlContainer = new Group();
+                controlContainer.percentHeight = 100;
+                controlContainer.percentWidth = 100;
+
+                this.addElementAt(controlContainer, 0);
+
+                var controls:Array = configData.controls;
+                if (controls)
+                {
+                    for (var i:uint = 0; i < controls.length; i++)
+                    {
+                        controllerList.push(controls[i]);
+                    }
+                }
+                this.cursorManager.setBusyCursor();
+                loadNextControl();
+            }
+
+            private function loadNextControl():void
+            {
+                if (controllerList.length)
+                {
+                    var ctl:Object = controllerList[0];
+                    controllerList.splice(0, 1);
+                    loadControl(ctl);
+                }
+                else
+                {
+                    //load pre load widget after controllers are loaded
+                    this.cursorManager.removeBusyCursor();
+                    preloadWidgets();
+                }
+            }
+
+            private function loadControl(ctl:Object):void
+            {
+                ctlInfo = ModuleManager.getModule(ctl.url);
+                ctlInfo.data = ctl;
+                ctlInfo.addEventListener(ModuleEvent.READY, moduleReadyHandler);
+                ctlInfo.addEventListener(ModuleEvent.ERROR, moduleErrorHandler);
+                ctlInfo.load(null, null, null, moduleFactory);
+            }
+
+            private function moduleReadyHandler(event:ModuleEvent):void
+            {
+                var moduleInfo:IModuleInfo = event.module;
+                var moduleData:Object = moduleInfo.data;
+                controlTable.add(moduleData.url, moduleInfo);
+
+                var config:String = moduleData.config as String;
+
+                var baseWidget:IBaseWidget = moduleInfo.factory.create() as IBaseWidget;
+
+                baseWidget.widgetId = moduleData.id as Number;
+                baseWidget.widgetTitle = moduleData.label;
+                baseWidget.widgetIcon = moduleData.icon;
+                baseWidget.config = config;
+                baseWidget.configData = configData;
+                baseWidget.map = map;
+                baseWidget.setRelativePosition(moduleData.left, moduleData.right, moduleData.top, moduleData.bottom);
+                baseWidget.run();
+
+                var visualElement:IVisualElement = baseWidget as IVisualElement;
+                if (visualElement)
+                {
+                    controlContainer.addElement(visualElement);
+                }
+                loadNextControl();
+            }
+
+            //=====================================================================
+            // Load preload widgets
+            //=====================================================================
+            private function preloadWidgets():void
+            {
+                for (var i:Number = 0; i < configData.widgets.length; i++)
+                {
+                    var id:Number = configData.widgets[i].id;
+                    var preload:String = configData.widgets[i].preload;
+                    if (preload == "open" || preload == "minimized")
+                    {
+                        preloadArray.push(configData.widgets[i]);
+                    }
+                }
+                preloadNextWidget();
+            }
+
+            private function preloadNextWidget():void
+            {
+                if (preloadArray.length > 0)
+                {
+                    var id:Number = preloadArray[0].id;
+                    preloadArray.splice(0, 1);
+                    ViewerContainer.dispatchEvent(new AppEvent(AppEvent.WIDGET_RUN, id));
+                }
+            }
+
+            //=====================================================================
+            // Load widgets
+            //=====================================================================
+
+            private var widgetAdded:Boolean = false;
+
+            private function onRunWidget(event:AppEvent):void
+            {
+                var id:Number = event.data as Number;
+                var idx:Object = configData.widgetIndex[id];
+
+                var wgtContainer:IWidgetContainer = configData.widgetContainers[idx.container].container.obj;
+                var wgt:Object = configData.widgetContainers[idx.container].widgets[idx.widget];
+
+                var preload:String = wgt.preload;
+                var label:String = wgt.label;
+                var icon:String = wgt.icon;
+                var config:String = wgt.config;
+                var url:String = wgt.url;
+
+                var wx:Number = Number(wgt.x);
+                var wy:Number = Number(wgt.y);
+                var wleft:String = wgt.left;
+                var wtop:String = wgt.top;
+                var wright:String = wgt.right;
+                var wbottom:String = wgt.bottom;
+
+                if (!widgetAdded)
+                {
+                    widgetAdded = true;
+                }
+
+                //widget loaded
+                var widget:IBaseWidget;
+                if (widgetTable.containsKey(id))
+                {
+                    widget = widgetTable.find(id) as IBaseWidget;
+
+                    //add back the container if exists
+                    widget.setState(WidgetStates.WIDGET_OPENED);
+                    wgtContainer.addWidget(widget);
+                }
+                else
+                {
+                    //module loaded
+                    if (moduleTable.containsKey(url))
+                    {
+                        var modInfo:IModuleInfo = moduleTable.find(url) as IModuleInfo;
+                        widget = modInfo.factory.create() as IBaseWidget;
+                        widget.widgetId = id;
+                        widget.widgetTitle = label;
+                        widget.widgetIcon = icon;
+                        widget.config = config;
+                        widget.configData = configData;
+                        widget.map = map;
+                        widget.isDraggable = this.isDraggable;
+                        widget.isResizeable = this.isResizeable;
+
+                        widget.setPreload(preload);
+
+                        // if no X and Y both configured, use system X/Y for positioning
+                        if (wleft || wtop || wright || wbottom)
+                        {
+                            widget.setRelativePosition(wleft, wright, wtop, wbottom);
+                        }
+                        else if (wx && wy)
+                        {
+                            widget.setXYPosition(wx, wy);
+                        }
+                        else
+                        {
+                            setAutoXY();
+                            wx = _refX;
+                            wy = _refY
+                            widget.setXYPosition(wx, wy);
+                        }
+
+                        wgtContainer.addWidget(widget);
+
+                        if (preload)
+                        {
+                            widget.setState(preload);
+                        }
+                        else
+                        {
+                            widget.setState(WidgetStates.WIDGET_OPENED);
+                        }
+
+                        widgetTable.add(id, widget);
+                    }
+                    else
+                    {
+                        loadWidget(id);
+                    }
+                }
+            }
+
+            private function loadWidget(id:Number):void
+            {
+                var idx:Object = configData.widgetIndex[id];
+                var wgt:Object = configData.widgetContainers[idx.container].widgets[idx.widget];
+                var preload:String = wgt.preload;
+                var url:String = wgt.url;
+
+                wgtInfo = ModuleManager.getModule(url);
+                wgtInfo.data =
+                    {
+                        id: id,
+                        preload: preload
+                    };
+                wgtInfo.addEventListener(ModuleEvent.READY, widgetReadyHandler);
+                wgtInfo.addEventListener(ModuleEvent.ERROR, moduleErrorHandler);
+                wgtInfo.load(null, null, null, moduleFactory);
+                this.cursorManager.setBusyCursor();
+            }
+
+            private function widgetReadyHandler(event:ModuleEvent):void
+            {
+                this.cursorManager.removeBusyCursor();
+
+                var info:IModuleInfo = event.module;
+                moduleTable.add(info.url, info);
+
+                var id:Number = info.data.id;
+                var idx:Object = configData.widgetIndex[id];
+                var wgt:Object = configData.widgetContainers[idx.container].widgets[idx.widget];
+                var wgtContainer:IWidgetContainer = configData.widgetContainers[idx.container].container.obj;
+
+                var preload:String = info.data.preload;
+                var label:String = wgt.label;
+                var icon:String = wgt.icon;
+                var config:String = wgt.config;
+                var wx:Number = Number(wgt.x);
+                var wy:Number = Number(wgt.y);
+                var wleft:String = wgt.left;
+                var wtop:String = wgt.top;
+                var wright:String = wgt.right;
+                var wbottom:String = wgt.bottom;
+
+                var widget:IBaseWidget = info.factory.create() as IBaseWidget;
+                widget.widgetId = id;
+                widget.widgetTitle = label;
+                widget.widgetIcon = icon;
+                widget.config = config;
+                widget.configData = configData;
+                widget.map = map;
+                widget.isDraggable = this.isDraggable;
+                widget.isResizeable = this.isResizeable;
+                widget.setPreload(preload);
+
+                // if no X and Y both configured, use system X/Y for positioning
+                if (wleft || wtop || wright || wbottom)
+                {
+                    widget.setRelativePosition(wleft, wright, wtop, wbottom);
+                }
+                else if (wx && wy)
+                {
+                    widget.setXYPosition(wx, wy);
+                }
+                else
+                {
+                    setAutoXY();
+                    wx = _refX;
+                    wy = _refY
+                    widget.setXYPosition(wx, wy);
+                }
+
+                widget.setXYPosition(wx, wy);
+
+                widgetTable.add(id, widget);
+                wgtContainer.addWidget(widget);
+                widget.setState(WidgetStates.WIDGET_OPENED);
+            }
+
+            private function setAutoXY():void
+            {
+                var widgetWidget:Number = 300;
+
+                var siftUnit:Number = 20;
+
+                if (_refX == 0)
+                {
+                    _refX = siftUnit;
+                }
+                else
+                {
+                    _refX = _refX + widgetWidget + 20;
+                }
+
+                if (_refY == 0)
+                {
+                    _refY = Math.round(widgetWidget / 2);
+                }
+
+                if (((_refX + widgetWidget) > this.width))
+                {
+                    _refX = siftUnit
+                    _refY = _refY + Math.round(widgetWidget + siftUnit) / 2;
+                }
+                else if ((_refY + widgetWidget) > this.height)
+                {
+                    _refX = siftUnit;
+                    _refY = Math.round(widgetWidget / 2);
+                }
+            }
+
+            /* --------------------------------------------------------------------
+               Load Infowidnow Template Widgets
+             * -------------------------------------------------------------------- */
+            private var m_infoWidgetInfo:IModuleInfo;
+            private var m_infoWidgetCallback:Function;
+
+            private function onInfowidgetRequest(event:AppEvent):void
+            {
+                m_infoWidgetCallback = event.callback;
+                var url:String = event.data.url as String;
+                var id:String = event.data.id as String;
+                var config:String = event.data.config as String;
+
+                if (infowidgetTable.containsKey(url))
+                {
+                    m_infoWidgetInfo = infowidgetTable.find(url) as IModuleInfo;
+                    m_infoWidgetInfo.data.id = id;
+                    m_infoWidgetInfo.data.config = config;
+                    createInfoTemplate(m_infoWidgetInfo);
+                }
+                else
+                {
+                    loadInfoWidget(url, id, config);
+                }
+
+            }
+
+            private function loadInfoWidget(url:String, id:String, config:String):void
+            {
+                m_infoWidgetInfo = ModuleManager.getModule(url);
+                m_infoWidgetInfo.data =
+                    {
+                        url: url,
+                        id: id,
+                        config: config
+                    };
+                m_infoWidgetInfo.addEventListener(ModuleEvent.READY, infoWidgetReadyHandler);
+                m_infoWidgetInfo.addEventListener(ModuleEvent.ERROR, moduleErrorHandler);
+                m_infoWidgetInfo.load(null, null, null, moduleFactory);
+            }
+
+            private function infoWidgetReadyHandler(event:ModuleEvent):void
+            {
+                var moduleInfo:IModuleInfo = event.module;
+                var url:String = moduleInfo.data.url as String;
+                infowidgetTable.add(url, moduleInfo);
+                createInfoTemplate(moduleInfo);
+            }
+
+            private var _infoData:Object;
+
+            private function createInfoTemplate(moduleInfo:IModuleInfo):void
+            {
+                var infoWidget:IInfowindowTemplate = moduleInfo.factory.create() as IInfowindowTemplate;
+                var url:String = moduleInfo.data.url as String;
+                var id:String = moduleInfo.data.id as String;
+                var config:String = moduleInfo.data.config as String;
+
+                if (infoWidget)
+                {
+                    _infoData =
+                        {
+                            url: url,
+                            id: id,
+                            config: config,
+                            infoWidget: infoWidget
+                        };
+
+                    if (config)
+                    {
+                        var baseWidget:IBaseWidget = infoWidget as IBaseWidget;
+
+                        baseWidget.setInfoConfig(config, false);
+                        baseWidget.addEventListener("widgetConfigLoaded", widgetConfigLoadedHandler);
+                    }
+                    else
+                    {
+                        m_infoWidgetCallback(new AppEvent(AppEvent.DATA_CREATE_INFOWIDGET, _infoData));
+                    }
+                }
+            }
+
+            private function widgetConfigLoadedHandler(event:Event):void
+            {
+                m_infoWidgetCallback(new AppEvent(AppEvent.DATA_CREATE_INFOWIDGET, _infoData));
+            }
+
+            private function moduleErrorHandler(event:ModuleEvent):void
+            {
+                this.cursorManager.removeBusyCursor();
+
+                Alert.show(event.errorText);
+            }
+
+            //child change handler
+            //TODO: load preload the same way of loading controller
+            private function widgetAddedHandler(event:AppEvent):void
+            {
+                preloadNextWidget();
+            }
+
+            private function focusWidgetHandler(event:AppEvent):void
+            {
+                var id:int = Number(event.data);
+                var idx:Object = configData.widgetIndex[id];
+
+                if (idx)
+                {
+                    var widgetId:Number = idx.widget;
+                    var wgtContainer:IWidgetContainer = configData.widgetContainers[idx.container].container.obj;
+
+                    wgtContainer.focusWidget(widgetId);
+                }
+            }
+
+            /**
+             * in case regular widget is configured as controller and can be closed.
+             */
+            private var curId:Number;
+
+            private function widgetClosedHandler(event:AppEvent):void
+            {
+                var data:Object = event.data;
+
+                if (data.state as String == WidgetStates.WIDGET_CLOSED)
+                {
+                    curId = data.id as Number;
+
+                    var timer:Timer = new Timer(500, 1);
+                    timer.addEventListener(TimerEvent.TIMER_COMPLETE, removeWidget);
+                    timer.start();
+                }
+            }
+
+            private function removeWidget(event:TimerEvent):void
+            {
+                var widget:IVisualElement;
+                for (var i:int = 0; i < controlContainer.numElements; i++)
+                {
+                    widget = controlContainer.getElementAt(i);
+
+                    var baseWidget:IBaseWidget = widget as IBaseWidget;
+
+                    if (baseWidget.widgetId == curId)
+                    {
+                        controlContainer.removeElement(widget);
+
+                        return;
+                    }
+                }
+            }
+        ]]>
+    </fx:Script>
+
+</s:SkinnableContainer>

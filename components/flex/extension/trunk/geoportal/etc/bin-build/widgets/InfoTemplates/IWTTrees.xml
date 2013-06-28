@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<configuration>
+    <fields>TYPE,DESCRIPTION</fields>
+    <titlefield>TYPE</titlefield>
+    <linkfield></linkfield>
+    <datefields></datefields> <!-- field in milliseconds -->
+    <zoomscale>5000</zoomscale>
+</configuration>

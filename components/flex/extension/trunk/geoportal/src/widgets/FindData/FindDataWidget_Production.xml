@@ -1,5 +1,5 @@
 <configuration>
-    <!--
+<!--
 See the NOTICE file distributed with
 this work for additional information regarding copyright ownership.
 Esri Inc. licenses this file to You under the Apache License, Version 2.0
@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-    <!--
+  <!--
   If on webserver and you may have search results with services, or search urls
   that do not have a crossdomain.xml then it can be used. 
   
@@ -23,9 +23,9 @@ limitations under the License.
     used. If you are using ESRI Situational Awareness then it recommmended you use
     this attribute.
    -->
-    <useProxy proxyUrl="">true</useProxy>
-
-    <!-- 
+  <useProxy proxyUrl="">true</useProxy>
+  <geometryService>http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer</geometryService>
+  <!-- 
   /gptEndPoint - Elements pointing to gpt end points
   @name will be listed in the drop down
   @url Can be relative or aboulute.  url to the rest 
@@ -35,120 +35,122 @@ limitations under the License.
   @useNameAsPrefix if url points to repositories list then the attribute
      specifies whether the @name should be used as the prefix  
   -->
-    <gptEndpoint url="rest/find/document"
-      name="Default Site"/>
-    <gptEndpoint url="rest/find/document?rid=ArcGIS.com"
-      name="ArcGIS.com"/>
-    <gptEndpoint url="rest/repositories?f=xml"
-      name="Default Site: " useNameAsPrefix="true"/>
-
-    <!-- GP Service needs to be set up for this to work. Feature coming next 
+  <gptEndpoint url="rest/find/document" 
+    name="Default Site"/> 
+  <gptEndpoint url="rest/find/document?rid=ArcGIS.com" 
+    name="ArcGIS.com"/>  
+  <gptEndpoint url="http://geo.data.gov/geoportal/rest/find/document" 
+    name="Geo.data.gov http://geo.data.gov"/>   
+  <gptEndpoint url="http://geoss.esri.com/geoportal/rest/find/document" 
+    name="GEOSS http://geoss.esri.com"/>    
+  <gptEndpoint url="rest/repositories?f=xml" 
+    name="Default Site: " useNameAsPrefix="true"/>   
+    
+  <!-- GP Service needs to be set up for this to work. Feature coming next 
   release after GPT version 10 -->
-    <gpShapefile
-       url="http://{host}/ArcGIS/rest/services/toJson/GPServer/convertShp/"/>
-    <gpKmlfile
-       url="http://{host}/ArcGIS/rest/services/toJson/GPServer/convertKML"/>
+  <gpShapefile
+     url="http://{host}/ArcGIS/rest/services/toJson/GPServer/convertShp/"/> 
+  <gpKmlfile 
+     url="http://{host}/ArcGIS/rest/services/toJson/GPServer/convertKML"/>         
+       
+  
+  <!-- Other Configurations -->
+  <searchTimeout>90</searchTimeout><!-- Seconds -->
+  <addLayerTimeout>90</addLayerTimeout><!-- Seconds -->
+  <numOfResultsPerPage>10</numOfResultsPerPage>
+  <iconSearch>assets/images/i_searchtext.png</iconSearch>
+  <iconResult>assets/images/i_table.png</iconResult>
+  <iconHelp>assets/images/i_help.png</iconHelp>
+  
+  <zoomFactor>1</zoomFactor>
+  <urlHelp>http://sourceforge.net/apps/mediawiki/geoportal/index.php?title=Search_Widget_for_Flex#How_to_Use_the_Geoportal_Search_Widget_for_Flex</urlHelp>
 
-
-    <!-- Other Configurations -->
-    <searchTimeout>90</searchTimeout>
-    <!-- Seconds -->
-    <addLayerTimeout>90</addLayerTimeout>
-    <!-- Seconds -->
-    <numOfResultsPerPage>10</numOfResultsPerPage>
-    <iconSearch>assets/images/i_searchtext.png</iconSearch>
-    <iconResult>assets/images/i_table.png</iconResult>
-    <iconHelp>assets/images/i_help.png</iconHelp>
-
-    <zoomFactor>1</zoomFactor>
-    <urlHelp>http://help.arcgis.com/en/geoportal_extension/10.0/help/index.html#//00t00000002v000000.htm</urlHelp>
-
-    <!-- regWebContext =  Used to match the webcontext so as to automate getting the 
+  <!-- regWebContext =  Used to match the webcontext so as to automate getting the 
   endpoint for relative URLS -->
-    <regWebContext>.*\/{2}[^\/]*\/[^\/]*</regWebContext>
+  <regWebContext>.*\/{2}[^\/]*\/[^\/]*</regWebContext>
 
-    <linkParser id="default">
-        <!-- 
+  <linkParser id="default">
+    <!-- 
     Detects if the gptEndpoint is a url to an xml document with a list of xml documents
      -->
-        <regDetectEndpointListUrl>.*rest\/repositories.*</regDetectEndpointListUrl>
-        <!-- regExtractExtSearchPrfx - The url specified in gptEndpoint will be processed to determine then remote/external search
+    <regDetectEndpointListUrl>.*rest\/repositories.*</regDetectEndpointListUrl>
+    <!-- regExtractExtSearchPrfx - The url specified in gptEndpoint will be processed to determine then remote/external search
     site id in the same site as the gpt endpoint
     - The regExtract* elements can take a @replaceDelimeter and an @delimeter.  if you have
       (reg[replaceDelimeter]string[delimeter])* the reg will be used with to look for section
       to replaces with the string 
      -->
-        <regExtractExtSearchPrfx replaceDelimeter="|" delimeter="~">repositories.*|find/document?rid={id}</regExtractExtSearchPrfx>
-        <!-- Watch out for escaped url special chracters.  
+    <regExtractExtSearchPrfx replaceDelimeter="|" delimeter="~">repositories.*|find/document?rid={id}</regExtractExtSearchPrfx>
+    <!-- Watch out for escaped url special chracters.  
       Most likely they will be escaped 
       The regexs below work by using string.replace(reg, "").  -->
-        <regDetectMapLinkProvider><![CDATA[.*command.addToMap.*|.*resources=map%3(A|a).*%40.*|.*livedata.*preview.page.*]]></regDetectMapLinkProvider>
-        <regExtractMapservice delimeter="~"><![CDATA[.*resources=map%3(A|a).*%40~.*livedata.*preview.page.*url=~.*command=addToMap.*server=~&info=.*~&serviceType=.*~&resourceType=.*]]></regExtractMapservice>
-        <regExtractMapLinkType delimeter="~"><![CDATA[.*resources=map%3A~%40.*~.*serviceType=~.*resourceType=~&info=.*]]></regExtractMapLinkType>
-        <regExcludeLinks><![CDATA[.*resource=.*%3(A|a).*|.*resources=map%3(A|a).*%40.*|.*preview.page.*|.*command.addToMap.*|.*iewer\/index.*]]></regExcludeLinks>
-        <!-- Once RegExtractMapService is used, the below will be applied to each type (its unescaped after the extract)
+    <regDetectMapLinkProvider><![CDATA[.*command.addToMap.*|.*resources=map%3(A|a).*%40.*|.*livedata.*preview.page.*]]></regDetectMapLinkProvider>
+    <regExtractMapservice delimeter="~"><![CDATA[.*resources=map%3(A|a).*%40~.*livedata.*preview.page.*url=~.*command=addToMap.*server=~&info=.*~&serviceType=.*~&resourceType=.*]]></regExtractMapservice>
+    <regExtractMapLinkType delimeter="~"><![CDATA[.*resources=map%3A~%40.*~.*serviceType=~.*resourceType=~&info=.*]]></regExtractMapLinkType>
+    <regExcludeLinks><![CDATA[.*resource=.*%3(A|a).*|.*resources=map%3(A|a).*%40.*|.*preview.page.*|.*command.addToMap.*|.*iewer\/index.*]]></regExcludeLinks>
+    <!-- Once RegExtractMapService is used, the below will be applied to each type (its unescaped after the extract)
      -->
-        <regLinkTypes>
-            <!-- Extracted map link type will be matched agains first then the url 
+    <regLinkTypes>
+      <!-- Extracted map link type will be matched agains first then the url 
       -->
-            <wms>
-                <regDetect><![CDATA[WMS|wms|.*service=wms.*|.*wmsserver.*|.*com.esri.wms.esrimap.*]]></regDetect>
-            </wms>
-            <wfs>
-                <regDetect><![CDATA[WFS|wfs|.*service=wfs.*|.*wfsserver.*|.*com.esri.wfs.esrimap.*]]></regDetect>
-            </wfs>
-            <agsRest>
-                <regDetect><![CDATA[.*rest\/services.*ap.erver.*]]></regDetect>
-            </agsRest>
+      <wms>
+        <regDetect><![CDATA[WMS|wms|.*service=wms.*|.*wmsserver.*|.*com.esri.wms.esrimap.*]]></regDetect>
+      </wms>
+      <wfs>
+        <regDetect><![CDATA[WFS|wfs|.*service=wfs.*|.*wfsserver.*|.*com.esri.wfs.esrimap.*]]></regDetect>
+      </wfs>
+      <agsRest>
+        <regDetect><![CDATA[.*rest\/services.*ap.erver.*]]></regDetect>
+      </agsRest>
 
-            <agsRestMapServer>
-                <regDetect><![CDATA[.*rest\/services.*ap.erver.*]]></regDetect>
-            </agsRestMapServer>
+      <agsRestMapServer>
+        <regDetect><![CDATA[.*rest\/services.*ap.erver.*]]></regDetect>
+      </agsRestMapServer>
 
-            <agsRestFeatureServer>
-                <regDetect><![CDATA[.*rest\/services.*eature.erver.*]]></regDetect>
-            </agsRestFeatureServer>
+      <agsRestFeatureServer>
+        <regDetect><![CDATA[.*rest\/services.*eature.erver.*]]></regDetect>
+      </agsRestFeatureServer>
 
-            <agsRestImageServer>
-                <regDetect><![CDATA[.*rest\/services.*mage.erver.*]]></regDetect>
-            </agsRestImageServer>
+      <agsRestImageServer>
+        <regDetect><![CDATA[.*rest\/services.*mage.erver.*]]></regDetect>
+      </agsRestImageServer>
 
-            <kml>
-                <regDetect><![CDATA[kmz|kml|.*kmz|.*kml]]></regDetect>
-            </kml>
-            <agsWebmap>
-                <regDetect><![CDATA[kmz|kml|.*kmz|.*kml]]></regDetect>
-            </agsWebmap>
+      <kml>
+        <regDetect><![CDATA[kmz|kml|.*kmz|.*kml]]></regDetect>
+      </kml>
+      <agsWebmap>
+        <regDetect><![CDATA[kmz|kml|.*kmz|.*kml]]></regDetect>
+      </agsWebmap>
 
-            <geoRss>
-                <regDetect>georss</regDetect>
-            </geoRss>
-            <arcIms>
-                <regDetect><![CDATA[aims|arcims|image|.*servlet.*com.esri.esrimap.Esrimap.*]]></regDetect>
-                <regExtractHost delimeter="~"><![CDATA[\/[a-zA-Z|_|-]*$~\/servlet.*com.esri.esrimap.Esrimap.*~.*server=~&service=.*]]></regExtractHost>
-                <regExtractServiceName delimeter="~"><![CDATA[.*\/~.*serviceName=~.*ServiceName=~.*service=~&serviceType=.*]]></regExtractServiceName>
-            </arcIms>
-        </regLinkTypes>
-    </linkParser>
+      <geoRss>
+        <regDetect>georss</regDetect>
+      </geoRss>
+      <arcIms>
+        <regDetect><![CDATA[aims|arcims|image|.*servlet.*com.esri.esrimap.Esrimap.*]]></regDetect>
+        <regExtractHost delimeter="~"><![CDATA[\/[a-zA-Z|_|-]*$~\/servlet.*com.esri.esrimap.Esrimap.*~.*server=~&service=.*]]></regExtractHost>
+        <regExtractServiceName delimeter="~"><![CDATA[.*\/~.*serviceName=~.*ServiceName=~.*service=~&serviceType=.*]]></regExtractServiceName>
+      </arcIms>
+    </regLinkTypes>
+  </linkParser>
 
-    <!-- Color for the bounding boxes -->
-    <color id="mainBboxesPlain"
-      fillColor="0xFF0000"
-      fillAlpha="0.001"
-      fillStyle="null"
-      outlineColor="0xFF0000"
-      outlineWidth="2"
-      outlineAlpha="1"
-      outlineStyle="solid"/>
-
-    <!-- Color for the bounding boxes if highlighted -->
-    <color id="mainBboxesHighlight"
-      fillColor="0xFF0000"
-      fillStyle="null"
-      fillAlpha="0.001"
-      outlineColor="0xFF0000"
-      outlineWidth="5"
-      outlineAlpha="1"
-      outlineStyle="solid"/>
-
+  <!-- Color for the bounding boxes -->  
+  <color id="mainBboxesPlain"
+    fillColor="0xFF0000" 
+    fillAlpha="0.001"
+    fillStyle="null"
+    outlineColor="0xFF0000" 
+    outlineWidth="2" 
+    outlineAlpha="1"
+    outlineStyle="solid"/>
+    
+  <!-- Color for the bounding boxes if highlighted -->  
+  <color id="mainBboxesHighlight"
+    fillColor="0xFF0000" 
+    fillStyle="null"
+    fillAlpha="0.001"
+    outlineColor="0xFF0000" 
+    outlineWidth="5"
+    outlineAlpha="1"
+    outlineStyle="solid"/> 
+  
 </configuration>

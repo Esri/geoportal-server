@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<configuration>
+    <fields>district,req_type,req_date,req_time,address,status</fields>
+    <titlefield>address</titlefield>
+    <linkfield></linkfield>
+    <datefields></datefields> <!-- field in milliseconds -->
+    <zoomscale>5000</zoomscale>
+</configuration>

@@ -1,0 +1,656 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                      xmlns:s="library://ns.adobe.com/flex/spark"
+                      xmlns:mx="library://ns.adobe.com/flex/mx"
+                      xmlns:esri="http://www.esri.com/2008/ags"
+                      creationComplete="init()">
+
+    <!-- this component is used by the OverviewMapWidget -->
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.Graphic;
+            import com.esri.ags.Map;
+            import com.esri.ags.events.ExtentEvent;
+            import com.esri.ags.events.MapEvent;
+            import com.esri.ags.geometry.MapPoint;
+            import com.esri.ags.geometry.Polygon;
+            import com.esri.ags.layers.ArcGISDynamicMapServiceLayer;
+            import com.esri.ags.layers.ArcGISImageServiceLayer;
+            import com.esri.ags.layers.ArcGISTiledMapServiceLayer;
+            import com.esri.ags.layers.ArcIMSMapServiceLayer;
+            import com.esri.ags.layers.FeatureLayer;
+            import com.esri.ags.layers.GraphicsLayer;
+            import com.esri.ags.layers.Layer;
+            import com.esri.ags.layers.OpenStreetMapLayer;
+            import com.esri.ags.symbols.SimpleFillSymbol;
+            import com.esri.ags.symbols.SimpleLineSymbol;
+            import com.esri.ags.virtualearth.VETiledLayer;
+            import com.esri.viewer.AppEvent;
+            import com.esri.viewer.ConfigData;
+
+            import mx.collections.ArrayCollection;
+            import mx.core.FlexGlobals;
+            import mx.events.EffectEvent;
+
+            private const lineSym:SimpleLineSymbol = new SimpleLineSymbol("solid", 0xFF0000, 0.7, 2);
+            private const currentExtentSym:SimpleFillSymbol = new SimpleFillSymbol("solid", 0xFF0000, 0.2, lineSym);
+
+            [Bindable]
+            public var map:Map;
+            public var configData:ConfigData;
+            public var openDefaultToolTip:String;
+            public var closeDefaultToolTip:String;
+
+            private var graphicsLayer:GraphicsLayer = new GraphicsLayer();
+            private var proxyUrl:String;
+            private var overviewGraphic:Graphic = new Graphic();
+            private var useBaseMapLayer:Boolean;
+            private var baseMapSwitched:Boolean;
+            private var currentBaseMapId:String;
+            private var hasOverviewGraphicBeenMoved:Boolean = false;
+            private var lastMouseMapX:Number;
+            private var lastMouseMapY:Number;
+            private var basemapLayerObjectToLayer:Dictionary;
+            private var isCollapsible:Boolean = true;
+
+            [Bindable]
+            private var openToolTip:String;
+            [Bindable]
+            private var closeToolTip:String;
+
+            private function init():void
+            {
+                // wait for the current state to be updated based on config
+                viewBox.visible = false;
+                borderRect1.visible = false;
+
+                overviewGraphic.buttonMode = true;
+                toggleIcon.addEventListener(MouseEvent.CLICK, toggleIcon_clickHandler);
+                viewBox.setStyle("backgroundColor", FlexGlobals.topLevelApplication.getStyle("backgroundColor"));
+            }
+
+            private function toggleIcon_clickHandler(event:MouseEvent):void
+            {
+                currentState = (currentState == "collapsed") ? "expanded" : "collapsed";
+            }
+
+            public function set expansionDirection(direction:String):void
+            {
+                switch (direction)
+                {
+                    case ExpansionDirection.UP_RIGHT:
+                    {
+                        toggleIcon.rotation = 90;
+                        toggleIcon.left = toggleIcon.bottom = iconMask.left = iconMask.bottom = null;
+                        toggleIcon.right = toggleIcon.top = iconMask.right = iconMask.top = 0;
+                        break;
+                    }
+                    case ExpansionDirection.DOWN_RIGHT:
+                    {
+                        toggleIcon.rotation = 180;
+                        toggleIcon.left = toggleIcon.top = iconMask.left = iconMask.top = null;
+                        toggleIcon.right = toggleIcon.bottom = iconMask.right = iconMask.bottom = 0;
+                        break;
+                    }
+                    case ExpansionDirection.DOWN_LEFT:
+                    {
+                        toggleIcon.rotation = 270;
+                        toggleIcon.right = toggleIcon.top = iconMask.right = iconMask.top = null;
+                        toggleIcon.left = toggleIcon.bottom = iconMask.left = iconMask.bottom = 0;
+                        break;
+                    }
+                }
+            }
+
+            private var _configXML:XML;
+
+            public function get configXML():XML
+            {
+                return _configXML;
+            }
+
+            public function set configXML(value:XML):void
+            {
+                _configXML = value;
+
+                if (configXML)
+                {
+                    // overviewmap open/close tooltip label
+                    openToolTip = configXML.labels.opentooltip || openDefaultToolTip;
+                    closeToolTip = configXML.labels.closetooltip || closeDefaultToolTip;
+
+                    // proxyURL
+                    proxyUrl = configData.proxyUrl;
+
+                    var url:String = configXML.layer.@url;
+                    var type:String;
+                    var useProxy:Boolean;
+                    if (url)
+                    {
+                        useBaseMapLayer = false;
+                        type = configXML.layer.@type;
+                        useProxy = configXML.layer.@useproxy[0] && configXML.layer.@useproxy == "true";
+                        switch (type.toLowerCase())
+                        {
+                            case "tiled":
+                            {
+                                var tiledlayer:ArcGISTiledMapServiceLayer = new ArcGISTiledMapServiceLayer(url);
+                                tiledlayer.alpha = alpha;
+                                if (proxyUrl && useProxy)
+                                {
+                                    tiledLayer.proxyURL = proxyUrl;
+                                }
+                                overviewMap.addLayer(tiledlayer);
+                                break;
+                            }
+                            case "dynamic":
+                            {
+                                var dynlayer:ArcGISDynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer(url);
+                                dynlayer.alpha = alpha;
+                                if (proxyUrl && useProxy)
+                                {
+                                    dynlayer.proxyURL = proxyUrl;
+                                }
+                                overviewMap.addLayer(dynlayer);
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        useBaseMapLayer = true;
+                        basemapLayerObjectToLayer = new Dictionary();
+
+                        // get the base map layers
+                        for each (var basemapLayerObject:Object in configData.basemaps)
+                        {
+                            type = basemapLayerObject.type;
+                            useProxy = basemapLayerObject.useProxy;
+                            proxyUrl = configData.proxyUrl;
+
+                            const alpha:Number = Number(basemapLayerObject.alpha);
+                            const autoRefresh:Number = Number(basemapLayerObject.autoRefresh);
+                            const label:String = basemapLayerObject.label;
+                            const token:String = basemapLayerObject.token;
+                            const urlBaseMap:String = basemapLayerObject.url;
+                            const bingMapKey:String = basemapLayerObject.key;
+                            const style:String = basemapLayerObject.style;
+                            const visible:Boolean = basemapLayerObject.visible;
+                            const visibleLayers:String = basemapLayerObject.visibleLayers;
+                            const culture:String = basemapLayerObject.culture;
+                            const useamf:Boolean = basemapLayerObject.useamf;
+                            const mode:String = basemapLayerObject.mode;
+                            const noData:Number = Number(basemapLayerObject.noData);
+                            const serviceHost:String = basemapLayerObject.serviceHost;
+                            const serviceName:String = basemapLayerObject.serviceName;
+                            const definitionExpression:String = basemapLayerObject.definitionExpression;
+
+                            var layerToAdd:Layer = null;
+                            switch (type.toLowerCase())
+                            {
+                                case "tiled":
+                                {
+                                    var tiledLayer:ArcGISTiledMapServiceLayer = new ArcGISTiledMapServiceLayer(urlBaseMap);
+                                    tiledLayer.alpha = alpha;
+                                    tiledLayer.id = label;
+                                    tiledLayer.visible = visible;
+                                    tiledLayer.token = token;
+                                    if (proxyUrl && useProxy)
+                                    {
+                                        tiledLayer.proxyURL = proxyUrl;
+                                    }
+
+                                    layerToAdd = tiledLayer;
+                                    break;
+                                }
+                                case "dynamic":
+                                {
+                                    var dynLayer:ArcGISDynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer(urlBaseMap);
+                                    dynLayer.alpha = alpha;
+                                    dynLayer.id = label;
+                                    dynLayer.visible = visible;
+                                    dynLayer.token = token;
+                                    if (autoRefresh > 0)
+                                    {
+                                        setInterval(dynLayer.refresh, autoRefresh * 1000);
+                                    }
+                                    if (visibleLayers)
+                                    {
+                                        var vizLayers:Array = visibleLayers.split(",");
+                                        dynLayer.visibleLayers = new ArrayCollection(vizLayers);
+                                    }
+                                    if (proxyUrl && useProxy)
+                                    {
+                                        dynLayer.proxyURL = proxyUrl;
+                                    }
+                                    layerToAdd = dynlayer;
+                                    break;
+                                }
+                                case "feature":
+                                {
+                                    var featureLayer:FeatureLayer = new FeatureLayer(urlBaseMap);
+                                    featureLayer.alpha = alpha;
+                                    featureLayer.id = label;
+                                    featureLayer.visible = visible;
+                                    featureLayer.outFields = [ '*' ];
+                                    featureLayer.token = token;
+                                    featureLayer.useAMF = useamf;
+                                    if (mode)
+                                    {
+                                        featureLayer.mode = mode;
+                                    }
+                                    if (proxyUrl && useProxy)
+                                    {
+                                        featureLayer.proxyURL = proxyUrl;
+                                    }
+                                    if (definitionExpression && definitionExpression != "")
+                                    {
+                                        featureLayer.definitionExpression = definitionExpression;
+                                    }
+                                    layerToAdd = featureLayer;
+                                    break;
+                                }
+                                case "bing":
+                                {
+                                    var veTiledLayer:VETiledLayer = new VETiledLayer();
+                                    veTiledLayer.alpha = alpha;
+                                    veTiledLayer.id = label;
+                                    veTiledLayer.visible = visible;
+                                    veTiledLayer.key = bingMapKey;
+                                    if (style)
+                                    {
+                                        veTiledLayer.mapStyle = style;
+                                    }
+                                    if (culture)
+                                    {
+                                        veTiledLayer.culture = culture;
+                                    }
+                                    layerToAdd = veTiledLayer;
+                                    break;
+                                }
+                                case "image":
+                                {
+                                    var imgLayer:ArcGISImageServiceLayer = new ArcGISImageServiceLayer(urlBaseMap);
+                                    imgLayer.alpha = alpha;
+                                    imgLayer.id = label;
+                                    imgLayer.visible = visible;
+                                    imgLayer.noData = noData;
+                                    imgLayer.token = token;
+                                    if (proxyUrl && useProxy)
+                                    {
+                                        imgLayer.proxyURL = proxyUrl;
+                                    }
+                                    layerToAdd = imgLayer;
+                                    break;
+                                }
+                                case "arcims":
+                                {
+                                    var arcimsLayer:ArcIMSMapServiceLayer = new ArcIMSMapServiceLayer();
+                                    arcimsLayer.alpha = alpha;
+                                    arcimsLayer.id = label;
+                                    arcimsLayer.visible = visible;
+                                    arcimsLayer.serviceHost = serviceHost;
+                                    arcimsLayer.serviceName = serviceName;
+                                    if (autoRefresh > 0)
+                                    {
+                                        setInterval(arcimsLayer.refresh, autoRefresh * 1000);
+                                    }
+                                    if (visibleLayers)
+                                    {
+                                        var visLayers:Array = visibleLayers.split(",");
+                                        arcimsLayer.visibleLayers = new ArrayCollection(visLayers);
+                                    }
+                                    if (proxyUrl && useProxy)
+                                    {
+                                        arcimsLayer.proxyURL = proxyUrl;
+                                    }
+                                    layerToAdd = arcimsLayer;
+                                    break;
+                                }
+                                case "osm":
+                                {
+                                    var osmLayer:OpenStreetMapLayer = new OpenStreetMapLayer();
+                                    osmLayer.alpha = alpha;
+                                    osmLayer.id = label;
+                                    osmLayer.name = label;
+                                    osmLayer.visible = visible;
+                                    layerToAdd = osmLayer;
+                                    break;
+                                }
+                            }
+
+                            if (layerToAdd)
+                            {
+                                overviewMap.addLayer(layerToAdd);
+                                basemapLayerObjectToLayer[basemapLayerObject] = layerToAdd;
+                            }
+                        }
+                        AppEvent.addListener(AppEvent.BASEMAP_SWITCH, viewContainer_basemapSwitchHandler);
+                    }
+                    // collapsible
+                    if (configXML.collapsible.length() > 0)
+                    {
+                        isCollapsible = configXML.collapsible == "true";
+                    }
+                    if (isCollapsible)
+                    {
+                        currentState = configXML.initialstate == "open" ? "expanded" : "collapsed";
+                    }
+                    else
+                    {
+                        currentState = "noncollapsible";
+                    }
+                    if (currentState == "collapsed") // turn layer(s) off if component is collapsed
+                    {
+                        for each (var layer:Layer in overviewMap.layers)
+                        {
+                            layer.visible = false;
+                        }
+                    }
+                    viewBox.visible = true;
+                    borderRect1.visible = true;
+                }
+            }
+
+            private function viewContainer_basemapSwitchHandler(event:AppEvent):void
+            {
+                baseMapSwitched = true;
+                currentBaseMapId = event.data as String;
+                if (currentState == "expanded" || currentState == "noncollapsible")
+                {
+                    showCurrentBaseMap(currentBaseMapId);
+                }
+            }
+
+            private function showCurrentBaseMap(currentBaseMapId:String):void
+            {
+                var configBasemaps:Array = configData.basemaps;
+
+                if (currentBaseMapId)
+                {
+                    var selectedLabel:String;
+                    for (var i:uint = 0; i < configBasemaps.length; i++)
+                    {
+                        if (configBasemaps[i].id == currentBaseMapId)
+                        {
+                            selectedLabel = configBasemaps[i].label;
+                            break;
+                        }
+                    }
+                    if (selectedLabel)
+                    {
+                        // turn on the selected basemap layers (more than one layer can have the same label)
+                        var layers:ArrayCollection = overviewMap.layers as ArrayCollection;
+                        for (i = 0; i < configBasemaps.length; i++)
+                        {
+                            var basemapLabel:String = configBasemaps[i].label;
+                            for each (var layer:Layer in layers)
+                            {
+                                if (layer.id == basemapLabel)
+                                {
+                                    if (layer.id == selectedLabel)
+                                    {
+                                        layer.visible = true;
+                                    }
+                                    else
+                                    {
+                                        layer.visible = false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            private function overviewMap_loadHandler(event:MapEvent):void
+            {
+                graphicsLayer.name = "overviewMapGraphicsLayer";
+                graphicsLayer.symbol = currentExtentSym;
+                overviewMap.addLayer(graphicsLayer);
+
+                overviewGraphic.geometry = map.extent;
+                overviewGraphic.addEventListener(MouseEvent.MOUSE_DOWN, overviewGraphic_mouseDownHandler);
+
+                //update map extent when mouse moves out of the overview map
+                overviewMap.addEventListener(MouseEvent.ROLL_OUT, overviewMap_mouseRollOutHandler);
+
+                graphicsLayer.add(overviewGraphic);
+
+                if (map.loaded)
+                {
+                    trackMapExtent();
+                }
+                else
+                {
+                    map.addEventListener(MapEvent.LOAD, map_loadHandler);
+                }
+            }
+
+            private function overviewGraphic_mouseDownHandler(event:MouseEvent):void
+            {
+                overviewGraphic.removeEventListener(MouseEvent.MOUSE_DOWN, overviewGraphic_mouseDownHandler);
+                overviewMap.addEventListener(MouseEvent.MOUSE_UP, overviewMap_mouseUpHandler);
+                overviewMap.addEventListener(MouseEvent.MOUSE_MOVE, overviewMap_mouseMoveHandler);
+
+                var overviewCenterMapPoint:MapPoint = overviewGraphic.geometry.extent.center;
+                var mouseMapPoint:MapPoint = overviewMap.toMapFromStage(event.stageX, event.stageY);
+                lastMouseMapX = mouseMapPoint.x;
+                lastMouseMapY = mouseMapPoint.y;
+            }
+
+            private function overviewMap_mouseMoveHandler(event:MouseEvent):void
+            {
+                hasOverviewGraphicBeenMoved = true;
+
+                var overviewPolygon:Polygon = overviewGraphic.geometry as Polygon;
+                var overviewCenterMapPoint:MapPoint = overviewPolygon.extent.center;
+
+                var mouseMapPoint:MapPoint = overviewMap.toMapFromStage(event.stageX, event.stageY);
+                var deltaMapX:Number = mouseMapPoint.x - lastMouseMapX;
+                var deltaMapY:Number = mouseMapPoint.y - lastMouseMapY;
+                lastMouseMapX = mouseMapPoint.x;
+                lastMouseMapY = mouseMapPoint.y;
+
+                var ring:Array = overviewPolygon.removeRing(0)[0];
+                for (var iMapPoint:int = 4; iMapPoint >= 0; iMapPoint--)
+                {
+                    ring[iMapPoint].x += deltaMapX;
+                    ring[iMapPoint].y += deltaMapY;
+                }
+                overviewPolygon.addRing(ring);
+
+                overviewGraphic.refresh();
+            }
+
+            private function overviewMap_mouseRollOutHandler(event:MouseEvent):void
+            {
+                overviewMap.removeEventListener(MouseEvent.MOUSE_MOVE, overviewMap_mouseMoveHandler);
+                overviewMap.removeEventListener(MouseEvent.MOUSE_UP, overviewMap_mouseUpHandler);
+                overviewGraphic.addEventListener(MouseEvent.MOUSE_DOWN, overviewGraphic_mouseDownHandler);
+
+                if (hasOverviewGraphicBeenMoved)
+                {
+                    hasOverviewGraphicBeenMoved = false;
+                    updateMapExtentFromOverview();
+                }
+            }
+
+            private function updateMapExtentFromOverview():void
+            {
+                map.center = overviewGraphic.geometry.extent.center;
+            }
+
+            private function overviewMap_mouseUpHandler(event:MouseEvent):void
+            {
+                overviewMap.removeEventListener(MouseEvent.MOUSE_MOVE, overviewMap_mouseMoveHandler);
+                overviewMap.removeEventListener(MouseEvent.MOUSE_UP, overviewMap_mouseUpHandler);
+                overviewGraphic.addEventListener(MouseEvent.MOUSE_DOWN, overviewGraphic_mouseDownHandler);
+
+                if (hasOverviewGraphicBeenMoved)
+                {
+                    hasOverviewGraphicBeenMoved = false;
+                    updateMapExtentFromOverview();
+                }
+            }
+
+            private function trackMapExtent():void
+            {
+                map.addEventListener(ExtentEvent.EXTENT_CHANGE, map_extentChangeHandler);
+                updateOverviewExtentFromMap();
+            }
+
+            private function updateOverviewExtentFromMap():void
+            {
+                overviewMap.extent = map.extent.expand(3);
+                overviewGraphic.geometry = map.visibleArea;
+                //hide overview box if larger than overview map
+                overviewGraphic.visible = overviewMap.extent.contains(overviewGraphic.geometry);
+            }
+
+            private function map_extentChangeHandler(event:ExtentEvent):void
+            {
+                updateOverviewExtentFromMap();
+            }
+
+            private function map_loadHandler(event:MapEvent):void
+            {
+                map.removeEventListener(MapEvent.LOAD, map_loadHandler);
+                trackMapExtent();
+            }
+
+            private function sequence_effectStartHandler(event:EffectEvent):void
+            {
+                if (currentState == "expanded" || currentState == "noncollapsible")
+                {
+                    if (useBaseMapLayer)
+                    {
+                        if (baseMapSwitched)
+                        {
+                            showCurrentBaseMap(currentBaseMapId);
+                        }
+                        else
+                        {
+                            // on start up and if basemap is not switched
+                            for (var basemapLayerObject:Object in basemapLayerObjectToLayer)
+                            {
+                                var layer:Layer = basemapLayerObjectToLayer[basemapLayerObject];
+                                layer.visible = basemapLayerObject.visible;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for each (var overviewMapLayer:Layer in overviewMap.layers)
+                        {
+                            overviewMapLayer.visible = true;
+                        }
+                    }
+                }
+            }
+
+            private function sequence_effectEndHandler(event:EffectEvent):void
+            {
+                if (currentState == "collapsed") // turn layer(s) off if component is collapsed
+                {
+                    for each (var layer:Layer in overviewMap.layers)
+                    {
+                        if (!(layer is GraphicsLayer && layer.name == "overviewMapGraphicsLayer"))
+                        {
+                            layer.visible = false;
+                        }
+                    }
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <s:states>
+        <s:State name="collapsed"/>
+        <s:State name="expanded"/>
+        <s:State name="noncollapsible"/>
+    </s:states>
+
+    <s:transitions>
+        <s:Transition fromState="collapsed" toState="expanded">
+            <s:Sequence effectEnd="sequence_effectEndHandler(event)" effectStart="sequence_effectStartHandler(event)">
+                <s:Resize duration="800" target="{viewBox}"/>
+                <s:Rotate angleBy="180"
+                          autoCenterTransform="true"
+                          duration="300"
+                          target="{toggleIcon}"/>
+            </s:Sequence>
+        </s:Transition>
+        <s:Transition fromState="expanded" toState="collapsed">
+            <s:Sequence effectEnd="sequence_effectEndHandler(event)" effectStart="sequence_effectStartHandler(event)">
+                <s:Resize duration="800" target="{viewBox}"/>
+                <s:Rotate angleBy="180"
+                          autoCenterTransform="true"
+                          duration="300"
+                          target="{toggleIcon}"/>
+            </s:Sequence>
+        </s:Transition>
+    </s:transitions>
+
+    <s:BorderContainer id="viewBox"
+                       width="250" width.collapsed="{toggleIcon.width}" height="250" height.collapsed="{toggleIcon.height}"
+                       backgroundAlpha="1.0">
+        <esri:Map id="overviewMap"
+                  width="250" height="250"
+                  attributionVisible="false"
+                  clickRecenterEnabled="false"
+                  doubleClickZoomEnabled="false"
+                  keyboardNavigationEnabled="false"
+                  load="overviewMap_loadHandler(event)"
+                  logoVisible="false"
+                  mask="{mapMask}"
+                  panArrowsVisible="false"
+                  panEnabled="false"
+                  rubberbandZoomEnabled="false"
+                  scaleBarVisible="false"
+                  scrollWheelZoomEnabled="false"
+                  wrapAround180="{map.wrapAround180}"
+                  zoomSliderVisible="false"/>
+        <s:BorderContainer id="mapMask"
+                           width="{viewBox.width}" height="{viewBox.height}"/>
+        <s:Group width="{viewBox.width}" height="{viewBox.height}"
+                 includeInLayout.noncollapsible="false"
+                 visible.noncollapsible="false">
+            <mx:Image id="toggleIcon"
+                      width="23" height="23"
+                      buttonMode="true"
+                      mask="{iconMask}"
+                      smoothBitmapContent="true"
+                      source="assets/images/i_expand2.png"
+                      toolTip.collapsed="{openToolTip}"
+                      toolTip.expanded="{closeToolTip}"
+                      useHandCursor="true"/>
+            <s:BorderContainer id="iconMask"
+                               width="{toggleIcon.width}" height="{toggleIcon.height}"/>
+        </s:Group>
+    </s:BorderContainer>
+    <s:Rect id="borderRect1"
+            left="-1" right="-1" top="-1" bottom="-1">
+        <s:stroke>
+            <s:SolidColorStroke color="{getStyle('contentBackgroundColor')}" weight="1"/>
+        </s:stroke>
+    </s:Rect>
+
+</s:SkinnableContainer>

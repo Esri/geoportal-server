@@ -47,6 +47,12 @@
 		<delete dir="${DEPLOY_DIR}"/>
 		<delete dir="${BUILD_DIR}"/>
     <echo message="BaseDir: ${basedir}" />
+    <!-- Unzip flex fiewer -->
+    <!--<unzip src="../../support/viewer/flexviewer-3.3-src4bld.zip" dest="../../"/>-->
+    <!-- Copy flex viewer -->
+    <copy todir="../../">
+      <fileset dir="../../support/viewer/3.3" includes="**" />
+    </copy>
 	</target>
   
   <!--
@@ -127,7 +133,19 @@
 	      <include name="**/*.as"/>
 	      <include name="**/*.mxml"/>
 	    </fileset>
+      <fileset dir="${BUILD_DIR}/viewer/com/esri/viewer/components/toc/tocClasses/">
+        <include name="**/*.as"/>
+        <include name="**/*.mxml"/>
+      </fileset>
 	  </replaceregexp>
+    <replaceregexp byline="true"> <!-- More specific search needed -->
+      <regexp pattern="\[Embed\(source=&quot;assets\/images"/>
+      <substitution expression="\[Embed\(source=&quot;\/assets\/images"/>
+      <fileset dir="${BUILD_DIR}/viewer/com/esri/viewer/components/toc/tocClasses/">
+        <include name="**/*.as"/>
+        <include name="**/*.mxml"/>
+      </fileset>
+    </replaceregexp>
 	  <replaceregexp byline="true">
 	    <regexp pattern="&lt;s:states&gt;"/>
 	    <substitution expression="&lt;s:states&gt;&lt;s:State name=&quot;disabled&quot;/&gt;&lt;s:State name=&quot;normal&quot;/&gt;"/>
@@ -169,7 +187,7 @@
             actionscript-file-encoding="UTF-8"
             keep-generated-actionscript="false"
             keep-all-type-selectors="true"
-     	      link-report="MyReport.xml"
+     	      link-report="${VIEWER_ROOT_DIR}\MyReport.xml"
             incremental="true"
             static-rsls="false"
             use-network="true"
@@ -241,7 +259,8 @@
 			This looks at the module directory and converts it to a list of module names separated by commas
 		 	and places it in the variable "flex.modules"
 		-->
-		<pathconvert property="flex.modules.viewer" pathsep=",">
+    <echo message="BUILD_Dir/viewer: ${BUILD_DIR}/viewer" />
+		<pathconvert property="flex.modules.viewer" pathsep=",">      
 		    <fileset dir="${BUILD_DIR}/viewer">
 		    	<include name="**/*Widget.mxml"/>
 		    </fileset>
@@ -251,6 +270,10 @@
 		       <mapper type="regexp" from="^(.*)${MODULE_DIR}(.*)(\.mxml)$$" to="\2"/>
 		    </mapper>
 		</pathconvert>
+    <echo message="MODULE_DIR:  ${MODULE_DIR}" />
+    <echo message="BUILD_DIR:  ${BUILD_DIR}" />
+    <echo message="flex.modules.viewer: ${flex.modules.viewer}" />
+    
     <pathconvert property="flex.modules.geoportal" pathsep=",">
       <fileset dir="${BUILD_DIR}/geoportal">
         <include name="**/*Widget.mxml"/>
@@ -261,6 +284,8 @@
         <mapper type="regexp" from="^(.*)${MODULE_DIR}(.*)(\.mxml)$$" to="\2"/>
       </mapper>
     </pathconvert>
+    
+    <echo message="flex.modules.geoportal: ${flex.modules.geoportal}" />
 		
 		<!-- Calls the "compile-module" target and gives it the parameter "moduleName"  -->
 		<foreach list="${flex.modules.viewer}" delimiter="," parallel="false" param="moduleName" trim="true" target="compile-module-viewer"/>
@@ -312,7 +337,7 @@
 			      optimize="true"
 			      debug="false"
 			      fork="true"
-			      load-externs="MyReport.xml"
+			      load-externs="${VIEWER_ROOT_DIR}\MyReport.xml"
             static-rsls="false"
             keep-all-type-selectors="true"
             incremental="false"
@@ -352,7 +377,7 @@
 
 				
 		<!-- compile the CSS SWF -->
-		<mxmlc 
+		<!--<mxmlc 
 			file="${BUILD_DIR}/viewer/${STYLE}.css" 
 			output="${DEPLOY_DIR}/${STYLE}.swf"			
 			maxmemory="256m" fork="true">
@@ -366,10 +391,10 @@
 			<library-path dir="${LIB_DIR}" append="true">
 			   <include name="*.swc" />
 			</library-path>
-		</mxmlc>
+		</mxmlc>-->
 		
 		<!-- delete the copy of the CSS file at the root level -->
-		<delete file="${BUILD_DIR}/viewer/${STYLE}.css"/>
+		<!--<delete file="${BUILD_DIR}/viewer/${STYLE}.css"/>-->
 	</target>
 	
 	<!--
@@ -386,7 +411,9 @@
         <exclude name="**/*.css"/>
         <exclude name="**/*.scc"/>
       </fileset>
+      <fileset file="${VIEWER_ROOT_DIR}/html-template/swfobject.js" />
     </copy>
+    
     
     <!-- Copy supporting files of the geoportal widget -->
     <copy todir="${DEPLOY_DIR}/geoportal">
@@ -433,7 +460,7 @@
 		Copies runtime images into the deployment directory
 	-->
 	<target name="compile-wrapper">
-		<copy file="html-template/swfobject.js" toFile="${DEPLOY_DIR}/swfobject.js" />
+		<!--<copy file="html-template/swfobject.js" toFile="${DEPLOY_DIR}/swfobject.js" />-->
 		<copy todir="${DEPLOY_DIR}/history">
 			<fileset dir="html-template/history"/>
 
@@ -460,7 +487,7 @@
 	-->
 	<target name="clean-up">
 
-		<delete file="MyReport.xml" />
+		<delete file="${VIEWER_ROOT_DIR}\MyReport.xml" />
 	</target>
   
   <!--

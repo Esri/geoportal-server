@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:mx="library://ns.adobe.com/flex/mx"
+        alpha.disabled="0.5">
+
+    <fx:Metadata>
+        <![CDATA[
+        /**
+        * @copy spark.skins.default.ApplicationSkin#hostComponent
+        */
+        [HostComponent("spark.components.ButtonBar")]
+        ]]>
+    </fx:Metadata>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="disabled"/>
+    </s:states>
+
+    <fx:Declarations>
+        <fx:Component id="middleButton">
+            <s:ButtonBarButton skinClass="widgets.Navigation.IconButtonSkin"/>
+        </fx:Component>
+    </fx:Declarations>
+
+    <!-- layer: fill -->
+    <s:Rect x="0" y="0" width="100%" height="100%"
+            minWidth="23"
+            radiusX="3"
+            radiusY="3">
+        <s:fill>
+            <s:SolidColor alpha="{getStyle('contentBackgroundAlpha')}" color="{getStyle('contentBackgroundColor')}"/>
+        </s:fill>
+    </s:Rect>
+
+    <!---
+         @copy spark.components.SkinnableDataContainer#dataGroup
+    -->
+    <s:DataGroup id="dataGroup"
+                 width="100%" height="100%">
+        <!--s:layout>
+             <s:ButtonBarHorizontalLayout gap="2"/>
+             </s:layout-->
+    </s:DataGroup>
+
+</s:Skin>

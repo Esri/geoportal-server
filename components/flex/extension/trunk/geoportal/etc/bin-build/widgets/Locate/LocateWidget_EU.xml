@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<configuration>
+    <locator wkid="4326">http://tasks.arcgisonline.com/ArcGIS/rest/services/Locators/TA_Address_EU/GeocodeServer</locator>
+    <minscore>40</minscore>
+    <!-- by default every locator field is a text box, you can change one field to a dropdown
+         by specifying it as a <listfield> and its values in <listvalues> -->
+    <listfield>Country</listfield>
+    <listvalues>Andorra,Austria,Belgium,Denmark,Finland,France,Germany,Gibraltar,Ireland,Italy,Liechtenstein,Luxembourg,Monaco,Netherlands,Norway,Portugal,San Marino,Spain,Sweden,Switzerland,United Kingdom,Vatican City</listvalues>
+    <zoomscale>5000</zoomscale>
+    <info>widgets/InfoTemplates/InfoPopupWidget.swf</info>
+</configuration>
+
+

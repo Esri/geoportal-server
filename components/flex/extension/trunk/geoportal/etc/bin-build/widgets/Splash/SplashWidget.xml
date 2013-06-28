@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<configuration>
+    <!--
+        Refer to the doc below for valid HTML tags that can be used for the content
+        http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flashx/textLayout/conversion/TextConverter.html#TEXT_FIELD_HTML_FORMAT
+    -->
+    <width>375</width>
+    <height>375</height>
+    <content>
+        <![CDATA[<p align='center'>
+            <img src='assets/images/globe.png' width='140' height='140' />
+        </p>
+        <p>
+            <font size="16"><b>Welcome to ArcGIS Viewer for Flex.</b></font>
+        </p>
+        <p>
+            This application was developed with ArcGIS Viewer for Flex.
+        </p>
+        <p>
+            More information at links below:
+        </p>
+        <textformat blockindent="20">
+            <p>
+                * Built with <a href="http://help.arcgis.com/en/webapps/flexviewer/" target='_blank'><font color="#FFFFFF"><b>ArcGIS Viewer for Flex</b></font></a>
+                <br>
+                * Based on <a href="http://help.arcgis.com/en/webapi/flex/" target='_blank'><font color="#FFFFFF"><b>ArcGIS API for Flex</b></font></a>
+            </p>
+        </textformat>
+        <br>
+        <p>
+            <a href="http://www.esri.com/legal/pdfs/mla_e204_e300/english.pdf" target='_blank'><font color="#FFFFFF">(c) Copyright 2010 Esri</font></a>. All rights reserved.
+        </p>
+       ]]>
+    </content>
+    <btnlabel>Click to continue</btnlabel>
+
+</configuration>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   width="100%" height="100%"
+                   cornerRadius="10"
+                   creationComplete="htmlPopup_creationCompleteHandler(event)">
+    <s:filters>
+        <s:GlowFilter alpha="0.8"
+                      blurX="50"
+                      blurY="50"
+                      color="0xFFFFFF"
+                      quality="{BitmapFilterQuality.MEDIUM}"
+                      strength="1"/>
+    </s:filters>
+    <fx:Script>
+        <![CDATA[
+            import com.esri.viewer.skins.TextAreaSkin;
+
+            import flash.filters.BitmapFilterQuality;
+
+            import flashx.textLayout.conversion.TextConverter;
+
+            import mx.core.FlexGlobals;
+            import mx.events.CloseEvent;
+            import mx.events.FlexEvent;
+
+            [Bindable]
+            public var content:String;
+
+            [Bindable]
+            public var btnLabel:String = "OK";
+
+            [Bindable]
+            public var txtareaWidth:Number = 500;
+
+            [Bindable]
+            public var txtareaHeight:Number = 500;
+
+
+            public static function show(content:String = "",
+                                        btnLabel:String = "OK",
+                                        width:Number = 500,
+                                        height:Number = 500,
+                                        modal:Boolean = true,
+                                        closeHandler:Function = null):HTMLPopup
+            {
+                var alert:HTMLPopup = new HTMLPopup();
+
+                var parent:Sprite = Sprite(FlexGlobals.topLevelApplication);
+
+                if (closeHandler != null)
+                {
+                    alert.addEventListener(CloseEvent.CLOSE, closeHandler);
+                }
+
+                alert.content = content;
+                alert.btnLabel = btnLabel;
+                alert.txtareaWidth = width;
+                alert.txtareaHeight = height;
+
+                HTMLPopupManager.addPopUp(alert, parent, modal);
+
+                return alert;
+            }
+
+            private function close(event:Event):void
+            {
+                HTMLPopupManager.removePopUp(this);
+                dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
+            }
+
+            protected function htmlPopup_creationCompleteHandler(event:FlexEvent):void
+            {
+                setStyle("backgroundColor", getStyle("contentBackgroundColor"));
+                setStyle("backgroundAlpha", FlexGlobals.topLevelApplication.getStyle("backgroundAlpha"));
+                // setStyle("skinClass",FlexGlobals.topLevelApplication.getStyle("skinClass"));
+            }
+        ]]>
+    </fx:Script>
+    <!-- doc reference http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flashx/textLayout/conversion/TextConverter.html#PLAIN_TEXT_FORMAT -->
+    <s:RectangularDropShadow id="dropShadow"
+                             left="0" right="0" top="0" bottom="0"
+                             alpha="0.32"
+                             angle="90"
+                             blRadius="10"
+                             blurX="20"
+                             blurY="20"
+                             brRadius="10"
+                             distance="25"/>
+    <!--s:TextArea width="{FlexGlobals.topLevelApplication.width - 100}" text="dsflgmds mdflgmd dflgmdflgm dflgmdflgm dflsmgdf'l;gm " /-->
+    <s:VGroup horizontalAlign="center" paddingBottom="10">
+        <s:TextArea id="txtArea"
+                    width="{txtareaWidth}" height="{txtareaHeight}"
+                    borderVisible="false"
+                    editable="false"
+                    heightInLines="{NaN}"
+                    minHeight="100"
+                    minWidth="100"
+                    skinClass="com.esri.viewer.skins.TextAreaSkin"
+                    textFlow="{TextConverter.importToFlow(content,TextConverter.TEXT_FIELD_HTML_FORMAT)}"
+                    widthInChars="{NaN}"/>
+        <s:Button click="close(event)" label="{btnLabel}"/>
+    </s:VGroup>
+</s:BorderContainer>

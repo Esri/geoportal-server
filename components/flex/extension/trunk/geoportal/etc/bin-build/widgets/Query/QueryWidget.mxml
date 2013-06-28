@@ -1,0 +1,894 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:Query="widgets.Query.*"
+                   xmlns:viewer="com.esri.viewer.*"
+                   widgetConfigLoaded="init()">
+
+    <viewer:states>
+        <s:State name="resultsList"/>
+        <s:State name="filterInput"/>
+    </viewer:states>
+
+    <viewer:transitions>
+        <s:Transition autoReverse="true" toState="*">
+            <s:Fade targets="{[resultsList, filterInput]}"/>
+        </s:Transition>
+    </viewer:transitions>
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.FeatureSet;
+            import com.esri.ags.Graphic;
+            import com.esri.ags.events.LayerEvent;
+            import com.esri.ags.geometry.Geometry;
+            import com.esri.ags.geometry.MapPoint;
+            import com.esri.ags.geometry.Multipoint;
+            import com.esri.ags.geometry.Polygon;
+            import com.esri.ags.geometry.Polyline;
+            import com.esri.ags.layers.FeatureLayer;
+            import com.esri.ags.layers.GraphicsLayer;
+            import com.esri.ags.layers.supportClasses.CodedValue;
+            import com.esri.ags.layers.supportClasses.CodedValueDomain;
+            import com.esri.ags.layers.supportClasses.FeatureType;
+            import com.esri.ags.layers.supportClasses.Field;
+            import com.esri.ags.layers.supportClasses.LayerDetails;
+            import com.esri.ags.symbols.PictureMarkerSymbol;
+            import com.esri.ags.symbols.SimpleFillSymbol;
+            import com.esri.ags.symbols.SimpleLineSymbol;
+            import com.esri.ags.symbols.Symbol;
+            import com.esri.ags.tasks.supportClasses.Query;
+            import com.esri.viewer.AppEvent;
+            import com.esri.viewer.IInfowindowTemplate;
+            import com.esri.viewer.ViewerContainer;
+
+            import mx.collections.ArrayCollection;
+            import mx.core.UIComponent;
+            import mx.events.FlexEvent;
+            import mx.events.ModuleEvent;
+            import mx.formatters.DateFormatter;
+            import mx.rpc.AsyncResponder;
+
+            import spark.components.supportClasses.ItemRenderer;
+
+            private const ICON_URL:String = "assets/images/";
+
+            [Bindable]
+            private var filterFieldAlias:String;
+            [Bindable]
+            private var msgVisible:Boolean = false;
+            [Bindable]
+            private var queryResultAC:ArrayCollection;
+
+            private var allFields:Boolean;
+            private var fields:XMLList;
+            private var filterField:String;
+            private var graphicsLayer:GraphicsLayer;
+            private var infowidgetReady:Boolean = false;
+            private var infoUrl:String;
+            private var queryExpr:String;
+            private var queryLayer:FeatureLayer;
+            private var layerDetails:LayerDetails;
+            private var queryLinkField:String;
+            private var queryRefreshRate:String;
+            private var queryTitleField:String;
+            private var timer:Timer;
+            private var zoomScale:Number = 50000;
+            private var mouseDownStageX:Number;
+            private var mouseDownStageY:Number;
+            private var dateFormatter:DateFormatter = new DateFormatter();
+
+            //labels
+            private var loadingLabel:String;
+            private var textFilterClear:String;
+            private var textFilterLabel:String;
+            [Bindable]
+            private var filterButtonLabel:String;
+            [Bindable]
+            private var clearButtonLabel:String;
+            [Bindable]
+            private var noResultLabel:String;
+
+            // symbols
+            private var resultMarkerSymbol:Symbol;
+            private var resultLineSymbol:Symbol;
+            private var resultFillSymbol:Symbol;
+
+            private function init():void
+            {
+                if (configXML)
+                {
+                    //labels
+                    loadingLabel = configXML.labels.loading || configXML.labels.loadinglabel || getDefaultString("loadingLabel"); // other widgets use "loadinglabel" in their xml and so should this, but since 2.1 was released with "loading", we'll keep QueryWidget slightly inconsistent
+                    textFilterLabel = configXML.labels.filterresults || getDefaultString("filterTitleBarTooltip");
+                    textFilterClear = configXML.labels.filterclear || getDefaultString("showallTitleBarTooltip");
+                    filterButtonLabel = configXML.labels.filterbuttonlabel || getDefaultString("filterButtonLabel");
+                    clearButtonLabel = configXML.labels.clearbuttonlabel || getDefaultString("clearLabel");
+                    noResultLabel = configXML.label.noresultlabel || getDefaultString("noFeatures");
+
+                    filterField = configXML.filterfield.name;
+                    filterFieldAlias = configXML.filterfield.alias || configXML.filterfield.name;
+                    var layerURL:String = configXML.layer;
+                    var useAMF:String = configXML.useamf;
+                    infoUrl = configXML.info;
+
+                    queryExpr = configXML.query;
+                    if (!queryExpr) // server requires query to have at least one of 'geometry', 'text', or 'where' properties set. In this widget we only use 'where', so make sure it is always set.
+                    {
+                        queryExpr = "1=1"; // ... is always true
+                    }
+
+                    if (configXML.fields[0])
+                    {
+                        allFields = configXML.fields[0].@all[0] == "true";
+                        fields = configXML.fields[0].field;
+                    }
+                    queryTitleField = configXML.titlefield;
+                    queryLinkField = configXML.linkfield;
+                    queryRefreshRate = configXML.refreshrate;
+
+                    //useproxy
+                    var useProxy:Boolean;
+                    if (configXML.useproxy.length() > 0)
+                    {
+                        useProxy = configXML.useproxy == "true";
+                    }
+
+                    if (Number(configXML.zoomscale) > 0)
+                    {
+                        zoomScale = Number(configXML.zoomscale);
+                    }
+
+                    //marker symbol
+                    const resultMarkerSymbolURL:String = configXML.symbols.picturemarkersymbol.@url || widgetIcon;
+                    const resultMarkerSymbolHeight:Number = configXML.symbols.picturemarkersymbol.@height || 30;
+                    const resultMarkerSymbolWidth:Number = configXML.symbols.picturemarkersymbol.@width || 30;
+                    const resultMarkerSymbolXOffset:Number = configXML.symbols.picturemarkersymbol.@xoffset || 0;
+                    const resultMarkerSymbolYOffset:Number = configXML.symbols.picturemarkersymbol.@yoffset || 0;
+                    resultMarkerSymbol = new PictureMarkerSymbol(resultMarkerSymbolURL, resultMarkerSymbolWidth, resultMarkerSymbolHeight, resultMarkerSymbolXOffset, resultMarkerSymbolYOffset);
+
+                    //line symbol
+                    const resultLineSymbolColor:uint = configXML.symbols.simplelinesymbol.@color || 0xFF0000;
+                    const resultLineSymbolAlpha:Number = configXML.symbols.simplelinesymbol.@alpha || 0.8;
+                    const resultLineSymbolWidth:Number = configXML.symbols.simplelinesymbol.@width || 2;
+                    resultLineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, resultLineSymbolColor, resultLineSymbolAlpha, resultLineSymbolWidth);
+
+                    // fill symbol
+                    const resultFillSymbolColor:uint = configXML.symbols.simplefillsymbol.@color || 0xFF0000;
+                    const resultFillSymbolAlpha:Number = configXML.symbols.simplefillsymbol.@alpha || 0.5;
+                    const resultFillSymbolOutlineColor:uint = configXML.symbols.simplefillsymbol.outline.@color || 0xFF0000;
+                    const resultFillSymbolOutlineAlpha:Number = configXML.symbols.simplefillsymbol.outline.@alpha || 0.8;
+                    const resultFillSymbolOutlineWidth:Number = configXML.symbols.simplefillsymbol.outline.@width || 2;
+                    resultFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, resultFillSymbolColor, resultFillSymbolAlpha, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, resultFillSymbolOutlineColor, resultFillSymbolOutlineAlpha, resultFillSymbolOutlineWidth));
+
+                    graphicsLayer = new GraphicsLayer();
+                    graphicsLayer.name = "QueryWidget Results";
+                    graphicsLayer.symbol = resultMarkerSymbol;
+                    // CR - 164,040
+                    graphicsLayer.addEventListener(FlexEvent.HIDE, graphicsLayer_hideHandler);
+                    map.addLayer(graphicsLayer);
+
+                    if (layerURL)
+                    {
+                        queryLayer = new FeatureLayer(layerURL);
+                        if (useProxy && configData.proxyUrl)
+                        {
+                            queryLayer.proxyURL = configData.proxyUrl;
+                        }
+                        if (useAMF)
+                        {
+                            queryLayer.useAMF = useAMF == "true";
+                        }
+                        if (queryRefreshRate)
+                        {
+                            queryLayer.disableClientCaching = true; // turn on only if using a refresh timer
+                        }
+                        if (allFields)
+                        {
+                            queryLayer.outFields = [ "*" ];
+                        }
+                        else
+                        {
+                            queryLayer.outFields = [];
+                            for each (var fieldXML:XML in fields)
+                            {
+                                if (fieldXML.@name[0])
+                                {
+                                    queryLayer.outFields.push(fieldXML.@name[0]);
+                                }
+                            }
+                        }
+                    }
+
+                    var data:Object =
+                        {
+                            id: String(this.widgetId),
+                            url: infoUrl,
+                            config: null
+                        };
+
+                    ViewerContainer.dispatchEvent(new AppEvent(AppEvent.DATA_CREATE_INFOWIDGET, data, infoReady));
+                }
+
+                if (filterField)
+                {
+                    wTemplate.addTitlebarButton(ICON_URL + "i_searchtext.png", textFilterLabel, toggleFilterPanel);
+                    wTemplate.addTitlebarButton(ICON_URL + "i_clear.png", textFilterClear, doClear, false); // not selectable
+                    wTemplate.selectedTitlebarButtonIndex = -1;
+                    this.currentState = "resultsList";
+                }
+            }
+
+            private function graphicsLayer_hideHandler(event:FlexEvent):void
+            {
+                if (map.infoWindow.content === infoTemplate)
+                {
+                    map.infoWindow.hide();
+                }
+            }
+
+            private var infoTemplate:IInfowindowTemplate;
+
+            private function infoReady(event:AppEvent):void
+            {
+                var id:Number = Number(event.data.id);
+                if (id == this.widgetId)
+                {
+                    infoTemplate = event.data.infoWidget;
+
+                    if (queryLayer.loaded)
+                    {
+                        layerDetails = queryLayer.layerDetails;
+                        createAndStartWidgetTimer();
+                        queryFeatures();
+                    }
+                    else
+                    {
+                        queryLayer.addEventListener(LayerEvent.LOAD, queryLayer_loadHandler);
+                        function queryLayer_loadHandler(event:LayerEvent):void
+                        {
+                            layerDetails = queryLayer.layerDetails;
+                            createAndStartWidgetTimer();
+                            queryFeatures();
+                        }
+                    }
+                }
+            }
+
+            private function infoError(event:ModuleEvent):void
+            {
+                this.showMessage(event.errorText, true);
+            }
+
+            //create and start widget timer
+            private function createAndStartWidgetTimer():void
+            {
+                if (queryRefreshRate)
+                {
+                    if (!timer)
+                    {
+                        var seconds:Number = Number(queryRefreshRate);
+                        var rate:Number = seconds * 1000;
+                        timer = new Timer(rate);
+                        timer.addEventListener(TimerEvent.TIMER, timerTick);
+                    }
+                    timer.start();
+                }
+            }
+
+            //stop widget timer
+            private function stopWidgetTimer():void
+            {
+                if (timer && timer.running)
+                {
+                    timer.stop();
+                }
+            }
+
+            //start widget timer
+            private function startWidgetTimer():void
+            {
+                if (timer && !timer.running)
+                {
+                    timer.start();
+                }
+            }
+
+            //timer tick
+            private function timerTick(event:TimerEvent):void
+            {
+                queryFeatures();
+            }
+
+            //query features
+            private function queryFeatures():void
+            {
+                if (queryLayer)
+                {
+                    var query:Query = new Query();
+                    query.where = queryExpr;
+                    query.outSpatialReference = map.spatialReference;
+
+                    queryLayer.queryFeatures(query, new AsyncResponder(onResult, onFault));
+                    showMessage(loadingLabel, true);
+
+                    // on result
+                    function onResult(featureSet:FeatureSet, token:Object = null):void
+                    {
+                        try
+                        {
+                            queryResultAC = createQueryResults(featureSet);
+                            addSharedData(widgetTitle, queryResultAC);
+
+                            clearMessage();
+                            if (queryResultAC.length < 1)
+                            {
+                                showMessage(noResultLabel, false);
+                            }
+                        }
+                        catch (error:Error)
+                        {
+                            showMessage(error.message, false);
+                        }
+                    }
+
+                    //on fault
+                    function onFault(info:Object, token:Object = null):void
+                    {
+                        showMessage(info.toString(), false);
+                    }
+                }
+            }
+
+            //create queryrresults
+            private function createQueryResults(featureSet:FeatureSet):ArrayCollection
+            {
+                graphicsLayer.clear();
+
+                var result:ArrayCollection = new ArrayCollection();
+
+                if (!queryTitleField)
+                {
+                    queryTitleField = featureSet.displayFieldName;
+                }
+
+                for each (var graphic:Graphic in featureSet.features)
+                {
+                    var value:String = "";
+                    var title:String = "";
+                    var content:String = "";
+                    var link:String = "";
+
+                    if (allFields)
+                    {
+                        if (layerDetails.fields)
+                        {
+                            for each (var field:Field in layerDetails.fields)
+                            {
+                                if (field.name in graphic.attributes)
+                                {
+                                    displayFields(field.name, getFieldXML(field.name), field);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            for (var fieldName:String in graphic.attributes)
+                            {
+                                displayFields(fieldName, getFieldXML(fieldName), null);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for each (var fieldXML:XML in fields) // display the fields in the same order as specified
+                        {
+                            if (fieldXML.@name[0] in graphic.attributes)
+                            {
+                                displayFields(fieldXML.@name[0], fieldXML, getField(fieldXML.@name[0]));
+                            }
+                        }
+                    }
+
+                    function displayFields(fieldName:String, fieldXML:XML, field:Field):void
+                    {
+                        value = graphic.attributes[fieldName] ? String(graphic.attributes[fieldName]) : "";
+
+                        if (value)
+                        {
+                            var isDateField:Boolean;
+                            var dateFormat:String;
+                            if (fieldXML)
+                            {
+                                dateFormat = fieldXML.@dateformat[0];
+                                if (dateFormat)
+                                {
+                                    isDateField = true;
+                                }
+                            }
+                            if (!isDateField && field)
+                            {
+                                isDateField = field.type == Field.TYPE_DATE;
+                            }
+                            if (isDateField)
+                            {
+                                var dateMS:Number = Number(value);
+                                if (!isNaN(dateMS))
+                                {
+                                    value = msToDate(dateMS, dateFormat);
+                                }
+                            }
+                            else
+                            {
+                                var typeID:String = layerDetails.typeIdField ? graphic.attributes[layerDetails.typeIdField] : null;
+                                if (fieldName == layerDetails.typeIdField)
+                                {
+                                    // replace value with feature type name
+                                    var featureType:FeatureType = getFeatureType(typeID);
+                                    if (featureType && featureType.name)
+                                    {
+                                        value = featureType.name;
+                                    }
+                                }
+                                else
+                                {
+                                    // replace value with coded value name if one exists
+                                    var codedValue:CodedValue = getCodedValue(fieldName, value, typeID);
+                                    if (codedValue)
+                                    {
+                                        value = codedValue.name;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (fieldName.toUpperCase() == queryTitleField.toUpperCase())
+                        {
+                            title = value;
+                            if (!title)
+                            {
+                                title = widgetTitle;
+                            }
+                        }
+                        else if (fieldName.toUpperCase() == queryLinkField.toUpperCase())
+                        {
+                            link = value;
+                        }
+                        else if (fieldName.toUpperCase() != "SHAPE_LENGTH" && fieldName.toUpperCase() != "SHAPE_AREA")
+                        {
+                            if (fieldXML && fieldXML.@alias[0])
+                            {
+                                content += fieldXML.@alias[0];
+                            }
+                            else
+                            {
+                                content += featureSet.fieldAliases[fieldName];
+                            }
+                            content += ": " + value + "\n";
+                        }
+                    }
+
+                    var queryResult:QueryResult = new QueryResult();
+                    queryResult.title = title;
+                    queryResult.content = content;
+                    queryResult.point = getGeomCenter(graphic);
+                    queryResult.link = link ? link : null;
+                    queryResult.geometry = graphic.geometry;
+
+                    switch (graphic.geometry.type)
+                    {
+                        case Geometry.POLYLINE:
+                        {
+                            graphic.symbol = queryResult.symbol = resultLineSymbol;
+                            break;
+                        }
+                        case Geometry.POLYGON:
+                        {
+                            graphic.symbol = queryResult.symbol = resultFillSymbol;
+                            break;
+                        }
+                        case Geometry.MAPPOINT:
+                        {
+                            graphic.symbol = queryResult.symbol = resultMarkerSymbol;
+                            break;
+                        }
+                    }
+                    graphic.addEventListener(MouseEvent.MOUSE_DOWN, graphic_mouseDownHander);
+                    graphic.checkForMouseListeners = false;
+                    graphic.attributes = queryResult;
+                    if (queryResult.point && !isNaN(queryResult.point.x) && !isNaN(queryResult.point.y)) // make sure it is a valid point
+                    {
+                        result.addItem(queryResult);
+                        graphicsLayer.add(graphic);
+                    }
+                }
+
+                return result;
+            }
+
+            private function getFieldXML(fieldName:String):XML
+            {
+                var result:XML;
+
+                for each (var fieldXML:XML in fields)
+                {
+                    if (fieldName == fieldXML.@name[0])
+                    {
+                        result = fieldXML;
+                        break;
+                    }
+                }
+
+                return result;
+            }
+
+            private function getField(fieldName:String):Field
+            {
+                var result:Field;
+
+                for each (var field:Field in layerDetails.fields)
+                {
+                    if (fieldName == field.name)
+                    {
+                        result = field;
+                        break;
+                    }
+                }
+
+                return result;
+            }
+
+            private function getFeatureType(typeID:String):FeatureType
+            {
+                var result:FeatureType;
+
+                for each (var featureType:FeatureType in layerDetails.types)
+                {
+                    if (typeID == featureType.id)
+                    {
+                        result = featureType;
+                        break;
+                    }
+                }
+
+                return result;
+            }
+
+            private function msToDate(ms:Number, dateFormat:String):String
+            {
+                var date:Date = new Date(ms);
+                if (date.milliseconds == 999) // workaround for REST bug
+                {
+                    date.milliseconds++;
+                }
+
+                if (dateFormat)
+                {
+                    dateFormatter.formatString = dateFormat;
+                    var result:String = dateFormatter.format(date);
+                    if (result)
+                    {
+                        return result;
+                    }
+                    else
+                    {
+                        return dateFormatter.error;
+                    }
+                }
+                else
+                {
+                    return date.toLocaleString();
+                }
+            }
+
+            private var domainsCache:Object = {}; // map from (fieldName + typeID) to CodedValueDomain
+
+            private function getCodedValue(fieldName:String, fieldValue:String, typeID:String):CodedValue
+            {
+                var result:CodedValue;
+
+                var domainsKey:String = fieldName + typeID;
+                var codedValueDomain:CodedValueDomain;
+
+                if (domainsKey in domainsCache)
+                {
+                    codedValueDomain = domainsCache[domainsKey];
+                }
+                else
+                {
+                    if (typeID)
+                    {
+                        var featureType:FeatureType = getFeatureType(typeID);
+                        if (featureType)
+                        {
+                            codedValueDomain = featureType.domains[fieldName] as CodedValueDomain;
+                        }
+                    }
+                    else
+                    {
+                        var field:Field = getField(fieldName);
+                        if (field)
+                        {
+                            codedValueDomain = field.domain as CodedValueDomain;
+                        }
+                    }
+                    domainsCache[domainsKey] = codedValueDomain;
+                }
+
+                if (codedValueDomain)
+                {
+                    for each (var codedValue:CodedValue in codedValueDomain.codedValues)
+                    {
+                        if (fieldValue == codedValue.code)
+                        {
+                            result = codedValue;
+                            break;
+                        }
+                    }
+                }
+
+                return result;
+            }
+
+            //get geom center
+            private function getGeomCenter(gra:Graphic):MapPoint
+            {
+                var pt:MapPoint;
+                switch (gra.geometry.type)
+                {
+                    case Geometry.MAPPOINT:
+                    {
+                        pt = gra.geometry as MapPoint;
+                        break;
+                    }
+                    case Geometry.MULTIPOINT:
+                    {
+                        const multipoint:Multipoint = gra.geometry as Multipoint;
+                        pt = multipoint.points && multipoint.points.length > 0 ? multipoint.points[0] as MapPoint : null;
+                        break;
+                    }
+                    case Geometry.POLYLINE:
+                    {
+                        var pl:Polyline = gra.geometry as Polyline;
+                        var pathCount:Number = pl.paths.length;
+                        var pathIndex:int = int((pathCount / 2) - 1);
+                        var midPath:Array = pl.paths[pathIndex];
+                        var ptCount:Number = midPath.length;
+                        var ptIndex:int = int((ptCount / 2) - 1);
+                        pt = pl.getPoint(pathIndex, ptIndex);
+                        break;
+                    }
+                    case Geometry.POLYGON:
+                    {
+                        const poly:Polygon = gra.geometry as Polygon;
+                        pt = poly.extent.center;
+                        break;
+                    }
+                }
+                return pt;
+            }
+
+            //graphic mouse handling
+            private function graphic_mouseDownHander(event:MouseEvent):void
+            {
+                mouseDownStageX = event.stageX;
+                mouseDownStageY = event.stageY;
+                var graphic:Graphic = event.currentTarget as Graphic;
+                graphic.addEventListener(MouseEvent.MOUSE_MOVE, graphic_mouseMoveHander);
+                graphic.addEventListener(MouseEvent.MOUSE_UP, graphic_mouseUpHander);
+            }
+
+            private function graphic_mouseMoveHander(event:MouseEvent):void
+            {
+                var dx:uint = Math.abs(event.stageX - mouseDownStageX);
+                var dy:uint = Math.abs(event.stageY - mouseDownStageY);
+                if (dx >= 3 || dy >= 3)
+                {
+                    var graphic:Graphic = event.currentTarget as Graphic;
+                    graphic.removeEventListener(MouseEvent.MOUSE_MOVE, graphic_mouseMoveHander);
+                    graphic.removeEventListener(MouseEvent.MOUSE_UP, graphic_mouseUpHander);
+                }
+            }
+
+            private function graphic_mouseUpHander(event:MouseEvent):void
+            {
+                var graphic:Graphic = event.currentTarget as Graphic;
+                graphic.removeEventListener(MouseEvent.MOUSE_MOVE, graphic_mouseMoveHander);
+                graphic.removeEventListener(MouseEvent.MOUSE_UP, graphic_mouseUpHander);
+                showInfoWindow(graphic.attributes);
+            }
+
+            override public function showInfoWindow(infoData:Object):void
+            {
+                if (infoData)
+                {
+                    map.infoWindow.content = infoTemplate as UIComponent;
+                    map.infoWindow.label = infoData.title || "";
+                    infoTemplate.data = infoData;
+                    map.infoWindow.show(infoData.point);
+                }
+                else
+                {
+                    map.infoWindow.hide();
+                }
+            }
+
+            private var hitimer:uint;
+
+            private function mouseOverQueryResult(event:Event):void
+            {
+                clearTimeout(hitimer);
+                hitimer = setTimeout(showHighlight, 800, [ ItemRenderer(event.target).data as QueryResult ]);
+            }
+
+            private function mouseOutQueryResult(event:Event):void
+            {
+                clearTimeout(hitimer);
+            }
+
+            private function clickQueryResult(event:Event):void
+            {
+                var queryResult:QueryResult = ItemRenderer(event.target).data as QueryResult;
+                if (map.scale > zoomScale)
+                {
+                    map.scale = zoomScale;
+                }
+                map.centerAt(queryResult.point as MapPoint);
+            }
+
+            private function showHighlight(params:Array):void
+            {
+                var infoData:Object = params[0];
+                var pt:MapPoint = infoData.point;
+                showInfoWindow(params[0]);
+            }
+
+            private function showMessage(msg:String, swfVisible:Boolean):void
+            {
+                txtMessage.text = msg;
+                swfMessage.visible = swfVisible;
+                msgVisible = true;
+            }
+
+            private function clearMessage():void
+            {
+                msgVisible = false;
+            }
+
+            private function widgetClosedHandler(event:Event):void
+            {
+                graphicsLayer.visible = false;
+                stopWidgetTimer();
+                showInfoWindow(null);
+            }
+
+            private function widgetOpenedHandler(event:Event):void
+            {
+                if (graphicsLayer)
+                {
+                    graphicsLayer.visible = true;
+                }
+                startWidgetTimer();
+            }
+
+            private function toggleFilterPanel():void
+            {
+                this.currentState = "filterInput";
+            }
+
+            private function doFilter():void
+            {
+                if (txtFilter.text)
+                {
+                    ArrayCollection(graphicsLayer.graphicProvider).filterFunction = filterGraphicLayer;
+                    queryResultAC.filterFunction = filterDataList;
+                }
+                else
+                {
+                    ArrayCollection(graphicsLayer.graphicProvider).filterFunction = null;
+                    queryResultAC.filterFunction = null;
+                }
+                ArrayCollection(graphicsLayer.graphicProvider).refresh();
+                queryResultAC.refresh();
+
+                // change it back to show the results
+                wTemplate.selectedTitlebarButtonIndex = -1;
+                this.currentState = "resultsList";
+                if (queryResultAC.length < 1)
+                {
+                    showMessage(noResultLabel, false);
+                }
+                else
+                {
+                    clearMessage();
+                }
+            }
+
+            private function doClear():void
+            {
+                wTemplate.selectedTitlebarButtonIndex = -1;
+                txtFilter.text = '';
+                doFilter();
+            }
+
+            private function filterGraphicLayer(item:Object):Boolean
+            {
+                return QueryResult(Graphic(item).attributes).content.match(new RegExp(txtFilter.text, 'i')) != null;
+            }
+
+            private function filterDataList(item:Object):Boolean
+            {
+                return QueryResult(item).content.match(new RegExp(txtFilter.text, 'i')) != null;
+            }
+        ]]>
+    </fx:Script>
+
+    <viewer:WidgetTemplate id="wTemplate"
+                           width="300" height="300"
+                           closed="widgetClosedHandler(event)"
+                           open="widgetOpenedHandler(event)">
+        <s:Group id="resultsList"
+                 width="100%" height="100%"
+                 visible="false"
+                 visible.resultsList="true">
+            <s:layout>
+                <s:VerticalLayout gap="1"/>
+            </s:layout>
+            <s:HGroup id="boxMessage"
+                      width="100%"
+                      includeInLayout="{msgVisible}"
+                      visible="{msgVisible}">
+                <mx:Image id="swfMessage"
+                          source="assets/images/loader.swf"
+                          visible="false"/>
+                <s:Label id="txtMessage"
+                         width="90%"
+                         text=""/>
+            </s:HGroup>
+            <s:Scroller width="100%" height="100%">
+                <Query:QueryResultDataGroup id="queryResultDG"
+                                            dataProvider="{queryResultAC}"
+                                            queryResultClick="clickQueryResult(event)"
+                                            queryResultMouseOut="mouseOutQueryResult(event)"
+                                            queryResultMouseOver="mouseOverQueryResult(event)">
+                    <Query:layout>
+                        <s:VerticalLayout gap="2"
+                                          horizontalAlign="justify"
+                                          useVirtualLayout="true"/>
+                    </Query:layout>
+                </Query:QueryResultDataGroup>
+            </s:Scroller>
+        </s:Group>
+        <s:Group id="filterInput"
+                 width="100%" height="100%"
+                 visible="false"
+                 visible.filterInput="true">
+            <s:layout>
+                <s:VerticalLayout gap="4" horizontalAlign="center"/>
+            </s:layout>
+            <s:Label text="{filterFieldAlias} : "/>
+            <s:TextInput id="txtFilter"
+                         width="98%"
+                         enter="doFilter()"/>
+            <s:HGroup width="100%" horizontalAlign="center">
+                <s:Button click="doFilter()" label="{filterButtonLabel}"/>
+                <s:Button click="doClear()" label="{clearButtonLabel}"/>
+            </s:HGroup>
+        </s:Group>
+    </viewer:WidgetTemplate>
+
+</viewer:BaseWidget>

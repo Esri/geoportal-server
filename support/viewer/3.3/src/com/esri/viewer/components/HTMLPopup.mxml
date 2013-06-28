@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<!---
+    Pop-up component used to render HTML text.
+-->
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   width="100%" height="100%"
+                   cornerRadius="10"
+                   creationComplete="htmlPopup_creationCompleteHandler(event)"
+                   show="showHandler(event)"
+                   tabFocusEnabled="true">
+    <fx:Script>
+        <![CDATA[
+            import flash.filters.BitmapFilterQuality;
+
+            import flashx.textLayout.conversion.TextConverter;
+
+            import mx.core.FlexGlobals;
+            import mx.events.CloseEvent;
+            import mx.events.FlexEvent;
+
+            [Bindable]
+            public var content:String;
+
+            [Bindable]
+            public var btnLabel:String = "OK";
+
+            [Bindable]
+            public var txtareaWidth:Number = 300;
+
+            [Bindable]
+            public var txtareaHeight:Number = 300;
+
+            public static function show(content:String = "",
+                                        btnLabel:String = "OK",
+                                        width:Number = 300,
+                                        height:Number = 300,
+                                        modal:Boolean = true,
+                                        closeHandler:Function = null):HTMLPopup
+            {
+                var alert:HTMLPopup = new HTMLPopup();
+
+                var parent:Sprite = Sprite(FlexGlobals.topLevelApplication);
+
+                if (closeHandler != null)
+                {
+                    alert.addEventListener(CloseEvent.CLOSE, closeHandler);
+                }
+
+                alert.content = content;
+                alert.btnLabel = btnLabel;
+                alert.txtareaWidth = width;
+                alert.txtareaHeight = height;
+
+                HTMLPopupManager.addPopUp(alert, parent, modal);
+
+                return alert;
+            }
+
+            private function close(event:Event):void
+            {
+                HTMLPopupManager.removePopUp(this);
+                dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
+            }
+
+            protected function htmlPopup_creationCompleteHandler(event:FlexEvent):void
+            {
+                setStyle("backgroundColor", getStyle("contentBackgroundColor"));
+                setStyle("backgroundAlpha", FlexGlobals.topLevelApplication.getStyle("backgroundAlpha"));
+                setFocus();
+            }
+
+            protected function showHandler(event:FlexEvent):void
+            {
+                focusManager.activate();
+                focusManager.setFocus(closeButton);
+                // draw the focus state later
+                closeButton.drawFocus(false);
+                callLater(drawFocusLater);
+            }
+
+            private function drawFocusLater():void
+            {
+                closeButton.drawFocus(true);
+            }
+
+            protected function scroller_creationCompleteHandler(event:FlexEvent):void
+            {
+                // TLF does scrolling in real numbers.  If the scroller doesn't
+                // round to ints then the sets of verticalScrollPosition and
+                // horizontalScrollPosition will be no-ops which is desirable.
+                if (scroller.horizontalScrollBar)
+                {
+                    scroller.horizontalScrollBar.snapInterval = 0;
+                }
+                if (scroller.verticalScrollBar)
+                {
+                    scroller.verticalScrollBar.snapInterval = 0;
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <s:filters>
+        <s:GlowFilter alpha="0.8"
+                      blurX="50"
+                      blurY="50"
+                      color="0xFFFFFF"
+                      quality="{BitmapFilterQuality.MEDIUM}"
+                      strength="1"/>
+    </s:filters>
+
+    <s:RectangularDropShadow id="dropShadow"
+                             left="0" right="0" top="0" bottom="0"
+                             alpha="0.32"
+                             angle="90"
+                             blRadius="10"
+                             blurX="20"
+                             blurY="20"
+                             brRadius="10"
+                             distance="25"/>
+
+    <s:VGroup hasFocusableChildren="true"
+              horizontalAlign="center"
+              paddingBottom="10">
+        <s:Scroller id="scroller"
+                    width="{txtareaWidth}" height="{txtareaHeight}"
+                    creationComplete="scroller_creationCompleteHandler(event)"
+                    focusEnabled="false"
+                    hasFocusableChildren="false"
+                    measuredSizeIncludesScrollBars="false"
+                    minViewportInset="1">
+            <s:RichEditableText editable="false"
+                                paddingLeft="3"
+                                paddingRight="3"
+                                paddingTop="5"
+                                textFlow="{TextConverter.importToFlow(content, TextConverter.TEXT_FIELD_HTML_FORMAT)}"/>
+        </s:Scroller>
+
+        <s:Button id="closeButton"
+                  click="close(event)"
+                  label="{btnLabel}"
+                  tabIndex="0"/>
+    </s:VGroup>
+</s:BorderContainer>

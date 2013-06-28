@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<configuration>
+    <geocoder/>
+
+    <links>
+        <link>
+            <content>
+                <![CDATA[
+                     <p align='center'>
+                         <img src='assets/images/globe.png'/>
+                         <br/>
+                         <br/>
+                         <font size="+2"><b><a href="http://links.esri.com/flexviewer" target='_blank'>ArcGIS Viewer for Flex</a></b></font>
+                     </p>
+                ]]>
+            </content>
+        </link>
+    </links>
+</configuration>
+
+<!--
+    For valid HTML tags in Flash applications (that can be used for 'content'), see
+    http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flashx/textLayout/conversion/TextConverter.html#TEXT_FIELD_HTML_FORMAT
+-->
+<!--
+    See HeaderController widget tag reference at
+    http://links.esri.com/headercontrollerwidget
+-->

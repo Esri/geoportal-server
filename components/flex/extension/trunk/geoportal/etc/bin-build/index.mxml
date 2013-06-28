@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+               xmlns:s="library://ns.adobe.com/flex/spark"
+               xmlns:viewer="com.esri.viewer.*"
+               xmlns:managers="com.esri.viewer.managers.*"
+               pageTitle="ArcGIS Viewer for Flex">
+
+    <fx:Style source="defaults.css"/>
+
+    <fx:Metadata>
+        [ResourceBundle("ViewerStrings")]
+    </fx:Metadata>
+
+    <viewer:ViewerContainer>
+        <viewer:configManager>
+            <managers:ConfigManager/>
+        </viewer:configManager>
+        <viewer:dataManager>
+            <managers:DataManager/>
+        </viewer:dataManager>
+        <viewer:mapManager>
+            <managers:MapManager/>
+        </viewer:mapManager>
+        <viewer:uiManager>
+            <managers:UIManager/>
+        </viewer:uiManager>
+        <viewer:widgetManager>
+            <managers:WidgetManager/>
+        </viewer:widgetManager>
+    </viewer:ViewerContainer>
+
+</s:Application>

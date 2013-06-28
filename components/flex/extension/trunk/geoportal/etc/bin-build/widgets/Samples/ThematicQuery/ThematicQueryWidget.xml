@@ -1,0 +1,90 @@
+<?xml version="1.0" ?>
+<configuration>
+    <info>widgets/Samples/ThematicQuery/InfoColumnChartWidget.swf</info>
+    <!-- labelref should match the label of the operational layer's label in main config. -->
+    <theme labelref="Unemployment" >
+       <query layer="4" minscale="0" maxscale="25000001" legendurl="assets/images/Legend_unemp.png" > <!-- layer 4 is a state layer -->
+           <listfields>
+                <field name="NAME" alias="State" />
+                <field name="UNEMPRT_CY" alias="2009 Unemployment (%)" />
+                <field name="UNEMPRT_08" alias="2008 Unemployment (%)" />
+                <field name="RATE_UNEMP" alias="Unemployment Change (%)" />
+                <field name="TOTPOP_CY" alias="2009 Total Population" />
+           </listfields>
+           <columnchartfields>
+                <field name="UNEMPRT_08" alias="2008" />
+                <field name="UNEMPRT_CY" alias="2009" />
+           </columnchartfields>
+       </query>
+       <query layer="3" minscale="25000000" maxscale="750001" legendurl="assets/images/Legend_unemp.png">
+           <listfields>
+                <field name="NAME" alias="Name" />
+                <field name="UNEMPRT_CY" alias="2009 Unemployment (%)" />
+                <field name="UNEMPRT_08" alias="2008 Unemployment (%)" />
+                <field name="RATE_UNEMP" alias="Unemployment Change (%)" />
+                <field name="TOTPOP_CY" alias="2009 Total Population" />
+           </listfields>
+           <columnchartfields>
+                <field name="UNEMPRT_08" alias="2008" />
+                <field name="UNEMPRT_CY" alias="2009" />
+           </columnchartfields>
+       </query>
+       <query layer="2" minscale="750000" maxscale="150001" legendurl="assets/images/Legend_unemp.png">
+           <listfields>
+                <field name="ID" alias="Track ID" />
+                <field name="UNEMPRT_CY" alias="2009 Unemployment (%)" />
+                <field name="UNEMPRT_08" alias="2008 Unemployment (%)" />
+                <field name="RATE_UNEMP" alias="Unemployment Change (%)" />
+                <field name="TOTPOP_CY" alias="2009 Total Population" />
+           </listfields>
+           <columnchartfields>
+                <field name="UNEMPRT_08" alias="2008" />
+                <field name="UNEMPRT_CY" alias="2009" />
+           </columnchartfields>
+       </query>
+       <query layer="1" minscale="150000" maxscale="0" legendurl="assets/images/Legend_unemp.png">
+           <listfields>
+                <field name="ID" alias="Block Group ID" />
+                <field name="UNEMPRT_CY" alias="2009 Unemployment (%)" />
+                <field name="UNEMPRT_08" alias="2008 Unemployment (%)" />
+                <field name="RATE_UNEMP" alias="Unemployment Change (%)" />
+                <field name="TOTPOP_CY" alias="2009 Total Population" />
+           </listfields>
+           <columnchartfields>
+                <field name="UNEMPRT_08" alias="2008" />
+                <field name="UNEMPRT_CY" alias="2009" />
+           </columnchartfields>
+       </query>
+    </theme>
+    <theme labelref="Population Density" >
+       <query layer="4" minscale="0" maxscale="25000001" legendurl="assets/images/Legend_popdensity.png">
+           <listfields>
+                <field name="NAME" alias="State" />
+                <field name="POPDENS_CY" alias="Current Population Density" />
+                <field name="TOTPOP_CY" alias="Total Population" />
+           </listfields>
+       </query>
+       <query layer="3" minscale="25000000" maxscale="750001" legendurl="assets/images/Legend_popdensity.png">
+           <listfields>
+                <field name="NAME" alias="Name" />
+                <field name="POPDENS_CY" alias="Current Population Density" />
+                <field name="TOTPOP_CY" alias="Total Population" />
+           </listfields>
+       </query>
+       <query layer="2" minscale="750000" maxscale="150001" legendurl="assets/images/Legend_popdensity.png">
+           <listfields>
+                <field name="NAME" alias="Name" />
+                <field name="POPDENS_CY" alias="Current Population Density" />
+                <field name="TOTPOP_CY" alias="Total Population" />
+           </listfields>
+       </query>
+       <query layer="1" minscale="150000" maxscale="0" legendurl="assets/images/Legend_popdensity.png">
+           <listfields>
+                <field name="NAME" alias="Name" />
+                <field name="POPDENS_CY" alias="Current Population Density" />
+                <field name="TOTPOP_CY" alias="Total Population" />
+           </listfields>
+       </query>
+
+    </theme>
+</configuration>

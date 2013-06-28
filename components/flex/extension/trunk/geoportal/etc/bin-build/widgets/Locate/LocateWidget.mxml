@@ -1,0 +1,907 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:viewer="com.esri.viewer.*"
+                   xmlns:Locate="widgets.Locate.*"
+                   xmlns:esri="http://www.esri.com/2008/ags"
+                   widgetConfigLoaded="init()">
+
+    <viewer:states>
+        <s:State name="addrInput"/>
+        <s:State name="coordInput"/>
+        <s:State name="resultsList"/>
+    </viewer:states>
+
+    <viewer:transitions>
+        <s:Transition autoReverse="true" toState="*">
+            <s:Fade targets="{[addrInput, coordInput, resultsList]}"/>
+        </s:Transition>
+    </viewer:transitions>
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.Graphic;
+            import com.esri.ags.geometry.MapPoint;
+            import com.esri.ags.layers.GraphicsLayer;
+            import com.esri.ags.symbols.PictureMarkerSymbol;
+            import com.esri.ags.symbols.Symbol;
+            import com.esri.ags.tasks.Locator;
+            import com.esri.ags.tasks.supportClasses.AddressCandidate;
+            import com.esri.ags.utils.JSON;
+            import com.esri.ags.utils.WebMercatorUtil;
+            import com.esri.ags.virtualearth.VEGeocodeResult;
+            import com.esri.viewer.AppEvent;
+            import com.esri.viewer.IInfowindowTemplate;
+            import com.esri.viewer.ViewerContainer;
+
+            import mx.collections.ArrayCollection;
+            import mx.collections.ItemResponder;
+            import mx.containers.FormItem;
+            import mx.controls.ComboBox;
+            import mx.core.UIComponent;
+            import mx.events.FlexEvent;
+            import mx.rpc.events.ResultEvent;
+
+            import spark.components.supportClasses.ItemRenderer;
+            import spark.core.NavigationUnit;
+
+            private const ICON_URL:String = "assets/images/";
+
+            //labels
+            private var addressLabel:String;
+            private var coordinatesLabel:String;
+            private var loadingLabel:String;
+            private var locationsLabel:String;
+            private var resultsLabel:String;
+            [Bindable]
+            private var addressTitle:String;
+            [Bindable]
+            private var coordinatesTitle:String;
+            [Bindable]
+            private var noResultLabel:String;
+
+            [Bindable]
+            private var addressFieldsLoaded:Boolean;
+            [Bindable]
+            private var bingCulture:String;
+            [Bindable]
+            private var bingKey:String;
+            [Bindable]
+            private var clearLabel:String;
+            [Bindable]
+            private var locateResultAC:ArrayCollection;
+            [Bindable]
+            private var msgVisible:Boolean = false;
+            [Bindable]
+            private var submitLabel:String;
+            [Bindable]
+            private var xLabel:String;
+            [Bindable]
+            private var xExampleValue:String;
+            [Bindable]
+            private var yLabel:String;
+            [Bindable]
+            private var yExampleValue:String;
+
+            private var addrFields:Array;
+            private var addrObjects:Array = [];
+            private var excludeFields:Array;
+            private var graphicsLayer:GraphicsLayer;
+            private var resultSymbol:Symbol;
+            private var infoUrl:String;
+            private var listArray:Array;
+            private var listField:String;
+            private var listValues:String;
+            private var minscore:Number;
+            private var selectedindex:int = 0;
+            private var useProxy:Boolean;
+            private var useBingLocator:Boolean;
+            private var useSingleLine:Boolean = true;
+            private var zoomScale:Number = 5000;
+            private var serviceWKID:Number;
+
+            private function init():void
+            {
+                if (configXML)
+                {
+                    infoUrl = configXML.info || "widgets/InfoTemplates/InfoPopupWidget.swf";
+                    submitLabel = configXML.labels.submitlabel || getDefaultString("locateSubmitLabel");
+                    clearLabel = configXML.labels.clearlabel || getDefaultString("clearLabel");
+                    //labels for the three widget states
+                    addressLabel = configXML.labels.addresslabel || getDefaultString("addressLabel");
+                    coordinatesLabel = configXML.labels.coordinateslabel || getDefaultString("coordinatesLabel");
+                    resultsLabel = configXML.labels.resultslabel || getDefaultString("resultsLabel");
+                    //titles for the three widget states
+                    addressTitle = configXML.labels.addresstitle || getDefaultString("addressTitle");
+                    coordinatesTitle = configXML.labels.coordinatestitle || getDefaultString("coordinatesTitle");
+                    // noresult label
+                    noResultLabel = configXML.labels.noresultlabel || getDefaultString("noFeatures");
+
+                    //excludeFields
+                    excludeFields = [];
+                    var fields:XMLList = configXML.excludefield as XMLList;
+                    for (var j:Number = 0; j < fields.length(); j++)
+                    {
+                        excludeFields.push(fields[j].toString());
+                    }
+
+                    //labels for the "coordinate" tab
+                    xLabel = configXML.labels.xlabel || getDefaultString("xLabel");
+                    yLabel = configXML.labels.ylabel || getDefaultString("yLabel");
+                    xExampleValue = configXML.labels.xexamplevalue || getDefaultString("locateExampleValueX");
+                    yExampleValue = configXML.labels.yexamplevalue || getDefaultString("locateExampleValueY");
+
+                    //labels for the "results" tab
+                    loadingLabel = configXML.labels.loadinglabel || getDefaultString("loadingLabel");
+                    locationsLabel = configXML.labels.locationslabel || getDefaultString("locationsLabel");
+
+                    // result symbol's properties
+                    const resultSymbolURL:String = configXML.symbols.picturemarkersymbol.@url || widgetIcon;
+                    const resultSymbolHeight:Number = configXML.symbols.picturemarkersymbol.@height || 30;
+                    const resultSymbolWidth:Number = configXML.symbols.picturemarkersymbol.@width || 30;
+                    const resultSymbolXOffset:Number = configXML.symbols.picturemarkersymbol.@xoffset || 0;
+                    const resultSymbolYOffset:Number = configXML.symbols.picturemarkersymbol.@yoffset || 0;
+                    resultSymbol = new PictureMarkerSymbol(resultSymbolURL, resultSymbolWidth, resultSymbolHeight, resultSymbolXOffset, resultSymbolYOffset);
+
+                    var data:Object =
+                        {
+                            id: String(this.widgetId),
+                            url: infoUrl,
+                            config: null
+                        };
+
+                    // ViewerContainer.request(AppEvent.DATA_CREATE_INFOWIDGET, data, infoReady);
+                    ViewerContainer.dispatchEvent(new AppEvent(AppEvent.DATA_CREATE_INFOWIDGET, data, infoReady));
+
+                    graphicsLayer = new GraphicsLayer();
+                    graphicsLayer.name = "Locate Results";
+                    graphicsLayer.symbol = resultSymbol;
+                    // CR - 164,040
+                    graphicsLayer.addEventListener(FlexEvent.HIDE, graphicsLayer_hideHandler);
+                    map.addLayer(graphicsLayer);
+                    listField = configXML.listfield;
+                    listValues = configXML.listvalues;
+                    listArray = listValues.split(",");
+                    if (Number(configXML.zoomscale) > 0)
+                    {
+                        zoomScale = Number(configXML.zoomscale);
+                    }
+                    minscore = Number(configXML.minscore) || 40;
+
+                    var locatorType:String = configXML.locator;
+                    if (locatorType.toLowerCase() == "bing")
+                    {
+                        useBingLocator = true;
+                        addressFieldsLoaded = true;
+                        bingKey = configData.bingKey;
+                        bingCulture = configXML.bingculture || getDefaultString("bingCulture");
+
+                        var bingLocatorTextItem:TextInput = new TextInput();
+                        bingLocatorTextItem.percentWidth = 100;
+                        bingLocatorTextItem.removeEventListener(FlexEvent.ENTER, addressTextItemEnterHandler);
+                        bingLocatorTextItem.addEventListener(FlexEvent.ENTER, addressTextItemEnterHandler);
+
+                        addrObjects.push({ item: bingLocatorTextItem });
+
+                        frmLocateAddress.addChildAt(bingLocatorTextItem, 0);
+                    }
+                    else
+                    {
+                        //usesingleline
+                        if (configXML.usesingleline.length() > 0)
+                        {
+                            useSingleLine = configXML.usesingleline == "true";
+                        }
+
+                        //useproxy
+                        if (configXML.useproxy.length() > 0)
+                        {
+                            useProxy = configXML.useproxy == "true";
+                        }
+
+                        if (configXML.locator.@wkid[0])
+                        {
+                            // for 9.X servers that are missing the SR in the metadata
+                            serviceWKID = Number(configXML.locator.@wkid[0]);
+                        }
+
+                        var url:String = configXML.locator;
+                        if (useProxy && configData.proxyUrl)
+                        {
+                            locatorService.url = configData.proxyUrl + "?" + url + "?f=json";
+                            locator.proxyURL = configData.proxyUrl;
+                        }
+                        else
+                        {
+                            locatorService.url = url + "?f=json";
+                        }
+                        locator.url = url;
+                        locatorService.send();
+                    }
+                }
+                wTemplate.addTitlebarButton(ICON_URL + "i_mailbox.png", addressLabel, showStateAddress);
+                wTemplate.addTitlebarButton(ICON_URL + "i_pushpin.png", coordinatesLabel, showStateCoordinates);
+                wTemplate.addTitlebarButton(ICON_URL + "i_table.png", resultsLabel, showStateResults);
+            }
+
+            private function graphicsLayer_hideHandler(event:FlexEvent):void
+            {
+                if (map.infoWindow.content === infoTemplate)
+                {
+                    map.infoWindow.hide();
+                }
+            }
+
+            private var infoTemplate:IInfowindowTemplate;
+
+            private function infoReady(event:AppEvent):void
+            {
+                var id:Number = Number(event.data.id);
+                if (id == this.widgetId)
+                {
+                    infoTemplate = event.data.infoWidget;
+                }
+            }
+
+            private function showStateAddress():void
+            {
+                this.currentState = "addrInput";
+
+                addressRequiredFieldsLabel.visible = false;
+            }
+
+            private function showStateCoordinates():void
+            {
+                this.currentState = "coordInput";
+
+                coordinatesRequiredFieldsLabel.visible = false;
+            }
+
+            private function showStateResults():void
+            {
+                this.currentState = "resultsList";
+                wTemplate.selectedTitlebarButtonIndex = 2; // used to indicate selected titlebar button when automatically switching state
+            }
+
+            private function onJSONLoad(event:ResultEvent):void
+            {
+                // make all the labels and button visible
+                addressFieldsLoaded = true;
+
+                var rawData:String = String(event.result);
+                var data:Object = JSON.decode(rawData);
+
+                if (data.singleLineAddressField && useSingleLine)
+                {
+                    var singleAddressLabel:Label = new Label();
+                    singleAddressLabel.percentWidth = 100;
+                    singleAddressLabel.text = data.singleLineAddressField.alias + ": ";
+
+                    var singleAddressFormItem:FormItem = new FormItem();
+                    singleAddressFormItem.percentWidth = 100;
+
+                    var singleAddressTextItem:TextInput = new TextInput();
+                    singleAddressTextItem.percentWidth = 100;
+                    singleAddressTextItem.removeEventListener(FlexEvent.ENTER, addressTextItemEnterHandler);
+                    singleAddressTextItem.addEventListener(FlexEvent.ENTER, addressTextItemEnterHandler);
+                    singleAddressTextItem.id = data.singleLineAddressField.name;
+
+                    // required field
+                    singleAddressFormItem.required = data.singleLineAddressField.required;
+                    singleAddressFormItem.addChild(singleAddressTextItem);
+
+                    addrObjects.push({ item: singleAddressTextItem, required: data.singleLineAddressField.required });
+
+                    frmLocateAddress.setStyle("indicatorGap", 0);
+                    frmLocateAddress.addChildAt(singleAddressLabel, 0);
+                    frmLocateAddress.addChildAt(singleAddressFormItem, 1);
+                }
+                else
+                {
+                    addrFields = data.addressFields;
+                    // remove the excluded fields
+                    var shownAddressFields:Array = addrFields.slice();
+                    for (var n:Number = 0; n < shownAddressFields.length; n++)
+                    {
+                        for (var j:Number = 0; j < excludeFields.length; j++)
+                        {
+                            if (shownAddressFields[n].name == excludeFields[j])
+                            {
+                                shownAddressFields.splice(n, 1);
+                                i -= 1;
+                            }
+                        }
+                    }
+
+                    // loop through the shown fields to create form items
+                    for (var i:Number = 0; i < shownAddressFields.length; i++)
+                    {
+                        var frmItem:FormItem = new FormItem();
+                        frmItem.percentWidth = 100;
+                        frmItem.label = shownAddressFields[i].name + ": ";
+
+                        if (shownAddressFields[i].name != listField)
+                        {
+                            var txtItem:TextInput = new TextInput();
+                            txtItem.percentWidth = 100;
+                            txtItem.removeEventListener(FlexEvent.ENTER, addressTextItemEnterHandler);
+                            txtItem.addEventListener(FlexEvent.ENTER, addressTextItemEnterHandler);
+                            txtItem.id = shownAddressFields[i].name;
+
+                            // required field
+                            frmItem.required = shownAddressFields[i].required;
+                            frmItem.addChild(txtItem);
+
+                            addrObjects.push({ item: txtItem, required: shownAddressFields[i].required });
+                        }
+                        else
+                        {
+                            var cboItem:ComboBox = new ComboBox();
+                            cboItem.id = shownAddressFields[i].name;
+                            cboItem.dataProvider = listArray;
+
+                            // required field
+                            frmItem.required = shownAddressFields[i].required;
+                            frmItem.addChild(cboItem);
+
+                            addrObjects.push({ item: cboItem, required: shownAddressFields[i].required });
+                        }
+                        frmLocateAddress.addChildAt(frmItem, i);
+                    }
+                }
+
+                if (data.spatialReference && !isNaN(data.spatialReference.wkid))
+                {
+                    serviceWKID = data.spatialReference.wkid;
+                }
+            }
+
+            private function addressTextItemEnterHandler(event:FlexEvent):void
+            {
+                if (useBingLocator)
+                {
+                    locateBingAddress();
+                }
+                else
+                {
+                    locateAddress();
+                }
+            }
+
+            private function addressSubmitButtonClickHandler(event:MouseEvent):void
+            {
+                if (useBingLocator)
+                {
+                    locateBingAddress();
+                }
+                else
+                {
+                    locateAddress();
+                }
+            }
+
+            private function locateAddress():void
+            {
+                // refresh before each request
+                graphicsLayer.clear();
+                map.infoWindow.hide();
+                if (locateResultAC)
+                {
+                    locateResultAC.removeAll();
+                }
+
+                var fullValue:String = "";
+                var data:Object = new Object();
+                var requiredFieldEmpty:Boolean;
+                var emptyRequiredFieldNames:Array = [];
+                for (var i:Number = 0; i < addrObjects.length; i++)
+                {
+                    var name:String = addrObjects[i].item.id;
+                    var value:String;
+                    if (addrObjects[i].item is TextInput)
+                    {
+                        if (addrObjects[i].required && TextInput(addrObjects[i].item).text == "")
+                        {
+                            requiredFieldEmpty = true;
+                            emptyRequiredFieldNames.push(addrObjects[i].item.id);
+                        }
+                        else
+                        {
+                            value = TextInput(addrObjects[i].item).text;
+                        }
+                    }
+                    else
+                    {
+                        // an item is always selected, so no check for required fields
+                        value = ComboBox(addrObjects[i].item).selectedLabel;
+                    }
+                    data[name] = value;
+                    fullValue += value;
+                }
+                if (requiredFieldEmpty)
+                {
+                    // dont send any request as the required field(s) not completed
+                    var txt:String;
+                    if (emptyRequiredFieldNames.length > 1)
+                    {
+                        txt = getDefaultString("requiredFields") + " ";
+                        for each (var str:String in emptyRequiredFieldNames)
+                        {
+                            txt += str + ", ";
+                        }
+                    }
+                    else
+                    {
+                        txt = getDefaultString("requiredField") + " " + emptyRequiredFieldNames[0];
+                    }
+                    addressRequiredFieldsLabel.visible = true;
+                    addressRequiredFieldsLabel.text = txt;
+                }
+                else
+                {
+                    showStateResults();
+                    if (fullValue != "")
+                    {
+                        locator.addressToLocations(data, null, new ItemResponder(locateResult, locateError));
+                        showMessage(loadingLabel, true);
+                    }
+                }
+            }
+
+            private function locateBingAddress():void
+            {
+                graphicsLayer.clear();
+                map.infoWindow.hide();
+                if (locateResultAC)
+                {
+                    locateResultAC.removeAll();
+                }
+
+                showStateResults();
+                veGeocoder.addressToLocations(TextInput(addrObjects[0].item).text, new ItemResponder(locateResult, locateError));
+                showMessage(loadingLabel, true);
+            }
+
+            private function locateResult(data:Array, token:Object = null):void
+            {
+                if (data.length > 0)
+                {
+                    locateResultAC = createLocateResults(data);
+
+                    // share data
+                    addSharedData(widgetTitle, locateResultAC);
+
+                    showMessage(locationsLabel + " " + locateResultAC.length, false);
+                    locateResultAC.getItemAt(0).selected = true;
+                    if (locateResultAC.length > 0)
+                    {
+                        showLocation(locateResultAC.getItemAt(0));
+                    }
+                }
+                else
+                {
+                    showMessage(noResultLabel, false);
+                }
+            }
+
+            private function locateError(info:Object, token:Object = null):void
+            {
+                showMessage(info.toString(), false);
+            }
+
+            //create locate results
+            private function createLocateResults(data:Array):ArrayCollection
+            {
+                var result:ArrayCollection = new ArrayCollection();
+                var mapWKID:Number = map.spatialReference ? map.spatialReference.wkid : NaN;
+                var mapIsWebMercator:Boolean = mapWKID == 102100 || mapWKID == 3857 || mapWKID == 102113;
+                if (useBingLocator)
+                {
+                    for each (var veGeocodeResult:VEGeocodeResult in data)
+                    {
+                        var bingLocateResult:LocateResult = new LocateResult();
+                        bingLocateResult.symbol = resultSymbol;
+                        bingLocateResult.title = veGeocodeResult.address.formattedAddress ? veGeocodeResult.address.formattedAddress : widgetTitle;
+                        bingLocateResult.content = "Confidence: " + veGeocodeResult.confidence;
+                        bingLocateResult.point = veGeocodeResult.location;
+                        if (mapIsWebMercator)
+                        {
+                            bingLocateResult.point = WebMercatorUtil.geographicToWebMercator(bingLocateResult.point) as MapPoint;
+                        }
+                        bingLocateResult.link = "";
+                        bingLocateResult.selected = false;
+
+                        result.addItem(bingLocateResult);
+                    }
+                }
+                else
+                {
+                    for each (var addrCandidate:AddressCandidate in data)
+                    {
+                        if (addrCandidate.score >= minscore)
+                        {
+                            var locateResult:LocateResult = new LocateResult();
+                            locateResult.symbol = resultSymbol;
+                            locateResult.title = addrCandidate.address ? String(addrCandidate.address) : widgetTitle;
+                            locateResult.content = "Score: " + (addrCandidate.score % 1 == 0 ? addrCandidate.score : addrCandidate.score.toFixed(1));
+                            locateResult.point = addrCandidate.location;
+                            if (!locateResult.point.spatialReference && !isNaN(serviceWKID)) // AGS 9.X returns locations w/o a SR and doesn't support outSR
+                            {
+                                var serviceIsWebMercator:Boolean = serviceWKID == 102100 || serviceWKID == 3857 || serviceWKID == 102113;
+                                if (mapIsWebMercator && serviceWKID == 4326)
+                                {
+                                    locateResult.point = WebMercatorUtil.geographicToWebMercator(locateResult.point) as MapPoint;
+                                }
+                                else if (serviceIsWebMercator && mapWKID == 4326)
+                                {
+                                    locateResult.point = WebMercatorUtil.webMercatorToGeographic(locateResult.point) as MapPoint;
+                                }
+                            }
+                            locateResult.link = "";
+                            locateResult.selected = false;
+
+                            result.addItem(locateResult);
+                        }
+                    }
+                }
+                return result;
+            }
+
+            private function locateCoordinates():void
+            {
+                // refresh before each request
+                graphicsLayer.clear();
+                map.infoWindow.hide();
+                if (locateResultAC)
+                {
+                    locateResultAC.removeAll();
+                }
+
+                try
+                {
+                    var long:String = txtLong.text;
+                    var lat:String = txtLat.text;
+                    if (long && lat)
+                    {
+                        showStateResults();
+
+                        var locateResult:LocateResult = new LocateResult();
+                        locateResult.symbol = resultSymbol;
+                        locateResult.title = coordinatesLabel;
+                        locateResult.content = long + ", " + lat;
+                        locateResult.point = new MapPoint(Number(long), Number(lat));
+                        var mapWKID:Number = map.spatialReference ? map.spatialReference.wkid : NaN;
+                        var mapIsWebMercator:Boolean = mapWKID == 102100 || mapWKID == 3857 || mapWKID == 102113;
+                        if (mapIsWebMercator)
+                        {
+                            locateResult.point = WebMercatorUtil.geographicToWebMercator(locateResult.point) as MapPoint;
+                        }
+                        locateResult.link = "";
+                        locateResult.selected = true;
+
+                        locateResultAC = new ArrayCollection([ locateResult ]);
+
+                        addSharedData(widgetTitle, locateResultAC);
+                        showLocation(locateResult);
+                        showMessage(locationsLabel, false);
+                    }
+                    else
+                    {
+                        // dont send any request as the required field(s) not completed
+                        coordinatesRequiredFieldsLabel.visible = true;
+                        if (long == "" && lat == "")
+                        {
+                            coordinatesRequiredFieldsLabel.text = getDefaultString("requiredFields") + " " + xLabel.substr(0, xLabel.length - 1) + ", " + yLabel.substr(0, yLabel.length - 1);
+                        }
+                        else
+                        {
+                            coordinatesRequiredFieldsLabel.text = long == "" ? getDefaultString("requiredField") + " " + xLabel.substr(0, xLabel.length - 1) : "Required field: " + yLabel.substr(0, yLabel.length - 1);
+                        }
+                    }
+                }
+                catch (error:Error)
+                {
+                    showMessage(error.message, false);
+                }
+            }
+
+            private function showLocation(data:Object):void
+            {
+                graphicsLayer.clear();
+                map.infoWindow.hide();
+
+                var ptGraphic:Graphic = new Graphic();
+
+                ptGraphic.addEventListener(MouseEvent.CLICK, mouseClickGraphic);
+                ptGraphic.geometry = data.point;
+                ptGraphic.attributes = data;
+                graphicsLayer.add(ptGraphic);
+
+                if (map.scale > zoomScale)
+                {
+                    map.scale = zoomScale;
+                }
+                map.centerAt(data.point);
+                // show infowindow
+                showInfoWindow(data);
+            }
+
+            private function selectLocation(event:Event):void
+            {
+                var locateResult:LocateResult = ItemRenderer(event.target).data as LocateResult;
+                locateResult.selected = true;
+
+                // unselect the other selected one
+                for each (var locateResult1:LocateResult in locateResultDG.dataProvider)
+                {
+                    if (locateResult1 !== locateResult)
+                    {
+                        locateResult1.selected = false;
+                    }
+                }
+                showLocation(locateResult);
+            }
+
+            private function mouseClickGraphic(event:MouseEvent):void
+            {
+                showInfoWindow(event.currentTarget.attributes);
+            }
+
+            private function clear():void
+            {
+                graphicsLayer.clear();
+                for (var i:Number = 0; i < addrObjects.length; i++)
+                {
+                    if (addrObjects[i].item is TextInput)
+                    {
+                        TextInput(addrObjects[i].item).text = "";
+                    }
+                }
+                clearMessage();
+                txtLong.text = "";
+                txtLat.text = "";
+                if (locateResultAC)
+                {
+                    locateResultAC.removeAll();
+                }
+                map.infoWindow.hide();
+            }
+
+            override public function showInfoWindow(infoData:Object):void
+            {
+                if (infoData)
+                {
+                    map.infoWindow.content = infoTemplate as UIComponent;
+                    map.infoWindow.label = infoData.title || "";
+                    infoTemplate.data = infoData;
+                    map.infoWindow.show(infoData.point);
+                }
+                else
+                {
+                    map.infoWindow.hide();
+                }
+            }
+
+            private function showMessage(msg:String, swfVisible:Boolean):void
+            {
+                txtMessage.text = msg;
+                swfMessage.visible = swfVisible;
+                msgVisible = true;
+            }
+
+            private function clearMessage():void
+            {
+                msgVisible = false;
+            }
+
+            private function widgetClosedHandler(event:Event):void
+            {
+                if (graphicsLayer)
+                {
+                    graphicsLayer.visible = false;
+                }
+                showInfoWindow(null);
+            }
+
+            private function widgetOpenedHandler(event:Event):void
+            {
+                if (graphicsLayer)
+                {
+                    graphicsLayer.visible = true;
+                }
+            }
+
+            protected function locateDG_locateResultDeleteHandler(event:Event):void
+            {
+                var locateResult:LocateResult = ItemRenderer(event.target).data as LocateResult;
+                for (var i:Number = 0; i < locateResultAC.length; )
+                {
+                    if (locateResultAC.getItemAt(i) === locateResult)
+                    {
+                        locateResultAC.removeItemAt(i);
+
+                        if (locateResultAC.length == 0)
+                        {
+                            clearMessage();
+                            graphicsLayer.clear();
+                            showInfoWindow(null);
+                        }
+                        else
+                        {
+                            // if a selected item is deleted, show the 1st one, by default
+                            if (locateResult.selected)
+                            {
+                                locateResultAC.getItemAt(0).selected = true;
+                                showLocation(locateResultAC.getItemAt(0));
+                                //scroll to the top
+                                locateResultDG.verticalScrollPosition = locateResultDG.layout.getVerticalScrollPositionDelta(NavigationUnit.HOME);
+                            }
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+                txtMessage.text = locationsLabel + " " + locateResultAC.length;
+            }
+
+            private function buttonKeyDownHandler(event:KeyboardEvent):void
+            {
+                if (event.keyCode == Keyboard.ENTER)
+                {
+                    event.target.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <fx:Declarations>
+        <mx:HTTPService id="locatorService"
+                        result="onJSONLoad(event)"
+                        resultFormat="text"
+                        url="http://tasks.arcgisonline.com/ArcGIS/rest/services/Locators/TA_Streets_US/GeocodeServer?f=json"/>
+        <esri:Locator id="locator"
+                      outSpatialReference="{map.spatialReference}"
+                      url="http://tasks.arcgisonline.com/ArcGIS/rest/services/Locators/TA_Streets_US/GeocodeServer"/>
+        <esri:VEGeocoder id="veGeocoder"
+                         culture="{bingCulture}"
+                         key="{bingKey}"/>
+    </fx:Declarations>
+
+    <viewer:WidgetTemplate id="wTemplate"
+                           width="300" height="300"
+                           closed="widgetClosedHandler(event)"
+                           minHeight="200"
+                           minWidth="200"
+                           open="widgetOpenedHandler(event)">
+        <s:Scroller width="100%" height="100%"
+                    horizontalScrollPolicy="off"
+                    verticalScrollPolicy="auto">
+            <s:Group id="addrInput"
+                     width="100%" height="100%"
+                     visible="false"
+                     visible.addrInput="true">
+                <s:layout>
+                    <s:VerticalLayout gap="1"/>
+                </s:layout>
+                <s:Label id="addressText"
+                         text="{addressTitle}"
+                         visible="{addressFieldsLoaded}"/>
+                <mx:Form id="frmLocateAddress"
+                         width="100%" height="100%"
+                         paddingBottom="0"
+                         verticalScrollPolicy="off">
+                    <s:HGroup width="100%" horizontalAlign="center">
+                        <s:Button id="addressSubmitButton"
+                                  click="addressSubmitButtonClickHandler(event)"
+                                  keyDown="buttonKeyDownHandler(event)"
+                                  label="{submitLabel}"
+                                  visible="{addressFieldsLoaded}"/>
+                        <s:Button id="addressClearButton"
+                                  click="clear()"
+                                  keyDown="buttonKeyDownHandler(event)"
+                                  label="{clearLabel}"
+                                  visible="{addressFieldsLoaded}"/>
+                    </s:HGroup>
+                    <mx:Spacer/>
+                    <s:Label id="addressRequiredFieldsLabel"
+                             color="0xff0000"
+                             visible="false"/>
+                </mx:Form>
+            </s:Group>
+        </s:Scroller>
+        <s:Group id="coordInput"
+                 width="100%" height="100%"
+                 visible="false"
+                 visible.coordInput="true">
+            <s:layout>
+                <s:VerticalLayout gap="1"/>
+            </s:layout>
+            <s:Label id="coordsText" text="{coordinatesTitle}"/>
+            <mx:Form id="frmLocateCoords"
+                     width="100%" height="100%"
+                     paddingBottom="0"
+                     verticalScrollPolicy="off">
+                <mx:FormItem width="100%"
+                             label="{xLabel}"
+                             required="true">
+                    <s:TextInput id="txtLong"
+                                 width="100%"
+                                 enter="locateCoordinates()"
+                                 restrict="0-9\.\-"
+                                 text="{xExampleValue}"/>
+                </mx:FormItem>
+                <mx:FormItem width="100%"
+                             label="{yLabel}"
+                             required="true">
+                    <s:TextInput id="txtLat"
+                                 width="100%"
+                                 enter="locateCoordinates()"
+                                 restrict="0-9\.\-"
+                                 text="{yExampleValue}"/>
+                </mx:FormItem>
+                <mx:Spacer/>
+                <s:HGroup width="100%" horizontalAlign="center">
+                    <s:Button click="locateCoordinates()"
+                              keyDown="buttonKeyDownHandler(event)"
+                              label="{submitLabel}"/>
+                    <s:Button click="clear()"
+                              keyDown="buttonKeyDownHandler(event)"
+                              label="{clearLabel}"/>
+                </s:HGroup>
+                <mx:Spacer/>
+                <s:Label id="coordinatesRequiredFieldsLabel"
+                         color="0xff0000"
+                         visible="false"/>
+            </mx:Form>
+        </s:Group>
+        <s:Group id="resultsList"
+                 width="100%" height="100%"
+                 visible="false"
+                 visible.resultsList="true">
+            <s:layout>
+                <s:VerticalLayout gap="1"/>
+            </s:layout>
+            <s:HGroup id="boxMessage"
+                      width="100%"
+                      includeInLayout="{msgVisible}"
+                      visible="{msgVisible}">
+                <mx:Image id="swfMessage"
+                          source="assets/images/loader.swf"
+                          visible="false"/>
+                <s:Label id="txtMessage"
+                         width="90%"
+                         text=""/>
+            </s:HGroup>
+            <s:Scroller width="100%" height="100%"
+                        horizontalScrollPolicy="off">
+                <Locate:LocateResultDataGroup id="locateResultDG"
+                                              dataProvider="{locateResultAC}"
+                                              locateResultClick="selectLocation(event)"
+                                              locateResultDelete="locateDG_locateResultDeleteHandler(event)">
+                    <Locate:layout>
+                        <s:VerticalLayout gap="2"
+                                          horizontalAlign="justify"
+                                          useVirtualLayout="true"/>
+                    </Locate:layout>
+                </Locate:LocateResultDataGroup>
+            </s:Scroller>
+        </s:Group>
+    </viewer:WidgetTemplate>
+</viewer:BaseWidget>

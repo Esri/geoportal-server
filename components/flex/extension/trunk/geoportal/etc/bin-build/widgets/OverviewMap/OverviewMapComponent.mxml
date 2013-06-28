@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                      xmlns:s="library://ns.adobe.com/flex/spark"
+                      xmlns:mx="library://ns.adobe.com/flex/mx"
+                      xmlns:esri="http://www.esri.com/2008/ags"
+                      creationComplete="init()">
+
+    <!-- this component is used by the OverviewMapWidget -->
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.Graphic;
+            import com.esri.ags.Map;
+            import com.esri.ags.events.ExtentEvent;
+            import com.esri.ags.events.MapEvent;
+            import com.esri.ags.geometry.Extent;
+            import com.esri.ags.geometry.MapPoint;
+            import com.esri.ags.layers.ArcGISDynamicMapServiceLayer;
+            import com.esri.ags.layers.ArcGISImageServiceLayer;
+            import com.esri.ags.layers.ArcGISTiledMapServiceLayer;
+            import com.esri.ags.layers.ArcIMSMapServiceLayer;
+            import com.esri.ags.layers.FeatureLayer;
+            import com.esri.ags.layers.GraphicsLayer;
+            import com.esri.ags.layers.Layer;
+            import com.esri.ags.symbols.SimpleFillSymbol;
+            import com.esri.ags.symbols.SimpleLineSymbol;
+            import com.esri.ags.virtualearth.VETiledLayer;
+            import com.esri.viewer.AppEvent;
+            import com.esri.viewer.ConfigData;
+            import com.esri.viewer.ViewerContainer;
+
+            import mx.collections.ArrayCollection;
+            import mx.core.FlexGlobals;
+            import mx.events.EffectEvent;
+            import mx.events.FlexEvent;
+
+            private const lineSym:SimpleLineSymbol = new SimpleLineSymbol("solid", 0xFF0000, 0.7, 2);
+            private const currentExtentSym:SimpleFillSymbol = new SimpleFillSymbol("solid", 0xFF0000, 0.2, lineSym);
+
+            // main map
+            public var map:Map;
+            // configData
+            public var configData:ConfigData;
+            // open tool tip default string
+            public var openDefaultToolTip:String;
+            // closed tool tip default string
+            public var closeDefaultToolTip:String;
+
+            private var graphicsLayer:GraphicsLayer = new GraphicsLayer();
+            private var overviewMode:String;
+            private var ovGraphic:Graphic = new Graphic();
+            private var xOff:Number;
+            private var yOff:Number;
+            private var baseMapSwitched:Boolean;
+            private var currentBaseMapId:String;
+
+            [Bindable]
+            private var openToolTip:String;
+            [Bindable]
+            private var closeToolTip:String;
+
+            private function init():void
+            {
+                bt.addEventListener(MouseEvent.CLICK, toggleView);
+            }
+
+            private var _configXML:XML;
+
+            public function get configXML():XML
+            {
+                return _configXML;
+            }
+
+            public function set configXML(value:XML):void
+            {
+                _configXML = value;
+
+                if (configXML)
+                {
+                    // overviewmap open/close tooltip label
+                    openToolTip = configXML.labels.opentooltip || openDefaultToolTip;
+                    closeToolTip = configXML.labels.closetooltip || closeDefaultToolTip;
+
+                    var url:String = configXML.layer.@url;
+                    var type:String;
+                    if (url)
+                    {
+                        type = configXML.layer.@type;
+                        overviewMode = configXML.layer.@mode;
+                        switch (type.toLowerCase())
+                        {
+                            case "tiled":
+                            {
+                                var tiledlayer:ArcGISTiledMapServiceLayer = new ArcGISTiledMapServiceLayer(url);
+                                tiledlayer.alpha = alpha;
+                                ovMap.addLayer(tiledlayer);
+                                break;
+                            }
+                            case "dynamic":
+                            {
+                                var dynlayer:ArcGISDynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer(url);
+                                dynlayer.alpha = alpha;
+                                ovMap.addLayer(dynlayer);
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        overviewMode = "dynamic";
+                        // get the base map layers
+                        for (var i:uint = 0; i < configData.basemaps.length; i++)
+                        {
+                            type = configData.basemaps[i].type;
+
+                            const alpha:Number = Number(configData.basemaps[i].alpha);
+                            const autoRefresh:Number = Number(configData.basemaps[i].autoRefresh);
+                            const label:String = configData.basemaps[i].label;
+                            const token:String = configData.basemaps[i].token;
+                            const urlBaseMap:String = configData.basemaps[i].url;
+                            const bingMapKey:String = configData.basemaps[i].key;
+                            const style:String = configData.basemaps[i].style;
+                            const visible:Boolean = configData.basemaps[i].visible;
+                            const visibleLayers:String = configData.basemaps[i].visibleLayers;
+                            const culture:String = configData.basemaps[i].culture;
+                            const useamf:Boolean = configData.basemaps[i].useamf;
+                            const mode:String = configData.basemaps[i].mode;
+                            const noData:Number = Number(configData.basemaps[i].noData);
+                            const useProxy:Boolean = configData.basemaps[i].useProxy;
+                            const proxyUrl:String = configData.proxyUrl;
+                            const serviceHost:String = configData.basemaps[i].serviceHost;
+                            const serviceName:String = configData.basemaps[i].serviceName;
+                            const definitionExpression:String = configData.basemaps[i].definitionExpression;
+
+                            switch (type.toLowerCase())
+                            {
+                                case "tiled":
+                                {
+                                    var tiledLayer:ArcGISTiledMapServiceLayer = new ArcGISTiledMapServiceLayer(urlBaseMap);
+                                    tiledLayer.alpha = alpha;
+                                    tiledLayer.id = label;
+                                    tiledLayer.visible = visible;
+                                    tiledLayer.token = token;
+                                    if (proxyUrl && useProxy)
+                                    {
+                                        tiledLayer.proxyURL = proxyUrl;
+                                    }
+                                    ovMap.addLayer(tiledLayer);
+                                    break;
+                                }
+                                case "dynamic":
+                                {
+                                    var dynLayer:ArcGISDynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer(urlBaseMap);
+                                    dynLayer.alpha = alpha;
+                                    dynLayer.id = label;
+                                    dynLayer.visible = visible;
+                                    dynLayer.token = token;
+                                    if (autoRefresh > 0)
+                                    {
+                                        setInterval(dynLayer.refresh, autoRefresh * 1000);
+                                    }
+                                    if (visibleLayers)
+                                    {
+                                        var vizLayers:Array = visibleLayers.split(",");
+                                        dynLayer.visibleLayers = new ArrayCollection(vizLayers);
+                                    }
+                                    if (proxyUrl && useProxy)
+                                    {
+                                        dynLayer.proxyURL = proxyUrl;
+                                    }
+                                    ovMap.addLayer(dynLayer);
+                                    break;
+                                }
+                                case "feature":
+                                {
+                                    var featureLayer:FeatureLayer = new FeatureLayer(urlBaseMap);
+                                    featureLayer.alpha = alpha;
+                                    featureLayer.id = label;
+                                    featureLayer.visible = visible;
+                                    featureLayer.outFields = [ '*' ];
+                                    featureLayer.token = token;
+                                    featureLayer.useAMF = useamf;
+                                    if (mode)
+                                    {
+                                        featureLayer.mode = mode;
+                                    }
+                                    if (proxyUrl && useProxy)
+                                    {
+                                        featureLayer.proxyURL = proxyUrl;
+                                    }
+                                    if (definitionExpression && definitionExpression != "")
+                                    {
+                                        featureLayer.definitionExpression = definitionExpression;
+                                    }
+                                    ovMap.addLayer(featureLayer);
+                                    break;
+                                }
+                                case "bing":
+                                {
+                                    var veTiledLayer:VETiledLayer = new VETiledLayer();
+                                    veTiledLayer.alpha = alpha;
+                                    veTiledLayer.id = label;
+                                    veTiledLayer.visible = visible;
+                                    veTiledLayer.key = bingMapKey;
+                                    if (style)
+                                    {
+                                        veTiledLayer.mapStyle = style;
+                                    }
+                                    if (culture)
+                                    {
+                                        veTiledLayer.culture = culture;
+                                    }
+                                    ovMap.addLayer(veTiledLayer);
+                                    break;
+                                }
+                                case "image":
+                                {
+                                    var imgLayer:ArcGISImageServiceLayer = new ArcGISImageServiceLayer(urlBaseMap);
+                                    imgLayer.alpha = alpha;
+                                    imgLayer.id = label;
+                                    imgLayer.visible = visible;
+                                    imgLayer.noData = noData;
+                                    imgLayer.token = token;
+                                    if (proxyUrl && useProxy)
+                                    {
+                                        imgLayer.proxyURL = proxyUrl;
+                                    }
+                                    ovMap.addLayer(imgLayer);
+                                    break;
+                                }
+                                case "arcims":
+                                {
+                                    var arcimsLayer:ArcIMSMapServiceLayer = new ArcIMSMapServiceLayer();
+                                    arcimsLayer.alpha = alpha;
+                                    arcimsLayer.id = label;
+                                    arcimsLayer.visible = visible;
+                                    arcimsLayer.serviceHost = serviceHost;
+                                    arcimsLayer.serviceName = serviceName;
+                                    if (autoRefresh > 0)
+                                    {
+                                        setInterval(arcimsLayer.refresh, autoRefresh * 1000);
+                                    }
+                                    if (visibleLayers)
+                                    {
+                                        var visLayers:Array = visibleLayers.split(",");
+                                        arcimsLayer.visibleLayers = new ArrayCollection(visLayers);
+                                    }
+                                    if (proxyUrl && useProxy)
+                                    {
+                                        arcimsLayer.proxyURL = proxyUrl;
+                                    }
+                                    ovMap.addLayer(arcimsLayer);
+                                    break;
+                                }
+                            }
+                        }
+                        ViewerContainer.addEventListener(AppEvent.BASEMAP_SWITCH, baseMapSwitchHandler);
+                    }
+                    currentState = configXML.initialstate == "open" ? "expanded" : "collapsed";
+                    if (currentState == "collapsed") // turn layer(s) off if component is collapsed
+                    {
+                        for each (var layer:Layer in ovMap.layers)
+                        {
+                            layer.visible = false;
+                        }
+                    }
+                }
+            }
+
+            private function ovMapLoaded(event:MapEvent):void
+            {
+                graphicsLayer.name = "overviewMapGraphicsLayer";
+                graphicsLayer.symbol = currentExtentSym;
+                ovMap.addLayer(graphicsLayer);
+
+                ovGraphic.geometry = map.extent;
+                ovGraphic.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+                ovGraphic.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
+
+                //make sure when mouse moves out of the overview map the extent is setup automatically
+                this.addEventListener(MouseEvent.MOUSE_OUT, mouseUpHandler);
+
+                graphicsLayer.add(ovGraphic);
+
+                map.addEventListener(ExtentEvent.EXTENT_CHANGE, setOverviewExtent);
+                updateOverviewExtent();
+            }
+
+            private function setOverviewExtent(event:ExtentEvent):void
+            {
+                updateOverviewExtent();
+            }
+
+            private var lastExtent:Extent;
+
+            private function updateOverviewExtent():void
+            {
+                if (overviewMode == "dynamic")
+                {
+                    ovMap.extent = map.extent.expand(3);
+                }
+
+                ovGraphic.geometry = map.extent;
+            }
+
+            private function mouseDownHandler(event:MouseEvent):void
+            {
+                var ext:Extent = ovGraphic.geometry as Extent;
+                var mPt:MapPoint = ovMap.toMapFromStage(event.stageX, event.stageY);
+                xOff = ext.center.x - mPt.x;
+                yOff = ext.center.y - mPt.y;
+                ovGraphic.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
+            }
+
+            private function mouseMoveHandler(event:MouseEvent):void
+            {
+                var mPt:MapPoint = ovMap.toMapFromStage(event.stageX, event.stageY);
+                var tempX:Number = mPt.x + xOff;
+                var tempY:Number = mPt.y + yOff;
+                var ext:Extent = ovGraphic.geometry as Extent;
+                var newext:Extent = new Extent(tempX - ext.width / 2, tempY - ext.height / 2, tempX + ext.width / 2, tempY + ext.height / 2);
+                ovGraphic.geometry = newext;
+                if (!event.buttonDown)
+                {
+                    ovGraphic.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
+                }
+            }
+
+            private function mouseUpHandler(event:MouseEvent):void
+            {
+                map.extent = ovGraphic.geometry as Extent;
+                ovGraphic.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
+            }
+
+            private function toggleView(event:MouseEvent):void
+            {
+                currentState = currentState == "collapsed" ? "expanded" : "collapsed";
+            }
+
+            //basemap menu clicked
+            private function baseMapSwitchHandler(event:AppEvent):void
+            {
+                baseMapSwitched = true;
+                currentBaseMapId = event.data as String;
+                if (currentState == "expanded")
+                {
+                    showCurrentBaseMap(currentBaseMapId);
+                }
+            }
+
+            private function viewBox_creationCompleteHandler(event:FlexEvent):void
+            {
+                viewBox.setStyle("backgroundColor", FlexGlobals.topLevelApplication.getStyle("backgroundColor"))
+            }
+
+            private function sequence1_effectEndHandler(event:EffectEvent):void
+            {
+                if (currentState == "collapsed") // turn layer(s) off if component is collapsed
+                {
+                    for each (var layer:Layer in ovMap.layers)
+                    {
+                        if (!(layer is GraphicsLayer && layer.name == "overviewMapGraphicsLayer"))
+                        {
+                            layer.visible = false;
+                        }
+                    }
+                }
+            }
+
+            private function sequence1_effectStartHandler(event:EffectEvent):void
+            {
+                if (currentState == "expanded")
+                {
+                    if (baseMapSwitched)
+                    {
+                        showCurrentBaseMap(currentBaseMapId);
+                    }
+                    else
+                    {
+                        // on start up and if basemap is not switched
+                        for (var i:int = 0; i < configData.basemaps.length; i++)
+                        {
+                            var basemapLabel:String = configData.basemaps[i].label;
+                            var isVisible:Boolean = configData.basemaps[i].visible;
+                            for each (var layer:Layer in ovMap.layers)
+                            {
+                                if (layer.id == basemapLabel)
+                                {
+                                    layer.visible = isVisible;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            private function showCurrentBaseMap(currentBaseMapId:String):void
+            {
+                var configBasemaps:Array = configData.basemaps;
+
+                if (currentBaseMapId)
+                {
+                    var selectedLabel:String;
+                    for (var i:uint = 0; i < configBasemaps.length; i++)
+                    {
+                        if (configBasemaps[i].id == currentBaseMapId)
+                        {
+                            selectedLabel = configBasemaps[i].label;
+                            break;
+                        }
+                    }
+                    if (selectedLabel)
+                    {
+                        // turn on the selected basemap layers (more than one layer can have the same label) 
+                        var layers:ArrayCollection = ovMap.layers as ArrayCollection;
+                        for (i = 0; i < configBasemaps.length; i++)
+                        {
+                            var basemapLabel:String = configBasemaps[i].label;
+                            for each (var layer:Layer in layers)
+                            {
+                                if (layer.id == basemapLabel)
+                                {
+                                    if (layer.id == selectedLabel)
+                                    {
+                                        layer.visible = true;
+                                    }
+                                    else
+                                    {
+                                        layer.visible = false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <s:states>
+        <s:State name="collapsed"/>
+        <s:State name="expanded"/>
+    </s:states>
+
+    <s:transitions>
+        <s:Transition id="trans"
+                      fromState="*"
+                      toState="*">
+            <s:Sequence effectEnd="sequence1_effectEndHandler(event)" effectStart="sequence1_effectStartHandler(event)">
+                <s:Resize duration="800" target="{viewBox}"/>
+                <s:Rotate angleBy="180"
+                          autoCenterTransform="true"
+                          duration="300"
+                          target="{bt}"/>
+            </s:Sequence>
+        </s:Transition>
+    </s:transitions>
+
+    <s:BorderContainer id="viewBox"
+                       width="250" width.collapsed="{bt.width}" height="250" height.collapsed="{bt.height}"
+                       backgroundAlpha="1.0"
+                       creationComplete="viewBox_creationCompleteHandler(event)">
+
+        <esri:Map id="ovMap"
+                  width="250" height="250"
+                  clickRecenterEnabled="false"
+                  doubleClickZoomEnabled="false"
+                  keyboardNavigationEnabled="false"
+                  load="ovMapLoaded(event)"
+                  logoVisible="false"
+                  panArrowsVisible="false"
+                  panEnabled="false"
+                  rubberbandZoomEnabled="false"
+                  scaleBarVisible="false"
+                  scrollWheelZoomEnabled="false"
+                  zoomSliderVisible="false"/>
+        <mx:Image id="bt"
+                  width="23" height="23"
+                  left="0" top="0"
+                  buttonMode="true"
+                  smoothBitmapContent="true"
+                  source="assets/images/i_expand2.png"
+                  toolTip.collapsed="{openToolTip}"
+                  toolTip.expanded="{closeToolTip}"
+                  useHandCursor="true"/>
+    </s:BorderContainer>
+
+    <s:Rect id="vborder"
+            left="-1" right="-1" top="-1" bottom="-1">
+        <s:stroke>
+            <s:SolidColorStroke color="{getStyle('contentBackgroundColor')}" weight="1"/>
+        </s:stroke>
+    </s:Rect>
+
+    <s:Rect id="vborder2"
+            left="-5" right="-5" top="-5" bottom="-5">
+        <s:stroke>
+            <s:SolidColorStroke color="{getStyle('color')}" weight="2"/>
+        </s:stroke>
+    </s:Rect>
+</s:SkinnableContainer>

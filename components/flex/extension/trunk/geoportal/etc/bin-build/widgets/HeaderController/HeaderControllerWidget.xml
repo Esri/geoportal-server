@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<configuration>
+    <about>
+       <label>About</label>
+       <visible>true</visible>
+       <width>375</width>
+       <height>375</height>
+       <content>
+        <![CDATA[<p align='center'><img src='assets/images/globe.png' width='140' height='140' /></p>
+        <font size="16"><b>Welcome to ArcGIS Viewer for Flex.</b></font>
+        <br><p>This application is developed with ArcGIS Viewer for Flex 2.</p>
+        <br>More information at links below:
+        <textformat indent="25"><p><br><a href="http://help.arcgis.com/en/webapps/flexviewer/" target='_blank'><font color='#FFFF00'>ArcGIS Viewer for Flex</font></a>
+        <br><a href="http://help.arcgis.com/en/webapi/flex/" target='_blank'><font color='#FFFF00'>ArcGIS API for Flex</font></a>
+        <br><a href="http://www.esri.com" target='_blank'><font color='#FFFF00'>Esri</font></a></p></textformat>
+        ]]>
+        </content>
+        <btnlabel>OK</btnlabel>
+    </about>
+</configuration>

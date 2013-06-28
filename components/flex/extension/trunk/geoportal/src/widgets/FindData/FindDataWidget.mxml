@@ -62,7 +62,7 @@ TM: Widget modified from the sample viewer GeoRSS widget
 	import com.esri.ags.symbols.SimpleLineSymbol;
 	import com.esri.ags.tasks.FindTask;
 	import com.esri.ags.tasks.Geoprocessor;
-	import com.esri.ags.webmap.WebMapUtil;
+
 	import com.esri.gpt.finddata.EndPoint;
 	import com.esri.gpt.finddata.EndPointEvent;
 	import com.esri.gpt.finddata.EndPoints;
@@ -79,7 +79,6 @@ TM: Widget modified from the sample viewer GeoRSS widget
 	import com.esri.gpt.finddata.SearchResultRecordList;
 	import com.esri.gpt.utils.ProjectionHandler;
 	import com.esri.gpt.utils.Utils;
-	//import com.esri.gpt.wfs.layers.WFSLayer;
 	import com.esri.gpt.wms.WMSLayer;
 	import com.esri.viewer.AppEvent;
 	import com.esri.viewer.ViewerContainer;
@@ -137,6 +136,7 @@ private var bUseProxy:Boolean = true;
 private var bRssWidgetAdded:Boolean = false;
 private var bUseShowHelpUsingFloatPane:Boolean = false;
 private var bUseEsriApiWmsObject:Boolean = false;
+private var geometryService:String;
 
 private var nZoomFactor:Number = 3;
 [Bindable]
@@ -211,8 +211,7 @@ private function init():void
     bDebug = Utils.chkBoolean(configXML.debug);
     bUseProxy = Utils.chkBoolean(configXML.useProxy);
     bUseEsriApiWmsObject = Utils.chkBoolean(configXML.useEsriApiWmsObject);
-    URL_TO_PROXY = Utils.chkString(configXML.useProxy.@proxyUrl);
-    
+    URL_TO_PROXY = Utils.chkString(configXML.useProxy.@proxyUrl);	
     if(bUseProxy == true && URL_TO_PROXY == "") {
       URL_TO_PROXY = Utils.chkString(this.configData.proxyUrl);
     }
@@ -235,7 +234,8 @@ private function init():void
     gpKmlUrl = Utils.chkString(configXML.gpKmlfile.@url);  
     gpKmlTimeout = Utils.chkNumber(configXML.gpKmlfile.@timeout, -1);
     
-    urlHelp = Utils.chkString(configXML.urlHelp);                        
+    urlHelp = Utils.chkString(configXML.urlHelp); 
+	geometryService = Utils.chkString(configXML.geometryService);
   
     nZoomFactor = Utils.chkNumber(configXML.zoomFactor.text(), nZoomFactor);
     nSearchTimeout = Utils.chkNumber(configXML.searchTimeout,nSearchTimeout); 
@@ -274,7 +274,9 @@ private function init():void
     agsGptRSSEndPoints.readEndpoints();
     
     projectionToMap = new ProjectionHandler(map.spatialReference);
+	projectionToMap.setGeometryService = geometryService;
     projectionToGpt = new ProjectionHandler(new SpatialReference(4326));
+	projectionToGpt.setGeometryService  = geometryService;
     numOfResultsPerPage = Utils.chkNumber(configXML.numOfResultsPerPage, 10);
   }
   
@@ -427,7 +429,7 @@ private function addResource(title:String, urlResource:String):void {
     
   } catch (error:Error) { 
     
-    userAlert.show(this, resourceManager.getString('gptStrings','finddata.lblUrlNotUnderstood'), 
+    userAlert.show(this.map, resourceManager.getString('gptStrings','finddata.lblUrlNotUnderstood'), 
       resourceManager.getString('gptStrings','finddata.lblUrlNotUnderstood') + 
       "\n\n" + error.toString());                 
     
@@ -450,7 +452,7 @@ private function readResourceUrl(result:URLVariables, url:String):void
     }
   } catch (error:Error) { 
     
-    userAlert.show(this, resourceManager.getString('gptStrings','finddata.lblErrGeneral'), 
+    userAlert.show(this.map, resourceManager.getString('gptStrings','finddata.lblErrGeneral'), 
       "Could not parse/add url that determines a service to be preloaded" + 
       "\n\n" + error.toString());                 
     
@@ -563,7 +565,7 @@ private function loadRSSData(event:ResultEvent):void {
 	AppEvent.dispatch( GptRSSEvent.GPT_SEARCH_DONE,
       new GptRSSEvent(GptRSSEvent.GPT_SEARCH_DONE, null));
   } catch (error:Error) {
-    userAlert.show(this, resourceManager.getString('gptStrings','finddata.lblErrCantSearch'), 
+    userAlert.show(this.map, resourceManager.getString('gptStrings','finddata.lblErrCantSearch'), 
       "A problem occured while parsing the RSS feed: " + "\n" +
       error.message + "\n\n" + error.getStackTrace());
     trace(error.getStackTrace());                                       
@@ -615,8 +617,7 @@ private function doSearch():void {
     }
     extent = projectionToGpt.reprojectExtent(extent);
     if(extent == null) {
-      throw new Error("Could not get projected extent");
-      
+      throw new Error("Could not get projected extent");      
     }
     criteria.extent = extent;
     criteria.numOfResultsPerPage = numOfResultsPerPage;
@@ -625,7 +626,7 @@ private function doSearch():void {
       agsGptRssModel.createUrlCriteria(criteria, geoRssUrl), rssService);
     
   } catch (error:Error) {
-    userAlert.show(this, resourceManager.getString('gptStrings','finddata.lblErrCantSearch'), 
+    userAlert.show(this.map, resourceManager.getString('gptStrings','finddata.lblErrCantSearch'), 
       error.message + "\n\n" 
       + error.getStackTrace());
     trace(error.getStackTrace());
@@ -730,7 +731,7 @@ private function doZoomTo(extent:Extent, factor:Number):void {
     extent = extent.expand(factor);
     map.extent = extent;
   } catch (error:Error) {
-    userAlert.show(this, resourceManager.getString('gptStrings','finddata.lblErrGeneral'), "error while zooming to "
+    userAlert.show(this.map, resourceManager.getString('gptStrings','finddata.lblErrGeneral'), "error while zooming to "
       + strExt + "\n\n" + error.getStackTrace());
     trace(error.getStackTrace());
   } catch (event:FaultEvent) {
@@ -802,7 +803,7 @@ private function doShowMoreMetaInfo(obj:Object):void {
       doZoomTo( layer.initialExtent, nZoomFactor);
     }
   } catch (error:Error) {
-    userAlert.show(this, resourceManager.getString('gptStrings','finddata.lblErrGeneral'), 
+    userAlert.show(this.map, resourceManager.getString('gptStrings','finddata.lblErrGeneral'), 
       "A problem occured while elaborating metadata : \n\n",
       error.toString() + "\n\n" + error.getStackTrace());
   } catch (evt:FaultEvent) {
@@ -830,7 +831,7 @@ public function doAddToMap(record:SearchResultRecord,
   try {
     this.doAddToMap2(record, endPoint);
   } catch (error:Error) {
-    userAlert.show(this, resourceManager.getString('gptStrings','finddata.lblErrGeneral'), 
+    userAlert.show(this.map, resourceManager.getString('gptStrings','finddata.lblErrGeneral'), 
       "A problem occured while adding the map service : \n\n" 
       + error.message + ":" + "\n" + error.toString() + "\n"
       + error.getStackTrace());
@@ -1354,7 +1355,7 @@ private function showHelp(event:MouseEvent=null):void{
       navigateToURL(urlRequest, "_blank");
    }
   } catch (err:Error) {
-    userAlert.show(this, resourceManager.getString('gptStrings','finddata.lblErrGeneral'), 
+    userAlert.show(this.map, resourceManager.getString('gptStrings','finddata.lblErrGeneral'), 
       err.toString() + 
       "\n\n" + err.getStackTrace());
   }

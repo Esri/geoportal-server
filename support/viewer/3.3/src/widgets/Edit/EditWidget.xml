@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<!-- If compiling this widget, make sure to add -keep-all-type-selectors=true to your compiler arguments in the FB project properties. -->
+<configuration>
+    <createoptions>
+        <polygondrawtools>polygon,freehandpolygon,extent,autocomplete</polygondrawtools>
+        <polylinedrawtools>polyline,freehandpolyline,line</polylinedrawtools>
+    </createoptions>
+    <addfeatures>true</addfeatures>
+    <deletefeatures>true</deletefeatures>
+    <toolbarvisible>true</toolbarvisible>
+    <toolbarcutvisible>false</toolbarcutvisible>
+    <toolbarmergevisible>false</toolbarmergevisible>
+    <toolbarreshapevisible>false</toolbarreshapevisible>   
+    <updategeometry>true</updategeometry>
+    <updateattributes>true</updateattributes>    
+</configuration>
+
+<!--
+    See Edit widget documentation at
+    http://links.esri.com/editwidget
+-->

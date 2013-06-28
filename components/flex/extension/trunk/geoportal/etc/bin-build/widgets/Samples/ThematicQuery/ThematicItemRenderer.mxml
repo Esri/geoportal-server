@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/FlexViewer/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:mx="library://ns.adobe.com/flex/mx"
+                autoDrawBackground="false"
+                buttonMode="true"
+                click="itemrenderer_clickHandler(event)"
+                dataChange="itemrenderer_dataChangeHandler(event)"
+                minHeight="30"
+                useHandCursor="true">
+
+    <fx:Script>
+        <![CDATA[
+            import mx.events.FlexEvent;
+
+            import spark.components.RadioButtonGroup;
+
+            private const THEME_CLICK:String = "themeClick";
+
+            [Bindable]
+            private var title:String;
+
+            [Bindable]
+            private var grp:spark.components.RadioButtonGroup;
+
+            [Bindable]
+            private var radioSelected:Boolean;
+
+            private function itemrenderer_dataChangeHandler(event:FlexEvent):void
+            {
+                if (data)
+                {
+                    title = data.labelref;
+                    grp = data.themeType;
+                    radioSelected = data.visible;
+                }
+            }
+
+            private function itemrenderer_clickHandler(event:MouseEvent):void
+            {
+                if (event.target is ThematicItemRenderer)
+                {
+                    ThematicItemRenderer(event.target).themeRadio.selected = true;
+                }
+                dispatchEvent(new Event(THEME_CLICK, true)); // bubbles
+            }
+        ]]>
+    </fx:Script>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="hovered"/>
+    </s:states>
+
+    <!-- border -->
+    <s:Rect left="0" right="10" top="0" bottom="0"
+            radiusX="4"
+            radiusY="4">
+        <s:stroke>
+            <s:SolidColorStroke alpha="{getStyle('borderAlpha')}"
+                                color="{getStyle('borderColor')}"
+                                weight="1"/>
+        </s:stroke>
+    </s:Rect>
+
+    <!-- background fill -->
+    <s:Rect left="1" right="11" top="1" bottom="1"
+            radiusX="4"
+            radiusY="4">
+        <s:fill>
+            <s:SolidColor alpha="0.3"
+                          alpha.hovered="0.8"
+                          color.hovered="{getStyle('rollOverColor')}"
+                          color.normal="{getStyle('contentBackgroundColor')}"/>
+        </s:fill>
+    </s:Rect>
+
+    <s:RadioButton id="themeRadio"
+                   left="30" right="40"
+                   fontWeight="normal"
+                   group="{grp}"
+                   label="{title}"
+                   selected="{radioSelected}"
+                   verticalCenter="0"/>
+
+</s:ItemRenderer>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:mx="library://ns.adobe.com/flex/mx"
+                width="100%"
+                autoDrawBackground="true"
+                buttonMode="true"
+                click="itemrenderer_clickHandler(event)"
+                dataChange="itemrenderer_dataChangeHandler(event)"
+                minHeight="30"
+                useHandCursor="true">
+
+    <fx:Script>
+        <![CDATA[
+            import flashx.textLayout.formats.TextAlign;
+
+            import mx.events.EffectEvent;
+            import mx.events.FlexEvent;
+
+            private const WIDGET_ITEM_CLICK:String = "widgetListItemClick";
+
+            [Bindable]
+            private var widgetItem:WidgetItem;
+
+            private function itemrenderer_dataChangeHandler(event:FlexEvent):void
+            {
+                widgetItem = data as WidgetItem;
+
+                icon.source = widgetItem.icon;
+                underline.visible = widgetItem.open;
+                underline.includeInLayout = widgetItem.open;
+
+                // set style on the label
+                widgetLabel.setStyle("textAlign", TextAlign.CENTER);
+                widgetLabel.text = widgetItem.label;
+            }
+
+            private function itemrenderer_clickHandler(event:MouseEvent):void
+            {
+                dispatchEvent(new Event(WIDGET_ITEM_CLICK, true)); // bubbles
+            }
+        ]]>
+    </fx:Script>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="hovered"/>
+    </s:states>
+
+    <!-- border/background rectangle -->
+    <s:Rect left="0" right="0" top="0" bottom="0"
+            radiusX="4"
+            radiusY="4">
+        <s:fill>
+            <s:SolidColor alpha="0.3"
+                          alpha.hovered="0.8"
+                          color.hovered="{getStyle('rollOverColor')}"
+                          color.normal="{getStyle('contentBackgroundColor')}"/>
+        </s:fill>
+    </s:Rect>
+
+    <s:VGroup width="100%" height="100%">
+        <s:HGroup width="100%" height="30"
+                  buttonMode="true"
+                  paddingLeft="10"
+                  useHandCursor="true"
+                  verticalAlign="middle">
+            <s:VGroup width="25" height="30"
+                      horizontalAlign="center">
+                <mx:Image id="icon"
+                          width="100%" height="100%"/>
+                <mx:HRule id="underline"
+                          width="10"
+                          strokeColor="{getStyle('focusColor')}"/>
+            </s:VGroup>
+            <s:Label id="widgetLabel"
+                     width="100%"
+                     color="{getStyle('color')}"
+                     maxDisplayedLines="3"
+                     showTruncationTip="true"/>
+        </s:HGroup>
+        <mx:HRule width="100%" alpha="0.3"/>
+    </s:VGroup>
+</s:ItemRenderer>
+

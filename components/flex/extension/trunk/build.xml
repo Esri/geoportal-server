@@ -3,10 +3,13 @@
         simple parent build file
     </description>
 
-  <target name="main">
-    <ant antfile="build.xml" dir="C:/Builds/GeoportalServer/Flex/Sources/geoportal/etc" inheritrefs="true">
-     <property file="C:/Builds/GeoportalServer/Flex/Sources/geoportal/etc/tempbuild.properties"/>
+  <target name="main">      
+    <ant antfile="build.xml" dir="${BuildDirectory}/Sources/geoportal/etc" inheritrefs="true">
+     <property file="${BuildDirectory}/Sources/geoportal/etc/tfsbuild.properties"/>
     </ant>
+    <!--<ant antfile="build.xml" dir="C:/Projects/GeoportalServer/components/flex/extension/trunk/geoportal/etc" inheritrefs="true">
+      <property file="C:/Projects/GeoportalServer/components/flex/extension/trunk/geoportal/etc/tempbuild.properties"/>
+    </ant>-->
     <!-- <ant antfile="C:\Builds\GeoportalServer\Flex\Sources\geoportal\etc\build.xml" inheritrefs="true" /> -->
   </target>
   

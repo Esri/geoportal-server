@@ -21,6 +21,8 @@ package com.esri.gpt.utils
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	
+	import mx.collections.IList;
+	
   /**
   * @Author: TM
   * Utility class
@@ -193,5 +195,7 @@ package com.esri.gpt.utils
     
     return extent;
   }
+  
+  
 }
 }

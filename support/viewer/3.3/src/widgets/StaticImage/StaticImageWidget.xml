@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<configuration label="Esri Globe">
+    <imageurl>assets/images/globe.png</imageurl>
+    <linkurl>http://www.esri.com</linkurl>
+    <tooltip>http://www.esri.com</tooltip>
+</configuration>
+
+<!--
+    See Static Image widget tag reference at
+    http://links.esri.com/staticimagewidget
+-->

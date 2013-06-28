@@ -24,7 +24,7 @@ limitations under the License.
     this attribute.
    -->
   <useProxy proxyUrl="">true</useProxy>
-  
+  <geometryService>http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer</geometryService>
   <!-- 
   /gptEndPoint - Elements pointing to gpt end points
   @name will be listed in the drop down
@@ -35,6 +35,8 @@ limitations under the License.
   @useNameAsPrefix if url points to repositories list then the attribute
      specifies whether the @name should be used as the prefix  
   -->
+  <gptEndpoint url="http://inspirerh1.esri.com:8080/geoportal/rest/find/document" 
+    name="Inspire"/>
   <gptEndpoint url="rest/find/document" 
     name="Default Site"/> 
   <gptEndpoint url="rest/find/document?rid=ArcGIS.com" 
@@ -59,7 +61,7 @@ limitations under the License.
   <iconHelp>assets/images/i_help.png</iconHelp>
   
   <zoomFactor>1</zoomFactor>
-  <urlHelp>http://help.arcgis.com/en/geoportal_extension/10.0/help/index.html#//00t00000002v000000.htm</urlHelp>
+  <urlHelp>http://sourceforge.net/apps/mediawiki/geoportal/index.php?title=Search_Widget_for_Flex#How_to_Use_the_Geoportal_Search_Widget_for_Flex</urlHelp>
   
   <!-- regWebContext =  Used to match the webcontext so as to automate getting the 
   endpoint for relative URLS -->

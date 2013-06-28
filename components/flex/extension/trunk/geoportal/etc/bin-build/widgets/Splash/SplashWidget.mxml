@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:viewer="com.esri.viewer.*"
+                   widgetConfigLoaded="init()">
+    <fx:Script>
+        <![CDATA[
+            import com.esri.viewer.components.HTMLPopup;
+
+            private var content:String;
+            private var btnLabel:String
+            private var txtareaWidth:Number;
+            private var txtareaHeight:Number;
+
+            private function init():void
+            {
+                if (configXML)
+                {
+                    content = configXML.content || "...";
+                    btnLabel = configXML.btnlabel || getDefaultString("okLabel");
+                    txtareaWidth = configXML.width || 500;
+                    txtareaHeight = configXML.height || 500;
+
+                    HTMLPopup.show(content, btnLabel, txtareaWidth, txtareaHeight);
+                }
+            }
+        ]]>
+    </fx:Script>
+</viewer:BaseWidget>

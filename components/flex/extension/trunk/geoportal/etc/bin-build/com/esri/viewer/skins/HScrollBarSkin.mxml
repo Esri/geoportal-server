@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     ////////////////////////////////////////////////////////////////////////////////
+     //
+     // Copyright (c) 2010 ESRI
+     //
+     // All rights reserved under the copyright laws of the United States.
+     // You may freely redistribute and use this software, with or
+     // without modification, provided you include the original copyright
+     // and use restrictions.  See use restrictions in the file:
+     // <install location>/License.txt
+     //
+     ////////////////////////////////////////////////////////////////////////////////
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+             xmlns:s="library://ns.adobe.com/flex/spark"
+             alpha.disabled="0.5"
+             alpha.inactive="0.5"
+             minHeight="15"
+             minWidth="35">
+
+    <fx:Metadata>
+        [HostComponent("spark.components.HScrollBar")]
+    </fx:Metadata>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="disabled"/>
+        <s:State name="inactive"/>
+    </s:states>
+
+    <s:Button id="track"
+              width="54"
+              left="16" right="15"
+              focusEnabled="false"
+              skinClass="com.esri.viewer.skins.HScrollBarTrackSkin"/>
+
+    <s:Button id="thumb"
+              focusEnabled="false"
+              skinClass="com.esri.viewer.skins.HScrollBarThumbSkin"
+              visible.inactive="false"/>
+
+    <s:Button id="decrementButton"
+              left="0"
+              enabled.inactive="false"
+              focusEnabled="false"
+              skinClass="com.esri.viewer.skins.ScrollBarLeftButtonSkin"/>
+
+    <s:Button id="incrementButton"
+              right="0"
+              enabled.inactive="false"
+              focusEnabled="false"
+              skinClass="com.esri.viewer.skins.ScrollBarRightButtonSkin"/>
+
+</s:SparkSkin>

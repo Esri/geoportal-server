@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<configuration label="Extract data">
+    <description>Extract data and download zip file</description>
+    <taskurl>http://sampleserver4.arcgisonline.com/ArcGIS/rest/services/HomelandSecurity/Incident_Data_Extraction/GPServer/Extract%20Data%20Task</taskurl>
+    <helpurl>http://sampleserver4.arcgisonline.com/arcgisoutput/HomelandSecurity_Incident_Data_Extraction/ExtractDataTask.htm</helpurl>
+    <inputparams>
+        <param name="Area_of_Interest"
+               geometrytype="polygon"
+               label="1. Select area"
+               required="true"
+               type="featurerecordset"
+               visible="true">
+            <renderer type="simple">
+                <defaultsymbol alpha="0.5"
+                               color="0xFFFFFF"
+                               type="simplefill">
+                    <outline width="1" color="0x000000"/>
+                </defaultsymbol>
+            </renderer>
+        </param>
+        <param name="Layers_to_Clip"
+               defaultvalue="Incident Areas,Incident Points"
+               label="2. Select layers to extract"
+               required="true"
+               type="multivalue:string"
+               visible="true">
+            <choicelist>
+                <choice value="Incident Areas"/>
+                <choice value="Incident Lines"/>
+                <choice value="Incident Points"/>
+            </choicelist>
+        </param>
+        <param name="Feature_Format"
+               defaultvalue="File Geodatabase - GDB - .gdb"
+               label="3. Select file format"
+               required="true"
+               type="string"
+               visible="true">
+            <choicelist>
+                <choice value="File Geodatabase - GDB - .gdb"/>
+                <choice value="Shapefile - SHP - .shp"/>
+                <choice value="Autodesk AutoCAD - DXF_R2007 - .dxf"/>
+                <choice value="Autodesk AutoCAD - DWG_R2007 - .dwg"/>
+                <choice value="Bentley Microstation Design (V8) - DGN_V8 - .dgn"/>
+            </choicelist>
+        </param>
+    </inputparams>
+    <outputparams>
+        <param name="Output_Zip_File"
+               label="Output Zip file"
+               required="true"
+               type="datafile"
+               visible="true"/>
+    </outputparams>
+    <layerorder>Area_of_Interest</layerorder>
+    <labels>
+        <submitlabel>Extract</submitlabel>
+    </labels>
+</configuration>
+
+<!--
+    See Geoprocessing widget tag reference at
+    http://links.esri.com/geoprocessingwidget
+-->

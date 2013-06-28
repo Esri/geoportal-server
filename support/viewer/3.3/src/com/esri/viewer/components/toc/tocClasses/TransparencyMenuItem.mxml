@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<!---
+@private
+-->
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:layers="com.esri.ags.layers.*"
+                   width="205" height="65"
+                   backgroundColor="{getStyle('contentBackgroundColor')}"
+                   borderColor="{getStyle('accentColor')}"
+                   initialize="transparencyBorderContainer_initializeHandler(event)"
+                   rollOut="transparencyBorderContainer_rollOutHandler(event)"
+                   rollOver="transparencyBorderContainer_rollOverHandler(event)">
+    <fx:Script>
+        <![CDATA[
+            import com.esri.viewer.AppEvent;
+            import com.esri.viewer.utils.LocalizationUtil;
+
+            import mx.events.FlexEvent;
+            import mx.events.SliderEvent;
+
+            protected function transparencyBorderContainer_initializeHandler(event:FlexEvent):void
+            {
+                transparencySlider.value = (1.0 - layer.alpha) * 100;
+            }
+
+            protected function transparencySlider_changeHandler(event:SliderEvent):void
+            {
+                layer.alpha = 1.0 - (transparencySlider.value / 100.0);
+            }
+
+            protected function transparencyBorderContainer_rollOverHandler(event:MouseEvent):void
+            {
+                AppEvent.dispatch(AppEvent.SUSPEND_TOC_HIDE_TIMER, "true");
+            }
+
+            protected function transparencyBorderContainer_rollOutHandler(event:MouseEvent):void
+            {
+                AppEvent.dispatch(AppEvent.SUSPEND_TOC_HIDE_TIMER, null);
+            }
+        ]]>
+    </fx:Script>
+    <fx:Declarations>
+        <layers:Layer id="layer"/>
+    </fx:Declarations>
+    <s:VGroup width="100%"
+              gap="2"
+              paddingBottom="2"
+              paddingLeft="10"
+              paddingRight="10">
+        <s:HGroup width="100%"
+                  gap="2"
+                  paddingTop="2">
+            <s:Label text="{LocalizationUtil.getDefaultString('tocMapLayerOpaqueLabel')}"/>
+            <s:Spacer width="100%"/>
+            <s:Label text="{LocalizationUtil.getDefaultString('tocMapLayerTransparentLabel')}"/>
+        </s:HGroup>
+        <mx:HSlider id="transparencySlider"
+                    width="100%"
+                    change="transparencySlider_changeHandler(event)"
+                    chromeColor="{getStyle('accentColor')}"
+                    dataTipPrecision="0"
+                    labelOffset="30"
+                    labels="{['0%','50%','100%']}"
+                    liveDragging="true"
+                    maximum="100"
+                    minimum="0"
+                    snapInterval="1"/>
+    </s:VGroup>
+</s:BorderContainer>

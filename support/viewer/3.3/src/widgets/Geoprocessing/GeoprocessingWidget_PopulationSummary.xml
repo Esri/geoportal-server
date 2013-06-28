@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<configuration label="Population summary">
+    <description/>
+    <taskurl>http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Population_World/GPServer/PopulationSummary</taskurl>
+    <helpurl>http://sampleserver1.arcgisonline.com/arcgisoutput/Demographics_ESRI_Population_World/PopulationSummary.htm</helpurl>
+    <inputparams>
+        <param name="inputPoly"
+               geometrytype="polygon"
+               label="Population area"
+               required="true"
+               type="featurerecordset"
+               visible="true">
+            <renderer type="simple">
+                <defaultsymbol alpha="0.5"
+                               color="0xFFFFFF"
+                               type="simplefill">
+                    <outline width="1" color="0x000000"/>
+                </defaultsymbol>
+            </renderer>
+        </param>
+    </inputparams>
+    <outputparams>
+        <param name="StatsSummary"
+               label="Population summary"
+               required="true"
+               type="recordset"
+               visible="true"/>
+    </outputparams>
+    <layerorder>inputPoly</layerorder>
+</configuration>
+
+<!--
+    See Geoprocessing widget tag reference at
+    http://links.esri.com/geoprocessingwidget
+-->

@@ -2,40 +2,34 @@
 <!--
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright (c) 2010 ESRI
-//
-// All rights reserved under the copyright laws of the United States.
-// You may freely redistribute and use this software, with or
-// without modification, provided you include the original copyright
-// and use restrictions.  See use restrictions in the file:
-// <install location>/License.txt
-//
-// Read more about ArcGIS Viewer for Flex 2.2 - http://links.esri.com/flexviewer
+// Read more about ArcGIS Viewer for Flex - http://links.esri.com/flexviewer
 //
 ////////////////////////////////////////////////////////////////////////////////
 -->
 <configuration>
-    <title>Geoportal Server Map Viewer</title>
-    <subtitle></subtitle>
+    <title>ArcGIS Viewer for Flex</title>
+    <subtitle>a configurable web mapping application</subtitle>
     <logo>assets/images/logo.png</logo>
     <style>
         <colors>0xFFFFFF,0x333333,0x101010,0x000000,0xFFD700</colors>
         <alpha>0.8</alpha>
     </style>
- 
+    <!-- replace the following url with your own geometryservice -->
+    <geometryservice url="http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer" />
+
     <!-- UI elements -->
     <widget left="10"  top="50"    config="widgets/Navigation/NavigationWidget.xml" url="widgets/Navigation/NavigationWidget.swf"/>
     <widget right="-2" bottom="-2" config="widgets/OverviewMap/OverviewMapWidget.xml" url="widgets/OverviewMap/OverviewMapWidget.swf"/>
     <widget right="20" top="55"    config="widgets/MapSwitcher/MapSwitcherWidget.xml" url="widgets/MapSwitcher/MapSwitcherWidget.swf"/>
     <widget left="0"   top="0"     config="widgets/HeaderController/HeaderControllerWidget.xml" url="widgets/HeaderController/HeaderControllerWidget.swf"/>
 
-    <map initialextent="-14083000 3139000 -10879000 5458000" top="40">
+    <map wraparound180="false" initialextent="-20000000 -20000000 20000000 20000000" fullextent="-20000000 -20000000 20000000 20000000" top="40">
         <basemaps>
-            <layer label="Streets" type="tiled" visible="true"  alpha="1"
+            <layer label="Streets" type="tiled" visible="true"
                    url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer"/>
-            <layer label="Aerial"  type="tiled" visible="false" alpha="1"
+            <layer label="Aerial"  type="tiled" visible="false"
                    url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"/>
-            <layer label="Topo"    type="tiled" visible="false" alpha="1"
+            <layer label="Topo"    type="tiled" visible="false"
                    url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer"/>
         </basemaps>
         <operationallayers>
@@ -50,7 +44,7 @@
         <widget label="Layer List"
                 icon="assets/images/i_layers.png"
                 config="widgets/LayerList/LayerListWidget.xml"
-                url="widgets/LayerList/LayerListWidget.swf"/>    
+                url="widgets/LayerList/LayerListWidget.swf"/>
         <widget label="Print"
                 icon="assets/images/i_print.png"
                 config="widgets/Print/PrintWidget.xml"
@@ -61,7 +55,8 @@
                 preload="open"
                 icon="assets/images/i_search.png"
                 config="widgets/FindData/FindDataWidget.xml"
-                url="widgets/FindData/FindDataWidget.swf"/>    
+                url="widgets/FindData/FindDataWidget.swf"/>
     </widgetcontainer>
 
 </configuration>
+
