@@ -72,6 +72,20 @@ function getSynchronizable() {
 }
 
 /**
+ * Checks if 'findable' is checked.
+ */
+function getFindable() {
+  return isChecked(dojo.byId("harvestCreate:findable"));
+}
+
+/**
+ * Selects/unselects 'findable'.
+ */
+function setFindable(checked) {
+  setChecked(dojo.byId("harvestCreate:findable"),checked);
+}
+
+/**
  * Checks if 'searchable' is checked.
  */
 function getSearchable() {
@@ -280,6 +294,7 @@ function selectSection(section) {
   dojo.query(".onBehalfOf").style("display",section!="agp2agp"? "block": "none");
 
   adjustSearchable(section);
+  adjustFindable(section);
 }
 
 dojo.addOnLoad(function() {
@@ -325,6 +340,8 @@ dojo.addOnLoad(function() {
 
 var lastSearchableValue = false;
 var lastSearchableEnabled = true;
+var lastFindableValue = false;
+var lastFindableEnabled = true;
 
 /**
  * Adjusts searchable.
@@ -343,14 +360,38 @@ function adjustSearchable(section) {
   lastSearchableEnabled = enabled;
 }
 
+/**
+ * Adjusts searchable.
+ */
+function adjustFindable(section) {
+  var enabled = section!="agp2agp";
+  dojo.query("#harvestCreate .findable").attr("disabled",!enabled);
+  if (!enabled) {
+    if (lastFindableEnabled) {
+      lastFindableValue = getFindable();
+      setFindable(false);
+    }
+  } else if (!lastFindableEnabled) {
+    setFindable(lastFindableValue);
+  }
+  lastFindableEnabled = enabled;
+}
+
 dojo.addOnLoad(function() {
   lastSearchableValue = getSearchable();
+  lastFindableValue = getFindable();
+  
   dojo.query("#harvestCreate\\:searchable").onchange(function(node){
     lastSearchableValue = node.target.checked;
   });
+  dojo.query("#harvestCreate\\:findable").onchange(function(node){
+    lastFindableValue = node.target.checked;
+  });
+  
   checked = dojo.query("#harvestCreate\\:protocolType input:checked").attr("value");
   if (checked!=null && checked.length>0) {
     adjustSearchable(checked);
+    adjustFindable(checked);
   }
 });
 
