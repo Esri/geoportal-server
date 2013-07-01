@@ -609,7 +609,9 @@ package com.esri.gpt.wms
          */
 		override protected function loadMapImage( loader:Loader ):void  {
 			try {
+			
 			   loadMapImageWork(loader);
+			
 			} catch(error:Error) {
 				dispatchEvent(new LayerEvent(WMSEVENT_GETMAPERROR, 
 					this, new Fault("WMS", "Getmap Error", 

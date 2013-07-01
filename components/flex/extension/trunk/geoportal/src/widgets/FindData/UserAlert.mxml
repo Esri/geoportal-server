@@ -12,14 +12,15 @@
   </mx:Metadata>
   <mx:Script>
     <![CDATA[
-      import com.esri.ags.Map;
-      import com.esri.gpt.utils.Utils;
-      import com.esri.viewer.BaseWidget;
-      
-      import mx.core.UIComponent;
-      import mx.logging.ILogger;
-      import mx.logging.Log;
-      import mx.managers.PopUpManager;
+		import com.esri.ags.Map;
+		import com.esri.gpt.utils.Utils;
+		import com.esri.viewer.BaseWidget;
+		
+		import mx.core.UIComponent;
+		import mx.logging.ILogger;
+		import mx.logging.Log;
+		import mx.managers.PopUpManager;
+		import mx.resources.ResourceManager;
       
       [Bindable]
       private var message:String = "";
@@ -86,8 +87,6 @@
         
         if(advancedMessage != null && Utils.chkString(advancedMessage) != "") {
           bShowMoreOption = true;
-        } else {
-          bShowMoreOption = true;
         }
         LOG.error(message + "\n\n" + advancedMessage);    
       }
@@ -122,7 +121,13 @@
       
       
       
-    ]]>
+		protected function button1_clickHandler(event:MouseEvent):void
+		{
+			// TODO Auto-generated method stub
+			this.doClose(null);
+		}
+		
+	]]>
   </mx:Script>
   
   <mx:states>
@@ -162,5 +167,8 @@
                      visible="{bShowMoreOption}"/>
     </mx:HBox>
     <mx:VBox id="contShowMore1"/>
+	<mx:Button click="button1_clickHandler(event)" label="{ResourceManager.getInstance().getString('ViewerStrings','okLabel')}">
+		
+	</mx:Button>
   </mx:VBox>
 </mx:TitleWindow>
