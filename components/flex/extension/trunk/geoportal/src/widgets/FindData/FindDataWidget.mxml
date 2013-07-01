@@ -1256,7 +1256,7 @@ private function showLoadLayerMessage(event:LayerEvent):void {
  * */
 private function layerLoaded(event:LayerEvent):void {
 
-  
+   
   var eventObj:Object = dctAddingService[event.layer];
   try { 
     
