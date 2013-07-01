@@ -77,8 +77,8 @@ abstract class Agp2AgpExecutor extends Executor {
               LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Pushed item #{0} of source URI: \"{1}\" through unit: {2}", new Object[]{rp.getHarvestedCount() + 1, sourceItem.getProperties().getValue("id"), unit});
               return result;
             } catch (Exception ex) {
-              rp.createUnpublishedEntry(sourceUri, Arrays.asList(new String[]{ex.getMessage()}));
-              throw ex;
+              LOGGER.log(Level.WARNING, "[SYNCHRONIZER] Failed pushing item #{0} of source URI: \"{1}\" through unit: {2}. Reason: {3}", new Object[]{rp.getHarvestedCount() + 1, sourceItem.getProperties().getValue("id"), unit, ex.getMessage()});
+              return false;
             }
           }
 
