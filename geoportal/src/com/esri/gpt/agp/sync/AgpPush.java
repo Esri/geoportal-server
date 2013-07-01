@@ -616,8 +616,7 @@ push-working.jsp
       sourceRequest.search(this.source.getConnection(),this.source.getSearchCriteria(), 
         new AgpItemListener() {
           @Override
-          public void onItemLoaded(AgpConnection connection, AgpItem item)
-            throws Exception {
+          public void onItemLoaded(AgpConnection connection, AgpItem item) throws Exception {
             AgpPush.this.syncItem(item);
           }
         }
