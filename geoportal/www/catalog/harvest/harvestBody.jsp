@@ -647,12 +647,12 @@ value="#{HarvestController.prepareSelectedPublishers}"/>
   styleClass="formTable" columnClasses="formLabelColumn,formInputColumn">
 
 <%-- Repository id --%>
-<h:outputLabel for="idDisp" value="#{gptMsg['catalog.harvest.manage.edit.repositoryId']}"/>
+<h:outputText value="#{gptMsg['catalog.harvest.manage.edit.repositoryId']}"/>
 <h:outputText id="idDisp" escape="false" 
 value="#{not empty HarvestController.editor.repository.uuid? HarvestController.editor.repository.localId: gptMsg['catalog.harvest.manage.message.willBeGenerated'] }" />
 
 <%-- Repository uuid --%>
-<h:outputLabel for="uuidDisp" value="#{gptMsg['catalog.harvest.manage.edit.repositoryUuid']}"/>
+<h:outputText value="#{gptMsg['catalog.harvest.manage.edit.repositoryUuid']}"/>
 <h:outputText id="uuidDisp" escape="false" 
 value="#{not empty HarvestController.editor.repository.uuid? HarvestController.editor.repository.uuid: gptMsg['catalog.harvest.manage.message.willBeGenerated'] }" />
 
@@ -664,7 +664,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   styleClass="formTable" columnClasses="formLabelColumn harvestExtra,formInputColumn">
 
 <%-- Protocol Type --%>
-<h:outputLabel for="protocolType" value="#{gptMsg['catalog.harvest.manage.edit.protocolType']}"/>
+<h:outputText value="#{gptMsg['catalog.harvest.manage.edit.protocolType']}"/>
 
 <h:selectOneRadio value="#{HarvestController.editor.type}" id="protocolType">
   <f:selectItems value="#{HarvestController.protocols}"/>

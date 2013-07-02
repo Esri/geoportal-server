@@ -735,7 +735,7 @@ ul#navigation li.selectedNav a {
 .mapToolbar img {text-align: left; vertical-align: middle;
                           cursor: hand; cursor: pointer;}
 .mapToolbar img.firstTool {margin-left: 20px;}
-.mapToolbar .locatorInput {margin-right: 5px; width:25em;}
+.mapToolbar .locatorInput {margin-right: 5px; width:25em; margin-left: 5px;}
 .mdEditor .mapToolbar .locatorInput {margin-left: 50px;}
 
 .locatorCandidates {

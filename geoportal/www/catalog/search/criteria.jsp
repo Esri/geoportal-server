@@ -1462,7 +1462,8 @@
   variableName="_csDefaultSearchSite"/>
 
 <% // search text and submit button %>
-<h:panelGrid columns="3">
+<h:panelGrid columns="4">
+  <h:outputLabel for="scText" value="#{gptMsg['catalog.search.search.lblSearch']}"/>
   <h:inputText id="scText"
                value="#{SearchController.searchCriteria.searchFilterKeyword.searchText}"
                maxlength="4000" styleClass="searchBox" />
@@ -1578,6 +1579,7 @@
   <% // map %>
   <h:panelGrid id="pnlMap">
     <h:panelGroup id="mapToolbar" styleClass="mapToolbar">
+      <h:outputLabel for="mapInput-locate" value="#{gptMsg['catalog.search.search.lblLocator']}"/>
       <h:inputText id="mapInput-locate" styleClass="locatorInput"
                    maxlength="1024" onkeypress="return scMap.onLocatorKeyPress(event);"/>
       <h:graphicImage id="mapButton-locate" url="/catalog/images/btn-locate-off.gif"
@@ -1623,7 +1625,7 @@
 <% // content type %>
 <h:panelGroup id="_pngCtypeLocal">
   <h:outputText escape="false" value="<h3>"/>
-  <h:outputText id="scLblContent" value="#{gptMsg['catalog.search.filterContentTypes.title']}" />
+  <h:outputLabel for="scSelContent" id="scLblContent" value="#{gptMsg['catalog.search.filterContentTypes.title']}" />
   <h:outputText escape="false" value="</h3>"/>
   <h:panelGrid id="scPnlContent">
     <h:selectOneMenu id="scSelContent"
@@ -1660,7 +1662,7 @@
 
 <h:panelGroup id="_pngCtypeRemote">
   <h:outputText escape="false" value="<h3>"/>
-  <h:outputText id="scLblContentR" value="#{gptMsg['catalog.search.filterContentTypes.title']}" />
+  <h:outputLabel for="scSelContentR" id="scLblContentR" value="#{gptMsg['catalog.search.filterContentTypes.title']}" />
   <h:outputText escape="false" value="</h3>"/>
   <h:panelGrid id="scPnlContentR">
     <h:selectOneMenu id="scSelContentR"
@@ -1772,7 +1774,7 @@
 <% // sort option %>
 <h:panelGroup id="_pngSortSection">
   <h:outputText escape="false" value="<h3>"/>
-  <h:outputText id="scLblSort" value="#{gptMsg['catalog.search.filterSort.labelSort']}" />
+  <h:outputLabel for="scSelSort" id="scLblSort" value="#{gptMsg['catalog.search.filterSort.labelSort']}" />
   <h:outputText escape="false" value="</h3>"/>
   <h:panelGrid id="scPnlSort">
     <h:selectOneMenu id="scSelSort"
