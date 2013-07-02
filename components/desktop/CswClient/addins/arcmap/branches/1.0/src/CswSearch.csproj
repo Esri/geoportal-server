@@ -193,11 +193,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\AppLogger\trunk\src\AppLogger.csproj">
+    <ProjectReference Include="..\..\..\..\..\..\AppLogger\branches\1.0\src\AppLogger.csproj">
       <Project>{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}</Project>
       <Name>AppLogger</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\trunk\src\CswClient.csproj">
+    <ProjectReference Include="..\..\..\..\..\branches\1.0\src\CswClient.csproj">
       <Project>{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}</Project>
       <Name>CswClient</Name>
     </ProjectReference>

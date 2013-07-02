@@ -12,11 +12,10 @@
     <AssemblyName>WMCOpener</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SccProjectName>"%24/Product/Geoportal Solution/Applications/WMCOpener/src", GHHGAAAA</SccProjectName>
+    <SccProjectName>%24/GeoportalServer/components/desktop/WMCOpener/trunk/src</SccProjectName>
     <SccLocalPath>.</SccLocalPath>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
+    <SccAuxPath>http://pstfsarr:8080/tfs/consultingservices</SccAuxPath>
+    <SccProvider>{4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}</SccProvider>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>

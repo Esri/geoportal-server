@@ -2,12 +2,30 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CswSearch", "CswSearch.csproj", "{52601F47-5166-41CE-B4B1-01858054B949}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F3D05B12-5F2F-489B-A634-3B3BD44F85A2} = {F3D05B12-5F2F-489B-A634-3B3BD44F85A2}
+		{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C} = {2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CswClient", "..\..\..\..\trunk\src\CswClient.csproj", "{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CswClient", "..\..\..\..\..\branches\1.0\src\CswClient.csproj", "{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppLogger", "..\..\..\..\..\AppLogger\trunk\src\AppLogger.csproj", "{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppLogger", "..\..\..\..\..\..\AppLogger\branches\1.0\src\AppLogger.csproj", "{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}"
 EndProject
 Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 4
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://pstfsarr:8080/tfs/consultingservices
+		SccProjectUniqueName0 = CswSearch.csproj
+		SccLocalPath0 = .
+		SccLocalPath1 = .
+		SccProjectUniqueName2 = ..\\..\\..\\..\\..\\branches\\1.0\\src\\CswClient.csproj
+		SccProjectName2 = ../../../../../branches/1.0/src
+		SccLocalPath2 = ..\\..\\..\\..\\..\\branches\\1.0\\src
+		SccProjectUniqueName3 = ..\\..\\..\\..\\..\\..\\AppLogger\\branches\\1.0\\src\\AppLogger.csproj
+		SccProjectName3 = ../../../../../../AppLogger/branches/1.0/src
+		SccLocalPath3 = ..\\..\\..\\..\\..\\..\\AppLogger\\branches\\1.0\\src
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

@@ -1,0 +1,2 @@
+echo Packaging Install
+"C:\Program Files (x86)\Installshield\2012 SAB\System\IsCmdBld.exe" -p "C:\Builds\GeoportalServer\10.1_PublishClient\Sources\PublishClient\trunk\InstallSupport\PublishClient.ism" -y 1.2.2.0
