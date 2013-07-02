@@ -23,6 +23,7 @@ import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
 import com.esri.gpt.catalog.harvest.repository.HrUpdateLastSyncDate;
 import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.http.HttpClientException;
 import com.esri.gpt.framework.resource.query.Result;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -76,9 +77,11 @@ abstract class Agp2AgpExecutor extends Executor {
               }
               LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Pushed item #{0} of source URI: \"{1}\" through unit: {2}", new Object[]{rp.getHarvestedCount() + 1, sourceItem.getProperties().getValue("id"), unit});
               return result;
-            } catch (Exception ex) {
+            } catch (HttpClientException ex) {
               LOGGER.log(Level.WARNING, "[SYNCHRONIZER] Failed pushing item #{0} of source URI: \"{1}\" through unit: {2}. Reason: {3}", new Object[]{rp.getHarvestedCount() + 1, sourceItem.getProperties().getValue("id"), unit, ex.getMessage()});
               return false;
+            } catch (Exception ex) {
+              throw ex;
             }
           }
 
