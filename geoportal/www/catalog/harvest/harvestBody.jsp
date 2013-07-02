@@ -961,6 +961,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 
 <f:verbatim>
   <div class="tundra" id="ownersDialog" data-dojo-type="dijit.Dialog" data-dojo-id="ownersDialog" title="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.caption"/>" style="min-width: 250px;">
+        <label for="ownersSearchText" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.lblSearch"/>"/>
         <input type="text" id="ownersSearchText" data-type="search"/><input id="searchOwnersDialog" type="button" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.button.search"/>" data-type="search"/>
         <div id="ownersDiv"></div>
         <input id="closeOwnersDialog" type="button" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.button.close"/>"/>
