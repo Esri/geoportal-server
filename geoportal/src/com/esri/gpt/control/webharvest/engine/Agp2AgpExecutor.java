@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.control.webharvest.engine;
 
+import com.esri.gpt.agp.client.AgpException;
 import com.esri.gpt.agp.client.AgpItem;
 import com.esri.gpt.agp.sync.AgpDestination;
 import com.esri.gpt.agp.sync.AgpPush;
@@ -67,18 +68,24 @@ abstract class Agp2AgpExecutor extends Executor {
         AgpSource source = agp2agp.getSource();
         AgpDestination destination = agp2agp.getDestination();
         AgpPush agpPush = new AgpPush(source, destination) {
+          private long counter;
+          
           @Override
           protected boolean syncItem(AgpItem sourceItem) throws Exception {
+            counter++;
             String sourceUri = sourceItem.getProperties().getValue("id");
             try {
               boolean result = super.syncItem(sourceItem);
               if (result) {
                 rp.createEntry(sourceUri, true);
               }
-              LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Pushed item #{0} of source URI: \"{1}\" through unit: {2}", new Object[]{rp.getHarvestedCount() + 1, sourceItem.getProperties().getValue("id"), unit});
+              LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Pushed item #{0} of source URI: \"{1}\" through unit: {2}", new Object[]{counter, sourceItem.getProperties().getValue("id"), unit});
               return result;
+            } catch (AgpException ex) {
+              LOGGER.log(Level.WARNING, "[SYNCHRONIZER] Failed pushing item #{0} of source URI: \"{1}\" through unit: {2}. Reason: {3}", new Object[]{counter, sourceItem.getProperties().getValue("id"), unit, ex.getMessage()});
+              return false;
             } catch (HttpClientException ex) {
-              LOGGER.log(Level.WARNING, "[SYNCHRONIZER] Failed pushing item #{0} of source URI: \"{1}\" through unit: {2}. Reason: {3}", new Object[]{rp.getHarvestedCount() + 1, sourceItem.getProperties().getValue("id"), unit, ex.getMessage()});
+              LOGGER.log(Level.WARNING, "[SYNCHRONIZER] Failed pushing item #{0} of source URI: \"{1}\" through unit: {2}. Reason: {3}", new Object[]{counter, sourceItem.getProperties().getValue("id"), unit, ex.getMessage()});
               return false;
             } catch (Exception ex) {
               throw ex;
