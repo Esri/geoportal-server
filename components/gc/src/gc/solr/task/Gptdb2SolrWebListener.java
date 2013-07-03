@@ -14,17 +14,27 @@
  */
 package gc.solr.task;
 
+import java.util.concurrent.ScheduledFuture;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 public class Gptdb2SolrWebListener implements ServletContextListener {
 
+	private ScheduledFuture<?> gptdb2SolrHandle = null;
+	
   public void contextInitialized(ServletContextEvent event) {
 		Gptdb2SolrScheduled scheduled = new Gptdb2SolrScheduled();
-		scheduled.execute();
+		gptdb2SolrHandle = scheduled.execute();
   }
 
   public void contextDestroyed(ServletContextEvent event) {
-
+  	//System.err.println("Gptdb2SolrWebListener.contextDestroyed");
+  	if (gptdb2SolrHandle != null) {
+  		//System.err.println("111111111111111111111");
+  		gptdb2SolrHandle.cancel(true);
+  		//System.err.println("222222222222222222222");
+  		//System.err.println(gptdb2SolrHandle.isDone());
+  	}
   }
 }

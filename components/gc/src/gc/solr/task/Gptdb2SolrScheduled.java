@@ -29,13 +29,15 @@ public class Gptdb2SolrScheduled {
   private final ScheduledExecutorService scheduler =
       Executors.newScheduledThreadPool(1);
   
-  public void execute() {
+  public ScheduledFuture<?> execute() {
   	
     final Runnable worker = new Runnable() {
       public void run() {
+      	//System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
       	try {
 	    		List<Gptdb2SolrInstance> instances = Gptdb2SolrInstance.createInstancesFromConfig();
 	    		for (Gptdb2SolrInstance instance: instances) {
+	    			//System.err.println("???????????????????????????????");
 	    			XmlTypes xmlTypes = XmlTypes.createFromConfig();
 	    			TaskContext context = new TaskContext("Gptdb2SolrTask");
 	    			context.getStats().setFeedbackMillis(60000);
@@ -45,6 +47,7 @@ public class Gptdb2SolrScheduled {
       	} catch (Exception e) {
     		  e.printStackTrace();
       	}
+      	//System.err.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
       }
     };
     
@@ -52,6 +55,7 @@ public class Gptdb2SolrScheduled {
     long delay = 60 * 60 * 24;
     final ScheduledFuture<?> handle = scheduler.scheduleWithFixedDelay(
     		worker,initialDelay,delay,TimeUnit.SECONDS);
+    return handle;
   }
   
 }
