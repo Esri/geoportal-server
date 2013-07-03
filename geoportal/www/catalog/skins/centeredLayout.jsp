@@ -24,7 +24,7 @@
 <f:view>
 <f:loadBundle basename="gpt.resources.gpt" var="gptMsg"/>
 <gpt:prepareView/>
-<html>
+<html lang="<%=request.getLocale().getLanguage()%>">
 <head>
 	<title><%=com.esri.gpt.framework.jsf.PageContext.extract().getSiteTitle()%></title>
     <jsp:include page="/catalog/skins/lookAndFeel.jsp"/>

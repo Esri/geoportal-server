@@ -3,16 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WMCOpener", "WMCOpener.csproj", "{FD5FC0B9-DCB2-4FEE-88EF-3FF6017EA854}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppLogger", "..\..\..\AppLogger\trunk\src\AppLogger.csproj", "{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppLogger", "..\..\..\..\AppLogger\branches\1.0\src\AppLogger.csproj", "{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}"
 EndProject
 Global
-	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 1
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://pstfsarr:8080/tfs/consultingservices
 		SccProjectUniqueName0 = WMCOpener.csproj
-		SccProjectName0 = \u0022$/Product/Geoportal\u0020Solution/Applications/WMCOpener/src\u0022,\u0020GHHGAAAA
+		SccProjectName0 = .
+		SccAuxPath0 = http://pstfsarr:8080/tfs/consultingservices
 		SccLocalPath0 = .
-		SccProvider0 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
-		CanCheckoutShared = false
+		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName1 = ..\\..\\..\\..\\AppLogger\\branches\\1.0\\src\\AppLogger.csproj
+		SccProjectName1 = ../../../../AppLogger/branches/1.0/src
+		SccAuxPath1 = http://pstfsarr:8080/tfs/consultingservices
+		SccLocalPath1 = ..\\..\\..\\..\\AppLogger\\branches\\1.0\\src
+		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

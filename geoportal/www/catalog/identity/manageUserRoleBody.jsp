@@ -41,10 +41,10 @@
 	String umSearchUser = umMsgBroker.retrieveMessage("catalog.manage.user.role.searchUser");
 	String umSearch = umMsgBroker.retrieveMessage("catalog.manage.user.search");
 	String umListAGroup = umMsgBroker.retrieveMessage("catalog.manage.user.listAGroup");
-	String VER121 = "v1.2.1";
+	String VER124 = "v1.2.4";
 %>
 
-<script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER121+ "/gpt-identity-users.js"%>"></script>
+<script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER124+ "/gpt-identity-users.js"%>"></script>
 <script type="text/javascript">
 var umMain = null;
 function umInit() {

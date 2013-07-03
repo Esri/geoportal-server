@@ -26,6 +26,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIForm;
 import javax.faces.component.UISelectItem;
 import javax.faces.component.html.HtmlCommandLink;
+import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.component.html.HtmlPanelGroup;
@@ -415,14 +416,19 @@ private void build(HtmlPanelGroup masterPanelGroup,
     HtmlPanelGroup resultsPerPagePanelGroup = new HtmlPanelGroup();
     panelGrid.getChildren().add(resultsPerPagePanelGroup);
 
+    // listbox id
+    String listBoxId = "recsPerPage";
+    
     // Display label
-    HtmlOutputText resultsPerPageText =
-      makeResultText(facesContext, sRecordsPerPageMsg);
-    resultsPerPagePanelGroup.getChildren().add(resultsPerPageText);
+    HtmlOutputLabel resultsPerPageLabel =
+      makeResultsLabel(facesContext, sRecordsPerPageMsg);
+    resultsPerPagePanelGroup.getChildren().add(resultsPerPageLabel);
+    resultsPerPageLabel.setFor(listBoxId);
 
     // Create lisbox
     HtmlSelectOneListbox listBox = new HtmlSelectOneListbox();
     resultsPerPagePanelGroup.getChildren().add(listBox);
+    listBox.setId(listBoxId);
 
     listBox.setSize(1);
     listBox.setValue(Integer.toString(cursor.getRecordsPerPage()));
@@ -552,6 +558,23 @@ private HtmlOutputText makeResultText(FacesContext facesContext, String text) {
     outText.setStyleClass(getResultStyleClass());
   }
   return outText;
+}
+
+
+/**
+ * Makes an HtmlOutputLabel component for result text display.
+ * @param facesContext the active Faces context
+ * @param text the text to display
+ * @return the new HtmlOutputLabel component
+ */
+private HtmlOutputLabel makeResultsLabel(FacesContext facesContext, String text) {
+  HtmlOutputLabel outLabel = new HtmlOutputLabel();
+  outLabel.setEscape(false);
+  outLabel.setValue(text);
+  if (getResultStyleClass().length() > 0) {
+    outLabel.setStyleClass(getResultStyleClass());
+  }
+  return outLabel;
 }
 
 /**

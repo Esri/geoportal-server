@@ -139,7 +139,7 @@
     <value>Failed to set spatial reference: unable to create the spatial reference</value>
   </data>
   <data name="helpUrl" xml:space="preserve">
-    <value>http://links.esri.com/geoportal_server_wmc_client</value>
+    <value>http://sourceforge.net/apps/mediawiki/geoportal/index.php?title=WMC_Client</value>
   </data>
   <data name="InvalidWMCDocument" xml:space="preserve">
     <value>This does not appear to be a valid WMC document.</value>

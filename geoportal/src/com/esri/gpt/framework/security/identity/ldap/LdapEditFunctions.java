@@ -109,7 +109,12 @@ private void modifyEntry(DirContext dirContext,
                          int operation,
                          Attributes attributes)
   throws NamingException {
-  dirContext.modifyAttributes(objectDN,operation,attributes);
+	try{
+		dirContext.modifyAttributes(objectDN,operation,attributes);
+	}catch(javax.naming.directory.InvalidAttributeValueException iave){
+		LogUtil.getLogger().severe(iave.getMessage());
+		throw new LdapException("javax.naming.directory.InvalidAttributeValueException");
+	}
 }
 
 /**

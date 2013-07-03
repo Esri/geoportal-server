@@ -463,6 +463,7 @@ dojo.addOnLoad(function() {
   var closeFoldersDialog = dojo.byId("closeFoldersDialog");
   var foldersDiv = dojo.byId("foldersDiv");
   var ownersDiv = dojo.byId("ownersDiv");
+  var ownersSearchText = dojo.byId("ownersSearchText");
   
   
   dojo.connect(fetchOwners,"onclick",function(evt){
@@ -510,6 +511,13 @@ dojo.addOnLoad(function() {
     searchOwners();
   });
   
+
+  dojo.connect(ownersSearchText,"onkeydown",function(evt){
+    if (evt.keyCode==13) {
+      dojo.empty(ownersDiv);
+      searchOwners();
+    }
+  });
   
   dojo.addClass(dijit.byId("foldersDialog").domNode,"tundra");
   dojo.addClass(dijit.byId("ownersDialog").domNode,"tundra");
@@ -647,12 +655,12 @@ value="#{HarvestController.prepareSelectedPublishers}"/>
   styleClass="formTable" columnClasses="formLabelColumn,formInputColumn">
 
 <%-- Repository id --%>
-<h:outputLabel for="idDisp" value="#{gptMsg['catalog.harvest.manage.edit.repositoryId']}"/>
+<h:outputText value="#{gptMsg['catalog.harvest.manage.edit.repositoryId']}"/>
 <h:outputText id="idDisp" escape="false" 
 value="#{not empty HarvestController.editor.repository.uuid? HarvestController.editor.repository.localId: gptMsg['catalog.harvest.manage.message.willBeGenerated'] }" />
 
 <%-- Repository uuid --%>
-<h:outputLabel for="uuidDisp" value="#{gptMsg['catalog.harvest.manage.edit.repositoryUuid']}"/>
+<h:outputText value="#{gptMsg['catalog.harvest.manage.edit.repositoryUuid']}"/>
 <h:outputText id="uuidDisp" escape="false" 
 value="#{not empty HarvestController.editor.repository.uuid? HarvestController.editor.repository.uuid: gptMsg['catalog.harvest.manage.message.willBeGenerated'] }" />
 
@@ -664,7 +672,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   styleClass="formTable" columnClasses="formLabelColumn harvestExtra,formInputColumn">
 
 <%-- Protocol Type --%>
-<h:outputLabel for="protocolType" value="#{gptMsg['catalog.harvest.manage.edit.protocolType']}"/>
+<h:outputText value="#{gptMsg['catalog.harvest.manage.edit.protocolType']}"/>
 
 <h:selectOneRadio value="#{HarvestController.editor.type}" id="protocolType">
   <f:selectItems value="#{HarvestController.protocols}"/>
@@ -961,6 +969,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 
 <f:verbatim>
   <div class="tundra" id="ownersDialog" data-dojo-type="dijit.Dialog" data-dojo-id="ownersDialog" title="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.caption"/>" style="min-width: 250px;">
+        <label for="ownersSearchText"><fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.lblSearch"/></label>
         <input type="text" id="ownersSearchText" data-type="search"/><input id="searchOwnersDialog" type="button" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.button.search"/>" data-type="search"/>
         <div id="ownersDiv"></div>
         <input id="closeOwnersDialog" type="button" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.button.close"/>"/>

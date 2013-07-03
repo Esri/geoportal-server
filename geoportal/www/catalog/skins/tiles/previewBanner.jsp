@@ -45,5 +45,5 @@
         id="contentHome"
         action="catalog.main.home"
         styleClass="#{PageContext.tabStyleMap['catalog.content.home']}"
-        value="#{gptMsg['catalog.main.home.caption']}"/>
+        value="#{gptMsg['catalog.main.home.menuCaption']}"/>
 </h:form>

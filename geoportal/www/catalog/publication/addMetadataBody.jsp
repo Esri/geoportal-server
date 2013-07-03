@@ -29,8 +29,8 @@
   styleClass="formTable" columnClasses="formLabelColumn,formInputColumn">
 
   <% // operation %>
-  <h:outputLabel for="operation" styleClass="requiredField"
-    value="#{gptMsf['catalog.publication.addMetadata.command']}"/>
+  
+  <h:outputText styleClass="requiredField" value=""/>
   <h:selectOneRadio id="operation" layout="pageDirection"
                     value="#{EditMetadataController.operation}">
     <f:selectItem itemValue="register" itemLabel="#{gptMsg['catalog.publication.addMetadata.command.register']}"/>

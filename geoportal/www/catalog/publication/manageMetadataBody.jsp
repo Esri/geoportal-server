@@ -872,7 +872,7 @@ function mmdClearAclSelection(){
         <f:attribute name="defaultDirection" value="asc"/>
       </h:commandLink>
     </f:facet>
-    <h:outputText value="#{record.title}"/>
+    <h:outputLabel for="mmdCheckRecord" value="#{record.title}"/>
   </h:column>
 
   <% // document owner %>

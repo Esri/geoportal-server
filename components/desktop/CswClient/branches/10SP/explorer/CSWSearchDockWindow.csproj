@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="2.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AC2F86AA-F822-4F32-99F5-32F9C5BA1D94}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>com.esri.gpt.csw</RootNamespace>
+    <AssemblyName>CSWSearchDockWindow</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <PublishUrl>http://localhost/CSWSearchDockWindow/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <DocumentationFile>..\..\Bin\CSWSearchDockWindow.XML</DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <DocumentationFile>..\..\Bin\CSWSearchDockWindow.XML</DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ESRI.ArcGISExplorer.Application">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGISExplorer">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>2.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Resources\CswResources.Designer.cs" />
+    <Compile Include="UI\CSWSearchDockWindow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\CSWSearchDockWindow.Designer.cs">
+      <DependentUpon>CSWSearchDockWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\FormMessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormMessageBox.designer.cs">
+      <DependentUpon>FormMessageBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormViewMetadata.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormViewMetadata.designer.cs">
+      <DependentUpon>FormViewMetadata.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AddIns.xml" />
+    <Content Include="Images\Configure.gif" />
+    <Content Include="Images\CSWSearchTask.png" />
+    <Content Include="Images\delete.gif" />
+    <Content Include="Images\display_footprint.bmp" />
+    <Content Include="Images\Find Service.gif" />
+    <Content Include="Images\find.gif" />
+    <Content Include="Images\GetLocation.png" />
+    <Content Include="Images\hideAll.gif" />
+    <Content Include="Images\metadata_addToMap.gif" />
+    <Content Include="Images\metadata_download.gif" />
+    <Content Include="Images\metadata_view.gif" />
+    <Content Include="Images\new.gif" />
+    <Content Include="Images\open.gif" />
+    <Content Include="Images\save.gif" />
+    <Content Include="Images\showAll.gif" />
+    <Content Include="Images\zoom_to_footprint.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\CswResources.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\CSWSearchDockWindow.resx">
+      <DependentUpon>CSWSearchDockWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormMessageBox.resx">
+      <DependentUpon>FormMessageBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormViewMetadata.resx">
+      <DependentUpon>FormViewMetadata.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CswClient.properties" />
+    <None Include="Images\CSWSearchDockWindow_DockWindow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\AppLogger\branches\10SP\src\AppLogger.csproj">
+      <Project>{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}</Project>
+      <Name>AppLogger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\common\CswClient.csproj">
+      <Project>{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}</Project>
+      <Name>CswClient</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+REM Packages files to ArcGIS Explorer EAZ Archive.
+set ZipLocation=%25appdata%25\ESRI\ArcGIS Explorer\AddIns\
+mkdir "%25ZipLocation%25"
+ 
+cd "%25ZipLocation%25"
+mkdir Scratch
+cd "%25ZipLocation%25\Scratch"
+mkdir Images
+cd "%25ZipLocation%25\Scratch\Images"
+copy "$(ProjectDir)\Images"
+cd "%25ZipLocation%25\Scratch"
+copy "$(ProjectDir)\AddIns.xml"
+
+copy "$(TargetDir)\*.dll"
+copy "$(TargetDir)\*.pdb"
+copy "$(TargetDir)\*.properties"
+
+del /F /Q "%25ZipLocation%25\Scratch\CswSearch.*"
+del /F /Q "%25ZipLocation%25\Scratch\Interop*.*"
+
+cd "%25ArcGIS_E3SDK%25\..\bin"
+ 
+esrizip zip "%25ZipLocation%25\Scratch"  "%25ZipLocation%25$(ProjectName).zip" /no-root
+
+del /F /Q "%25ZipLocation%25$(ProjectName).eaz"
+ 
+move "%25ZipLocation%25$(ProjectName).zip" "%25ZipLocation%25$(ProjectName).eaz"
+ 
+rmdir "%25ZipLocation%25\Scratch" /S /Q
+</PostBuildEvent>
+  </PropertyGroup>
+</Project>
