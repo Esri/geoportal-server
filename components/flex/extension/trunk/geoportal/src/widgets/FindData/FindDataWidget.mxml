@@ -305,9 +305,13 @@ private function init():void
     return;
   }           
   search = "&" + search;
+  try {
   urlVariables.decode(search); 
   this.readResourceUrl(urlVariables, search);
   this.readUrlBbox(urlVariables);
+  } catch (e:Error) {
+	  LOG.error("Error while decoding url variables", e);
+  }
   
   
 }
@@ -997,7 +1001,7 @@ private function doAddToMap2(record:SearchResultRecord, endPoint:EndPoint,
     agsImgLyr.visible = visible;
     agsImgLyr.alpha = alpha;
     if(bUseProxy) {
-      agsLyr.proxyURL = URL_TO_PROXY;
+		agsImgLyr.proxyURL = URL_TO_PROXY;
     }
     dctAddingService[agsImgLyr] = eventObj;
     AppEvent.dispatch("START_MAP_LOAD_IMG", new Event("START_MAP_LOAD_IMG"));
@@ -1252,19 +1256,15 @@ private function showLoadLayerMessage(event:LayerEvent):void {
  * */
 private function layerLoaded(event:LayerEvent):void {
 
-  
+   
   var eventObj:Object = dctAddingService[event.layer];
   try { 
     
     
     if(event.layer && event.layer.initialExtent && event.layer.spatialReference 
       && !isNaN(event.layer.spatialReference.wkid) && map.spatialReference 
-      && !isNaN(map.spatialReference.wkid) && 
-      (ProjectionHandler.isEqualWkids(map.spatialReference.wkid, 
-        event.layer.spatialReference.wkid) == true 
-      )
-	  &&  projectionHandler.reprojectExtent(event.layer.initialExtent)
-		    .contains(event.layer.initialExtent) 
+      && !isNaN(map.spatialReference.wkid) 
+	  
     ) {
       var projectionHandler:ProjectionHandler = new ProjectionHandler(
         new SpatialReference(map.spatialReference.wkid)); 
