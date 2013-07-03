@@ -139,7 +139,7 @@
     <mapViewer>
         <instance 
             url="{contextPath}/viewer/index.jsp" 
-            className="com.esri.gpt.catalog.search.MapViewerFlex">
+            className="com.esri.gpt.catalog.search.MapViewerFlex_2_4">
         <parameter key="width" value="1000"/>
         <parameter key="height" value="700"/>
         <parameter key="regexCanConsumeUrl" value=""/>

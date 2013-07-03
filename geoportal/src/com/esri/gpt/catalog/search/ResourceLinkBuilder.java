@@ -576,6 +576,11 @@ protected void buildPreviewLink(SearchXslRecord xRecord, SearchResultRecord reco
   String resourceUrl = Val.chkStr(record.getResourceUrl());
   String serviceType = Val.chkStr(record.getServiceType()).toLowerCase();
   //String previewPath = Val.chkStr(this.previewPath);
+  
+  if (resourceUrl.indexOf("q=")>=0 && resourceUrl.indexOf("user=")>=0 && resourceUrl.indexOf("max=")>=0 && resourceUrl.indexOf("dest=")>=0 && resourceUrl.indexOf("destuser=")>=0) {
+    // look like this is AGP-2-AGP registration; don'e generate preview link
+    return;
+  }
 
   // return if we cannot preview
   String tmp = resourceUrl.toLowerCase();
