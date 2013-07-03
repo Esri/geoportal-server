@@ -25,6 +25,7 @@ String VER12 = "v1.2";
 String VER121 = "v1.2.1";
 String VER122 = "v1.2.2";
 String VER123 = "v1.2.3";
+String VER124 = "v1.2.4";
 %>
 
 <link rel="stylesheet" type="text/css" href="http://serverapi.arcgisonline.com/jsapi/arcgis/2.5/js/dojo/dijit/themes/tundra/tundra.css" />
