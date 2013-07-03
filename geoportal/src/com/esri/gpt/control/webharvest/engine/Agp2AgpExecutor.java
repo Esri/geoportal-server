@@ -76,16 +76,16 @@ abstract class Agp2AgpExecutor extends Executor {
             String sourceUri = sourceItem.getProperties().getValue("id");
             try {
               boolean result = super.syncItem(sourceItem);
-              if (result) {
-                rp.createEntry(sourceUri, true);
-              }
+              rp.createEntry(sourceUri, result);
               LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Pushed item #{0} of source URI: \"{1}\" through unit: {2}", new Object[]{counter, sourceItem.getProperties().getValue("id"), unit});
               return result;
             } catch (AgpException ex) {
               LOGGER.log(Level.WARNING, "[SYNCHRONIZER] Failed pushing item #{0} of source URI: \"{1}\" through unit: {2}. Reason: {3}", new Object[]{counter, sourceItem.getProperties().getValue("id"), unit, ex.getMessage()});
+              rp.createUnpublishedEntry(sourceUri, Arrays.asList(new String[]{ex.getMessage()}));
               return false;
             } catch (HttpClientException ex) {
               LOGGER.log(Level.WARNING, "[SYNCHRONIZER] Failed pushing item #{0} of source URI: \"{1}\" through unit: {2}. Reason: {3}", new Object[]{counter, sourceItem.getProperties().getValue("id"), unit, ex.getMessage()});
+              rp.createUnpublishedEntry(sourceUri, Arrays.asList(new String[]{ex.getMessage()}));
               return false;
             } catch (Exception ex) {
               throw ex;
