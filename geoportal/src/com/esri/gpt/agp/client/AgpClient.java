@@ -18,9 +18,12 @@ import java.util.logging.Logger;
 
 import com.esri.gpt.framework.http.ContentHandler;
 import com.esri.gpt.framework.http.ContentProvider;
+import com.esri.gpt.framework.http.HttpClientException;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.StringHandler;
 import com.esri.gpt.framework.http.StringProvider;
+import com.esri.gpt.framework.util.Val;
+import org.apache.commons.httpclient.Header;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.json.JSONObject;
@@ -148,7 +151,32 @@ public class AgpClient {
     }
     http.setContentProvider(contentProvider);
     http.setContentHandler(contentHandler);
-    http.execute();
+    
+    try {
+      http.execute();
+    } catch (HttpClientException ex) {
+      boolean doThrow = true;
+      if (ex.getHttpStatusCode()==302) {
+        // This part of the code deals with redirect issue which accurs when
+        // harvesting from arcgis.com
+        Header hdrLocation = http.getResponseInfo().getResponseHeader("Location");
+        if (hdrLocation!=null) {
+          String location = Val.chkStr(hdrLocation.getValue());
+          if (url.endsWith("/data") && location.contains("ago-item-storage")) {
+            location = location.replaceAll("^https:", "http:");
+            doThrow = false;
+            HttpClientRequest http2 = new HttpClientRequest();
+            http2.setUrl(location);
+            http2.setRetries(-1);
+            http2.setContentHandler(contentHandler);
+            http2.execute();
+          }
+        }
+      }
+      if (doThrow) {
+        throw ex;
+      }
+    }
   }
   
 }
