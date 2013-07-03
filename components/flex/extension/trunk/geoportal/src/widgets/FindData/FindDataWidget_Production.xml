@@ -39,10 +39,6 @@ limitations under the License.
     name="Default Site"/> 
   <gptEndpoint url="rest/find/document?rid=ArcGIS.com" 
     name="ArcGIS.com"/>  
-  <gptEndpoint url="http://geo.data.gov/geoportal/rest/find/document" 
-    name="Geo.data.gov http://geo.data.gov"/>   
-  <gptEndpoint url="http://geoss.esri.com/geoportal/rest/find/document" 
-    name="GEOSS http://geoss.esri.com"/>    
   <gptEndpoint url="rest/repositories?f=xml" 
     name="Default Site: " useNameAsPrefix="true"/>   
     
