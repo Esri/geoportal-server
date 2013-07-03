@@ -16,6 +16,7 @@ package com.esri.gpt.wms
 {
 	import com.esri.ags.Map;
 	import com.esri.ags.SpatialReference;
+	import com.esri.ags.events.ExtentEvent;
 	import com.esri.ags.events.LayerEvent;
 	import com.esri.ags.geometry.Extent;
 	import com.esri.ags.geometry.MapPoint;
@@ -200,7 +201,10 @@ package com.esri.gpt.wms
             } else if (this.parent.parent.parent as Map) {
                this.map = this.parent.parent.parent as Map;
             }
-           
+            this.map.addEventListener(ExtentEvent.EXTENT_CHANGE, function(ev:ExtentEvent):void {
+				
+				invalidateLayer();
+			});
                    
             
         }
