@@ -570,6 +570,7 @@ function rsGetQualityOfService() {
 				<h:panelGroup>
 				  <h:graphicImage id="smallImgContentType" 
 				    height="16px" width="16px" 
+				    alt="#{record.contentTypeLink.label}"
 				    value="#{record.contentTypeLink.url}" 
 				    title="#{record.contentTypeLink.label}"
 				    onmouseover="javascript:this.style.cursor='pointer';"
