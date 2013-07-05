@@ -127,7 +127,7 @@ public class AGPEntryProcessor implements IEntryProcessor{
 	        	        maxx = Val.chkDbl(upperCorner[0], maxx);
 	        	        maxy = Val.chkDbl(upperCorner[1], maxy);
 	        	      }
-	        	      georssBox += minx + " " + miny + " " + maxx + " " + maxy + "</georss:box>";
+	        	      georssBox += miny + " " + minx + " " + maxy + " " + maxx + "</georss:box>";
 	        	    }
 	        		
 	        	 }
