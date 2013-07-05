@@ -16,7 +16,7 @@
 -->
 <CSWCatalogs>
         <CSWCatalog>
-        <URL>http://gptogc.esri.com/catalog/csw?request=getcapabilities&amp;service=csw</URL>
+        <URL>http://gptogc.esri.com/geoportal/csw/discovery?request=GetCapabilities&amp;service=csw&amp;version=2.0.2</URL>
         <Name>gptogc.esri.com</Name>
         <CSWProfile>urn:ogc:CSW:2.0.2:HTTP:OGCCORE:ESRI:GPT</CSWProfile>
         <Credentials>
