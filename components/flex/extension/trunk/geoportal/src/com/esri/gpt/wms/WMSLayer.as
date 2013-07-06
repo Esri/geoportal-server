@@ -202,7 +202,7 @@ package com.esri.gpt.wms
                this.map = this.parent.parent.parent as Map;
             }
             this.map.addEventListener(ExtentEvent.EXTENT_CHANGE, function(ev:ExtentEvent):void {
-				
+				//
 				invalidateLayer();
 			});
                    

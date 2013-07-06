@@ -1,0 +1,421 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="display_footprint" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\display_footprint.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CreateWmsLayerFailed" xml:space="preserve">
+    <value>Failed to create WMS layer.</value>
+  </data>
+  <data name="LoadCatalogsFailed" xml:space="preserve">
+    <value>Failed to load catalogs.</value>
+  </data>
+  <data name="LoadConfigTabFailed" xml:space="preserve">
+    <value>Failed to load Configure Tab.</value>
+  </data>
+  <data name="NoCatalogSelected" xml:space="preserve">
+    <value>No catalog was selected.</value>
+  </data>
+  <data name="CswSearchCmdCaption" xml:space="preserve">
+    <value>CSW Client</value>
+  </data>
+  <data name="UrlIsEmpty" xml:space="preserve">
+    <value>Url cannot be empty.</value>
+  </data>
+  <data name="FileSaveSucceed" xml:space="preserve">
+    <value>File saved successfully.</value>
+  </data>
+  <data name="CreateWmsGroupLayerFailed" xml:space="preserve">
+    <value>Failed to create WMS group layers.</value>
+  </data>
+  <data name="LayerAlreadyInMap" xml:space="preserve">
+    <value>Selected IMS Service already exists in map.</value>
+  </data>
+  <data name="LoadFindServicesFailed" xml:space="preserve">
+    <value>Failed to load Find Services.</value>
+  </data>
+  <data name="VersionNo" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="UnsupportedCoordinateSystem" xml:space="preserve">
+    <value>Unsupported coordinate system.</value>
+  </data>
+  <data name="NoSearchResultSelected" xml:space="preserve">
+    <value>No search result was selected.</value>
+  </data>
+  <data name="CswRecordIsNull" xml:space="preserve">
+    <value>CSW record is null.</value>
+  </data>
+  <data name="UncheckCurrentExtentAndTryAgain" xml:space="preserve">
+    <value>Please uncheck "Use Current Extent" checkbox and try again.</value>
+  </data>
+  <data name="SearchResultsLabelText" xml:space="preserve">
+    <value>Results</value>
+  </data>
+  <data name="CatalogListLabelText" xml:space="preserve">
+    <value>Catalogs</value>
+  </data>
+  <data name="LoadMetadataPreparationStylesheetFailed" xml:space="preserve">
+    <value>Failed to load metadata preparation stylesheet.</value>
+  </data>
+  <data name="ServerNodeMissing" xml:space="preserve">
+    <value>&lt;Server&gt; node missing.</value>
+  </data>
+  <data name="CatalogSavedSuccessfully" xml:space="preserve">
+    <value>Data saved.</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="CatalogAddedSuccessfully" xml:space="preserve">
+    <value>Catalog added successfully.</value>
+  </data>
+  <data name="EmptyMetadata" xml:space="preserve">
+    <value>Metadata is empty.</value>
+  </data>
+  <data name="LoadMetadataFailed" xml:space="preserve">
+    <value>Failed to load metadata XML.</value>
+  </data>
+  <data name="ConnectToMapServiceFailed" xml:space="preserve">
+    <value>Failed to connect to map service.</value>
+  </data>
+  <data name="AddWmsLayerFailed" xml:space="preserve">
+    <value>Faied to add WMS map service layer.</value>
+  </data>
+  <data name="RetrieveMetadataFromCatalogFailed" xml:space="preserve">
+    <value>Failed to retrieve metadata from catalog.</value>
+  </data>
+  <data name="ConfirmDelete" xml:space="preserve">
+    <value>Confirm delete</value>
+  </data>
+  <data name="CswCatalogIsNull" xml:space="preserve">
+    <value>CSW catalog is null.</value>
+  </data>
+  <data name="EsriNodeMissing" xml:space="preserve">
+    <value>&lt;Esri&gt; node missing.</value>
+  </data>
+  <data name="showAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\showAll.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MapServiceInfoNotAvailable" xml:space="preserve">
+    <value>Map Service Information not available in metadata.</value>
+  </data>
+  <data name="XmlFilesFilter" xml:space="preserve">
+    <value>XML Files|*.xml</value>
+  </data>
+  <data name="ApplicationCaption" xml:space="preserve">
+    <value>CSW Client for ArcGIS</value>
+  </data>
+  <data name="MapServiceLayerAlreadyExistInMap" xml:space="preserve">
+    <value>Selected map service layer already exists in map.</value>
+  </data>
+  <data name="GetCurrentExtentFailed" xml:space="preserve">
+    <value>Failed to get current map view extent.</value>
+  </data>
+  <data name="LoadHelpFilesFailed" xml:space="preserve">
+    <value>Failed to load help files.</value>
+  </data>
+  <data name="DownloadMetadataCaption" xml:space="preserve">
+    <value>Download Metadata</value>
+  </data>
+  <data name="ErrorMessageDialogCaption" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="NoRecordsFound" xml:space="preserve">
+    <value>No records found.</value>
+  </data>
+  <data name="CswSearchCmdMessage" xml:space="preserve">
+    <value>CSW Client</value>
+  </data>
+  <data name="SelectAnItemToDelete" xml:space="preserve">
+    <value>Please select an item to delete.</value>
+  </data>
+  <data name="FileSaveFailed" xml:space="preserve">
+    <value>Failed to save file.</value>
+  </data>
+  <data name="hideAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\hideAll.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeleteConfirmation" xml:space="preserve">
+    <value>Are you sure want to delete?</value>
+  </data>
+  <data name="LoadProfilesFailed" xml:space="preserve">
+    <value>Failed to load profiles.</value>
+  </data>
+  <data name="BuildNo" xml:space="preserve">
+    <value>Build</value>
+  </data>
+  <data name="MetadataNodeMissing" xml:space="preserve">
+    <value>&lt;Metadata&gt; node missing.</value>
+  </data>
+  <data name="CswSearchCmdTooltip" xml:space="preserve">
+    <value>CSW Client</value>
+  </data>
+  <data name="UnknownCoordinateSystem" xml:space="preserve">
+    <value>Unknown coordinate system.</value>
+  </data>
+  <data name="ConnectToCatalogFailed" xml:space="preserve">
+    <value>Failed to connect to catalog.</value>
+  </data>
+  <data name="hideAllFootprintTooltip" xml:space="preserve">
+    <value>Hide All FootPrint</value>
+  </data>
+  <data name="showAllFootPrintToolTip" xml:space="preserve">
+    <value>Show All FootPrint</value>
+  </data>
+  <data name="SpatialReferenceNotDefined" xml:space="preserve">
+    <value>No spatial reference was defined for the active map view.</value>
+  </data>
+  <data name="NotAMapService" xml:space="preserve">
+    <value>Not a map service.</value>
+  </data>
+  <data name="PrepareMetadataFailed" xml:space="preserve">
+    <value>Failed to prepare metadata.</value>
+  </data>
+  <data name="LoadMetadataFormattingStylesheetFailed" xml:space="preserve">
+    <value>Failed to load metadata formatting stylesheet.</value>
+  </data>
+  <data name="SelectAnItemToUpdate" xml:space="preserve">
+    <value>Please select an item to update.</value>
+  </data>
+  <data name="WarningMessageDialogCaption" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="CswSearchCmdCategory" xml:space="preserve">
+    <value>Geoportal</value>
+  </data>
+  <data name="PleaseSelectACswCatalog" xml:space="preserve">
+    <value>Please select a CSW Catalog.</value>
+  </data>
+  <data name="AddArcimsLayerFailed" xml:space="preserve">
+    <value>Failed to add ArcIMS map service layer.</value>
+  </data>
+  <data name="zoom_to_footprint" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\zoom_to_footprint.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="AddArcGISLayerFailed" xml:space="preserve">
+    <value>Failed to add ArcGIS map service layer.</value>
+  </data>
+  <data name="findButton" xml:space="preserve">
+    <value>Find</value>
+  </data>
+  <data name="aboutUrl" xml:space="preserve">
+    <value>http://esriurl.com/geoportal</value>
+  </data>
+  <data name="abstractLabel" xml:space="preserve">
+    <value>Abstract:</value>
+  </data>
+  <data name="addToMapToolTip" xml:space="preserve">
+    <value>Add To Map</value>
+  </data>
+  <data name="catalogDisplayNameLabel" xml:space="preserve">
+    <value>Display Name:</value>
+  </data>
+  <data name="catalogListLabel" xml:space="preserve">
+    <value>Catalogs</value>
+  </data>
+  <data name="catalogProfileLabel" xml:space="preserve">
+    <value>Profile:</value>
+  </data>
+  <data name="catalogUrlLabel" xml:space="preserve">
+    <value>Catalog Service URL:</value>
+  </data>
+  <data name="clearAllFootprintToolTip" xml:space="preserve">
+    <value>Clear All Footprint</value>
+  </data>
+  <data name="configureTabPage" xml:space="preserve">
+    <value>Configure</value>
+  </data>
+  <data name="deleteCatalogToolTip" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="displayFootprintToolTip" xml:space="preserve">
+    <value>Display Footprint</value>
+  </data>
+  <data name="findLabel" xml:space="preserve">
+    <value>Find:</value>
+  </data>
+  <data name="findTabPage" xml:space="preserve">
+    <value>Find</value>
+  </data>
+  <data name="helpTabPage" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="helpUrl" xml:space="preserve">
+    <value>https://github.com/Esri/geoportal-server/wiki/Geoportal-CSW-Clients</value>
+  </data>
+  <data name="inCatalogLabel" xml:space="preserve">
+    <value>In Catalog:</value>
+  </data>
+  <data name="linkLblAbt" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="linkLblHelp" xml:space="preserve">
+    <value>CSW Client for ArcGIS Help</value>
+  </data>
+  <data name="liveDataAndMapsOnlyCheckBox" xml:space="preserve">
+    <value>Live Data and Maps Only</value>
+  </data>
+  <data name="maximumLabel" xml:space="preserve">
+    <value>Maximum:</value>
+  </data>
+  <data name="newCatalogToolTip" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="resultsLabel" xml:space="preserve">
+    <value>Results</value>
+  </data>
+  <data name="saveCatalogToolTip" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="useCurrentExtentCheckBox" xml:space="preserve">
+    <value>Use Current Extent</value>
+  </data>
+  <data name="viewMetadataToolTip" xml:space="preserve">
+    <value>View Metadata</value>
+  </data>
+  <data name="zoomtoFootprintToolTip" xml:space="preserve">
+    <value>Zoom to Footprint</value>
+  </data>
+  <data name="formMessageBox" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="formMessageBox_btnOK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="formMessageBox_lblDetails" xml:space="preserve">
+    <value>Details:</value>
+  </data>
+  <data name="formMessageBox_txtDetail" xml:space="preserve">
+    <value>detail here</value>
+  </data>
+  <data name="formMessageBox_txtMessage" xml:space="preserve">
+    <value>message here</value>
+  </data>
+  <data name="ViewMetadataForm" xml:space="preserve">
+    <value>View Metadata</value>
+  </data>
+  <data name="serviceTypeUnknown" xml:space="preserve">
+    <value>Service type could not be determined.</value>
+  </data>
+  <data name="wcsWithNoGeoTiffInterface" xml:space="preserve">
+    <value>WCS service with no GeoTiff interface.</value>
+  </data>
+</root>

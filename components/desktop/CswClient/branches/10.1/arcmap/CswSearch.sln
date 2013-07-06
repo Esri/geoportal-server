@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CswSearch", "CswSearch.csproj", "{52601F47-5166-41CE-B4B1-01858054B949}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CswClient", "..\common\CswClient.csproj", "{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppLogger", "..\..\..\..\AppLogger\branches\10.1\src\AppLogger.csproj", "{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://pstfsarr:8080/tfs/consultingservices
+		SccProjectUniqueName0 = CswSearch.csproj
+		SccProjectName0 = .
+		SccAuxPath0 = http://pstfsarr:8080/tfs/consultingservices
+		SccLocalPath0 = .
+		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName1 = ..\\common\\CswClient.csproj
+		SccProjectName1 = ../common
+		SccAuxPath1 = http://pstfsarr:8080/tfs/consultingservices
+		SccLocalPath1 = ..\\common
+		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName2 = ..\\..\\..\\..\\AppLogger\\branches\\10.1\\src\\AppLogger.csproj
+		SccProjectName2 = ../../../../AppLogger/branches/10.1/src
+		SccAuxPath2 = http://pstfsarr:8080/tfs/consultingservices
+		SccLocalPath2 = ..\\..\\..\\..\\AppLogger\\branches\\10.1\\src
+		SccProvider2 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{52601F47-5166-41CE-B4B1-01858054B949}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52601F47-5166-41CE-B4B1-01858054B949}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52601F47-5166-41CE-B4B1-01858054B949}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52601F47-5166-41CE-B4B1-01858054B949}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

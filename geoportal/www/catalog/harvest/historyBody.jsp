@@ -388,9 +388,9 @@ cellpadding="2">
       <f:attribute name="defaultDirection" value="asc"/>
     </h:commandLink>
   </f:facet>
-  <h:outputText value="#{hist.harvestDate}">
+  <h:outputLabel for="hhCheckRecord" value="#{hist.harvestDate}">
     <f:convertDateTime type="date" pattern="yyyy-MM-dd"/>
-  </h:outputText>
+  </h:outputLabel>
 </h:column>  
 
 <h:column>

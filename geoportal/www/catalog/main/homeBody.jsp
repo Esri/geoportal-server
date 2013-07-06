@@ -92,7 +92,7 @@ function hpSubmitForm(event, form) {
 			</h:column>
 		</f:facet>
 		<h:column>
-			<h:outputText value="#{gptMsg['catalog.main.home.topic.findData']}"/>
+          <h:outputLabel for="itxFilterKeywordText" value="#{gptMsg['catalog.main.home.topic.findData']}"/>
 			<f:verbatim><p>&nbsp;</p></f:verbatim>
 
 			<h:panelGrid columns="1" summary="#{gptMsg['catalog.general.designOnly']}" width="90%" styleClass="homeTableCol">
@@ -168,7 +168,7 @@ function hpSubmitForm(event, form) {
 
 
 <f:verbatim>
-<h2></h2><br/>
+<br/>
 
 <!-- more content here -->
 

@@ -62,7 +62,7 @@ limitations under the License.
   <iconHelp>assets/images/i_help.png</iconHelp>
   
   <zoomFactor>1</zoomFactor>
-  <urlHelp>http://sourceforge.net/apps/mediawiki/geoportal/index.php?title=Search_Widget_for_Flex#How_to_Use_the_Geoportal_Search_Widget_for_Flex</urlHelp>
+  <urlHelp>https://github.com/Esri/geoportal-server/wiki/Search-Widget-for-Flex</urlHelp>
   
   <!-- regWebContext =  Used to match the webcontext so as to automate getting the 
   endpoint for relative URLS -->

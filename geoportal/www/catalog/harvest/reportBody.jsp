@@ -79,7 +79,7 @@ styleClass="report">
   
 <h:panelGroup>
 <h:outputLink value="#" onclick="changeDots('dot_summary'); toggleItem('panel_summary'); return false;">
-<h:graphicImage url="../images/bul_dot_open.gif" id="dot_summary" styleClass="dot"/>
+  <h:graphicImage url="../images/bul_dot_open.gif" id="dot_summary" styleClass="dot" title="#{gptMsg['catalog.harvest.manage.report.summary']}" alt="#{gptMsg['catalog.harvest.manage.report.summary']}"/>
 </h:outputLink>
 
 <h:outputLink value="#" onclick="changeDots('dot_summary'); toggleItem('panel_summary'); return false;">
@@ -101,7 +101,7 @@ styleClass="report">
 
 <h:panelGroup>
 <h:outputLink value="#" onclick="changeDots('dot_details'); toggleItem('panel_details'); return false;">
-<h:graphicImage url="../images/bul_dot.gif" id="dot_details" styleClass="dot"/>
+  <h:graphicImage url="../images/bul_dot.gif" id="dot_details" styleClass="dot" title="#{gptMsg['catalog.harvest.manage.report.details']}" alt="#{gptMsg['catalog.harvest.manage.report.details']}"/>
 </h:outputLink>
 
 <h:outputLink value="#" onclick="changeDots('dot_details'); toggleItem('panel_details'); return false;">

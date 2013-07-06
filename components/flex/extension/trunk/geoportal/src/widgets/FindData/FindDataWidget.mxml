@@ -62,7 +62,6 @@ TM: Widget modified from the sample viewer GeoRSS widget
 	import com.esri.ags.symbols.SimpleLineSymbol;
 	import com.esri.ags.tasks.FindTask;
 	import com.esri.ags.tasks.Geoprocessor;
-
 	import com.esri.gpt.finddata.EndPoint;
 	import com.esri.gpt.finddata.EndPointEvent;
 	import com.esri.gpt.finddata.EndPoints;
@@ -77,6 +76,7 @@ TM: Widget modified from the sample viewer GeoRSS widget
 	import com.esri.gpt.finddata.RSSParser;
 	import com.esri.gpt.finddata.SearchResultRecord;
 	import com.esri.gpt.finddata.SearchResultRecordList;
+	import com.esri.gpt.utils.GptURLVariables;
 	import com.esri.gpt.utils.ProjectionHandler;
 	import com.esri.gpt.utils.Utils;
 	import com.esri.gpt.wms.WMSLayer;
@@ -283,7 +283,7 @@ private function init():void
   graphicsLayer = new GraphicsLayer(); 
   map.addLayer(graphicsLayer); 
   
-  var urlVariables:URLVariables = new URLVariables();
+  var urlVariables:URLVariables = new GptURLVariables();
   var exFlashAvailable:Boolean  = flash.external.ExternalInterface.available;
   if (exFlashAvailable == false)                   
   {
@@ -1268,8 +1268,9 @@ private function layerLoaded(event:LayerEvent):void {
     ) {
       var projectionHandler:ProjectionHandler = new ProjectionHandler(
         new SpatialReference(map.spatialReference.wkid)); 
-      map.extent = projectionHandler.reprojectExtent(
-        event.layer.initialExtent);
+      
+	  doZoomTo(projectionHandler.reprojectExtent(event.layer.initialExtent), 
+		  nZoomFactor);
     }
     
   } finally {

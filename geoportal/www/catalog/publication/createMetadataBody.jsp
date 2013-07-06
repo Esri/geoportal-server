@@ -36,7 +36,7 @@
   </h:selectOneMenu>
   
   <% // schema %>
-  <h:outputLabel for="schema" styleClass="requiredField"
+  <h:outputText styleClass="requiredField"
     value="#{gptMsg['catalog.publication.createMetadata.label.schema']}"/>
   <h:selectOneRadio id="schema" layout="pageDirection"
     value="#{EditMetadataController.createSchemaKey}">

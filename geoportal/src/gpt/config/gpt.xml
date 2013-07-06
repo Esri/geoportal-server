@@ -73,7 +73,7 @@
     -->
       
     <lucene
-        indexLocation=""
+        indexLocation="C:\index"
         writeLockTimeout="60000"
         useNativeFSLockFactory="true"
         analyzerClassName="org.apache.lucene.analysis.standard.StandardAnalyzer">
@@ -395,8 +395,6 @@
         <parameter key="catalog.cart.enabled" value="false"/>
         <parameter key="catalog.cart.maxItems" value="100"/>
         <parameter key="catalog.cart.processor" value="com.esri.gpt.control.cart.ZipXmls"/>
-
-				<!-- Mapping file to map dcat fields to lucene index fields -->
 				<parameter key="dcat.mappings" value="gpt/metadata/dcat-mappings.xml"/>
     </catalog>
     
@@ -470,13 +468,13 @@
       
         <ldapAdapter>
             <ldapConnectionProperties
-                providerURL="ldap://ldap_host_name:ldap_port"
+                providerURL="ldap://inspiresrv1:10389"
                 initialContextFactoryName="com.sun.jndi.ldap.LdapCtxFactory"
                 securityAuthentication="simple"
                 securityProtocol="">
                 <ldapServiceAccount
-                    securityPrincipal="ldap_admin_user"
-                    securityCredentials="ldap_admin_password"
+                    securityPrincipal="uid=admin,ou=system"
+                    securityCredentials="secret"
                     encrypted="false"/>
             </ldapConnectionProperties>
         
