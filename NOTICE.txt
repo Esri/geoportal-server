@@ -71,7 +71,9 @@ Copyright (C) 2002 The Apache Software Foundation. All rights reserved.
 Apache Batik
 Copyright 1999-2007 The Apache Software Foundation
 This software contains code from the World Wide Web Consortium (W3C) for the Document Object Model API (DOM API) and SVG Document Type Definition (DTD).This software contains code from the International Organisation for Standardization for the definition of character entities used in the software's documentation.This product includes images from the Tango Desktop Project(http://tango.freedesktop.org/).This product includes images from the Pasodoble Icon Theme (http://www.jesusda.com/projects/pasodoble).
+
 This software contains code from the World Wide Web Consortium (W3C) for the  Document Object Model API (DOM API) and SVG Document Type Definition (DTD).
+
 This software contains code from the International Organisation for Standardization for the definition of character entities used in the software's documentation.
 
 Apache Lucene
@@ -83,7 +85,7 @@ Copyright © 2008 The Apache Software Foundation
 This product includes software developed by The Apache Software Foundation (http://www.apache.org/).
 
 =====================================================
-Other project libraries used that are under the Apache 2.0 license: jopenid, JavaServer Pages Standard Tag Library (JSTL), saaj, standard, zookeeper, and smiley-http-proxy-servlet 
+Other project libraries used that are under the Apache 2.0 license: jopenid, JavaServer Pages Standard Tag Library (JSTL), saaj, standard, zookeeper, and smiley-http-proxy-servlet
 Apache License
 Version 2.0, January 2004
 http://www.apache.org/licenses/
@@ -581,7 +583,7 @@ is derived from Unicode data such as the Unicode Character Database.
 See http://unicode.org/copyright.html for more details.
 
 The Morfologik analyzer (morfologik) includes BSD-licensed software
-developed by Dawid Weiss and Marcin Miłkowski (http://morfologik.blogspot.com/).
+developed by Dawid Weiss and Marcin Milkowski (http://morfologik.blogspot.com/).
 
 Morfologik uses data from Polish ispell/myspell dictionary
 (http://www.sjp.pl/slownik/en/) licenced on the terms of (inter alia)

@@ -34,17 +34,17 @@
      xpath="/atom:entry/atom:link/@href"/>
   
   <property meaning="envelope" xpath="/atom:entry/georss:box">
-	  <property meaning="envelope.west" xpathType="STRING" xpath="normalize-space(substring-before(normalize-space(./text()),' '))" />	
-	  <property meaning="envelope.south" xpathType="STRING" xpath="normalize-space(substring-before(normalize-space(substring-after(normalize-space(./text()),' ')),' '))" />	
-		<property meaning="envelope.east" xpathType="STRING" xpath="normalize-space(substring-before(normalize-space(substring-after(normalize-space(substring-after(normalize-space(./text()),' ')),' ')),' '))" />
-		<property meaning="envelope.north" xpathType="STRING" xpath="normalize-space(substring-after(normalize-space(substring-after(normalize-space(substring-after(normalize-space(./text()),' ')),' ')),' '))" />
-	</property>
+	  <property meaning="envelope.south" xpathType="STRING" xpath="normalize-space(substring-before(normalize-space(./text()),' '))" />	
+	  <property meaning="envelope.west"  xpathType="STRING" xpath="normalize-space(substring-before(normalize-space(substring-after(normalize-space(./text()),' ')),' '))" />	
+	  <property meaning="envelope.north" xpathType="STRING" xpath="normalize-space(substring-before(normalize-space(substring-after(normalize-space(substring-after(normalize-space(./text()),' ')),' ')),' '))" />
+	  <property meaning="envelope.east"  xpathType="STRING" xpath="normalize-space(substring-after(normalize-space(substring-after(normalize-space(substring-after(normalize-space(./text()),' ')),' ')),' '))" />
+  </property>
 	
 	<property meaning="envelope" xpath="/atom:entry/georss:point">
-		<property meaning="envelope.west" xpathType="STRING" xpath="normalize-space(substring-before(normalize-space(./text()),' '))" />
-		<property meaning="envelope.south" xpathType="STRING" xpath="normalize-space(substring-after(normalize-space(./text()),' '))" />
-		<property meaning="envelope.east" xpathType="STRING" xpath="normalize-space(substring-before(normalize-space(./text()),' '))" />		
-		<property meaning="envelope.north" xpathType="STRING" xpath="normalize-space(substring-after(normalize-space(./text()),' '))" />
+		<property meaning="envelope.south" xpathType="STRING" xpath="normalize-space(substring-before(normalize-space(./text()),' '))" />
+		<property meaning="envelope.west" xpathType="STRING" xpath="normalize-space(substring-after(normalize-space(./text()),' '))" />
+		<property meaning="envelope.north" xpathType="STRING" xpath="normalize-space(substring-before(normalize-space(./text()),' '))" />		
+		<property meaning="envelope.east" xpathType="STRING" xpath="normalize-space(substring-after(normalize-space(./text()),' '))" />
 	</property>	
 	
 		<property meaning="envelope.west" xpathType="STRING" xpath="normalize-space(substring-before(normalize-space(/atom:entry/geo:long/text()),' '))" />

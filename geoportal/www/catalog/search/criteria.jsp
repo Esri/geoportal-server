@@ -559,7 +559,9 @@
         
         elTdInp.appendChild(el);
         elTr.appendChild(elTdInp);
-        elTdName.appendChild(document.createTextNode(siteName));
+        elTdName.appendChild(
+        		dojo.create('label', { "for": siteId, innerHTML: siteName}))
+        		//document.createTextNode(siteName));
         elTr.appendChild(elTdName);
         elTbody.appendChild(elTr);
         elTr = document.createElement("tr");
@@ -1143,7 +1145,7 @@
       ">";
     htmlCatalogs += "</span>";
     htmlCatalogs += "<img height=\"20\" style=\"visibility:hidden; \"  "
-      + "name=\"distrLoadingImg\" src=\""
+      + "name=\"distrLoadingImg\" alt=\"\" src=\""
       + contextPath + "/catalog/images/loading.gif\" class=\"loadingImages\" "
       + "id=\"distrLoadImg" + srNormalizeId(uuid) + "\"/>";    
     htmlCatalogs += "</div></td></tr>";

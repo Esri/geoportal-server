@@ -23,7 +23,6 @@ import com.esri.gpt.agp.sync.AgpDestination;
 import com.esri.gpt.agp.sync.AgpSource;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.common.CommonCapabilities;
-import com.esri.gpt.framework.collection.StringAttribute;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
@@ -53,6 +52,26 @@ public class HarvestProtocolAgp2Agp extends AbstractHTTPHarvestProtocol {
    * flags to carry over
    */
   private long flags;
+  /**
+   * flag indicating to stop on error.
+   */
+  private boolean stopOnError = true;
+  
+  /**
+   * Creates instance of the protocol
+   * @param stopOnError <code>true</code> to stop harvesting on error
+   */
+  public HarvestProtocolAgp2Agp(boolean stopOnError) {
+    this.stopOnError = stopOnError;
+  }
+  
+  /**
+   * Checks if stop harvesting on error.
+   * @return <code>true</code> to stop harvesting on error
+   */
+  public boolean getStopOnError() {
+    return stopOnError;
+  }
   
   /**
    * Gets source.

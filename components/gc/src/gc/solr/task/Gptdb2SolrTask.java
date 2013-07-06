@@ -96,12 +96,12 @@ public class Gptdb2SolrTask extends Task implements SqlRowHandler {
 			//deleteDocs();
 			//if (true) return;
 			
-			okIds = null;
+			//okIds = null;
 			con = gptdb2SolrInstance.makeSqlConnection();
 			GptResource r = new GptResource();
 			SqlQuery q = new SqlQuery();
 			q.query(context,con,r.getSqlQInfo(),this);
-			//this.walkSolrDocs();
+		  this.walkSolrDocs();
 			
 		} finally {
       try {if (con != null) con.close();} 
@@ -146,6 +146,15 @@ public class Gptdb2SolrTask extends Task implements SqlRowHandler {
 		String[] result = queryDoc(resource);
 		String id = result[0];
 		String fsMatched = result[1];
+		
+		if (this.approvedOnly) {
+			String s = resource.approvalstatus;
+			// handles an earlier problem with publishing "posted" docs
+			if ((s != null) && s.equals("posted")) {
+				fsMatched = null;
+			}
+		}
+		
 		if (fsMatched != null) {
 			if ((okIds != null) && (okIds.size() <= this.maxIdsInMap)) {
 				okIds.put(id,"");
@@ -160,7 +169,7 @@ public class Gptdb2SolrTask extends Task implements SqlRowHandler {
 			if (bContinue && this.approvedOnly) {
 				s = resource.approvalstatus;
 				if (s == null) s = "";
-				if (!s.equals("approved") && !s.equals("posted")) {
+				if (!s.equals("approved") && !s.equals("reviewed")) {
 					stats.incrementCount(tn+".ignore.notApproved");
 					bContinue = false;
 				}
@@ -425,8 +434,8 @@ public class Gptdb2SolrTask extends Task implements SqlRowHandler {
 		}
 		
 		if ((delIds != null) && (delIds.size() > 0)) {
-			//stats.incrementCount(context.getTaskName()+".solr.sentForDelete",delIds.size());
-			//this.docPublisher.getUpdateServer().deleteById(delIds);
+			stats.incrementCount(context.getTaskName()+".solr.sentForDelete",delIds.size());
+			this.docPublisher.getUpdateServer().deleteById(delIds);
 	  }
 		
 	}

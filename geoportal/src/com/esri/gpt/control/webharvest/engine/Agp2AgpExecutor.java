@@ -39,9 +39,12 @@ abstract class Agp2AgpExecutor extends Executor {
    * logger
    */
   private static final Logger LOGGER = Logger.getLogger(Agp2AgpExecutor.class.getCanonicalName());
+  
+  private boolean stopOnError = true;
 
-  public Agp2AgpExecutor(DataProcessor dataProcessor, ExecutionUnit unit) {
+  public Agp2AgpExecutor(DataProcessor dataProcessor, ExecutionUnit unit, boolean stopOnError) {
     super(dataProcessor, unit);
+    this.stopOnError = stopOnError;
   }
 
   @Override
@@ -80,10 +83,16 @@ abstract class Agp2AgpExecutor extends Executor {
               LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Pushed item #{0} of source URI: \"{1}\" through unit: {2}", new Object[]{counter, sourceItem.getProperties().getValue("id"), unit});
               return result;
             } catch (AgpException ex) {
+              if (stopOnError) {
+                throw ex;
+              }
               LOGGER.log(Level.WARNING, "[SYNCHRONIZER] Failed pushing item #{0} of source URI: \"{1}\" through unit: {2}. Reason: {3}", new Object[]{counter, sourceItem.getProperties().getValue("id"), unit, ex.getMessage()});
               rp.createUnpublishedEntry(sourceUri, Arrays.asList(new String[]{ex.getMessage()}));
               return false;
             } catch (HttpClientException ex) {
+              if (stopOnError) {
+                throw ex;
+              }
               LOGGER.log(Level.WARNING, "[SYNCHRONIZER] Failed pushing item #{0} of source URI: \"{1}\" through unit: {2}. Reason: {3}", new Object[]{counter, sourceItem.getProperties().getValue("id"), unit, ex.getMessage()});
               rp.createUnpublishedEntry(sourceUri, Arrays.asList(new String[]{ex.getMessage()}));
               return false;
