@@ -92,9 +92,7 @@ public abstract void setContext(RequestContext context);
 public abstract void writeError(Throwable err);
 
 /**
- * Write the search result.  This will be used instead of
- * {@link FeedWriter#write(SearchResultRecords)} since the searchresultsRecords
- * can be extracted from {@link SearchResult}.
+ * Write the search result.
  *
  * @param result the result
  */

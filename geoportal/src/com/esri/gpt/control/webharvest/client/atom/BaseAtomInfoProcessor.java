@@ -36,8 +36,8 @@ abstract class BaseAtomInfoProcessor implements IAtomInfoProcessor {
 
 	/**
 	 * Initializes base atom info object with protocol and url
-	 * @param the protocol
-	 * @param the url param
+	 * @param protocol protocol
+	 * @param url URL
 	 * @return the info object
 	 */
 	@Override

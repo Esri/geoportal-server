@@ -36,7 +36,7 @@ public class TpUtil {
    * <br/>Calling this method will advance the calendar to the 
    * final millisecond of 2010-04
    * @param calendar the calendar to advance
-   * @param the date string associated with the current calendar time
+   * @param date the date string associated with the current calendar time
    */
   public static void advanceToUpperBoundary(Calendar calendar, String date) {
     if (date.indexOf("T") == -1) {

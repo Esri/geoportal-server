@@ -135,7 +135,6 @@ public void setRequestContext(RequestContext requestContext) {
  * Write.
  * 
  * @param records the records
- * @see com.esri.gpt.control.georss.FeedWriter#write(com.esri.gpt.catalog.search.SearchResultRecords)
  */
   @Override
   public void write(IFeedRecords records) {

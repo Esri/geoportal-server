@@ -187,8 +187,8 @@ public void registerUser(User user)
 /**
  * Adds user attribute.
  * @param  objectDn the subject dn
- * @param  role the user attribute will be added.
- * @param  role the user attribute value will be added.
+ * @param  attributeName the user attribute will be added.
+ * @param  attributeValue the user attribute value will be added.
  * @throws CredentialPolicyException if the credentials are invalid
  * @throws IdentityException if a system error occurs preventing the action
  * @throws NamingException if an LDAP naming exception occurs
@@ -201,8 +201,8 @@ public void addAttribute(String objectDn, String attributeName, String attribute
 /**
  * Adds user attribute.
  * @param  objectDn the subject dn
- * @param  role the user attribute will be removed.
- * @param  role the user attribute value will be removed
+ * @param  attributeName the user attribute will be removed.
+ * @param  attributeValue the user attribute value will be removed
  * @throws CredentialPolicyException if the credentials are invalid
  * @throws IdentityException if a system error occurs preventing the action
  * @throws NamingException if an LDAP naming exception occurs

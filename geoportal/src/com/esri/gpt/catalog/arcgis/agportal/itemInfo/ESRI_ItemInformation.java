@@ -613,7 +613,7 @@ public class ESRI_ItemInformation {
    * Gets array of strings as a single string.
    * @param array array of strings
    * @param separator separator
-   * @return 
+   * @return ESRI_ItemInformation as string
    */
   private String asString(List<String> array, String separator) {
     separator = Val.chkStr(separator);

@@ -43,7 +43,7 @@ public class AtomNamespaceUtil {
 	/**
 	 * Makes xpath using namespace option
 	 * @param isAtomNamespaceAware
-	 * @return
+	 * @return XPath
 	 */
 	public static XPath makeXPath(boolean isAtomNamespaceAware){
 		XPath xPath = XPathFactory.newInstance().newXPath();

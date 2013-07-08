@@ -213,7 +213,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	/**
    * Prints attributes using dcat mappings
    * @param r record
-   * @param more <code>true</code> if more info will be printed after that
+   * @param before <code>true</code> if more info will be printed after that
    * section
    */
   protected void printAttributesUserDcatMappings(IFeedRecord r, boolean before) {
@@ -341,8 +341,8 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	
   /**
    * Cleans value from lucene index
-   * @param value
-   * @return
+   * @param value value to clean
+   * @return cleaned value
    */
 	private String cleanValue(String value){
 		if(value == null) return "";
@@ -363,7 +363,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	 * @param jsonKey the dcat field
 	 * @param delimiter the delimiter in lucene field
 	 * @param before the indentation flag
-	 * @return
+	 * @return always <code>true</code>
 	 */
 	private boolean writeFieldValue(String fieldValue,String jsonKey, String delimiter, boolean before){
 		String cleanedVal = cleanValue(fieldValue);
@@ -384,7 +384,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	 * @param delimiter the delimiter in lucene field
 	 * @param before the indentation flag
 	 * @param isDate true if date field
-	 * @return
+	 * @return always <code>true</code>
 	 */
 	private boolean writeField(Map<String, IFeedAttribute> index, String fieldName,String jsonKey, String delimiter, boolean before,
 			boolean isDate){

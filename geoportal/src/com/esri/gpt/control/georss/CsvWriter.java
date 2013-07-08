@@ -33,7 +33,6 @@ private static final String DELIMETER = ",";
  * Writes the records
  * 
  * @param records list of records
- * @see com.esri.gpt.control.georss.FeedWriter#write(com.esri.gpt.catalog.search.SearchResultRecords)
  */
 @Override
 public void write(IFeedRecords records) {
