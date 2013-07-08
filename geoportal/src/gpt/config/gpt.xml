@@ -73,7 +73,7 @@
     -->
       
     <lucene
-        indexLocation="C:\index"
+        indexLocation=""
         writeLockTimeout="60000"
         useNativeFSLockFactory="true"
         analyzerClassName="org.apache.lucene.analysis.standard.StandardAnalyzer">
@@ -139,7 +139,7 @@
     <mapViewer>
         <instance 
             url="{contextPath}/viewer/index.jsp" 
-            className="com.esri.gpt.catalog.search.MapViewerFlex">
+            className="com.esri.gpt.catalog.search.MapViewerFlex_2_4">
         <parameter key="width" value="1000"/>
         <parameter key="height" value="700"/>
         <parameter key="regexCanConsumeUrl" value=""/>
@@ -395,6 +395,8 @@
         <parameter key="catalog.cart.enabled" value="false"/>
         <parameter key="catalog.cart.maxItems" value="100"/>
         <parameter key="catalog.cart.processor" value="com.esri.gpt.control.cart.ZipXmls"/>
+
+				<!-- Mapping file to map dcat fields to lucene index fields -->
 				<parameter key="dcat.mappings" value="gpt/metadata/dcat-mappings.xml"/>
     </catalog>
     
@@ -468,13 +470,13 @@
       
         <ldapAdapter>
             <ldapConnectionProperties
-                providerURL="ldap://inspiresrv1:10389"
+                providerURL="ldap://ldap_host_name:ldap_port"
                 initialContextFactoryName="com.sun.jndi.ldap.LdapCtxFactory"
                 securityAuthentication="simple"
                 securityProtocol="">
                 <ldapServiceAccount
-                    securityPrincipal="uid=admin,ou=system"
-                    securityCredentials="secret"
+                    securityPrincipal="ldap_admin_user"
+                    securityCredentials="ldap_admin_password"
                     encrypted="false"/>
             </ldapConnectionProperties>
         
