@@ -134,6 +134,7 @@
 	<xs:element name="SupportSpatialResponse">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
+				<xs:enumeration value="False"/>
 				<xs:enumeration value="True"/>
 			</xs:restriction>
 		</xs:simpleType>
