@@ -1,3 +1,6 @@
+com.esri.gpt.agp.client
+com.esri.gpt.agp.multipart2
+com.esri.gpt.agp.sync
 com.esri.gpt.catalog.arcgis.agportal.client
 com.esri.gpt.catalog.arcgis.agportal.itemInfo
 com.esri.gpt.catalog.arcgis.agportal.publication
@@ -20,6 +23,7 @@ com.esri.gpt.catalog.management
 com.esri.gpt.catalog.publication
 com.esri.gpt.catalog.schema
 com.esri.gpt.catalog.schema.indexable
+com.esri.gpt.catalog.schema.indexable.tp
 com.esri.gpt.catalog.search
 com.esri.gpt.control
 com.esri.gpt.control.arcims
@@ -45,6 +49,7 @@ com.esri.gpt.control.webharvest
 com.esri.gpt.control.webharvest.client.agportal
 com.esri.gpt.control.webharvest.client.arcgis
 com.esri.gpt.control.webharvest.client.arcims
+com.esri.gpt.control.webharvest.client.atom
 com.esri.gpt.control.webharvest.client.csw
 com.esri.gpt.control.webharvest.client.oai
 com.esri.gpt.control.webharvest.client.res
