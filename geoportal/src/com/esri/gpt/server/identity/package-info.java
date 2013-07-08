@@ -13,5 +13,8 @@
  * limitations under the License.
  */
 
+/**
+ * Identity management related classes.
+ */
 package com.esri.gpt.server.identity;
 

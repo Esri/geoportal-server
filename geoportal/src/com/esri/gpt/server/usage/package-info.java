@@ -13,5 +13,8 @@
  * limitations under the License.
  */
 
+/**
+ * Usage statistics related classes.
+ */
 package com.esri.gpt.server.usage;
 
