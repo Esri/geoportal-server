@@ -3,7 +3,7 @@
     <layerlist visible="true">
         <!-- <excludelayer>The Label Of Some Layer In Main Config File</excludelayer> -->
     </layerlist>
-	<showthumbnails>true</showthumbnails>
+    <showthumbnails>false</showthumbnails>
 </configuration>
 
 <!--
