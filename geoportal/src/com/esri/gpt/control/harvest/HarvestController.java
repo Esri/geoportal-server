@@ -15,11 +15,11 @@
 package com.esri.gpt.control.harvest;
 
 import com.esri.gpt.agp.client.AgpCountRequest;
-import com.esri.gpt.agp.client.AgpFetchFoldersRequest;
-import com.esri.gpt.agp.client.AgpFetchUsersRequest;
 import com.esri.gpt.agp.sync.AgpDestination;
 import com.esri.gpt.agp.sync.AgpSource;
 import com.esri.gpt.catalog.arcgis.metadata.AGSProcessorConfig;
+import com.esri.gpt.catalog.harvest.adhoc.AdHocEventList;
+import com.esri.gpt.catalog.harvest.adhoc.IAdHocEvent;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRConnectionException;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidProtocolException;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidResponseException;
@@ -72,8 +72,8 @@ import com.esri.gpt.framework.util.TimePeriod;
 import com.esri.gpt.framework.util.UuidUtil;
 import com.esri.gpt.framework.util.Val;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -429,6 +429,7 @@ public class HarvestController extends BaseHarvestController {
       if (owner!=null) {
         getEditor().getRepository().setOwnerId(owner.getLocalID());
       }
+      getEditor().prepareForUpdate();
       if (getEditor().validate(extractMessageBroker())) {
         HrCompleteUpdateRequest req = new HrCompleteUpdateRequest(context, getEditor().getRepository());
         boolean creating = req.execute();
@@ -950,6 +951,18 @@ public class HarvestController extends BaseHarvestController {
     }
     return protocols;
   }
+  
+  public ArrayList<TimePoint> getTimePoins() {
+    ArrayList<TimePoint> timePoints = new ArrayList<TimePoint>();
+    try {
+      AdHocEventList adHocEventList = getEditor().getRepository().getAdHocEventList();
+      for (IAdHocEvent evt: adHocEventList) {
+        
+      }
+    } catch (ParseException ex) {
+    }
+    return timePoints;
+  }
 
   /**
    * Creates editor.
@@ -1016,8 +1029,11 @@ public class HarvestController extends BaseHarvestController {
     }
 
     setInfoEnabled(UuidUtil.isUuid(record.getUuid()) && ApprovalStatus.isPubliclyVisible(record.getApprovalStatus().name()) && record.getSynchronizable());
-
-    setEditor(new HarvestEditor(record));
+    
+    HarvestEditor harvestEditor = new HarvestEditor(record);
+    harvestEditor.prepareForEdit();
+    
+    setEditor(harvestEditor);
   }
 
   /**
@@ -1197,6 +1213,10 @@ public class HarvestController extends BaseHarvestController {
   }
 // types =======================================================================
 
+  public static class TimePoint {
+    
+  }
+  
   /**
    * Custom implementation of SortDirectionStyleMap.
    */

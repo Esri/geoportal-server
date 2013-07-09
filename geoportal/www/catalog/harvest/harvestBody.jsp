@@ -617,6 +617,22 @@ function searchFolders() {
     var folderDiv = dojo.create("div",{innerHTML: '<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.norecords"/>'},foldersDiv);
   });
 }
+
+dojo.addOnLoad(function(){
+  dojo.query("#harvestCreate\\:harvestFrequencyMode input").onchange(function(evt){
+    var target = evt.target;
+    onHarvestFrequencyMode(target);
+    
+  });
+  dojo.query("#harvestCreate\\:harvestFrequencyMode input[checked]").forEach(function(target){
+    onHarvestFrequencyMode(target);
+  });
+});
+
+function onHarvestFrequencyMode(target) {
+  dojo.query("#harvestCreate\\:harvestFrequency").style("display", target.value=="PERIODICAL"? "block": "none");
+  dojo.query("#harvestCreate\\:harvestTimes").style("display", target.value=="ADHOC"? "block": "none");
+}
 </script>
 
 </f:verbatim>
@@ -888,9 +904,19 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 </h:panelGrid>
 
 <f:verbatim><br/></f:verbatim>
-
+  
 <%-- Harvesting frequency --%>
 <h:outputText styleClass="syncOptSpec" value="#{gptMsg['catalog.harvest.manage.edit.frequency.caption']}"/>
+
+<%-- Harvesting frequency mode --%>
+<h:selectOneRadio styleClass="syncOptSpecMode" value="#{HarvestController.editor.frequencyModeAsString}" id="harvestFrequencyMode">
+<f:selectItem itemValue="PERIODICAL" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.periodical']}"/>
+<f:selectItem itemValue="ADHOC" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.adhoc']}"/>
+</h:selectOneRadio>
+
+<f:verbatim><br/></f:verbatim>
+
+<%-- Harvesting period --%>
 <h:selectOneRadio styleClass="syncOptSpec" layout="pageDirection" value="#{HarvestController.editor.harvestFrequency}" id="harvestFrequency">
 <f:selectItem itemValue="monthly" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.monthly']}"/>
 <f:selectItem itemValue="biweekly" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.biweekly']}"/>
@@ -900,6 +926,10 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <f:selectItem itemValue="once" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.once']}"/>
 <f:selectItem itemValue="skip" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.skip']}"/>
 </h:selectOneRadio>
+
+<%-- Harvesting time points --%>
+<h:panelGrid columns="1" summary="#{gptMsg['catalog.general.designOnly']}" id="harvestTimes">
+</h:panelGrid>
 
 <f:verbatim><br/><hr/><br/></f:verbatim>
 

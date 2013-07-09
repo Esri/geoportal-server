@@ -73,6 +73,8 @@ private TreeMap<String,Protocol> protocols = new TreeMap<String,Protocol>(String
 private boolean arcgisDotComAllowed;
 private boolean crossAllowed;
 
+private FrequencyMode frequencyMode = FrequencyMode.PERIODICAL;
+
 // constructors ================================================================
 /**
  * Creates instance of editor.
@@ -398,6 +400,32 @@ public void setApprovalStatus(String status) {
 // methods =====================================================================
 
 /**
+ * Prepares repository for edit.
+ */
+public void prepareForEdit() {
+  switch (getRepository().getHarvestFrequency()) {
+    case AdHoc:
+      setFrequencyMode(FrequencyMode.ADHOC);
+      getRepository().setHarvestFrequency(HrRecord.HarvestFrequency.Skip);
+      break;
+    default:
+      setFrequencyMode(FrequencyMode.PERIODICAL);
+      getRepository().clearAdHocEventList();
+  }
+}
+
+/**
+ * Prepares repository for update.
+ */
+public void prepareForUpdate() {
+  if (getFrequencyMode()== FrequencyMode.ADHOC) {
+    getRepository().setHarvestFrequency(HrRecord.HarvestFrequency.AdHoc);
+  } else {
+    getRepository().clearAdHocEventList();
+  }
+}
+
+/**
  * Validates entered content.
  * @param mb message broker
  * @return <code>true</code> if data is valid
@@ -520,5 +548,31 @@ public boolean validate(MessageBroker mb) {
 @Override
 public String toString() {
   return _harvestRepository.toString();
+}
+
+public FrequencyMode getFrequencyMode() {
+  return frequencyMode;
+}
+
+public void setFrequencyMode(FrequencyMode frequencyMode) {
+  this.frequencyMode = frequencyMode;
+}
+
+public String getFrequencyModeAsString() {
+  return frequencyMode.name();
+}
+
+public void setFrequencyModeAsString(String frequencyMode) {
+  frequencyMode = Val.chkStr(frequencyMode);
+  try {
+    this.frequencyMode = FrequencyMode.valueOf(frequencyMode.toUpperCase());
+  } catch (IllegalArgumentException ex) {
+    this.frequencyMode = FrequencyMode.PERIODICAL;
+  }
+}
+
+public static enum FrequencyMode {
+  PERIODICAL,
+  ADHOC
 }
 }

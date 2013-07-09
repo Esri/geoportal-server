@@ -1502,3 +1502,11 @@ img.datepicker_trigger {
   display: table-cell;
   padding-top: 10px;
 }
+
+#harvestCreate .syncOptSpecMode input {
+  
+}
+
+#harvestCreate .syncOptSpecMode input[checked] {
+  
+}

@@ -15,7 +15,7 @@
 package com.esri.gpt.catalog.harvest.repository;
 
 import com.esri.gpt.catalog.harvest.adhoc.AdHocEventFactoryList;
-import com.esri.gpt.catalog.harvest.adhoc.IAdHocEvent;
+import com.esri.gpt.catalog.harvest.adhoc.AdHocEventList;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRConnectionException;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidProtocolException;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
@@ -342,9 +342,9 @@ public Date getNextHarvestDate() {
   switch (harvestFrequency) {
     case AdHoc:
       try {
-        IAdHocEvent event = AdHocEventFactoryList.getInstance().parseSingle(getProtocol().getAttributeMap().getValue("ad-hoc"));
-        if (event!=null) {
-          return event.getNextHarvestDate(lastHarvestDate);
+        AdHocEventList eventList = getAdHocEventList();
+        if (eventList!=null) {
+          return eventList.getNextHarvestDate(lastHarvestDate);
         } else {
           return null;
         }
@@ -354,6 +354,30 @@ public Date getNextHarvestDate() {
     default:
       return harvestFrequency.getDueDate(lastSyncDate);
   }
+}
+
+/**
+ * Gets ad-hoc event list.
+ * @return ad-hoc event list
+ * @throws ParseException if parsing "ad-hoc" attribute fails
+ */
+public AdHocEventList getAdHocEventList() throws ParseException {
+  return AdHocEventFactoryList.getInstance().parse(Val.chkStr(getProtocol().getAttributeMap().getValue("ad-hoc")));
+}
+
+/**
+ * Sets ad-hoc event list.
+ * @param eventList event list
+ */
+public void setAdHocEventList(AdHocEventList eventList) {
+  getProtocol().getAttributeMap().set("ad-hoc", eventList.toString());
+}
+
+/**
+ * Clears ad-hoc event list.
+ */
+public void clearAdHocEventList() {
+  getProtocol().getAttributeMap().remove("ad-hoc");
 }
 
 /**
