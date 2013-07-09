@@ -14,6 +14,8 @@
  */
 package com.esri.gpt.catalog.harvest.repository;
 
+import com.esri.gpt.catalog.harvest.adhoc.AdHocEventFactoryList;
+import com.esri.gpt.catalog.harvest.adhoc.IAdHocEvent;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRConnectionException;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidProtocolException;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
@@ -33,6 +35,7 @@ import com.esri.gpt.framework.util.ResourceXml;
 import com.esri.gpt.framework.util.UuidUtil;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
@@ -335,7 +338,22 @@ public void setLastHarvestDate(Date lastHarvestDate) {
  */
 public Date getNextHarvestDate() {
   Date lastHarvestDate = getLastHarvestDate();
-  return getHarvestFrequency().getDueDate(lastHarvestDate);
+  HarvestFrequency harvestFrequency = getHarvestFrequency();
+  switch (harvestFrequency) {
+    case AdHoc:
+      try {
+        IAdHocEvent event = AdHocEventFactoryList.getInstance().parseSingle(getProtocol().getAttributeMap().getValue("ad-hoc"));
+        if (event!=null) {
+          return event.getNextHarvestDate(lastHarvestDate);
+        } else {
+          return null;
+        }
+      } catch (ParseException ex) {
+        return null;
+      }
+    default:
+      return harvestFrequency.getDueDate(lastSyncDate);
+  }
 }
 
 /**
@@ -588,11 +606,13 @@ public Date getDueDate(Date lastDate) {
 }
 },
 /** do not perform scheduled harvests. */
-Skip;
+Skip,
+/** do ad-hoc scheduled harvest. */
+AdHoc;
 
 /**
  * Checks value of the frequency.
- * @param frequency value of frequency to parse
+ * @param frequency value of frequency to parseSingle
  * @return parsed frequency
  */
 public static HarvestFrequency checkValueOf(String frequency) {
