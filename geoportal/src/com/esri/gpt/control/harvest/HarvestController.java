@@ -952,12 +952,19 @@ public class HarvestController extends BaseHarvestController {
     return protocols;
   }
   
+  /**
+   * Gets time points.
+   * @return list of time points
+   */
   public ArrayList<TimePoint> getTimePoins() {
+    MessageBroker broker = extractMessageBroker();
     ArrayList<TimePoint> timePoints = new ArrayList<TimePoint>();
     try {
       AdHocEventList adHocEventList = getEditor().getRepository().getAdHocEventList();
       for (IAdHocEvent evt: adHocEventList) {
-        
+        String localizedCaption = evt.getLocalizedCaption(broker);
+        TimePoint tp = new TimePoint(evt, localizedCaption);
+        timePoints.add(tp);
       }
     } catch (ParseException ex) {
     }
@@ -1212,10 +1219,6 @@ public class HarvestController extends BaseHarvestController {
     return sp;
   }
 // types =======================================================================
-
-  public static class TimePoint {
-    
-  }
   
   /**
    * Custom implementation of SortDirectionStyleMap.

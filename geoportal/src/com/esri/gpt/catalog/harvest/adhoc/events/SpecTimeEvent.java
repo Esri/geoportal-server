@@ -16,6 +16,7 @@
 package com.esri.gpt.catalog.harvest.adhoc.events;
 
 import com.esri.gpt.catalog.harvest.adhoc.IAdHocEvent;
+import com.esri.gpt.framework.jsf.MessageBroker;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -35,12 +36,17 @@ public class SpecTimeEvent implements IAdHocEvent {
   }
 
   @Override
-  public Date getNextHarvestDate(Date lastHarvestDate) {
+  public Date getNextEventDate(Date lastHarvestDate) {
     Date now = new Date();
     if (now.before(specTime)) {
       return specTime;
     }
     return null;
+  }
+
+  @Override
+  public String getLocalizedCaption(MessageBroker broker) {
+    return broker.retrieveMessage(getClass().getCanonicalName(), new Object[]{specTime.toString()});
   }
   
   @Override

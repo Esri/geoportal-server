@@ -13,25 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.catalog.harvest.adhoc;
+package com.esri.gpt.control.harvest;
 
-import com.esri.gpt.framework.jsf.MessageBroker;
-import java.util.Date;
+import com.esri.gpt.catalog.harvest.adhoc.IAdHocEvent;
 
 /**
- * Ad-hoc event.
+ * Time point.
  */
-public interface IAdHocEvent {
+public class TimePoint {
+  private IAdHocEvent event;
+  private String caption;
+  
   /**
-   * Gets next event date.
-   * @param lastEventDate last event date
-   * @return next harvest date or <code>null</code> if no next event date
+   * Creates instance of time point.
+   * @param event event
+   * @param caption caption
    */
-  Date getNextEventDate(Date lastEventDate);
+  public TimePoint(IAdHocEvent event, String caption) {
+    this.event = event;
+    this.caption = caption;
+  }
+  
   /**
-   * Gets localized caption.
-   * @param broker message broker
+   * Gets caption.
    * @return caption
    */
-  String getLocalizedCaption(MessageBroker broker);
+  public String getCaption() {
+    return caption;
+  }
+  
+  /**
+   * Gets event.
+   * @return event
+   */
+  public IAdHocEvent getEvent() {
+    return event;
+  }
 }

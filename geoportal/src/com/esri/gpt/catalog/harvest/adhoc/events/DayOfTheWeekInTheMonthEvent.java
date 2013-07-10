@@ -16,6 +16,7 @@
 package com.esri.gpt.catalog.harvest.adhoc.events;
 
 import com.esri.gpt.catalog.harvest.adhoc.IAdHocEvent;
+import com.esri.gpt.framework.jsf.MessageBroker;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,7 +43,7 @@ public class DayOfTheWeekInTheMonthEvent implements IAdHocEvent {
   }
 
   @Override
-  public Date getNextHarvestDate(Date lastHarvestDate) {
+  public Date getNextEventDate(Date lastHarvestDate) {
     Calendar req = Calendar.getInstance();
     req.set(Calendar.DAY_OF_WEEK_IN_MONTH, (7*dayOfTheMonth)+dayOfTheWeek.getCalendarDay());
     req.set(Calendar.HOUR_OF_DAY, timeOfTheDay.getHours());
@@ -55,6 +56,12 @@ public class DayOfTheWeekInTheMonthEvent implements IAdHocEvent {
       req.add(Calendar.DAY_OF_MONTH, 7);
     }
     return req.getTime();
+  }
+
+  @Override
+  public String getLocalizedCaption(MessageBroker broker) {
+    String dayOfTheWeekString =  broker.retrieveMessage(DayOfTheWeekEvent.DayOfTheWeek.class.getPackage().getName()+"."+dayOfTheWeek.name().toUpperCase());
+    return broker.retrieveMessage(getClass().getCanonicalName(), new Object[]{Integer.toString(dayOfTheMonth), dayOfTheWeekString, SDF.format(timeOfTheDay)});
   }
   
   @Override

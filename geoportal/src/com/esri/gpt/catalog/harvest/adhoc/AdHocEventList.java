@@ -30,7 +30,7 @@ public class AdHocEventList extends ArrayList<IAdHocEvent> {
   public Date getNextHarvestDate(Date lastHarvestDate) {
     Date nextHarvestDate = null;
     for (IAdHocEvent evt: this) {
-      Date date = evt.getNextHarvestDate(lastHarvestDate);
+      Date date = evt.getNextEventDate(lastHarvestDate);
       if (date!=null) {
         if (nextHarvestDate==null || date.before(nextHarvestDate)) {
           nextHarvestDate = date;
