@@ -929,6 +929,14 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 
 <%-- Harvesting time points --%>
 <h:panelGrid columns="1" summary="#{gptMsg['catalog.general.designOnly']}" id="harvestTimes">
+  <h:dataTable id="timePoints" value="#{HarvestController.timePoints}" var="timePoint" styleClass="grid timePoints" rowClasses="rowOdd,rowEven" cellspacing="0" cellpadding="2">
+    <h:column>
+      <f:facet name="header">
+        <h:outputText value="#{gptMsg['com.esri.gpt.catalog.harvest.adhoc.timePoints.caption']}"/>
+      </f:facet>
+      <h:outputText value="#{timePoint.caption}"/>
+    </h:column>  
+  </h:dataTable>
 </h:panelGrid>
 
 <f:verbatim><br/><hr/><br/></f:verbatim>

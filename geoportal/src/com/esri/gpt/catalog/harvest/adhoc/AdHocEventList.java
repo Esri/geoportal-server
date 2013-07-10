@@ -40,15 +40,23 @@ public class AdHocEventList extends ArrayList<IAdHocEvent> {
     return nextHarvestDate;
   }
   
-  @Override
-  public String toString() {
+  /**
+   * Gets events codes.
+   * @return event codes
+   */
+  public String getCodes() {
     StringBuilder sb = new StringBuilder();
     for (IAdHocEvent evt: this) {
       if (sb.length()>0) {
         sb.append("|");
       }
-      sb.append(evt);
+      sb.append(evt.getCode());
     }
     return sb.toString();
+  }
+  
+  @Override
+  public String toString() {
+    return getCodes();
   }
 }

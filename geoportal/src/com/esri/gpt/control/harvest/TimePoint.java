@@ -35,6 +35,14 @@ public class TimePoint {
   }
   
   /**
+   * Gets event code.
+   * @return event code
+   */
+  public String getCode() {
+    return event.toString();
+  }
+  
+  /**
    * Gets caption.
    * @return caption
    */

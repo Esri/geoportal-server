@@ -59,6 +59,11 @@ public class DayOfTheMonthEvent implements IAdHocEvent {
   public String getLocalizedCaption(MessageBroker broker) {
     return broker.retrieveMessage(getClass().getCanonicalName(), new Object[]{Integer.toString(dayOfTheMonth), SDF.format(timeOfTheDay)});
   }
+
+  @Override
+  public String getCode() {
+    return ""+dayOfTheMonth+","+SDF.format(timeOfTheDay);
+  }
   
   @Override
   public String toString() {

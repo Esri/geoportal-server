@@ -55,6 +55,11 @@ public class TimeOfTheDayEvent implements IAdHocEvent {
   public String getLocalizedCaption(MessageBroker broker) {
     return broker.retrieveMessage(getClass().getCanonicalName(), new Object[]{SDF.format(timeOfTheDay)});
   }
+
+  @Override
+  public String getCode() {
+    return SDF.format(timeOfTheDay);
+  }
   
   @Override
   public String toString() {

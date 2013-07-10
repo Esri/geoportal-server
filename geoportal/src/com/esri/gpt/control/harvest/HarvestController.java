@@ -956,7 +956,7 @@ public class HarvestController extends BaseHarvestController {
    * Gets time points.
    * @return list of time points
    */
-  public ArrayList<TimePoint> getTimePoins() {
+  public ArrayList<TimePoint> getTimePoints() {
     MessageBroker broker = extractMessageBroker();
     ArrayList<TimePoint> timePoints = new ArrayList<TimePoint>();
     try {

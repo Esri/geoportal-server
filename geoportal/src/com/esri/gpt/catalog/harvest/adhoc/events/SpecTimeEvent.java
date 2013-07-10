@@ -48,6 +48,11 @@ public class SpecTimeEvent implements IAdHocEvent {
   public String getLocalizedCaption(MessageBroker broker) {
     return broker.retrieveMessage(getClass().getCanonicalName(), new Object[]{specTime.toString()});
   }
+
+  @Override
+  public String getCode() {
+    return SDF.format(specTime);
+  }
   
   @Override
   public String toString() {

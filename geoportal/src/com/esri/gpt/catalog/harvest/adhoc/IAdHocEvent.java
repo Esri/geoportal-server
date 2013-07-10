@@ -23,6 +23,11 @@ import java.util.Date;
  */
 public interface IAdHocEvent {
   /**
+   * Gets event code.
+   * @return event code
+   */
+  String getCode();
+  /**
    * Gets next event date.
    * @param lastEventDate last event date
    * @return next harvest date or <code>null</code> if no next event date

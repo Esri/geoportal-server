@@ -63,6 +63,11 @@ public class DayOfTheWeekInTheMonthEvent implements IAdHocEvent {
     String dayOfTheWeekString =  broker.retrieveMessage(DayOfTheWeekEvent.DayOfTheWeek.class.getPackage().getName()+"."+dayOfTheWeek.name().toUpperCase());
     return broker.retrieveMessage(getClass().getCanonicalName(), new Object[]{Integer.toString(dayOfTheMonth), dayOfTheWeekString, SDF.format(timeOfTheDay)});
   }
+
+  @Override
+  public String getCode() {
+    return ""+dayOfTheMonth+","+dayOfTheWeek+","+SDF.format(timeOfTheDay);
+  }
   
   @Override
   public String toString() {

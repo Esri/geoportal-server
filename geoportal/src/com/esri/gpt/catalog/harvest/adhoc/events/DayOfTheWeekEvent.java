@@ -83,6 +83,11 @@ public class DayOfTheWeekEvent implements IAdHocEvent {
       return calendarDay;
     }
   }
+
+  @Override
+  public String getCode() {
+    return ""+dayOfTheWeek+","+SDF.format(timeOfTheDay);
+  }
   
   @Override
   public String toString() {
