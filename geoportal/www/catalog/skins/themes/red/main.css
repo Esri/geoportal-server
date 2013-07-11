@@ -1510,3 +1510,7 @@ img.datepicker_trigger {
   width: 350px;
   margin-bottom: 10px;
 }
+
+#timeDialog .dijitArrowButton {
+  height: 18px;
+}

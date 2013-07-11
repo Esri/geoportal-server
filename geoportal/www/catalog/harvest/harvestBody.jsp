@@ -49,6 +49,12 @@ String basePath = RequestContext.extract(request).resolveBaseContextPath(request
 }
 </style>
 <script type="text/javascript" >
+dojo.require("dijit.form.TimeTextBox");
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.Select");
+dojo.require("dijit.form.CheckBox");
+dojo.require("dijit.form.RadioButton");
 
 /**
  * Safe function to check if node is checked
@@ -633,6 +639,15 @@ dojo.addOnLoad(function(){
     var timeDialog = dijit.byId("timeDialog");
     timeDialog.show();
   });
+  
+  dojo.connect(dojo.byId("closeTimeDialog"),"onclick",function(evt){
+    var timeDialog = dijit.byId("timeDialog");
+    timeDialog.hide();
+  });
+  
+  dojo.connect(dojo.byId("timeSpecDate"),"onclick",function(evt){
+    dojo.style("timeSpecDateDiv", "display", evt.target.checked? "block": "none");
+  });
 });
 
 function onHarvestFrequencyMode(target) {
@@ -936,24 +951,10 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <f:verbatim>
   <div id="harvestTimes">
     <div id="timePoints" class="timePoints">
-      
     </div>
     <input id="addTime" type="button" value="<fmt:message key="catalog.harvest.manage.addTime.button"/>"/>
   </div>
 </f:verbatim>
-<%-- Harvesting time points --%>
-<%--
-<h:panelGrid columns="1" summary="#{gptMsg['catalog.general.designOnly']}" id="harvestTimes">
-  <h:dataTable id="timePoints" value="#{HarvestController.timePoints}" var="timePoint" styleClass="grid timePoints" rowClasses="rowOdd,rowEven" cellspacing="0" cellpadding="2">
-    <h:column>
-      <f:facet name="header">
-        <h:outputText value="#{gptMsg['com.esri.gpt.catalog.harvest.adhoc.timePoints.caption']}"/>
-      </f:facet>
-      <h:outputText value="#{timePoint.caption}"/>
-    </h:column>  
-  </h:dataTable>
-</h:panelGrid>
---%>
 
 <f:verbatim><br/><hr/><br/></f:verbatim>
 
@@ -1033,6 +1034,37 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
         <input id="closeFoldersDialog" type="button" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.foldersDialog.button.close"/>"/>
   </div>
   <div class="tundra" id="timeDialog" data-dojo-type="dijit.Dialog" data-dojo-id="timeDialog" data-dojo-props="title: '<fmt:message key="catalog.harvest.manage.timeDialog.caption"/>'" style="min-width: 250px;">
-    <input id="closeTimeDialog" type="button" value="<fmt:message key="catalog.harvest.manage.timeDialog.button.close"/>"/>
+    <div>
+      <label for="timeInput"><fmt:message key="catalog.harvest.manage.timeDialog.timeInput.label"/></label>
+      <input type="text" id="timeInput" dojoType="dijit.form.TimeTextBox" constraints="{clickableIncrement: 'T00:15:00', visibleIncrement: 'T00:15:00'}"/>
+    </div>
+    <input type="checkbox" id="timeSpecDate" dojoType="dijit.form.CheckBox"/>
+    <label for="timeSpecDate"><fmt:message key="catalog.harvest.manage.timeDialog.timeSpecDate.label"/></label>
+    <div id="timeSpecDateDiv" style="display: none;">
+      <div>
+        <input type="button" data-dojo-type="dijit.form.RadioButton" id="dateRadio" name="dateStyle"/><label for="dateRadio"><fmt:message key="catalog.harvest.manage.timeDialog.dateStyle.date.label"/></label>
+        <div>
+          <input type="text" id="dateInput" data-dojo-type="dijit.form.DateTextBox"/>
+        </div>
+      </div>
+      <div>
+        <input type="button" data-dojo-type="dijit.form.RadioButton" id="patternRadio" name="dateStyle"/><label for="patternRadio"><fmt:message key="catalog.harvest.manage.timeDialog.dateStyle.pattern.label"/></label>
+        <div>
+          <input type="text" id="dayOfTheMonthInput" data-dojo-type="dijit.form.NumberTextBox"/>
+          <select id="dayOfTheWeekInput" data-dojo-type="dijit.form.Select">
+              <option value="SUNDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SUNDAY"/></option>
+              <option value="MONDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.MONDAY"/></option>
+              <option value="TUEASDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.TUEASDAY"/></option>
+              <option value="WEDNESDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.WEDNESDAY"/></option>
+              <option value="THURSDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.THURSDAY"/></option>
+              <option value="FRIDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.FRIDAY"/></option>
+              <option value="SATURDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SATURDAY"/></option>
+          </select>    
+        </div>
+      </div>
+    </div>
+    <div>
+      <input id="closeTimeDialog" type="button" value="<fmt:message key="catalog.harvest.manage.timeDialog.button.close"/>"/>
+    </div>
   </div>
 </f:verbatim>
