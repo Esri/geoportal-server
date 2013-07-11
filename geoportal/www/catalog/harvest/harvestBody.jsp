@@ -968,13 +968,13 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   value="#{gptMsg['catalog.general.requiredFieldNote']}"/>
 
 <f:verbatim>
-  <div class="tundra" id="ownersDialog" data-dojo-type="dijit.Dialog" data-dojo-id="ownersDialog" title="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.caption"/>" style="min-width: 250px;">
+  <div class="tundra" id="ownersDialog" data-dojo-type="dijit.Dialog" data-dojo-id="ownersDialog" data-dojo-props="title: '<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.caption"/>'" style="min-width: 250px;">
         <label for="ownersSearchText"><fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.lblSearch"/></label>
         <input type="text" id="ownersSearchText" data-type="search"/><input id="searchOwnersDialog" type="button" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.button.search"/>" data-type="search"/>
         <div id="ownersDiv"></div>
         <input id="closeOwnersDialog" type="button" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.button.close"/>"/>
   </div>
-  <div class="tundra" id="foldersDialog" data-dojo-type="dijit.Dialog" data-dojo-id="foldersDialog" title="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.foldersDialog.caption"/>" style="min-width: 250px;">
+  <div class="tundra" id="foldersDialog" data-dojo-type="dijit.Dialog" data-dojo-id="foldersDialog" data-dojo-props="title: '<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.foldersDialog.caption"/>'" style="min-width: 250px;">
         <div id="foldersDiv"></div>
         <input id="closeFoldersDialog" type="button" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.foldersDialog.button.close"/>"/>
   </div>
