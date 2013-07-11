@@ -521,6 +521,7 @@ dojo.addOnLoad(function() {
   
   dojo.addClass(dijit.byId("foldersDialog").domNode,"tundra");
   dojo.addClass(dijit.byId("ownersDialog").domNode,"tundra");
+  dojo.addClass(dijit.byId("timeDialog").domNode,"tundra");
 });
 
 function getSelf() {
@@ -627,11 +628,16 @@ dojo.addOnLoad(function(){
   dojo.query("#harvestCreate\\:harvestFrequencyMode input[checked]").forEach(function(target){
     onHarvestFrequencyMode(target);
   });
+  
+  dojo.connect(dojo.byId("addTime"),"onclick",function(evt){
+    var timeDialog = dijit.byId("timeDialog");
+    timeDialog.show();
+  });
 });
 
 function onHarvestFrequencyMode(target) {
   dojo.query("#harvestCreate\\:harvestFrequency").style("display", target.value=="PERIODICAL"? "block": "none");
-  dojo.query("#harvestCreate\\:harvestTimes").style("display", target.value=="ADHOC"? "block": "none");
+  dojo.query("#harvestTimes").style("display", target.value=="ADHOC"? "block": "none");
 }
 </script>
 
@@ -927,7 +933,16 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <f:selectItem itemValue="skip" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.skip']}"/>
 </h:selectOneRadio>
 
+<f:verbatim>
+  <div id="harvestTimes">
+    <div id="timePoints" class="timePoints">
+      
+    </div>
+    <input id="addTime" type="button" value="<fmt:message key="catalog.harvest.manage.addTime.button"/>"/>
+  </div>
+</f:verbatim>
 <%-- Harvesting time points --%>
+<%--
 <h:panelGrid columns="1" summary="#{gptMsg['catalog.general.designOnly']}" id="harvestTimes">
   <h:dataTable id="timePoints" value="#{HarvestController.timePoints}" var="timePoint" styleClass="grid timePoints" rowClasses="rowOdd,rowEven" cellspacing="0" cellpadding="2">
     <h:column>
@@ -938,6 +953,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
     </h:column>  
   </h:dataTable>
 </h:panelGrid>
+--%>
 
 <f:verbatim><br/><hr/><br/></f:verbatim>
 
@@ -1006,14 +1022,17 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   value="#{gptMsg['catalog.general.requiredFieldNote']}"/>
 
 <f:verbatim>
-  <div class="tundra" id="ownersDialog" data-dojo-type="dijit.Dialog" data-dojo-id="ownersDialog" title="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.caption"/>" style="min-width: 250px;">
+  <div class="tundra" id="ownersDialog" data-dojo-type="dijit.Dialog" data-dojo-id="ownersDialog" data-dojo-props="title: '<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.caption"/>'" style="min-width: 250px;">
         <label for="ownersSearchText"><fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.lblSearch"/></label>
         <input type="text" id="ownersSearchText" data-type="search"/><input id="searchOwnersDialog" type="button" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.button.search"/>" data-type="search"/>
         <div id="ownersDiv"></div>
         <input id="closeOwnersDialog" type="button" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.button.close"/>"/>
   </div>
-  <div class="tundra" id="foldersDialog" data-dojo-type="dijit.Dialog" data-dojo-id="foldersDialog" title="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.foldersDialog.caption"/>" style="min-width: 250px;">
+  <div class="tundra" id="foldersDialog" data-dojo-type="dijit.Dialog" data-dojo-id="foldersDialog" data-dojo-props="title: '<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.foldersDialog.caption"/>'" style="min-width: 250px;">
         <div id="foldersDiv"></div>
         <input id="closeFoldersDialog" type="button" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.foldersDialog.button.close"/>"/>
+  </div>
+  <div class="tundra" id="timeDialog" data-dojo-type="dijit.Dialog" data-dojo-id="timeDialog" data-dojo-props="title: '<fmt:message key="catalog.harvest.manage.timeDialog.caption"/>'" style="min-width: 250px;">
+    <input id="closeTimeDialog" type="button" value="<fmt:message key="catalog.harvest.manage.timeDialog.button.close"/>"/>
   </div>
 </f:verbatim>
