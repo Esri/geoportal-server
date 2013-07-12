@@ -20,6 +20,7 @@ import com.esri.gpt.catalog.harvest.adhoc.factories.DayOfTheWeekEventFactory;
 import com.esri.gpt.catalog.harvest.adhoc.factories.DayOfTheWeekInTheMonthEventFactory;
 import com.esri.gpt.catalog.harvest.adhoc.factories.SpecTimeEventFactory;
 import com.esri.gpt.catalog.harvest.adhoc.factories.TimeOfTheDayEventFactory;
+import com.esri.gpt.framework.util.Val;
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -53,9 +54,12 @@ public class AdHocEventFactoryList extends ArrayList<IAdHocEventFactory>  {
    */
   public AdHocEventList parse(String definition) throws ParseException {
     AdHocEventList list = new AdHocEventList();
-    String[] parts = definition.split("\\|");
-    for (String part: parts) {
-      list.add(parseSingle(part));
+    definition = Val.chkStr(definition);
+    if (!definition.isEmpty()) {
+      String[] parts = definition.split("\\|");
+      for (String part: parts) {
+        list.add(parseSingle(part));
+      }
     }
     return list;
   }

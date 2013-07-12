@@ -370,7 +370,7 @@ public AdHocEventList getAdHocEventList() throws ParseException {
  * @param eventList event list
  */
 public void setAdHocEventList(AdHocEventList eventList) {
-  getProtocol().getAttributeMap().set("ad-hoc", eventList.toString());
+  getProtocol().getAttributeMap().set("ad-hoc", eventList.getCodes());
 }
 
 /**

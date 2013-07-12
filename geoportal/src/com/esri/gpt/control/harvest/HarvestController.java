@@ -18,6 +18,7 @@ import com.esri.gpt.agp.client.AgpCountRequest;
 import com.esri.gpt.agp.sync.AgpDestination;
 import com.esri.gpt.agp.sync.AgpSource;
 import com.esri.gpt.catalog.arcgis.metadata.AGSProcessorConfig;
+import com.esri.gpt.catalog.harvest.adhoc.AdHocEventFactoryList;
 import com.esri.gpt.catalog.harvest.adhoc.AdHocEventList;
 import com.esri.gpt.catalog.harvest.adhoc.IAdHocEvent;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRConnectionException;
@@ -75,6 +76,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.ExternalContext;
@@ -85,36 +87,52 @@ import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
 
 /**
- * Harvest controller.
- * Provides functionality to support *.jsp pages to list, and edit harvest
- * repository data.
+ * Harvest controller. Provides functionality to support *.jsp pages to list,
+ * and edit harvest repository data.
  */
 public class HarvestController extends BaseHarvestController {
 
 // class variables =============================================================
-  /** action expression */
+  /**
+   * action expression
+   */
   private static final String ACTION_EXPRESSION =
-    "#{HarvestController.handleListRepositories}";
-  /** change expression */
+          "#{HarvestController.handleListRepositories}";
+  /**
+   * change expression
+   */
   private static final String CHANGE_EXPRESSION =
-    "#{HarvestController.pageCursorPanel.onChange}";
+          "#{HarvestController.pageCursorPanel.onChange}";
 // instance variables ==========================================================
-  /** Harvest result. */
+  /**
+   * Harvest result.
+   */
   private HrResult _result = new HrResult();
-  /** Repository editor. */
+  /**
+   * Repository editor.
+   */
   private HarvestEditor _editor = new HarvestEditor(new HrRecord());
-  /** Sort direction style map. */
+  /**
+   * Sort direction style map.
+   */
   private BaseSortDirectionStyleMap _sortDirectionStyleMap =
-    new SortDirectionStyleMapImpl();
-  /** Selectable publishers */
+          new SortDirectionStyleMapImpl();
+  /**
+   * Selectable publishers
+   */
   private SelectablePublishers _selectablePublishers = new SelectablePublishers();
-  /** Selectable publishers build */
+  /**
+   * Selectable publishers build
+   */
   private boolean _selectablePublishersBuild;
-  /** synchronization status */
+  /**
+   * synchronization status
+   */
   private String synchronizationStatus = "none";
-  /** info enabled */
+  /**
+   * info enabled
+   */
   private boolean infoEnabled = false;
-
   private ManageMetadataController mmController;
 
 // constructors ================================================================
@@ -137,6 +155,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Gets harvest criteria.
+   *
    * @return harvest criteria
    */
   public HrCriteria getCriteria() {
@@ -145,6 +164,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Sets harvest criteria.
+   *
    * @param criteria harvest criteria
    */
   public void setCriteria(HrCriteria criteria) {
@@ -153,6 +173,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Gets harvest result.
+   *
    * @return harvest result
    */
   public HrResult getResult() {
@@ -161,6 +182,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Sets harvest result.
+   *
    * @param result harvest result
    */
   public void setResult(HrResult result) {
@@ -169,6 +191,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Gets harvest history criteria.
+   *
    * @return harvest history criteria
    */
   public HeCriteria getHistoryCriteria() {
@@ -177,6 +200,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Sets harvest history criteria.
+   *
    * @param historyCriteria harvest history criteria
    */
   public void setHistoryCriteria(HeCriteria historyCriteria) {
@@ -185,6 +209,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Gets harvest repository editor.
+   *
    * @return harvest repository editor
    */
   public HarvestEditor getEditor() {
@@ -193,6 +218,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Sets harvest repository editor.
+   *
    * @param editor harvest repository editor
    */
   public void setEditor(HarvestEditor editor) {
@@ -201,6 +227,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Gets sort direction style map.
+   *
    * @return sort direction style map
    */
   public BaseSortDirectionStyleMap getSortDirectionStyleMap() {
@@ -209,6 +236,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Gets sort direction style.
+   *
    * @return sort direction style
    */
   public SortDirectionStyle getSortDirectionStyle() {
@@ -217,6 +245,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Sets sort direction style.
+   *
    * @param style sort direction style
    */
   public void setSortDirectionStyle(SortDirectionStyle style) {
@@ -225,6 +254,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Gets always false.
+   *
    * @return <code>false</code>
    */
   public boolean getAlwaysFalse() {
@@ -233,6 +263,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Sets always false.
+   *
    * @param ignored ignored parameter
    */
   public void setAlwaysFalse(boolean ignored) {
@@ -240,6 +271,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Gets selectable publishers.
+   *
    * @return selectable publishers
    */
   public SelectablePublishers getSelectablePublishers() {
@@ -252,12 +284,13 @@ public class HarvestController extends BaseHarvestController {
    * <p/>
    * Reads sort columna and sort direction and stores within query criteria
    * object.
+   *
    * @param event the associated JSF action event
    * @throws AbortProcessingException if processing should be aborted
    * @see HarvestContext
    */
   public void handleListRepositories(ActionEvent event)
-    throws AbortProcessingException {
+          throws AbortProcessingException {
 
     try {
       // start execution phase
@@ -274,12 +307,12 @@ public class HarvestController extends BaseHarvestController {
 
       UIComponent component = event.getComponent();
       String sCommand =
-        Val.chkStr((String) component.getAttributes().get("command"));
+              Val.chkStr((String) component.getAttributes().get("command"));
       if (sCommand.equalsIgnoreCase("sort")) {
         String sCol = (String) component.getAttributes().get("column");
         String sDir = (String) component.getAttributes().get("defaultDirection");
         String sCurrCol =
-          getCriteria().getQueryCriteria().getSortOption().getColumnKey();
+                getCriteria().getQueryCriteria().getSortOption().getColumnKey();
         if (sCol.equalsIgnoreCase(sCurrCol)) {
           switch (SortOption.SortDirection.checkValue(sDir)) {
             case asc:
@@ -291,7 +324,7 @@ public class HarvestController extends BaseHarvestController {
           }
         }
         getCriteria().getQueryCriteria().
-          getSortOption().setColumnKey(sCol, true, sDir);
+                getSortOption().setColumnKey(sCol, true, sDir);
       }
 
       // evaluate local id
@@ -302,7 +335,7 @@ public class HarvestController extends BaseHarvestController {
             getCriteria().getQueryCriteria().setLocalId("");
           } else {
             extractMessageBroker().addErrorMessage(
-              "catalog.harvest.manage.message.err.idInv");
+                    "catalog.harvest.manage.message.err.idInv");
           }
         }
       }
@@ -317,11 +350,12 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Handles repository creation.
+   *
    * @param event the associated JSF action event
    * @throws AbortProcessingException if processing should be aborted
    */
   public void handleCreateRepository(ActionEvent event)
-    throws AbortProcessingException {
+          throws AbortProcessingException {
     try {
       // start execution phase
       RequestContext context = onExecutionPhaseStarted();
@@ -343,11 +377,12 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Handles initiating incremental synchronization.
+   *
    * @param event action event
    * @throws AbortProcessingException if processing has been aborted
    */
   public void handleIncSynchronization(ActionEvent event)
-    throws AbortProcessingException {
+          throws AbortProcessingException {
 
     // start execution phase
     RequestContext context = onExecutionPhaseStarted();
@@ -364,11 +399,12 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Handles initiating full synchronization.
+   *
    * @param event action event
    * @throws AbortProcessingException if processing has been aborted
    */
   public void handleFullSynchronization(ActionEvent event)
-    throws AbortProcessingException {
+          throws AbortProcessingException {
 
     // start execution phase
     RequestContext context = onExecutionPhaseStarted();
@@ -386,11 +422,12 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Handles canceling synchronization.
+   *
    * @param event action event
    * @throws AbortProcessingException if processing has been aborted
    */
   public void handleCancelSynchronization(ActionEvent event)
-    throws AbortProcessingException {
+          throws AbortProcessingException {
 
     // start execution phase
     RequestContext context = onExecutionPhaseStarted();
@@ -410,14 +447,15 @@ public class HarvestController extends BaseHarvestController {
     handleUpdateRepository(event);
     getMmController().processAction(event);
   }
-  
+
   /**
    * Updates repository repository.
+   *
    * @param event the associated JSF action event
    * @throws AbortProcessingException if processing should be aborted
    */
   public void handleUpdateRepository(ActionEvent event)
-    throws AbortProcessingException {
+          throws AbortProcessingException {
 
     // start execution phase
     RequestContext context = onExecutionPhaseStarted();
@@ -426,7 +464,7 @@ public class HarvestController extends BaseHarvestController {
 
       // copy ownership
       Publisher owner = getSelectablePublishers().selectedAsPublisher(context, true);
-      if (owner!=null) {
+      if (owner != null) {
         getEditor().getRepository().setOwnerId(owner.getLocalID());
       }
       getEditor().prepareForUpdate();
@@ -435,7 +473,7 @@ public class HarvestController extends BaseHarvestController {
         boolean creating = req.execute();
 
         extractMessageBroker().addSuccessMessage(
-          creating ? "catalog.harvest.manage.message.create.2" : "catalog.harvest.manage.message.update.2");
+                creating ? "catalog.harvest.manage.message.create.2" : "catalog.harvest.manage.message.update.2");
       }
 
     } catch (ValidationException e) {
@@ -472,11 +510,12 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Checks connection to the remote server.
+   *
    * @param event the associated JSF action event
    * @throws AbortProcessingException if processing should be aborted
    */
   public void handleTestConnection(ActionEvent event)
-    throws AbortProcessingException {
+          throws AbortProcessingException {
     try {
       // start execution phase
       RequestContext context = onExecutionPhaseStarted();
@@ -490,63 +529,63 @@ public class HarvestController extends BaseHarvestController {
       request.execute();
 
       extractMessageBroker().addSuccessMessage(
-        "catalog.harvest.manage.test.success");
+              "catalog.harvest.manage.test.success");
 
     } catch (HRInvalidProtocolException ex) {
       switch (ex.getElement()) {
         case url:
           extractMessageBroker().addErrorMessage(
-            "catalog.harvest.manage.test.err.HarvestInvalidUrl");
+                  "catalog.harvest.manage.test.err.HarvestInvalidUrl");
           break;
         case portNo:
           extractMessageBroker().addErrorMessage(
-            "catalog.harvest.manage.test.err.HarvestInvalidPortNo");
+                  "catalog.harvest.manage.test.err.HarvestInvalidPortNo");
           break;
         case sourceUri:
           extractMessageBroker().addErrorMessage(
-            "catalog.harvest.manage.test.err.HarvestInvalidSourceURI");
+                  "catalog.harvest.manage.test.err.HarvestInvalidSourceURI");
           break;
         case userName:
           extractMessageBroker().addErrorMessage(
-            "catalog.harvest.manage.test.err.HarvestInvalidUserName");
+                  "catalog.harvest.manage.test.err.HarvestInvalidUserName");
           break;
         case userPassword:
           extractMessageBroker().addErrorMessage(
-            "catalog.harvest.manage.test.err.HarvestInvalidUserPassword");
+                  "catalog.harvest.manage.test.err.HarvestInvalidUserPassword");
           break;
         case serviceName:
           extractMessageBroker().addErrorMessage(
-            "catalog.harvest.manage.test.err.HarvestInvalidServiceName");
+                  "catalog.harvest.manage.test.err.HarvestInvalidServiceName");
           break;
         case set:
           extractMessageBroker().addErrorMessage(
-            "catalog.harvest.manage.test.err.HarvestInvalidSet");
+                  "catalog.harvest.manage.test.err.HarvestInvalidSet");
           break;
         case prefix:
           extractMessageBroker().addErrorMessage(
-            "catalog.harvest.manage.test.err.HarvestInvalidPrefix");
+                  "catalog.harvest.manage.test.err.HarvestInvalidPrefix");
           break;
         case databaseName:
           extractMessageBroker().addErrorMessage(
-            "catalog.harvest.manage.test.err.HarvestInvalidDatabaseName");
+                  "catalog.harvest.manage.test.err.HarvestInvalidDatabaseName");
           break;
         default:
           extractMessageBroker().addErrorMessage(
-            "catalog.harvest.manage.test.err.HarvestInvalidArgumentException");
+                  "catalog.harvest.manage.test.err.HarvestInvalidArgumentException");
           break;
       }
       LogUtil.getLogger().log(Level.FINE, "Exception raised.", ex);
     } catch (HRTimeoutException ex) {
       extractMessageBroker().addErrorMessage(
-        "catalog.harvest.manage.test.err.HarvestTimeoutException");
+              "catalog.harvest.manage.test.err.HarvestTimeoutException");
       LogUtil.getLogger().log(Level.FINE, "Exception raised.", ex);
     } catch (HRInvalidResponseException ex) {
       extractMessageBroker().addErrorMessage(
-        "catalog.harvest.manage.test.err.HarvestInvalidResponseException");
+              "catalog.harvest.manage.test.err.HarvestInvalidResponseException");
       LogUtil.getLogger().log(Level.FINE, "Exception raised.", ex);
     } catch (HRConnectionException ex) {
       extractMessageBroker().addErrorMessage(
-        "catalog.harvest.manage.test.err.HarvestConnectionException");
+              "catalog.harvest.manage.test.err.HarvestConnectionException");
       LogUtil.getLogger().log(Level.FINE, "Exception raised.", ex);
     } catch (AbortProcessingException e) {
       throw (e);
@@ -557,96 +596,96 @@ public class HarvestController extends BaseHarvestController {
     }
 
   }
-  
+
   public void handleTestAgp2AgpQuery(ActionEvent event)
-    throws AbortProcessingException {
+          throws AbortProcessingException {
     try {
       // start execution phase
       RequestContext context = onExecutionPhaseStarted();
       Protocol protocol = this.getEditor().getRepository().getProtocol();
       if (protocol instanceof HarvestProtocolAgp2Agp) {
-        HarvestProtocolAgp2Agp agp2agp = (HarvestProtocolAgp2Agp)protocol;
+        HarvestProtocolAgp2Agp agp2agp = (HarvestProtocolAgp2Agp) protocol;
         AgpSource source = agp2agp.getSource();
-        
+
         boolean stop = false;
         if (source.getConnection().getHost().isEmpty()) {
           extractMessageBroker().addErrorMessage(
-            "catalog.harvest.manage.test.err.agp2agp.src.nohost");
+                  "catalog.harvest.manage.test.err.agp2agp.src.nohost");
           stop = true;
         }
-        
+
         if (source.getConnection().getTokenCriteria().getCredentials().getUsername().isEmpty() || source.getConnection().getTokenCriteria().getCredentials().getPassword().isEmpty()) {
           extractMessageBroker().addErrorMessage(
-            "catalog.harvest.manage.test.err.agp2agp.src.nocredentials");
+                  "catalog.harvest.manage.test.err.agp2agp.src.nocredentials");
           stop = true;
         }
 
         if (source.getSearchCriteria().getQ().isEmpty()) {
           extractMessageBroker().addErrorMessage(
-            "catalog.harvest.manage.test.err.agp2agp.src.noquery");
+                  "catalog.harvest.manage.test.err.agp2agp.src.noquery");
           stop = true;
         }
-        
+
         if (!stop) {
           source.getConnection().generateToken();
           AgpCountRequest sourceRequest = new AgpCountRequest();
-          long count = sourceRequest.count(source.getConnection(),source.getSearchCriteria());
+          long count = sourceRequest.count(source.getConnection(), source.getSearchCriteria());
           String srcM = getEditor().getRepository().getProtocol().getAttributeMap().getValue("src-m");
           long max = Val.chkLong(srcM, 0);
           long apx = Math.min(count, max);
-          
+
           extractMessageBroker().addSuccessMessage(
-            "catalog.harvest.manage.test.msg.agp2agp.success", new Object[]{apx});
+                  "catalog.harvest.manage.test.msg.agp2agp.success", new Object[]{apx});
         }
       }
     } catch (Exception ex) {
-          extractMessageBroker().addErrorMessage(
-            "catalog.harvest.manage.test.err.agp2agp.connect",new Object[]{ex.getMessage()});
+      extractMessageBroker().addErrorMessage(
+              "catalog.harvest.manage.test.err.agp2agp.connect", new Object[]{ex.getMessage()});
     } finally {
       onExecutionPhaseCompleted();
     }
   }
-  
+
   public void handleTestAgp2AgpClient(ActionEvent event)
-    throws AbortProcessingException {
+          throws AbortProcessingException {
     try {
       // start execution phase
       RequestContext context = onExecutionPhaseStarted();
       Protocol protocol = this.getEditor().getRepository().getProtocol();
       if (protocol instanceof HarvestProtocolAgp2Agp) {
-        HarvestProtocolAgp2Agp agp2agp = (HarvestProtocolAgp2Agp)protocol;
+        HarvestProtocolAgp2Agp agp2agp = (HarvestProtocolAgp2Agp) protocol;
         AgpDestination destination = agp2agp.getDestination();
-        
+
         boolean stop = false;
         if (destination.getConnection().getHost().isEmpty()) {
           extractMessageBroker().addErrorMessage(
-            "catalog.harvest.manage.test.err.agp2agp.dst.nohost");
+                  "catalog.harvest.manage.test.err.agp2agp.dst.nohost");
           stop = true;
         }
-        
+
         if (destination.getConnection().getTokenCriteria().getCredentials().getUsername().isEmpty() || destination.getConnection().getTokenCriteria().getCredentials().getPassword().isEmpty()) {
           extractMessageBroker().addErrorMessage(
-            "catalog.harvest.manage.test.err.agp2agp.dst.nocredentials");
+                  "catalog.harvest.manage.test.err.agp2agp.dst.nocredentials");
           stop = true;
         }
-        
+
         if (!stop) {
           destination.getConnection().generateToken();
           extractMessageBroker().addSuccessMessage(
-            "catalog.harvest.manage.test.msg.agp2agp.confirmed");
+                  "catalog.harvest.manage.test.msg.agp2agp.confirmed");
         }
       }
     } catch (Exception ex) {
-          extractMessageBroker().addErrorMessage(
-            "catalog.harvest.manage.test.err.agp2agp.connect",new Object[]{ex.getMessage()});
+      extractMessageBroker().addErrorMessage(
+              "catalog.harvest.manage.test.err.agp2agp.connect", new Object[]{ex.getMessage()});
     } finally {
       onExecutionPhaseCompleted();
     }
-  }  
-  
-  
+  }
+
   /**
    * <i>Execute</i> button action handler.
+   *
    * @return navigation outcome
    */
   public String onClickButtonExecuteAction() {
@@ -659,10 +698,10 @@ public class HarvestController extends BaseHarvestController {
 
       // get action
       HrActionCriteria.RepositoryAction action =
-        getCriteria().getActionCriteria().getAction();
+              getCriteria().getActionCriteria().getAction();
 
       StringSet uuids =
-        getCriteria().getActionCriteria().getSelectedRecordIdSet();
+              getCriteria().getActionCriteria().getSelectedRecordIdSet();
 
       String[] aUuids = uuids.toArray(new String[uuids.size()]);
 
@@ -676,24 +715,24 @@ public class HarvestController extends BaseHarvestController {
             return "catalog.harvest.manage.edit";
           } else {
             extractMessageBroker().addErrorMessage(
-              "catalog.harvest.manage.message.err.selection");
+                    "catalog.harvest.manage.message.err.selection");
           }
           break;
         case Delete:
           HrDeleteRequest request = new HrDeleteRequest(context, aUuids);
           request.execute();
           int nRecordsDeleted =
-            request.getActionResult().getNumberOfRecordsModified();
+                  request.getActionResult().getNumberOfRecordsModified();
           if (aUuids.length > 0) {
             extractMessageBroker().addSuccessMessage(
-              "catalog.harvest.manage.message.deleted",
-              new Object[]{
-                Integer.toString(nRecordsDeleted),
-                Integer.toString(aUuids.length)
-              });
+                    "catalog.harvest.manage.message.deleted",
+                    new Object[]{
+              Integer.toString(nRecordsDeleted),
+              Integer.toString(aUuids.length)
+            });
           } else {
             extractMessageBroker().addErrorMessage(
-              "catalog.harvest.manage.message.err.atLeast");
+                    "catalog.harvest.manage.message.err.atLeast");
           }
           break;
         case History:
@@ -702,7 +741,7 @@ public class HarvestController extends BaseHarvestController {
             return "catalog.harvest.manage.history";
           } else {
             extractMessageBroker().addErrorMessage(
-              "catalog.harvest.manage.message.err.selection");
+                    "catalog.harvest.manage.message.err.selection");
           }
           break;
         case Synchronize:
@@ -724,6 +763,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Prepares page to display list of harvest repositories.
+   *
    * @return empty string
    */
   public String getListRepositoriesView() {
@@ -737,12 +777,12 @@ public class HarvestController extends BaseHarvestController {
 
       getResult().getQueryResult().getRecords().clear();
       if (getCriteria().getActionCriteria().getAction()
-        == HrActionCriteria.RepositoryAction.Unknown) {
+              == HrActionCriteria.RepositoryAction.Unknown) {
         getCriteria().getActionCriteria().
-          setAction(HrActionCriteria.RepositoryAction.Create);
+                setAction(HrActionCriteria.RepositoryAction.Create);
       }
       HrSelectRequest request =
-        new HrSelectRequest(context, getCriteria(), getResult(), isAdministrator(context));
+              new HrSelectRequest(context, getCriteria(), getResult(), isAdministrator(context));
       request.execute();
 
     } catch (NotAuthorizedException e) {
@@ -763,17 +803,19 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Does post-preparation of the list of harvest repositories.
+   *
    * @return empty string
    */
   public String getListRepositoriesPostView() {
     // build the UI components associated with the PageCursorPanel
     getPageCursorPanel().setPageCursor(
-      getResult().getQueryResult().getPageCursor());
+            getResult().getQueryResult().getPageCursor());
     return "";
   }
 
   /**
    * Prepares page to display edited repository.
+   *
    * @return empty string
    */
   public String getEditRepositoryView() {
@@ -809,6 +851,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Sets synchronization status.
+   *
    * @param status synchronization status
    */
   public void setSynchronizationStatus(String status) {
@@ -817,6 +860,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Gets synchronization status.
+   *
    * @return synchronization status.
    */
   public String getSynchronizationStatus() {
@@ -825,6 +869,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Gets synchronization statistics.
+   *
    * @return synchronization statistics
    */
   public String getSynchronizationStatistics() {
@@ -852,6 +897,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Prepares selected publishers.
+   *
    * @return empty string
    */
   public String getPrepareSelectedPublishers() {
@@ -884,11 +930,11 @@ public class HarvestController extends BaseHarvestController {
             // if does not exist, try to finf him and add to this list
             if (!bExist) {
               Users allSelectablePublishers =
-                Publisher.buildSelectablePublishers(context, true);
+                      Publisher.buildSelectablePublishers(context, true);
               User owner = allSelectablePublishers.get(uDN);
               if (owner != null) {
                 getSelectablePublishers().getItems().add(
-                  new SelectItem(owner.getKey(), owner.getName()));
+                        new SelectItem(owner.getKey(), owner.getName()));
               }
             }
             // at least, select it
@@ -909,6 +955,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Companion to {@link HarvestController#getPrepareSelectedPublishers}
+   *
    * @param ignore ignored argument
    */
   public void setPrepareSelectedPublishers(String ignore) {
@@ -918,6 +965,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Sets info enabled.
+   *
    * @param enabled <code>true</code> to enabled info.
    */
   public void setInfoEnabled(boolean enabled) {
@@ -926,6 +974,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Checks if info enabled.
+   *
    * @return <code>true</code> if info enabled.
    */
   public boolean getInfoEnabled() {
@@ -934,6 +983,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Gets protocols eligible to choose.
+   *
    * @return collection of protocols eligible to choose
    */
   public ArrayList<SelectItem> getProtocols() {
@@ -942,18 +992,21 @@ public class HarvestController extends BaseHarvestController {
     ApplicationContext appCtx = ApplicationContext.getInstance();
     ApplicationConfiguration appCfg = appCtx.getConfiguration();
     ProtocolFactories protocolFactories = appCfg.getProtocolFactories();
-    for (String key: protocolFactories.getKeys()) {
+    for (String key : protocolFactories.getKeys()) {
       ProtocolFactory pf = protocolFactories.get(key);
-      if (pf instanceof AgpProtocolFactory && !AGSProcessorConfig.isAvailable()) continue;
+      if (pf instanceof AgpProtocolFactory && !AGSProcessorConfig.isAvailable()) {
+        continue;
+      }
       String resourceKey = protocolFactories.getResourceKey(key);
       SelectItem item = new SelectItem(key.toLowerCase(), msgBroker.retrieveMessage(resourceKey));
       protocols.add(item);
     }
     return protocols;
   }
-  
+
   /**
    * Gets time points.
+   *
    * @return list of time points
    */
   public ArrayList<TimePoint> getTimePoints() {
@@ -961,7 +1014,7 @@ public class HarvestController extends BaseHarvestController {
     ArrayList<TimePoint> timePoints = new ArrayList<TimePoint>();
     try {
       AdHocEventList adHocEventList = getEditor().getRepository().getAdHocEventList();
-      for (IAdHocEvent evt: adHocEventList) {
+      for (IAdHocEvent evt : adHocEventList) {
         String localizedCaption = evt.getLocalizedCaption(broker);
         TimePoint tp = new TimePoint(evt, localizedCaption);
         timePoints.add(tp);
@@ -971,8 +1024,61 @@ public class HarvestController extends BaseHarvestController {
     return timePoints;
   }
 
+  public void setTimeMessages(String timeMessages) {
+    // intentionally left empty
+  }
+  
+  public String getTimeMessages() {
+    MessageBroker broker = extractMessageBroker();
+
+    try {
+      StringBuilder sb = new StringBuilder();
+      AdHocEventList adHocEventList = getEditor().getRepository().getAdHocEventList();
+      for (IAdHocEvent evt : adHocEventList) {
+        String localizedCaption = evt.getLocalizedCaption(broker);
+        if (sb.length() > 0) {
+          sb.append("|");
+        }
+        sb.append(localizedCaption);
+      }
+
+      return sb.toString();
+    } catch (ParseException ex) {
+      return "";
+    }
+  }
+
+  /**
+   * Gets time codes.
+   *
+   * @return time codes.
+   */
+  public String getTimeCodes() {
+    try {
+      AdHocEventList adHocEventList = getEditor().getRepository().getAdHocEventList();
+      return adHocEventList.getCodes();
+    } catch (ParseException ex) {
+      return "";
+    }
+  }
+
+  /**
+   * Sets time codes.
+   *
+   * @param timeCodes time codes
+   */
+  public void setTimeCodes(String timeCodes) {
+    try {
+      AdHocEventList adHocEventList = AdHocEventFactoryList.getInstance().parse(timeCodes);
+      getEditor().getRepository().setAdHocEventList(adHocEventList);
+    } catch (ParseException ex) {
+      getEditor().getRepository().setAdHocEventList(new AdHocEventList());
+    }
+  }
+
   /**
    * Creates editor.
+   *
    * @param context request context
    * @param reload <code>true</code> to reload repository
    * @throws SQLException if accessing database fails
@@ -985,7 +1091,7 @@ public class HarvestController extends BaseHarvestController {
 
     boolean doInit = false;
     boolean doClear = false;
-    
+
     if (UuidUtil.isUuid(uuid)) {
       if (!getEditor().getRepository().getUuid().equals(uuid) || reload) {
         RequestContext rc = new FacesContextBroker().extractRequestContext();
@@ -998,7 +1104,7 @@ public class HarvestController extends BaseHarvestController {
         } else {
           doClear = true;
           extractMessageBroker().addErrorMessage(
-            "catalog.harvest.manage.message.err.missing");
+                  "catalog.harvest.manage.message.err.missing");
         }
       }
     } else {
@@ -1027,24 +1133,25 @@ public class HarvestController extends BaseHarvestController {
     } else if (record.getRecentJobStatus() == RecentJobStatus.Canceled) {
       setSynchronizationStatus("canceled");
     } else if (record.getHarvestFrequency() != HarvestFrequency.Skip
-      && record.getHarvestFrequency() != HarvestFrequency.Once
-      && ApprovalStatus.isPubliclyVisible(record.getApprovalStatus().name())
-      && record.getSynchronizable()) {
+            && record.getHarvestFrequency() != HarvestFrequency.Once
+            && ApprovalStatus.isPubliclyVisible(record.getApprovalStatus().name())
+            && record.getSynchronizable()) {
       setSynchronizationStatus("scheduled");
     } else {
       setSynchronizationStatus("none");
     }
 
     setInfoEnabled(UuidUtil.isUuid(record.getUuid()) && ApprovalStatus.isPubliclyVisible(record.getApprovalStatus().name()) && record.getSynchronizable());
-    
+
     HarvestEditor harvestEditor = new HarvestEditor(record);
     harvestEditor.prepareForEdit();
-    
+
     setEditor(harvestEditor);
   }
 
   /**
    * Submits incremental synchronization request.
+   *
    * @param context request context
    * @throws Exception if performing operation fails
    */
@@ -1065,28 +1172,29 @@ public class HarvestController extends BaseHarvestController {
     String[] aUuids = uuids.toArray(new String[uuids.size()]);
 
     HrHarvestRequest hrvNowRequest =
-      new HrHarvestRequest(context,
-      aUuids,
-      HjRecord.JobType.Now,
-      getCriteria(),
-      getResult());
+            new HrHarvestRequest(context,
+            aUuids,
+            HjRecord.JobType.Now,
+            getCriteria(),
+            getResult());
     hrvNowRequest.execute();
 
     if (hrvNowRequest.getActionResult().getNumberOfRecordsModified() > 0) {
       extractMessageBroker().addSuccessMessage(
-        "catalog.harvest.manage.message.synchronized",
-        new Object[]{Integer.toString(hrvNowRequest.getActionResult().
-          getNumberOfRecordsModified())
-        });
+              "catalog.harvest.manage.message.synchronized",
+              new Object[]{Integer.toString(hrvNowRequest.getActionResult().
+        getNumberOfRecordsModified())
+      });
     } else {
       extractMessageBroker().addSuccessMessage(
-        "catalog.harvest.manage.message.synchronized.none");
+              "catalog.harvest.manage.message.synchronized.none");
     }
 
   }
 
   /**
    * Submits full synchronization request.
+   *
    * @param context request context
    * @throws Exception if performing operation fails
    */
@@ -1106,27 +1214,28 @@ public class HarvestController extends BaseHarvestController {
     String[] aUuids = uuids.toArray(new String[uuids.size()]);
 
     HrHarvestRequest hrvFullRequest =
-      new HrHarvestRequest(context,
-      aUuids,
-      HjRecord.JobType.Full,
-      getCriteria(),
-      getResult());
+            new HrHarvestRequest(context,
+            aUuids,
+            HjRecord.JobType.Full,
+            getCriteria(),
+            getResult());
     hrvFullRequest.execute();
 
     if (hrvFullRequest.getActionResult().getNumberOfRecordsModified() > 0) {
       extractMessageBroker().addSuccessMessage(
-        "catalog.harvest.manage.message.synchronized",
-        new Object[]{Integer.toString(hrvFullRequest.getActionResult().
-          getNumberOfRecordsModified())
-        });
+              "catalog.harvest.manage.message.synchronized",
+              new Object[]{Integer.toString(hrvFullRequest.getActionResult().
+        getNumberOfRecordsModified())
+      });
     } else {
       extractMessageBroker().addSuccessMessage(
-        "catalog.harvest.manage.message.synchronized.none");
+              "catalog.harvest.manage.message.synchronized.none");
     }
   }
 
   /**
    * Submits cancel synchronization request.
+   *
    * @param context request context
    * @throws Exception if performing operation fails
    */
@@ -1153,24 +1262,26 @@ public class HarvestController extends BaseHarvestController {
     }
 
     extractMessageBroker().addSuccessMessage(
-      "catalog.harvest.manage.message.canceled",
-      new Object[]{Integer.toString(canceledCount)});
+            "catalog.harvest.manage.message.canceled",
+            new Object[]{Integer.toString(canceledCount)});
   }
 
   /**
    * Checks if user is administrator.
+   *
    * @param context request context
    * @return <code>true</code> if user is administrator
    */
   private boolean isAdministrator(RequestContext context) {
     return context.getUser() != null
-      && context.getUser().getAuthenticationStatus().getWasAuthenticated()
-      && context.getUser().getAuthenticationStatus().
-      getAuthenticatedRoles().hasRole("gptAdministrator");
+            && context.getUser().getAuthenticationStatus().getWasAuthenticated()
+            && context.getUser().getAuthenticationStatus().
+            getAuthenticatedRoles().hasRole("gptAdministrator");
   }
 
   /**
    * Encodes selected item.
+   *
    * @param si selected item to encode
    * @return encoded selected item
    */
@@ -1180,17 +1291,19 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Decodes selected item.
+   *
    * @param siData selected item to decode
    * @return decoded selected item
    */
   private SelectItem decodeSelectItem(String siData) {
     String[] elements = Val.chkStr(siData).split("\t");
     return new SelectItem(elements.length > 1 ? elements[1] : "",
-      elements.length > 0 ? elements[0] : "");
+            elements.length > 0 ? elements[0] : "");
   }
 
   /**
    * Encodes selectable publishers.
+   *
    * @param sp selectable publishers to encode
    * @return encoded selected publishers
    */
@@ -1207,6 +1320,7 @@ public class HarvestController extends BaseHarvestController {
 
   /**
    * Decodes selectable publishers.
+   *
    * @param spData selectable publishers to decode
    * @return decoded selectable publishers
    */
@@ -1219,7 +1333,7 @@ public class HarvestController extends BaseHarvestController {
     return sp;
   }
 // types =======================================================================
-  
+
   /**
    * Custom implementation of SortDirectionStyleMap.
    */
@@ -1227,6 +1341,7 @@ public class HarvestController extends BaseHarvestController {
 
     /**
      * Gets sort option.
+     *
      * @return sort option
      */
     @Override

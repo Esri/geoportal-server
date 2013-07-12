@@ -1514,3 +1514,23 @@ img.datepicker_trigger {
 #timeDialog .dijitArrowButton {
   height: 18px;
 }
+
+#timeDialog #buttonsDiv {
+  margin-top: 10px;
+}
+
+#harvestCreate .timePointDiv {
+  padding: 2px;
+}
+
+#harvestCreate .timePointSpan {
+  
+}
+
+#harvestCreate .timePointDelete {
+  float: right;
+  cursor: pointer;
+  background-image: url(images/Preview_Decline_16.png);
+  width: 16px;
+  height: 16px;
+}

@@ -56,6 +56,32 @@ dojo.require("dijit.form.Select");
 dojo.require("dijit.form.CheckBox");
 dojo.require("dijit.form.RadioButton");
 
+var RES = {
+  SpecTimeEvent:               "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SpecTimeEvent"/>",
+  TimeOfTheDayEvent:           "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.TimeOfTheDayEvent"/>",
+  DayOfTheMonthEvent:          "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.DayOfTheMonthEvent"/>",
+  DayOfTheWeekEvent:           "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.DayOfTheWeekEvent"/>",
+  DayOfTheWeekInTheMonthEvent: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.DayOfTheWeekInTheMonthEvent"/>",
+
+  DayOfTheWeek: [
+    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SUNDAY"/>",
+    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.MONDAY"/>",
+    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.TUEASDAY"/>",
+    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.WEDNESDAY"/>",
+    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.THURSDAY"/>",
+    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.FRIDAY"/>",
+    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SATURDAY"/>"
+  ],
+          
+  SUNDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SUNDAY"/>",
+  MONDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.MONDAY"/>",
+  TUEASDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.TUEASDAY"/>",
+  WEDNESDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.WEDNESDAY"/>",
+  THURSDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.THURSDAY"/>",
+  FRIDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.FRIDAY"/>",
+  SATURDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SATURDAY"/>"
+};
+
 /**
  * Safe function to check if node is checked
  */
@@ -648,12 +674,150 @@ dojo.addOnLoad(function(){
   dojo.connect(dojo.byId("timeSpecDate"),"onclick",function(evt){
     dojo.style("timeSpecDateDiv", "display", evt.target.checked? "block": "none");
   });
+  
+  dojo.connect(dojo.byId("addTimeDialog"), "onclick", function(evt){
+    var timePoint = getTimePoint();
+    if (timePoint && timePoint.code.length>0 && timePoint.msg.length>0) {
+      var timeDialog = dijit.byId("timeDialog");
+      timeDialog.hide();
+      addTimePoint(timePoint);
+    }
+  });
+  
+  if (getRadio()=="") {
+    setRadio("DATE");
+  }
+  
+  var timeCodes = dojo.attr(dojo.byId("timeCodes"),"value").split("|");
+  var timeMessages = dojo.attr(dojo.byId("timeMessages"),"value").split("|");
+  
+  if (timeCodes.length == timeMessages.length) {
+    for (i=0; i<timeCodes.length; i++) {
+      var timePoint = {
+        code: timeCodes[i],
+        msg: timeMessages[i]
+      };
+      addTimePoint(timePoint);
+    }
+  }
 });
 
 function onHarvestFrequencyMode(target) {
   dojo.query("#harvestCreate\\:harvestFrequency").style("display", target.value=="PERIODICAL"? "block": "none");
   dojo.query("#harvestTimes").style("display", target.value=="ADHOC"? "block": "none");
 }
+
+function getTimePoint() {
+  var timePoint = {
+    code: "",
+    msg: ""
+  };
+
+  var timeInput = dijit.byId("timeInput");
+  var time = timeInput.get('value');
+  
+  if (time!=null) {
+    var hours = strLPad(time.getHours(),2,"0");
+    var minutes = strLPad(time.getMinutes(),2,"0");
+
+    var timeString = hours +":"+minutes;
+
+    if (!dojo.attr("timeSpecDate","checked")) {
+      timePoint.code = timeString;
+      timePoint.msg = RES.TimeOfTheDayEvent.replace("\{0\}",timeString);
+    } else {
+      switch (getRadio()) {
+        case "DATE":
+          var dateInput = dijit.byId("dateInput");
+          var date = dateInput.get("value");
+          if (date!=null) {
+            var year = strLPad(date.getFullYear(),4,"0");
+            var month = strLPad(date.getMonth()+1,2,"0");
+            var day = strLPad(date.getDate(),2,"0");
+
+            var dateString = year+"-"+month+"-"+day;
+
+            timePoint.code = dateString +"T"+ timeString;
+            timePoint.msg = RES.SpecTimeEvent.replace("\{0\}",dateString +" "+ timeString);
+          }
+          break;
+        case "PATTERN":
+          var dayOfTheWeek = dijit.byId("dayOfTheWeekInput").get("value");
+          var dayOfTheMonthInput=dijit.byId("dayOfTheMonthInput").get("value");
+          if (Number.isNaN(dayOfTheMonthInput)) {
+            timePoint.code = dayOfTheWeek +"," + timeString;
+            timePoint.msg = RES.DayOfTheWeekEvent.replace("\{0\}",dayOfTheWeek).replace("\{1\}",timeString);
+          } else {
+            timePoint.code = dayOfTheMonthInput + "," + dayOfTheWeek +"," + timeString;
+            timePoint.msg = RES.DayOfTheWeekInTheMonthEvent.replace("\{0\}",dayOfTheMonthInput).replace("\{1\}",dayOfTheWeek).replace("\{2\}",timeString);
+          }
+          break;
+      }
+    }
+  }
+  
+  return timePoint;
+}
+
+function getRadio() {
+  var dateRadio = dijit.byId("dateRadio");
+  var patternRadio = dijit.byId("patternRadio");
+  
+  if (dateRadio.get("value")=="on") {
+    return "DATE";
+  } else if (patternRadio.get("value")=="on") {
+    return "PATTERN";
+  } else {
+    return "";
+  }
+}
+
+function setRadio(value) {
+  var dateRadio = dijit.byId("dateRadio");
+  var patternRadio = dijit.byId("patternRadio");
+  
+  switch (value) {
+    case "DATE":
+      dateRadio.set("value","on");
+      patternRadio.set("value",false);
+      break;
+    case "PATTERN":
+      dateRadio.set("value",false);
+      patternRadio.set("value","on");
+      break;
+    default:
+      dateRadio.set("value",false);
+      patternRadio.set("value",false);
+  }
+}
+
+function strLPad(str,len,ch) {
+  str = ""+str;
+  while (str.length<len) {
+    str = ch + str;
+  }
+  return str;
+}
+
+function addTimePoint(timePoint) {
+  var timePoints = dojo.byId("timePoints");
+  
+  var timePointDiv = dojo.create("div",{"class": "timePointDiv"},timePoints);
+  var timePointSpan = dojo.create("span",{innerHTML: timePoint.msg, "class": "timePointSpan"}, timePointDiv);
+  var timePointDelete = dojo.create("span",{"class": "timePointDelete"}, timePointDiv);
+  dojo.attr(timePointDiv, "data-time-code", timePoint.code);
+  
+  dojo.connect(timePointDelete,"onclick",dojo.hitch({timePointDiv: timePointDiv},function(evt){
+    this.timePointDiv.remove();
+  }));
+  
+  dojo.attr("harvestCreate:timeCodes","value",collectTimeCodes());
+}
+
+function collectTimeCodes() {
+  return dojo.query(".timePointDiv").attr("data-time-code").join("|");
+}
+
 </script>
 
 </f:verbatim>
@@ -686,6 +850,10 @@ value="#{HarvestController.prepareSelectedPublishers}"/>
 
 <%-- lock title flag --%>
 <h:inputHidden id="lockTitle" value="#{HarvestController.editor.lockTitle}"/>
+
+<%-- time codes --%>
+<h:inputHidden id="timeCodes" value="#{HarvestController.timeCodes}"/>
+<h:inputHidden id="timeMessages" value="#{HarvestController.timeMessages}"/>
 
 <%-- Repository id -----------------------------------------------------------%>  
 <h:panelGrid columns="2" summary="#{gptMsg['catalog.general.designOnly']}"
@@ -1063,7 +1231,8 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
         </div>
       </div>
     </div>
-    <div>
+    <div id="buttonsDiv">
+      <input id="addTimeDialog" type="button" value="<fmt:message key="catalog.harvest.manage.timeDialog.button.add"/>"/>
       <input id="closeTimeDialog" type="button" value="<fmt:message key="catalog.harvest.manage.timeDialog.button.close"/>"/>
     </div>
   </div>
