@@ -14,6 +14,8 @@
  */
 package com.esri.gpt.control.harvest;
 
+import com.esri.gpt.catalog.harvest.adhoc.AdHocEventFactoryList;
+import com.esri.gpt.catalog.harvest.adhoc.AdHocEventList;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocol.ProtocolType;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolResource;
@@ -33,6 +35,7 @@ import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.jsf.FacesMap;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -569,6 +572,24 @@ public void setFrequencyModeAsString(String frequencyMode) {
   } catch (IllegalArgumentException ex) {
     this.frequencyMode = FrequencyMode.PERIODICAL;
   }
+}
+
+/**
+ * Gets time codes.
+ *
+ * @return time codes.
+ */
+public String getTimeCodes() {
+  return _harvestRepository.getProtocol().getAdHoc();
+}
+
+/**
+ * Sets time codes.
+ *
+ * @param timeCodes time codes
+ */
+public void setTimeCodes(String timeCodes) {
+  _harvestRepository.getProtocol().setAdHoc(timeCodes);
 }
 
 public static enum FrequencyMode {

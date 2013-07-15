@@ -362,7 +362,7 @@ public Date getNextHarvestDate() {
  * @throws ParseException if parsing "ad-hoc" attribute fails
  */
 public AdHocEventList getAdHocEventList() throws ParseException {
-  return AdHocEventFactoryList.getInstance().parse(Val.chkStr(getProtocol().getAttributeMap().getValue("ad-hoc")));
+  return AdHocEventFactoryList.getInstance().parse(Val.chkStr(getProtocol().getAdHoc()));
 }
 
 /**
@@ -370,7 +370,7 @@ public AdHocEventList getAdHocEventList() throws ParseException {
  * @param eventList event list
  */
 public void setAdHocEventList(AdHocEventList eventList) {
-  getProtocol().getAttributeMap().set("ad-hoc", eventList.getCodes());
+  getProtocol().setAdHoc(eventList.getCodes());
 }
 
 /**

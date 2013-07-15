@@ -688,16 +688,18 @@ dojo.addOnLoad(function(){
     setRadio("DATE");
   }
   
-  var timeCodes = dojo.attr(dojo.byId("timeCodes"),"value").split("|");
-  var timeMessages = dojo.attr(dojo.byId("timeMessages"),"value").split("|");
+  var timeCodes = dojo.attr("harvestCreate:timeCodes","value").split("|");
+  var timeMessages = dojo.attr("harvestCreate:timeMessages","value").split("|");
   
   if (timeCodes.length == timeMessages.length) {
     for (i=0; i<timeCodes.length; i++) {
-      var timePoint = {
-        code: timeCodes[i],
-        msg: timeMessages[i]
-      };
-      addTimePoint(timePoint);
+      if (timeCodes[i].length>0) {
+        var timePoint = {
+          code: timeCodes[i],
+          msg: timeMessages[i]
+        };
+        addTimePoint(timePoint);
+      }
     }
   }
 });

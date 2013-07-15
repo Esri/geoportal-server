@@ -103,6 +103,8 @@ public class HarvestController extends BaseHarvestController {
    */
   private static final String CHANGE_EXPRESSION =
           "#{HarvestController.pageCursorPanel.onChange}";
+  
+  private static String _timeCodes = "";
 // instance variables ==========================================================
   /**
    * Harvest result.
@@ -461,7 +463,9 @@ public class HarvestController extends BaseHarvestController {
     RequestContext context = onExecutionPhaseStarted();
 
     try {
-
+      getEditor().setTimeCodes(_timeCodes);
+      _timeCodes = "";
+      
       // copy ownership
       Publisher owner = getSelectablePublishers().selectedAsPublisher(context, true);
       if (owner != null) {
@@ -1048,33 +1052,24 @@ public class HarvestController extends BaseHarvestController {
     }
   }
 
-  /**
-   * Gets time codes.
-   *
-   * @return time codes.
-   */
-  public String getTimeCodes() {
-    try {
-      AdHocEventList adHocEventList = getEditor().getRepository().getAdHocEventList();
-      return adHocEventList.getCodes();
-    } catch (ParseException ex) {
-      return "";
-    }
-  }
+/**
+ * Gets time codes.
+ *
+ * @return time codes.
+ */
+public String getTimeCodes() {
+  return getEditor().getTimeCodes();
+}
 
-  /**
-   * Sets time codes.
-   *
-   * @param timeCodes time codes
-   */
-  public void setTimeCodes(String timeCodes) {
-    try {
-      AdHocEventList adHocEventList = AdHocEventFactoryList.getInstance().parse(timeCodes);
-      getEditor().getRepository().setAdHocEventList(adHocEventList);
-    } catch (ParseException ex) {
-      getEditor().getRepository().setAdHocEventList(new AdHocEventList());
-    }
-  }
+/**
+ * Sets time codes.
+ *
+ * @param timeCodes time codes
+ */
+public void setTimeCodes(String timeCodes) {
+  this._timeCodes = timeCodes;
+  getEditor().setTimeCodes(timeCodes);
+}
 
   /**
    * Creates editor.

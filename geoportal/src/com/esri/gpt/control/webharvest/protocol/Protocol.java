@@ -64,4 +64,14 @@ public interface Protocol {
    * @return query builder
    */
   public abstract QueryBuilder newQueryBuilder(IterationContext context, String url);
+  /**
+   * Gets ad-hoc harvesting info.
+   * @return ad-hoc
+   */
+  String getAdHoc();
+  /**
+   * Sets ad-hoc info.
+   * @param adHoc ad-hoc iinfo
+   */
+  void setAdHoc(String adHoc);
 }
