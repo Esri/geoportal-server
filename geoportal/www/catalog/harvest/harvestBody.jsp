@@ -269,6 +269,7 @@ var synchronizableClicked = false;
 
 // store original harvesting options just received from the bean
 dojo.addOnLoad(function() {
+  dojo.query("body").addClass("tundra");
   storeHarvestingOptions();
   dojo.query("#harvestCreate\\:synchronizable").onclick(function(node){
     if (!synchronizableClicked && node.target.checked) {

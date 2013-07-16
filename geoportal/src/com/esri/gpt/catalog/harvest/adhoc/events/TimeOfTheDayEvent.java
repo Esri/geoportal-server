@@ -45,10 +45,24 @@ public class TimeOfTheDayEvent implements IAdHocEvent {
     req.set(Calendar.MILLISECOND, 0);
     
     Calendar now = Calendar.getInstance();
+    Calendar lhc = getCalendar(lastHarvestDate);
+    if (now.after(req) && (lhc==null || req.after(lhc))) {
+      return req.getTime();
+    }
     while (now.after(req)) {
       req.add(Calendar.DAY_OF_MONTH, 1);
     }
     return req.getTime();
+  }
+  
+  private Calendar getCalendar(Date date) {
+    if (date!=null) {
+      Calendar cal = Calendar.getInstance();
+      cal.setTime(date);
+      return cal;
+    } else {
+      return null;
+    }
   }
 
   @Override
