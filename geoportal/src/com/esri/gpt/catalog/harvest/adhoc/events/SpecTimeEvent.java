@@ -15,15 +15,15 @@
  */
 package com.esri.gpt.catalog.harvest.adhoc.events;
 
-import com.esri.gpt.catalog.harvest.adhoc.IAdHocEvent;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
  * Specific time ad-hoc event.
  */
-public class SpecTimeEvent implements IAdHocEvent {
+public class SpecTimeEvent extends AdHocEvent {
   private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
   private Date specTime;
   
@@ -38,6 +38,12 @@ public class SpecTimeEvent implements IAdHocEvent {
   @Override
   public Date getNextEventDate(Date lastHarvestDate) {
     Date now = new Date();
+    Calendar lhc = getCalendar(lastHarvestDate);
+    Calendar stc = Calendar.getInstance();
+    stc.setTime(specTime);
+    if (now.after(specTime) && (lhc==null || stc.after(lhc))) {
+      return specTime;
+    }
     if (now.before(specTime)) {
       return specTime;
     }

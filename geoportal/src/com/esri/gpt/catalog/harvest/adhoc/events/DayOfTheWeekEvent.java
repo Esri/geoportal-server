@@ -15,7 +15,6 @@
  */
 package com.esri.gpt.catalog.harvest.adhoc.events;
 
-import com.esri.gpt.catalog.harvest.adhoc.IAdHocEvent;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,7 +23,7 @@ import java.util.Date;
 /**
  * Day of the week ad-hoc event.
  */
-public class DayOfTheWeekEvent implements IAdHocEvent {
+public class DayOfTheWeekEvent extends AdHocEvent {
   private static final SimpleDateFormat SDF = new SimpleDateFormat("HH:mm");
   private DayOfTheWeek dayOfTheWeek;
   private Date timeOfTheDay;
@@ -49,6 +48,10 @@ public class DayOfTheWeekEvent implements IAdHocEvent {
     req.set(Calendar.MILLISECOND, 0);
     
     Calendar now = Calendar.getInstance();
+    Calendar lhc = getCalendar(lastHarvestDate);
+    if (now.after(req) && (lhc==null || req.after(lhc))) {
+      return req.getTime();
+    }
     while (now.after(req)) {
       req.add(Calendar.DAY_OF_MONTH, 7);
     }
