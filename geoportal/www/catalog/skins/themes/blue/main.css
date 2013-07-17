@@ -1502,11 +1502,13 @@ img.datepicker_trigger {
 }
 
 #harvestCreate .timePoints {
-  min-height: 100px;
+  min-height: 110px;
+  max-height: 110px;
   min-width: 350px;
   border: lightgrey solid 1px;
   width: 350px;
   margin-bottom: 10px;
+  overflow-y: scroll;
 }
 
 #timeDialog .dijitArrowButton {

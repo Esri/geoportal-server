@@ -1224,6 +1224,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
         <div>
           <input type="text" id="dayOfTheMonthInput" data-dojo-type="dijit.form.NumberTextBox"/>
           <select id="dayOfTheWeekInput" data-dojo-type="dijit.form.Select">
+              <option value="" selected="true">----------</option>
               <option value="SUNDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SUNDAY"/></option>
               <option value="MONDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.MONDAY"/></option>
               <option value="TUEASDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.TUEASDAY"/></option>
