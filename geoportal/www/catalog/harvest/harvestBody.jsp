@@ -748,11 +748,18 @@ function getTimePoint() {
           var dayOfTheWeek = dijit.byId("dayOfTheWeekInput").get("value");
           var dayOfTheMonthInput=dijit.byId("dayOfTheMonthInput").get("value");
           if (Number.isNaN(dayOfTheMonthInput)) {
-            timePoint.code = dayOfTheWeek +"," + timeString;
-            timePoint.msg = RES.DayOfTheWeekEvent.replace("\{0\}",dayOfTheWeek).replace("\{1\}",timeString);
+            if (dayOfTheWeek.length>0) {
+              timePoint.code = dayOfTheWeek +"," + timeString;
+              timePoint.msg = RES.DayOfTheWeekEvent.replace("\{0\}",dayOfTheWeek).replace("\{1\}",timeString);
+            }
           } else {
-            timePoint.code = dayOfTheMonthInput + "," + dayOfTheWeek +"," + timeString;
-            timePoint.msg = RES.DayOfTheWeekInTheMonthEvent.replace("\{0\}",dayOfTheMonthInput).replace("\{1\}",dayOfTheWeek).replace("\{2\}",timeString);
+            if (dayOfTheWeek.length>0) {
+              timePoint.code = dayOfTheMonthInput + "," + dayOfTheWeek +"," + timeString;
+              timePoint.msg = RES.DayOfTheWeekInTheMonthEvent.replace("\{0\}",dayOfTheMonthInput).replace("\{1\}",dayOfTheWeek).replace("\{2\}",timeString);
+            } else {
+              timePoint.code = dayOfTheMonthInput + "," + timeString;
+              timePoint.msg = RES.DayOfTheMonthEvent.replace("\{0\}",dayOfTheMonthInput).replace("\{1\}",timeString);
+            }
           }
           break;
       }
