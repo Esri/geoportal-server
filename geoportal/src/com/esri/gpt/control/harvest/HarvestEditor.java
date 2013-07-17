@@ -14,6 +14,8 @@
  */
 package com.esri.gpt.control.harvest;
 
+import com.esri.gpt.catalog.harvest.adhoc.AdHocEventFactoryList;
+import com.esri.gpt.catalog.harvest.adhoc.AdHocEventList;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocol.ProtocolType;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolResource;
@@ -33,6 +35,7 @@ import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.jsf.FacesMap;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -72,6 +75,8 @@ private TreeMap<String,Protocol> protocols = new TreeMap<String,Protocol>(String
 
 private boolean arcgisDotComAllowed;
 private boolean crossAllowed;
+
+private FrequencyMode frequencyMode = FrequencyMode.PERIODICAL;
 
 // constructors ================================================================
 /**
@@ -398,6 +403,32 @@ public void setApprovalStatus(String status) {
 // methods =====================================================================
 
 /**
+ * Prepares repository for edit.
+ */
+public void prepareForEdit() {
+  switch (getRepository().getHarvestFrequency()) {
+    case AdHoc:
+      setFrequencyMode(FrequencyMode.ADHOC);
+      getRepository().setHarvestFrequency(HrRecord.HarvestFrequency.Skip);
+      break;
+    default:
+      setFrequencyMode(FrequencyMode.PERIODICAL);
+      getRepository().clearAdHocEventList();
+  }
+}
+
+/**
+ * Prepares repository for update.
+ */
+public void prepareForUpdate() {
+  if (getFrequencyMode()== FrequencyMode.ADHOC) {
+    getRepository().setHarvestFrequency(HrRecord.HarvestFrequency.AdHoc);
+  } else {
+    getRepository().clearAdHocEventList();
+  }
+}
+
+/**
  * Validates entered content.
  * @param mb message broker
  * @return <code>true</code> if data is valid
@@ -520,5 +551,49 @@ public boolean validate(MessageBroker mb) {
 @Override
 public String toString() {
   return _harvestRepository.toString();
+}
+
+public FrequencyMode getFrequencyMode() {
+  return frequencyMode;
+}
+
+public void setFrequencyMode(FrequencyMode frequencyMode) {
+  this.frequencyMode = frequencyMode;
+}
+
+public String getFrequencyModeAsString() {
+  return frequencyMode.name();
+}
+
+public void setFrequencyModeAsString(String frequencyMode) {
+  frequencyMode = Val.chkStr(frequencyMode);
+  try {
+    this.frequencyMode = FrequencyMode.valueOf(frequencyMode.toUpperCase());
+  } catch (IllegalArgumentException ex) {
+    this.frequencyMode = FrequencyMode.PERIODICAL;
+  }
+}
+
+/**
+ * Gets time codes.
+ *
+ * @return time codes.
+ */
+public String getTimeCodes() {
+  return _harvestRepository.getProtocol().getAdHoc();
+}
+
+/**
+ * Sets time codes.
+ *
+ * @param timeCodes time codes
+ */
+public void setTimeCodes(String timeCodes) {
+  _harvestRepository.getProtocol().setAdHoc(timeCodes);
+}
+
+public static enum FrequencyMode {
+  PERIODICAL,
+  ADHOC
 }
 }

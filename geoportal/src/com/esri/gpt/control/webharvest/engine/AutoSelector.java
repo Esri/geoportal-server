@@ -80,9 +80,16 @@ public void run() {
 
         // get the one record with the closes due date but not due yet
         HrRecord nextDue = records.findNextDue();
-
+        
         // caluclate duration in milliseconds
-        duration = nextDue != null ? nextDue.getNextHarvestDate().getTime() - (new Date()).getTime() : autoSelectFrequency;
+        if (nextDue!=null) {
+          Date nextHarvestDate = nextDue.getNextHarvestDate();
+          duration = nextHarvestDate.getTime() - (new Date()).getTime() ;
+          LOGGER.log(Level.INFO,"[SYNCHRONIZER] Next synchronization time : "+nextHarvestDate.toString()+" has been determined based on scheduling of "+nextDue.getUuid()+"/\""+nextDue.getName()+"\" harvesting site.");
+        } else {
+          duration = autoSelectFrequency;
+          LOGGER.log(Level.INFO,"[SYNCHRONIZER] Next synchronization time couldn't been determined at this time.");
+        }
         
         // clear attempt counter
         attempt = 0;

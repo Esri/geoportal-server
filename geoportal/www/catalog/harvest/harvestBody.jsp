@@ -49,6 +49,38 @@ String basePath = RequestContext.extract(request).resolveBaseContextPath(request
 }
 </style>
 <script type="text/javascript" >
+dojo.require("dijit.form.TimeTextBox");
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.Select");
+dojo.require("dijit.form.CheckBox");
+dojo.require("dijit.form.RadioButton");
+
+var RES = {
+  SpecTimeEvent:               "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SpecTimeEvent"/>",
+  TimeOfTheDayEvent:           "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.TimeOfTheDayEvent"/>",
+  DayOfTheMonthEvent:          "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.DayOfTheMonthEvent"/>",
+  DayOfTheWeekEvent:           "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.DayOfTheWeekEvent"/>",
+  DayOfTheWeekInTheMonthEvent: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.DayOfTheWeekInTheMonthEvent"/>",
+
+  DayOfTheWeek: [
+    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SUNDAY"/>",
+    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.MONDAY"/>",
+    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.TUEASDAY"/>",
+    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.WEDNESDAY"/>",
+    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.THURSDAY"/>",
+    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.FRIDAY"/>",
+    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SATURDAY"/>"
+  ],
+          
+  SUNDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SUNDAY"/>",
+  MONDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.MONDAY"/>",
+  TUEASDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.TUEASDAY"/>",
+  WEDNESDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.WEDNESDAY"/>",
+  THURSDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.THURSDAY"/>",
+  FRIDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.FRIDAY"/>",
+  SATURDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SATURDAY"/>"
+};
 
 /**
  * Safe function to check if node is checked
@@ -237,6 +269,7 @@ var synchronizableClicked = false;
 
 // store original harvesting options just received from the bean
 dojo.addOnLoad(function() {
+  dojo.query("body").addClass("tundra");
   storeHarvestingOptions();
   dojo.query("#harvestCreate\\:synchronizable").onclick(function(node){
     if (!synchronizableClicked && node.target.checked) {
@@ -521,6 +554,7 @@ dojo.addOnLoad(function() {
   
   dojo.addClass(dijit.byId("foldersDialog").domNode,"tundra");
   dojo.addClass(dijit.byId("ownersDialog").domNode,"tundra");
+  dojo.addClass(dijit.byId("timeDialog").domNode,"tundra");
 });
 
 function getSelf() {
@@ -617,6 +651,184 @@ function searchFolders() {
     var folderDiv = dojo.create("div",{innerHTML: '<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.norecords"/>'},foldersDiv);
   });
 }
+
+dojo.addOnLoad(function(){
+  dojo.query("#harvestCreate\\:harvestFrequencyMode input").onchange(function(evt){
+    var target = evt.target;
+    onHarvestFrequencyMode(target);
+    
+  });
+  dojo.query("#harvestCreate\\:harvestFrequencyMode input[checked]").forEach(function(target){
+    onHarvestFrequencyMode(target);
+  });
+  
+  dojo.connect(dojo.byId("addTime"),"onclick",function(evt){
+    var timeDialog = dijit.byId("timeDialog");
+    timeDialog.show();
+  });
+  
+  dojo.connect(dojo.byId("closeTimeDialog"),"onclick",function(evt){
+    var timeDialog = dijit.byId("timeDialog");
+    timeDialog.hide();
+  });
+  
+  dojo.connect(dojo.byId("timeSpecDate"),"onclick",function(evt){
+    dojo.style("timeSpecDateDiv", "display", evt.target.checked? "block": "none");
+  });
+  
+  dojo.connect(dojo.byId("addTimeDialog"), "onclick", function(evt){
+    var timePoint = getTimePoint();
+    if (timePoint && timePoint.code.length>0 && timePoint.msg.length>0) {
+      var timeDialog = dijit.byId("timeDialog");
+      timeDialog.hide();
+      addTimePoint(timePoint);
+    }
+  });
+  
+  if (getRadio()=="") {
+    setRadio("DATE");
+  }
+  
+  var timeCodes = dojo.attr("harvestCreate:timeCodes","value").split("|");
+  var timeMessages = dojo.attr("harvestCreate:timeMessages","value").split("|");
+  
+  if (timeCodes.length == timeMessages.length) {
+    for (i=0; i<timeCodes.length; i++) {
+      if (timeCodes[i].length>0) {
+        var timePoint = {
+          code: timeCodes[i],
+          msg: timeMessages[i]
+        };
+        addTimePoint(timePoint);
+      }
+    }
+  }
+});
+
+function onHarvestFrequencyMode(target) {
+  dojo.query("#harvestCreate\\:harvestFrequency").style("display", target.value=="PERIODICAL"? "block": "none");
+  dojo.query("#harvestTimes").style("display", target.value=="ADHOC"? "block": "none");
+}
+
+function getTimePoint() {
+  var timePoint = {
+    code: "",
+    msg: ""
+  };
+
+  var timeInput = dijit.byId("timeInput");
+  var time = timeInput.get('value');
+  
+  if (time!=null) {
+    var hours = strLPad(time.getHours(),2,"0");
+    var minutes = strLPad(time.getMinutes(),2,"0");
+
+    var timeString = hours +":"+minutes;
+
+    if (!dojo.attr("timeSpecDate","checked")) {
+      timePoint.code = timeString;
+      timePoint.msg = RES.TimeOfTheDayEvent.replace("\{0\}",timeString);
+    } else {
+      switch (getRadio()) {
+        case "DATE":
+          var dateInput = dijit.byId("dateInput");
+          var date = dateInput.get("value");
+          if (date!=null) {
+            var year = strLPad(date.getFullYear(),4,"0");
+            var month = strLPad(date.getMonth()+1,2,"0");
+            var day = strLPad(date.getDate(),2,"0");
+
+            var dateString = year+"-"+month+"-"+day;
+
+            timePoint.code = dateString +"T"+ timeString;
+            timePoint.msg = RES.SpecTimeEvent.replace("\{0\}",dateString +" "+ timeString);
+          }
+          break;
+        case "PATTERN":
+          var dayOfTheWeek = dijit.byId("dayOfTheWeekInput").get("value");
+          var dayOfTheMonthInput=dijit.byId("dayOfTheMonthInput").get("value");
+          if (Number.isNaN(dayOfTheMonthInput)) {
+            if (dayOfTheWeek.length>0) {
+              timePoint.code = dayOfTheWeek +"," + timeString;
+              timePoint.msg = RES.DayOfTheWeekEvent.replace("\{0\}",dayOfTheWeek).replace("\{1\}",timeString);
+            }
+          } else {
+            if (dayOfTheWeek.length>0) {
+              timePoint.code = dayOfTheMonthInput + "," + dayOfTheWeek +"," + timeString;
+              timePoint.msg = RES.DayOfTheWeekInTheMonthEvent.replace("\{0\}",dayOfTheMonthInput).replace("\{1\}",dayOfTheWeek).replace("\{2\}",timeString);
+            } else {
+              timePoint.code = dayOfTheMonthInput + "," + timeString;
+              timePoint.msg = RES.DayOfTheMonthEvent.replace("\{0\}",dayOfTheMonthInput).replace("\{1\}",timeString);
+            }
+          }
+          break;
+      }
+    }
+  }
+  
+  return timePoint;
+}
+
+function getRadio() {
+  var dateRadio = dijit.byId("dateRadio");
+  var patternRadio = dijit.byId("patternRadio");
+  
+  if (dateRadio.get("value")=="on") {
+    return "DATE";
+  } else if (patternRadio.get("value")=="on") {
+    return "PATTERN";
+  } else {
+    return "";
+  }
+}
+
+function setRadio(value) {
+  var dateRadio = dijit.byId("dateRadio");
+  var patternRadio = dijit.byId("patternRadio");
+  
+  switch (value) {
+    case "DATE":
+      dateRadio.set("value","on");
+      patternRadio.set("value",false);
+      break;
+    case "PATTERN":
+      dateRadio.set("value",false);
+      patternRadio.set("value","on");
+      break;
+    default:
+      dateRadio.set("value",false);
+      patternRadio.set("value",false);
+  }
+}
+
+function strLPad(str,len,ch) {
+  str = ""+str;
+  while (str.length<len) {
+    str = ch + str;
+  }
+  return str;
+}
+
+function addTimePoint(timePoint) {
+  var timePoints = dojo.byId("timePoints");
+  
+  var timePointDiv = dojo.create("div",{"class": "timePointDiv"},timePoints);
+  var timePointSpan = dojo.create("span",{innerHTML: timePoint.msg, "class": "timePointSpan"}, timePointDiv);
+  var timePointDelete = dojo.create("span",{"class": "timePointDelete"}, timePointDiv);
+  dojo.attr(timePointDiv, "data-time-code", timePoint.code);
+  
+  dojo.connect(timePointDelete,"onclick",dojo.hitch({timePointDiv: timePointDiv},function(evt){
+    this.timePointDiv.remove();
+    dojo.attr("harvestCreate:timeCodes","value",collectTimeCodes());
+  }));
+  
+  dojo.attr("harvestCreate:timeCodes","value",collectTimeCodes());
+}
+
+function collectTimeCodes() {
+  return dojo.query(".timePointDiv").attr("data-time-code").join("|");
+}
+
 </script>
 
 </f:verbatim>
@@ -649,6 +861,10 @@ value="#{HarvestController.prepareSelectedPublishers}"/>
 
 <%-- lock title flag --%>
 <h:inputHidden id="lockTitle" value="#{HarvestController.editor.lockTitle}"/>
+
+<%-- time codes --%>
+<h:inputHidden id="timeCodes" value="#{HarvestController.timeCodes}"/>
+<h:inputHidden id="timeMessages" value="#{HarvestController.timeMessages}"/>
 
 <%-- Repository id -----------------------------------------------------------%>  
 <h:panelGrid columns="2" summary="#{gptMsg['catalog.general.designOnly']}"
@@ -888,9 +1104,19 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 </h:panelGrid>
 
 <f:verbatim><br/></f:verbatim>
-
+  
 <%-- Harvesting frequency --%>
 <h:outputText styleClass="syncOptSpec" value="#{gptMsg['catalog.harvest.manage.edit.frequency.caption']}"/>
+
+<%-- Harvesting frequency mode --%>
+<h:selectOneRadio styleClass="syncOptSpecMode" value="#{HarvestController.editor.frequencyModeAsString}" id="harvestFrequencyMode">
+<f:selectItem itemValue="PERIODICAL" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.periodical']}"/>
+<f:selectItem itemValue="ADHOC" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.adhoc']}"/>
+</h:selectOneRadio>
+
+<f:verbatim><br/></f:verbatim>
+
+<%-- Harvesting period --%>
 <h:selectOneRadio styleClass="syncOptSpec" layout="pageDirection" value="#{HarvestController.editor.harvestFrequency}" id="harvestFrequency">
 <f:selectItem itemValue="monthly" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.monthly']}"/>
 <f:selectItem itemValue="biweekly" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.biweekly']}"/>
@@ -900,6 +1126,14 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <f:selectItem itemValue="once" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.once']}"/>
 <f:selectItem itemValue="skip" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.skip']}"/>
 </h:selectOneRadio>
+
+<f:verbatim>
+  <div id="harvestTimes">
+    <div id="timePoints" class="timePoints">
+    </div>
+    <input id="addTime" type="button" value="<fmt:message key="catalog.harvest.manage.addTime.button"/>"/>
+  </div>
+</f:verbatim>
 
 <f:verbatim><br/><hr/><br/></f:verbatim>
 
@@ -977,5 +1211,41 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   <div class="tundra" id="foldersDialog" data-dojo-type="dijit.Dialog" data-dojo-id="foldersDialog" data-dojo-props="title: '<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.foldersDialog.caption"/>'" style="min-width: 250px;">
         <div id="foldersDiv"></div>
         <input id="closeFoldersDialog" type="button" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.foldersDialog.button.close"/>"/>
+  </div>
+  <div class="tundra" id="timeDialog" data-dojo-type="dijit.Dialog" data-dojo-id="timeDialog" data-dojo-props="title: '<fmt:message key="catalog.harvest.manage.timeDialog.caption"/>'" style="min-width: 250px;">
+    <div>
+      <label for="timeInput"><fmt:message key="catalog.harvest.manage.timeDialog.timeInput.label"/></label>
+      <input type="text" id="timeInput" dojoType="dijit.form.TimeTextBox" constraints="{clickableIncrement: 'T00:15:00', visibleIncrement: 'T00:15:00'}"/>
+    </div>
+    <input type="checkbox" id="timeSpecDate" dojoType="dijit.form.CheckBox"/>
+    <label for="timeSpecDate"><fmt:message key="catalog.harvest.manage.timeDialog.timeSpecDate.label"/></label>
+    <div id="timeSpecDateDiv" style="display: none;">
+      <div>
+        <input type="button" data-dojo-type="dijit.form.RadioButton" id="dateRadio" name="dateStyle"/><label for="dateRadio"><fmt:message key="catalog.harvest.manage.timeDialog.dateStyle.date.label"/></label>
+        <div>
+          <input type="text" id="dateInput" data-dojo-type="dijit.form.DateTextBox"/>
+        </div>
+      </div>
+      <div>
+        <input type="button" data-dojo-type="dijit.form.RadioButton" id="patternRadio" name="dateStyle"/><label for="patternRadio"><fmt:message key="catalog.harvest.manage.timeDialog.dateStyle.pattern.label"/></label>
+        <div>
+          <input type="text" id="dayOfTheMonthInput" data-dojo-type="dijit.form.NumberTextBox"/>
+          <select id="dayOfTheWeekInput" data-dojo-type="dijit.form.Select">
+              <option value="" selected="true">----------</option>
+              <option value="SUNDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SUNDAY"/></option>
+              <option value="MONDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.MONDAY"/></option>
+              <option value="TUEASDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.TUEASDAY"/></option>
+              <option value="WEDNESDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.WEDNESDAY"/></option>
+              <option value="THURSDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.THURSDAY"/></option>
+              <option value="FRIDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.FRIDAY"/></option>
+              <option value="SATURDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SATURDAY"/></option>
+          </select>    
+        </div>
+      </div>
+    </div>
+    <div id="buttonsDiv">
+      <input id="addTimeDialog" type="button" value="<fmt:message key="catalog.harvest.manage.timeDialog.button.add"/>"/>
+      <input id="closeTimeDialog" type="button" value="<fmt:message key="catalog.harvest.manage.timeDialog.button.close"/>"/>
+    </div>
   </div>
 </f:verbatim>
