@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.catalog.harvest.adhoc.factories;
+package com.esri.gpt.framework.adhoc.factories;
 
-import com.esri.gpt.catalog.harvest.adhoc.IAdHocEvent;
-import com.esri.gpt.catalog.harvest.adhoc.IAdHocEventFactory;
-import com.esri.gpt.catalog.harvest.adhoc.events.SpecTimeEvent;
+import com.esri.gpt.framework.adhoc.IAdHocEvent;
+import com.esri.gpt.framework.adhoc.IAdHocEventFactory;
+import com.esri.gpt.framework.adhoc.events.SpecTimeEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 

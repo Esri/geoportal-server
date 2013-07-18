@@ -15,7 +15,7 @@
  */
 package com.esri.gpt.control.harvest;
 
-import com.esri.gpt.catalog.harvest.adhoc.IAdHocEvent;
+import com.esri.gpt.framework.adhoc.IAdHocEvent;
 
 /**
  * Time point.

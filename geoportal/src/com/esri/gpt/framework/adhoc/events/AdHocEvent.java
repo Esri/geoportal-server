@@ -13,30 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.catalog.harvest.adhoc;
+package com.esri.gpt.framework.adhoc.events;
 
-import com.esri.gpt.framework.jsf.MessageBroker;
+import com.esri.gpt.framework.adhoc.IAdHocEvent;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Ad-hoc event.
+ * Abstract ad-hoc event.
  */
-public interface IAdHocEvent {
+public abstract class AdHocEvent implements IAdHocEvent {
+  
   /**
-   * Gets event code.
-   * @return event code
+   * Gets calendar for a date.
+   * @param date date
+   * @return calendar or <code>null</code> if date is <code>null</code>
    */
-  String getCode();
-  /**
-   * Gets next event date.
-   * @param lastEventDate last event date
-   * @return next harvest date or <code>null</code> if no next event date
-   */
-  Date getNextEventDate(Date lastEventDate);
-  /**
-   * Gets localized caption.
-   * @param broker message broker
-   * @return caption
-   */
-  String getLocalizedCaption(MessageBroker broker);
+  protected Calendar getCalendar(Date date) {
+    if (date!=null) {
+      Calendar cal = Calendar.getInstance();
+      cal.setTime(date);
+      return cal;
+    } else {
+      return null;
+    }
+  }
+  
 }

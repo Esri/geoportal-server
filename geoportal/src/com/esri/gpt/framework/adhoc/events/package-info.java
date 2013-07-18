@@ -15,6 +15,6 @@
  */
 
 /**
- * Ad-Hoc harvesting related classes.
+ * Events.
  */
-package com.esri.gpt.catalog.harvest.adhoc;
+package com.esri.gpt.framework.adhoc.events;

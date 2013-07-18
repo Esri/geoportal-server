@@ -13,8 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.esri.gpt.framework.adhoc;
 
 /**
- * Events.
+ * Ad-hoc event factory.
  */
-package com.esri.gpt.catalog.harvest.adhoc.events;
+public interface IAdHocEventFactory {
+  /**
+   * Parses event definition.
+   * @param definition definition
+   * @return instance of the event or <code>null</code> if event can not be parsed
+   */
+  IAdHocEvent parse(String definition);
+}

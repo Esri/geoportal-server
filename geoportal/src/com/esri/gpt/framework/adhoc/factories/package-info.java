@@ -17,4 +17,4 @@
 /**
  * Event factories.
  */
-package com.esri.gpt.catalog.harvest.adhoc.factories;
+package com.esri.gpt.framework.adhoc.factories;

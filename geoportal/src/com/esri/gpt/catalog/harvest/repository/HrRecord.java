@@ -14,8 +14,8 @@
  */
 package com.esri.gpt.catalog.harvest.repository;
 
-import com.esri.gpt.catalog.harvest.adhoc.AdHocEventFactoryList;
-import com.esri.gpt.catalog.harvest.adhoc.AdHocEventList;
+import com.esri.gpt.framework.adhoc.AdHocEventFactoryList;
+import com.esri.gpt.framework.adhoc.AdHocEventList;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRConnectionException;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidProtocolException;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;

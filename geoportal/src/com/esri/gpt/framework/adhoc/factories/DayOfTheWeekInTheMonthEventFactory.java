@@ -13,27 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.catalog.harvest.adhoc.factories;
+package com.esri.gpt.framework.adhoc.factories;
 
-import com.esri.gpt.catalog.harvest.adhoc.IAdHocEvent;
-import com.esri.gpt.catalog.harvest.adhoc.IAdHocEventFactory;
-import com.esri.gpt.catalog.harvest.adhoc.events.TimeOfTheDayEvent;
+import com.esri.gpt.framework.adhoc.IAdHocEvent;
+import com.esri.gpt.framework.adhoc.IAdHocEventFactory;
+import com.esri.gpt.framework.adhoc.events.DayOfTheWeekEvent;
+import com.esri.gpt.framework.adhoc.events.DayOfTheWeekInTheMonthEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
- * Time of the day event factory.
+ * Day of the week in the month event factory.
  */
-public class TimeOfTheDayEventFactory implements IAdHocEventFactory {
+public class DayOfTheWeekInTheMonthEventFactory implements IAdHocEventFactory {
   private static final SimpleDateFormat SDF = new SimpleDateFormat("HH:mm");
 
   @Override
   public IAdHocEvent parse(String definition) {
     try {
-      return new TimeOfTheDayEvent(SDF.parse(definition));
+      String[] parts = definition.split(",");
+      if (parts!=null && parts.length==3) {
+        return new DayOfTheWeekInTheMonthEvent(Integer.parseInt(parts[0]),DayOfTheWeekEvent.DayOfTheWeek.valueOf(parts[1].toUpperCase()),SDF.parse(parts[2]));
+      }
+      return null;
+    } catch (IllegalArgumentException ex) {
+      return null;
     } catch (ParseException ex) {
       return null;
     }
   }
-  
 }

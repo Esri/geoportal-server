@@ -57,29 +57,29 @@ dojo.require("dijit.form.CheckBox");
 dojo.require("dijit.form.RadioButton");
 
 var RES = {
-  SpecTimeEvent:               "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SpecTimeEvent"/>",
-  TimeOfTheDayEvent:           "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.TimeOfTheDayEvent"/>",
-  DayOfTheMonthEvent:          "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.DayOfTheMonthEvent"/>",
-  DayOfTheWeekEvent:           "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.DayOfTheWeekEvent"/>",
-  DayOfTheWeekInTheMonthEvent: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.DayOfTheWeekInTheMonthEvent"/>",
+  SpecTimeEvent:               "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.SpecTimeEvent"/>",
+  TimeOfTheDayEvent:           "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.TimeOfTheDayEvent"/>",
+  DayOfTheMonthEvent:          "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.DayOfTheMonthEvent"/>",
+  DayOfTheWeekEvent:           "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.DayOfTheWeekEvent"/>",
+  DayOfTheWeekInTheMonthEvent: "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.DayOfTheWeekInTheMonthEvent"/>",
 
   DayOfTheWeek: [
-    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SUNDAY"/>",
-    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.MONDAY"/>",
-    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.TUEASDAY"/>",
-    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.WEDNESDAY"/>",
-    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.THURSDAY"/>",
-    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.FRIDAY"/>",
-    "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SATURDAY"/>"
+    "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.SUNDAY"/>",
+    "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.MONDAY"/>",
+    "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.TUEASDAY"/>",
+    "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.WEDNESDAY"/>",
+    "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.THURSDAY"/>",
+    "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.FRIDAY"/>",
+    "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.SATURDAY"/>"
   ],
           
-  SUNDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SUNDAY"/>",
-  MONDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.MONDAY"/>",
-  TUEASDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.TUEASDAY"/>",
-  WEDNESDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.WEDNESDAY"/>",
-  THURSDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.THURSDAY"/>",
-  FRIDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.FRIDAY"/>",
-  SATURDAY: "<fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SATURDAY"/>"
+  SUNDAY: "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.SUNDAY"/>",
+  MONDAY: "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.MONDAY"/>",
+  TUEASDAY: "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.TUEASDAY"/>",
+  WEDNESDAY: "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.WEDNESDAY"/>",
+  THURSDAY: "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.THURSDAY"/>",
+  FRIDAY: "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.FRIDAY"/>",
+  SATURDAY: "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.SATURDAY"/>"
 };
 
 /**
@@ -1232,13 +1232,13 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
           <input type="text" id="dayOfTheMonthInput" data-dojo-type="dijit.form.NumberTextBox"/>
           <select id="dayOfTheWeekInput" data-dojo-type="dijit.form.Select">
               <option value="" selected="true">----------</option>
-              <option value="SUNDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SUNDAY"/></option>
-              <option value="MONDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.MONDAY"/></option>
-              <option value="TUEASDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.TUEASDAY"/></option>
-              <option value="WEDNESDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.WEDNESDAY"/></option>
-              <option value="THURSDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.THURSDAY"/></option>
-              <option value="FRIDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.FRIDAY"/></option>
-              <option value="SATURDAY"><fmt:message key="catalog.com.esri.gpt.catalog.harvest.adhoc.events.SATURDAY"/></option>
+              <option value="SUNDAY"><fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.SUNDAY"/></option>
+              <option value="MONDAY"><fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.MONDAY"/></option>
+              <option value="TUEASDAY"><fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.TUEASDAY"/></option>
+              <option value="WEDNESDAY"><fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.WEDNESDAY"/></option>
+              <option value="THURSDAY"><fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.THURSDAY"/></option>
+              <option value="FRIDAY"><fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.FRIDAY"/></option>
+              <option value="SATURDAY"><fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.SATURDAY"/></option>
           </select>    
         </div>
       </div>

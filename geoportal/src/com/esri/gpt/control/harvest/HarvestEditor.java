@@ -14,8 +14,8 @@
  */
 package com.esri.gpt.control.harvest;
 
-import com.esri.gpt.catalog.harvest.adhoc.AdHocEventFactoryList;
-import com.esri.gpt.catalog.harvest.adhoc.AdHocEventList;
+import com.esri.gpt.framework.adhoc.AdHocEventFactoryList;
+import com.esri.gpt.framework.adhoc.AdHocEventList;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocol.ProtocolType;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolResource;

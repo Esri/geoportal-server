@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.catalog.harvest.adhoc.events;
+package com.esri.gpt.framework.adhoc.events;
 
 import com.esri.gpt.framework.jsf.MessageBroker;
 import java.text.SimpleDateFormat;
