@@ -14,8 +14,6 @@
  */
 package com.esri.gpt.control.harvest;
 
-import com.esri.gpt.framework.adhoc.AdHocEventFactoryList;
-import com.esri.gpt.framework.adhoc.AdHocEventList;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocol.ProtocolType;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolResource;
@@ -35,7 +33,6 @@ import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.jsf.FacesMap;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -53,7 +50,7 @@ public class HarvestEditor {
 // class variables =============================================================
 /** CSW profiles manager */
 private static CswProfilesManager _cswProfilesManager = new CswProfilesManager();
-private static final String HOST_NAME_REGEX = "(^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$)|(^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$)";
+private static final String HOST_NAME_REGEX = "(^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])([/].+)?$)|(^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])([/].+)?$)";
 
 // instance variables ==========================================================
   
