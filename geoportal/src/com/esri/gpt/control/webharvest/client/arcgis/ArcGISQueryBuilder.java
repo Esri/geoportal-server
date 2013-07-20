@@ -56,6 +56,18 @@ public ArcGISQueryBuilder(IterationContext context, ArcGISProtocol protocol, Str
   this.info = new ArcGISInfo(restUrl, soapUrl, protocol.getUserName(), protocol.getUserPassword());
 }
 
+/**
+ * Creates instance of the builder.
+ * @param context iteration context
+ * @param info info
+ */
+public ArcGISQueryBuilder(IterationContext context, ArcGISInfo info) {
+  if (context == null)
+    throw new IllegalArgumentException("No context provided.");
+  this.context = context;
+  this.info = info;
+}
+
 public Capabilities getCapabilities() {
   return capabilities;
 }
@@ -85,7 +97,7 @@ public Native getNativeResource() {
  * @param requestContext request context
  * @return processor
  */
-private AGSProcessor newProcessor(RequestContext requestContext) {
+public AGSProcessor newProcessor(RequestContext requestContext) {
   AGSProcessor processor = new AGSProcessor(newProcessingContext(requestContext));
   processor.setCredentials(info.newCredentials());
   AGSTarget target = processor.getTarget();

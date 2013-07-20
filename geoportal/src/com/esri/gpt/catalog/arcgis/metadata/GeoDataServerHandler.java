@@ -21,9 +21,7 @@ import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
-import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.api.SourceUri;
-import com.esri.gpt.framework.resource.common.CommonPublishable;
 import com.esri.gpt.framework.resource.common.UrlUri;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
@@ -157,7 +155,7 @@ public class GeoDataServerHandler extends ServiceHandler {
   }
 
   @Override
-  public void appendRecord(Collection<Resource> records, ServiceHandlerFactory factory, ServiceInfo serviceInfo, boolean isNative) throws Exception {
+  public void appendRecord(Collection<IServiceInfoProvider> records, ServiceHandlerFactory factory, ServiceInfo serviceInfo, boolean isNative) throws Exception {
     super.appendRecord(records, factory, serviceInfo, isNative);
 
     // configuration parameters for data element recursion
@@ -229,7 +227,7 @@ public class GeoDataServerHandler extends ServiceHandler {
    * @param serviceInfo service info
    * @param element element to add
    */
-  private void addElement(Collection<Resource> records, ServiceInfo serviceInfo, DataElement element) {
+  private void addElement(Collection<IServiceInfoProvider> records, ServiceInfo serviceInfo, DataElement element) {
     records.add(new DataElementRecord(serviceInfo, element));
     DataElement [] children = element.getChildren();
     if (children!=null) {
@@ -242,18 +240,17 @@ public class GeoDataServerHandler extends ServiceHandler {
   /**
    * Data element specific Record implementation.
    */
-  private class DataElementRecord extends CommonPublishable {
+  private class DataElementRecord extends ServiceInfoProvider {
 
-    private ServiceInfo info;
     private DataElement element;
 
     public DataElementRecord(ServiceInfo info, DataElement element) {
-      this.info = info;
+      super(info);
       this.element = element;
     }
 
     public SourceUri getSourceUri() {
-      return new UrlUri(info.getRestUrl()+"/"+element.getName());
+      return new UrlUri(getServiceInfo().getRestUrl()+"/"+element.getName());
     }
 
     public String getContent() throws IOException {

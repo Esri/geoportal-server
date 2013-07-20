@@ -29,6 +29,7 @@ import com.esri.gpt.framework.resource.adapters.PublishablesAdapter;
 import com.esri.gpt.framework.resource.api.Native;
 import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.api.Resource;
+import com.esri.gpt.framework.resource.api.SourceUri;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
@@ -40,11 +41,14 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.xml.transform.TransformerException;
+import org.xml.sax.SAXException;
 
 /**
  * Processes resources associated with an ArcGIS server.
@@ -292,8 +296,10 @@ public class AGSProcessor extends ResourceProcessor {
     
   }
 
+  @Override
   public Query createQuery(final IterationContext context, final Criteria criteria) {
     return new Query() {
+      @Override
       public Result execute() {
         ResourceFolders folders = createResourceFolders(context);
         return new CommonResult(new LimitedLengthResourcesAdapter(folders, criteria.getMaxRecords()));
@@ -301,6 +307,7 @@ public class AGSProcessor extends ResourceProcessor {
     };
   }
 
+  @Override
   public Native getNativeResource(IterationContext context) {
     ResourceFolders folders = createResourceFolders(context);
     for (Publishable publishable : new PublishablesAdapter(new FlatResourcesAdapter(folders))) {
@@ -358,15 +365,25 @@ public class AGSProcessor extends ResourceProcessor {
   }
 
   /**
+   * Reads service descriptions.
+   * @return array of service descriptions
+   * @throws ArcGISWebServiceException if accessing service descriptions 
+   */
+  private ServiceDescription[] readServiceDescriptions() throws ArcGISWebServiceException {
+    String soapUrl = extractRootUrl(getTarget().getSoapUrl());
+    ServiceCatalogBindingStub stub = new ServiceCatalogBindingStub(soapUrl);
+    ServiceDescription[] descriptors = stub.getServiceDescriptions();
+    return descriptors;
+  }
+  
+  /**
    * Creates resource folders.
    * @param context iteration context
    * @return resource folders
    */
   private ResourceFolders createResourceFolders(IterationContext context) {
     try {
-      String soapUrl = extractRootUrl(getTarget().getSoapUrl());
-      ServiceCatalogBindingStub stub = new ServiceCatalogBindingStub(soapUrl);
-      ServiceDescription[] descriptors = stub.getServiceDescriptions();
+      ServiceDescription[] descriptors = readServiceDescriptions();
       return new ResourceFolders(context, factory, descriptors);
     } catch (ArcGISWebServiceException ex) {
       context.onIterationException(ex);
@@ -377,7 +394,7 @@ public class AGSProcessor extends ResourceProcessor {
   /**
    * ArcGIS folders.
    */
-  private class ResourceFolders implements Iterable<Resource> {
+  private class ResourceFolders implements Iterable<IServiceInfoProvider> {
   /** iteration context */
   private IterationContext context;
   /** service handler factory */
@@ -409,14 +426,14 @@ public class AGSProcessor extends ResourceProcessor {
     this.checkFolder = !normalizedTargetSoapUrl.endsWith("Server");
   }
 
-  public Iterator<Resource> iterator() {
+  public Iterator<IServiceInfoProvider> iterator() {
     return new AGSRecordsIterator();
   }
 
   /**
    * ArcGIS folders iterator.
    */
-  private class AGSRecordsIterator extends ReadOnlyIterator<Resource> {
+  private class AGSRecordsIterator extends ReadOnlyIterator<IServiceInfoProvider> {
   /** index of the current folder */
   private int index = -1;
   /** service handler */
@@ -462,12 +479,29 @@ public class AGSProcessor extends ResourceProcessor {
     return true;
   }
 
-  public Resource next() {
+  public IServiceInfoProvider next() {
     final ResourceRecordsFamily family = new ResourceRecordsFamily(context, factory, handler, info, !matchAll);
     reset();
-    return new Resource() {
+    return new IServiceInfoProvider() {
+
+      public ServiceInfo getServiceInfo() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      }
+
+      public SourceUri getSourceUri() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      }
+
+      public String getContent() throws IOException, TransformerException, SAXException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      }
+
+      public Date getUpdateDate() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      }
+
       public Iterable<Resource> getNodes() {
-        return family;
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
       }
     };
   }
@@ -478,7 +512,7 @@ public class AGSProcessor extends ResourceProcessor {
    * Family of the records. This is a collection of records derived from the same
    * service URL.
    */
-  private class ResourceRecordsFamily implements Iterable<Resource> {
+  private class ResourceRecordsFamily implements Iterable<IServiceInfoProvider> {
   /** iteration context */
   private IterationContext context;
   /** service handler factory */
@@ -510,8 +544,8 @@ public class AGSProcessor extends ResourceProcessor {
     this.isNative = isNative;
   }
 
-  public Iterator<Resource> iterator() {
-    ArrayList<Resource> recs = new ArrayList<Resource>();
+  public Iterator<IServiceInfoProvider> iterator() {
+    ArrayList<IServiceInfoProvider> recs = new ArrayList<IServiceInfoProvider>();
     try {
       handler.appendRecord(recs, factory, info, isNative);
     } catch (Exception ex) {

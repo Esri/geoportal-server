@@ -26,13 +26,13 @@ import java.util.NoSuchElementException;
  */
 public class FlatResourcesAdapter implements Iterable<Resource> {
 /** collection of resources */
-private Iterable<Resource> resources;
+private Iterable<? extends Resource> resources;
 
 /**
  * Creates instance of the adapter.
  * @param resources collection of resources
  */
-public FlatResourcesAdapter(Iterable<Resource> resources) {
+public FlatResourcesAdapter(Iterable<? extends Resource> resources) {
   this.resources = resources;
 }
 
@@ -55,9 +55,9 @@ public Iterator<Resource> iterator() {
 private class FlatResourcesIterator extends ReadOnlyIterator<Resource> {
 
 /** stack of iterators */
-private LinkedList<Iterator<Resource>> stack = new LinkedList<Iterator<Resource>>();
+private LinkedList<Iterator<? extends Resource>> stack = new LinkedList<Iterator<? extends Resource>>();
 {
-  Iterator<Resource> iter = resources.iterator();
+  Iterator<? extends Resource> iter = resources.iterator();
   if (iter.hasNext()) {
     stack.addLast(iter);
   }

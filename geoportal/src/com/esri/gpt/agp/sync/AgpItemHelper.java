@@ -26,7 +26,7 @@ import java.util.ArrayList;
 /**
  * Item related helper functions for the AgpPush synchronizer.
  */
-class AgpItemHelper { 
+public class AgpItemHelper { 
 
   /** constructors ============================================================ */
   
@@ -44,7 +44,7 @@ class AgpItemHelper {
    * @param destination the destination
    * @return true if an item with the exact itemId exists at the destination
    */
-  protected boolean doesUnsyncedItemExist(AgpItem sourceItem, AgpDestination destination) 
+  public boolean doesUnsyncedItemExist(AgpItem sourceItem, AgpDestination destination) 
     throws Exception {
     
     final AgpItem destItem = new AgpItem();
@@ -77,7 +77,7 @@ class AgpItemHelper {
    * @param item the source item
    * @return true if the item originated from synchronization 
    */
-  protected boolean isSyncedItem(AgpItem item) {
+  public boolean isSyncedItem(AgpItem item) {
     String sTypeKeywords = item.getProperties().getValue("typeKeywords");
     if (sTypeKeywords != null) {
       String[] aTokens = sTypeKeywords.split(",");

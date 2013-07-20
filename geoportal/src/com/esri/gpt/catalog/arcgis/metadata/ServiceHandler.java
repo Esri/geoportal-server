@@ -127,7 +127,7 @@ public abstract class ServiceHandler {
    * @param isNative <code>true</code> to append native record
    * @throws Exception if an exception occurs
    */
-  public void appendRecord(Collection<Resource> records, ServiceHandlerFactory factory, ServiceInfo serviceInfo, boolean isNative) throws Exception {
+  public void appendRecord(Collection<IServiceInfoProvider> records, ServiceHandlerFactory factory, ServiceInfo serviceInfo, boolean isNative) throws Exception {
     records.add(isNative? new NativeServiceRecord(factory, serviceInfo): new ServiceRecord(factory, serviceInfo));
   }
 
@@ -147,27 +147,26 @@ public abstract class ServiceHandler {
   /**
    * Service specific Record implementation.
    */
-  private class ServiceRecord extends CommonPublishable {
+  public class ServiceRecord extends ServiceInfoProvider {
 
     private ServiceHandlerFactory factory;
-    private ServiceInfo info;
 
     public ServiceRecord(ServiceHandlerFactory factory, ServiceInfo info) {
-      this.info = info;
+      super(info);
       this.factory = factory;
     }
 
     public SourceUri getSourceUri() {
-      return new UrlUri(info.getResourceUrl());
+      return new UrlUri(getServiceInfo().getResourceUrl());
     }
 
     public String getContent() throws IOException {
       ApplicationContext appCtx = ApplicationContext.getInstance();
       ApplicationConfiguration cfg = appCtx.getConfiguration();
-      LOGGER.finer("Collecting metadata for: " + info.getSoapUrl());
+      LOGGER.finer("Collecting metadata for: " + getServiceInfo().getSoapUrl());
       try {
-        ServiceHandler.this.collectMetadata(factory, info);
-        return info.asDublinCore(cfg, http);
+        ServiceHandler.this.collectMetadata(factory, getServiceInfo());
+        return getServiceInfo().asDublinCore(cfg, http);
       } catch (Exception ex) {
         throw new IOException("Error collecting metadata. Cause: "+ex.getMessage());
       }
