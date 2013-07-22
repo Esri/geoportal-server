@@ -21,11 +21,13 @@ import com.esri.gpt.agp.sync.AgpItemHelper;
 import com.esri.gpt.agp.sync.AgpPartHelper;
 import com.esri.gpt.catalog.arcgis.metadata.IServiceInfoProvider;
 import com.esri.gpt.catalog.arcgis.metadata.ServiceInfo;
+import com.esri.gpt.catalog.arcgis.metadata.ServiceInfoProviderAdapter;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.arcgis.ArcGISInfo;
 import com.esri.gpt.control.webharvest.client.arcgis.ArcGISQueryBuilder;
 import com.esri.gpt.control.webharvest.common.CommonCriteria;
 import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.resource.adapters.FlatResourcesAdapter;
 import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
@@ -78,10 +80,10 @@ public class Ags2AgpCopy {
 
       this.destination.getConnection().generateToken();
       
-      for (Resource r: result.getResources()) {
-        if (r instanceof IServiceInfoProvider) {
-          IServiceInfoProvider siProvider = (IServiceInfoProvider)r;
-          ServiceInfo serviceInfo = siProvider.getServiceInfo();
+      Iterable<IServiceInfoProvider> records = new ServiceInfoProviderAdapter(new FlatResourcesAdapter(result.getResources()));
+      for (IServiceInfoProvider r: records) {
+        ServiceInfo serviceInfo = r.getServiceInfo();
+        if (serviceInfo!=null) {
           LOGGER.log(Level.FINE, serviceInfo.toString());
         }
       }

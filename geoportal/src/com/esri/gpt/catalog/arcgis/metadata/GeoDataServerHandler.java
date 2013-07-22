@@ -21,12 +21,16 @@ import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.resource.api.Publishable;
+import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.api.SourceUri;
 import com.esri.gpt.framework.resource.common.UrlUri;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -155,7 +159,7 @@ public class GeoDataServerHandler extends ServiceHandler {
   }
 
   @Override
-  public void appendRecord(Collection<IServiceInfoProvider> records, ServiceHandlerFactory factory, ServiceInfo serviceInfo, boolean isNative) throws Exception {
+  public void appendRecord(Collection<Resource> records, ServiceHandlerFactory factory, ServiceInfo serviceInfo, boolean isNative) throws Exception {
     super.appendRecord(records, factory, serviceInfo, isNative);
 
     // configuration parameters for data element recursion
@@ -227,7 +231,7 @@ public class GeoDataServerHandler extends ServiceHandler {
    * @param serviceInfo service info
    * @param element element to add
    */
-  private void addElement(Collection<IServiceInfoProvider> records, ServiceInfo serviceInfo, DataElement element) {
+  private void addElement(Collection<Resource> records, ServiceInfo serviceInfo, DataElement element) {
     records.add(new DataElementRecord(serviceInfo, element));
     DataElement [] children = element.getChildren();
     if (children!=null) {
@@ -240,7 +244,7 @@ public class GeoDataServerHandler extends ServiceHandler {
   /**
    * Data element specific Record implementation.
    */
-  private class DataElementRecord extends ServiceInfoProvider {
+  private class DataElementRecord extends ServiceInfoProvider implements Publishable {
 
     private DataElement element;
 
@@ -249,13 +253,25 @@ public class GeoDataServerHandler extends ServiceHandler {
       this.element = element;
     }
 
+    @Override
     public SourceUri getSourceUri() {
       return new UrlUri(getServiceInfo().getRestUrl()+"/"+element.getName());
     }
 
+    @Override
     public String getContent() throws IOException {
       XmlPropertySet xmlProps = element.getMetadata();
       return xmlProps!=null? Val.chkStr(xmlProps.getXmlDoc()): "";
+    }
+
+    @Override
+    public Iterable<Resource> getNodes() {
+      return new ArrayList<Resource>();
+    }
+
+    @Override
+    public Date getUpdateDate() {
+      return null;
     }
   }
 }

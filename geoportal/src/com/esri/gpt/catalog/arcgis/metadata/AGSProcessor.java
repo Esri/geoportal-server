@@ -29,7 +29,6 @@ import com.esri.gpt.framework.resource.adapters.PublishablesAdapter;
 import com.esri.gpt.framework.resource.api.Native;
 import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.api.Resource;
-import com.esri.gpt.framework.resource.api.SourceUri;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
@@ -41,14 +40,11 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.xml.transform.TransformerException;
-import org.xml.sax.SAXException;
 
 /**
  * Processes resources associated with an ArcGIS server.
@@ -479,29 +475,14 @@ public class AGSProcessor extends ResourceProcessor {
     return true;
   }
 
+  @Override
   public IServiceInfoProvider next() {
     final ResourceRecordsFamily family = new ResourceRecordsFamily(context, factory, handler, info, !matchAll);
     reset();
-    return new IServiceInfoProvider() {
-
-      public ServiceInfo getServiceInfo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-      }
-
-      public SourceUri getSourceUri() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-      }
-
-      public String getContent() throws IOException, TransformerException, SAXException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-      }
-
-      public Date getUpdateDate() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-      }
-
+    return new ServiceInfoProvider(info) {
+      @Override
       public Iterable<Resource> getNodes() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return family;
       }
     };
   }
@@ -512,7 +493,7 @@ public class AGSProcessor extends ResourceProcessor {
    * Family of the records. This is a collection of records derived from the same
    * service URL.
    */
-  private class ResourceRecordsFamily implements Iterable<IServiceInfoProvider> {
+  private class ResourceRecordsFamily implements Iterable<Resource> {
   /** iteration context */
   private IterationContext context;
   /** service handler factory */
@@ -544,8 +525,8 @@ public class AGSProcessor extends ResourceProcessor {
     this.isNative = isNative;
   }
 
-  public Iterator<IServiceInfoProvider> iterator() {
-    ArrayList<IServiceInfoProvider> recs = new ArrayList<IServiceInfoProvider>();
+  public Iterator<Resource> iterator() {
+    ArrayList<Resource> recs = new ArrayList<Resource>();
     try {
       handler.appendRecord(recs, factory, info, isNative);
     } catch (Exception ex) {

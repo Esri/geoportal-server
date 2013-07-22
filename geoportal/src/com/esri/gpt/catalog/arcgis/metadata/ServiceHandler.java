@@ -18,13 +18,15 @@ import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.resource.api.Native;
+import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.api.SourceUri;
-import com.esri.gpt.framework.resource.common.CommonPublishable;
 import com.esri.gpt.framework.resource.common.UrlUri;
 import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.logging.Logger;
 
 /**
@@ -127,7 +129,7 @@ public abstract class ServiceHandler {
    * @param isNative <code>true</code> to append native record
    * @throws Exception if an exception occurs
    */
-  public void appendRecord(Collection<IServiceInfoProvider> records, ServiceHandlerFactory factory, ServiceInfo serviceInfo, boolean isNative) throws Exception {
+  public void appendRecord(Collection<Resource> records, ServiceHandlerFactory factory, ServiceInfo serviceInfo, boolean isNative) throws Exception {
     records.add(isNative? new NativeServiceRecord(factory, serviceInfo): new ServiceRecord(factory, serviceInfo));
   }
 
@@ -147,7 +149,7 @@ public abstract class ServiceHandler {
   /**
    * Service specific Record implementation.
    */
-  public class ServiceRecord extends ServiceInfoProvider {
+  public class ServiceRecord extends ServiceInfoProvider implements Publishable {
 
     private ServiceHandlerFactory factory;
 
@@ -156,10 +158,12 @@ public abstract class ServiceHandler {
       this.factory = factory;
     }
 
+    @Override
     public SourceUri getSourceUri() {
       return new UrlUri(getServiceInfo().getResourceUrl());
     }
 
+    @Override
     public String getContent() throws IOException {
       ApplicationContext appCtx = ApplicationContext.getInstance();
       ApplicationConfiguration cfg = appCtx.getConfiguration();
@@ -172,6 +176,16 @@ public abstract class ServiceHandler {
       }
     }
 
+    @Override
+    public Iterable<Resource> getNodes() {
+      return new ArrayList<Resource>();
+    }
+
+    @Override
+    public Date getUpdateDate() {
+      return null;
+    }
+
   }
 
   /**
@@ -180,6 +194,11 @@ public abstract class ServiceHandler {
   private class NativeServiceRecord extends ServiceRecord implements Native {
     public NativeServiceRecord(ServiceHandlerFactory factory, ServiceInfo info) {
       super(factory, info);
+    }
+
+    @Override
+    public Date getUpdateDate() {
+      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
   }
 }

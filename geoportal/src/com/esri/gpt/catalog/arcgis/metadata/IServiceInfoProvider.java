@@ -15,12 +15,12 @@
  */
 package com.esri.gpt.catalog.arcgis.metadata;
 
-import com.esri.gpt.framework.resource.api.Publishable;
+import com.esri.gpt.framework.resource.api.Resource;
 
 /**
  * Service info provider
  */
-public interface IServiceInfoProvider extends Publishable {
+public interface IServiceInfoProvider extends Resource {
 
   /**
    * Gets service info.

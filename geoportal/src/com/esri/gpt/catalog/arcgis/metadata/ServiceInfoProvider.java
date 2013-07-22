@@ -15,12 +15,10 @@
  */
 package com.esri.gpt.catalog.arcgis.metadata;
 
-import com.esri.gpt.framework.resource.common.CommonPublishable;
-
 /**
  * Service info provider.
  */
-public abstract class ServiceInfoProvider extends CommonPublishable implements IServiceInfoProvider {
+public abstract class ServiceInfoProvider implements IServiceInfoProvider {
   private ServiceInfo serviceInfo;
   
   public ServiceInfoProvider(ServiceInfo serviceInfo) {
