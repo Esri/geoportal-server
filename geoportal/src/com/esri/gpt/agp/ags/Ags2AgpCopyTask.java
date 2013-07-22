@@ -18,6 +18,7 @@ package com.esri.gpt.agp.ags;
 import com.esri.gpt.agp.client.AgpConnection;
 import com.esri.gpt.agp.sync.AgpDestination;
 import com.esri.gpt.catalog.arcgis.agportal.publication.PublicationRequest;
+import com.esri.gpt.catalog.harvest.protocols.HostContextPair;
 import com.esri.gpt.control.webharvest.client.arcgis.ArcGISInfo;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.RequestContext;
@@ -35,10 +36,12 @@ public class Ags2AgpCopyTask implements Runnable, IScheduledTask {
   private static final Logger LOGGER = Logger.getLogger(Ags2AgpCopyTask.class.getName());
   private StringAttributeMap parameters;
 
+  @Override
   public void setParameters(StringAttributeMap parameters) {
     this.parameters = parameters;
   }
 
+  @Override
   public void run() {
     try {
       ArcGISInfo source = getSource();
@@ -68,6 +71,10 @@ public class Ags2AgpCopyTask implements Runnable, IScheduledTask {
     
     AgpDestination destination = new AgpDestination();
     destination.setConnection(connection);
+    
+    HostContextPair hcp = HostContextPair.makeHostContextPair(parameters.getValue("agp.host"));
+    connection.setHost(hcp.getHost());
+    connection.setWebContext(hcp.getContext());
     destination.setDestinationOwner(parameters.getValue("agp.owner"));
     destination.setDestinationOwner(parameters.getValue("agp.folder"));
     

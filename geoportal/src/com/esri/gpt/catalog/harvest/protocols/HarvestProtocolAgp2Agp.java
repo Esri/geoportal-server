@@ -82,7 +82,7 @@ public class HarvestProtocolAgp2Agp extends AbstractHTTPHarvestProtocol {
 
     AgpSource source = new AgpSource();
     AgpConnection con1 = new AgpConnection();
-    HostContextPair pair = makeHostContextPair(getSourceHost());
+    HostContextPair pair = HostContextPair.makeHostContextPair(getSourceHost());
     con1.setHost(pair.getHost());
     con1.setWebContext(pair.getContext());
     con1.setTokenCriteria(new AgpTokenCriteria());
@@ -108,7 +108,7 @@ public class HarvestProtocolAgp2Agp extends AbstractHTTPHarvestProtocol {
     
     AgpDestination destination = new AgpDestination();
     AgpConnection con2 = new AgpConnection();
-    HostContextPair pair = makeHostContextPair(getDestinationHost());
+    HostContextPair pair = HostContextPair.makeHostContextPair(getDestinationHost());
     con2.setHost(pair.getHost());
     con2.setWebContext(pair.getContext());
     con2.setTokenCriteria(new AgpTokenCriteria());
@@ -226,51 +226,4 @@ public static Long getAgp2AgpMaxItems() {
   return Val.chkLong(sMaxItems, DEFAULT_MAX_ITEMS_AGP2AGP);
 }
 
-/**
- * Makes host/context pair.
- * @param host host name
- * @return host/context pair
- */
-private static HostContextPair makeHostContextPair(String host) {
-  if (host!=null) {
-    int index = host.indexOf("/");
-    if (index>=0) {
-      return new HostContextPair(host.substring(0, index), host.substring(index));
-    } else {
-      return new HostContextPair(host);
-    }
-  }
-  
-  return null;
-}
-
-/**
- * host/context pair.
- */
-private static class HostContextPair {
-  private String host;
-  private String context;
-  
-  public HostContextPair(String host) {
-    this.host = host;
-  }
-  
-  public HostContextPair(String host, String context) {
-    this.host = host;
-    this.context = context;
-  }
-  
-  public String getHost() {
-    return host;
-  }
-  
-  public String getContext() {
-    return context;
-  }
-  
-  @Override
-  public String toString() {
-    return host!=null? host + (context!=null? context: ""): "";
-  }
-}
 }
