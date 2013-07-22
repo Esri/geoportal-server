@@ -16,6 +16,8 @@
 package com.esri.gpt.agp.ags;
 
 import com.esri.gpt.agp.client.AgpItem;
+import com.esri.gpt.agp.client.AgpProperties;
+import com.esri.gpt.agp.client.AgpProperty;
 import com.esri.gpt.agp.sync.AgpDestination;
 import com.esri.gpt.agp.sync.AgpItemHelper;
 import com.esri.gpt.agp.sync.AgpPartHelper;
@@ -28,9 +30,9 @@ import com.esri.gpt.control.webharvest.client.arcgis.ArcGISQueryBuilder;
 import com.esri.gpt.control.webharvest.common.CommonCriteria;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.resource.adapters.FlatResourcesAdapter;
-import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,6 +51,19 @@ public class Ags2AgpCopy {
   private int numWithNullType;
   private int numUnsyncedExistingAtDestination;
   private int numOriginatedFromSynchronization;
+  
+  private static final HashMap<String,String> agsToAgpType = new HashMap<String, String>();
+  
+  static {
+    agsToAgpType.put("MapServer", "Map Service");
+    agsToAgpType.put("ImageServer", "Image Service");
+    agsToAgpType.put("FeatureServer", "Feature Service");
+    agsToAgpType.put("WFSServer", "Feature Service");
+    agsToAgpType.put("WMSServer", "WMS");
+    agsToAgpType.put("GPServer", "Geoprocessing Service");
+    agsToAgpType.put("NASServer", "Network Analysis Service");
+    agsToAgpType.put("GeometryServer", "Geometry Service");
+  }
   
   /**
    * Creates instance of the class.
@@ -83,8 +98,9 @@ public class Ags2AgpCopy {
       Iterable<IServiceInfoProvider> records = new ServiceInfoProviderAdapter(new FlatResourcesAdapter(result.getResources()));
       for (IServiceInfoProvider r: records) {
         ServiceInfo serviceInfo = r.getServiceInfo();
-        if (serviceInfo!=null) {
-          LOGGER.log(Level.FINE, serviceInfo.toString());
+        AgpItem agpItem = createAgpItem(serviceInfo);
+        if (agpItem!=null) {
+          syncItem(agpItem);
         }
       }
 
@@ -94,50 +110,77 @@ public class Ags2AgpCopy {
   }
   
   private AgpItem createAgpItem(ServiceInfo serviceInfo) {
-    AgpItem agpItem = new AgpItem();
-    // TODO provide implementation
-    return agpItem;
+    if (serviceInfo!=null) {
+      AgpItem agpItem = new AgpItem();
+      AgpProperties props = agpItem.getProperties();
+      String type = serviceInfo.getType();
+      
+      props.add(new AgpProperty("title", serviceInfo.getName()));
+      props.add(new AgpProperty("name", serviceInfo.getName()));
+      props.add(new AgpProperty("url", serviceInfo.getRestUrl()));
+      props.add(new AgpProperty("description", serviceInfo.getDescription()));
+      props.add(new AgpProperty("thumbnail", serviceInfo.getThumbnailUrl()));
+      
+      String agpType = agsToAgpType.get(type);
+      if (agpType!=null) {
+        props.add(new AgpProperty("type", agpType));
+      }
+      
+      System.out.println("serviceInfo: "+serviceInfo);
+      System.out.println("createAgpItem: "+props);
+      
+      if (agpType!=null) {
+        syncItem(agpItem);
+      }
+    }
+    return null;
   }
   
-  private boolean syncItem(AgpItem sourceItem) throws Exception {
+  private boolean syncItem(AgpItem sourceItem)  {
     AgpDestination dest = this.destination; 
-    String sId = sourceItem.getProperties().getValue("id");
+    //String sId = sourceItem.getProperties().getValue("id");
     String sType = sourceItem.getProperties().getValue("type");
     String sTitle = sourceItem.getProperties().getValue("title");
     String sMsg = "Processing item ("+this.numItemsConsidered+")";
-    sMsg += ", id:"+sId+", type:"+sType+", title:"+sTitle;
+    //sMsg += ", id:"+sId+", type:"+sType+", title:"+sTitle;
+    sMsg += ", type:"+sType+", title:"+sTitle;
     LOGGER.info(sMsg);
 
     // check the id and type
-    if (sId == null) {
+    /*if (sId == null) {
       this.numWithNullId++;
       LOGGER.finer("Ignoring item with null id: "+sTitle);
       return false;
-    } else if (sType == null) {
+    } else */if (sType == null) {
       this.numWithNullType++;
-      LOGGER.finer("Ignoring item with null type: "+sId+" "+sTitle);
+//      LOGGER.finer("Ignoring item with null type: "+sId+" "+sTitle);
+      LOGGER.finer("Ignoring item with null type: "+sTitle);
       return false;
     } else if (sType.equalsIgnoreCase("Code Attachment")) {
       // don't publish Code Attachments now, publish within processRelatedItems
       return false;
     }
     
+    /*
     boolean bUnsyncedItemExists = this.itemHelper.doesUnsyncedItemExist(sourceItem,dest);
     if (bUnsyncedItemExists) {
       this.numUnsyncedExistingAtDestination++;
       String s = "Ignoring unsynced item existing at destination: ";
-      LOGGER.finer(s+sId+" "+sTitle);
+      LOGGER.finer(s+" "+sTitle);
       return false;
     }
+    */
     
+    /*
     // don't propagate synced items from portal to portal
     boolean bIsSyncedItem = this.itemHelper.isSyncedItem(sourceItem);
     if (bIsSyncedItem) {
       this.numOriginatedFromSynchronization++;
       String s = "Ignoring, an item that originated from synchronization will not be repropagated: ";
-      LOGGER.finer(s+sId+" "+sTitle);
+      LOGGER.finer(s+" "+sTitle);
       return false;
     }
+    */
 
        
     // determine if the item requires an update
