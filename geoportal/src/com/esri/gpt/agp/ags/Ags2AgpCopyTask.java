@@ -16,6 +16,8 @@
 package com.esri.gpt.agp.ags;
 
 import com.esri.gpt.agp.client.AgpConnection;
+import com.esri.gpt.agp.client.AgpCredentials;
+import com.esri.gpt.agp.client.AgpTokenCriteria;
 import com.esri.gpt.agp.sync.AgpDestination;
 import com.esri.gpt.catalog.arcgis.agportal.publication.PublicationRequest;
 import com.esri.gpt.catalog.harvest.protocols.HostContextPair;
@@ -23,6 +25,8 @@ import com.esri.gpt.control.webharvest.client.arcgis.ArcGISInfo;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.scheduler.IScheduledTask;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.logging.Level;
@@ -75,10 +79,27 @@ public class Ags2AgpCopyTask implements Runnable, IScheduledTask {
     HostContextPair hcp = HostContextPair.makeHostContextPair(parameters.getValue("agp.host"));
     connection.setHost(hcp.getHost());
     connection.setWebContext(hcp.getContext());
+    AgpTokenCriteria agpTokenCriteria = new AgpTokenCriteria();
+    agpTokenCriteria.setCredentials(new AgpCredentials(parameters.getValue("agp.userName"), parameters.getValue("agp.userPassword")));
+    agpTokenCriteria.setReferer(getReferrer());
+    connection.setTokenCriteria(agpTokenCriteria);
+    
     destination.setDestinationOwner(parameters.getValue("agp.owner"));
-    destination.setDestinationOwner(parameters.getValue("agp.folder"));
+    destination.setDestinationFolderID(parameters.getValue("agp.folder"));
     
     return destination;
+  }
+
+  /**
+   * Gets referrer.
+   * @return referrer
+   */
+  protected String getReferrer() {
+    try {
+      return InetAddress.getLocalHost().getCanonicalHostName();
+    } catch (UnknownHostException ex) {
+      return "";
+    }
   }
   
 }
