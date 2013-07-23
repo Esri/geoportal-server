@@ -20,12 +20,18 @@ import com.esri.arcgisws.MapServerBindingStub;
 import com.esri.arcgisws.MapServerInfo;
 import com.esri.arcgisws.PropertySet;
 import com.esri.arcgisws.PropertySetProperty;
+import com.esri.arcgisws.runtime.exception.ArcGISWebServiceException;
+import com.esri.gpt.framework.resource.api.Resource;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
  * Handles the collection of metadata for an ArcGIS map service (MapServer).
  */
 public class MapServerHandler extends ServiceHandler {
+  private static final Logger LOGGER = Logger.getLogger(MapServerHandler.class.getCanonicalName());
   
   /** constructors ============================================================ */
 
@@ -139,6 +145,22 @@ public class MapServerHandler extends ServiceHandler {
       //}
     }  
     
+  }
+
+  @Override
+  public void appendRecord(Collection<Resource> records, ServiceHandlerFactory factory, ServiceInfo serviceInfo, boolean isNative) throws Exception {
+    try {
+      MapServerBindingStub stub =
+        getCredentials()==null || getCredentials().getUsername().length()==0 || getCredentials().getPassword().length()==0?
+        new MapServerBindingStub(serviceInfo.getSoapUrl()):
+        new MapServerBindingStub(serviceInfo.getSoapUrl(), getCredentials().getUsername(), getCredentials().getPassword());
+      MapServerInfo mapInfo = stub.getServerInfo(stub.getDefaultMapName());
+      serviceInfo.setDescription(mapInfo.getDescription());
+      serviceInfo.setEnvelope(mapInfo.getFullExtent());
+    } catch (ArcGISWebServiceException ex) {
+      LOGGER.log(Level.FINE, "Error getting MapServerInfo.", ex);
+    }
+    super.appendRecord(records, factory, serviceInfo, isNative); //To change body of generated methods, choose Tools | Templates.
   }
   
 }

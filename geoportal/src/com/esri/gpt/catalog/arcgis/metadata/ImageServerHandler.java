@@ -15,11 +15,17 @@
 package com.esri.gpt.catalog.arcgis.metadata;
 import com.esri.arcgisws.ImageServerBindingStub ;
 import com.esri.arcgisws.ImageServiceInfo;
+import com.esri.arcgisws.runtime.exception.ArcGISWebServiceException;
+import com.esri.gpt.framework.resource.api.Resource;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Handles the collection of metadata for an ArcGIS image service (ImageServer).
  */
 public class ImageServerHandler extends ServiceHandler {
+  private static final Logger LOGGER = Logger.getLogger(ImageServerHandler.class.getCanonicalName());
   
   /** constructors ============================================================ */
 
@@ -57,6 +63,22 @@ public class ImageServerHandler extends ServiceHandler {
     //System.err.println(" getServiceDataType="+imageServiceInfo.getServiceDataType());
     //System.err.println(" getServiceSourceType="+imageServiceInfo.getServiceSourceType());
     //System.err.println(" getServiceProperties="+imageServiceInfo.getServiceProperties());
+  }
+
+  @Override
+  public void appendRecord(Collection<Resource> records, ServiceHandlerFactory factory, ServiceInfo serviceInfo, boolean isNative) throws Exception {
+    try {
+    ImageServerBindingStub stub = 
+      getCredentials()==null || getCredentials().getUsername().length()==0 || getCredentials().getPassword().length()==0?
+      new ImageServerBindingStub(serviceInfo.getSoapUrl()):
+      new ImageServerBindingStub(serviceInfo.getSoapUrl(), getCredentials().getUsername(), getCredentials().getPassword());
+    ImageServiceInfo imageServiceInfo = stub.getServiceInfo();
+    serviceInfo.setDescription(imageServiceInfo.getDescription());
+    serviceInfo.setEnvelope(imageServiceInfo.getExtent());
+    } catch (ArcGISWebServiceException ex) {
+      LOGGER.log(Level.FINE, "Error getting ImageServiceInfo.", ex);
+    }
+    super.appendRecord(records, factory, serviceInfo, isNative);
   }
   
 }
