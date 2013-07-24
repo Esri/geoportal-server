@@ -163,6 +163,7 @@ public Protocol parseProtocol(String xmlString) {
     String protocolName = "";
     long flags = 0;
     List<String> vDest = null;
+    String sAddHoc = "";
     StringAttributeMap properties = new StringAttributeMap();
     NodeList protocolNL = doc.getElementsByTagName("protocol");
 
@@ -180,6 +181,9 @@ public Protocol parseProtocol(String xmlString) {
       Node destinationsN = attributes.getNamedItem("destinations");
       String sDest = destinationsN!=null? Val.chkStr(destinationsN.getNodeValue()): null;
       vDest = sDest!=null? Arrays.asList(sDest.split(",")): null;
+      
+      Node addHocN = attributes.getNamedItem("adHoc");
+      sAddHoc = addHocN!=null? Val.chkStr(addHocN.getNodeValue()): "";
 
       NodeList propertiesNL = protocolN.getChildNodes();
       for (int i = 0; i < propertiesNL.getLength(); i++) {
@@ -198,6 +202,7 @@ public Protocol parseProtocol(String xmlString) {
     Protocol protocol = protocolFactory.newProtocol();
     protocol.setFlags(flags);
     protocol.applyAttributeMap(properties);
+    protocol.setAdHoc(sAddHoc);
     ProtocolInvoker.setDestinations(protocol, vDest);
 
     return protocol;

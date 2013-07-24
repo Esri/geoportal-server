@@ -50,7 +50,7 @@ public class HarvestEditor {
 // class variables =============================================================
 /** CSW profiles manager */
 private static CswProfilesManager _cswProfilesManager = new CswProfilesManager();
-private static final String HOST_NAME_REGEX = "(^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$)|(^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$)";
+private static final String HOST_NAME_REGEX = "(^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])([/].+)?$)|(^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])([/].+)?$)";
 
 // instance variables ==========================================================
   
@@ -72,6 +72,8 @@ private TreeMap<String,Protocol> protocols = new TreeMap<String,Protocol>(String
 
 private boolean arcgisDotComAllowed;
 private boolean crossAllowed;
+
+private FrequencyMode frequencyMode = FrequencyMode.PERIODICAL;
 
 // constructors ================================================================
 /**
@@ -398,6 +400,32 @@ public void setApprovalStatus(String status) {
 // methods =====================================================================
 
 /**
+ * Prepares repository for edit.
+ */
+public void prepareForEdit() {
+  switch (getRepository().getHarvestFrequency()) {
+    case AdHoc:
+      setFrequencyMode(FrequencyMode.ADHOC);
+      getRepository().setHarvestFrequency(HrRecord.HarvestFrequency.Skip);
+      break;
+    default:
+      setFrequencyMode(FrequencyMode.PERIODICAL);
+      getRepository().clearAdHocEventList();
+  }
+}
+
+/**
+ * Prepares repository for update.
+ */
+public void prepareForUpdate() {
+  if (getFrequencyMode()== FrequencyMode.ADHOC) {
+    getRepository().setHarvestFrequency(HrRecord.HarvestFrequency.AdHoc);
+  } else {
+    getRepository().clearAdHocEventList();
+  }
+}
+
+/**
  * Validates entered content.
  * @param mb message broker
  * @return <code>true</code> if data is valid
@@ -520,5 +548,49 @@ public boolean validate(MessageBroker mb) {
 @Override
 public String toString() {
   return _harvestRepository.toString();
+}
+
+public FrequencyMode getFrequencyMode() {
+  return frequencyMode;
+}
+
+public void setFrequencyMode(FrequencyMode frequencyMode) {
+  this.frequencyMode = frequencyMode;
+}
+
+public String getFrequencyModeAsString() {
+  return frequencyMode.name();
+}
+
+public void setFrequencyModeAsString(String frequencyMode) {
+  frequencyMode = Val.chkStr(frequencyMode);
+  try {
+    this.frequencyMode = FrequencyMode.valueOf(frequencyMode.toUpperCase());
+  } catch (IllegalArgumentException ex) {
+    this.frequencyMode = FrequencyMode.PERIODICAL;
+  }
+}
+
+/**
+ * Gets time codes.
+ *
+ * @return time codes.
+ */
+public String getTimeCodes() {
+  return _harvestRepository.getProtocol().getAdHoc();
+}
+
+/**
+ * Sets time codes.
+ *
+ * @param timeCodes time codes
+ */
+public void setTimeCodes(String timeCodes) {
+  _harvestRepository.getProtocol().setAdHoc(timeCodes);
+}
+
+public static enum FrequencyMode {
+  PERIODICAL,
+  ADHOC
 }
 }

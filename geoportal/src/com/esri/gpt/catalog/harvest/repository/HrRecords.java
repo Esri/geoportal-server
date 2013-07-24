@@ -68,6 +68,7 @@ public HrRecord findByUuid(String uuid) {
  */
 public HrRecords findSelected() {
   return findByCriteria(new ISearchCriteria(){
+    @Override
     public boolean qualified(HrRecord record) {
       return record.getIsSelected();
     }
@@ -81,6 +82,7 @@ public HrRecords findSelected() {
  */
 public HrRecords findSaved(final boolean saved) {
   return findByCriteria(new ISearchCriteria(){
+    @Override
     public boolean qualified(HrRecord record) {
       return UuidUtil.isUuid(record.getUuid())==saved;
     }
@@ -93,6 +95,7 @@ public HrRecords findSaved(final boolean saved) {
  */
 public HrRecords findHarvestDue() {
   return findByCriteria(new ISearchCriteria(){
+    @Override
     public boolean qualified(HrRecord record) {
       return record.getIsHarvestDue() && record.getApprovalStatus()==ApprovalStatus.approved && record.getSynchronizable();
     }

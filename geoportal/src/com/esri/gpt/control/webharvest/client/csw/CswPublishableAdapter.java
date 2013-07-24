@@ -19,6 +19,7 @@ import com.esri.gpt.framework.resource.api.SourceUri;
 import com.esri.gpt.framework.resource.common.CommonPublishable;
 import com.esri.gpt.framework.resource.common.StringUri;
 import com.esri.gpt.framework.util.Val;
+import com.esri.gpt.server.csw.client.NullReferenceException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
@@ -44,7 +45,7 @@ public SourceUri getSourceUri() {
   return sourceUri;
 }
 
-public String getContent() throws IOException {
+public String getContent() throws IOException, NullReferenceException {
   return proxy.read(sourceUri.asString());
 }
 

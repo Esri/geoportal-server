@@ -43,6 +43,7 @@ import com.esri.gpt.framework.security.identity.local.LocalDao;
 import com.esri.gpt.framework.security.principal.*;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.XsltTemplate;
+import com.esri.gpt.server.csw.client.NullReferenceException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -335,6 +336,14 @@ class LocalDataProcessor implements DataProcessor {
 
           // create harvest report entry for the current record
           rp.createEntry(sourceUri.asString(), !bReplaced);
+        } catch (NullReferenceException ex) {
+          if (LOGGER.isLoggable(Level.FINEST)) {
+            LOGGER.log(Level.FINEST, "[SYNCHRONIZER] FAILED processing metadata #" + (rp.getHarvestedCount() + 1) + " through: " + unit + ", source URI: " + sourceUri, ex);
+          } else {
+            LOGGER.finer("[SYNCHRONIZER] FAILED processing metadata #" + (rp.getHarvestedCount() + 1) + " through: " + unit + ", source URI: " + sourceUri + ", details: " + ex.getMessage());
+          }
+          rp.createInvalidEntry(sourceUri.asString(), Arrays.asList(new String[]{ex.getMessage()}));
+          listener.onPublishException(unit.getRepository(), sourceUri, metadata, ex);
         } catch (ValidationException ex) {
           if (LOGGER.isLoggable(Level.FINEST)) {
             LOGGER.log(Level.FINEST, "[SYNCHRONIZER] FAILED processing metadata #" + (rp.getHarvestedCount() + 1) + " through: " + unit + ", source URI: " + sourceUri, ex);

@@ -44,7 +44,13 @@ public abstract class HarvestProtocol implements Protocol, Serializable {
   private long flags;
   /** destinations */
   private List<String> destinations;
-// constructors ================================================================
+  /** ad-hoc */
+  private String addHoc = "";
+
+  // constructors ================================================================
+  public HarvestProtocol() {
+  }
+  
 // properties ==================================================================
   
   /**
@@ -197,6 +203,16 @@ public abstract class HarvestProtocol implements Protocol, Serializable {
   public void applyAttributeMap(StringAttributeMap attributeMap) {
     // default implementation is to do exatly what setAttributeMap() does
     setAttributeMap(attributeMap);
+  }
+
+  @Override
+  public String getAdHoc() {
+    return addHoc;
+  }
+
+  @Override
+  public void setAdHoc(String adHoc) {
+    this.addHoc = Val.chkStr(adHoc);
   }
 
   /**
