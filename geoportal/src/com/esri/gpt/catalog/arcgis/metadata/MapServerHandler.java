@@ -155,7 +155,6 @@ public class MapServerHandler extends ServiceHandler {
         new MapServerBindingStub(serviceInfo.getSoapUrl()):
         new MapServerBindingStub(serviceInfo.getSoapUrl(), getCredentials().getUsername(), getCredentials().getPassword());
       MapServerInfo mapInfo = stub.getServerInfo(stub.getDefaultMapName());
-      serviceInfo.setDescription(mapInfo.getDescription());
       serviceInfo.setEnvelope(mapInfo.getFullExtent());
     } catch (ArcGISWebServiceException ex) {
       LOGGER.log(Level.FINE, "Error getting MapServerInfo.", ex);

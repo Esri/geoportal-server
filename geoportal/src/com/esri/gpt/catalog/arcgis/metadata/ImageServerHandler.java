@@ -73,7 +73,6 @@ public class ImageServerHandler extends ServiceHandler {
       new ImageServerBindingStub(serviceInfo.getSoapUrl()):
       new ImageServerBindingStub(serviceInfo.getSoapUrl(), getCredentials().getUsername(), getCredentials().getPassword());
     ImageServiceInfo imageServiceInfo = stub.getServiceInfo();
-    serviceInfo.setDescription(imageServiceInfo.getDescription());
     serviceInfo.setEnvelope(imageServiceInfo.getExtent());
     } catch (ArcGISWebServiceException ex) {
       LOGGER.log(Level.FINE, "Error getting ImageServiceInfo.", ex);
