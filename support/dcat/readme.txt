@@ -18,12 +18,18 @@ In order to add DCAT support to your Geoportal Server instance take the followin
 
 - Make coffee and have some!
 - Backup your existing Geoportal Server
-- Merge gpt-dcat-pacth.xml with your gpt.xml. 
+- Merge gpt-dcat-patch.xml with your gpt.xml. 
   - The searchResultFormat element goes inside the search element.
   - The paramemeter element (dcat.mappings) goes into catalog, but outside search.
 - Append the contents of gpt-dcat-patch.properties to your existing gpt.properties.
-- replace your existing WEB-INF/lib/gpt.jar with the gpt-a.b.c-dcat.jar that matches your Geoportal Server version.
-- Merge the metadata.zip into the WEB-INF/classes/gpt/config/metadata folder. note especially fgdc-indexables.xml since you should already have one.
+- Replace your existing WEB-INF/lib/gpt.jar with the gpt-a.b.c-dcat.jar that matches your Geoportal Server version. IMPORTANT: if you have customizations that required a different 
+gpt.jar than the default distributed with your geoportal, those customizations will be overwritten when you apply this patch.
+- Carefully merge the metadata.zip into the WEB-INF/classes/gpt/config/metadata folder. Note especially fgdc-indexables.xml and property-meanings.xml, you will add the property meanings 
+that begin with 'dcat.'. Do not change the other property meanings, only add the ones for dcat. Also, remember to copy the dcat-mappings.xml to the 
+\\geoportal\WEB-INF\classes\gpt\metadata directory.
+- Re-index your FGDC metadata so they will be available through the REST API for DCAT. Login as an administrator and reapprove a few metadata documents to force an 
+immediate reindex; then test. You can see the new dcat indices when you view the REST document statistics at http://your_server/geoportal/rest/index/stats.
+- Further documentation is available at https://github.com/Esri/geoportal-server/wiki/Customize-DCAT-output.
 
 With these steps performed your site should be able to provide a DCAT listing in support of Project Open Data (http://project-open-data.github.io/)
 
