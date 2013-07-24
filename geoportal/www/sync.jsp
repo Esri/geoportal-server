@@ -20,9 +20,16 @@
 
 <%!
   private ArcGISInfo getSource() {
+    /*
     return new ArcGISInfo(
             "http://www.landscape.blm.gov/ArcGIS/rest/services",
             "http://www.landscape.blm.gov/ArcGIS/services/?wsdl",
+            "",
+            "");
+    */
+    return new ArcGISInfo(
+            "http://www.geocommunicator.gov/ArcGIS/rest/services",
+            "http://www.geocommunicator.gov/ArcGIS/services/?wsdl",
             "",
             "");
     
@@ -43,7 +50,8 @@
     connection.setTokenCriteria(agpTokenCriteria);
     
     destination.setDestinationOwner("piotrandzel");
-    destination.setDestinationFolderID("367e3b156010478cb0fd219ee8a9b531");
+//    destination.setDestinationFolderID("367e3b156010478cb0fd219ee8a9b531");
+    destination.setDestinationFolderID("943763cf142e4a69adc3dac8dbb5640f");
     
     return destination;
   }

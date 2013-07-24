@@ -44,6 +44,8 @@ import com.esri.gpt.framework.util.Val;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.json.JSONObject;
 
 /**
@@ -132,9 +134,18 @@ public class Ags2AgpCopy {
       if (serviceInfo.getEnvelope() instanceof EnvelopeN) {
         EnvelopeN e = (EnvelopeN) serviceInfo.getEnvelope();
         String envelope = ""+e.getXMin()+","+e.getYMin()+","+e.getXMax()+","+e.getYMax();
-        Integer wkid = e.getSpatialReference().getWKID();
         props.add(new AgpProperty("extent", envelope));
-        props.add(new AgpProperty("spatialreference", "{wkid: " +wkid+ "}"));
+        String wkt = e.getSpatialReference().getWKT();
+        Pattern p = Pattern.compile("GEOGCS\\[\\\"[^\"]*\\\"",Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(wkt);
+        if (m.find()) {
+          String GEOGCS = m.group();
+          p = Pattern.compile("\\\"[^\"]*\\\"",Pattern.CASE_INSENSITIVE);
+          m = p.matcher(GEOGCS);
+          if (m.find()) {
+            props.add(new AgpProperty("spatialreference", m.group().replaceAll("^\\\"|\\\"$", "")));
+          }
+        }
       }
       
       String agpType = agsToAgpType.get(type);
