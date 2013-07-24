@@ -236,7 +236,8 @@ public class Ags2AgpCopy {
     final AgpItem destinationItem = new AgpItem();
     destinationItem.setProperties(null);
     
-    String sQuery = "url:\""+sourceItem.getProperties().getValue("url")+"\"";
+    final String url = sourceItem.getProperties().getValue("url");
+    String sQuery = "url:\""+url+"\"";
     
     AgpSearchRequest request = new AgpSearchRequest();
     AgpSearchCriteria criteria = new AgpSearchCriteria();
@@ -247,7 +248,9 @@ public class Ags2AgpCopy {
         @Override
         public void onItemLoaded(AgpConnection connection, AgpItem item)
           throws Exception {
-          destinationItem.setProperties(item.getProperties());
+          if (url.equals(item.getProperties().get("url").getValue())) {
+            destinationItem.setProperties(item.getProperties());
+          }
         }
       }
     );

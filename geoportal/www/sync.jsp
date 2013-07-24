@@ -21,8 +21,8 @@
 <%!
   private ArcGISInfo getSource() {
     return new ArcGISInfo(
-            "http://services.arcgisonline.com/ArcGIS/rest/services/",
-            "http://services.arcgisonline.com/ArcGIS/services/?wsdl",
+            "http://www.landscape.blm.gov/ArcGIS/rest/services",
+            "http://www.landscape.blm.gov/ArcGIS/services/?wsdl",
             "",
             "");
     
@@ -43,7 +43,7 @@
     connection.setTokenCriteria(agpTokenCriteria);
     
     destination.setDestinationOwner("piotrandzel");
-    destination.setDestinationFolderID("f7b112d7935f466da925ca0b10fdb7a2");
+    destination.setDestinationFolderID("367e3b156010478cb0fd219ee8a9b531");
     
     return destination;
   }
