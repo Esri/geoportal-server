@@ -261,7 +261,7 @@ public class Ags2AgpCopy {
         @Override
         public void onItemLoaded(AgpConnection connection, AgpItem item)
           throws Exception {
-          if (url.equals(item.getProperties().get("url").getValue())) {
+          if (url.equals(item.getProperties().get("url").getValue()) && Ags2AgpCopy.this.destination.getDestinationOwner().equals(item.getProperties().get("owner").getValue())) {
             destinationItem.setProperties(item.getProperties());
           }
         }
