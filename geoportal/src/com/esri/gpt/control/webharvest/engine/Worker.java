@@ -15,6 +15,7 @@
 package com.esri.gpt.control.webharvest.engine;
 
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
+import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgs2Agp;
 import com.esri.gpt.catalog.management.MmdEnums.ApprovalStatus;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
@@ -178,6 +179,9 @@ class Worker extends WorkerBase {
     if (unit.getRepository().getProtocol().getKind().equalsIgnoreCase("agp2agp") && (unit.getRepository().getProtocol() instanceof HarvestProtocolAgp2Agp) ) {
       HarvestProtocolAgp2Agp agpProtocol = (HarvestProtocolAgp2Agp)unit.getRepository().getProtocol();
       return new Worker.Agp2AgpExecutorImpl(dataProcessor, unit, agpProtocol.getStopOnError());
+    } else if (unit.getRepository().getProtocol().getKind().equalsIgnoreCase("ags2agp") && (unit.getRepository().getProtocol() instanceof HarvestProtocolAgs2Agp) ) {
+      HarvestProtocolAgs2Agp agpProtocol = (HarvestProtocolAgs2Agp)unit.getRepository().getProtocol();
+      return new Worker.Ags2AgpExecutorImpl(dataProcessor, unit);
     } else {
       return new Worker.ExecutorImpl(dataProcessor, unit);
     }
@@ -271,6 +275,31 @@ class Worker extends WorkerBase {
 
     public Agp2AgpExecutorImpl(DataProcessor dataProcessor, ExecutionUnit unit, boolean stopOnError) {
       super(dataProcessor, unit, stopOnError);
+    }
+
+    @Override
+    protected boolean isActive() {
+      return !(isShutdown() || isDropped());
+    }
+
+    @Override
+    protected boolean isShutdown() {
+      return Worker.this.isShutdown();
+    }
+
+    @Override
+    protected boolean isSuspended() {
+      return Worker.this.isSuspended();
+    }
+  }
+
+  /**
+   * Agp2Agp executor implementation.
+   */
+  private class Ags2AgpExecutorImpl extends Ags2AgpExecutor {
+
+    public Ags2AgpExecutorImpl(DataProcessor dataProcessor, ExecutionUnit unit) {
+      super(dataProcessor, unit);
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Esri.
+ * Copyright 2013 Esri.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,20 +34,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Agp2Agp executor.
+ *
+ * @author Esri
  */
-abstract class Agp2AgpExecutor extends Executor {
+abstract class Ags2AgpExecutor extends Executor {
 
   /**
    * logger
    */
-  private static final Logger LOGGER = Logger.getLogger(Agp2AgpExecutor.class.getCanonicalName());
-  
-  private boolean stopOnError = true;
+  private static final Logger LOGGER = Logger.getLogger(Ags2AgpExecutor.class.getCanonicalName());
 
-  public Agp2AgpExecutor(DataProcessor dataProcessor, ExecutionUnit unit, boolean stopOnError) {
+  public Ags2AgpExecutor(DataProcessor dataProcessor, ExecutionUnit unit) {
     super(dataProcessor, unit);
-    this.stopOnError = stopOnError;
   }
 
   @Override
@@ -69,11 +67,12 @@ abstract class Agp2AgpExecutor extends Executor {
 
     try {
       Protocol protocol = getExecutionUnit().getRepository().getProtocol();
-      if (protocol instanceof HarvestProtocolAgp2Agp) {
-        HarvestProtocolAgp2Agp agp2agp = (HarvestProtocolAgp2Agp)protocol;
-        AgpSource source = agp2agp.getSource();
-        AgpDestination destination = agp2agp.getDestination();
-        AgpPush agpPush = new AgpPush(source, destination) {
+      if (protocol instanceof HarvestProtocolAgs2Agp) {
+        HarvestProtocolAgs2Agp ags2agp = (HarvestProtocolAgs2Agp)protocol;
+        ArcGISInfo source = ags2agp.getSource();
+        AgpDestination destination = ags2agp.getDestination();
+        
+        Ags2AgpCopy copy = new Ags2AgpCopy(source, destination){
           private long counter;
           
           @Override
@@ -86,16 +85,10 @@ abstract class Agp2AgpExecutor extends Executor {
               LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Pushed item #{0} of source URI: \"{1}\" through unit: {2}", new Object[]{counter, sourceItem.getProperties().getValue("id"), unit});
               return result;
             } catch (AgpException ex) {
-              if (stopOnError) {
-                throw ex;
-              }
               LOGGER.log(Level.WARNING, "[SYNCHRONIZER] Failed pushing item #{0} of source URI: \"{1}\" through unit: {2}. Reason: {3}", new Object[]{counter, sourceItem.getProperties().getValue("id"), unit, ex.getMessage()});
               rp.createUnpublishedEntry(sourceUri, Arrays.asList(new String[]{ex.getMessage()}));
               return false;
             } catch (HttpClientException ex) {
-              if (stopOnError) {
-                throw ex;
-              }
               LOGGER.log(Level.WARNING, "[SYNCHRONIZER] Failed pushing item #{0} of source URI: \"{1}\" through unit: {2}. Reason: {3}", new Object[]{counter, sourceItem.getProperties().getValue("id"), unit, ex.getMessage()});
               rp.createUnpublishedEntry(sourceUri, Arrays.asList(new String[]{ex.getMessage()}));
               return false;
@@ -106,15 +99,13 @@ abstract class Agp2AgpExecutor extends Executor {
 
           @Override
           protected boolean doContinue() {
-            boolean doContinue = Agp2AgpExecutor.this.isActive();
+            boolean doContinue = Ags2AgpExecutor.this.isActive();
             if (!doContinue) {
               unit.setCleanupFlag(false);
             }
             return doContinue;
           }
-          
         };
-        agpPush.synchronize();
       }
 
       success = true;
@@ -141,4 +132,5 @@ abstract class Agp2AgpExecutor extends Executor {
       LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Completed pushing through unit: {0}. Obtained {1} records.", new Object[]{unit, count});
     }
   }
+  
 }

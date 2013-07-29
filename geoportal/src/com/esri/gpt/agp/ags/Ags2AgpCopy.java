@@ -107,6 +107,9 @@ public class Ags2AgpCopy {
       
       Iterable<IServiceInfoProvider> records = new ServiceInfoProviderAdapter(new FlatResourcesAdapter(result.getResources()));
       for (IServiceInfoProvider r: records) {
+        if (!doContinue()) {
+          break;
+        }
         ServiceInfo serviceInfo = r.getServiceInfo();
         AgpItem agpItem = createAgpItem(serviceInfo);
         if (agpItem!=null) {
@@ -157,7 +160,7 @@ public class Ags2AgpCopy {
     return null;
   }
   
-  private boolean syncItem(AgpItem sourceItem) throws Exception  {
+  protected boolean syncItem(AgpItem sourceItem) throws Exception  {
     this.numItemsConsidered++;
     
     String sType = sourceItem.getProperties().getValue("type");
@@ -271,5 +274,13 @@ public class Ags2AgpCopy {
       return destinationItem;
     }
     return null;
+  }
+  
+  /**
+   * Check if continue copying.
+   * @return <code>true</code> if continue copying
+   */
+  protected boolean doContinue() {
+    return true;
   }
 }
