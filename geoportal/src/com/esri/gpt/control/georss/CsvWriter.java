@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 
 /**
- * @author TM
- * 
  * The Class CsvWriter.
  */
 public class CsvWriter extends AFeedWriter2 {

@@ -589,8 +589,13 @@ public void setTimeCodes(String timeCodes) {
   _harvestRepository.getProtocol().setAdHoc(timeCodes);
 }
 
+/**
+ * Frequency mode.
+ */
 public static enum FrequencyMode {
+  /** periodical (once every period of time) */
   PERIODICAL,
+  /** ad-hoc (at the predefined exact point in time) */
   ADHOC
 }
 }

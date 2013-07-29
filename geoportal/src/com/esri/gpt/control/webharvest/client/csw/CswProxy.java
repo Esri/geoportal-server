@@ -68,7 +68,7 @@ public CswCatalog getCatalog() {
   return catalog;
 }
 
-public String read(String sourceUri) throws IOException {
+public String read(String sourceUri) throws IOException, NullReferenceException {
   LOGGER.finer("Reading metadata of source URI: \"" +sourceUri+ "\" through proxy: "+this);
   sourceUri = Val.chkStr(sourceUri);
   String fullMetadata = "";
@@ -84,8 +84,8 @@ public String read(String sourceUri) throws IOException {
     LOGGER.finer("Received metadata of source URI: \"" +sourceUri+ "\" through proxy: "+this);
     LOGGER.finest(mdText);
     return mdText;
-  } catch (NullReferenceException ex) {
-    throw new IOException("Error accessing metadata. Cause: "+ex.getMessage());
+//  } catch (NullReferenceException ex) {
+//    throw new IOException("Error accessing metadata. Cause: "+ex.getMessage());
   } catch (InvalidOperationException ex) {
     throw new IOException("Error accessing metadata. Cause: "+ex.getMessage());
   } catch (TransformerException ex) {

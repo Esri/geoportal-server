@@ -17,6 +17,6 @@
 
 <!-- NSIDC. -->
 <repository key="nsidc" class="com.esri.gpt.catalog.search.SearchEngineRest" labelResourceKey="catalog.search.searchSite.nsidc" abstractResourceKey="catalog.search.searchSite.nsidc.abstract">
-	<parameter key="endPointSearchUrl" value="http://nsidc.org/api/opensearch/1.1/dataset?searchterms={searchTerms}"/>
+	<parameter key="endPointSearchUrl" value="http://nsidc.org/api/opensearch/1.1/dataset?searchterms={searchTerms?}&amp;startIndex={startIndex}&amp;itemsPerPage={count}"/>
 	<parameter key="profileId" value="urn:esri:gpt:HTTP:XML:NSIDC"/>
 </repository>

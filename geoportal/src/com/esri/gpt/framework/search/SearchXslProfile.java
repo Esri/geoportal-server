@@ -85,6 +85,9 @@ private static Logger LOG = Logger.getLogger(CswProfile.class
 private final static String SCHEME_METADATA_DOCUMENT = 
   "urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Document";
 
+/**
+ * Type of search output format.
+ */
 public static enum FORMAT_SEARCH_TO_XSL {MINIMAL_LEGACY_CSWCLIENT, 
   FULL_NATIVE_GPTXML, DETAILED_GPT_CSW202};
 

@@ -20,6 +20,7 @@ import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.NodeListAdapter;
 import com.esri.gpt.framework.xml.XmlIoUtil;
+import com.esri.gpt.server.csw.client.NullReferenceException;
 import java.io.IOException;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
@@ -67,14 +68,17 @@ public String read(String sourceUri) throws IOException {
         "/OAI-PMH/GetRecord/record/metadata",
         doc, XPathConstants.NODE);
     Node elementNode = null;
-    for (Node nd : new NodeListAdapter(node.getChildNodes())) {
-      if (nd.getNodeType()==Node.ELEMENT_NODE) {
-        elementNode = nd;
-        break;
+    if (node!=null) {
+      for (Node nd : new NodeListAdapter(node.getChildNodes())) {
+        if (nd.getNodeType()==Node.ELEMENT_NODE) {
+          elementNode = nd;
+          break;
+        }
       }
     }
     if (elementNode==null) {
-      throw new IOException("Error extracting metadata from <metadata> node.");
+      LOGGER.finer("Received empty metadata of source URI: \"" +sourceUri+ "\" through proxy: "+this);
+      return "";
     }
     Document mdDoc = DomUtil.newDocument();
     mdDoc.appendChild(mdDoc.importNode(elementNode, true));

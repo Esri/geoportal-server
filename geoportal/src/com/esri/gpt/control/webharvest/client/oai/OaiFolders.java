@@ -29,7 +29,6 @@ import com.esri.gpt.framework.xml.NodeListAdapter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
@@ -79,6 +78,7 @@ public OaiFolders(IterationContext context, OaiInfo info, OaiProxy proxy, Criter
   this.criteria = criteria;
 }
 
+@Override
 public Iterator<Resource> iterator() {
   return new OaiFolderIterator();
 }
@@ -97,6 +97,7 @@ private int recs;
 /** no more records*/
 private boolean noMore;
 
+@Override
 public boolean hasNext() {
   if (!noMore && nextOaiRecords == null) {
     if (resumptionToken == null || resumptionToken.length() > 0) {
@@ -113,6 +114,7 @@ public boolean hasNext() {
   return !noMore;
 }
 
+@Override
 public Resource next() {
   if (!hasNext()) {
     throw new NoSuchElementException();
@@ -120,6 +122,7 @@ public Resource next() {
   final Iterable<Resource> records = nextOaiRecords;
   nextOaiRecords = null;
   return new Resource() {
+    @Override
     public Iterable<Resource> getNodes() {
       return records;
     }
@@ -134,7 +137,7 @@ private void advanceToNextRecords() throws IOException {
   LOGGER.finer("Advancing to the next group of records.");
   try {
     HttpClientRequest cr = new HttpClientRequest();
-    cr.setUrl(info.newListIdsUrl(resumptionToken, null, null));
+    cr.setUrl(info.newListIdsUrl(resumptionToken, criteria.getFromDate(), criteria.getToDate()));
 
     XmlHandler sh = new XmlHandler(false);
     cr.setContentHandler(sh);
@@ -155,10 +158,12 @@ private void advanceToNextRecords() throws IOException {
       Publishable publishable = new CommonPublishable() {
         private StringUri uri = new StringUri(id);
         
+        @Override
         public SourceUri getSourceUri() {
           return uri;
         }
 
+        @Override
         public String getContent() throws IOException {
           return proxy.read(id);
         }

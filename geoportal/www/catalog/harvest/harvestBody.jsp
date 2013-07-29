@@ -57,29 +57,29 @@ dojo.require("dijit.form.CheckBox");
 dojo.require("dijit.form.RadioButton");
 
 var RES = {
-  SpecTimeEvent:               "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.SpecTimeEvent"/>",
-  TimeOfTheDayEvent:           "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.TimeOfTheDayEvent"/>",
-  DayOfTheMonthEvent:          "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.DayOfTheMonthEvent"/>",
-  DayOfTheWeekEvent:           "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.DayOfTheWeekEvent"/>",
-  DayOfTheWeekInTheMonthEvent: "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.DayOfTheWeekInTheMonthEvent"/>",
+  SpecTimeEvent:               "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.SpecTimeEvent'/>",
+  TimeOfTheDayEvent:           "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.TimeOfTheDayEvent'/>",
+  DayOfTheMonthEvent:          "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.DayOfTheMonthEvent'/>",
+  DayOfTheWeekEvent:           "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.DayOfTheWeekEvent'/>",
+  DayOfTheWeekInTheMonthEvent: "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.DayOfTheWeekInTheMonthEvent'/>",
 
   DayOfTheWeek: [
-    "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.SUNDAY"/>",
-    "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.MONDAY"/>",
-    "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.TUEASDAY"/>",
-    "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.WEDNESDAY"/>",
-    "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.THURSDAY"/>",
-    "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.FRIDAY"/>",
-    "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.SATURDAY"/>"
+    "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.SUNDAY'/>",
+    "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.MONDAY'/>",
+    "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.TUEASDAY'/>",
+    "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.WEDNESDAY'/>",
+    "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.THURSDAY'/>",
+    "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.FRIDAY'/>",
+    "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.SATURDAY'/>"
   ],
           
-  SUNDAY: "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.SUNDAY"/>",
-  MONDAY: "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.MONDAY"/>",
-  TUEASDAY: "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.TUEASDAY"/>",
-  WEDNESDAY: "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.WEDNESDAY"/>",
-  THURSDAY: "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.THURSDAY"/>",
-  FRIDAY: "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.FRIDAY"/>",
-  SATURDAY: "<fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.SATURDAY"/>"
+  SUNDAY: "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.SUNDAY'/>",
+  MONDAY: "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.MONDAY'/>",
+  TUEASDAY: "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.TUEASDAY'/>",
+  WEDNESDAY: "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.WEDNESDAY'/>",
+  THURSDAY: "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.THURSDAY'/>",
+  FRIDAY: "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.FRIDAY'/>",
+  SATURDAY: "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.SATURDAY'/>"
 };
 
 /**
@@ -510,7 +510,7 @@ dojo.addOnLoad(function() {
       ownersDialog.show();
       getSelf();
     } else {
-      alert("<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.alert"/>");
+      alert("<fmt:message key='catalog.harvest.manage.test.msg.agp2agp.ownersDialog.alert'/>");
     }
   });
   
@@ -525,7 +525,7 @@ dojo.addOnLoad(function() {
       foldersDialog.show();
       searchFolders();
     } else {
-      alert("<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.foldersDialog.alert"/>");
+      alert("<fmt:message key='catalog.harvest.manage.test.msg.agp2agp.foldersDialog.alert'/>");
     }
   });
 
