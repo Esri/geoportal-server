@@ -300,7 +300,7 @@ function enableSection(section,enable) {
  */
 function selectSection(section) {
   
-  if (section=="agp2agp") {
+  if (section=="agp2agp" || section=="ags2agp" ) {
     dojo.query("#harvestCreate\\:repositoryMain > tbody > tr:nth-child(2)").style("display","none");
   } else {
     dojo.query("#harvestCreate\\:repositoryMain > tbody > tr:nth-child(2)").style("display","table-row");
@@ -323,8 +323,9 @@ function selectSection(section) {
   enableSection("atom", section=="atom");
   
   enableSection("agp2agp", section=="agp2agp");
+  enableSection("ags2agp", section=="ags2agp");
   
-  dojo.query(".onBehalfOf").style("display",section!="agp2agp"? "block": "none");
+  dojo.query(".onBehalfOf").style("display",section!="agp2agp" && section!="ags2agp"? "block": "none");
 
   adjustSearchable(section);
   adjustFindable(section);
@@ -397,7 +398,7 @@ function adjustSearchable(section) {
  * Adjusts searchable.
  */
 function adjustFindable(section) {
-  var enabled = section!="agp2agp";
+  var enabled = section!="agp2agp" && section!="ags2agp";
   dojo.query("#harvestCreate .findable").attr("disabled",!enabled);
   if (!enabled) {
     if (lastFindableEnabled) {
@@ -1043,6 +1044,65 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <h:inputText   styleClass="agp2agp" size="40" value="#{HarvestController.editor.attrs['dest-f']}" id="dest-f"/>
 <f:verbatim>
   <input type="button" style="left: -4px;" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.button.fetchFolders"/>" id="fetchFolders"/>
+</f:verbatim>
+</h:panelGroup>
+
+<%-- AGS-TO-AGP specific properties ------------------------------------------%>
+<h:outputText styleClass="ags2agp agp2agpCaption" value=""/>
+<h:outputText styleClass="ags2agp agp2agpCaption" value="#{gptMsg['catalog.harvest.manage.edit.src.caption']}"/>
+
+<%-- src host --%>
+<h:outputLabel styleClass="requiredField ags2agp" for="ags-src-restUrl" value="#{gptMsg['catalog.harvest.manage.edit.src.h']}"/>
+<h:inputText   styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-src-restUrl']}" id="ags-src-restUrl"/>
+
+<%-- src soap --%>
+<h:outputLabel styleClass="requiredField ags2agp" for="ags-src-soapUrl" value="#{gptMsg['catalog.harvest.manage.edit.src.soap']}"/>
+<h:inputText   styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-src-soapUrl']}" id="ags-src-soapUrl"/>
+
+<%-- src user name --%>
+<h:outputLabel styleClass="requiredField ags2agp" for="ags-src-userName" value="#{gptMsg['catalog.harvest.manage.edit.src.u']}"/>
+<h:inputText   styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-src-userName']}" id="ags-src-userName"/>
+
+<%-- src password --%>
+<h:outputLabel styleClass="requiredField ags2agp" for="ags-src-userPassword" value="#{gptMsg['catalog.harvest.manage.edit.src.p']}"/>
+<h:inputSecret redisplay="true" styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-src-userPassword']}" id="ags-src-userPassword"/>
+
+<h:outputText styleClass="ags2agp agp2agpCaption" value=""/>
+<h:outputText styleClass="ags2agp agp2agpCaption" value="#{gptMsg['catalog.harvest.manage.edit.dest.caption']}"/>
+
+<%-- dest host --%>
+<h:outputLabel styleClass="requiredField ags2agp" for="agp-dest-h" value="#{gptMsg['catalog.harvest.manage.edit.dest.h']}"/>
+<h:inputText   styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-dest-h']}" id="agp-dest-h"/>
+
+<%-- dest user name --%>
+<h:outputLabel styleClass="requiredField ags2agp" for="ags-dest-u" value="#{gptMsg['catalog.harvest.manage.edit.dest.u']}"/>
+<h:inputText   styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-dest-u']}" id="ags-dest-u"/>
+
+<%-- dest password --%>
+<h:outputLabel styleClass="requiredField ags2agp" for="ags-dest-p" value="#{gptMsg['catalog.harvest.manage.edit.dest.p']}"/>
+<h:panelGroup>
+<h:inputSecret redisplay="true" styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-dest-p']}" id="ags-dest-p"/>
+<h:commandButton 
+  id="ags2agp-testClient"
+  value="#{gptMsg['catalog.harvest.manage.test.msg.agp2agp.button.testClient']}" 
+  actionListener="#{HarvestController.handleTestAgp2AgpClient}" />
+</h:panelGroup>
+
+<%-- dest owner --%>
+<h:outputLabel styleClass="requiredField ags2agp" for="ags-dest-o" value="#{gptMsg['catalog.harvest.manage.edit.dest.o']}"/>
+<h:panelGroup>
+<h:inputText styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-dest-o']}" id="ags-dest-o"/>
+<f:verbatim>
+  <input type="button" style="left: -4px;" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.button.fetchOwners"/>" id="ags2agp-fetchOwners"/>
+</f:verbatim>
+</h:panelGroup>
+
+<%-- dest folder ID --%>
+<h:outputLabel styleClass="requiredField ags2agp" for="ags-dest-f" value="#{gptMsg['catalog.harvest.manage.edit.dest.f']}"/>
+<h:panelGroup>
+<h:inputText   styleClass="ags2agp" size="40" value="#{HarvestController.editor.attrs['ags-dest-f']}" id="ags-dest-f"/>
+<f:verbatim>
+  <input type="button" style="left: -4px;" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.button.fetchFolders"/>" id="ags2agp-fetchFolders"/>
 </f:verbatim>
 </h:panelGroup>
 
