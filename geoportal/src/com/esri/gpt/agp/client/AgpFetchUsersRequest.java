@@ -93,6 +93,9 @@ public class AgpFetchUsersRequest {
     return user;
   }
   
+  /**
+   * Portal for ArcGIS user.
+   */
   public static class AgpUser {
     private String username = "";
     private String fullName = "";
@@ -100,42 +103,82 @@ public class AgpFetchUsersRequest {
     private String role = "";
     private String orgId = "";
 
+    /**
+     * Gets user name.
+     * @return user name
+     */
     public String getUsername() {
       return username;
     }
 
+    /**
+     * Sets user name.
+     * @param username user name 
+     */
     public void setUsername(String username) {
       this.username = username;
     }
 
+    /**
+     * Gets user full name.
+     * @return user full name
+     */
     public String getFullName() {
       return fullName;
     }
 
+    /**
+     * Sets user full name.
+     * @param fullName user full name
+     */
     public void setFullName(String fullName) {
       this.fullName = fullName;
     }
 
+    /**
+     * Gets user access.
+     * @return user access
+     */
     public String getAccess() {
       return access;
     }
 
+    /**
+     * Sets user access.
+     * @param access user access
+     */
     public void setAccess(String access) {
       this.access = access;
     }
 
+    /**
+     * Gets user role.
+     * @return user role
+     */
     public String getRole() {
       return role;
     }
 
+    /**
+     * Sets user role.
+     * @param role user role
+     */
     public void setRole(String role) {
       this.role = role;
     }
 
+    /**
+     * Gets user OrgID
+     * @return user OrgID
+     */
     public String getOrgId() {
       return orgId;
     }
 
+    /**
+     * Sets user OrgID.
+     * @param orgId user OrgID
+     */
     public void setOrgId(String orgId) {
       this.orgId = orgId;
     }

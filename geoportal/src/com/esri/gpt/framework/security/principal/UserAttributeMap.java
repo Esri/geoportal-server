@@ -15,7 +15,7 @@
 package com.esri.gpt.framework.security.principal;
 import com.esri.gpt.framework.collection.CaseInsensitiveMap;
 
-/*
+/**
  * Maintains and ordered map representing the attributes
  * associated with a user's profile.
  * <p/>

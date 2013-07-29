@@ -25,20 +25,59 @@ import java.util.List;
  */
 public interface IFeedAttribute {
 
+  /**
+   * Gets value.
+   * @return value
+   */
   Object getValue();
+  /**
+   * Gets Esri type.
+   * @return Esri type
+   */
   String getEsriType();
+  /**
+   * Gets attribute length.
+   * @return attribute length
+   */
   int getLength();
   
+  /**
+   * Feed attribute factory.
+   */
   static class Factory {
+    /**
+     * Creates attribute.
+     * @param value value
+     * @param length length
+     * @return attribute
+     */
     static IFeedAttribute create(String value, int length) {
       return new FeedString(value, length);
     }
+    /**
+     * Creates attribute.
+     * @param value value
+     * @param length length
+     * @return attribute
+     */
     static IFeedAttribute create(Number value, int length) {
       return new FeedNumber(value, length);
     }
+    /**
+     * Creates attribute.
+     * @param value value
+     * @param length length
+     * @return attribute
+     */
     static IFeedAttribute create(Date value, int length) {
       return new FeedDate(value);
     }
+    /**
+     * Creates attribute.
+     * @param value value
+     * @param length length
+     * @return attribute
+     */
     static IFeedAttribute create(Object value, int length) {
       if (value instanceof String) {
         return create((String)value, length);
@@ -59,6 +98,9 @@ public interface IFeedAttribute {
     }
   }
   
+  /**
+   * Null feed.
+   */
   static class FeedNull implements IFeedAttribute {
     @Override
     public String toString() {
@@ -81,6 +123,9 @@ public interface IFeedAttribute {
     }
   }
   
+  /**
+   * String feed.
+   */
   static class FeedString implements IFeedAttribute {
     private String value;
     private int length;
@@ -115,6 +160,9 @@ public interface IFeedAttribute {
     }
   }
   
+  /**
+   * Number feed.
+   */
   static class FeedNumber implements IFeedAttribute {
     private Number number;
     private int length;
@@ -144,6 +192,9 @@ public interface IFeedAttribute {
     }
   }
   
+  /**
+   * Date feed.
+   */
   static class FeedDate implements IFeedAttribute {
     private final static IsoDateFormat DF = new IsoDateFormat();
     private Date date;
@@ -173,6 +224,9 @@ public interface IFeedAttribute {
     }
   }
   
+  /**
+   * Object feed.
+   */
   static class FeedObject implements IFeedAttribute {
     private Object obj;
     private int length;
@@ -202,6 +256,9 @@ public interface IFeedAttribute {
     }
   }
   
+  /**
+   * List feed.
+   */
   static class FeedList implements IFeedAttribute {
     private List<IFeedAttribute> list;
     

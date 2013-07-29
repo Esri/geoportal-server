@@ -21,6 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.esri.gpt.framework.collection.StringAttributeMap;
 
+/**
+ * HTTP request utility class.
+ */
 public class HttpRequestUtil {
 	
 	// class variables =============================================================

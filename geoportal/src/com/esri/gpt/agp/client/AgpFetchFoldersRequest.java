@@ -50,22 +50,41 @@ public class AgpFetchFoldersRequest {
     return folders;
   }
   
+  /**
+   * Portal for ArcGIS user.
+   */
   public static class AgpFolder {
     private String id = "";
     private String title = "";
 
+    /**
+     * Gets folder id.
+     * @return folder id
+     */
     public String getId() {
       return id;
     }
 
+    /**
+     * Sets folder id.
+     * @param id folder id
+     */
     public void setId(String id) {
       this.id = id;
     }
 
+    /**
+     * Gets folder title.
+     * @return folder title
+     */
     public String getTitle() {
       return title;
     }
 
+    /**
+     * Sets folder title.
+     * @param title folder title
+     */
     public void setTitle(String title) {
       this.title = title;
     }
