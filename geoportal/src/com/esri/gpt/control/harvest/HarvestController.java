@@ -28,6 +28,7 @@ import com.esri.gpt.catalog.harvest.clients.exceptions.HRTimeoutException;
 import com.esri.gpt.catalog.harvest.history.HeCriteria;
 import com.esri.gpt.catalog.harvest.jobs.HjRecord;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
+import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgs2Agp;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolArcIms;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolResource;
 import com.esri.gpt.catalog.harvest.repository.HrActionCriteria;
@@ -601,6 +602,11 @@ public class HarvestController extends BaseHarvestController {
 
   }
 
+  /**
+   * Tests agp-2-agp query.
+   * @param event action event
+   * @throws AbortProcessingException  if processing should be aborted
+   */
   public void handleTestAgp2AgpQuery(ActionEvent event)
           throws AbortProcessingException {
     try {
@@ -650,6 +656,11 @@ public class HarvestController extends BaseHarvestController {
     }
   }
 
+  /**
+   * Tests agp-2-agp destination client.
+   * @param event action event
+   * @throws AbortProcessingException  if processing should be aborted
+   */
   public void handleTestAgp2AgpClient(ActionEvent event)
           throws AbortProcessingException {
     try {
@@ -659,6 +670,48 @@ public class HarvestController extends BaseHarvestController {
       if (protocol instanceof HarvestProtocolAgp2Agp) {
         HarvestProtocolAgp2Agp agp2agp = (HarvestProtocolAgp2Agp) protocol;
         AgpDestination destination = agp2agp.getDestination();
+
+        boolean stop = false;
+        if (destination.getConnection().getHost().isEmpty()) {
+          extractMessageBroker().addErrorMessage(
+                  "catalog.harvest.manage.test.err.agp2agp.dst.nohost");
+          stop = true;
+        }
+
+        if (destination.getConnection().getTokenCriteria().getCredentials().getUsername().isEmpty() || destination.getConnection().getTokenCriteria().getCredentials().getPassword().isEmpty()) {
+          extractMessageBroker().addErrorMessage(
+                  "catalog.harvest.manage.test.err.agp2agp.dst.nocredentials");
+          stop = true;
+        }
+
+        if (!stop) {
+          destination.getConnection().generateToken();
+          extractMessageBroker().addSuccessMessage(
+                  "catalog.harvest.manage.test.msg.agp2agp.confirmed");
+        }
+      }
+    } catch (Exception ex) {
+      extractMessageBroker().addErrorMessage(
+              "catalog.harvest.manage.test.err.agp2agp.connect", new Object[]{ex.getMessage()});
+    } finally {
+      onExecutionPhaseCompleted();
+    }
+  }
+
+  /**
+   * Tests agp-2-agp destination client.
+   * @param event action event
+   * @throws AbortProcessingException  if processing should be aborted
+   */
+  public void handleTestAgs2AgpClient(ActionEvent event)
+          throws AbortProcessingException {
+    try {
+      // start execution phase
+      RequestContext context = onExecutionPhaseStarted();
+      Protocol protocol = this.getEditor().getRepository().getProtocol();
+      if (protocol instanceof HarvestProtocolAgs2Agp) {
+        HarvestProtocolAgs2Agp ags2agp = (HarvestProtocolAgs2Agp) protocol;
+        AgpDestination destination = ags2agp.getDestination();
 
         boolean stop = false;
         if (destination.getConnection().getHost().isEmpty()) {

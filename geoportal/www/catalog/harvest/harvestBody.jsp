@@ -1085,7 +1085,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <h:commandButton 
   id="ags2agp-testClient"
   value="#{gptMsg['catalog.harvest.manage.test.msg.agp2agp.button.testClient']}" 
-  actionListener="#{HarvestController.handleTestAgp2AgpClient}" />
+  actionListener="#{HarvestController.handleTestAgs2AgpClient}" />
 </h:panelGroup>
 
 <%-- dest owner --%>
