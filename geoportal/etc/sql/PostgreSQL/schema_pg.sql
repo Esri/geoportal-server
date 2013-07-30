@@ -210,7 +210,7 @@ CREATE TABLE GPT_RESOURCE (
   ACL               character varying(4000),
   HOST_URL          character varying(255), 
   PROTOCOL_TYPE     character varying(20), 
-  PROTOCOL          character varying(1000),
+  PROTOCOL          character varying(2000),
   FREQUENCY         character varying(10),
   SEND_NOTIFICATION character varying(10),
   FINDABLE          character varying(6),
