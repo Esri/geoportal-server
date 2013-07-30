@@ -159,6 +159,11 @@ public class HarvestProtocolAgs2Agp extends AbstractHTTPHarvestProtocol {
     };
   }
 
+  @Override
+  public void ping(String url) throws Exception {
+    super.ping(getSourceHost()); //To change body of generated methods, choose Tools | Templates.
+  }
+
   /**
    * Gets referrer.
    * @return referrer

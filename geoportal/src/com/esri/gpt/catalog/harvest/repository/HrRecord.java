@@ -510,10 +510,6 @@ public void checkConnection()
   try {
     Protocol protocol = getProtocol();
     String hostUrl = getHostUrl();
-    if (protocol instanceof HarvestProtocolAgs2Agp) {
-      HarvestProtocolAgs2Agp ags2agp = (HarvestProtocolAgs2Agp)protocol;
-      hostUrl = ags2agp.getSourceHost();
-    }
     ProtocolInvoker.ping(protocol, hostUrl);
   } catch (Exception ex) {
     if (ex instanceof HRInvalidProtocolException) {
