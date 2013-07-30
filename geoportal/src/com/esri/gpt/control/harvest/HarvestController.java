@@ -603,6 +603,95 @@ public class HarvestController extends BaseHarvestController {
   }
 
   /**
+   * Checks connection to the remote server.
+   *
+   * @param event the associated JSF action event
+   * @throws AbortProcessingException if processing should be aborted
+   */
+  public void handleTestAgs2AgpConnection(ActionEvent event)
+          throws AbortProcessingException {
+    try {
+      // start execution phase
+      RequestContext context = onExecutionPhaseStarted();
+
+      // check authorization
+      authorizeAction(context);
+
+      HrRecord repository = getEditor().getRepository();
+
+      HrTestRequest request = new HrTestRequest(context, repository);
+      request.execute();
+
+      extractMessageBroker().addSuccessMessage(
+              "catalog.harvest.manage.test.success");
+
+    } catch (HRInvalidProtocolException ex) {
+      switch (ex.getElement()) {
+        case url:
+          extractMessageBroker().addErrorMessage(
+                  "catalog.harvest.manage.test.err.HarvestInvalidUrl");
+          break;
+        case portNo:
+          extractMessageBroker().addErrorMessage(
+                  "catalog.harvest.manage.test.err.HarvestInvalidPortNo");
+          break;
+        case sourceUri:
+          extractMessageBroker().addErrorMessage(
+                  "catalog.harvest.manage.test.err.HarvestInvalidSourceURI");
+          break;
+        case userName:
+          extractMessageBroker().addErrorMessage(
+                  "catalog.harvest.manage.test.err.HarvestInvalidUserName");
+          break;
+        case userPassword:
+          extractMessageBroker().addErrorMessage(
+                  "catalog.harvest.manage.test.err.HarvestInvalidUserPassword");
+          break;
+        case serviceName:
+          extractMessageBroker().addErrorMessage(
+                  "catalog.harvest.manage.test.err.HarvestInvalidServiceName");
+          break;
+        case set:
+          extractMessageBroker().addErrorMessage(
+                  "catalog.harvest.manage.test.err.HarvestInvalidSet");
+          break;
+        case prefix:
+          extractMessageBroker().addErrorMessage(
+                  "catalog.harvest.manage.test.err.HarvestInvalidPrefix");
+          break;
+        case databaseName:
+          extractMessageBroker().addErrorMessage(
+                  "catalog.harvest.manage.test.err.HarvestInvalidDatabaseName");
+          break;
+        default:
+          extractMessageBroker().addErrorMessage(
+                  "catalog.harvest.manage.test.err.HarvestInvalidArgumentException");
+          break;
+      }
+      LogUtil.getLogger().log(Level.FINE, "Exception raised.", ex);
+    } catch (HRTimeoutException ex) {
+      extractMessageBroker().addErrorMessage(
+              "catalog.harvest.manage.test.err.HarvestTimeoutException");
+      LogUtil.getLogger().log(Level.FINE, "Exception raised.", ex);
+    } catch (HRInvalidResponseException ex) {
+      extractMessageBroker().addErrorMessage(
+              "catalog.harvest.manage.test.err.HarvestInvalidResponseException");
+      LogUtil.getLogger().log(Level.FINE, "Exception raised.", ex);
+    } catch (HRConnectionException ex) {
+      extractMessageBroker().addErrorMessage(
+              "catalog.harvest.manage.test.err.HarvestConnectionException");
+      LogUtil.getLogger().log(Level.FINE, "Exception raised.", ex);
+    } catch (AbortProcessingException e) {
+      throw (e);
+    } catch (Throwable t) {
+      handleException(t);
+    } finally {
+      onExecutionPhaseCompleted();
+    }
+
+  }
+
+  /**
    * Tests agp-2-agp query.
    * @param event action event
    * @throws AbortProcessingException  if processing should be aborted
