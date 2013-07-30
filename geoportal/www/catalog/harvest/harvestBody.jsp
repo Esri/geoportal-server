@@ -494,40 +494,53 @@ dojo.addOnLoad(function() {
 dojo.addOnLoad(function() {
   var fetchOwners = dojo.byId("fetchOwners");
   var fetchFolders = dojo.byId("fetchFolders");
+  var fetchAgs2AgpOwners = dojo.byId("ags2agp-fetchOwners");
+  var fetchAgs2AgpFolders = dojo.byId("ags2agp-fetchFolders");
+  
   var closeFoldersDialog = dojo.byId("closeFoldersDialog");
   var foldersDiv = dojo.byId("foldersDiv");
   var ownersDiv = dojo.byId("ownersDiv");
   var ownersSearchText = dojo.byId("ownersSearchText");
   
-  
-  dojo.connect(fetchOwners,"onclick",function(evt){
+  var fetchOwnersFun = function(protocolType) {
     var ownersDialog = dijit.byId("ownersDialog");
     dojo.empty(ownersDiv);
-    var h = dojo.trim(dojo.attr("harvestCreate:dest-h","value"));
-    var u = dojo.trim(dojo.attr("harvestCreate:dest-u","value"));
-    var p = dojo.trim(dojo.attr("harvestCreate:dest-p","value"));
-    if (h.length>0 && u.length>0 && p.length>0) {
+    var content = getDestination(protocolType);
+    if (content.h.length>0 && content.u.length>0 && content.p.length>0) {
       dojo.query("[data-type=search]").style("display","none");
       ownersDialog.show();
-      getSelf();
+      getSelf(protocolType);
     } else {
       alert("<fmt:message key='catalog.harvest.manage.test.msg.agp2agp.ownersDialog.alert'/>");
     }
+  }
+  
+  dojo.connect(fetchOwners,"onclick",function(evt){
+    fetchOwnersFun("agp2agp");
   });
   
-  dojo.connect(fetchFolders,"onclick",function(evt){
+  dojo.connect(fetchAgs2AgpOwners,"onclick",function(evt){
+    fetchOwnersFun("ags2agp");
+  });
+  
+  var fetchFoldersFun = function(protocolType) {
     var foldersDialog = dijit.byId("foldersDialog");
     dojo.empty(foldersDiv);
-    var h = dojo.trim(dojo.attr("harvestCreate:dest-h","value"));
-    var u = dojo.trim(dojo.attr("harvestCreate:dest-u","value"));
-    var p = dojo.trim(dojo.attr("harvestCreate:dest-p","value"));
-    var o = dojo.trim(dojo.attr("harvestCreate:dest-o","value"));
-    if (h.length>0 && u.length>0 && p.length>0 && o.length>0) {
+    var content = getDestination(protocolType);
+    if (content.h.length>0 && content.u.length>0 && content.p.length>0 && content.o.length>0) {
       foldersDialog.show();
-      searchFolders();
+      searchFolders(protocolType);
     } else {
       alert("<fmt:message key='catalog.harvest.manage.test.msg.agp2agp.foldersDialog.alert'/>");
     }
+  }
+  
+  dojo.connect(fetchFolders,"onclick",function(evt){
+    fetchFoldersFun("agp2agp");
+  });
+  
+  dojo.connect(fetchAgs2AgpFolders,"onclick",function(evt){
+    fetchFoldersFun("ags2agp");
   });
 
   dojo.connect(closeFoldersDialog,"onclick",function(evt){
@@ -542,14 +555,14 @@ dojo.addOnLoad(function() {
 
   dojo.connect(searchOwnersDialog,"onclick",function(evt){
     dojo.empty(ownersDiv);
-    searchOwners();
+    searchOwners(getSelectedProtocol());
   });
   
 
   dojo.connect(ownersSearchText,"onkeydown",function(evt){
     if (evt.keyCode==13) {
       dojo.empty(ownersDiv);
-      searchOwners();
+      searchOwners(getSelectedProtocol());
     }
   });
   
@@ -558,15 +571,66 @@ dojo.addOnLoad(function() {
   dojo.addClass(dijit.byId("timeDialog").domNode,"tundra");
 });
 
-function getSelf() {
+function getSelectedProtocol() {
+  var ps = dojo.query("#harvestCreate\\:protocolType input:checked").attr("value");
+  return ps!=null && ps.length>0? ps[0]: "";
+}
+
+function getAgp2AgpDestination() {
+  var destination = {
+    h: dojo.trim(dojo.attr("harvestCreate:dest-h","value")),
+    u: dojo.trim(dojo.attr("harvestCreate:dest-u","value")),
+    p: dojo.trim(dojo.attr("harvestCreate:dest-p","value")),
+    o: dojo.trim(dojo.attr("harvestCreate:dest-o","value")),
+    f: dojo.trim(dojo.attr("harvestCreate:dest-f","value"))
+  };
+  return destination;
+};
+
+function getAgs2AgpDestination() {
+  var destination = {
+    h: dojo.trim(dojo.attr("harvestCreate:ags-dest-h","value")),
+    u: dojo.trim(dojo.attr("harvestCreate:ags-dest-u","value")),
+    p: dojo.trim(dojo.attr("harvestCreate:ags-dest-p","value")),
+    o: dojo.trim(dojo.attr("harvestCreate:ags-dest-o","value")),
+    f: dojo.trim(dojo.attr("harvestCreate:ags-dest-f","value"))
+  };
+  return destination;
+};
+
+function getDestination(protocolType) {
+  if (protocolType=="agp2agp") {
+    return getAgp2AgpDestination();
+  }
+  if (protocolType=="ags2agp") {
+    return getAgs2AgpDestination();
+  }
+  return null;
+}
+
+function setDestinationOwner(protocolType,owner) {
+  if (protocolType=="agp2agp") {
+    dojo.attr("harvestCreate:dest-o","value",owner);
+  }
+  if (protocolType=="ags2agp") {
+    dojo.attr("harvestCreate:ags-dest-o","value",owner);
+  }
+}
+
+function setDestinationFolder(protocolType,folder) {
+  if (protocolType=="agp2agp") {
+    dojo.attr("harvestCreate:dest-f","value",folder);
+  }
+  if (protocolType=="ags2agp") {
+    dojo.attr("harvestCreate:ags-dest-f","value",folder);
+  }
+}
+
+function getSelf(protocolType) {
   var ownersDiv = dojo.byId("ownersDiv");
   esri.request({
     url: "<%=basePath%>/catalog/harvest/getSelf.jsp",
-    content: {
-      h: dojo.trim(dojo.attr("harvestCreate:dest-h","value")),
-      u: dojo.trim(dojo.attr("harvestCreate:dest-u","value")),
-      p: dojo.trim(dojo.attr("harvestCreate:dest-p","value"))
-    },
+    content: getDestination(protocolType),
     handleAs: "json",
     callbackParamName: "callback"
   }).then(function(response){
@@ -578,7 +642,7 @@ function getSelf() {
         var folderDiv = dojo.create("div",null,ownersDiv);
         var folderLink = dojo.create("a",{href:"#", innerHTML: caption},folderDiv);
         dojo.connect(folderLink,"onclick",function(evt){
-          dojo.attr("harvestCreate:dest-o","value",response.username);
+          setDestinationOwner(protocolType,response.username);
           var ownersDialog = dijit.byId("ownersDialog");
           ownersDialog.hide();
         });
@@ -587,16 +651,11 @@ function getSelf() {
   });
 }
 
-function searchOwners() {
+function searchOwners(protocolType) {
   var ownersDiv = dojo.byId("ownersDiv");
   esri.request({
     url: "<%=basePath%>/catalog/harvest/searchOwners.jsp",
-    content: {
-      h: dojo.trim(dojo.attr("harvestCreate:dest-h","value")),
-      u: dojo.trim(dojo.attr("harvestCreate:dest-u","value")),
-      p: dojo.trim(dojo.attr("harvestCreate:dest-p","value")),
-      q: dojo.trim(dojo.attr("ownersSearchText","value"))
-    },
+    content: dojo.mixin(getDestination(protocolType),{q: dojo.trim(dojo.attr("ownersSearchText","value"))}),
     handleAs: "json",
     callbackParamName: "callback"
   }).then(function(response){
@@ -608,8 +667,8 @@ function searchOwners() {
         var caption = owner.fullName + " (" + owner.username + ")";
         var folderDiv = dojo.create("div",null,ownersDiv);
         var folderLink = dojo.create("a",{href:"#", innerHTML: caption},folderDiv);
-        dojo.connect(folderLink,"onclick",dojo.hitch({username: owner.username},function(evt){
-          dojo.attr("harvestCreate:dest-o","value",this.username);
+        dojo.connect(folderLink,"onclick",dojo.hitch({protocolType: protocolType, username: owner.username},function(evt){
+          setDestinationOwner(this.protocolType,this.username);
           var ownersDialog = dijit.byId("ownersDialog");
           ownersDialog.hide();
         }));
@@ -620,16 +679,11 @@ function searchOwners() {
   });
 }
 
-function searchFolders() {
+function searchFolders(protocolType) {
   var foldersDiv = dojo.byId("foldersDiv");
   esri.request({
     url: "<%=basePath%>/catalog/harvest/searchFolders.jsp",
-    content: {
-      h: dojo.trim(dojo.attr("harvestCreate:dest-h","value")),
-      u: dojo.trim(dojo.attr("harvestCreate:dest-u","value")),
-      p: dojo.trim(dojo.attr("harvestCreate:dest-p","value")),
-      o: dojo.trim(dojo.attr("harvestCreate:dest-o","value"))
-    },
+    content: getDestination(protocolType),
     handleAs: "json",
     callbackParamName: "callback"
   }).then(function(response){
@@ -641,8 +695,8 @@ function searchFolders() {
         var caption = folder.title + " (" + folder.id + ")";
         var folderDiv = dojo.create("div",null,foldersDiv);
         var folderLink = dojo.create("a",{href:"#", innerHTML: caption},folderDiv);
-        dojo.connect(folderLink,"onclick",dojo.hitch({folderId: folder.id},function(evt){
-          dojo.attr("harvestCreate:dest-f","value",this.folderId);
+        dojo.connect(folderLink,"onclick",dojo.hitch({protocolType: protocolType, folderId: folder.id},function(evt){
+          setDestinationFolder(this.protocolType,this.folderId);
           var foldersDialog = dijit.byId("foldersDialog");
           foldersDialog.hide();
         }));
@@ -1071,8 +1125,8 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <h:outputText styleClass="ags2agp agp2agpCaption" value="#{gptMsg['catalog.harvest.manage.edit.dest.caption']}"/>
 
 <%-- dest host --%>
-<h:outputLabel styleClass="requiredField ags2agp" for="agp-dest-h" value="#{gptMsg['catalog.harvest.manage.edit.dest.h']}"/>
-<h:inputText   styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-dest-h']}" id="agp-dest-h"/>
+<h:outputLabel styleClass="requiredField ags2agp" for="ags-dest-h" value="#{gptMsg['catalog.harvest.manage.edit.dest.h']}"/>
+<h:inputText   styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-dest-h']}" id="ags-dest-h"/>
 
 <%-- dest user name --%>
 <h:outputLabel styleClass="requiredField ags2agp" for="ags-dest-u" value="#{gptMsg['catalog.harvest.manage.edit.dest.u']}"/>
