@@ -19,6 +19,7 @@ import com.esri.gpt.framework.adhoc.AdHocEventList;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRConnectionException;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidProtocolException;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
+import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgs2Agp;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolNone;
 import com.esri.gpt.catalog.management.MmdEnums.ApprovalStatus;
 import com.esri.gpt.control.webharvest.IterationContext;
@@ -235,6 +236,8 @@ public void setName(String name) {
 public String getHostUrl() {
   if (getProtocol() instanceof HarvestProtocolAgp2Agp) {
     return ((HarvestProtocolAgp2Agp)getProtocol()).getHostUrl();
+  } else if (getProtocol() instanceof HarvestProtocolAgs2Agp) {
+    return ((HarvestProtocolAgs2Agp)getProtocol()).getHostUrl();
   } else {
     return _hostUrl;
   }

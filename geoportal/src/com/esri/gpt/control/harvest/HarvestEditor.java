@@ -16,6 +16,7 @@ package com.esri.gpt.control.harvest;
 
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocol.ProtocolType;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
+import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgs2Agp;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolResource;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolArcIms;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolCsw;
@@ -432,13 +433,13 @@ public void prepareForUpdate() {
  */
 public boolean validate(MessageBroker mb) {
   _valid = true;
+  String kind = _harvestRepository.getProtocol().getKind();
   
   if (getHostUrl().length()==0) {
     mb.addErrorMessage("catalog.harvest.manage.edit.err.hostUrlReq");
     _valid = false;
   }
 
-  String kind = _harvestRepository.getProtocol().getKind();
   if (kind.equalsIgnoreCase(ProtocolType.ArcIms.name())) {
     if (getArcIms().getPortNoAsString().length()==0) {
       mb.addErrorMessage("catalog.harvest.manage.edit.err.portNumberReq");
@@ -531,6 +532,47 @@ public boolean validate(MessageBroker mb) {
           _valid = false;
         }
         if (p.getAttributeMap().getValue("dest-f").isEmpty()) {
+          mb.addErrorMessage("catalog.harvest.manage.edit.dest.f.err");
+          _valid = false;
+        }
+      }
+    }
+  } else if (kind.equalsIgnoreCase("ags2agp")) {
+    HarvestProtocolAgs2Agp p = (HarvestProtocolAgs2Agp) protocols.get("ags2agp");
+    if (p!=null) {
+      if (!getArcgisDotComAllowed()) {
+        if ( p.getDestinationHost().toLowerCase().endsWith("arcgis.com") || p.getDestinationHost().toLowerCase().endsWith("arcgisonline.com")) {
+          mb.addErrorMessage("catalog.harvest.manage.test.msg.agp2agp.arcgis.forbiden");
+          _valid = false;
+        }
+      }
+      if (_valid) {
+        if (p.getAttributeMap().getValue("ags-src-restUrl").length()==0) {
+          mb.addErrorMessage("catalog.harvest.manage.edit.err.hostUrlReq");
+          _valid = false;
+        }
+        if (p.getAttributeMap().getValue("ags-src-soapUrl").length()==0) {
+          mb.addErrorMessage("catalog.harvest.manage.edit.err.soapUrl");
+          _valid = false;
+        }
+
+        if (!p.getDestinationHost().matches(HOST_NAME_REGEX)) {
+          mb.addErrorMessage("catalog.harvest.manage.edit.dest.h.err");
+          _valid = false;
+        }
+        if (p.getAttributeMap().getValue("ags-dest-o").isEmpty()) {
+          mb.addErrorMessage("catalog.harvest.manage.edit.dest.o.err");
+          _valid = false;
+        }
+        if (p.getAttributeMap().getValue("ags-dest-u").isEmpty()) {
+          mb.addErrorMessage("catalog.harvest.manage.edit.dest.u.err");
+          _valid = false;
+        }
+        if (p.getAttributeMap().getValue("ags-dest-p").isEmpty()) {
+          mb.addErrorMessage("catalog.harvest.manage.edit.dest.p.err");
+          _valid = false;
+        }
+        if (p.getAttributeMap().getValue("ags-dest-f").isEmpty()) {
           mb.addErrorMessage("catalog.harvest.manage.edit.dest.f.err");
           _valid = false;
         }
