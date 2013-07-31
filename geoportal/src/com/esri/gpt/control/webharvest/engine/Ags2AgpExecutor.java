@@ -106,6 +106,8 @@ abstract class Ags2AgpExecutor extends Executor {
             return doContinue;
           }
         };
+        
+        copy.copy();
       }
 
       success = true;
