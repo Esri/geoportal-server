@@ -15,16 +15,13 @@
  */
 package com.esri.gpt.control.webharvest.engine;
 
-import com.esri.gpt.agp.ags.Ags2AgpCopy;
 import com.esri.gpt.agp.client.AgpException;
 import com.esri.gpt.agp.client.AgpItem;
 import com.esri.gpt.agp.sync.AgpDestination;
 import com.esri.gpt.agp.sync.AgpPush;
 import com.esri.gpt.agp.sync.AgpSource;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
-import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgs2Agp;
 import com.esri.gpt.catalog.harvest.repository.HrUpdateLastSyncDate;
-import com.esri.gpt.control.webharvest.client.arcgis.ArcGISInfo;
 import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.http.HttpClientException;
@@ -36,7 +33,7 @@ import java.util.logging.Logger;
 /**
  * Agp2Agp executor.
  */
-abstract class Agp2AgpExecutor extends Executor {
+public abstract class Agp2AgpExecutor extends Executor {
 
   /**
    * logger
@@ -45,6 +42,12 @@ abstract class Agp2AgpExecutor extends Executor {
   
   private boolean stopOnError = true;
 
+  /**
+   * Creates instance of the executor.
+   * @param dataProcessor data processor
+   * @param unit execution unit
+   * @param stopOnError <code>true</code> to stop on errors
+   */
   public Agp2AgpExecutor(DataProcessor dataProcessor, ExecutionUnit unit, boolean stopOnError) {
     super(dataProcessor, unit);
     this.stopOnError = stopOnError;

@@ -15,6 +15,10 @@
 package com.esri.gpt.control.webharvest.protocol;
 
 import com.esri.gpt.control.webharvest.IterationContext;
+import com.esri.gpt.control.webharvest.engine.DataProcessor;
+import com.esri.gpt.control.webharvest.engine.ExecutionUnit;
+import com.esri.gpt.control.webharvest.engine.Executor;
+import com.esri.gpt.control.webharvest.engine.IWorker;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
 
@@ -63,7 +67,15 @@ public interface Protocol {
    * @param url url
    * @return query builder
    */
-  public abstract QueryBuilder newQueryBuilder(IterationContext context, String url);
+  QueryBuilder newQueryBuilder(IterationContext context, String url);
+  /**
+   * Creates new executor.
+   * @param dataProcessor data processor
+   * @param unit execution unit
+   * @param worker worker
+   * @return executor
+   */
+  Executor newExecutor(DataProcessor dataProcessor, ExecutionUnit unit, IWorker worker);
   /**
    * Gets ad-hoc harvesting info.
    * @return ad-hoc

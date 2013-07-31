@@ -37,13 +37,18 @@ import java.util.logging.Logger;
  *
  * @author Esri
  */
-abstract class Ags2AgpExecutor extends Executor {
+public abstract class Ags2AgpExecutor extends Executor {
 
   /**
    * logger
    */
   private static final Logger LOGGER = Logger.getLogger(Ags2AgpExecutor.class.getCanonicalName());
 
+  /**
+   * Creates instance of the executor.
+   * @param dataProcessor data processor
+   * @param unit execution unit
+   */
   public Ags2AgpExecutor(DataProcessor dataProcessor, ExecutionUnit unit) {
     super(dataProcessor, unit);
   }

@@ -23,6 +23,11 @@ import com.esri.gpt.agp.sync.AgpDestination;
 import com.esri.gpt.agp.sync.AgpSource;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.common.CommonCapabilities;
+import com.esri.gpt.control.webharvest.engine.Agp2AgpExecutor;
+import com.esri.gpt.control.webharvest.engine.DataProcessor;
+import com.esri.gpt.control.webharvest.engine.ExecutionUnit;
+import com.esri.gpt.control.webharvest.engine.Executor;
+import com.esri.gpt.control.webharvest.engine.IWorker;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
@@ -225,5 +230,38 @@ public static Long getAgp2AgpMaxItems() {
   
   return Val.chkLong(sMaxItems, DEFAULT_MAX_ITEMS_AGP2AGP);
 }
+
+  @Override
+  public Executor newExecutor(DataProcessor dataProcessor, ExecutionUnit unit, IWorker worker) {
+    return new Agp2AgpExecutorImpl(dataProcessor, unit, worker, getStopOnError());
+  }
+
+
+  /**
+   * Agp2Agp executor implementation.
+   */
+  private static class Agp2AgpExecutorImpl extends Agp2AgpExecutor {
+    private IWorker worker;
+
+    public Agp2AgpExecutorImpl(DataProcessor dataProcessor, ExecutionUnit unit, IWorker worker, boolean stopOnError) {
+      super(dataProcessor, unit, stopOnError);
+      this.worker = worker;
+    }
+
+    @Override
+    protected boolean isActive() {
+      return worker.isActive();
+    }
+
+    @Override
+    protected boolean isShutdown() {
+      return worker.isShutdown();
+    }
+
+    @Override
+    protected boolean isSuspended() {
+      return worker.isSuspended();
+    }
+  }
 
 }

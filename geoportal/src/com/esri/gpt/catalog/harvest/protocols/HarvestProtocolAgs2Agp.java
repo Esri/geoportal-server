@@ -23,6 +23,11 @@ import static com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp.NAME
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.arcgis.ArcGISInfo;
 import com.esri.gpt.control.webharvest.common.CommonCapabilities;
+import com.esri.gpt.control.webharvest.engine.Ags2AgpExecutor;
+import com.esri.gpt.control.webharvest.engine.DataProcessor;
+import com.esri.gpt.control.webharvest.engine.ExecutionUnit;
+import com.esri.gpt.control.webharvest.engine.Executor;
+import com.esri.gpt.control.webharvest.engine.IWorker;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.resource.api.Native;
 import com.esri.gpt.framework.resource.query.Capabilities;
@@ -173,6 +178,39 @@ public class HarvestProtocolAgs2Agp extends AbstractHTTPHarvestProtocol {
       return InetAddress.getLocalHost().getCanonicalHostName();
     } catch (UnknownHostException ex) {
       return "";
+    }
+  }
+
+  @Override
+  public Executor newExecutor(DataProcessor dataProcessor, ExecutionUnit unit, IWorker worker) {
+    return new Ags2AgpExecutorImpl(dataProcessor, unit, worker);
+  }
+
+
+  /**
+   * Agp2Agp executor implementation.
+   */
+  private static class Ags2AgpExecutorImpl extends Ags2AgpExecutor {
+    private IWorker worker;
+
+    public Ags2AgpExecutorImpl(DataProcessor dataProcessor, ExecutionUnit unit, IWorker worker) {
+      super(dataProcessor, unit);
+      this.worker = worker;
+    }
+
+    @Override
+    protected boolean isActive() {
+      return worker.isActive();
+    }
+
+    @Override
+    protected boolean isShutdown() {
+      return worker.isShutdown();
+    }
+
+    @Override
+    protected boolean isSuspended() {
+      return worker.isSuspended();
     }
   }
   

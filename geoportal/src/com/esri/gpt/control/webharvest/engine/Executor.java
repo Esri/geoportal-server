@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 /**
  * Executes query.
  */
-abstract class Executor {
+public abstract class Executor {
 /** logger */
 private static final Logger LOGGER = Logger.getLogger(Executor.class.getCanonicalName());
 
