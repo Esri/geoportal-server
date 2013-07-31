@@ -15,6 +15,7 @@
 package com.esri.gpt.control.webharvest.protocol;
 
 import com.esri.gpt.control.webharvest.protocol.factories.Agp2AgpProtocolFactory;
+import com.esri.gpt.control.webharvest.protocol.factories.Ags2AgpProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.ArcGISProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.ArcImsProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.AtomProtocolFactory;
@@ -109,6 +110,7 @@ public void initDefault() {
   put("THREDDS", new ThreddsProtocolFactory(),  "catalog.harvest.manage.edit.protocol.thredds");
   put("ATOM"   , new AtomProtocolFactory(),     "catalog.harvest.manage.edit.protocol.atom");
   put("AGP2AGP", new Agp2AgpProtocolFactory(),  "catalog.harvest.manage.edit.protocol.agp2agp");
+  put("AGS2AGP", new Ags2AgpProtocolFactory(),  "catalog.harvest.manage.edit.protocol.ags2agp");
   /* NOTE! This is EXPERIMENTAL feature. It might be removed at any time in the future.
   put("AGP"    , new AgpProtocolFactory(),      "catalog.harvest.manage.edit.protocol.agp");
   */
