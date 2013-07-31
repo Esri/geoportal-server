@@ -1103,10 +1103,10 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 
 <%-- AGS-TO-AGP specific properties ------------------------------------------%>
 <h:outputText styleClass="ags2agp agp2agpCaption" value=""/>
-<h:outputText styleClass="ags2agp agp2agpCaption" value="#{gptMsg['catalog.harvest.manage.edit.src.caption']}"/>
+<h:outputText styleClass="ags2agp agp2agpCaption" value="#{gptMsg['catalog.harvest.manage.edit.src.ags2agp.caption']}"/>
 
 <%-- src host --%>
-<h:outputLabel styleClass="requiredField ags2agp" for="ags-src-restUrl" value="#{gptMsg['catalog.harvest.manage.edit.src.h']}"/>
+<h:outputLabel styleClass="requiredField ags2agp" for="ags-src-restUrl" value="#{gptMsg['catalog.harvest.manage.edit.src.rest']}"/>
 <h:panelGroup>
 <h:inputText   styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-src-restUrl']}" id="ags-src-restUrl"/>
 <h:outputText value="&nbsp;" escape="false"/>
@@ -1119,14 +1119,6 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <%-- src soap --%>
 <h:outputLabel styleClass="requiredField ags2agp" for="ags-src-soapUrl" value="#{gptMsg['catalog.harvest.manage.edit.src.soap']}"/>
 <h:inputText   styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-src-soapUrl']}" id="ags-src-soapUrl"/>
-
-<%-- src user name --%>
-<h:outputLabel styleClass="ags2agp" for="ags-src-userName" value="#{gptMsg['catalog.harvest.manage.edit.src.u']}"/>
-<h:inputText   styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-src-userName']}" id="ags-src-userName"/>
-
-<%-- src password --%>
-<h:outputLabel styleClass="ags2agp" for="ags-src-userPassword" value="#{gptMsg['catalog.harvest.manage.edit.src.p']}"/>
-<h:inputSecret redisplay="true" styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-src-userPassword']}" id="ags-src-userPassword"/>
 
 <h:outputText styleClass="ags2agp agp2agpCaption" value=""/>
 <h:outputText styleClass="ags2agp agp2agpCaption" value="#{gptMsg['catalog.harvest.manage.edit.dest.caption']}"/>
