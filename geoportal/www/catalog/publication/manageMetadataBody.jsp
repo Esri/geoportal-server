@@ -848,7 +848,7 @@ function mmdClearAclSelection(){
       title="#{gptMsg['catalog.harvest.manage.action.harvest.cancel.tip']}"
       url="/catalog/images/mr_fullharvest_cancel.gif"
       onclick="mmdOnActionIconClicked('cancel','#{record.uuid}');"/>
-    <h:graphicImage rendered="#{record.protocol ne null and record.protocol.kind!='AGP2AGP'}"
+    <h:graphicImage rendered="#{record.protocol ne null and record.protocol.kind!='AGP2AGP' and record.protocol.kind!='AGS2AGP'}"
       alt="#{gptMsg['catalog.publication.manageMetadata.action.showharvested.tip']}"
       title="#{gptMsg['catalog.publication.manageMetadata.action.showharvested.tip']}"
       url="/catalog/images/mmd_showharvested.gif"

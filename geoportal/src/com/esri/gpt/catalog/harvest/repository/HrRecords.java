@@ -110,10 +110,12 @@ public HrRecord findNextDue() {
   Date now = new Date();
   HrRecord nextDue = null;
   for (HrRecord record : this) {
-    Date nextHarvestDate = record.getNextHarvestDate();
-    if (nextHarvestDate!=null && nextHarvestDate.after(now)) {
-      if (nextDue==null || nextDue.getNextHarvestDate().after(nextHarvestDate)) {
-        nextDue = record;
+    if ((record.getApprovalStatus()== ApprovalStatus.approved || record.getApprovalStatus()== ApprovalStatus.reviewed) && record.getSynchronizable()) {
+      Date nextHarvestDate = record.getNextHarvestDate();
+      if (nextHarvestDate!=null && nextHarvestDate.after(now)) {
+        if (nextDue==null || nextDue.getNextHarvestDate().after(nextHarvestDate)) {
+          nextDue = record;
+        }
       }
     }
   }
