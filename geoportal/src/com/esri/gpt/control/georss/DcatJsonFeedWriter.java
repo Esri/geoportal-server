@@ -15,13 +15,11 @@
 package com.esri.gpt.control.georss;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -159,14 +157,11 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    */
 	@Override
   protected void printRecords(IFeedRecords records, boolean more) {
-      List<Envelope> envelopes = new ArrayList<Envelope>();
-      for (IFeedRecord r : records) {
-        envelopes.add(r.getEnvelope());
-      }
-      
       this.dcatSchemas = ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getDcatSchemas();
       for (int i = 0; i < records.size(); i++) {
-        printRecord(records.get(i), envelopes.get(i), i < records.size() - 1);
+        IFeedRecord record = records.get(i);
+        Envelope envelope = record.getEnvelope();
+        printRecord(record, envelope, i < records.size() - 1);
       }
   }
 
