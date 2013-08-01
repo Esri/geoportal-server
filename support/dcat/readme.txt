@@ -26,9 +26,9 @@ In order to add DCAT support to your Geoportal Server instance take the followin
 gpt.jar than the default distributed with your geoportal, those customizations will be overwritten when you apply this patch.
 - Carefully merge the metadata.zip into the WEB-INF/classes/gpt/config/metadata folder. Note especially fgdc-indexables.xml and property-meanings.xml, you will add the property meanings 
 that begin with 'dcat.'. Do not change the other property meanings, only add the ones for dcat. Also, remember to copy the dcat-mappings.xml to the 
-\\geoportal\WEB-INF\classes\gpt\metadata directory.
-- Re-index your FGDC metadata so they will be available through the REST API for DCAT. Login as an administrator and reapprove a few metadata documents to force an 
-immediate reindex; then test. You can see the new dcat indices when you view the REST document statistics at http://your_server/geoportal/rest/index/stats.
+\\geoportal\WEB-INF\classes\gpt\metadata directory. This dcat-mappings.xml will map existing indices in lucene to the DCAT indices, including your ISO metadata indices.
+- Re-index your FGDC metadata so they will be available through the REST API for DCAT. Note, you won't have to reindex your ISO metadata because we didn't add any additional DCAT mappings for ISO, only FGDC. To force an immediate reindex for testing purposes, login as an administrator and reapprove a few metadata documents. 
+- Next, test. You can see the new dcat indices when you view the REST document statistics at http://your_server/geoportal/rest/index/stats.
 - Further documentation is available at https://github.com/Esri/geoportal-server/wiki/Customize-DCAT-output.
 
 With these steps performed your site should be able to provide a DCAT listing in support of Project Open Data (http://project-open-data.github.io/)
