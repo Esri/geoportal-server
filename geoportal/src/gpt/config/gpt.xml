@@ -398,6 +398,7 @@
 
 				<!-- Mapping file to map dcat fields to lucene index fields -->
 				<parameter key="dcat.mappings" value="gpt/metadata/dcat-mappings.xml"/>
+                <parameter key="dcat.cache.path" value="c:\dcat\cache"/>
     </catalog>
     
     <!-- Download data configuration.
