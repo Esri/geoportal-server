@@ -51,15 +51,6 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	
 	@Override
   public void write(IFeedRecords records) {
-    if (Val.chkBool(getRequestParam("returnCountOnly"),false)) {
-      writeCountOnly(records.getOpenSearchProperties().getNumberOfHits());
-      return;
-    }
-    
-    if (Val.chkBool(getRequestParam("returnIdsOnly"),false)) {
-      writeIdsOnly(records);
-      return;
-    }
             
     String sTitle = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.title"));
     String sDescription = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.description"));
