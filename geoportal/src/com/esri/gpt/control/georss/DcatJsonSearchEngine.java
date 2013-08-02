@@ -78,6 +78,7 @@ public abstract class DcatJsonSearchEngine extends JsonSearchEngine {
       }
     }
   }
+  
 	/**
    * Performs search operation.
    * @param request HTTP servlet request
@@ -88,7 +89,7 @@ public abstract class DcatJsonSearchEngine extends JsonSearchEngine {
    * @throws Exception if searching fails
    */
 	@Override
-  protected IFeedRecords doSearch(HttpServletRequest request, HttpServletResponse response, RequestContext context, RestQuery query) throws Exception {
+  public IFeedRecords doSearch(HttpServletRequest request, HttpServletResponse response, RequestContext context, RestQuery query) throws Exception {
     MessageBroker msgBroker = new FacesContextBroker(request, response).extractMessageBroker();
     FeedLinkBuilder linkBuilder = new FeedLinkBuilder(RequestContext.resolveBaseContextPath(request), msgBroker);
     
@@ -100,7 +101,7 @@ public abstract class DcatJsonSearchEngine extends JsonSearchEngine {
   /**
    * DCAT records adapter.
    */
-  private static class DcatRecordsAdapter extends AbstractList<IFeedRecord> implements IFeedRecords {
+  public static class DcatRecordsAdapter extends AbstractList<IFeedRecord> implements IFeedRecords {
     private static List<FieldMeta> fieldMetaList = new ArrayList<FieldMeta>();
     
     private MessageBroker msgBroker;

@@ -23,16 +23,19 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Logger;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
  * DCAT cache.
  */
 public class DcatCache {
-  private static final Logger LOGGER = Logger.getLogger(DcatCache.class.getCanonicalName());
-  private static final Pattern CACHE_NAME_PATTERN = Pattern.compile("cache\\-\\p{Digit}{4}\\-\\p{Digit}{2}\\-\\p{Digit}{2} \\p{Digit}{2}:\\p{Digit}{2}\\.dcat",Pattern.CASE_INSENSITIVE);
+  private static final Pattern CACHE_NAME_PATTERN = Pattern.compile("cache[^.]*\\.dcat",Pattern.CASE_INSENSITIVE);
+  private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd hh-mm");
   
   private static DcatCache instance;
   private File root;
@@ -59,17 +62,25 @@ public class DcatCache {
    * @return input stream
    * @throws FileNotFoundException if cache data file not found
    */
-  public InputStream createCacheStream() throws FileNotFoundException {
+  public InputStream createInputCacheStream() throws FileNotFoundException {
     File [] cacheFiles = listCacheFiles();
     File latestCache = findLatest(cacheFiles);
+    if (latestCache==null) {
+      throw new FileNotFoundException("No recent cache found.");
+    }
     return new FileInputStream(latestCache);
+  }
+  
+  public OutputStream createOutputCacheStream() throws FileNotFoundException {
+    File file = new File(root,"cache-"+SDF.format(new Date())+".temp");
+    return new CacheOutputStream(file);
   }
   
   /**
    * Creates instance of the cache.
    * @param root root folder of the cache
    */
-  private DcatCache(File root) {
+  public DcatCache(File root) {
     this.root = root;
   }
   
@@ -93,19 +104,62 @@ public class DcatCache {
    */
   private File findLatest(File [] files) {
     File latest = null;
-    for (File f: files) {
-      if (latest==null || f.lastModified()>latest.lastModified()) {
-        latest = f;
+    if (files!=null) {
+      for (File f: files) {
+        if (latest==null || f.lastModified()>latest.lastModified()) {
+          latest = f;
+        }
       }
     }
     return latest;
   }
   
+  /**
+   * Purges outdated files.
+   * @param files list of files
+   * @param latest latest file
+   */
   private void purgeOutdatedFiles(File [] files, File latest) {
     for (File f: files) {
       if (!f.equals(latest)) {
         f.delete();
       }
     }
+  }
+  
+  /**
+   * Cache output stream
+   */
+  private class CacheOutputStream extends OutputStream {
+    
+    private File file;
+    private FileOutputStream fileOutputStream;
+    
+    /**
+     * Creates instance of the stream.
+     * @param file file representing the stream
+     * @throws FileNotFoundException if creating stream fails
+     */
+    public CacheOutputStream(File file) throws FileNotFoundException {
+      this.file = file;
+      this.file.getParentFile().mkdirs();
+      this.fileOutputStream = new FileOutputStream(file);
+    }
+
+    @Override
+    public void write(int b) throws IOException {
+      fileOutputStream.write(b);
+    }
+
+    @Override
+    public void close() throws IOException {
+      fileOutputStream.close();
+      String name = file.getName();
+      name = name.replaceAll("\\.[^.]+$", ".dcat");
+      file.renameTo(new File(file.getParentFile(), name));
+      File[] files = listCacheFiles();
+      purgeOutdatedFiles(files, findLatest(files));
+    }
+    
   }
 }
