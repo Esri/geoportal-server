@@ -18,6 +18,7 @@ package com.esri.gpt.control.georss.dcatcache;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
+import com.esri.gpt.framework.util.Val;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -49,12 +50,21 @@ public class DcatCache {
       ApplicationContext appCtx = ApplicationContext.getInstance();
       ApplicationConfiguration appCfg = appCtx.getConfiguration();
       StringAttributeMap parameters = appCfg.getCatalogConfiguration().getParameters();
-      String dcatCachePath = parameters.getValue("dcat.cache.path");
+      String dcatCachePath = Val.chkStr(parameters.getValue("dcat.cache.path"),getDefaultDCATPath());
       File root = new File(dcatCachePath);
       
       instance = new DcatCache(root);
     }
     return instance;
+  }
+  
+  /**
+   * Gets default DCAT cache path.
+   * @return default DCAT cache path
+   */
+  private static String getDefaultDCATPath() {
+    File home = new File(System.getProperty("user.home"));
+    return new File(home, "dcat/cache").getAbsolutePath();
   }
   
   /**
