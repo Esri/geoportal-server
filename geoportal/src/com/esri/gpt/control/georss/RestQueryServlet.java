@@ -37,12 +37,20 @@ import com.esri.gpt.catalog.search.SearchFilterThemeTypes;
 import com.esri.gpt.catalog.search.SearchFiltersList;
 import com.esri.gpt.catalog.search.SearchResult;
 import com.esri.gpt.catalog.search.SearchResultRecords;
+import com.esri.gpt.control.georss.dcatcache.DcatCache;
+import com.esri.gpt.control.georss.dcatcache.DcatCacheUpdateRequest;
 import com.esri.gpt.framework.context.BaseServlet;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.server.csw.provider.local.CoreQueryables;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -158,13 +166,42 @@ public class RestQueryServlet extends BaseServlet {
         if (callback != null) {
           printWriter.print(callback + "(");
         }
-
-        // init query
-        query.setReturnables(new CoreQueryables(context).getFull());
-        toSearchCriteria(request, context, query);
         
+        DcatCache cache = DcatCache.getInstance();
+        InputStream cacheStream = null;
         
-        feedWriter.write(DcatJsonSearchEngine.createInstance().search(request, response, context, query));
+        try {
+          cacheStream = cache.createInputCacheStream();
+          PrintWriter writer = response.getWriter();
+          BufferedReader reader = new BufferedReader(new InputStreamReader(cacheStream));
+          
+          char [] buffer = new char[1024];
+          int length = -1;
+          
+          while ((length=reader.read(buffer))>0) {
+            writer.write(buffer, 0, length);
+          }
+          
+        } catch (FileNotFoundException ex) {
+          PrintWriter writer = response.getWriter();
+          writer.println("[]");
+          feedWriter.write(null);
+          
+          DcatCacheUpdateRequest cureq = new DcatCacheUpdateRequest();
+          cureq.execute();
+          
+          // The following part of the code has been disabled since DCAT content
+          // is being cached.
+          //query.setReturnables(new CoreQueryables(context).getFull());
+          //toSearchCriteria(request, context, query);
+          //feedWriter.write(DcatJsonSearchEngine.createInstance().search(request, response, context, query));
+        } finally {
+          if (cacheStream!=null) {
+            try {
+              cacheStream.close();
+            } catch (IOException ex) {}
+          }
+        }
 
         if (callback != null) {
           printWriter.print(")");
