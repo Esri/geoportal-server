@@ -135,9 +135,10 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     printArg("temporal", sTemporal, false);
 
     levelDown();
-    println(records.size() > 0 ? "}," : "}");
-
-    printRecords(records, true);
+    println(records!=null && records.size() > 0 ? "}," : "}");
+    if (records!=null) {
+      printRecords(records, true);
+    }
 
     levelDown();
     println("]");

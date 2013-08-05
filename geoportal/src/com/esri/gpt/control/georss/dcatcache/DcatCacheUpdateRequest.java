@@ -33,7 +33,7 @@ import java.util.logging.Logger;
  */
 public class DcatCacheUpdateRequest {
   private static final Logger LOGGER = Logger.getLogger(DcatCacheUpdateRequest.class.getCanonicalName());
-  private volatile Thread runningThread;
+  private volatile static Thread runningThread;
   
   /**
    * Executes update request.
@@ -96,10 +96,11 @@ public class DcatCacheUpdateRequest {
     
     DcatCache cache = DcatCache.getInstance();
     OutputStream cacheStream = null;
+    PrintWriter writer = null;
     
     try {
       cacheStream = cache.createOutputCacheStream();
-      PrintWriter writer = new PrintWriter(new OutputStreamWriter(cacheStream, "UTF-8"));
+      writer = new PrintWriter(new OutputStreamWriter(cacheStream, "UTF-8"));
       
       DcatJsonFeedWriter feedWriter = new DcatJsonFeedWriter(context, writer, query);
       feedWriter.setMessageBroker(msgBroker);
@@ -111,10 +112,8 @@ public class DcatCacheUpdateRequest {
       feedWriter.write(discoveredRecordsAdapter);
     } finally {
       LOGGER.info("DCAT cache update process completed.");
-      if (cacheStream!=null) {
-        try {
-          cacheStream.close();
-        } catch (IOException ioex){}
+      if (writer!=null) {
+          writer.close();
       }
     }
   }

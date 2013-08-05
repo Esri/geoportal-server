@@ -584,6 +584,9 @@
        
         <!-- Index optimization --> 
         <!-- <thread class="com.esri.gpt.catalog.lucene.LuceneIndexOptimizer" at="03:30"/>-->
+        
+        <!-- DCAT cache generation -->
+        <thread class="com.esri.gpt.control.georss.dcatcache.DcatCacheTask" period='1[DAY]' delay="15[SECOND]"/>
     </scheduler>
     
     <!-- Harvesting protocols configuration.

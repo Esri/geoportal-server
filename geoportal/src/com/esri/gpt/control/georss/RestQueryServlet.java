@@ -183,11 +183,18 @@ public class RestQueryServlet extends BaseServlet {
           }
           
         } catch (FileNotFoundException ex) {
-          // init query
-          query.setReturnables(new CoreQueryables(context).getFull());
-          toSearchCriteria(request, context, query);
-          // TODO: uncomment this
-          feedWriter.write(DcatJsonSearchEngine.createInstance().search(request, response, context, query));
+          PrintWriter writer = response.getWriter();
+          writer.println("[]");
+          feedWriter.write(null);
+          
+          DcatCacheUpdateRequest cureq = new DcatCacheUpdateRequest();
+          cureq.execute();
+          
+          // The following part of the code has been disabled since DCAT content
+          // is being cached.
+          //query.setReturnables(new CoreQueryables(context).getFull());
+          //toSearchCriteria(request, context, query);
+          //feedWriter.write(DcatJsonSearchEngine.createInstance().search(request, response, context, query));
         } finally {
           if (cacheStream!=null) {
             try {
