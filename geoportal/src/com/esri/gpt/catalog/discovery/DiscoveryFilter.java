@@ -14,6 +14,11 @@
  */
 package com.esri.gpt.catalog.discovery;
 
+import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.ApplicationConfiguration;
+import com.esri.gpt.framework.context.ApplicationContext;
+import com.esri.gpt.framework.util.Val;
+
 /**
  * Defines the filter that constrains a query.
  */
@@ -23,6 +28,7 @@ public class DiscoveryFilter extends DiscoveryComponent {
   
   /** The threshold for the maximum number of record to return = 5000 */
   public static final int THRESHOLD_MAXRECORDS = 5000;
+  private static Integer maxRecordsThreshold = null;
     
   /** instance variables ====================================================== */
   private int maxRecords = 10;
@@ -51,8 +57,7 @@ public class DiscoveryFilter extends DiscoveryComponent {
    * @param maxRecords maximum number of records to return
    */
   public void setMaxRecords(int maxRecords) {
-    this.maxRecords = maxRecords;
-    if (this.maxRecords > THRESHOLD_MAXRECORDS) this.maxRecords = THRESHOLD_MAXRECORDS;
+    this.maxRecords = Math.min(maxRecords, getMaxRecordsThreshold());
   }
   
   /**
@@ -104,4 +109,20 @@ public class DiscoveryFilter extends DiscoveryComponent {
     }
   }
 
+  /**
+   * Gets max records threshold.
+   * Checks if is there any threshold configured in gpt.xml ("lucene.maxrecords.threshold"). 
+   * If not, use THRESHOLD_MAXRECORDS.
+   * @return max records threshold
+   */
+  private static synchronized int getMaxRecordsThreshold() {
+    if (maxRecordsThreshold==null) {
+      ApplicationContext appCtx = ApplicationContext.getInstance();
+      ApplicationConfiguration appCfg = appCtx.getConfiguration();
+      StringAttributeMap parameters = appCfg.getCatalogConfiguration().getParameters();
+      String value = parameters.getValue("lucene.maxrecords.threshold");
+      maxRecordsThreshold = Val.chkInt(value, THRESHOLD_MAXRECORDS);
+    }
+    return maxRecordsThreshold;
+  }
 }
