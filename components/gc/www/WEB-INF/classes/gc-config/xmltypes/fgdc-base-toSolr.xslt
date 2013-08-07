@@ -23,7 +23,7 @@
         <xsl:text> </xsl:text>
         <xsl:value-of select="normalize-space(southbc)"/>
         <xsl:text> </xsl:text>
-        <xsl:value-of select="normalize-space(southbc)"/>
+        <xsl:value-of select="normalize-space(eastbc)"/>
         <xsl:text> </xsl:text>
         <xsl:value-of select="normalize-space(northbc)"/>
       </field>
