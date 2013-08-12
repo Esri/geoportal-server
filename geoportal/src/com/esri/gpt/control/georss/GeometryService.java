@@ -87,8 +87,8 @@ public class GeometryService {
   
   /**
    * Performs projection.
-   * @param envelopes list of envelopes to project
-   * @param inEnv input spatial reference (WKID)
+   * @param inEnv list of envelopes
+   * @param inSR input spatial reference (WKID)
    * @param outSR output spatial reference (WKID)
    * @return list of projected envelopes
    * @throws JSONException if reading response as JSON fails
