@@ -165,6 +165,12 @@ public class Ags2AgpCopy {
     return null;
   }
   
+  /**
+   * Syncronizes a single item.
+   * @param sourceItem item
+   * @return <code>true</code> if item has been synchronized
+   * @throws Exception if any exception occurs during the process
+   */
   protected boolean syncItem(AgpItem sourceItem) throws Exception  {
     this.numItemsConsidered++;
     
