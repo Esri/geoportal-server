@@ -91,7 +91,7 @@ public class HarvestProtocolAgs2Agp extends AbstractHTTPHarvestProtocol {
    */
   public String getHostUrl() {
     StringAttributeMap attrs = getAttributeMap();
-    return "http://" + getSourceHost() + "?user=" +attrs.getValue("ags-src-userName") +
+    return getSourceHost() + "?user=" +attrs.getValue("ags-src-userName") +
             "&dest=http://" + getDestinationHost() + "/" + attrs.getValue("agp-dest-o")  + "/" + attrs.getValue("agp-dest-f") + "&destuser=" + attrs.getValue("agp-dest-u");
   }
   
