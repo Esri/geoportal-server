@@ -22,11 +22,13 @@ import com.esri.gpt.framework.jsf.MessageBroker;
  * OAI protocol validator.
  */
 class OAIValidator implements IValidator {
+
   private String url;
   private HarvestProtocolOai protocol;
 
   /**
    * Creates instance of the validator.
+   *
    * @param url host URL
    * @param protocol protocol
    */
@@ -37,7 +39,18 @@ class OAIValidator implements IValidator {
 
   @Override
   public boolean validate(MessageBroker mb) {
-    return true;
+    boolean _valid = true;
+
+    if (url.isEmpty()) {
+      mb.addErrorMessage("catalog.harvest.manage.edit.err.hostUrlReq");
+      _valid = false;
+    }
+
+    if (protocol.getPrefix().length() == 0) {
+      mb.addErrorMessage("catalog.harvest.manage.edit.err.prefixReq");
+      _valid = false;
+    }
+
+    return _valid;
   }
-  
 }

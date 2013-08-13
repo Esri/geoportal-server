@@ -22,11 +22,13 @@ import com.esri.gpt.framework.jsf.MessageBroker;
  * ArcGIS protocol validator.
  */
 class ArcGISValidator implements IValidator {
+
   private String url;
   private ArcGISProtocol protocol;
 
   /**
    * Creates instance of the validator.
+   *
    * @param url host URL
    * @param protocol protocol
    */
@@ -37,6 +39,18 @@ class ArcGISValidator implements IValidator {
 
   @Override
   public boolean validate(MessageBroker mb) {
-    return true;
+    boolean _valid = true;
+
+    if (url.isEmpty()) {
+      mb.addErrorMessage("catalog.harvest.manage.edit.err.hostUrlReq");
+      _valid = false;
+    }
+    
+    if (protocol.getSoapUrl().length() == 0) {
+      mb.addErrorMessage("catalog.harvest.manage.edit.err.soapUrl");
+      _valid = false;
+    }
+
+    return _valid;
   }
 }

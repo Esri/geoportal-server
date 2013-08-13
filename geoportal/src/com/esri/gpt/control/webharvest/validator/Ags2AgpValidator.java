@@ -21,12 +21,14 @@ import com.esri.gpt.framework.jsf.MessageBroker;
 /**
  * AGS to AGP protocol validator.
  */
-class Ags2AgpValidator implements IValidator {
+class Ags2AgpValidator extends AgpValidator {
+
   private String url;
   private HarvestProtocolAgs2Agp protocol;
 
   /**
    * Creates instance of the validator.
+   *
    * @param url host URL
    * @param protocol protocol
    */
@@ -37,6 +39,49 @@ class Ags2AgpValidator implements IValidator {
 
   @Override
   public boolean validate(MessageBroker mb) {
-    return true;
+    boolean _valid = true;
+
+    if (url.isEmpty()) {
+      mb.addErrorMessage("catalog.harvest.manage.edit.err.hostUrlReq");
+      _valid = false;
+    }
+
+    if (!getArcgisDotComAllowed()) {
+      if (protocol.getDestinationHost().toLowerCase().endsWith("arcgis.com") || protocol.getDestinationHost().toLowerCase().endsWith("arcgisonline.com")) {
+        mb.addErrorMessage("catalog.harvest.manage.test.msg.agp2agp.arcgis.forbiden");
+        _valid = false;
+      }
+    }
+    if (_valid) {
+      if (protocol.getAttributeMap().getValue("ags-src-restUrl").length() == 0) {
+        mb.addErrorMessage("catalog.harvest.manage.edit.err.hostUrlReq");
+        _valid = false;
+      }
+      if (protocol.getAttributeMap().getValue("ags-src-soapUrl").length() == 0) {
+        mb.addErrorMessage("catalog.harvest.manage.edit.err.soapUrl");
+        _valid = false;
+      }
+      if (!protocol.getDestinationHost().matches(HOST_NAME_REGEX)) {
+        mb.addErrorMessage("catalog.harvest.manage.edit.dest.h.err");
+        _valid = false;
+      }
+      if (protocol.getAttributeMap().getValue("ags-dest-o").isEmpty()) {
+        mb.addErrorMessage("catalog.harvest.manage.edit.dest.o.err");
+        _valid = false;
+      }
+      if (protocol.getAttributeMap().getValue("ags-dest-u").isEmpty()) {
+        mb.addErrorMessage("catalog.harvest.manage.edit.dest.u.err");
+        _valid = false;
+      }
+      if (protocol.getAttributeMap().getValue("ags-dest-p").isEmpty()) {
+        mb.addErrorMessage("catalog.harvest.manage.edit.dest.p.err");
+        _valid = false;
+      }
+      if (protocol.getAttributeMap().getValue("ags-dest-f").isEmpty()) {
+        mb.addErrorMessage("catalog.harvest.manage.edit.dest.f.err");
+        _valid = false;
+      }
+    }
+    return _valid;
   }
 }

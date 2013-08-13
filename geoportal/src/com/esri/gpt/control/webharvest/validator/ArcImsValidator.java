@@ -37,7 +37,34 @@ class ArcImsValidator implements IValidator {
 
   @Override
   public boolean validate(MessageBroker mb) {
-    return true;
+    boolean _valid = true;
+
+    if (url.isEmpty()) {
+      mb.addErrorMessage("catalog.harvest.manage.edit.err.hostUrlReq");
+      _valid = false;
+    }
+
+    if (protocol.getPortNoAsString().length() == 0) {
+      mb.addErrorMessage("catalog.harvest.manage.edit.err.portNumberReq");
+      _valid = false;
+    } else {
+      try {
+        int portNo = Integer.parseInt(protocol.getPortNoAsString());
+        if (!(portNo >= 0 && portNo < 65536)) {
+          mb.addErrorMessage("catalog.harvest.manage.edit.err.portNumberInv");
+          _valid = false;
+        }
+      } catch (NumberFormatException ex) {
+        mb.addErrorMessage("catalog.harvest.manage.edit.err.portNumberInv");
+        _valid = false;
+      }
+    }
+    if (protocol.getServiceName().length() == 0) {
+      mb.addErrorMessage("catalog.harvest.manage.edit.err.serviceNameReq");
+      _valid = false;
+    }
+
+    return _valid;
   }
   
 }
