@@ -55,6 +55,6 @@ public class ValidatorFactory {
    */
   public IValidator getValidator(HrRecord record) {
     IValidatorFactory validatorFactory = factories.get(record.getProtocol().getClass());
-    return validatorFactory!=null? validatorFactory.create(record): null;
+    return validatorFactory!=null? validatorFactory.create(record): new DefaultValidator(record.getHostUrl(), record.getProtocol());
   }
 }
