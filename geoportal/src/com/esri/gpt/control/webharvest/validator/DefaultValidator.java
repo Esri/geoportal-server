@@ -16,14 +16,12 @@
 package com.esri.gpt.control.webharvest.validator;
 
 import com.esri.gpt.control.webharvest.protocol.Protocol;
-import com.esri.gpt.framework.jsf.MessageBroker;
 
 /**
  * Default validator.
  */
-class DefaultValidator implements IValidator {
+class DefaultValidator extends GenericValidator {
 
-  private String url;
   private Protocol protocol;
 
   /**
@@ -33,7 +31,7 @@ class DefaultValidator implements IValidator {
    * @param protocol protocol
    */
   public DefaultValidator(String url, Protocol protocol) {
-    this.url = url;
+    super(url);
     this.protocol = protocol;
   }
 

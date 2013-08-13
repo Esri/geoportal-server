@@ -40,6 +40,11 @@ abstract class AgpValidator implements IValidator {
     this.crossAllowed = Val.chkBool(sCrossAllowed, false);
   }
 
+  @Override
+  public boolean checkConnection(IMessageCollector mb) {
+    return true;
+  }
+
   protected boolean getArcgisDotComAllowed() {
     return arcgisDotComAllowed;
   }

@@ -16,14 +16,12 @@
 package com.esri.gpt.control.webharvest.validator;
 
 import com.esri.gpt.control.webharvest.client.arcgis.ArcGISProtocol;
-import com.esri.gpt.framework.jsf.MessageBroker;
 
 /**
  * ArcGIS protocol validator.
  */
-class ArcGISValidator implements IValidator {
+class ArcGISValidator extends GenericValidator {
 
-  private String url;
   private ArcGISProtocol protocol;
 
   /**
@@ -33,7 +31,7 @@ class ArcGISValidator implements IValidator {
    * @param protocol protocol
    */
   public ArcGISValidator(String url, ArcGISProtocol protocol) {
-    this.url = url;
+    super(url);
     this.protocol = protocol;
   }
 

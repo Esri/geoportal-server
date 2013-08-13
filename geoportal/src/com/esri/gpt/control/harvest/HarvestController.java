@@ -18,7 +18,6 @@ import com.esri.gpt.agp.client.AgpCountRequest;
 import com.esri.gpt.agp.sync.AgpDestination;
 import com.esri.gpt.agp.sync.AgpSource;
 import com.esri.gpt.catalog.arcgis.metadata.AGSProcessorConfig;
-import com.esri.gpt.framework.adhoc.AdHocEventFactoryList;
 import com.esri.gpt.framework.adhoc.AdHocEventList;
 import com.esri.gpt.framework.adhoc.IAdHocEvent;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRConnectionException;
@@ -57,6 +56,9 @@ import com.esri.gpt.control.webharvest.protocol.ProtocolFactories;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
 import com.esri.gpt.control.webharvest.protocol.factories.AgpProtocolFactory;
+import com.esri.gpt.control.webharvest.validator.IValidator;
+import com.esri.gpt.control.webharvest.validator.MessageCollectorAdaptor;
+import com.esri.gpt.control.webharvest.validator.ValidatorFactory;
 import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
@@ -77,7 +79,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.ExternalContext;
@@ -527,6 +528,27 @@ public class HarvestController extends BaseHarvestController {
 
       // check authorization
       authorizeAction(context);
+      
+      // perform check through the validator
+      HrRecord repository = getEditor().getRepository();
+      ValidatorFactory validatorFactory = ValidatorFactory.getInstance();
+      IValidator validator = validatorFactory.getValidator(repository);
+      if (validator!=null && validator.checkConnection(new MessageCollectorAdaptor(extractMessageBroker()))) {
+        extractMessageBroker().addSuccessMessage("catalog.harvest.manage.test.success");
+      }
+      
+    } catch (Throwable t) {
+      handleException(t);
+    } finally {
+      onExecutionPhaseCompleted();
+    }
+    /*
+    try {
+      // start execution phase
+      RequestContext context = onExecutionPhaseStarted();
+
+      // check authorization
+      authorizeAction(context);
 
       HrRecord repository = getEditor().getRepository();
 
@@ -599,7 +621,7 @@ public class HarvestController extends BaseHarvestController {
     } finally {
       onExecutionPhaseCompleted();
     }
-
+    */
   }
 
   /**

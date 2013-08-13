@@ -15,20 +15,26 @@
  */
 package com.esri.gpt.control.webharvest.validator;
 
+import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolWaf;
+import com.esri.gpt.catalog.harvest.repository.HrRecord;
+
 /**
- * Validator.
+ * WAF protocol validator factory.
  */
-public interface IValidator {
-  /**
-   * Validates protocol validator is associated with,
-   * @param mb message collector
-   * @return <code>true</code> if protocol passes validation
-   */
-  boolean validate(IMessageCollector mb);
-  /**
-   * Checks if connection can be established.
-   * @param mb message collector
-   * @return <code>true</code> if connection could be established
-   */
-  boolean checkConnection(IMessageCollector mb);
+public class WAFValidatorFactory implements IValidatorFactory {
+
+  @Override
+  public Class getProtocolClass() {
+    return HarvestProtocolWaf.class;
+  }
+
+  @Override
+  public IValidator create(HrRecord record) {
+    if (record!=null && getProtocolClass().isInstance(record.getProtocol())) {
+      String url = record.getHostUrl();
+      HarvestProtocolWaf protocol = (HarvestProtocolWaf) record.getProtocol();
+      return new WAFValidator(url, protocol);
+    }
+    return null;
+  }
 }

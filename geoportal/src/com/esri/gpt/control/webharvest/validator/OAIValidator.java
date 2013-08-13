@@ -21,9 +21,7 @@ import com.esri.gpt.framework.jsf.MessageBroker;
 /**
  * OAI protocol validator.
  */
-class OAIValidator implements IValidator {
-
-  private String url;
+class OAIValidator extends GenericValidator {
   private HarvestProtocolOai protocol;
 
   /**
@@ -33,7 +31,7 @@ class OAIValidator implements IValidator {
    * @param protocol protocol
    */
   public OAIValidator(String url, HarvestProtocolOai protocol) {
-    this.url = url;
+    super(url);
     this.protocol = protocol;
   }
 

@@ -35,6 +35,7 @@ public class ValidatorFactory {
     register(new ArcGISValidatorFactory());
     register(new Agp2AgpValidatorFactory());
     register(new Ags2AgpValidatorFactory());
+    register(new WAFValidatorFactory());
   }
   
   /**

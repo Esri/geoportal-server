@@ -16,13 +16,11 @@
 package com.esri.gpt.control.webharvest.validator;
 
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolArcIms;
-import com.esri.gpt.framework.jsf.MessageBroker;
 
 /**
  * ArcIMS protocol validator.
  */
-class ArcImsValidator implements IValidator {
-  private String url;
+class ArcImsValidator extends GenericValidator {
   private HarvestProtocolArcIms protocol;
 
   /**
@@ -31,7 +29,7 @@ class ArcImsValidator implements IValidator {
    * @param protocol protocol
    */
   public ArcImsValidator(String url, HarvestProtocolArcIms protocol) {
-    this.url = url;
+    super(url);
     this.protocol = protocol;
   }
 
