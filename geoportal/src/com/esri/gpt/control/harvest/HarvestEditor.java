@@ -16,7 +16,6 @@ package com.esri.gpt.control.harvest;
 
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocol.ProtocolType;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
-import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgs2Agp;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolResource;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolArcIms;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolCsw;

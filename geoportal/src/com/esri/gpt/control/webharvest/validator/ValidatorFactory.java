@@ -16,6 +16,10 @@
 package com.esri.gpt.control.webharvest.validator;
 
 import com.esri.gpt.catalog.harvest.repository.HrRecord;
+import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.ApplicationConfiguration;
+import com.esri.gpt.framework.context.ApplicationContext;
+import com.esri.gpt.framework.util.Val;
 import java.util.HashMap;
 
 /**
@@ -37,6 +41,22 @@ public class ValidatorFactory {
    * Gets singleton instance.
    */
   public static ValidatorFactory getInstance() {
+    if (instance==null) {
+      ApplicationContext appCtx = ApplicationContext.getInstance();
+      ApplicationConfiguration appCfg = appCtx.getConfiguration();
+      StringAttributeMap parameters = appCfg.getCatalogConfiguration().getParameters();
+      String validatorFactoryClassName = Val.chkStr(parameters.getValue("webharvester.validatorFactory.class"));
+      if (!validatorFactoryClassName.isEmpty()) {
+        try {
+          Class validatorFactoryClass = Class.forName(validatorFactoryClassName);
+          instance = (ValidatorFactory)validatorFactoryClass.newInstance();
+        } catch (Exception ex) {
+          instance = new ValidatorFactory();
+        }
+      } else {
+        instance = new ValidatorFactory();
+      }
+    }
     return instance;
   }
   
