@@ -16,13 +16,18 @@
 package com.esri.gpt.control.webharvest.validator;
 
 /**
- * Validator.
+ * Message collector.
  */
-public interface IValidator {
+public interface IMessageCollector {
   /**
-   * Validates protocol validator is associated with,
-   * @param mb message broker
-   * @return <code>true</code> if protocol passes validation
+   * Adds error message.
+   * @param resourceKey resource key of the message
    */
-  boolean validate(IMessageCollector mb);
+  void addErrorMessage(String resourceKey);
+  /**
+   * Adds error message.
+   * @param resourceKey resource key of the message
+   * @param parameters parameters
+   */
+  void addErrorMessage(String resourceKey, Object[] parameters);
 }

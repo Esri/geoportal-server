@@ -29,6 +29,7 @@ import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
 import com.esri.gpt.control.webharvest.validator.IValidator;
+import com.esri.gpt.control.webharvest.validator.MessageCollectorAdaptor;
 import com.esri.gpt.control.webharvest.validator.ValidatorFactory;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
@@ -440,7 +441,7 @@ public void prepareForUpdate() {
 public boolean validate(MessageBroker mb) {
   ValidatorFactory factory = ValidatorFactory.getInstance();
   IValidator validator = factory.getValidator(_harvestRepository);
-  return validator!=null? validator.validate(mb): true;
+  return validator!=null? validator.validate(new MessageCollectorAdaptor(mb)): true;
 }
 
 /**

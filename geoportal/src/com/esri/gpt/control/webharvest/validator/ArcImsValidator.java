@@ -36,7 +36,7 @@ class ArcImsValidator implements IValidator {
   }
 
   @Override
-  public boolean validate(MessageBroker mb) {
+  public boolean validate(IMessageCollector mb) {
     boolean _valid = true;
 
     if (url.isEmpty()) {

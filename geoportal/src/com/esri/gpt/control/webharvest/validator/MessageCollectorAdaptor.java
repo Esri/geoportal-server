@@ -15,38 +15,29 @@
  */
 package com.esri.gpt.control.webharvest.validator;
 
-import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.framework.jsf.MessageBroker;
 
 /**
- * Default validator.
+ * Message collector adaptor.
  */
-class DefaultValidator implements IValidator {
-
-  private String url;
-  private Protocol protocol;
+public class MessageCollectorAdaptor implements IMessageCollector {
+  private MessageBroker mb;
 
   /**
-   * Creates instance of the validator.
-   *
-   * @param url host URL
-   * @param protocol protocol
+   * Creates instance of the adaptor.
+   * @param mb message broker
    */
-  public DefaultValidator(String url, Protocol protocol) {
-    this.url = url;
-    this.protocol = protocol;
+  public MessageCollectorAdaptor(MessageBroker mb) {
+    this.mb = mb;
   }
 
   @Override
-  public boolean validate(IMessageCollector mb) {
-    boolean _valid = true;
-
-    if (url.isEmpty()) {
-      mb.addErrorMessage("catalog.harvest.manage.edit.err.hostUrlReq");
-      _valid = false;
-    }
-    
-    return _valid;
+  public void addErrorMessage(String resourceKey) {
+    mb.addErrorMessage(resourceKey);
   }
-  
+
+  @Override
+  public void addErrorMessage(String resourceKey, Object[] parameters) {
+    mb.addErrorMessage(resourceKey, parameters);
+  }
 }
