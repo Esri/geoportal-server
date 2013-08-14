@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.control.webharvest.validator;
 
+import com.esri.gpt.agp.sync.AgpDestination;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.util.Val;
@@ -22,7 +23,7 @@ import com.esri.gpt.framework.util.Val;
 /**
  * Generic AGP protocol validator.
  */
-abstract class AgpValidator implements IValidator {
+public abstract class AgpValidator implements IValidator {
   protected static final String HOST_NAME_REGEX = "(^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])([/].+)?$)|(^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])([/].+)?$)";
   protected boolean arcgisDotComAllowed;
   protected boolean crossAllowed;
@@ -44,6 +45,13 @@ abstract class AgpValidator implements IValidator {
   public boolean checkConnection(IMessageCollector mb) {
     return true;
   }
+  
+  /**
+   * Checks connection to the destination.
+   * @param mb message collector
+   * @return <code>true</code> if connection could be verified
+   */
+  public abstract boolean checkDestinationConnection(IMessageCollector mb);
 
   protected boolean getArcgisDotComAllowed() {
     return arcgisDotComAllowed;
@@ -59,6 +67,40 @@ abstract class AgpValidator implements IValidator {
 
   protected void setCrossAllowed(boolean crossAllowed) {
     this.crossAllowed = crossAllowed;
+  }
+  
+  /**
+   * Checks connection to the destination.
+   * @param mb message collector
+   * @param destination destination
+   * @return <code>true</code> if connection could be verified
+   */
+  protected boolean checkConnection(IMessageCollector mb, AgpDestination destination) {
+    try {
+        boolean stop = false;
+        if (destination.getConnection().getHost().isEmpty()) {
+          mb.addErrorMessage("catalog.harvest.manage.test.err.agp2agp.dst.nohost");
+          stop = true;
+        }
+
+        if (destination.getConnection().getTokenCriteria().getCredentials().getUsername().isEmpty() || destination.getConnection().getTokenCriteria().getCredentials().getPassword().isEmpty()) {
+          mb.addErrorMessage("catalog.harvest.manage.test.err.agp2agp.dst.nocredentials");
+          stop = true;
+        }
+
+        if (!stop) {
+          destination.getConnection().generateToken();
+          return true;
+        }
+    } catch (Exception ex) {
+      String message = Val.chkStr(ex.getMessage());
+      if (message.isEmpty()) {
+        mb.addErrorMessage("catalog.harvest.manage.test.err.HarvestConnectionException");
+      } else {
+        mb.addErrorMessage("catalog.harvest.manage.test.err.agp2agp.connect", new Object[]{message});
+      }
+    }
+    return false;
   }
   
 }

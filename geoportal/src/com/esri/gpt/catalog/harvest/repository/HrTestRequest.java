@@ -20,7 +20,9 @@ import com.esri.gpt.framework.context.RequestContext;
 
 /**
  * Provides connection test request functionality.
+ * @deprecated replaced with {@link com.esri.gpt.control.webharvest.validator.ValidatorFactory}
  */
+@Deprecated
 public class HrTestRequest extends HrRequest {
 
 // class variables =============================================================

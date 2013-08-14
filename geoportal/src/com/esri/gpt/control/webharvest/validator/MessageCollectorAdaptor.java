@@ -40,4 +40,14 @@ public class MessageCollectorAdaptor implements IMessageCollector {
   public void addErrorMessage(String resourceKey, Object[] parameters) {
     mb.addErrorMessage(resourceKey, parameters);
   }
+
+  @Override
+  public void addSuccessMessage(String resourceKey) {
+    mb.addSuccessMessage(resourceKey);
+  }
+
+  @Override
+  public void addSuccessMessage(String resourceKey, Object[] parameters) {
+    mb.addSuccessMessage(resourceKey, parameters);
+  }
 }

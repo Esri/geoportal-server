@@ -16,7 +16,9 @@
 package com.esri.gpt.control.webharvest.validator;
 
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgs2Agp;
-import com.esri.gpt.framework.jsf.MessageBroker;
+import com.esri.gpt.framework.http.HttpClientRequest;
+import com.esri.gpt.framework.http.StringHandler;
+import java.io.IOException;
 
 /**
  * AGS to AGP protocol validator.
@@ -83,5 +85,24 @@ class Ags2AgpValidator extends AgpValidator {
       }
     }
     return _valid;
+  }
+
+  @Override
+  public boolean checkConnection(IMessageCollector mb) {
+    try {
+      HttpClientRequest httpRequest = new HttpClientRequest();
+      httpRequest.setUrl(protocol.getSourceHost());
+      httpRequest.setContentHandler(new StringHandler());
+      httpRequest.execute();
+      return true;
+    } catch (IOException ex) {
+      mb.addErrorMessage("catalog.harvest.manage.test.err.HarvestConnectionException");
+    }
+    return false;
+  }
+
+  @Override
+  public boolean checkDestinationConnection(IMessageCollector mb) {
+    return checkConnection(mb, protocol.getDestination());
   }
 }

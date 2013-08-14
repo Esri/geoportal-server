@@ -21,11 +21,13 @@ import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.util.Val;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 /**
  * Validator factory.
  */
 public class ValidatorFactory {
+  private final static Logger LOGGER = Logger.getLogger(ValidatorFactory.class.getCanonicalName());
   private static final HashMap<Class,IValidatorFactory> factories = new HashMap<Class, IValidatorFactory>();
   private static ValidatorFactory instance = new ValidatorFactory();
   
@@ -43,6 +45,7 @@ public class ValidatorFactory {
    */
   public static ValidatorFactory getInstance() {
     if (instance==null) {
+      LOGGER.fine("Creating singleton instance of protcol validator factory...");
       ApplicationContext appCtx = ApplicationContext.getInstance();
       ApplicationConfiguration appCfg = appCtx.getConfiguration();
       StringAttributeMap parameters = appCfg.getCatalogConfiguration().getParameters();
@@ -52,6 +55,7 @@ public class ValidatorFactory {
           Class validatorFactoryClass = Class.forName(validatorFactoryClassName);
           instance = (ValidatorFactory)validatorFactoryClass.newInstance();
         } catch (Exception ex) {
+          LOGGER.fine("Instance of protcol validator as defined in 'webharvester.validatorFactory.class' couldn't be created. Creating generic one.");
           instance = new ValidatorFactory();
         }
       } else {

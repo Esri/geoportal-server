@@ -1055,7 +1055,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <h:commandButton 
   id="testQuery"
   value="#{gptMsg['catalog.harvest.manage.test.msg.agp2agp.button.testQuery']}" 
-  actionListener="#{HarvestController.handleTestAgp2AgpQuery}" />
+  actionListener="#{HarvestController.handleTestConnection}" />
 </h:panelGroup>
 
 <%-- src max items --%>
@@ -1080,7 +1080,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <h:commandButton 
   id="testClient"
   value="#{gptMsg['catalog.harvest.manage.test.msg.agp2agp.button.testClient']}" 
-  actionListener="#{HarvestController.handleTestAgp2AgpClient}" />
+  actionListener="#{HarvestController.handleTestAgpDestination}" />
 </h:panelGroup>
 
 <%-- dest owner --%>
@@ -1113,7 +1113,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <h:commandButton 
   id="ags2agp-testConnection"
   value="#{gptMsg['catalog.harvest.manage.edit.testConnection']}" 
-  actionListener="#{HarvestController.handleTestAgs2AgpConnection}" />
+  actionListener="#{HarvestController.handleTestConnection}" />
 </h:panelGroup>
 
 <%-- src soap --%>
@@ -1138,7 +1138,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <h:commandButton 
   id="ags2agp-testClient"
   value="#{gptMsg['catalog.harvest.manage.test.msg.agp2agp.button.testClient']}" 
-  actionListener="#{HarvestController.handleTestAgs2AgpClient}" />
+  actionListener="#{HarvestController.handleTestAgpDestination}" />
 </h:panelGroup>
 
 <%-- dest owner --%>

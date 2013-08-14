@@ -30,4 +30,15 @@ public interface IMessageCollector {
    * @param parameters parameters
    */
   void addErrorMessage(String resourceKey, Object[] parameters);
+  /**
+   * Adds success message.
+   * @param resourceKey resource key of the message
+   */
+  void addSuccessMessage(String resourceKey);
+  /**
+   * Adds success message.
+   * @param resourceKey resource key of the message
+   * @param parameters parameters
+   */
+  void addSuccessMessage(String resourceKey, Object[] parameters);
 }

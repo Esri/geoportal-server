@@ -15,10 +15,11 @@
  */
 package com.esri.gpt.control.webharvest.validator;
 
+import com.esri.gpt.agp.client.AgpCountRequest;
+import com.esri.gpt.agp.sync.AgpSource;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
-import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
 
 /**
@@ -119,5 +120,54 @@ class Agp2AgpValidator extends AgpValidator {
       }
     }
     return _valid;
+  }
+
+  @Override
+  public boolean checkConnection(IMessageCollector mb) {
+    try {
+        AgpSource source = protocol.getSource();
+
+        boolean stop = false;
+        if (source.getConnection().getHost().isEmpty()) {
+          mb.addErrorMessage("catalog.harvest.manage.test.err.agp2agp.src.nohost");
+          stop = true;
+        }
+
+        if (source.getConnection().getTokenCriteria().getCredentials().getUsername().isEmpty() || source.getConnection().getTokenCriteria().getCredentials().getPassword().isEmpty()) {
+          mb.addErrorMessage("catalog.harvest.manage.test.err.agp2agp.src.nocredentials");
+          stop = true;
+        }
+
+        if (source.getSearchCriteria().getQ().isEmpty()) {
+          mb.addErrorMessage("catalog.harvest.manage.test.err.agp2agp.src.noquery");
+          stop = true;
+        }
+
+        if (!stop) {
+          source.getConnection().generateToken();
+          AgpCountRequest sourceRequest = new AgpCountRequest();
+          long count = sourceRequest.count(source.getConnection(), source.getSearchCriteria());
+          String srcM = protocol.getAttributeMap().getValue("src-m");
+          long max = Val.chkLong(srcM, 0);
+          long apx = Math.min(count, max);
+
+          mb.addSuccessMessage("catalog.harvest.manage.test.msg.agp2agp.success", new Object[]{apx});
+          return true;
+        }
+    } catch (Exception ex) {
+      String message = Val.chkStr(ex.getMessage());
+      if (message.isEmpty()) {
+        mb.addErrorMessage("catalog.harvest.manage.test.err.HarvestConnectionException");
+      } else {
+        mb.addErrorMessage("catalog.harvest.manage.test.err.agp2agp.connect", new Object[]{message});
+      }
+    }
+    
+    return false;
+  }
+
+  @Override
+  public boolean checkDestinationConnection(IMessageCollector mb) {
+    return checkConnection(mb, protocol.getDestination());
   }
 }

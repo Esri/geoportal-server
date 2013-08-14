@@ -504,7 +504,9 @@ public String toString() {
  * Checks connection to the remote host.
  * @throws HRInvalidProtocolException when protocol attributes are invalid
  * @throws HRConnectionException if connecting remote repository failed
+ * @deprecated replaced with {@link com.esri.gpt.control.webharvest.validator.ValidatorFactory}
  */
+@Deprecated
 public void checkConnection()
     throws HRInvalidProtocolException, HRConnectionException {
   try {
