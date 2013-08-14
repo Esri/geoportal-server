@@ -16,5 +16,19 @@
 
 /**
  * DCAT cache related classes.
+ * <p>
+ * Please, include {@link com.esri.gpt.control.georss.dcatcache.DcatCacheTask} in
+ * the &lt;scheduler&gt; node in gpt.xml configuration file, for example:
+ * <code><pre>
+ * 
+ * &lt;scheduler active="true" corePoolSize="0"&gt;
+ *   ...
+ *   &lt;thread class="com.esri.gpt.control.georss.dcatcache.DcatCacheTask" period='1[DAY]' delay="15[SECOND]"/&gt;
+ *   ...
+ * &lt;/scheduler&gt;
+ * </pre></code>
+ * This will cause to periodically generate DCAT cache. Until the cache is generated,
+ * empty response will be provided by the DCAT REST end-point.
+ * </p>
  */
 package com.esri.gpt.control.georss.dcatcache;
