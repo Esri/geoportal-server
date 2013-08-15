@@ -33,7 +33,7 @@ public interface IValidator extends IConnectionChecker {
    * There is always non-empty map of connection checkers with at least one checker
    * named: "this" which refers to validator itself.
    * </p>
-   * @return 
+   * @return collection of named connection checkers
    */
   Map<String,IConnectionChecker> listConnectionCheckers();
 }
