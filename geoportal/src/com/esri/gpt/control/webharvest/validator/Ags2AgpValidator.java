@@ -19,6 +19,8 @@ import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgs2Agp;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.StringHandler;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * AGS to AGP protocol validator.
@@ -27,7 +29,7 @@ class Ags2AgpValidator extends AgpValidator {
 
   private String url;
   private HarvestProtocolAgs2Agp protocol;
-
+  
   /**
    * Creates instance of the validator.
    *

@@ -13,8 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Protocol validation classes.
- * @since 1.2.5
- */
 package com.esri.gpt.control.webharvest.validator;
+
+/**
+ * Connection checker.
+ */
+public interface IConnectionChecker {
+
+  /**
+   * Checks if connection can be established.
+   * @param mb message collector
+   * @return <code>true</code> if connection could be established
+   */
+  boolean checkConnection(IMessageCollector mb);
+  
+}

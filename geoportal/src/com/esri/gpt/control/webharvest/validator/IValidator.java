@@ -15,10 +15,12 @@
  */
 package com.esri.gpt.control.webharvest.validator;
 
+import java.util.Map;
+
 /**
  * Validator.
  */
-public interface IValidator {
+public interface IValidator extends IConnectionChecker {
   /**
    * Validates protocol validator is associated with,
    * @param mb message collector
@@ -26,9 +28,12 @@ public interface IValidator {
    */
   boolean validate(IMessageCollector mb);
   /**
-   * Checks if connection can be established.
-   * @param mb message collector
-   * @return <code>true</code> if connection could be established
+   * Lists all connections checkers.
+   * <p>
+   * There is always non-empty map of connection checkers with at least one checker
+   * named: "this" which refers to validator itself.
+   * </p>
+   * @return 
    */
-  boolean checkConnection(IMessageCollector mb);
+  Map<String,IConnectionChecker> listConnectionCheckers();
 }

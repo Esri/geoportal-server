@@ -19,12 +19,19 @@ import com.esri.gpt.framework.http.CredentialProvider;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.StringHandler;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Generic validator.
  */
 abstract class GenericValidator implements IValidator {
   protected String url;
+  private Map<String,IConnectionChecker> checkers = new HashMap<String,IConnectionChecker>();
+  
+  {
+    checkers.put("this", this);
+  }
 
   /**
    * Creates instance of the validator.
@@ -47,6 +54,11 @@ abstract class GenericValidator implements IValidator {
       mb.addErrorMessage("catalog.harvest.manage.test.err.HarvestConnectionException");
     }
     return false;
+  }
+
+  @Override
+  public Map<String, IConnectionChecker> listConnectionCheckers() {
+    return checkers;
   }
   
   protected CredentialProvider getCredentialProvider() {

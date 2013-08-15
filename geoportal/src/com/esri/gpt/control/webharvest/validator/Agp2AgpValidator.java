@@ -21,6 +21,8 @@ import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.util.Val;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * AGP to AGP protocol validator

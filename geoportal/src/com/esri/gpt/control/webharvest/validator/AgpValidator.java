@@ -19,14 +19,27 @@ import com.esri.gpt.agp.sync.AgpDestination;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.util.Val;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Generic AGP protocol validator.
  */
-public abstract class AgpValidator implements IValidator {
+abstract class AgpValidator implements IValidator {
   protected static final String HOST_NAME_REGEX = "(^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])([/].+)?$)|(^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])([/].+)?$)";
   protected boolean arcgisDotComAllowed;
   protected boolean crossAllowed;
+  private Map<String,IConnectionChecker> checkers = new HashMap<String,IConnectionChecker>();
+  
+  {
+    checkers.put("this",this);
+    checkers.put("destination", new IConnectionChecker() {
+      @Override
+      public boolean checkConnection(IMessageCollector mb) {
+        return checkDestinationConnection(mb);
+      }
+    });
+  }
 
   public AgpValidator() {
 
@@ -42,8 +55,8 @@ public abstract class AgpValidator implements IValidator {
   }
 
   @Override
-  public boolean checkConnection(IMessageCollector mb) {
-    return true;
+  public Map<String, IConnectionChecker> listConnectionCheckers() {
+    return checkers;
   }
   
   /**

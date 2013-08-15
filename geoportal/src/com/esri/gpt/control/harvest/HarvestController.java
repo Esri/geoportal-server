@@ -45,7 +45,7 @@ import com.esri.gpt.control.webharvest.protocol.ProtocolFactories;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
 import com.esri.gpt.control.webharvest.protocol.factories.AgpProtocolFactory;
-import com.esri.gpt.control.webharvest.validator.AgpValidator;
+import com.esri.gpt.control.webharvest.validator.IConnectionChecker;
 import com.esri.gpt.control.webharvest.validator.IValidator;
 import com.esri.gpt.control.webharvest.validator.MessageCollectorAdaptor;
 import com.esri.gpt.control.webharvest.validator.ValidatorFactory;
@@ -576,7 +576,9 @@ public class HarvestController extends BaseHarvestController {
       HrRecord repository = getEditor().getRepository();
       ValidatorFactory validatorFactory = ValidatorFactory.getInstance();
       IValidator validator = validatorFactory.getValidator(repository);
-      if (validator instanceof AgpValidator && ((AgpValidator)validator).checkDestinationConnection(new MessageCollectorAdaptor(extractMessageBroker()))) {
+      IConnectionChecker destinationChecker = validator.listConnectionCheckers().get("destination");
+      
+      if (destinationChecker!=null && destinationChecker.checkConnection(new MessageCollectorAdaptor(extractMessageBroker()))) {
         extractMessageBroker().addSuccessMessage("catalog.harvest.manage.test.success");
       }
       
