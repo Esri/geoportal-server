@@ -21,7 +21,7 @@ import com.esri.gpt.catalog.harvest.repository.HrRecord;
 /**
  * AGP to AGP protocol validator factory.
  */
-public class Agp2AgpValidatorFactory implements IValidatorFactory {
+class Agp2AgpValidatorFactory implements IValidatorFactory {
 
   @Override
   public Class getProtocolClass() {

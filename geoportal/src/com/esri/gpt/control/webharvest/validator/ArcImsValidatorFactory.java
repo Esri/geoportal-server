@@ -21,7 +21,7 @@ import com.esri.gpt.catalog.harvest.repository.HrRecord;
 /**
  * ArcIMS protocol validator factory.
  */
-public class ArcImsValidatorFactory implements IValidatorFactory {
+class ArcImsValidatorFactory implements IValidatorFactory {
 
   @Override
   public Class getProtocolClass() {

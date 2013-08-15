@@ -21,7 +21,7 @@ import com.esri.gpt.catalog.harvest.repository.HrRecord;
 /**
  * OAI validator factory.
  */
-public class OAIValidatorFactory implements IValidatorFactory {
+class OAIValidatorFactory implements IValidatorFactory {
 
   @Override
   public Class getProtocolClass() {

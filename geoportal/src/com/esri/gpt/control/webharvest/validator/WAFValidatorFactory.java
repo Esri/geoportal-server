@@ -21,7 +21,7 @@ import com.esri.gpt.catalog.harvest.repository.HrRecord;
 /**
  * WAF protocol validator factory.
  */
-public class WAFValidatorFactory implements IValidatorFactory {
+class WAFValidatorFactory implements IValidatorFactory {
 
   @Override
   public Class getProtocolClass() {

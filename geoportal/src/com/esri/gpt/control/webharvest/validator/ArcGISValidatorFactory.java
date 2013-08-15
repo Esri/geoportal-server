@@ -21,7 +21,7 @@ import com.esri.gpt.control.webharvest.client.arcgis.ArcGISProtocol;
 /**
  * ArcGIS protocol validator factory.
  */
-public class ArcGISValidatorFactory implements IValidatorFactory {
+class ArcGISValidatorFactory implements IValidatorFactory {
 
   @Override
   public Class getProtocolClass() {
