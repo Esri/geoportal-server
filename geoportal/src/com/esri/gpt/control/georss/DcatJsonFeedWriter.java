@@ -347,7 +347,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     argName = Val.chkStr(argName);
     argVal = Val.chkStr(argVal);
     if (argName.length() > 0) {
-      println("\"" + argName + "\"" + sp() + ":" + sp() + "\"" + argVal + "\"" + (more ? "," : ""));
+      println("\"" + argName + "\"" + sp() + ":" + sp() + "\"" + Val.escapeStrForJson(argVal) + "\"" + (more ? "," : ""));
     }
   }
 
@@ -389,7 +389,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
       print(false, ",");
       print(false, "\r\n");
     }
-    print(before, "\"" + jsonKey + "\"" + sp() + ":" + sp() + "\"" + cleanedVal + "\"");
+    print(before, "\"" + jsonKey + "\"" + sp() + ":" + sp() + "\"" + Val.escapeStrForJson(cleanedVal) + "\"");
     before = true;
     return before;
   }
@@ -434,7 +434,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
         print(false, ",");
         print(false, "\r\n");
       }
-      print(before, "\"" + jsonKey + "\"" + sp() + ":" + sp() + "\"" + fldValues + "\"");
+      print(before, "\"" + jsonKey + "\"" + sp() + ":" + sp() + "\"" + Val.escapeStrForJson(fldValues) + "\"");
       before = true;
     }
     return before;
