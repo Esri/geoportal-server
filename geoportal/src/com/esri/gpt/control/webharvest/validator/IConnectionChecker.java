@@ -13,9 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.esri.gpt.control.webharvest.validator;
 
 /**
- * Ad-Hoc harvesting related classes.
- * @since 1.2.5
+ * Connection checker.
  */
-package com.esri.gpt.framework.adhoc;
+public interface IConnectionChecker {
+
+  /**
+   * Checks if connection can be established.
+   * @param mb message collector
+   * @return <code>true</code> if connection could be established
+   */
+  boolean checkConnection(IMessageCollector mb);
+  
+}

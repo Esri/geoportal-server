@@ -81,6 +81,11 @@ public class DcatCache {
     return new FileInputStream(latestCache);
   }
   
+  /**
+   * Creates output stream to write into the cache.
+   * @return output stream
+   * @throws FileNotFoundException if can not create stream
+   */
   public OutputStream createOutputCacheStream() throws FileNotFoundException {
     File file = new File(root,"cache-"+SDF.format(new Date())+".temp");
     return new CacheOutputStream(file);

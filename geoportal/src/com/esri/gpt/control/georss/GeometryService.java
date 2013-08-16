@@ -29,16 +29,33 @@ import org.json.JSONObject;
 public class GeometryService {
   private String geometryServiceURL;
   
+  /**
+   * Creates instance of the service object.
+   * @param URL URL to the service
+   */
   public GeometryService(String URL) {
     this.geometryServiceURL = URL;
   }
   
+  /**
+   * Creates instance as configured in gpt.xml.
+   * @return instance of the service
+   */
   public static GeometryService createDefaultInstance() {
     ApplicationContext appCtx = ApplicationContext.getInstance();
     ApplicationConfiguration appCfg = appCtx.getConfiguration();
     return new GeometryService(appCfg.getInteractiveMap().getGeometryServiceUrl());
   }
   
+  /**
+   * Performs projection.
+   * @param envelopes list of envelopes to project
+   * @param outSR output spatial reference (WKID)
+   * @return list of projected envelopes
+   * @throws JSONException if reading response as JSON fails
+   * @throws HttpClientException if HTTP communication fails
+   * @throws IOException if data transmission fails
+   */
   public List<Envelope> project(List<Envelope> envelopes, String outSR) throws JSONException, HttpClientException, IOException {
     Envelope [] envArray = new Envelope[envelopes.size()];
     
@@ -68,6 +85,16 @@ public class GeometryService {
     return Arrays.asList(envArray);
   }
   
+  /**
+   * Performs projection.
+   * @param inEnv list of envelopes
+   * @param inSR input spatial reference (WKID)
+   * @param outSR output spatial reference (WKID)
+   * @return list of projected envelopes
+   * @throws JSONException if reading response as JSON fails
+   * @throws HttpClientException if HTTP communication fails
+   * @throws IOException if data transmission fails
+   */
   protected List<Envelope> project(List<Envelope> inEnv, String inSR, String outSR) throws JSONException, HttpClientException, IOException {
     List<Envelope> outEnv = new ArrayList<Envelope>();
     
@@ -104,6 +131,12 @@ public class GeometryService {
     return outEnv;
   }
   
+  /**
+   * Read envelope from the JSON object.
+   * @param geom JSON object representing envelope
+   * @return envelope
+   * @throws JSONException if input object is not a valid envelope
+   */
   protected Envelope readEnvelope(JSONObject geom) throws JSONException {
     double xmin = geom.getDouble("xmin");
     double ymin = geom.getDouble("ymin");
@@ -121,6 +154,12 @@ public class GeometryService {
     return env;
   }
   
+  /**
+   * Creates WKID to envelope mapping.
+   * @param envelopes envelopes
+   * @param defWkid default WKID
+   * @return mapping
+   */
   protected Map<String,List<Envelope>> createEnvMap(List<Envelope> envelopes, String defWkid) {
     Map<String,List<Envelope>> envMap = new HashMap<String, List<Envelope>>();
     for (Envelope env: envelopes) {
@@ -135,6 +174,12 @@ public class GeometryService {
     return envMap;
   }
   
+  /**
+   * Turns list of envelopes into a JSON object.
+   * @param envList list of envelopes
+   * @param wkid WKID
+   * @return string representation of JSON object
+   */
   protected String envToJson(List<Envelope> envList, String wkid) {
     StringBuilder sb = new StringBuilder();
     sb.append("{");
@@ -156,7 +201,12 @@ public class GeometryService {
     return sb.toString();
   }
   
-  
+  /**
+   * Turns a single envelope into a JSON object.
+   * @param env envelope
+   * @param wkid WKID
+   * @return string representation of JSON object
+   */
   protected String envToJson(Envelope env, String wkid) {
     StringBuilder sb = new StringBuilder();
     sb.append("{");
@@ -169,6 +219,11 @@ public class GeometryService {
     return sb.toString();
   }
   
+  /**
+   * Encodes a string.
+   * @param str string to encode
+   * @return encoded string
+   */
   protected String enc(String str) {
     try {
       return URLEncoder.encode(str, "UTF-8");

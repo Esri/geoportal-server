@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
- * Ad-Hoc harvesting related classes.
- * @since 1.2.5
+ * Ags2Agp harvest protocol support classes.
  */
-package com.esri.gpt.framework.adhoc;
+package com.esri.gpt.agp.ags;

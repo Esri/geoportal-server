@@ -13,9 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.esri.gpt.control.webharvest.validator;
+
+import com.esri.gpt.catalog.harvest.repository.HrRecord;
 
 /**
- * Ad-Hoc harvesting related classes.
- * @since 1.2.5
+ * Validator factory.
  */
-package com.esri.gpt.framework.adhoc;
+public interface IValidatorFactory {
+  /**
+   * Gets class of the protocol for which it can create a validator.
+   * @return protocol class
+   */
+  Class getProtocolClass();
+  /**
+   * Creates validator.
+   * @param record harvest record
+   * @return validator or <code>null</code> if no validator available
+   */
+  IValidator create(HrRecord record);
+}

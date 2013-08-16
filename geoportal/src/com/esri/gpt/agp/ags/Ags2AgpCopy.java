@@ -32,20 +32,22 @@ import com.esri.gpt.agp.sync.AgpPartHelper;
 import com.esri.gpt.catalog.arcgis.metadata.IServiceInfoProvider;
 import com.esri.gpt.catalog.arcgis.metadata.ServiceInfo;
 import com.esri.gpt.catalog.arcgis.metadata.ServiceInfoProviderAdapter;
+import com.esri.gpt.control.georss.GeometryService;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.arcgis.ArcGISInfo;
 import com.esri.gpt.control.webharvest.client.arcgis.ArcGISQueryBuilder;
 import com.esri.gpt.control.webharvest.common.CommonCriteria;
 import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.resource.adapters.FlatResourcesAdapter;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
 import com.esri.gpt.framework.util.Val;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.json.JSONObject;
 
 /**
@@ -54,6 +56,7 @@ import org.json.JSONObject;
 public class Ags2AgpCopy {
   private AgpItemHelper  itemHelper = new AgpItemHelper(); 
   private AgpPartHelper  partHelper = new AgpPartHelper(); 
+  private GeometryService gs = GeometryService.createDefaultInstance();
   private static final Logger LOGGER = Logger.getLogger(Ags2AgpCopy.class.getCanonicalName());
   
   private ArcGISInfo source;
@@ -136,18 +139,20 @@ public class Ags2AgpCopy {
       props.add(new AgpProperty("thumbnailurl", Val.chkStr(serviceInfo.getThumbnailUrl())));
       if (serviceInfo.getEnvelope() instanceof EnvelopeN) {
         EnvelopeN e = (EnvelopeN) serviceInfo.getEnvelope();
-        String envelope = ""+e.getXMin()+","+e.getYMin()+","+e.getXMax()+","+e.getYMax();
-        props.add(new AgpProperty("extent", envelope));
-        String wkt = e.getSpatialReference().getWKT();
-        Pattern p = Pattern.compile("GEOGCS\\[\\\"[^\"]*\\\"",Pattern.CASE_INSENSITIVE);
-        Matcher m = p.matcher(wkt);
-        if (m.find()) {
-          String GEOGCS = m.group();
-          p = Pattern.compile("\\\"[^\"]*\\\"",Pattern.CASE_INSENSITIVE);
-          m = p.matcher(GEOGCS);
-          if (m.find()) {
-            props.add(new AgpProperty("spatialreference", m.group().replaceAll("^\\\"|\\\"$", "")));
+        
+        // project envelope
+        Envelope gptEnvelope = new Envelope(e.getXMin(), e.getYMin(), e.getXMax(), e.getYMax());
+        gptEnvelope.setWkid(e.getSpatialReference().getWKID().toString());
+        List<Envelope> envelopes = Arrays.asList(new Envelope[]{gptEnvelope});
+        try {
+          List<Envelope> projectedEnvelopes = gs.project(envelopes, "4326");
+          if (projectedEnvelopes!=null && !projectedEnvelopes.isEmpty()) {
+            Envelope pe = projectedEnvelopes.get(0);
+            String envelope = ""+pe.getMinX()+","+pe.getMinY()+","+pe.getMaxX()+","+pe.getMaxY();
+            props.add(new AgpProperty("extent", envelope));
           }
+        } catch (Exception ex) {
+          LOGGER.log(Level.WARNING, "Error projecting envelope.", ex);
         }
       }
       
@@ -160,6 +165,12 @@ public class Ags2AgpCopy {
     return null;
   }
   
+  /**
+   * Syncronizes a single item.
+   * @param sourceItem item
+   * @return <code>true</code> if item has been synchronized
+   * @throws Exception if any exception occurs during the process
+   */
   protected boolean syncItem(AgpItem sourceItem) throws Exception  {
     this.numItemsConsidered++;
     

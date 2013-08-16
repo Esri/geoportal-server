@@ -36,6 +36,7 @@ import com.esri.gpt.catalog.search.OpenSearchProperties;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
 import com.esri.gpt.framework.jsf.MessageBroker;
+import com.esri.gpt.framework.util.Val;
 import java.util.AbstractList;
 
 /**
@@ -91,11 +92,66 @@ public abstract class DcatJsonSearchEngine extends JsonSearchEngine {
 	@Override
   public IFeedRecords doSearch(HttpServletRequest request, HttpServletResponse response, RequestContext context, RestQuery query) throws Exception {
     MessageBroker msgBroker = new FacesContextBroker(request, response).extractMessageBroker();
+    final Map<DiscoveredRecord, Map<String, List<String>>> mapping = new HashMap<DiscoveredRecord, Map<String, List<String>>>();
+
+    List<IFeedRecords.FieldMeta> fields = new ArrayList<IFeedRecords.FieldMeta>();
+    loadStdFieldMeta(fields);
+
+    int startRecord = query.getFilter().getStartRecord();
+    boolean returnIdsOnly = Val.chkBool(Val.chkStr(request.getParameter("returnIdsOnly")), false);
+    if (returnIdsOnly) {
+      startRecord = 1;
+      query.getFilter().setMaxRecords(1);
+      LuceneQueryAdapter tmp = new LuceneQueryAdapter();
+      tmp.execute(context, query);
+      query.getFilter().setMaxRecords(query.getResult().getNumberOfHits());
+    }
+
+    query.getFilter().setStartRecord(startRecord);
+    LuceneQueryAdapter lqa = new LuceneQueryAdapter() {
+      @Override
+      protected void onRecord(DiscoveredRecord record, Document document) {
+        Map<String, List<String>> fieldMap = new HashMap<String, List<String>>();
+        for (Fieldable field : document.getFields()) {
+          String name = field.name();
+          List<String> fieldValues = fieldMap.get(name);
+          if (fieldValues == null) {
+            fieldValues = new ArrayList<String>();
+            fieldMap.put(name, fieldValues);
+          }
+          fieldValues.add(field.stringValue());
+        }
+        mapping.put(record, fieldMap);
+      }
+    };
+    lqa.execute(context, query);
+    startRecord += query.getFilter().getMaxRecords();
+
+    loadLuceneMeta(context, fields);
+
+    OpenSearchProperties osProps = new OpenSearchProperties();
+    osProps.setShortName(msgBroker.retrieveMessage("catalog.openSearch.shortName"));
+    osProps.setNumberOfHits(query.getResult().getNumberOfHits());
+    osProps.setStartRecord(query.getFilter().getStartRecord());
+    osProps.setRecordsPerPage(query.getFilter().getMaxRecords());
+
+    DiscoveredRecordsAdapter discoveredRecordsAdapter =
+            new DiscoveredRecordsAdapter(osProps, fields, query.getResult().getRecords(), mapping);
+
+    FeedLinkBuilder linkBuilder = new FeedLinkBuilder(RequestContext.resolveBaseContextPath(request), msgBroker);
+    for (IFeedRecord record : discoveredRecordsAdapter) {
+      linkBuilder.build(record);
+    }
+
+    return discoveredRecordsAdapter;
+    /*
+    MessageBroker msgBroker = new FacesContextBroker(request, response).extractMessageBroker();
     FeedLinkBuilder linkBuilder = new FeedLinkBuilder(RequestContext.resolveBaseContextPath(request), msgBroker);
     
     DcatRecordsAdapter discoveredRecordsAdapter = new DcatRecordsAdapter(msgBroker, linkBuilder, context, query);
 
     return discoveredRecordsAdapter;
+    */
   }
     
   /**

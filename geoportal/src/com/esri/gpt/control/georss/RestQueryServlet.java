@@ -162,46 +162,17 @@ public class RestQueryServlet extends BaseServlet {
         }
 
       }else if (format == RestQueryServlet.ResponseFormat.dcat) {
+        
         String callback = request.getParameter("callback");
         if (callback != null) {
           printWriter.print(callback + "(");
         }
         
-        DcatCache cache = DcatCache.getInstance();
-        InputStream cacheStream = null;
-        
-        try {
-          cacheStream = cache.createInputCacheStream();
-          PrintWriter writer = response.getWriter();
-          BufferedReader reader = new BufferedReader(new InputStreamReader(cacheStream));
-          
-          char [] buffer = new char[1024];
-          int length = -1;
-          
-          while ((length=reader.read(buffer))>0) {
-            writer.write(buffer, 0, length);
-          }
-          
-        } catch (FileNotFoundException ex) {
-          PrintWriter writer = response.getWriter();
-          writer.println("[]");
-          feedWriter.write(null);
-          
-          DcatCacheUpdateRequest cureq = new DcatCacheUpdateRequest();
-          cureq.execute();
-          
-          // The following part of the code has been disabled since DCAT content
-          // is being cached.
-          //query.setReturnables(new CoreQueryables(context).getFull());
-          //toSearchCriteria(request, context, query);
-          //feedWriter.write(DcatJsonSearchEngine.createInstance().search(request, response, context, query));
-        } finally {
-          if (cacheStream!=null) {
-            try {
-              cacheStream.close();
-            } catch (IOException ex) {}
-          }
-        }
+        // The following part of the code has been disabled since DCAT content
+        // is being cached.
+        query.setReturnables(new CoreQueryables(context).getFull());
+        toSearchCriteria(request, context, query);
+        feedWriter.write(DcatJsonSearchEngine.createInstance().search(request, response, context, query));
 
         if (callback != null) {
           printWriter.print(")");

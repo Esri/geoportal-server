@@ -55,6 +55,8 @@ import com.esri.gpt.control.webharvest.engine.LocalDataProcessorFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactories;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInitializer;
+import com.esri.gpt.control.webharvest.validator.IValidatorFactory;
+import com.esri.gpt.control.webharvest.validator.ValidatorFactory;
 import com.esri.gpt.framework.collection.StringAttribute;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.http.HttpClientRequest;
@@ -1199,6 +1201,17 @@ private void loadProtocolFactories(ApplicationConfiguration appConfig, Document 
         factories.put(factory.getName(), factory, resourceKey);
       } catch (Exception ex) {
         getLogger().log(Level.WARNING, "Error loading protocol: "+factoryClass, ex);
+      }
+      
+      String validatorFactoryClass = Val.chkStr((String) xpath.evaluate("validator/@factoryClass", ndProto, XPathConstants.STRING));
+      if (!validatorFactoryClass.isEmpty()) {
+        try {
+          Class fc = Class.forName(validatorFactoryClass);
+          IValidatorFactory factory = (IValidatorFactory) fc.newInstance();
+          ValidatorFactory.register(factory);
+        } catch (Exception ex) {
+          getLogger().log(Level.WARNING, "Error loading protocol validator factory: "+validatorFactoryClass, ex);
+        }
       }
     }
   } else {

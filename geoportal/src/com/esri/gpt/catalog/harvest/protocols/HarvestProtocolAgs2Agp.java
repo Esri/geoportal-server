@@ -19,7 +19,6 @@ import com.esri.gpt.agp.client.AgpConnection;
 import com.esri.gpt.agp.client.AgpCredentials;
 import com.esri.gpt.agp.client.AgpTokenCriteria;
 import com.esri.gpt.agp.sync.AgpDestination;
-import static com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp.NAME;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.arcgis.ArcGISInfo;
 import com.esri.gpt.control.webharvest.common.CommonCapabilities;
@@ -91,7 +90,7 @@ public class HarvestProtocolAgs2Agp extends AbstractHTTPHarvestProtocol {
    */
   public String getHostUrl() {
     StringAttributeMap attrs = getAttributeMap();
-    return "http://" + getSourceHost() + "?user=" +attrs.getValue("ags-src-userName") +
+    return getSourceHost() + "?user=" +attrs.getValue("ags-src-userName") +
             "&dest=http://" + getDestinationHost() + "/" + attrs.getValue("agp-dest-o")  + "/" + attrs.getValue("agp-dest-f") + "&destuser=" + attrs.getValue("agp-dest-u");
   }
   

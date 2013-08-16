@@ -14,21 +14,11 @@
  */
 package com.esri.gpt.control.harvest;
 
-import com.esri.gpt.agp.client.AgpCountRequest;
-import com.esri.gpt.agp.sync.AgpDestination;
-import com.esri.gpt.agp.sync.AgpSource;
 import com.esri.gpt.catalog.arcgis.metadata.AGSProcessorConfig;
-import com.esri.gpt.framework.adhoc.AdHocEventFactoryList;
 import com.esri.gpt.framework.adhoc.AdHocEventList;
 import com.esri.gpt.framework.adhoc.IAdHocEvent;
-import com.esri.gpt.catalog.harvest.clients.exceptions.HRConnectionException;
-import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidProtocolException;
-import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidResponseException;
-import com.esri.gpt.catalog.harvest.clients.exceptions.HRTimeoutException;
 import com.esri.gpt.catalog.harvest.history.HeCriteria;
 import com.esri.gpt.catalog.harvest.jobs.HjRecord;
-import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
-import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgs2Agp;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolArcIms;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolResource;
 import com.esri.gpt.catalog.harvest.repository.HrActionCriteria;
@@ -43,7 +33,6 @@ import com.esri.gpt.catalog.harvest.repository.HrRecord.RecentJobStatus;
 import com.esri.gpt.catalog.harvest.repository.HrRecords;
 import com.esri.gpt.catalog.harvest.repository.HrResult;
 import com.esri.gpt.catalog.harvest.repository.HrSelectRequest;
-import com.esri.gpt.catalog.harvest.repository.HrTestRequest;
 import com.esri.gpt.catalog.management.MmdEnums.ApprovalStatus;
 import com.esri.gpt.catalog.schema.Schema;
 import com.esri.gpt.catalog.schema.ValidationException;
@@ -52,11 +41,14 @@ import com.esri.gpt.control.view.BaseSortDirectionStyleMap;
 import com.esri.gpt.control.view.SelectablePublishers;
 import com.esri.gpt.control.view.SortDirectionStyle;
 import com.esri.gpt.control.webharvest.engine.Statistics;
-import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactories;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
 import com.esri.gpt.control.webharvest.protocol.factories.AgpProtocolFactory;
+import com.esri.gpt.control.webharvest.validator.IConnectionChecker;
+import com.esri.gpt.control.webharvest.validator.IValidator;
+import com.esri.gpt.control.webharvest.validator.MessageCollectorAdaptor;
+import com.esri.gpt.control.webharvest.validator.ValidatorFactory;
 import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
@@ -69,7 +61,6 @@ import com.esri.gpt.framework.security.identity.local.LocalDao;
 import com.esri.gpt.framework.security.principal.Publisher;
 import com.esri.gpt.framework.security.principal.User;
 import com.esri.gpt.framework.security.principal.Users;
-import com.esri.gpt.framework.util.LogUtil;
 import com.esri.gpt.framework.util.TimePeriod;
 import com.esri.gpt.framework.util.UuidUtil;
 import com.esri.gpt.framework.util.Val;
@@ -77,7 +68,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.ExternalContext;
@@ -527,79 +517,20 @@ public class HarvestController extends BaseHarvestController {
 
       // check authorization
       authorizeAction(context);
-
+      
+      // perform check through the validator
       HrRecord repository = getEditor().getRepository();
-
-      HrTestRequest request = new HrTestRequest(context, repository);
-      request.execute();
-
-      extractMessageBroker().addSuccessMessage(
-              "catalog.harvest.manage.test.success");
-
-    } catch (HRInvalidProtocolException ex) {
-      switch (ex.getElement()) {
-        case url:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidUrl");
-          break;
-        case portNo:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidPortNo");
-          break;
-        case sourceUri:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidSourceURI");
-          break;
-        case userName:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidUserName");
-          break;
-        case userPassword:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidUserPassword");
-          break;
-        case serviceName:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidServiceName");
-          break;
-        case set:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidSet");
-          break;
-        case prefix:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidPrefix");
-          break;
-        case databaseName:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidDatabaseName");
-          break;
-        default:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidArgumentException");
-          break;
+      ValidatorFactory validatorFactory = ValidatorFactory.getInstance();
+      IValidator validator = validatorFactory.getValidator(repository);
+      if (validator!=null && validator.checkConnection(new MessageCollectorAdaptor(extractMessageBroker()))) {
+        extractMessageBroker().addSuccessMessage("catalog.harvest.manage.test.success");
       }
-      LogUtil.getLogger().log(Level.FINE, "Exception raised.", ex);
-    } catch (HRTimeoutException ex) {
-      extractMessageBroker().addErrorMessage(
-              "catalog.harvest.manage.test.err.HarvestTimeoutException");
-      LogUtil.getLogger().log(Level.FINE, "Exception raised.", ex);
-    } catch (HRInvalidResponseException ex) {
-      extractMessageBroker().addErrorMessage(
-              "catalog.harvest.manage.test.err.HarvestInvalidResponseException");
-      LogUtil.getLogger().log(Level.FINE, "Exception raised.", ex);
-    } catch (HRConnectionException ex) {
-      extractMessageBroker().addErrorMessage(
-              "catalog.harvest.manage.test.err.HarvestConnectionException");
-      LogUtil.getLogger().log(Level.FINE, "Exception raised.", ex);
-    } catch (AbortProcessingException e) {
-      throw (e);
+      
     } catch (Throwable t) {
       handleException(t);
     } finally {
       onExecutionPhaseCompleted();
     }
-
   }
 
   /**
@@ -607,8 +538,32 @@ public class HarvestController extends BaseHarvestController {
    *
    * @param event the associated JSF action event
    * @throws AbortProcessingException if processing should be aborted
+   * @deprecated identical to {@link #handleTestConnection} 
    */
+  @Deprecated
   public void handleTestAgs2AgpConnection(ActionEvent event)
+          throws AbortProcessingException {
+    handleTestConnection(event);
+  }
+
+  /**
+   * Tests agp-2-agp query.
+   * @param event action event
+   * @throws AbortProcessingException  if processing should be aborted
+   * @deprecated identical to {@link #handleTestConnection} 
+   */
+  @Deprecated
+  public void handleTestAgp2AgpQuery(ActionEvent event)
+          throws AbortProcessingException {
+    handleTestConnection(event);
+  }
+
+  /**
+   * Tests agp destination client.
+   * @param event action event
+   * @throws AbortProcessingException  if processing should be aborted
+   */
+  public void handleTestAgpDestination(ActionEvent event)
           throws AbortProcessingException {
     try {
       // start execution phase
@@ -616,217 +571,46 @@ public class HarvestController extends BaseHarvestController {
 
       // check authorization
       authorizeAction(context);
-
+      
+      // perform check through the validator
       HrRecord repository = getEditor().getRepository();
-
-      HrTestRequest request = new HrTestRequest(context, repository);
-      request.execute();
-
-      extractMessageBroker().addSuccessMessage(
-              "catalog.harvest.manage.test.success");
-
-    } catch (HRInvalidProtocolException ex) {
-      switch (ex.getElement()) {
-        case url:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidUrl");
-          break;
-        case portNo:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidPortNo");
-          break;
-        case sourceUri:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidSourceURI");
-          break;
-        case userName:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidUserName");
-          break;
-        case userPassword:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidUserPassword");
-          break;
-        case serviceName:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidServiceName");
-          break;
-        case set:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidSet");
-          break;
-        case prefix:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidPrefix");
-          break;
-        case databaseName:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidDatabaseName");
-          break;
-        default:
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.HarvestInvalidArgumentException");
-          break;
+      ValidatorFactory validatorFactory = ValidatorFactory.getInstance();
+      IValidator validator = validatorFactory.getValidator(repository);
+      IConnectionChecker destinationChecker = validator.listConnectionCheckers().get("destination");
+      
+      if (destinationChecker!=null && destinationChecker.checkConnection(new MessageCollectorAdaptor(extractMessageBroker()))) {
+        extractMessageBroker().addSuccessMessage("catalog.harvest.manage.test.success");
       }
-      LogUtil.getLogger().log(Level.FINE, "Exception raised.", ex);
-    } catch (HRTimeoutException ex) {
-      extractMessageBroker().addErrorMessage(
-              "catalog.harvest.manage.test.err.HarvestTimeoutException");
-      LogUtil.getLogger().log(Level.FINE, "Exception raised.", ex);
-    } catch (HRInvalidResponseException ex) {
-      extractMessageBroker().addErrorMessage(
-              "catalog.harvest.manage.test.err.HarvestInvalidResponseException");
-      LogUtil.getLogger().log(Level.FINE, "Exception raised.", ex);
-    } catch (HRConnectionException ex) {
-      extractMessageBroker().addErrorMessage(
-              "catalog.harvest.manage.test.err.HarvestConnectionException");
-      LogUtil.getLogger().log(Level.FINE, "Exception raised.", ex);
-    } catch (AbortProcessingException e) {
-      throw (e);
+      
     } catch (Throwable t) {
       handleException(t);
     } finally {
       onExecutionPhaseCompleted();
     }
-
   }
-
-  /**
-   * Tests agp-2-agp query.
-   * @param event action event
-   * @throws AbortProcessingException  if processing should be aborted
-   */
-  public void handleTestAgp2AgpQuery(ActionEvent event)
-          throws AbortProcessingException {
-    try {
-      // start execution phase
-      RequestContext context = onExecutionPhaseStarted();
-      Protocol protocol = this.getEditor().getRepository().getProtocol();
-      if (protocol instanceof HarvestProtocolAgp2Agp) {
-        HarvestProtocolAgp2Agp agp2agp = (HarvestProtocolAgp2Agp) protocol;
-        AgpSource source = agp2agp.getSource();
-
-        boolean stop = false;
-        if (source.getConnection().getHost().isEmpty()) {
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.agp2agp.src.nohost");
-          stop = true;
-        }
-
-        if (source.getConnection().getTokenCriteria().getCredentials().getUsername().isEmpty() || source.getConnection().getTokenCriteria().getCredentials().getPassword().isEmpty()) {
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.agp2agp.src.nocredentials");
-          stop = true;
-        }
-
-        if (source.getSearchCriteria().getQ().isEmpty()) {
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.agp2agp.src.noquery");
-          stop = true;
-        }
-
-        if (!stop) {
-          source.getConnection().generateToken();
-          AgpCountRequest sourceRequest = new AgpCountRequest();
-          long count = sourceRequest.count(source.getConnection(), source.getSearchCriteria());
-          String srcM = getEditor().getRepository().getProtocol().getAttributeMap().getValue("src-m");
-          long max = Val.chkLong(srcM, 0);
-          long apx = Math.min(count, max);
-
-          extractMessageBroker().addSuccessMessage(
-                  "catalog.harvest.manage.test.msg.agp2agp.success", new Object[]{apx});
-        }
-      }
-    } catch (Exception ex) {
-      extractMessageBroker().addErrorMessage(
-              "catalog.harvest.manage.test.err.agp2agp.connect", new Object[]{ex.getMessage()});
-    } finally {
-      onExecutionPhaseCompleted();
-    }
-  }
-
+  
   /**
    * Tests agp-2-agp destination client.
    * @param event action event
    * @throws AbortProcessingException  if processing should be aborted
+   * @deprecated replaced by {@link #handleTestAgpDestination}
    */
+  @Deprecated
   public void handleTestAgp2AgpClient(ActionEvent event)
           throws AbortProcessingException {
-    try {
-      // start execution phase
-      RequestContext context = onExecutionPhaseStarted();
-      Protocol protocol = this.getEditor().getRepository().getProtocol();
-      if (protocol instanceof HarvestProtocolAgp2Agp) {
-        HarvestProtocolAgp2Agp agp2agp = (HarvestProtocolAgp2Agp) protocol;
-        AgpDestination destination = agp2agp.getDestination();
-
-        boolean stop = false;
-        if (destination.getConnection().getHost().isEmpty()) {
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.agp2agp.dst.nohost");
-          stop = true;
-        }
-
-        if (destination.getConnection().getTokenCriteria().getCredentials().getUsername().isEmpty() || destination.getConnection().getTokenCriteria().getCredentials().getPassword().isEmpty()) {
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.agp2agp.dst.nocredentials");
-          stop = true;
-        }
-
-        if (!stop) {
-          destination.getConnection().generateToken();
-          extractMessageBroker().addSuccessMessage(
-                  "catalog.harvest.manage.test.msg.agp2agp.confirmed");
-        }
-      }
-    } catch (Exception ex) {
-      extractMessageBroker().addErrorMessage(
-              "catalog.harvest.manage.test.err.agp2agp.connect", new Object[]{ex.getMessage()});
-    } finally {
-      onExecutionPhaseCompleted();
-    }
+    handleTestAgpDestination(event);
   }
 
   /**
    * Tests agp-2-agp destination client.
    * @param event action event
    * @throws AbortProcessingException  if processing should be aborted
+   * @deprecated replaced by {@link #handleTestAgpDestination}
    */
+  @Deprecated
   public void handleTestAgs2AgpClient(ActionEvent event)
           throws AbortProcessingException {
-    try {
-      // start execution phase
-      RequestContext context = onExecutionPhaseStarted();
-      Protocol protocol = this.getEditor().getRepository().getProtocol();
-      if (protocol instanceof HarvestProtocolAgs2Agp) {
-        HarvestProtocolAgs2Agp ags2agp = (HarvestProtocolAgs2Agp) protocol;
-        AgpDestination destination = ags2agp.getDestination();
-
-        boolean stop = false;
-        if (destination.getConnection().getHost().isEmpty()) {
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.agp2agp.dst.nohost");
-          stop = true;
-        }
-
-        if (destination.getConnection().getTokenCriteria().getCredentials().getUsername().isEmpty() || destination.getConnection().getTokenCriteria().getCredentials().getPassword().isEmpty()) {
-          extractMessageBroker().addErrorMessage(
-                  "catalog.harvest.manage.test.err.agp2agp.dst.nocredentials");
-          stop = true;
-        }
-
-        if (!stop) {
-          destination.getConnection().generateToken();
-          extractMessageBroker().addSuccessMessage(
-                  "catalog.harvest.manage.test.msg.agp2agp.confirmed");
-        }
-      }
-    } catch (Exception ex) {
-      extractMessageBroker().addErrorMessage(
-              "catalog.harvest.manage.test.err.agp2agp.connect", new Object[]{ex.getMessage()});
-    } finally {
-      onExecutionPhaseCompleted();
-    }
+    handleTestAgpDestination(event);
   }
 
   /**
