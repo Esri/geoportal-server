@@ -31,6 +31,8 @@ that begin with 'dcat.'. Do not change the other property meanings, only add the
 - Next, test. You can see the new dcat indices when you view the REST document statistics at http://your_server/geoportal/rest/index/stats.
 - Further documentation is available at https://github.com/Esri/geoportal-server/wiki/Customize-DCAT-output.
 
+Note - default values for DCAT parameters can also be set in the gpt.properties file - if you look for the properties that begin wtih "catalog.json.dcat", you'll see where to set them for the DCAT JSON response.
+
 With these steps performed your site should be able to provide a DCAT listing in support of Project Open Data (http://project-open-data.github.io/)
 
 If you run into issues or have questions applying this patch, don't hesitate to contact us through our Github site: https://github.com/Esri/geoportal-server/issues
