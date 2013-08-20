@@ -620,6 +620,11 @@
       <protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.Agp2AgpRelaxedProtocolFactory"
                resourceKey="catalog.harvest.manage.edit.protocol.agp2agp"/>  
 -->
+
+<!--      
+      <protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.Ags2AgpProtocolFactory"
+               resourceKey="catalog.harvest.manage.edit.protocol.ags2agp"/>  
+-->
     </protocols>
 
 </gptConfig>
