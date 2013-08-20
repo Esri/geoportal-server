@@ -1342,7 +1342,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
       <div>
         <input type="button" data-dojo-type="dijit.form.RadioButton" id="patternRadio" name="dateStyle"/><label for="patternRadio"><fmt:message key="catalog.harvest.manage.timeDialog.dateStyle.pattern.label"/></label>
         <div>
-          <input type="text" id="dayOfTheMonthInput" data-dojo-type="dijit.form.NumberTextBox"/>
+          <input type="text" id="dayOfTheMonthInput" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props="constraints:{min:0}"/>
           <select id="dayOfTheWeekInput" data-dojo-type="dijit.form.Select">
               <option value="" selected="true">----------</option>
               <option value="SUNDAY"><fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.SUNDAY"/></option>
