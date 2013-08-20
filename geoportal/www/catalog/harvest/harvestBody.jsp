@@ -873,7 +873,7 @@ function addTimePoint(timePoint) {
   dojo.attr(timePointDiv, "data-time-code", timePoint.code);
   
   dojo.connect(timePointDelete,"onclick",dojo.hitch({timePointDiv: timePointDiv},function(evt){
-    this.timePointDiv.remove();
+    dojo.destroy(this.timePointDiv);
     dojo.attr("harvestCreate:timeCodes","value",collectTimeCodes());
   }));
   
