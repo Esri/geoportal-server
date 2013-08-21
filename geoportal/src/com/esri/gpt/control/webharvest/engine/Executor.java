@@ -161,6 +161,19 @@ private Result executeQuery() {
 }
 
 /**
+ * Cleans up.
+ */
+public void shutdown() {
+  if (unit!=null) {
+    ExecutionUnitHelper helper = new ExecutionUnitHelper(unit);
+    ReportBuilder rp = helper.getReportBuilder();
+    if (rp!=null) {
+      rp.cleanup();
+    }
+  }
+}
+
+/**
  * Indicates if thread is active.
  * @return <code>true</code> if thread is active
  */

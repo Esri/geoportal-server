@@ -95,6 +95,9 @@ public synchronized ExecutionUnit getExecutionUnit() {
  * Does not allow to complete pending task execution.
  */
 public synchronized void shutdown() {
+  if (executor!=null) {
+    executor.shutdown();
+  }
   shutdown = true;
   workerThread.interrupt();
 }
