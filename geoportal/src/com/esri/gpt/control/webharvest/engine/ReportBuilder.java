@@ -95,6 +95,8 @@ public ReportBuilder(File directory, Integer maxDocToHarvest, Long maxRepRecords
   this.writer = new RecordWriter(new FileOutputStream(storage));
   this.maxRepRecords = maxRepRecords;
   this.maxRepErrors = maxRepErrors;
+  
+  this.storage.deleteOnExit();
 }
 
 /**
