@@ -230,14 +230,15 @@ class LocalDataProcessor implements DataProcessor {
    * @param helper execution unit helper
    */
   private long performCleanup(RequestContext context, ExecutionUnit unit, final ExecutionUnitHelper helper) {
-      // perform cleanup for the specific harvest repository
-      if (unit.getCleanupFlag()) {
+    // perform cleanup for the specific harvest repository
+      final SourceUriArray sourceUris = helper.getSourceUris();
+      if (unit.getCleanupFlag() && sourceUris!=null) {
         // create Iterable based on MapEntryIterator
         Iterable<Map.Entry<String, String>> iterable = new Iterable<Map.Entry<String, String>>() {
 
           @Override
           public Iterator<Map.Entry<String, String>> iterator() {
-            return new MapEntryIterator(helper.getSourceUris());
+            return new MapEntryIterator(sourceUris);
           }
         };
 
@@ -257,6 +258,11 @@ class LocalDataProcessor implements DataProcessor {
             }
           }
         }
+      }
+      if (sourceUris!=null) {
+        try {
+          sourceUris.close();
+        } catch (IOException ex){}
       }
       return 0;
   }
