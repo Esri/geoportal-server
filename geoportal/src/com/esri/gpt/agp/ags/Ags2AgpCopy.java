@@ -142,17 +142,21 @@ public class Ags2AgpCopy {
         
         // project envelope
         Envelope gptEnvelope = new Envelope(e.getXMin(), e.getYMin(), e.getXMax(), e.getYMax());
-        gptEnvelope.setWkid(e.getSpatialReference().getWKID().toString());
-        List<Envelope> envelopes = Arrays.asList(new Envelope[]{gptEnvelope});
-        try {
-          List<Envelope> projectedEnvelopes = gs.project(envelopes, "4326");
-          if (projectedEnvelopes!=null && !projectedEnvelopes.isEmpty()) {
-            Envelope pe = projectedEnvelopes.get(0);
-            String envelope = ""+pe.getMinX()+","+pe.getMinY()+","+pe.getMaxX()+","+pe.getMaxY();
-            props.add(new AgpProperty("extent", envelope));
+        if (e.getSpatialReference()!=null && e.getSpatialReference().getWKID()!=null) {
+          gptEnvelope.setWkid(e.getSpatialReference().getWKID().toString());
+          List<Envelope> envelopes = Arrays.asList(new Envelope[]{gptEnvelope});
+          try {
+            List<Envelope> projectedEnvelopes = gs.project(envelopes, "4326");
+            if (projectedEnvelopes!=null && !projectedEnvelopes.isEmpty()) {
+              Envelope pe = projectedEnvelopes.get(0);
+              String envelope = ""+pe.getMinX()+","+pe.getMinY()+","+pe.getMaxX()+","+pe.getMaxY();
+              props.add(new AgpProperty("extent", envelope));
+            }
+          } catch (Exception ex) {
+            LOGGER.log(Level.WARNING, "Error projecting envelope.", ex);
           }
-        } catch (Exception ex) {
-          LOGGER.log(Level.WARNING, "Error projecting envelope.", ex);
+        } else {
+          LOGGER.log(Level.WARNING, "Error projecting envelope: no WKID.");
         }
       }
       
