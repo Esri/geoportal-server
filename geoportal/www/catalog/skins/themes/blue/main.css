@@ -1534,3 +1534,15 @@ img.datepicker_trigger {
   width: 16px;
   height: 16px;
 }
+
+#harvestCreate .hint {
+  font-size: x-small;
+}
+
+#harvestCreate .hint .hint-text {
+  
+}
+
+#harvestCreate .hint .hint-example {
+  
+}

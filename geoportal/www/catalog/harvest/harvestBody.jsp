@@ -291,7 +291,11 @@ var lastSearchable = false;
  */
 function enableSection(section,enable) {
   dojo.query("#harvestCreate ."+section).forEach(function(node, index, arr){
-    node.parentNode.parentNode.style.display = (enable? "": "none");
+    if (!dojo.hasClass(node,"hint")) {
+      node.parentNode.parentNode.style.display = (enable? "": "none");
+    } else {
+      node.style.display = (enable? "": "none");
+    }
   }, null);
 }
 
@@ -953,20 +957,65 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <h:outputLabel id="hostUrlLabel" for="hostUrl" styleClass="requiredField" value=""/>
 
 <h:panelGroup>
-<h:inputText size="50" value="#{HarvestController.editor.hostUrl}" id="hostUrl"/>
-<h:outputText value="&nbsp;" escape="false"/>
-<h:commandButton 
-  id="testConnection"
-  value="#{gptMsg['catalog.harvest.manage.edit.testConnection']}" 
-  actionListener="#{HarvestController.handleTestConnection}" />
+  <h:inputText size="50" value="#{HarvestController.editor.hostUrl}" id="hostUrl"/>
+  <h:outputText value="&nbsp;" escape="false"/>
+  <h:commandButton 
+    id="testConnection"
+    value="#{gptMsg['catalog.harvest.manage.edit.testConnection']}" 
+    actionListener="#{HarvestController.handleTestConnection}" />
 </h:panelGroup>
 
+<h:panelGroup></h:panelGroup>
+<h:panelGroup>
+  <verbatim>
+    <div class="hint res" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer</span>
+    </div>
+    <div class="hint arcgis" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://server.arcgisonline.com/ArcGIS/rest/services</span>
+    </div>
+    <div class="hint arcims" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://my.server.com</span>
+    </div>
+    <div class="hint oai" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://my.server.com/oai</span>
+    </div>
+    <div class="hint waf" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://my.server.com/waf/metadata</span>
+    </div>
+    <div class="hint csw" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://gptogc.esri.com/geoportal/csw?request=GetCapabilities&service=CSW</span>
+    </div>
+    <div class="hint thredds" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://my.server.com/thredds/catalog.xml</span>
+    </div>
+    <div class="hint atom" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://gptogc.esri.com/geoportal/rest/find/document?f=atom</span>
+    </div>
+  </verbatim>
+</h:panelGroup>
 <%-- ArcGIS specific properties ----------------------------------------------%>
 
 <%-- SOAP URL --%>
 <h:outputLabel styleClass="arcgis requiredField" for="soapUrl" value="#{gptMsg['catalog.harvest.manage.edit.soapUrl']}"/>
 <h:inputText   styleClass="arcgis" size="50" value="#{HarvestController.editor.soapUrl}" id="soapUrl"/>
-
+<h:panelGroup></h:panelGroup>
+<h:panelGroup>
+  <verbatim>
+    <div class="hint arcgis" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://services.arcgisonline.com/ArcGIS/services/?wsdl</span>
+    </div>
+  </verbatim>
+</h:panelGroup>
 <%-- Repository Name --%>
 <h:outputLabel for="name" styleClass="" value="#{gptMsg['catalog.harvest.manage.edit.name']}"/>
 <h:inputText size="50" value="#{HarvestController.editor.name}" id="name"/>
@@ -1039,6 +1088,15 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <%-- src host --%>
 <h:outputLabel styleClass="requiredField agp2agp" for="src-h" value="#{gptMsg['catalog.harvest.manage.edit.src.h']}"/>
 <h:inputText   styleClass="agp2agp" size="30" value="#{HarvestController.editor.attrs['src-h']}" id="src-h"/>
+<h:panelGroup></h:panelGroup>
+<h:panelGroup>
+  <verbatim>
+    <div class="hint agp2agp" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">my.host.com/portal</span>
+    </div>
+  </verbatim>
+</h:panelGroup>
 
 <%-- src user name --%>
 <h:outputLabel styleClass="requiredField agp2agp" for="src-u" value="#{gptMsg['catalog.harvest.manage.edit.src.u']}"/>
@@ -1068,6 +1126,15 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <%-- dest host --%>
 <h:outputLabel styleClass="requiredField agp2agp" for="dest-h" value="#{gptMsg['catalog.harvest.manage.edit.dest.h']}"/>
 <h:inputText   styleClass="agp2agp" size="30" value="#{HarvestController.editor.attrs['dest-h']}" id="dest-h"/>
+<h:panelGroup></h:panelGroup>
+<h:panelGroup>
+  <verbatim>
+    <div class="hint agp2agp" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">my.host.com/portal</span>
+    </div>
+  </verbatim>
+</h:panelGroup>
 
 <%-- dest user name --%>
 <h:outputLabel styleClass="requiredField agp2agp" for="dest-u" value="#{gptMsg['catalog.harvest.manage.edit.dest.u']}"/>
@@ -1115,10 +1182,28 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   value="#{gptMsg['catalog.harvest.manage.edit.testConnection']}" 
   actionListener="#{HarvestController.handleTestConnection}" />
 </h:panelGroup>
+<h:panelGroup></h:panelGroup>
+<h:panelGroup>
+  <verbatim>
+    <div class="hint ags2agp" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://server.arcgisonline.com/ArcGIS/rest/services</span>
+    </div>
+  </verbatim>
+</h:panelGroup>
 
 <%-- src soap --%>
 <h:outputLabel styleClass="requiredField ags2agp" for="ags-src-soapUrl" value="#{gptMsg['catalog.harvest.manage.edit.src.soap']}"/>
 <h:inputText   styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-src-soapUrl']}" id="ags-src-soapUrl"/>
+<h:panelGroup></h:panelGroup>
+<h:panelGroup>
+  <verbatim>
+    <div class="hint ags2agp" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://services.arcgisonline.com/ArcGIS/services/?wsdl</span>
+    </div>
+  </verbatim>
+</h:panelGroup>
 
 <h:outputText styleClass="ags2agp agp2agpCaption" value=""/>
 <h:outputText styleClass="ags2agp agp2agpCaption" value="#{gptMsg['catalog.harvest.manage.edit.dest.caption']}"/>
@@ -1126,6 +1211,15 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <%-- dest host --%>
 <h:outputLabel styleClass="requiredField ags2agp" for="ags-dest-h" value="#{gptMsg['catalog.harvest.manage.edit.dest.h']}"/>
 <h:inputText   styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-dest-h']}" id="ags-dest-h"/>
+<h:panelGroup></h:panelGroup>
+<h:panelGroup>
+  <verbatim>
+    <div class="hint ags2agp" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">my.host.com/portal</span>
+    </div>
+  </verbatim>
+</h:panelGroup>
 
 <%-- dest user name --%>
 <h:outputLabel styleClass="requiredField ags2agp" for="ags-dest-u" value="#{gptMsg['catalog.harvest.manage.edit.dest.u']}"/>
