@@ -1,0 +1,187 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.esri.gpt.framework.dcat.raw;
+
+/**
+ * Raw DCAT attribute.
+ */
+public class RawDcatAttribute {
+  private TYPE type;
+  private getter getter;
+  
+  /**
+   * Creates instance of the string attribute.
+   * @param value value
+   */
+  public RawDcatAttribute(String value) {
+    this.type = TYPE.STRING;
+    this.getter = new FromStringGetter(value);
+  }
+  
+  /**
+   * Creates instance of the double attribute.
+   * @param value value
+   */
+  public RawDcatAttribute(Double value) {
+    this.type = TYPE.NUMBER;
+    this.getter = new FromNumberGetter(value);
+  }
+  
+  /**
+   * Creates instance of the boolean attribute.
+   * @param value value
+   */
+  public RawDcatAttribute(Boolean value) {
+    this.type = TYPE.BOOLEAN;
+    this.getter = new FromBooleanGetter(value);
+  }
+  
+  /**
+   * Gets value as number.
+   * @return number
+   */
+  public Double getNumber() {
+    return getter.getNumericValue();
+  }
+  
+  /**
+   * Gets value as string.
+   * @return string
+   */
+  public String getString() {
+    return getter.getStringValue();
+  }
+  
+  /**
+   * Gets value as boolean.
+   * @return boolean
+   */
+  public Boolean getBoolean() {
+    return getter.getBooleanValue();
+  }
+  
+  /**
+   * Gets original value type.
+   * @return type
+   */
+  public TYPE getType() {
+    return type;
+  }
+  
+  
+  private interface getter {
+    String getStringValue();
+    Double getNumericValue();
+    Boolean getBooleanValue();
+  }
+  
+  private class FromBooleanGetter implements getter {
+    private Boolean booleanValue;
+    
+    public FromBooleanGetter(Boolean booleanValue) {
+      this.booleanValue = booleanValue;
+    }
+
+    @Override
+    public String getStringValue() {
+      return booleanValue.toString();
+    }
+
+    @Override
+    public Double getNumericValue() {
+      return Double.NaN;
+    }
+
+    @Override
+    public Boolean getBooleanValue() {
+      return booleanValue;
+    }
+    
+    @Override
+    public String toString() {
+      return booleanValue.toString();
+    }
+  }
+  
+  private class FromStringGetter implements getter {
+    private String stringValue;
+    
+    public FromStringGetter(String stringValue) {
+      this.stringValue = stringValue;
+    }
+
+    @Override
+    public String getStringValue() {
+      return stringValue;
+    }
+
+    @Override
+    public Double getNumericValue() {
+      try {
+        return Double.parseDouble(stringValue);
+      } catch (NumberFormatException ex) {
+        return Double.NaN;
+      }
+    }
+    
+    @Override
+    public String toString() {
+      return "\"" + stringValue + "\"";
+    }
+
+    @Override
+    public Boolean getBooleanValue() {
+      return Boolean.parseBoolean(stringValue);
+    }
+  }
+  
+  private class FromNumberGetter implements getter {
+    private Double numericValue;
+    
+    public FromNumberGetter(Double numericValue) {
+      this.numericValue = numericValue;
+    }
+
+    @Override
+    public String getStringValue() {
+      return numericValue.toString();
+    }
+
+    @Override
+    public Double getNumericValue() {
+      return numericValue;
+    }
+    
+    @Override
+    public String toString() {
+      long longValue = numericValue.longValue();
+      double doubleValue = numericValue.doubleValue();
+      return longValue<doubleValue? numericValue.toString(): ""+longValue;
+    }
+
+    @Override
+    public Boolean getBooleanValue() {
+      return Boolean.FALSE;
+    }
+    
+  }
+  
+  @Override
+  public String toString() {
+    return getter.toString();
+  }
+  
+  /**
+   * Type.
+   */
+  public static enum TYPE {
+    /** string */
+    STRING,
+    /** number */
+    NUMBER,
+    /** boolean */
+    BOOLEAN
+  }
+}
