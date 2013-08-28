@@ -243,15 +243,7 @@ public class AGSProcessor extends ResourceProcessor {
         if (handler != null) {
       
           // initialize service information
-          ServiceInfo info = new ServiceInfo();
-          info.setCapabilities(desc.getCapabilities());
-          info.setDescription(desc.getDescription());
-          info.setName(desc.getName());
-          info.setParentType(desc.getParentType());
-          info.setResourceUrl(currentRestUrl);
-          info.setRestUrl(currentRestUrl);
-          info.setSoapUrl(currentSoapUrl);
-          info.setType(desc.getType());
+          ServiceInfo info = handler.createServiceInfo(desc, currentRestUrl, currentSoapUrl);
           
           // collect
           try {
@@ -462,15 +454,8 @@ public class AGSProcessor extends ResourceProcessor {
     handler = factory.makeHandler(desc.getType());
     if (handler==null) return hasNext();
     handler.setCredentials(getCredentials());
-    info = new ServiceInfo();
-    info.setCapabilities(desc.getCapabilities());
-    info.setDescription(desc.getDescription());
-    info.setName(desc.getName());
-    info.setParentType(desc.getParentType());
-    info.setResourceUrl(currentRestUrl);
-    info.setRestUrl(currentRestUrl);
-    info.setSoapUrl(currentSoapUrl);
-    info.setType(desc.getType());
+    
+    info = handler.createServiceInfo(desc, currentRestUrl, currentSoapUrl);
 
     return true;
   }
