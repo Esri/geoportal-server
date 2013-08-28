@@ -137,8 +137,9 @@ public class Ags2AgpCopy {
       props.add(new AgpProperty("url", Val.chkStr(serviceInfo.getRestUrl())));
       props.add(new AgpProperty("description", Val.chkStr(serviceInfo.getDescription())));
       props.add(new AgpProperty("thumbnailurl", Val.chkStr(serviceInfo.getThumbnailUrl())));
-      if (serviceInfo.getEnvelope() instanceof EnvelopeN) {
-        EnvelopeN e = (EnvelopeN) serviceInfo.getEnvelope();
+      com.esri.arcgisws.Envelope recursiveEnvelope = serviceInfo.getRecursiveEnvelope();
+      if (recursiveEnvelope instanceof EnvelopeN) {
+        EnvelopeN e = (EnvelopeN) recursiveEnvelope;
         
         // project envelope
         Envelope gptEnvelope = new Envelope(e.getXMin(), e.getYMin(), e.getXMax(), e.getYMax());

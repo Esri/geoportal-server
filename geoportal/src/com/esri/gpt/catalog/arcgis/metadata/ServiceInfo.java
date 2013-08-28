@@ -25,6 +25,8 @@ import com.esri.arcgisws.SpatialReference;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -56,6 +58,7 @@ public class ServiceInfo {
   private String    soapUrl;
   private String    thumbnailUrl;
   private String    type;
+  private ServiceInfo parentInfo;
   
   /** constructors ============================================================ */
 
@@ -63,6 +66,22 @@ public class ServiceInfo {
   public ServiceInfo() {}
 
   /** properties ============================================================== */
+  /**
+   * Gets parent info.
+   * @return parent info
+   */
+  public ServiceInfo getParentInfo() {
+    return parentInfo;
+  }
+
+  /**
+   * Sets parent info.
+   * @param parentInfo parent info 
+   */
+  public void setParentInfo(ServiceInfo parentInfo) {
+    this.parentInfo = parentInfo;
+  }
+
   
   /**
    * Gets the service creator.
@@ -116,6 +135,15 @@ public class ServiceInfo {
   public Envelope getEnvelope() {
     return this.envelope;
   }
+  
+  /**
+   * Gets recursive envelope.
+   * @return recursive
+   */
+  public Envelope getRecursiveEnvelope() {
+    return getEnvelope()!=null? getEnvelope(): (getParentInfo()!=null? getParentInfo().getRecursiveEnvelope(): null);
+  }
+  
   /**
    * Sets the service envelope.
    * @param envelope the envelope

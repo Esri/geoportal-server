@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -395,6 +396,9 @@ public class AGSProcessor extends ResourceProcessor {
   private boolean matchAll;
   /** indicator to check folder */
   private boolean checkFolder;
+  
+  private HashMap<ServiceDescription,ServiceDescription> childToParent = new HashMap<ServiceDescription, ServiceDescription>();
+  private HashMap<ServiceDescription,ServiceInfo> sdToSi = new HashMap<ServiceDescription, ServiceInfo>();
 
   /**
    * Creates instance of the folders.
@@ -412,6 +416,21 @@ public class AGSProcessor extends ResourceProcessor {
     this.normalizedTargetSoapUrl = normalizeUrl(getTarget().getTargetSoapUrl());
     this.matchAll = normalizedTargetSoapUrl.equalsIgnoreCase(extractRootUrl(getTarget().getSoapUrl()));
     this.checkFolder = !normalizedTargetSoapUrl.endsWith("Server");
+    
+    HashMap<String,ServiceDescription> urlToSD = new HashMap<String, ServiceDescription>();
+    for (ServiceDescription sd: descriptors) {
+      String url = sd.getUrl();
+      urlToSD.put(url, sd);
+    }
+    
+    for (ServiceDescription sd: descriptors) {
+      if (sd.getParentType().isEmpty()) continue;
+      int index = sd.getUrl().indexOf(sd.getParentType()) + sd.getParentType().length();
+      String url = sd.getUrl().substring(0, index);
+      
+      ServiceDescription parentSD = urlToSD.get(url);
+      childToParent.put(sd, parentSD);
+    }
   }
 
   public Iterator<IServiceInfoProvider> iterator() {
@@ -456,6 +475,13 @@ public class AGSProcessor extends ResourceProcessor {
     handler.setCredentials(getCredentials());
     
     info = handler.createServiceInfo(desc, currentRestUrl, currentSoapUrl);
+    sdToSi.put(desc, info);
+    
+    ServiceDescription parentDesc = childToParent.get(desc);
+    ServiceInfo parentInfo = sdToSi.get(parentDesc);
+    if (parentInfo!=null) {
+      info.setParentInfo(parentInfo);
+    }
 
     return true;
   }
