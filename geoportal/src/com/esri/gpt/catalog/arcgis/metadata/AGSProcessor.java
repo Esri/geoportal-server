@@ -244,7 +244,7 @@ public class AGSProcessor extends ResourceProcessor {
         if (handler != null) {
       
           // initialize service information
-          ServiceInfo info = handler.createServiceInfo(desc, currentRestUrl, currentSoapUrl);
+          ServiceInfo info = handler.createServiceInfo(null, desc, currentRestUrl, currentSoapUrl);
           
           // collect
           try {
@@ -474,14 +474,11 @@ public class AGSProcessor extends ResourceProcessor {
     if (handler==null) return hasNext();
     handler.setCredentials(getCredentials());
     
-    info = handler.createServiceInfo(desc, currentRestUrl, currentSoapUrl);
-    sdToSi.put(desc, info);
-    
     ServiceDescription parentDesc = childToParent.get(desc);
     ServiceInfo parentInfo = sdToSi.get(parentDesc);
-    if (parentInfo!=null) {
-      info.setParentInfo(parentInfo);
-    }
+    
+    info = handler.createServiceInfo(parentInfo, desc, currentRestUrl, currentSoapUrl);
+    sdToSi.put(desc, info);
 
     return true;
   }

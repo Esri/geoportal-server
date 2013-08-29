@@ -93,8 +93,14 @@ public class OGCServerHandler extends ServiceHandler {
   }
 
   @Override
-  public ServiceInfo createServiceInfo(ServiceDescription desc, String currentRestUrl, String currentSoapUrl) {
-    return super.createServiceInfo(desc, currentSoapUrl.replaceAll("\\?wsdl$", "") /*currentRestUrl*/, currentSoapUrl);
+  public ServiceInfo createServiceInfo(ServiceInfo parentInfo, ServiceDescription desc, String currentRestUrl, String currentSoapUrl) {
+    ServiceInfo serviceInfo = super.createServiceInfo(parentInfo, desc, currentSoapUrl.replaceAll("\\?wsdl$", "") /*currentRestUrl*/, currentSoapUrl);
+    if (parentInfo!=null) {
+      serviceInfo.setLayersInfo(parentInfo.getLayersInfo());
+      serviceInfo.setEnvelope(parentInfo.getEnvelope());
+      serviceInfo.setCopyright(parentInfo.getCopyright());
+    }
+    return serviceInfo;
   }
     
 }

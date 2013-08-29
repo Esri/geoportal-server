@@ -59,6 +59,8 @@ public class ServiceInfo {
   private String    thumbnailUrl;
   private String    type;
   private ServiceInfo parentInfo;
+  private List<LayerInfo> layersInfo = new ArrayList<LayerInfo>();
+  private String    copyright = "";
   
   /** constructors ============================================================ */
 
@@ -66,6 +68,23 @@ public class ServiceInfo {
   public ServiceInfo() {}
 
   /** properties ============================================================== */
+  public List<LayerInfo> getLayersInfo() {
+    return layersInfo;
+  }
+  
+  public void setLayersInfo(List<LayerInfo> layersInfo) {
+    this.layersInfo = layersInfo!=null? layersInfo: new ArrayList<LayerInfo>();
+  }
+
+  public String getCopyright() {
+    return copyright;
+  }
+
+  public void setCopyright(String copyright) {
+    this.copyright = Val.chkStr(copyright);
+  }
+
+  
   /**
    * Gets parent info.
    * @return parent info
@@ -550,5 +569,23 @@ public class ServiceInfo {
     }
 
     return null;
+  }
+  
+  public static final class LayerInfo {
+    private String name;
+    private String title;
+    
+    public LayerInfo(String name, String title) {
+      this.name = name;
+      this.title = title;
+    }
+    
+    public String getName() {
+      return name;
+    }
+    
+    public String getTitle() {
+      return title;
+    }
   }
 }

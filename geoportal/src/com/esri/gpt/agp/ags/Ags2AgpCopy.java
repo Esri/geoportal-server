@@ -136,7 +136,9 @@ public class Ags2AgpCopy {
       props.add(new AgpProperty("name", Val.chkStr(serviceInfo.getName())));
       props.add(new AgpProperty("url", Val.chkStr(serviceInfo.getRestUrl())));
       props.add(new AgpProperty("description", Val.chkStr(serviceInfo.getDescription())));
-      props.add(new AgpProperty("thumbnailurl", Val.chkStr(serviceInfo.getThumbnailUrl())));
+      if (serviceInfo.getThumbnailUrl()!=null && !serviceInfo.getThumbnailUrl().isEmpty()) {
+        props.add(new AgpProperty("thumbnailurl", Val.chkStr(serviceInfo.getThumbnailUrl())));
+      }
       com.esri.arcgisws.Envelope recursiveEnvelope = serviceInfo.getRecursiveEnvelope();
       if (recursiveEnvelope instanceof EnvelopeN) {
         EnvelopeN e = (EnvelopeN) recursiveEnvelope;

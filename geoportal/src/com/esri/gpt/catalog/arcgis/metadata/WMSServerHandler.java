@@ -14,6 +14,14 @@
  */
 package com.esri.gpt.catalog.arcgis.metadata;
 
+import com.esri.arcgisws.EnvelopeN;
+import com.esri.arcgisws.ServiceDescription;
+import com.esri.gpt.catalog.arcgis.metadata.ServiceInfo.LayerInfo;
+import com.esri.gpt.control.georss.GeometryService;
+import com.esri.gpt.framework.geometry.Envelope;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Handles the collection of metadata for an ArcGIS WMS service (WMSServer).
  */
@@ -25,6 +33,51 @@ public class WMSServerHandler extends OGCServerHandler {
   public WMSServerHandler() {
     super("WMS");
   } 
+
+  @Override
+  public ServiceInfo createServiceInfo(ServiceInfo parentInfo, ServiceDescription desc, String currentRestUrl, String currentSoapUrl) {
+    ServiceInfo serviceInfo = super.createServiceInfo(parentInfo, desc, currentRestUrl, currentSoapUrl);
+    
+    if (parentInfo!=null && parentInfo.getEnvelope() instanceof EnvelopeN) {
+      EnvelopeN e = (EnvelopeN) parentInfo.getEnvelope();
+      Envelope envelope = new Envelope(e.getXMin(), e.getYMin(), e.getXMax(), e.getYMax());
+      envelope.setWkid(e.getSpatialReference()!=null && e.getSpatialReference().getWKID()!=null? e.getSpatialReference().getWKID().toString(): "4326");
+      
+      GeometryService gs = GeometryService.createDefaultInstance();
+      try {
+        List<Envelope> envelopes = gs.project(Arrays.asList(new Envelope[]{envelope}), "4326");
+        if (!envelopes.isEmpty()) {
+          envelope = envelopes.get(0);
+          
+          StringBuilder thumbnailURL = new StringBuilder();
+          thumbnailURL.append(currentSoapUrl);
+          thumbnailURL.append("?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=&VERSION=1.3.0");
+          thumbnailURL.append("&layers=");
+          
+          StringBuilder liSB = new StringBuilder();
+          for (LayerInfo li : serviceInfo.getLayersInfo()) {
+            if (liSB.length()>0) {
+              liSB.append(",");
+            }
+            liSB.append(li.getName());
+          }
+            thumbnailURL.append(liSB);
+          
+          thumbnailURL.append("&WIDTH=200&HEIGHT=133&CRS=EPSG:4326");
+
+          StringBuilder bboxSB = new StringBuilder();
+          bboxSB.append(envelope.getMinY()).append(",").append(envelope.getMinX()).append(",").append(envelope.getMaxY()).append(",").append(envelope.getMaxX());
+          
+          thumbnailURL.append("&BBOX=").append(bboxSB);
+          
+          serviceInfo.setThumbnailUrl(thumbnailURL.toString());
+        }
+      } catch (Exception ex) {
+        
+      }
+    }
+    return serviceInfo;
+  }
   
 }
 

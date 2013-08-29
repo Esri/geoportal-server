@@ -149,12 +149,13 @@ public abstract class ServiceHandler {
 
   /**
    * Creates service info.
+   * @param parentInfo parent info
    * @param desc service description
    * @param currentRestUrl current REST URL
    * @param currentSoapUrl current SOAP URL
    * @return service info
    */
-  public ServiceInfo createServiceInfo(ServiceDescription desc, String currentRestUrl, String currentSoapUrl) {
+  public ServiceInfo createServiceInfo(ServiceInfo parentInfo, ServiceDescription desc, String currentRestUrl, String currentSoapUrl) {
     ServiceInfo info = new ServiceInfo();
     info.setCapabilities(desc.getCapabilities());
     info.setDescription(desc.getDescription());
@@ -164,6 +165,7 @@ public abstract class ServiceHandler {
     info.setRestUrl(currentRestUrl);
     info.setSoapUrl(currentSoapUrl);
     info.setType(desc.getType());
+    info.setParentInfo(parentInfo);
     return info;
   }
 
