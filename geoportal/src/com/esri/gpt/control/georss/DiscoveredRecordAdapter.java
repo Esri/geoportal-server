@@ -19,6 +19,7 @@ import com.esri.gpt.catalog.discovery.DiscoveredRecord;
 import com.esri.gpt.catalog.discovery.PropertyMeanings;
 import com.esri.gpt.catalog.discovery.Returnable;
 import com.esri.gpt.catalog.schema.Meaning;
+import com.esri.gpt.catalog.search.ResourceIdentifier;
 import com.esri.gpt.catalog.search.ResourceLinks;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.util.Val;
@@ -38,8 +39,10 @@ public class DiscoveredRecordAdapter implements IFeedRecord {
   private Map<String,Map<String,IFeedAttribute>> collection = new HashMap<String, Map<String, IFeedAttribute>>();
   private HashMap<String,Object[]> values = new HashMap<String, Object[]>();
   private ResourceLinks resourceLinks = new ResourceLinks();
+  private ResourceIdentifier resourceIdentifier;
   
-  public DiscoveredRecordAdapter(DiscoveredRecord record) {
+  public DiscoveredRecordAdapter(ResourceIdentifier resourceIdentifier, DiscoveredRecord record) {
+    this.resourceIdentifier = resourceIdentifier;
     for (Returnable ret: record.getFields()) {
       this.values.put(ret.getMeaning().getName(), ret.getValues());
     }
@@ -137,7 +140,11 @@ public class DiscoveredRecordAdapter implements IFeedRecord {
   
   @Override
   public String getServiceType() {
-    return select(Meaning.MEANINGTYPE_RESOURCE_TYPE);
+    String serviceType = select(Meaning.MEANINGTYPE_RESOURCE_TYPE);
+    if (serviceType.isEmpty()) {
+      serviceType = resourceIdentifier.guessServiceTypeFromUrl(getResourceUrl());
+    }
+    return serviceType;
   }
 
   @Override

@@ -15,9 +15,14 @@
  */
 package com.esri.gpt.control.georss;
 
+import com.esri.gpt.catalog.search.IMapViewer;
+import com.esri.gpt.catalog.search.MapViewerFactory;
+import com.esri.gpt.catalog.search.ResourceIdentifier;
 import com.esri.gpt.catalog.search.ResourceLink;
+import com.esri.gpt.catalog.search.ResourceLinkBuilder;
 import com.esri.gpt.framework.collection.StringAttribute;
 import com.esri.gpt.framework.context.ApplicationContext;
+import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.LogUtil;
 import com.esri.gpt.framework.util.Val;
@@ -28,33 +33,165 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Feed link builder.
  */
 public class FeedLinkBuilder {
 
-  private final String metadataPath        = "/rest/document";
+  private final String metadataPath = "/rest/document";
   private final String resourceDetailsPath = "/catalog/search/resource/details.page";
   private final String resourcePreviewPath = "/catalog/search/resource/livedata-preview.page";
-  private final String imagePath           = "/catalog/images";
-  
+  private final String imagePath = "/catalog/images";
+  private RequestContext context;
   private String baseContextPath;
   private MessageBroker messageBroker;
   private Map<String, String> labels = new HashMap<String, String>();
+  private final String mapViewerUrl;
+  private ResourceIdentifier resourceIdentifier;
 
-  public FeedLinkBuilder(String baseContextPath, MessageBroker messageBroker) {
+  /**
+   * Creates instance of the link builder.
+   * @param context request context
+   * @param baseContextPath base context path
+   * @param messageBroker  message broker
+   */
+  public FeedLinkBuilder(RequestContext context, String baseContextPath, MessageBroker messageBroker) {
+    this.context = context;
     this.baseContextPath = baseContextPath;
     this.messageBroker = messageBroker;
+
+    this.mapViewerUrl = context.getCatalogConfiguration().getSearchConfig().getMapViewerUrl();
+    this.resourceIdentifier = ResourceIdentifier.newIdentifier(context);
   }
 
+  /**
+   * Gets map viewer URL.
+   * @return map viewer URL
+   */
+  protected String getMapViewerUrl() {
+    return mapViewerUrl;
+  }
+
+  /**
+   * Buids links and resources.
+   * @param record record
+   */
   public void build(IFeedRecord record) {
+    // links
+    buildOpenLink(record);
     buildMetadataLink(record);
     buildDetailsLink(record);
-    buildOpenLink(record);
     buildPreviewLink(record);
-    buildContentTypeLink(record);
-    buildThumbnailLink(record);
+    buildAddToMapLink(record);
+    
+    // resource links
+    buildContentTypeResource(record);
+    buildThumbnailResource(record);
+  }
+
+  protected void buildAddToMapLink(IFeedRecord record) {
+    String resourceUrl = Val.chkStr(record.getResourceUrl());
+    String serviceType = Val.chkStr(record.getServiceType()).toLowerCase();
+    String serviceName = Val.chkStr(record.getService());
+    String viewerUrl = Val.chkStr(this.getMapViewerUrl());
+    IMapViewer iMapViewer = null;
+
+    if ((viewerUrl.length() != 0)) {
+      // return if a map viewer link cannot be built
+      if (resourceUrl.length() == 0 || (serviceType.length() == 0)) {
+        return;
+      } else {
+        boolean canHandle = (serviceType.equalsIgnoreCase(ResourceLinkBuilder.ServiceType.AGS.name())
+                || serviceType.equalsIgnoreCase(ResourceLinkBuilder.ServiceType.AIMS.name())
+                || serviceType.equalsIgnoreCase(ResourceLinkBuilder.ServiceType.WMS.name())
+                || serviceType.equalsIgnoreCase(ResourceLinkBuilder.ServiceType.WFS.name()) || serviceType
+                .equalsIgnoreCase(ResourceLinkBuilder.ServiceType.WCS.name()));
+        if (!canHandle) {
+          return;
+        }
+      }
+
+    } else {
+      iMapViewer = MapViewerFactory.createMapViewer(resourceUrl, serviceType, record, context);
+      if (iMapViewer == null) {
+        return;
+      }
+      String addToMapUrl = iMapViewer.readAddToMapUrl();
+      if (addToMapUrl == null || "".equals(addToMapUrl)) {
+        return;
+      }
+      String resourceKey = "catalog.rest.addToMap";
+      ResourceLink link = this.makeLink(addToMapUrl, ResourceLink.TAG_ADDTOMAP,
+              resourceKey);
+      link.setTarget(iMapViewer.readTarget());
+      record.getResourceLinks().add(link);
+      return;
+
+    }
+    // maybe url is already an add to map url?  if so no modigications are required
+    if ((resourceUrl.toLowerCase().startsWith("http:") || resourceUrl
+            .toLowerCase().startsWith("https:"))
+            && resourceUrl.toLowerCase().contains("resources=map")) {
+    } else {
+
+      // set up an ArcGIS soap service for the viewer
+      if (serviceType.equals("ags")) {
+        resourceUrl = Val.chkStr(resourceIdentifier.guessAgsMapServerSoapUrl(resourceUrl));
+      }
+
+      // set up an ArcIMS service for the viewer
+      int nIdx = resourceUrl.toLowerCase().indexOf(
+              "/servlet/com.esri.esrimap.esrimap?servicename=");
+      if (nIdx > 0) {
+        resourceUrl = resourceUrl.substring(0, nIdx) + "/"
+                + resourceUrl.substring(nIdx + 46);
+      }
+
+      // set up an OGC service for the viewer
+      if (serviceType.equalsIgnoreCase("wms")
+              || serviceType.equalsIgnoreCase("wfs")
+              || serviceType.equalsIgnoreCase("wcs")) {
+        nIdx = resourceUrl.toLowerCase().indexOf("?");
+        if (nIdx > 0) {
+          resourceUrl = resourceUrl.substring(0, nIdx);
+        }
+      }
+    }
+
+    // TODO: explanation?
+    resourceUrl = resourceUrl.replaceAll("/$", "")
+            + (serviceName.length() > 0 ? "/" + serviceName : "");
+    resourceUrl = Val.chkStr(resourceUrl);
+
+    if (resourceUrl.length() > 0) {
+      String url = viewerUrl + "?resources=map:" + serviceType + "@"
+              + resourceUrl;
+      String resourceKey = "catalog.rest.addToMap";
+      ResourceLink link = this.makeLink(url, ResourceLink.TAG_ADDTOMAP,
+              resourceKey);
+      record.getResourceLinks().add(link);
+    }
+
+    String url = "";
+    try {
+      RequestContext rContext = context;
+      ServletRequest sRequest = rContext.getServletRequest();
+      if (sRequest instanceof HttpServletRequest) {
+        HttpServletRequest hSRequest = (HttpServletRequest) sRequest;
+        String path = Val.chkStr(hSRequest.getPathInfo()).toLowerCase();
+        if (path.contains("catalog/search/search.page")
+                || path.contains("catalog/main/home.page")) {
+          url = "javascript:GptUtils.popUp(\'" + url + "\',"
+                  + "GptMapViewer.TITLE," + "GptMapViewer.dimensions.WIDTH,"
+                  + "GptMapViewer.dimensions.HEIGHT);";
+        }
+      }
+
+    } catch (Exception e) {
+    }
   }
 
   protected void buildMetadataLink(IFeedRecord record) {
@@ -108,7 +245,7 @@ public class FeedLinkBuilder {
     }
     record.getResourceLinks().add(link);
   }
-  
+
   protected void buildOpenLink(IFeedRecord record) {
     String resourceUrl = Val.chkStr(record.getResourceUrl());
     String serviceType = Val.chkStr(record.getServiceType()).toLowerCase();
@@ -120,29 +257,29 @@ public class FeedLinkBuilder {
 
     String resourceKey = "catalog.rest.open";
     ResourceLink link = this.makeLink(resourceUrl, ResourceLink.TAG_OPEN,
-        resourceKey);
+            resourceKey);
     if (serviceType.length() > 0) {
       link.getParameters().add(new StringAttribute("resourceType", serviceType));
     }
     record.getResourceLinks().add(link);
   }
-  
-  protected void buildContentTypeLink(IFeedRecord record) {
-    String contentType = record.getContentType().isEmpty()? "unknown": record.getContentType();
-    
+
+  protected void buildContentTypeResource(IFeedRecord record) {
+    String contentType = record.getContentType().isEmpty() ? "unknown" : record.getContentType();
+
     String url = baseContextPath + imagePath + "/ContentType_" + contentType + ".png";
     String resourceKey = "catalog.search.filterContentTypes." + contentType;
     ResourceLink link = this.makeLink(url, ResourceLink.TAG_CONTENTTYPE, resourceKey);
     record.getResourceLinks().setIcon(link);
     record.getResourceLinks().add(link);
   }
-  
-  protected void buildThumbnailLink(IFeedRecord record) {
+
+  protected void buildThumbnailResource(IFeedRecord record) {
     IFeedAttribute thumbUrl = record.getData(IFeedRecord.STD_COLLECTION_INDEX).get("thumbnail.url");
-    if (thumbUrl!=null && thumbUrl.getValue() instanceof List && !((List)thumbUrl.getValue()).isEmpty()) {
-      Object oVal = ((List)thumbUrl.getValue()).get(0);
-      if (oVal instanceof IFeedAttribute && ((IFeedAttribute)oVal).getValue() instanceof String) {
-        String url = (String)((IFeedAttribute)oVal).getValue();
+    if (thumbUrl != null && thumbUrl.getValue() instanceof List && !((List) thumbUrl.getValue()).isEmpty()) {
+      Object oVal = ((List) thumbUrl.getValue()).get(0);
+      if (oVal instanceof IFeedAttribute && ((IFeedAttribute) oVal).getValue() instanceof String) {
+        String url = (String) ((IFeedAttribute) oVal).getValue();
         String resourceKey = "catalog.rest.thumbNail";
         ResourceLink link = this.makeLink(url, ResourceLink.TAG_THUMBNAIL, resourceKey);
         record.getResourceLinks().setThumbnail(link);

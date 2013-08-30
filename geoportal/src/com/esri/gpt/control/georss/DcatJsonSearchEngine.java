@@ -33,6 +33,7 @@ import com.esri.gpt.catalog.discovery.DiscoveryException;
 import com.esri.gpt.catalog.discovery.rest.RestQuery;
 import com.esri.gpt.catalog.lucene.LuceneQueryAdapter;
 import com.esri.gpt.catalog.search.OpenSearchProperties;
+import com.esri.gpt.catalog.search.ResourceIdentifier;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
 import com.esri.gpt.framework.jsf.MessageBroker;
@@ -135,10 +136,11 @@ public abstract class DcatJsonSearchEngine extends JsonSearchEngine {
     osProps.setStartRecord(query.getFilter().getStartRecord());
     osProps.setRecordsPerPage(query.getFilter().getMaxRecords());
 
+    ResourceIdentifier resourceIdentifier = ResourceIdentifier.newIdentifier(context);
     DiscoveredRecordsAdapter discoveredRecordsAdapter =
-            new DiscoveredRecordsAdapter(osProps, fields, query.getResult().getRecords(), mapping);
+            new DiscoveredRecordsAdapter(resourceIdentifier, osProps, fields, query.getResult().getRecords(), mapping);
 
-    FeedLinkBuilder linkBuilder = new FeedLinkBuilder(RequestContext.resolveBaseContextPath(request), msgBroker);
+    FeedLinkBuilder linkBuilder = new FeedLinkBuilder(context, RequestContext.resolveBaseContextPath(request), msgBroker);
     for (IFeedRecord record : discoveredRecordsAdapter) {
       linkBuilder.build(record);
     }
@@ -247,11 +249,12 @@ public abstract class DcatJsonSearchEngine extends JsonSearchEngine {
       query.getFilter().setStartRecord(startRecord);
       LuceneQueryAdapterImpl lqa = new LuceneQueryAdapterImpl();
       lqa.execute(context, query);
+      ResourceIdentifier resourceIdentifier = ResourceIdentifier.newIdentifier(context);
       
       // traverse through discovered records and build IFeedRecord for each of them (as DiscoveredRecordAdapter)
       DiscoveredRecords records = query.getResult().getRecords();
       for (DiscoveredRecord dr: records) {
-        DiscoveredRecordAdapter record = new DiscoveredRecordAdapter(dr);
+        DiscoveredRecordAdapter record = new DiscoveredRecordAdapter(resourceIdentifier,dr);
         Map<String, IFeedAttribute> attrs = new HashMap<String, IFeedAttribute>();
         Map<String,List<String>> data = lqa.getMapping().get(dr);
         if (data!=null) {
