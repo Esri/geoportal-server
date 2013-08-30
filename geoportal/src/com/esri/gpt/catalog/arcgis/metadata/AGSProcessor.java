@@ -474,10 +474,15 @@ public class AGSProcessor extends ResourceProcessor {
     if (handler==null) return hasNext();
     handler.setCredentials(getCredentials());
     
+    // get parent description if available for the current description
     ServiceDescription parentDesc = childToParent.get(desc);
+    // get service info for the parent
     ServiceInfo parentInfo = sdToSi.get(parentDesc);
     
+    // create servcice info for the current service description
     info = handler.createServiceInfo(parentInfo, desc, currentRestUrl, currentSoapUrl);
+    
+    // store mapping between service descritpion and service info
     sdToSi.put(desc, info);
 
     return true;

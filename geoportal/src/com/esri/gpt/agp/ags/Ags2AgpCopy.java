@@ -72,9 +72,9 @@ public class Ags2AgpCopy {
     agsToAgpType.put("FeatureServer", "Feature Service");
     agsToAgpType.put("WFSServer", "Feature Service");
     agsToAgpType.put("WMSServer", "WMS");
-    agsToAgpType.put("GPServer", "Geoprocessing Service");
-    agsToAgpType.put("NASServer", "Network Analysis Service");
-    agsToAgpType.put("GeometryServer", "Geometry Service");
+    //agsToAgpType.put("GPServer", "Geoprocessing Service");
+    //agsToAgpType.put("NASServer", "Network Analysis Service");
+    //agsToAgpType.put("GeometryServer", "Geometry Service");
   }
   
   /**
@@ -126,6 +126,42 @@ public class Ags2AgpCopy {
     }
   }
   
+  /**
+   * Creates a string definition of the envelope.
+   * @param E envelope
+   * @return string definition
+   */
+  private String envelopeToString(com.esri.arcgisws.Envelope E) {
+    if (E instanceof EnvelopeN) {
+      EnvelopeN e = (EnvelopeN) E;
+
+      // project envelope
+      Envelope gptEnvelope = new Envelope(e.getXMin(), e.getYMin(), e.getXMax(), e.getYMax());
+      if (e.getSpatialReference()!=null && e.getSpatialReference().getWKID()!=null) {
+        gptEnvelope.setWkid(e.getSpatialReference().getWKID().toString());
+        List<Envelope> envelopes = Arrays.asList(new Envelope[]{gptEnvelope});
+        try {
+          List<Envelope> projectedEnvelopes = gs.project(envelopes, "4326");
+          if (projectedEnvelopes!=null && !projectedEnvelopes.isEmpty()) {
+            Envelope pe = projectedEnvelopes.get(0);
+            String envelope = ""+pe.getMinX()+","+pe.getMinY()+","+pe.getMaxX()+","+pe.getMaxY();
+            return envelope;
+          }
+        } catch (Exception ex) {
+          LOGGER.log(Level.WARNING, "Error projecting envelope.", ex);
+        }
+      } else {
+        LOGGER.log(Level.WARNING, "Error projecting envelope: no WKID.");
+      }
+    }
+    return "";
+  }
+  
+  /**
+   * Creates AGP item from service info.
+   * @param serviceInfo service info.
+   * @return AGP item
+   */
   private AgpItem createAgpItem(ServiceInfo serviceInfo) {
     if (serviceInfo!=null) {
       AgpItem agpItem = new AgpItem();
@@ -136,31 +172,20 @@ public class Ags2AgpCopy {
       props.add(new AgpProperty("name", Val.chkStr(serviceInfo.getName())));
       props.add(new AgpProperty("url", Val.chkStr(serviceInfo.getRestUrl())));
       props.add(new AgpProperty("description", Val.chkStr(serviceInfo.getDescription())));
-      if (serviceInfo.getThumbnailUrl()!=null && !serviceInfo.getThumbnailUrl().isEmpty()) {
-        props.add(new AgpProperty("thumbnailurl", Val.chkStr(serviceInfo.getThumbnailUrl())));
+      
+      String thumbnailUrl = Val.chkStr(serviceInfo.getThumbnailUrl());
+      if (!thumbnailUrl.isEmpty()) {
+        props.add(new AgpProperty("thumbnailurl", thumbnailUrl));
       }
-      com.esri.arcgisws.Envelope recursiveEnvelope = serviceInfo.getRecursiveEnvelope();
-      if (recursiveEnvelope instanceof EnvelopeN) {
-        EnvelopeN e = (EnvelopeN) recursiveEnvelope;
-        
-        // project envelope
-        Envelope gptEnvelope = new Envelope(e.getXMin(), e.getYMin(), e.getXMax(), e.getYMax());
-        if (e.getSpatialReference()!=null && e.getSpatialReference().getWKID()!=null) {
-          gptEnvelope.setWkid(e.getSpatialReference().getWKID().toString());
-          List<Envelope> envelopes = Arrays.asList(new Envelope[]{gptEnvelope});
-          try {
-            List<Envelope> projectedEnvelopes = gs.project(envelopes, "4326");
-            if (projectedEnvelopes!=null && !projectedEnvelopes.isEmpty()) {
-              Envelope pe = projectedEnvelopes.get(0);
-              String envelope = ""+pe.getMinX()+","+pe.getMinY()+","+pe.getMaxX()+","+pe.getMaxY();
-              props.add(new AgpProperty("extent", envelope));
-            }
-          } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Error projecting envelope.", ex);
-          }
-        } else {
-          LOGGER.log(Level.WARNING, "Error projecting envelope: no WKID.");
-        }
+      
+      String textInfo = Val.chkStr(serviceInfo.getText());
+      if (!textInfo.isEmpty()) {
+        props.add(new AgpProperty("text", textInfo));
+      }
+      
+      String envelope = Val.chkStr(envelopeToString(serviceInfo.getEnvelope()));
+      if (!envelope.isEmpty()) {
+        props.add(new AgpProperty("extent", envelope));
       }
       
       String agpType = agsToAgpType.get(type);
@@ -173,7 +198,7 @@ public class Ags2AgpCopy {
   }
   
   /**
-   * Syncronizes a single item.
+   * Synchronizes a single item.
    * @param sourceItem item
    * @return <code>true</code> if item has been synchronized
    * @throws Exception if any exception occurs during the process

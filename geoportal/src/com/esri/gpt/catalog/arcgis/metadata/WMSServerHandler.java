@@ -21,11 +21,14 @@ import com.esri.gpt.control.georss.GeometryService;
 import com.esri.gpt.framework.geometry.Envelope;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Handles the collection of metadata for an ArcGIS WMS service (WMSServer).
  */
 public class WMSServerHandler extends OGCServerHandler {
+  private static final Logger LOGGER = Logger.getLogger(WMSServerHandler.class.getCanonicalName());
   
   /** constructors ============================================================ */
 
@@ -37,9 +40,72 @@ public class WMSServerHandler extends OGCServerHandler {
   @Override
   public ServiceInfo createServiceInfo(ServiceInfo parentInfo, ServiceDescription desc, String currentRestUrl, String currentSoapUrl) {
     ServiceInfo serviceInfo = super.createServiceInfo(parentInfo, desc, currentRestUrl, currentSoapUrl);
+    String thumbnailUrl = createThumbnailUrl(serviceInfo);
+    serviceInfo.setThumbnailUrl(thumbnailUrl);
+    String textInfo = createTextInfo(serviceInfo);
+    serviceInfo.setText(textInfo);
+    return serviceInfo;
+  }
+  
+  /**
+   * Creates text info.
+   * @param parentInfo parent info
+   * @param serviceInfo service info
+   * @return text info
+   */
+  private String createTextInfo(ServiceInfo serviceInfo) {
+    StringBuilder ti = new StringBuilder();
     
-    if (parentInfo!=null && parentInfo.getEnvelope() instanceof EnvelopeN) {
-      EnvelopeN e = (EnvelopeN) parentInfo.getEnvelope();
+    ti.append("{");
+    
+    ti.append("\"title\":\"").append(serviceInfo.getName()).append("\",");
+    ti.append("\"url\":\"").append(serviceInfo.getSoapUrl()).append("\",");
+    ti.append("\"mapUrl\":\"").append(serviceInfo.getSoapUrl()).append("?\",");
+    ti.append("\"version\":\"").append("1.3.0").append("\",");
+
+    ti.append("\"layers\":[");
+    
+    StringBuilder lb = new StringBuilder();
+    for (LayerInfo li : serviceInfo.getLayersInfo()) {
+      if (lb.length()>0) {
+        lb.append(",");
+      }
+      lb.append("{");
+      lb.append("\"name\":\"").append(li.getName()).append("\",");
+      lb.append("\"title\":\"").append(li.getTitle()).append("\"");
+      lb.append("}");
+    }
+    ti.append(lb);
+    
+    ti.append("],");
+
+    ti.append("\"copyright\":\"").append(serviceInfo.getCopyright()).append("\",");
+    
+    ti.append("\"spatialReferences\":[");
+    ti.append("4326");
+    if (serviceInfo.getEnvelope() instanceof EnvelopeN) {
+      EnvelopeN e = (EnvelopeN) serviceInfo.getEnvelope();
+      if (e.getSpatialReference()!=null && e.getSpatialReference().getWKID()!=null && e.getSpatialReference().getWKID()!=4326) {
+        ti.append(",").append(e.getSpatialReference().getWKID().toString());
+      }
+    }
+    ti.append("],");
+    
+    ti.append("\"format\":").append("null");
+    
+    ti.append("}");
+    
+    return ti.toString();
+  }
+  
+  /**
+   * Creates thumbnail URL.
+   * @param serviceInfo service info
+   * @return thumbnail URL
+   */
+  private String createThumbnailUrl(ServiceInfo serviceInfo) {
+    if (serviceInfo.getEnvelope() instanceof EnvelopeN) {
+      EnvelopeN e = (EnvelopeN) serviceInfo.getEnvelope();
       Envelope envelope = new Envelope(e.getXMin(), e.getYMin(), e.getXMax(), e.getYMax());
       envelope.setWkid(e.getSpatialReference()!=null && e.getSpatialReference().getWKID()!=null? e.getSpatialReference().getWKID().toString(): "4326");
       
@@ -50,7 +116,7 @@ public class WMSServerHandler extends OGCServerHandler {
           envelope = envelopes.get(0);
           
           StringBuilder thumbnailURL = new StringBuilder();
-          thumbnailURL.append(currentSoapUrl);
+          thumbnailURL.append(serviceInfo.getSoapUrl());
           thumbnailURL.append("?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=&VERSION=1.3.0");
           thumbnailURL.append("&layers=");
           
@@ -70,13 +136,14 @@ public class WMSServerHandler extends OGCServerHandler {
           
           thumbnailURL.append("&BBOX=").append(bboxSB);
           
-          serviceInfo.setThumbnailUrl(thumbnailURL.toString());
+          return thumbnailURL.toString();
         }
       } catch (Exception ex) {
-        
+        LOGGER.log(Level.WARNING, "Unable to create thumbnail URL for WMS service.", ex);
       }
     }
-    return serviceInfo;
+    
+    return "";
   }
   
 }
