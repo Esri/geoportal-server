@@ -54,9 +54,10 @@ public class FeedLinkBuilder {
 
   /**
    * Creates instance of the link builder.
+   *
    * @param context request context
    * @param baseContextPath base context path
-   * @param messageBroker  message broker
+   * @param messageBroker message broker
    */
   public FeedLinkBuilder(RequestContext context, String baseContextPath, MessageBroker messageBroker) {
     this.context = context;
@@ -69,6 +70,7 @@ public class FeedLinkBuilder {
 
   /**
    * Gets map viewer URL.
+   *
    * @return map viewer URL
    */
   protected String getMapViewerUrl() {
@@ -77,6 +79,7 @@ public class FeedLinkBuilder {
 
   /**
    * Buids links and resources.
+   *
    * @param record record
    */
   public void build(IFeedRecord record) {
@@ -85,11 +88,51 @@ public class FeedLinkBuilder {
     buildMetadataLink(record);
     buildDetailsLink(record);
     buildPreviewLink(record);
+    buildAGSLinks(record);
     buildAddToMapLink(record);
-    
+
     // resource links
     buildContentTypeResource(record);
     buildThumbnailResource(record);
+  }
+
+  protected void buildAGSLinks(IFeedRecord record) {
+    String resourceUrl = Val.chkStr(record.getResourceUrl());
+    String serviceType = Val.chkStr(record.getServiceType()).toLowerCase();
+    String restUrl = Val.chkStr(resourceIdentifier.guessAgsServiceRestUrl(resourceUrl));
+    String url;
+    String resourceKey;
+    ResourceLink link;
+
+    if ((restUrl.length() > 0) && serviceType.equals("ags")) {
+
+      // kml
+      if ((restUrl.toLowerCase().endsWith("/mapserver") || restUrl.toLowerCase().endsWith("/imageserver"))) {
+        url = restUrl + "/kml/mapImage.kmz";
+        if (restUrl.toLowerCase().endsWith("/imageserver")) {
+          url = restUrl + "/kml/image.kmz";
+        }
+        resourceKey = "catalog.rest.addToGlobeKml";
+        link = this.makeLink(url, ResourceLink.TAG_AGSKML, resourceKey);
+        record.getResourceLinks().add(link);
+      }
+
+      // nmf
+      if ((restUrl.toLowerCase().endsWith("/mapserver") || restUrl.toLowerCase().endsWith("/imageserver"))) {
+        url = restUrl + "?f=nmf";
+        resourceKey = "catalog.rest.addToGlobeNmf";
+        link = this.makeLink(url, ResourceLink.TAG_AGSNMF, resourceKey);
+        record.getResourceLinks().add(link);
+      }
+
+      // lyr
+      if ((restUrl.toLowerCase().endsWith("/mapserver") || restUrl.toLowerCase().endsWith("/imageserver") || restUrl.toLowerCase().endsWith("/globeserver"))) {
+        url = restUrl + "?f=lyr";
+        resourceKey = "catalog.rest.addToArcMap";
+        link = this.makeLink(url, ResourceLink.TAG_AGSLYR, resourceKey);
+        record.getResourceLinks().add(link);
+      }
+    }
   }
 
   protected void buildAddToMapLink(IFeedRecord record) {
