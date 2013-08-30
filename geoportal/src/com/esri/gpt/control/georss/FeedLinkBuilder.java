@@ -31,6 +31,8 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.ServletRequest;
@@ -40,6 +42,7 @@ import javax.servlet.http.HttpServletRequest;
  * Feed link builder.
  */
 public class FeedLinkBuilder {
+  private static final Logger LOGGER = Logger.getLogger(FeedLinkBuilder.class.getCanonicalName());
 
   private final String metadataPath = "/rest/document";
   private final String resourceDetailsPath = "/catalog/search/resource/details.page";
@@ -96,6 +99,10 @@ public class FeedLinkBuilder {
     buildThumbnailResource(record);
   }
 
+  /**
+   * Builds ArcGIS links.
+   * @param record record
+   */
   protected void buildAGSLinks(IFeedRecord record) {
     String resourceUrl = Val.chkStr(record.getResourceUrl());
     String serviceType = Val.chkStr(record.getServiceType()).toLowerCase();
@@ -135,6 +142,10 @@ public class FeedLinkBuilder {
     }
   }
 
+  /**
+   * Builds 'Add To Map' link.
+   * @param record record
+   */
   protected void buildAddToMapLink(IFeedRecord record) {
     String resourceUrl = Val.chkStr(record.getResourceUrl());
     String serviceType = Val.chkStr(record.getServiceType()).toLowerCase();
@@ -234,9 +245,14 @@ public class FeedLinkBuilder {
       }
 
     } catch (Exception e) {
+      LOGGER.log(Level.WARNING, "Error creating 'Add to Map' link.", e);
     }
   }
 
+  /**
+   * Builds 'Metadata' link.
+   * @param record record
+   */
   protected void buildMetadataLink(IFeedRecord record) {
     String uuid = Val.chkStr(record.getUuid());
     String url = baseContextPath + metadataPath + "?id=" + encodeUrlParam(uuid);
@@ -245,6 +261,10 @@ public class FeedLinkBuilder {
     record.getResourceLinks().add(link);
   }
 
+  /**
+   * Builds 'Details' link.
+   * @param record record
+   */
   protected void buildDetailsLink(IFeedRecord record) {
     String uuid = Val.chkStr(record.getUuid());
     String url = baseContextPath + this.resourceDetailsPath + "?uuid=" + encodeUrlParam(uuid);
@@ -253,6 +273,10 @@ public class FeedLinkBuilder {
     record.getResourceLinks().add(link);
   }
 
+  /**
+   * Builds 'Preview' link.
+   * @param record record
+   */
   protected void buildPreviewLink(IFeedRecord record) {
     String id = Val.chkStr(record.getUuid());
     String resourceUrl = Val.chkStr(record.getResourceUrl());
@@ -289,6 +313,10 @@ public class FeedLinkBuilder {
     record.getResourceLinks().add(link);
   }
 
+  /**
+   * Builds 'Open' link.
+   * @param record record
+   */
   protected void buildOpenLink(IFeedRecord record) {
     String resourceUrl = Val.chkStr(record.getResourceUrl());
     String serviceType = Val.chkStr(record.getServiceType()).toLowerCase();
@@ -307,6 +335,10 @@ public class FeedLinkBuilder {
     record.getResourceLinks().add(link);
   }
 
+  /**
+   * Builds 'Content Type' resource link.
+   * @param record record
+   */
   protected void buildContentTypeResource(IFeedRecord record) {
     String contentType = record.getContentType().isEmpty() ? "unknown" : record.getContentType();
 
@@ -317,6 +349,10 @@ public class FeedLinkBuilder {
     record.getResourceLinks().add(link);
   }
 
+  /**
+   * Builds 'Thumbnail' resource link.
+   * @param record record
+   */
   protected void buildThumbnailResource(IFeedRecord record) {
     IFeedAttribute thumbUrl = record.getData(IFeedRecord.STD_COLLECTION_INDEX).get("thumbnail.url");
     if (thumbUrl != null && thumbUrl.getValue() instanceof List && !((List) thumbUrl.getValue()).isEmpty()) {
@@ -330,6 +366,13 @@ public class FeedLinkBuilder {
     }
   }
 
+  /**
+   * Makes a resource link.
+   * @param url URL
+   * @param tag tag
+   * @param resourceKey resource key for the label
+   * @return link
+   */
   protected ResourceLink makeLink(String url, String tag, String resourceKey) {
     ResourceLink link = new ResourceLink();
     link.setUrl(url);
@@ -339,6 +382,11 @@ public class FeedLinkBuilder {
     return link;
   }
 
+  /**
+   * Makes label.
+   * @param resourceKey resource key for the label
+   * @return label
+   */
   protected String makeLabel(String resourceKey) {
     String label = labels.get(resourceKey);
     if (label == null) {
@@ -353,6 +401,11 @@ public class FeedLinkBuilder {
     }
   }
 
+  /**
+   * Encodes URL parameter.
+   * @param value parameter to encode
+   * @return encoded parameter
+   */
   protected String encodeUrlParam(String value) {
     value = Val.chkStr(value);
     try {
