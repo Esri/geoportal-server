@@ -31,6 +31,8 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -43,7 +45,25 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class FeedLinkBuilder {
   private static final Logger LOGGER = Logger.getLogger(FeedLinkBuilder.class.getCanonicalName());
-
+  private static final TreeSet<String> knownContentTypes = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+  static {
+    knownContentTypes.add("unknown");
+    knownContentTypes.add("liveData");
+    knownContentTypes.add("downloadableData");
+    knownContentTypes.add("offlineData");
+    knownContentTypes.add("staticMapImage");
+    knownContentTypes.add("document");
+    knownContentTypes.add("application");
+    knownContentTypes.add("geographicService");
+    knownContentTypes.add("clearinghouse");
+    knownContentTypes.add("mapFiles");
+    knownContentTypes.add("geographicActivities");
+  }
+  private static final TreeMap<String,String> additionalContentTypes = new TreeMap<String,String>(String.CASE_INSENSITIVE_ORDER);
+  static {
+    additionalContentTypes.put("CSW", "geographicService");
+  }
+  
   private final String metadataPath = "/rest/document";
   private final String resourceDetailsPath = "/catalog/search/resource/details.page";
   private final String resourcePreviewPath = "/catalog/search/resource/livedata-preview.page";
@@ -341,6 +361,13 @@ public class FeedLinkBuilder {
    */
   protected void buildContentTypeResource(IFeedRecord record) {
     String contentType = record.getContentType().isEmpty() ? "unknown" : record.getContentType();
+    if (!knownContentTypes.contains(contentType)) {
+      if (additionalContentTypes.containsKey(contentType)) {
+        contentType = additionalContentTypes.get(contentType);
+      } else {
+        contentType = "unknow";
+      }
+    }
 
     String url = baseContextPath + imagePath + "/ContentType_" + contentType + ".png";
     String resourceKey = "catalog.search.filterContentTypes." + contentType;
