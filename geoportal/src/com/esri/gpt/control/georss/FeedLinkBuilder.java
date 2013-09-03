@@ -365,7 +365,7 @@ public class FeedLinkBuilder {
       if (additionalContentTypes.containsKey(contentType)) {
         contentType = additionalContentTypes.get(contentType);
       } else {
-        contentType = "unknow";
+        contentType = "unknown";
       }
     }
 
