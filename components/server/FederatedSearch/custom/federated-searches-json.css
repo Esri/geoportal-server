@@ -1,0 +1,55 @@
+#federatedSearchContainer .item {
+	cursor: pointer;
+}
+
+.mainResults .snippet {
+	border-width: 1px;
+	border-color: lightgray;
+	border-style: solid;
+	padding: 5px;
+	margin-bottom: 5px;
+}
+
+.mainResults .snippet .title {
+	font-weight: bold;
+	margin-bottom: 4px;
+}
+
+.mainResults .snippet .title  img {
+	margin-right: 5px;
+}
+
+.mainResults .snippet .abstract {
+	margin-bottom: 4px;
+}
+
+.mainResults .snippet .abstract table tr td 
+	vertical-alight: top;
+}
+
+.mainResults .snippet .abstract .description {
+}
+
+.mainResults .snippet .abstract  .thumbnail {
+	max-height: 75px;
+    max-width: 120px;
+	margin-left: 5px;
+	padding: 5px;
+    border-color: lightgray;
+    border-style: solid;
+    border-width: 1px;	 
+}
+
+.mainResults .snippet .links {
+	font-size: smaller;
+	margin-top: 10px;
+}
+
+.mainResults .snippet .links a {
+	text-decoration: underline;
+	margin-right: 2px;
+}
+
+.mainResults .snippet .links a:hover {
+	color: orange;
+}

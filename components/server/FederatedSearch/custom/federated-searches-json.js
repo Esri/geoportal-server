@@ -1,14 +1,30 @@
 var custom = {
 	config: {
-		title: "Search additional catalogs",
 		catalogs: [
+			// TODO: create as many entries as needed
 			// {rest: "http://<host name>/geoportal/rest/find/document", caption: "<caption>"}
 		]
+	},
+	
+	resources: {
+		title: "Search additional catalogues",
+		wait: "One moment please...",
+		searching: "Searching '@{name}' for '@{keywords}'.",
+		showing: "Showing @{total} results for '@{keywords}' from @{name}.",
+		
+		sort: {
+			relevance: "Relevance",
+			title: "Title",
+			contentType: "Content Type",
+			date: "Date",
+			area: "Area"
+		}
 	},
 
 	setup: function() {
 		console.log("Setting up additional federated searches.");
 		custom._createPlaceholder(dojo.byId("relatedSearchesSection"));
+		// TODO: localize resources (optional)
 	},
 	
 	_createPlaceholder: function(root) {
@@ -17,7 +33,7 @@ var custom = {
 		}
 		var searchText = custom._getSearchText();
 		var sKeywords = results._cleanQuery(searchText);
-		dojo.create("span",{"class": "section", innerHTML: custom.config.title}, root);
+		dojo.create("span",{"class": "section", innerHTML: custom.resources.title}, root);
 		var federatedSearchContainer = dojo.create("div",{"id": "federatedSearchContainer", "style": "margin-left: 0.5em;overflow:auto;"}, root);
 		var federatedSearchList = dojo.create("span", {"class": "esriItemLinks"}, federatedSearchContainer);
 		dojo.forEach(custom.config.catalogs, function(catalog,index){
@@ -55,21 +71,28 @@ var custom = {
 		
 		var sUrl = REST + "?rid=" + sRid + "&start=" + sStart + "&max=" + sMax + "&searchText=" + encodeURIComponent(sKeywords) + "&orderBy=" + sSortOrder + "&f=xjson";
 		
-		targetHeaderNode.innerHTML =  "Searching '" + sName + "' for '" + sKeywords + "'"; 
-	    targetNode.innerHTML = "One moment please...";            	
+		targetHeaderNode.innerHTML =  custom.resources.searching.replace(/@{name}/gi,sName).replace(/@{keywords}/gi,sKeywords);
+	    targetNode.innerHTML = custom.resources.wait;            	
 	    targetSortersNode.innerHTML = "";
 	    
 		var funLoad = function(data) {
 			var nNumberOfResults = data.totalResults;
 			var sNumberOfResultsText = ""+nNumberOfResults;
-			targetHeaderNode.innerHTML = "Showing " +sNumberOfResultsText + " results for '" + sKeywords + "' from " + sName + ".";
+			targetHeaderNode.innerHTML = custom.resources.showing.replace(/@{name}/gi,sName).replace(/@{keywords}/gi,sKeywords).replace(/@{total}/gi,sNumberOfResultsText); 
 			dojo.empty(targetNode);
+			
+			dojo.query(".mainResults .esriSorter").style("display","none");
+			if (data.features && data.features.length>1) {
+				custom._renderSorter(REST, sName, sRid, sKeywords, sSortOrder, sStart, sMax, nNumberOfResults, targetNode);
+			}
+			
 			dojo.forEach(data.features,function(feature){
 				var attrs = feature.properties;
 				var links = feature.links;
+				var resources = feature.resources;
 				var divSnippet = dojo.create("div",{"class": "snippet"},targetNode);
 				var divTitle = dojo.create("div",{"class": "title", "id":attrs.id},divSnippet);
-				dojo.forEach(feature.resources,function(resource){
+				dojo.forEach(resources,function(resource){
 					if (resource.type=="icon") {
 						dojo.create("img",{"title":resource.label,"alt":resource.label,"src":resource.href},divTitle);
 					}
@@ -77,7 +100,20 @@ var custom = {
 				dojo.create("span",{"innerHTML": attrs.title},divTitle);
 				
 				var divAbstract = dojo.create("div",{"class":"abstract"},divSnippet);
-				dojo.create("span",{"innerHTML": attrs.summary},divAbstract);
+				
+				var divTable = dojo.create("table",{"width": "100%"},divAbstract);
+				var divRow = dojo.create("tr",null,divTable);
+				
+				var divDescriptionData = dojo.create("td",null,divRow);
+				var divDescription = dojo.create("div",{"innerHTML": attrs.summary, "class": "description"},divDescriptionData);
+				
+				dojo.forEach(resources,function(resource){
+					if (resource.type=="thumbnail") {
+						var divThumbnailData = dojo.create("td",{"width": "140"},divRow);
+						var divThumbnail = dojo.create("div",{"class": "thumbnail"},divThumbnailData);
+						dojo.create("img",{"title":resource.label,"alt":resource.label,"src":resource.href},divThumbnail);
+					}
+				});
 				
 				var divLinks = dojo.create("div",{"class":"links"},divSnippet);
 				dojo.forEach(links,function(link){
@@ -92,10 +128,6 @@ var custom = {
 				if (paging!=null) {
 					custom._renderPaginator(REST, sName, sRid, sKeywords, sSortOrder, sStart, sMax, nNumberOfResults, paging, "");
 				}
-				var sorters = dojo.byId("sorters");
-				if (sorters!=null) {
-					custom._renderPaginator(REST, sName, sRid, sKeywords, sSortOrder, sStart, sMax, nNumberOfResults, sorters, "after");
-				}
 			}
 		};
 		
@@ -106,11 +138,41 @@ var custom = {
 		
 		var layersRequest = esri.request({
 		  url: sUrl,
-		  content: { f: "xjson" },
+		  content: { f: "xson" },
 		  handleAs: "json",
 		  callbackParamName: "callback"
 		});
 		layersRequest.then(funLoad,funError);
+	},
+	
+	_renderSorter: function(REST, sName, sRid, sKeywords, sSortOrder, sStart, sMax, nNumberOfResults, root) {
+		var divSorter = dojo.create("div", {"class": "esriSorter"}, root);
+		var divLinks = dojo.create("span", {"class": "esriItemLinks"}, divSorter);
+		
+		var linkRelevance = dojo.create("a",{"innerHTML": custom.resources.sort.relevance, "href": "#", "class": "itemField " + (sSortOrder==""? " selected": "")}, divLinks);
+		dojo.connect(linkRelevance,"onclick",null,dojo.hitch({rest: REST, caption: sName, keywords: sKeywords},function(evt){
+			custom._doFederatedSearch(this.rest,this.caption,"",encodeURIComponent(this.keywords),"",1,10);
+		}));
+		
+		var linkTitle = dojo.create("a",{"innerHTML": custom.resources.sort.title, "href": "#", "class": "itemField " + (sSortOrder=="title"? " selected": "")}, divLinks);
+		dojo.connect(linkTitle,"onclick",null,dojo.hitch({rest: REST, caption: sName, keywords: sKeywords},function(evt){
+			custom._doFederatedSearch(this.rest,this.caption,"",encodeURIComponent(this.keywords),"title",1,10);
+		}));
+		
+		var linkContentType = dojo.create("a",{"innerHTML": custom.resources.sort.contentType, "href": "#", "class": "itemField " + (sSortOrder=="format"? " selected": "")}, divLinks);
+		dojo.connect(linkContentType,"onclick",null,dojo.hitch({rest: REST, caption: sName, keywords: sKeywords},function(evt){
+			custom._doFederatedSearch(this.rest,this.caption,"",encodeURIComponent(this.keywords),"format",1,10);
+		}));
+		
+		var linkDate = dojo.create("a",{"innerHTML": custom.resources.sort.date, "href": "#", "class": "itemField " + (sSortOrder=="dateDescending"? " selected": "")}, divLinks);
+		dojo.connect(linkDate,"onclick",null,dojo.hitch({rest: REST, caption: sName, keywords: sKeywords},function(evt){
+			custom._doFederatedSearch(this.rest,this.caption,"",encodeURIComponent(this.keywords),"dateDescending",1,10);
+		}));
+		
+		var linkArea = dojo.create("a",{"innerHTML": custom.resources.sort.area, "href": "#", "class": "itemField " + (sSortOrder=="areaDescending"? " selected": "")}, divLinks);
+		dojo.connect(linkArea,"onclick",null,dojo.hitch({rest: REST, caption: sName, keywords: sKeywords},function(evt){
+			custom._doFederatedSearch(this.rest,this.caption,"",encodeURIComponent(this.keywords),"areaDescending",1,10);
+		}));
 	},
 	
 	_renderPaginator: function(REST, sName, sRid, sKeywords, sSortOrder, sStart, sMax, nNumberOfResults, root, position ) {
