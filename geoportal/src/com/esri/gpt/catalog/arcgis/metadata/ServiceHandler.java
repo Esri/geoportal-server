@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.catalog.arcgis.metadata;
 
+import com.esri.arcgisws.ServiceDescription;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.http.HttpClientRequest;
@@ -144,6 +145,28 @@ public abstract class ServiceHandler {
     String resourceUrl = serviceInfo.getResourceUrl();
     String resourceXml = serviceInfo.asDublinCore(processor);
     processor.publishMetadata(resourceUrl,resourceXml);
+  }
+
+  /**
+   * Creates service info.
+   * @param parentInfo parent info
+   * @param desc service description
+   * @param currentRestUrl current REST URL
+   * @param currentSoapUrl current SOAP URL
+   * @return service info
+   */
+  public ServiceInfo createServiceInfo(ServiceInfo parentInfo, ServiceDescription desc, String currentRestUrl, String currentSoapUrl) {
+    ServiceInfo info = new ServiceInfo();
+    info.setCapabilities(desc.getCapabilities());
+    info.setDescription(desc.getDescription());
+    info.setName(desc.getName());
+    info.setParentType(desc.getParentType());
+    info.setResourceUrl(currentRestUrl);
+    info.setRestUrl(currentRestUrl);
+    info.setSoapUrl(currentSoapUrl);
+    info.setType(desc.getType());
+    info.setParentInfo(parentInfo);
+    return info;
   }
 
   /**

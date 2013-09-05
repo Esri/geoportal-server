@@ -7,10 +7,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.esri.gpt.catalog.discovery.rest.RestQuery;
 import com.esri.gpt.catalog.search.SearchResult;
-import com.esri.gpt.catalog.search.SearchResultRecords;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.MessageBroker;
 
+/**
+ * Extended feed writer.
+ */
 public interface FeedWriter2 extends FeedWriter {
 
 // properties ==================================================================

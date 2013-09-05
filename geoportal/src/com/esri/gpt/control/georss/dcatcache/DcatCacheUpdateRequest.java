@@ -92,7 +92,7 @@ public class DcatCacheUpdateRequest {
     RequestContext context = RequestContext.extract(null);
     MessageBroker msgBroker = new MessageBroker();
     msgBroker.setBundleBaseName(MessageBroker.DEFAULT_BUNDLE_BASE_NAME);
-    FeedLinkBuilder linkBuilder = new FeedLinkBuilder(RequestContext.resolveBaseContextPath(null), msgBroker);
+    FeedLinkBuilder linkBuilder = new FeedLinkBuilder(context, RequestContext.resolveBaseContextPath(null), msgBroker);
     
     DcatCache cache = DcatCache.getInstance();
     OutputStream cacheStream = null;

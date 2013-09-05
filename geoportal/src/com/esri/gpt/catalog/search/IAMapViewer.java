@@ -1,5 +1,6 @@
 package com.esri.gpt.catalog.search;
 
+import com.esri.gpt.control.georss.IFeedRecord;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.logging.Level;
@@ -30,7 +31,7 @@ private String             _resourceUri;
 private String             _hintServiceType;
 
 /** The search result record. */
-private SearchResultRecord _searchResultRecord;
+private IFeedRecord _searchResultRecord;
 
 /** The request context. */
 private RequestContext     _requestContext;
@@ -90,7 +91,7 @@ protected MapViewerConfigs getMapViewerConfigs() {
  * @param searchResultRecord
  *          the search result record
  */
-public void setSearchResultRecord(SearchResultRecord searchResultRecord) {
+public void setSearchResultRecord(IFeedRecord searchResultRecord) {
   this._searchResultRecord = searchResultRecord;
 
 }
@@ -101,7 +102,7 @@ public void setSearchResultRecord(SearchResultRecord searchResultRecord) {
  * @return the search result record
  * @return The search result record. Could be null.
  */
-private SearchResultRecord getSearchResultRecord() {
+private IFeedRecord getSearchResultRecord() {
   return this._searchResultRecord;
 }
 

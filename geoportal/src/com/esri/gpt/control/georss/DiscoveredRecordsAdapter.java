@@ -18,6 +18,7 @@ package com.esri.gpt.control.georss;
 import com.esri.gpt.catalog.discovery.DiscoveredRecord;
 import com.esri.gpt.catalog.discovery.DiscoveredRecords;
 import com.esri.gpt.catalog.search.OpenSearchProperties;
+import com.esri.gpt.catalog.search.ResourceIdentifier;
 import java.sql.SQLException;
 import java.util.AbstractList;
 import java.util.ArrayList;
@@ -32,13 +33,15 @@ public class DiscoveredRecordsAdapter extends AbstractList<IFeedRecord> implemen
   private OpenSearchProperties osProps;
   private List<FieldMeta> metadata;
   private ArrayList<IFeedRecord> feedRecords = new ArrayList<IFeedRecord>();
+  private ResourceIdentifier resourceIdentifier;
   
-  public DiscoveredRecordsAdapter(OpenSearchProperties osProps, List<FieldMeta> metadata, DiscoveredRecords records, Map<DiscoveredRecord,Map<String,List<String>>> mapping) throws SQLException {
+  public DiscoveredRecordsAdapter(ResourceIdentifier resourceIdentifier, OpenSearchProperties osProps, List<FieldMeta> metadata, DiscoveredRecords records, Map<DiscoveredRecord,Map<String,List<String>>> mapping) throws SQLException {
+    this.resourceIdentifier = resourceIdentifier;
     this.osProps = osProps;
     this.metadata = metadata;
     
     for (DiscoveredRecord dr: records) {
-      DiscoveredRecordAdapter record = new DiscoveredRecordAdapter(dr);
+      DiscoveredRecordAdapter record = new DiscoveredRecordAdapter(resourceIdentifier,dr);
       Map<String, IFeedAttribute> attrs = new HashMap<String, IFeedAttribute>();
       Map<String,List<String>> data = mapping.get(dr);
       if (data!=null) {
