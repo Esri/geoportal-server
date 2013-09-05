@@ -90,7 +90,9 @@ public void close() throws IOException {
 
   if (directory != null) {
     folder = directory.getFile();
-    directory.close();
+    try {
+      directory.close();
+    } catch (Exception ex) {}
   }
 
   if (folder != null) {

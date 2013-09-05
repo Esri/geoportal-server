@@ -16,6 +16,9 @@
 package com.esri.gpt.control.webharvest.client.dcat;
 
 import com.esri.gpt.control.webharvest.IterationContext;
+import com.esri.gpt.control.webharvest.client.waf.DestroyableResource;
+import com.esri.gpt.control.webharvest.common.CommonResult;
+import com.esri.gpt.framework.resource.adapters.LimitedLengthResourcesAdapter;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
@@ -56,8 +59,16 @@ class DCATQuery implements Query {
   @Override
   public Result execute() {
     LOGGER.log(Level.FINER, "Executing query: {0}", this);
+    final DestroyableResource rootFolder = new DCATRootResource(context, info, proxy);
+    Result r = new CommonResult(new LimitedLengthResourcesAdapter(rootFolder,criteria.getMaxRecords())) {
+        @Override
+        public void destroy() {
+          rootFolder.destroy();
+          info.destroy();
+        }
+    };
     LOGGER.log(Level.FINER, "Completed query execution: {0}", this);
-    return null;
+    return r;
   }
 
   @Override

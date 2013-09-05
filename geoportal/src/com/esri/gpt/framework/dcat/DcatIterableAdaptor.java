@@ -45,6 +45,10 @@ public class DcatIterableAdaptor implements Iterable<DcatRecord> {
     }
   }
   
+  protected void onException(DcatParseException ex) {
+    // TODO: override if needed
+  }
+  
   @Override
   public Iterator<DcatRecord> iterator() {
     return new DcatIterator();
@@ -86,6 +90,7 @@ public class DcatIterableAdaptor implements Iterable<DcatRecord> {
         return hasNext;
       } catch (DcatParseException ex) {
         close();
+        onException(ex);
         return false;
       }
     }
