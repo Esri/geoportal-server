@@ -50,7 +50,6 @@ class DCATAdaptor implements Iterable<Publishable> {
   
   private class DCATIterator extends ReadOnlyIterator<Publishable> {
     private Iterator<DcatRecord> iterator = adaptor!=null? adaptor.iterator(): null;
-    private String rootAccessUrl = null;
     private String accessUrl;
 
     @Override
@@ -66,9 +65,6 @@ class DCATAdaptor implements Iterable<Publishable> {
       }
       while(iterator.hasNext()) {
         DcatRecord record = iterator.next();
-        if (rootAccessUrl==null) {
-          rootAccessUrl = record.getAccessURL();
-        }
         String url = readAccessUrl(record);
         if (!url.isEmpty()) {
           accessUrl = url;
