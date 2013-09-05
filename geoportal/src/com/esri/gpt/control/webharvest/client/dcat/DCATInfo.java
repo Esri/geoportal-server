@@ -15,12 +15,13 @@
  */
 package com.esri.gpt.control.webharvest.client.dcat;
 
+import com.esri.gpt.control.webharvest.common.CommonInfo;
 import com.esri.gpt.framework.util.Val;
 
 /**
  * DCAT info.
  */
-class DCATInfo {
+class DCATInfo extends CommonInfo {
 
   private String url;
 

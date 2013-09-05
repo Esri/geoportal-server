@@ -109,7 +109,12 @@ public class DcatParser {
     return list;
   }
 
-  private void parse(final ListenerInternal listener) throws DcatParseException {
+  /**
+   * Parses DCAT using internal listener.
+   * @param listener internal listener
+   * @throws DcatParseException if parsing DCAT fails
+   */
+  void parse(final ListenerInternal listener) throws DcatParseException {
     if (!jsonParser.hasNext()) {
       throw new DcatParseException("No more data available.");
     }
@@ -122,7 +127,12 @@ public class DcatParser {
     parseRecords(listener);
   }
 
-  private void parseRecords(ListenerInternal listener) throws DcatParseException {
+  /**
+   * Parses DCAT records using internal listener.
+   * @param listener internal listener
+   * @throws DcatParseException if parsing DCAT fails
+   */
+  void parseRecords(ListenerInternal listener) throws DcatParseException {
 
     while (jsonParser.hasNext()) {
       JsonParser.Event event = jsonParser.next();
@@ -278,7 +288,7 @@ public class DcatParser {
     void onLimit(DcatRecordList recordsList);
   }
 
-  private static interface ListenerInternal {
+  static interface ListenerInternal {
 
     boolean onRecord(DcatRecord record);
   }

@@ -15,23 +15,39 @@
  */
 package com.esri.gpt.control.webharvest.client.dcat;
 
+import com.esri.gpt.framework.http.HttpClientRequest;
+import com.esri.gpt.framework.http.ResponseInfo;
+import com.esri.gpt.framework.http.StringHandler;
 import com.esri.gpt.framework.resource.query.Criteria;
+import java.io.IOException;
+import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.util.DateParseException;
+import org.apache.commons.httpclient.util.DateUtil;
 
 /**
  * DCAT proxy.
  */
 class DCATProxy {
 
-  /** logger */
+  /**
+   * logger
+   */
   private static final Logger LOGGER = Logger.getLogger(DCATProxy.class.getCanonicalName());
-  /** service info */
+  /**
+   * service info
+   */
   private DCATInfo info;
-  /** criteria */
+  /**
+   * criteria
+   */
   private Criteria criteria;
 
   /**
    * Creates instance of the proxy.
+   *
    * @param info service info
    * @param criteria criteria
    */
@@ -42,5 +58,99 @@ class DCATProxy {
     this.info = info;
     this.criteria = criteria;
   }
-  
+
+  public Content readContent(String sourceUri) throws IOException {
+    LOGGER.log(Level.FINER, "Reading metadata of source URI: \"{0}\" through proxy: {1}", new Object[]{sourceUri, this});
+    HttpClientRequest cr = new HttpClientRequest();
+    cr.setBatchHttpClient(this.info.getBatchHttpClient());
+    cr.setUrl(sourceUri);
+    BreakableStringHandler sh = new BreakableStringHandler(criteria != null ? criteria.getFromDate() : null);
+    cr.setContentHandler(sh);
+    cr.execute();
+    String mdText = sh.getContent();
+    LOGGER.log(Level.FINER, "Received metadata of source URI: \"{0}\" through proxy: {1}", new Object[]{sourceUri, this});
+    LOGGER.finest(mdText);
+    return new Content(sh.getLastModifiedDate(), mdText);
+  }
+
+  /**
+   * Finds last modified date.
+   *
+   * @param headers array of headers
+   * @return last modified date or <code>null</code> if date not found
+   */
+  private static Date findLastModifiedDate(ResponseInfo responseInfo) {
+    Header lastModfiedHeader = responseInfo.getResponseHeader("Last-Modified");
+    if (lastModfiedHeader != null) {
+      try {
+        return DateUtil.parseDate(lastModfiedHeader.getValue());
+      } catch (DateParseException ex) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Content
+   */
+  public static class Content {
+
+    private Date lastModifiedDate;
+    private String text;
+
+    /**
+     * Creates instance of the content
+     *
+     * @param lastModifiedDate last modified date
+     * @param text text read from stream
+     */
+    public Content(Date lastModifiedDate, String text) {
+      this.lastModifiedDate = lastModifiedDate;
+      this.text = text;
+    }
+
+    /**
+     * Gets last modified date
+     *
+     * @return last modified date or <code>null</code> if last modified date not
+     * available
+     */
+    public Date getLastModifedDate() {
+      return lastModifiedDate;
+    }
+
+    /**
+     * Gets text.
+     *
+     * @return text
+     */
+    public String getText() {
+      return text;
+    }
+  }
+
+  private static class BreakableStringHandler extends StringHandler {
+
+    private Date fromDate;
+    private Date lastModifiedDate;
+
+    public BreakableStringHandler(Date fromDate) {
+      this.fromDate = fromDate;
+    }
+
+    public Date getLastModifiedDate() {
+      return lastModifiedDate;
+    }
+
+    @Override
+    public boolean onBeforeReadResponse(HttpClientRequest request) {
+      lastModifiedDate = findLastModifiedDate(request.getResponseInfo());
+      if (fromDate != null && lastModifiedDate != null && lastModifiedDate.before(fromDate)) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
 }
