@@ -11,6 +11,7 @@ var custom = {
 		wait: "One moment please...",
 		searching: "Searching '@{name}' for '@{keywords}'.",
 		showing: "Showing @{total} results for '@{keywords}' from @{name}.",
+		invalid: "Illegal query '@{keywords}', catalogue cannot process request.",
 		
 		sort: {
 			relevance: "Relevance",
@@ -20,6 +21,9 @@ var custom = {
 			area: "Area"
 		}
 	},
+	
+	flipDateSort: false,
+	flipAreaSort: false,
 
 	setup: function() {
 		console.log("Setting up additional federated searches.");
@@ -42,7 +46,11 @@ var custom = {
 			var listItem = dojo.create("li", {"class": "federatedSearchItem"}, federatedSearchList);
 			var listLink = dojo.create("a", {"class": "item", innerHTML: caption}, listItem);
 			dojo.connect(listLink, "onclick", dojo.hitch({rest: rest, caption: caption, keywords: sKeywords},function(){
-				custom._doFederatedSearch(this.rest,this.caption,"",encodeURIComponent(this.keywords),"",1,10);
+				if (searchText.indexOf(":")>=0) {
+					custom._dontDoFederatedSearch(searchText);
+				} else {
+					custom._doFederatedSearch(this.rest,this.caption,"",encodeURIComponent(this.keywords),"",1,10);
+				}
 			}));
 		});
 		dojo.create("div",{"id": "federatedSearchResultContainer", "style": "height:200px;overflow:auto;"}, root);
@@ -50,6 +58,26 @@ var custom = {
 	
 	_getSearchText: function() {
 		return dojo.query("#search-box").attr("value").join(" ");
+	},
+	
+	_dontDoFederatedSearch: function(searchText) {
+		var targetNode = dojo.byId("esri_arcgisonline_sharing_dijit_SearchResultsSimple_0");
+		var targetHeaderNode = dojo.byId("resultsLabel");
+		var targetSortersNode = dojo.byId("esri_arcgisonline_sharing_dijit_Sorter_0");
+		
+		// destroy unwanted original paginator
+		dojo.query("#esri_arcgisonline_sharing_dijit_SearchResultsPaging_0 span").forEach(function(n){
+			dojo.destroy(n);
+		});
+		// destroy federated paginator; it will be recreated if needed
+		dojo.query("#paginator").forEach(function(n){
+			dojo.destroy(n);
+		});
+		
+		// display message
+		targetHeaderNode.innerHTML =  custom.resources.invalid.replace(/@{keywords}/gi,searchText);
+		targetNode.innerHTML = "";            	
+	    targetSortersNode.innerHTML = "";
 	},
 	
 	_doFederatedSearch: function(REST, sName, sRid, sKeywords, sSortOrder, sStart, sMax) {
@@ -71,9 +99,10 @@ var custom = {
 		
 		var sUrl = REST + "?rid=" + sRid + "&start=" + sStart + "&max=" + sMax + "&searchText=" + encodeURIComponent(sKeywords) + "&orderBy=" + sSortOrder + "&f=xjson";
 		
+	    targetSortersNode.innerHTML = "";
+		
 		targetHeaderNode.innerHTML =  custom.resources.searching.replace(/@{name}/gi,sName).replace(/@{keywords}/gi,sKeywords);
 	    targetNode.innerHTML = custom.resources.wait;            	
-	    targetSortersNode.innerHTML = "";
 	    
 		var funLoad = function(data) {
 			var nNumberOfResults = data.totalResults;
@@ -151,27 +180,49 @@ var custom = {
 		
 		var linkRelevance = dojo.create("a",{"innerHTML": custom.resources.sort.relevance, "href": "#", "class": "itemField " + (sSortOrder==""? " selected": "")}, divLinks);
 		dojo.connect(linkRelevance,"onclick",null,dojo.hitch({rest: REST, caption: sName, keywords: sKeywords},function(evt){
+			custom.flipDateSort = false;
+			custom.flipAreaSort = false;
 			custom._doFederatedSearch(this.rest,this.caption,"",encodeURIComponent(this.keywords),"",1,10);
 		}));
 		
 		var linkTitle = dojo.create("a",{"innerHTML": custom.resources.sort.title, "href": "#", "class": "itemField " + (sSortOrder=="title"? " selected": "")}, divLinks);
 		dojo.connect(linkTitle,"onclick",null,dojo.hitch({rest: REST, caption: sName, keywords: sKeywords},function(evt){
+			custom.flipDateSort = false;
+			custom.flipAreaSort = false;
 			custom._doFederatedSearch(this.rest,this.caption,"",encodeURIComponent(this.keywords),"title",1,10);
 		}));
 		
 		var linkContentType = dojo.create("a",{"innerHTML": custom.resources.sort.contentType, "href": "#", "class": "itemField " + (sSortOrder=="format"? " selected": "")}, divLinks);
 		dojo.connect(linkContentType,"onclick",null,dojo.hitch({rest: REST, caption: sName, keywords: sKeywords},function(evt){
+			custom.flipDateSort = false;
+			custom.flipAreaSort = false;
 			custom._doFederatedSearch(this.rest,this.caption,"",encodeURIComponent(this.keywords),"format",1,10);
 		}));
 		
-		var linkDate = dojo.create("a",{"innerHTML": custom.resources.sort.date, "href": "#", "class": "itemField " + (sSortOrder=="dateDescending"? " selected": "")}, divLinks);
-		dojo.connect(linkDate,"onclick",null,dojo.hitch({rest: REST, caption: sName, keywords: sKeywords},function(evt){
-			custom._doFederatedSearch(this.rest,this.caption,"",encodeURIComponent(this.keywords),"dateDescending",1,10);
+		var linkDate = dojo.create("a",{"innerHTML": custom.resources.sort.date, "href": "#", "class": "itemField " + (sSortOrder=="dateDescending" || sSortOrder=="dateAscending"? " selected": "")}, divLinks);
+		if (sSortOrder=="dateAscending") {
+			dojo.create("span",{"class":"dijitInline esriArrows arrowUp"},linkDate);
+		}else if (sSortOrder=="dateDescending") {
+			dojo.create("span",{"class":"dijitInline esriArrows arrowDown"},linkDate);
+		}
+		dojo.connect(linkDate,"onclick",null,dojo.hitch({rest: REST, caption: sName, keywords: sKeywords, sort: sSortOrder},function(evt){
+			var sortOrder = !custom.flipDateSort? "dateDescending": (this.sort=="dateDescending"? "dateAscending": "dateDescending");
+			custom.flipDateSort = true;
+			custom.flipAreaSort = false;
+			custom._doFederatedSearch(this.rest,this.caption,"",encodeURIComponent(this.keywords),sortOrder,1,10);
 		}));
 		
-		var linkArea = dojo.create("a",{"innerHTML": custom.resources.sort.area, "href": "#", "class": "itemField " + (sSortOrder=="areaDescending"? " selected": "")}, divLinks);
-		dojo.connect(linkArea,"onclick",null,dojo.hitch({rest: REST, caption: sName, keywords: sKeywords},function(evt){
-			custom._doFederatedSearch(this.rest,this.caption,"",encodeURIComponent(this.keywords),"areaDescending",1,10);
+		var linkArea = dojo.create("a",{"innerHTML": custom.resources.sort.area, "href": "#", "class": "itemField " + (sSortOrder=="areaDescending" || sSortOrder=="areaAscending"? " selected": "")}, divLinks);
+		if (sSortOrder=="areaAscending") {
+			dojo.create("span",{"class":"dijitInline esriArrows arrowUp"},linkArea);
+		}else if (sSortOrder=="areaDescending") {
+			dojo.create("span",{"class":"dijitInline esriArrows arrowDown"},linkArea);
+		}
+		dojo.connect(linkArea,"onclick",null,dojo.hitch({rest: REST, caption: sName, keywords: sKeywords, sort: sSortOrder},function(evt){
+			var sortOrder = !custom.flipAreaSort? "areaDescending": (this.sort=="areaDescending"? "areaAscending": "areaDescending");
+			custom.flipDateSort = false;
+			custom.flipAreaSort = true;
+			custom._doFederatedSearch(this.rest,this.caption,"",encodeURIComponent(this.keywords),sortOrder,1,10);
 		}));
 	},
 	
