@@ -19,8 +19,11 @@ import com.esri.gpt.catalog.discovery.rest.RestQuery;
 import com.esri.gpt.control.georss.DcatJsonFeedWriter;
 import com.esri.gpt.control.georss.DcatJsonSearchEngine;
 import com.esri.gpt.control.georss.FeedLinkBuilder;
+import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.MessageBroker;
+import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.server.csw.provider.local.CoreQueryables;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -92,7 +95,14 @@ public class DcatCacheUpdateRequest {
     RequestContext context = RequestContext.extract(null);
     MessageBroker msgBroker = new MessageBroker();
     msgBroker.setBundleBaseName(MessageBroker.DEFAULT_BUNDLE_BASE_NAME);
-    FeedLinkBuilder linkBuilder = new FeedLinkBuilder(context, RequestContext.resolveBaseContextPath(null), msgBroker);
+    
+    String baseContextPath = Val.chkStr(RequestContext.resolveBaseContextPath(null));
+    if (baseContextPath.isEmpty()) {
+      StringAttributeMap params = ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getParameters();
+      baseContextPath = Val.chkStr(params.getValue("reverseProxy.baseContextPath"));;
+    }
+    
+    FeedLinkBuilder linkBuilder = new FeedLinkBuilder(context, baseContextPath, msgBroker);
     
     DcatCache cache = DcatCache.getInstance();
     OutputStream cacheStream = null;
