@@ -18,9 +18,11 @@ package com.esri.gpt.control.webharvest.client.dcat;
 import com.esri.gpt.framework.resource.api.SourceUri;
 import com.esri.gpt.framework.resource.common.CommonPublishable;
 import com.esri.gpt.framework.resource.common.UrlUri;
+import com.esri.gpt.framework.resource.common.UuidUri;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
 import java.util.Date;
+import java.util.regex.Pattern;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
 
@@ -28,8 +30,9 @@ import org.apache.commons.httpclient.util.URIUtil;
  * DCAT record.
  */
 class DCATRecord extends CommonPublishable {
+  private static final Pattern pattern = Pattern.compile("/rest/document\\?id=\\{[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}\\}$", Pattern.CASE_INSENSITIVE);
 
-  private UrlUri uri;
+  private SourceUri uri;
   private DCATProxy proxy;
   private DCATProxy.Content content;
   private IOException storedException;
@@ -37,13 +40,27 @@ class DCATRecord extends CommonPublishable {
 
   public DCATRecord(DCATProxy proxy, String url) {
     this.proxy = proxy;
-    this.uri = new UrlUri(url);
+    this.uri = createUri(url);
     this.encodedUrl = encode(url);
   }
 
   @Override
   public SourceUri getSourceUri() {
     return uri;
+  }
+  
+  private SourceUri createUri(String url) {
+    try {
+      String decoded = URIUtil.decode(url, "UTF-8");
+      if (decoded.length()>=38 && pattern.matcher(decoded).find()) {
+        decoded = decoded.substring(decoded.length()-38);
+        return new UuidUri(decoded);
+      } else {
+        return new UrlUri(url);
+      }
+    } catch (IOException ex) {
+      return new UrlUri(url);
+    }
   }
 
   @Override

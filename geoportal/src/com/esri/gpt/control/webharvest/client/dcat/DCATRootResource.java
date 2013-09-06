@@ -23,6 +23,7 @@ import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.util.ReadOnlyIterator;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -70,9 +71,32 @@ class DCATRootResource implements DestroyableResource {
    * Resource iterator.
    */
   private class ResourceIterator extends ReadOnlyIterator<Resource> {
+    private boolean paginated = isPaginated();
     private Iterator<Publishable> iterator;
     private Resource resource;
     private boolean noMore;
+    private long totalCount;
+    private long passCount;
+    
+    private URL getNextUrl() throws MalformedURLException {
+      String sUrl = info.getUrl();
+      if (sUrl.contains("{max}") && sUrl.contains("{start}")) {
+        sUrl = sUrl.replace("{max}", "10").replace("{start}",Long.toString(1L+totalCount));
+      } else if (sUrl.contains("{max}") && sUrl.contains("{start}")) {
+        sUrl = sUrl.replace("{max}", "10").replace("{page}",Long.toString(1L+totalCount/10));
+      }
+      return new URL(sUrl);
+    }
+    
+    private boolean isPaginated() {
+      String sUrl = info.getUrl();
+      if (sUrl.contains("{max}") && sUrl.contains("{start}")) {
+        return true;
+      } else if (sUrl.contains("{max}") && sUrl.contains("{start}")) {
+        return true;
+      }
+      return false;
+    }
 
     @Override
     public boolean hasNext() {
@@ -84,7 +108,8 @@ class DCATRootResource implements DestroyableResource {
       }
       if (adaptor==null) {
         try {
-          URL url = new URL(info.getUrl());
+          passCount = 0;
+          URL url = getNextUrl();
           adaptor = new DCATIteratorAdaptor(proxy, new DcatParserAdaptor(new DcatParser(url.openStream())));
           iterator = adaptor.iterator();
         } catch (IOException ex) {
@@ -93,11 +118,21 @@ class DCATRootResource implements DestroyableResource {
           return false;
         }
       }
+      
       while (iterator.hasNext()) {
         Publishable next = iterator.next();
         resource = next;
         return true;
       }
+
+      if (paginated && passCount>0) {
+        adaptor.close();
+        adaptor = null;
+        return hasNext();
+      } else {
+        noMore = true;
+      }
+      
       return false;
     }
 
@@ -106,6 +141,8 @@ class DCATRootResource implements DestroyableResource {
       if (resource==null) {
         throw new NoSuchElementException();
       }
+      totalCount++;
+      passCount++;
       Resource result = resource;
       resource = null;
       return result;
