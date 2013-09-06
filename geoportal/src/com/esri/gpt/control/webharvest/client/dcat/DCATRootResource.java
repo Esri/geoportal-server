@@ -17,14 +17,13 @@ package com.esri.gpt.control.webharvest.client.dcat;
 
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.waf.DestroyableResource;
-import com.esri.gpt.framework.dcat.DcatIterableAdaptor;
+import com.esri.gpt.framework.dcat.DcatParserAdaptor;
 import com.esri.gpt.framework.dcat.DcatParser;
 import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.util.ReadOnlyIterator;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -35,7 +34,7 @@ class DCATRootResource implements DestroyableResource {
   private IterationContext context;
   private DCATInfo info;
   private DCATProxy proxy;
-  private DCATAdaptor adaptor;
+  private DCATIteratorAdaptor adaptor;
 
   /**
    * Creates instance of the resource.
@@ -67,6 +66,9 @@ class DCATRootResource implements DestroyableResource {
     };
   }
   
+  /**
+   * Resource iterator.
+   */
   private class ResourceIterator extends ReadOnlyIterator<Resource> {
     private Iterator<Publishable> iterator;
     private Resource resource;
@@ -83,7 +85,7 @@ class DCATRootResource implements DestroyableResource {
       if (adaptor==null) {
         try {
           URL url = new URL(info.getUrl());
-          adaptor = new DCATAdaptor(proxy, new DcatIterableAdaptor(new DcatParser(url.openStream())));
+          adaptor = new DCATIteratorAdaptor(proxy, new DcatParserAdaptor(new DcatParser(url.openStream())));
           iterator = adaptor.iterator();
         } catch (IOException ex) {
           context.onIterationException(ex);
@@ -104,7 +106,9 @@ class DCATRootResource implements DestroyableResource {
       if (resource==null) {
         throw new NoSuchElementException();
       }
-      return resource;
+      Resource result = resource;
+      resource = null;
+      return result;
     }
   }
 }

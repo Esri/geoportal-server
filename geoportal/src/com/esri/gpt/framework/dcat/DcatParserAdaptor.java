@@ -22,21 +22,30 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * DCAT iterable adaptor.
+ * DCAT parser adaptor.
+ * <p>
+ * It allows to wrap {@link DcatParser} parser so instead having 'event paradigm'
+ * based mechanism, an 'iterator paradigm' could be used.
+ * </p>
  */
-public class DcatIterableAdaptor implements Iterable<DcatRecord> {
+public class DcatParserAdaptor implements Iterable<DcatRecord> {
   private DcatParser parser;
   
   /**
    * Creates instance of the adaptor.
    * @param parser parser
    */
-  public DcatIterableAdaptor(DcatParser parser) {
+  public DcatParserAdaptor(DcatParser parser) {
     this.parser = parser;
   }
 
   /**
    * Closes adaptor.
+   * <p>
+   * It also closes underlying parser. This method is called either by the user
+   * of the adaptor or it will be called automatically if iteration reaches the
+   * end. Subsequential calls to the method will not case any adverse effects.
+   * </p>
    */
   public void close() {
     if (parser!=null) {
@@ -45,6 +54,10 @@ public class DcatIterableAdaptor implements Iterable<DcatRecord> {
     }
   }
   
+  /**
+   * Called upon parsing exception thrown during iteration.
+   * @param ex 
+   */
   protected void onException(DcatParseException ex) {
     // TODO: override if needed
   }
