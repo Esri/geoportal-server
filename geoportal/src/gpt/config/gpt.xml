@@ -625,6 +625,8 @@
       <protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.Ags2AgpProtocolFactory"
                resourceKey="catalog.harvest.manage.edit.protocol.ags2agp"/>  
 -->
+      <protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.DCATProtocolFactory"
+               resourceKey="catalog.harvest.manage.edit.protocol.dcat"/>  
     </protocols>
 
 </gptConfig>
