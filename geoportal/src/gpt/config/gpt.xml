@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
     See the NOTICE file distributed with
     this work for additional information regarding copyright ownership.
@@ -319,7 +319,7 @@
             - rssProviderUrl:
 				URL to include as the provider within RSS responses
             - reverseProxy.baseContextPath:
-				the URL prefix to use when the application is deployed behind a reverse proxy (e.g. http://somehost/geoportal)
+				the URL prefix to use when the application is deployed behind a reverse proxy (e.g. http://somehost/geoportal); should be the user-facing URL. Best practice is to set this even if not using a reverse proxy
             - RestServlet.printXml.stripStyleSheets:
 				true if references to XSLs and DOCTYPEs would be stripped from
 				document XMLs when requesting the full XML from the rest end-point
