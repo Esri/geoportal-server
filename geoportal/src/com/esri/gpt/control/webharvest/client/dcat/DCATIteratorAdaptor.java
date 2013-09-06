@@ -101,7 +101,7 @@ class DCATIteratorAdaptor implements Iterable<Publishable> {
       if (iterator==null) {
         return false;
       }
-      // accessUrl non empty? next() hasn't been called yet
+      // cached accessUrl non empty? next() hasn't been called yet
       if (accessUrl!=null) {
         return true;
       }
@@ -127,6 +127,7 @@ class DCATIteratorAdaptor implements Iterable<Publishable> {
         throw new NoSuchElementException();
       }
       DCATRecord record = new DCATRecord(proxy,accessUrl);
+      // clear cached access URL
       accessUrl = null;
       return record;
     }

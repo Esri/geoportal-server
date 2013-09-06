@@ -78,6 +78,11 @@ class DCATRootResource implements DestroyableResource {
     private long totalCount;
     private long passCount;
     
+    /**
+     * Gets URL to the next chunk of data.
+     * @return URL to the next chunk of data
+     * @throws MalformedURLException if creating URL fails
+     */
     private URL getNextUrl() throws MalformedURLException {
       String sUrl = info.getUrl();
       if (sUrl.contains("{max}") && sUrl.contains("{start}")) {
@@ -88,6 +93,10 @@ class DCATRootResource implements DestroyableResource {
       return new URL(sUrl);
     }
     
+    /**
+     * Checks if this is harvesting of the paginated DCAT.
+     * @return <code>true</code> if DCAT seems to be paginated
+     */
     private boolean isPaginated() {
       String sUrl = info.getUrl();
       if (sUrl.contains("{max}") && sUrl.contains("{start}")) {
@@ -100,12 +109,15 @@ class DCATRootResource implements DestroyableResource {
 
     @Override
     public boolean hasNext() {
-      if (resource!=null) {
-        return true;
-      }
+      // absolutly no more data
       if (noMore) {
         return false;
       }
+      // still cached? there is next
+      if (resource!=null) {
+        return true;
+      }
+      // no adaptor? create one
       if (adaptor==null) {
         try {
           passCount = 0;
@@ -119,17 +131,22 @@ class DCATRootResource implements DestroyableResource {
         }
       }
       
+      // check for the next available data
       while (iterator.hasNext()) {
         Publishable next = iterator.next();
         resource = next;
         return true;
       }
 
+      // nothing more is available? so how much records have been found in the
+      // last chunk of data? If more than one close current adaptor and try again.
+      // It will force to create next chunk of data.
       if (paginated && passCount>0) {
         adaptor.close();
         adaptor = null;
         return hasNext();
       } else {
+        // last pass yeld zero records; than means no more records available at all
         noMore = true;
       }
       
@@ -144,6 +161,7 @@ class DCATRootResource implements DestroyableResource {
       totalCount++;
       passCount++;
       Resource result = resource;
+      // clear cached record (resource)
       resource = null;
       return result;
     }

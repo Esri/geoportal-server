@@ -41,6 +41,13 @@ class DCATQuery implements Query {
   /** query criteria */
   private Criteria criteria;
 
+  /**
+   * Creates instance of the query.
+   * @param context iteration context
+   * @param info DCAT info
+   * @param proxy DCAT proxy
+   * @param criteria harvest criteria
+   */
   public DCATQuery(IterationContext context, DCATInfo info, DCATProxy proxy, Criteria criteria) {
     if (context == null) {
       throw new IllegalArgumentException("No context provided.");
@@ -59,11 +66,11 @@ class DCATQuery implements Query {
   @Override
   public Result execute() {
     LOGGER.log(Level.FINER, "Executing query: {0}", this);
-    final DestroyableResource rootFolder = new DCATRootResource(context, info, proxy);
-    Result r = new CommonResult(new LimitedLengthResourcesAdapter(rootFolder,criteria.getMaxRecords())) {
+    final DestroyableResource root = new DCATRootResource(context, info, proxy);
+    Result r = new CommonResult(new LimitedLengthResourcesAdapter(root,criteria.getMaxRecords())) {
         @Override
         public void destroy() {
-          rootFolder.destroy();
+          root.destroy();
           info.destroy();
         }
     };

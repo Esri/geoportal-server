@@ -76,28 +76,37 @@ public class DcatParserAdaptor implements Iterable<DcatRecord> {
 
     @Override
     public boolean hasNext() {
+      // no parser? no records
       if (parser==null) {
         return false;
       }
+      // next records still cached? it's still available
       if (nextRecord!=null) {
         return true;
       }
+      // create listener
       ListenerInternal listener = new ListenerInternal() {
         @Override
         public boolean onRecord(DcatRecord record) {
           nextRecord = record;
+          // always stop parser
           return false;
         }
       };
       try {
+        // if this is first time parsing, start from the beginning; it will stop
+        // after first record anyway
         if (firstTime) {
           firstTime = false;
           parser.parse(listener);
         } else {
+          // if this is not a first time, just suspend parsing
           parser.parseRecords(listener);
         }
+        // check if next records present
         boolean hasNext = nextRecord!=null;
         if (!hasNext) {
+          // if not close adaptor
           close();
         }
         return hasNext;
@@ -114,6 +123,7 @@ public class DcatParserAdaptor implements Iterable<DcatRecord> {
         throw new NoSuchElementException();
       }
       DcatRecord next = nextRecord;
+      // clear cached record (nextRecord)
       nextRecord = null;
       return next;
     }

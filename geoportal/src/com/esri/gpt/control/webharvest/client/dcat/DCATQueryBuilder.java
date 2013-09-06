@@ -44,7 +44,7 @@ public class DCATQueryBuilder implements QueryBuilder {
    * Creates instance of the builder.
    * @param context iteration context
    * @param protocol protocol
-   * @param url url
+   * @param url URL
    */
   public DCATQueryBuilder(IterationContext context, HarvestProtocolDCAT protocol, String url) {
     if (context == null) {

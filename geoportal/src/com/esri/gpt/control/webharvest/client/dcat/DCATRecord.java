@@ -38,6 +38,11 @@ class DCATRecord extends CommonPublishable {
   private IOException storedException;
   private String encodedUrl;
 
+  /**
+   * Creates instance of the record.
+   * @param proxy proxy
+   * @param url record URL
+   */
   public DCATRecord(DCATProxy proxy, String url) {
     this.proxy = proxy;
     this.uri = createUri(url);
@@ -49,9 +54,16 @@ class DCATRecord extends CommonPublishable {
     return uri;
   }
   
+  /**
+   * Creates URI.
+   * @param url URL of the record
+   * @return source URI
+   */
   private SourceUri createUri(String url) {
     try {
       String decoded = URIUtil.decode(url, "UTF-8");
+      // consider Geoportal Server URI; if URL matches pattern, create UUID-based
+      // URI.
       if (decoded.length()>=38 && pattern.matcher(decoded).find()) {
         decoded = decoded.substring(decoded.length()-38);
         return new UuidUri(decoded);
@@ -94,6 +106,11 @@ class DCATRecord extends CommonPublishable {
     return content != null ? content.getLastModifedDate() : null;
   }
 
+  /**
+   * Encodes URL.
+   * @param url URL to encode
+   * @return encoded URL
+   */
   private String encode(String url) {
     url = Val.chkStr(url);
     try {

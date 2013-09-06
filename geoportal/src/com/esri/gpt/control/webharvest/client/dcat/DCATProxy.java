@@ -59,16 +59,22 @@ class DCATProxy {
     this.criteria = criteria;
   }
 
-  public Content readContent(String sourceUri) throws IOException {
-    LOGGER.log(Level.FINER, "Reading metadata of source URI: \"{0}\" through proxy: {1}", new Object[]{sourceUri, this});
+  /**
+   * Reads content.
+   * @param url content URL
+   * @return content
+   * @throws IOException if reading content fails
+   */
+  public Content readContent(String url) throws IOException {
+    LOGGER.log(Level.FINER, "Reading metadata of source URI: \"{0}\" through proxy: {1}", new Object[]{url, this});
     HttpClientRequest cr = new HttpClientRequest();
     cr.setBatchHttpClient(this.info.getBatchHttpClient());
-    cr.setUrl(sourceUri);
+    cr.setUrl(url);
     BreakableStringHandler sh = new BreakableStringHandler(criteria != null ? criteria.getFromDate() : null);
     cr.setContentHandler(sh);
     cr.execute();
     String mdText = sh.getContent();
-    LOGGER.log(Level.FINER, "Received metadata of source URI: \"{0}\" through proxy: {1}", new Object[]{sourceUri, this});
+    LOGGER.log(Level.FINER, "Received metadata of source URI: \"{0}\" through proxy: {1}", new Object[]{url, this});
     LOGGER.finest(mdText);
     return new Content(sh.getLastModifiedDate(), mdText);
   }
@@ -130,15 +136,26 @@ class DCATProxy {
     }
   }
 
+  /**
+   * Breakable string handler.
+   */
   private static class BreakableStringHandler extends StringHandler {
 
     private Date fromDate;
     private Date lastModifiedDate;
 
+    /**
+     * Creates instance of the handler.
+     * @param fromDate date content older than will be considered
+     */
     public BreakableStringHandler(Date fromDate) {
       this.fromDate = fromDate;
     }
 
+    /**
+     * Gets last modified date.
+     * @return last modified date
+     */
     public Date getLastModifiedDate() {
       return lastModifiedDate;
     }
