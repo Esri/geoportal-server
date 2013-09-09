@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2013 Esri.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.esri.gpt.framework.dcat;
 
@@ -19,6 +30,8 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.spi.JsonProvider;
 import static javax.json.stream.JsonParser.Event.END_OBJECT;
 import static javax.json.stream.JsonParser.Event.KEY_NAME;
@@ -27,6 +40,7 @@ import static javax.json.stream.JsonParser.Event.KEY_NAME;
  * DCAT parser.
  */
 public class DcatParser {
+  private static final Logger LOGGER = Logger.getLogger(DcatParser.class.getCanonicalName());
 
   private JsonParser jsonParser;
 
@@ -65,6 +79,7 @@ public class DcatParser {
     ListenerInternal localListener = new ListenerInternal() {
       @Override
       public boolean onRecord(DcatRecord record) {
+        LOGGER.log(Level.FINEST, record!=null? record.toString(): "<empty record>");
         listener.onRecord(record);
         return true;
       }

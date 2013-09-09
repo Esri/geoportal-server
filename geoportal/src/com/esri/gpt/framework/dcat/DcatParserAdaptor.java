@@ -20,6 +20,8 @@ import com.esri.gpt.framework.dcat.dcat.DcatRecord;
 import com.esri.gpt.framework.util.ReadOnlyIterator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * DCAT parser adaptor.
@@ -29,6 +31,7 @@ import java.util.NoSuchElementException;
  * </p>
  */
 public class DcatParserAdaptor implements Iterable<DcatRecord> {
+  private static final Logger LOGGER = Logger.getLogger(DcatParserAdaptor.class.getCanonicalName());
   private DcatParser parser;
   
   /**
@@ -88,6 +91,7 @@ public class DcatParserAdaptor implements Iterable<DcatRecord> {
       ListenerInternal listener = new ListenerInternal() {
         @Override
         public boolean onRecord(DcatRecord record) {
+          LOGGER.log(Level.FINEST, record!=null? record.toString(): "<empty record>");
           nextRecord = record;
           // always stop parser
           return false;
