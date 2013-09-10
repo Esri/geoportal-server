@@ -25,19 +25,11 @@ import com.esri.gpt.framework.util.Val;
 
 /**
  * Harvest protocol DCAT.
- * <p>
- * Format property is a value of the 'format' attribute within 'Distribution'
- * array in the DCAT JSON response.
- * </p>
  */
 public class HarvestProtocolDCAT extends AbstractHTTPHarvestProtocol {
   private static final String FORMAT_PATTERN_KEY = "webharvest.dcat.formatPattern";
   public static final String FORMAT_PATTERN_DEFAULT_VALUE;
   private String  format = FORMAT_PATTERN_DEFAULT_VALUE;
-  
-  /*
-  private Pattern formatPattern;
-  */
   
   static {
     ApplicationContext appCtx = ApplicationContext.getInstance();
@@ -83,6 +75,10 @@ public class HarvestProtocolDCAT extends AbstractHTTPHarvestProtocol {
   
   /**
    * Gets format.
+   * <p>
+   * Format property is a value of the 'format' attribute within 'Distribution'
+   * array in the DCAT JSON response.
+   * </p>
    * @return format
    */
   public String getFormat() {
@@ -91,6 +87,10 @@ public class HarvestProtocolDCAT extends AbstractHTTPHarvestProtocol {
   
   /**
    * Set format.
+   * <p>
+   * Format property is a value of the 'format' attribute within 'Distribution'
+   * array in the DCAT JSON response.
+   * </p>
    * @param format format
    */
   public void setFormat(String format) {

@@ -28,10 +28,6 @@ import java.util.regex.Pattern;
 
 /**
  * DCAT adaptor.
- * <p>
- * Format property is a value of the 'format' attribute within 'Distribution'
- * array in the DCAT JSON response.
- * </p>
  */
 class DCATIteratorAdaptor implements Iterable<Publishable> {
   private DCATProxy proxy;
@@ -41,6 +37,10 @@ class DCATIteratorAdaptor implements Iterable<Publishable> {
 
   /**
    * Creates instance of the adaptor.
+   * <p>
+   * Format property is a value of the 'format' attribute within 'Distribution'
+   * array in the DCAT JSON response.
+   * </p>
    * @param format format;
    * @param proxy DCAT proxy
    * @param adaptor parser adaptor

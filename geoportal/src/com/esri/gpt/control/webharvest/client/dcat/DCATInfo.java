@@ -20,10 +20,6 @@ import com.esri.gpt.framework.util.Val;
 
 /**
  * DCAT info.
- * <p>
- * Format property is a value of the 'format' attribute within 'Distribution'
- * array in the DCAT JSON response.
- * </p>
  */
 class DCATInfo extends CommonInfo {
 
@@ -32,6 +28,10 @@ class DCATInfo extends CommonInfo {
 
   /**
    * Creates instance of the info.
+   * <p>
+   * Format property is a value of the 'format' attribute within 'Distribution'
+   * array in the DCAT JSON response.
+   * </p>
    * @param url service URL
    * @param format format
    */
