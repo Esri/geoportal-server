@@ -51,7 +51,7 @@ public class DCATQueryBuilder implements QueryBuilder {
       throw new IllegalArgumentException("No context provided.");
     }
     this.context = context;
-    this.info = new DCATInfo(url);
+    this.info = new DCATInfo(url,protocol.getFormat());
   }
 
   @Override

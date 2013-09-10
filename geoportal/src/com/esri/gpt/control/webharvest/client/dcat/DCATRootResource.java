@@ -122,7 +122,7 @@ class DCATRootResource implements DestroyableResource {
         try {
           passCount = 0;
           URL url = getNextUrl();
-          adaptor = new DCATIteratorAdaptor(proxy, new DcatParserAdaptor(new DcatParser(url.openStream())));
+          adaptor = new DCATIteratorAdaptor(info.getFormat(), proxy, new DcatParserAdaptor(new DcatParser(url.openStream())));
           iterator = adaptor.iterator();
         } catch (IOException ex) {
           context.onIterationException(ex);

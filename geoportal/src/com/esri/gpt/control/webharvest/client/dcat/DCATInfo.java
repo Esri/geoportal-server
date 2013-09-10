@@ -20,17 +20,24 @@ import com.esri.gpt.framework.util.Val;
 
 /**
  * DCAT info.
+ * <p>
+ * Format property is a value of the 'format' attribute within 'Distribution'
+ * array in the DCAT JSON response.
+ * </p>
  */
 class DCATInfo extends CommonInfo {
 
   private String url;
+  private String format;
 
   /**
    * Creates instance of the info.
    * @param url service URL
+   * @param format format
    */
-  public DCATInfo(String url) {
+  public DCATInfo(String url, String format) {
     this.url = Val.chkStr(url);
+    this.format = Val.chkStr(format);
   }
 
   /**
@@ -40,9 +47,17 @@ class DCATInfo extends CommonInfo {
   public String getUrl() {
     return url;
   }
+  
+  /**
+   * Gets format.
+   * @return format
+   */
+  public String getFormat() {
+    return format;
+  }
 
   @Override
   public String toString() {
-    return "{type: dcat, url: \"" + getUrl() + "\"}";
+    return "{type: dcat, url: \"" + getUrl() + "\", format: \"" +getFormat()+ "\"}";
   }
 }

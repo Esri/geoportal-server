@@ -17,6 +17,8 @@ package com.esri.gpt.control.webharvest.validator;
 
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolDCAT;
 import com.esri.gpt.framework.http.CredentialProvider;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * DCAT validator.
@@ -42,6 +44,18 @@ class DCATValidator extends GenericValidator {
     if (url.isEmpty()) {
       mb.addErrorMessage("catalog.harvest.manage.edit.err.hostUrlReq");
       _valid = false;
+    }
+    
+    if (protocol.getFormat().isEmpty()) {
+      mb.addErrorMessage("catalog.harvest.manage.edit.err.emptyFormat");
+      _valid = false;
+    } else {
+      try {
+        Pattern.compile(protocol.getFormat(), Pattern.CASE_INSENSITIVE);
+      } catch (PatternSyntaxException ex) {
+        mb.addErrorMessage("catalog.harvest.manage.edit.err.invalidFormat");
+        _valid = false;
+      }
     }
 
     return _valid;

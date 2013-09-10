@@ -17,12 +17,34 @@ package com.esri.gpt.catalog.harvest.protocols;
 
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.dcat.DCATQueryBuilder;
+import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.ApplicationConfiguration;
+import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
+import com.esri.gpt.framework.util.Val;
 
 /**
  * Harvest protocol DCAT.
+ * <p>
+ * Format property is a value of the 'format' attribute within 'Distribution'
+ * array in the DCAT JSON response.
+ * </p>
  */
 public class HarvestProtocolDCAT extends AbstractHTTPHarvestProtocol {
+  private static final String FORMAT_PATTERN_KEY = "webharvest.dcat.formatPattern";
+  public static final String FORMAT_PATTERN_DEFAULT_VALUE;
+  private String  format = FORMAT_PATTERN_DEFAULT_VALUE;
+  
+  /*
+  private Pattern formatPattern;
+  */
+  
+  static {
+    ApplicationContext appCtx = ApplicationContext.getInstance();
+    ApplicationConfiguration appCfg = appCtx.getConfiguration();
+    StringAttributeMap parameters = appCfg.getCatalogConfiguration().getParameters();
+    FORMAT_PATTERN_DEFAULT_VALUE = Val.chkStr(parameters.getValue(FORMAT_PATTERN_KEY),"xml");
+  }
 
   @Override
   public ProtocolType getType() {
@@ -37,5 +59,41 @@ public class HarvestProtocolDCAT extends AbstractHTTPHarvestProtocol {
   @Override
   public QueryBuilder newQueryBuilder(IterationContext context, String url) {
     return new DCATQueryBuilder(context, this, url);
+  }
+    
+  /**
+   * Gets all the attributes.
+   * @return attributes as attribute map
+   */
+  @Override
+  public StringAttributeMap getAttributeMap() {
+    StringAttributeMap properties = new StringAttributeMap();
+    properties.set("dcatFormat", Val.chkStr(getFormat(),FORMAT_PATTERN_DEFAULT_VALUE));
+    return properties;
+  }
+
+	/**
+   * Sets all the attributes.
+   * @param attributeMap attributes as attribute map
+   */
+  @Override
+  public void setAttributeMap(StringAttributeMap attributeMap) {
+  	setFormat(Val.chkStr(chckAttr(attributeMap.get("dcatFormat")),FORMAT_PATTERN_DEFAULT_VALUE));
+  }
+  
+  /**
+   * Gets format.
+   * @return format
+   */
+  public String getFormat() {
+    return format;
+  }
+  
+  /**
+   * Set format.
+   * @param format format
+   */
+  public void setFormat(String format) {
+    this.format = Val.chkStr(format);
   }
 }

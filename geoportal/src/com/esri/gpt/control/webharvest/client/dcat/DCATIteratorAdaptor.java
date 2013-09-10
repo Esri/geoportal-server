@@ -15,50 +15,44 @@
  */
 package com.esri.gpt.control.webharvest.client.dcat;
 
-import com.esri.gpt.framework.collection.StringAttributeMap;
-import com.esri.gpt.framework.context.ApplicationConfiguration;
-import com.esri.gpt.framework.context.ApplicationContext;
+import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolDCAT;
 import com.esri.gpt.framework.dcat.DcatParserAdaptor;
 import com.esri.gpt.framework.dcat.dcat.DcatDistribution;
 import com.esri.gpt.framework.dcat.dcat.DcatDistributionList;
 import com.esri.gpt.framework.dcat.dcat.DcatRecord;
 import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.util.ReadOnlyIterator;
-import com.esri.gpt.framework.util.Val;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
 
 /**
  * DCAT adaptor.
+ * <p>
+ * Format property is a value of the 'format' attribute within 'Distribution'
+ * array in the DCAT JSON response.
+ * </p>
  */
 class DCATIteratorAdaptor implements Iterable<Publishable> {
-  private static final String FORMAT_PATTERN_DEFAULT_VALUE = "xml";
-  private static final String FORMAT_PATTERN_KEY = "webharvest.dcat.formatPattern";
-  private static Pattern formatPattern;
   private DCATProxy proxy;
   private DcatParserAdaptor adaptor;
+  private Pattern formatPattern;
   
-  static {
-    ApplicationContext appCtx = ApplicationContext.getInstance();
-    ApplicationConfiguration appCfg = appCtx.getConfiguration();
-    StringAttributeMap parameters = appCfg.getCatalogConfiguration().getParameters();
-    String sFormatPattern = Val.chkStr(parameters.getValue(FORMAT_PATTERN_KEY), FORMAT_PATTERN_DEFAULT_VALUE);
-    try {
-      formatPattern = Pattern.compile(sFormatPattern, Pattern.CASE_INSENSITIVE);
-    } catch (Exception ex) {
-      formatPattern = Pattern.compile(FORMAT_PATTERN_DEFAULT_VALUE, Pattern.CASE_INSENSITIVE);
-    }
-  }
 
   /**
    * Creates instance of the adaptor.
+   * @param format format;
    * @param proxy DCAT proxy
    * @param adaptor parser adaptor
    */
-  public DCATIteratorAdaptor(DCATProxy proxy, DcatParserAdaptor adaptor) {
+  public DCATIteratorAdaptor(String format, DCATProxy proxy, DcatParserAdaptor adaptor) {
     this.proxy = proxy;
     this.adaptor = adaptor;
+    try {
+      formatPattern = Pattern.compile(format, Pattern.CASE_INSENSITIVE);
+    } catch (Exception ex) {
+      formatPattern = Pattern.compile(HarvestProtocolDCAT.FORMAT_PATTERN_DEFAULT_VALUE, Pattern.CASE_INSENSITIVE);
+    }
   }
 
   /**

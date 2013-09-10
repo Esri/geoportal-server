@@ -1263,6 +1263,8 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 </h:panelGroup>
 
 <%-- DCAT Portal specific properties -----------------------------------------%>
+<h:outputLabel styleClass="requiredField dcat" for="dcat-format" value="#{gptMsg['catalog.harvest.manage.edit.dcat.format']}"/>
+<h:inputText styleClass="dcat" size="30" value="#{HarvestController.editor.attrs['dcatFormat']}" id="dcat-format"/>
   
 <%-- End of the panel --%>
 </h:panelGrid>
