@@ -29,4 +29,9 @@ public interface DcatDistribution {
    * @return data format
    */
   String getFormat();
+  /**
+   * Gets media type.
+   * @return media type
+   */
+  String getMediaType();
 }

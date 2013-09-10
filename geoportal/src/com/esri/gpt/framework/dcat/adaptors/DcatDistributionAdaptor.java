@@ -37,6 +37,11 @@ class DcatDistributionAdaptor extends DcatAdaptor implements DcatDistribution {
   public String getFormat() {
     return getString("format");
   }
+
+  @Override
+  public String getMediaType() {
+    return getString("mediaType");
+  }
   
   @Override
   public String toString() {

@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.framework.dcat.adaptors;
 
+import com.esri.gpt.framework.dcat.raw.RawDcatAttribute;
 import com.esri.gpt.framework.dcat.raw.RawDcatAttributes;
 
 /**
@@ -23,11 +24,21 @@ import com.esri.gpt.framework.dcat.raw.RawDcatAttributes;
 public abstract class DcatAdaptor {
   protected RawDcatAttributes attrs;
 
+  /**
+   * Creates instance of the adaptor.
+   * @param attrs attributes
+   */
   public DcatAdaptor(RawDcatAttributes attrs) {
     this.attrs = attrs;
   }
   
+  /**
+   * Gets attribute.
+   * @param name attribute name
+   * @return attribute value
+   */
   protected String getString(String name) {
-    return attrs.get(name).getString();
+    RawDcatAttribute attr = attrs.get(name);
+    return attr!=null? attr.getString(): "";
   }
 }

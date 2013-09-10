@@ -22,6 +22,7 @@ import com.esri.gpt.framework.dcat.dcat.DcatDistributionList;
 import com.esri.gpt.framework.dcat.dcat.DcatRecord;
 import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.util.ReadOnlyIterator;
+import com.esri.gpt.framework.util.Val;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
@@ -134,7 +135,7 @@ class DCATIteratorAdaptor implements Iterable<Publishable> {
     private String selectAccessUrl(DcatRecord r) {
       DcatDistributionList distList = r.getDistribution();
       for (DcatDistribution d : distList) {
-        if (formatPattern.matcher(d.getFormat()).matches()) {
+        if (!d.getAccessURL().isEmpty() && formatPattern.matcher(Val.chkStr(d.getMediaType(), d.getFormat())).matches()) {
           return d.getAccessURL();
         }
       }
