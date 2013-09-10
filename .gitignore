@@ -159,3 +159,5 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+/components/gc/www/META-INF/context.xml
+/geoportal/www/META-INF/context.xml
