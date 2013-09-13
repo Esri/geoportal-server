@@ -1,4 +1,4 @@
-# Geoportal
+# geoportal-server
 
 ## Welcome 
 
@@ -19,8 +19,11 @@ Want to learn more? Try our [sandbox site](http://gptogc.esri.com)!
 
 Want to get started right away? Go to the Wiki page and download the binary-distribution or zip/tar ball to get started. 
 
+## Requirements
 
-## Documentation
+Please refer to [here](https://github.com/Esri/geoportal-server/wiki/Preinstallation-1.2.4) for system requirements.
+
+## Resources
 
 Geoportal Server documentation is broken down into three buckets: a wiki, Javadoc for server components, and JavaScript documentation for the Geoportal XML Editor.
 
@@ -40,11 +43,11 @@ Find a bug or want to request a new feature?  Please let us know by submitting a
 
 ## Contributing
 
-Anyone and everyone is welcome to contribute.
+Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
 
 ## Licensing
 
-Copyright 2010-2013 Esri
+Copyright 2013 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -57,6 +60,8 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+A copy of the license is available in the repository's [license.txt]( https://raw.github.com/Esri/geoportal-server/master/LICENSE.txt) file.
 
 [](Esri Tags: Esri Geoportal Server JavaScript Flex Silverlight C-Sharp Java)
 [](Esri Language: Java)
