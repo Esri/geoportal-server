@@ -19,6 +19,10 @@ Want to learn more? Try our [sandbox site](http://gptogc.esri.com)!
 
 Want to get started right away? Go to the Wiki page and download the binary-distribution or zip/tar ball to get started. 
 
+## Features
+
+Please click [here](http://www.esri.com/software/arcgis/geoportal/key-features) for key features of Geoportal Server.
+
 ## Requirements
 
 Please refer to [here](https://github.com/Esri/geoportal-server/wiki/Preinstallation-1.2.4) for system requirements.
