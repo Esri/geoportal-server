@@ -57,6 +57,7 @@ public class FieldConstants {
 	public static final String Val_Src_Site_Protocol_Waf = "src.site.protocol.waf";
 	public static final String Val_Sync_Type_Gptdb2Solr = "sync.type.gptdb2solr";
     
-    public static final String Sys_Src_Collections = "sys.src.collections_ss";
+    public static final String Sys_Src_Collections = "sys.src.collections_txt";
+    public static final String Sys_Src_Collections_ss = "sys.src.collections_ss";
 
 }

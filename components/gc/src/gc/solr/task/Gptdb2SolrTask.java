@@ -308,6 +308,7 @@ public class Gptdb2SolrTask extends Task implements SqlRowHandler {
         if (collections!=null) {
           for (String shortName: collections.getShortNames()) {
             builder.addField(doc,FieldConstants.Sys_Src_Collections,shortName);
+            builder.addField(doc,FieldConstants.Sys_Src_Collections_ss,shortName);
           }
         }
 	  //System.err.println(doc);
