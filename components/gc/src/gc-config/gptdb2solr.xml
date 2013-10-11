@@ -21,6 +21,7 @@
   <!--
   <property name="gptdb2solr.instance.id" value="gptinstance.mygeoportal">
     <property name="gpt.instance.url" value="http://mygeoportal:8080/geoportal"/>
+    <property name="gpt.include.collections" value="false"/>
     <property name="solr.collection.url" value="http://test.esri.com:8983/solr/collection1/"/>
     <property name="sql.database">
       <property name="driver" value="jdbcDriverClassnameHere"/>
