@@ -96,7 +96,8 @@ define({
       "contact.organizations_ss": "Organizations (contact)",
       "contact.people_ss": "People (contact)",
       "sys.src.collections_txt": "Collections",
-      "sys.src.collections_ss": "Collections (values)"
+      "sys.src.collections_ss": "Collections (values)",
+      "sys.src.site.name_s": "Site"
     }
     
   }

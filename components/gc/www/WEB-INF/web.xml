@@ -5,8 +5,7 @@
     <listener-class>gc.solr.task.Gptdb2SolrWebListener</listener-class>
   </listener>
   <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>g.html</welcome-file>
   </welcome-file-list>
   <filter>
 	    <filter-name>SolrHttpRequestFilter</filter-name>
