@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
     See the NOTICE file distributed with
     this work for additional information regarding copyright ownership.
@@ -14,7 +14,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<gptConfig version="1.2.4">
+<gptConfig version="1.2.5">
 
     <databaseReference name="gpt" jndiName="jdbc/gpt"/>
     
@@ -319,7 +319,7 @@
             - rssProviderUrl:
 				URL to include as the provider within RSS responses
             - reverseProxy.baseContextPath:
-				the URL prefix to use when the application is deployed behind a reverse proxy (e.g. http://somehost/geoportal)
+				the URL prefix to use when the application is deployed behind a reverse proxy (e.g. http://somehost/geoportal); should be the user-facing URL. Best practice is to set this even if not using a reverse proxy
             - RestServlet.printXml.stripStyleSheets:
 				true if references to XSLs and DOCTYPEs would be stripped from
 				document XMLs when requesting the full XML from the rest end-point
@@ -396,8 +396,10 @@
         <parameter key="catalog.cart.maxItems" value="100"/>
         <parameter key="catalog.cart.processor" value="com.esri.gpt.control.cart.ZipXmls"/>
 
-				<!-- Mapping file to map dcat fields to lucene index fields -->
-				<parameter key="dcat.mappings" value="gpt/metadata/dcat-mappings.xml"/>
+		<!-- Mapping file to map dcat fields to lucene index fields -->
+		<parameter key="dcat.mappings" value="gpt/metadata/dcat-mappings.xml"/>
+        <!-- DCAT cache directory -->
+        <parameter key="dcat.cache.path" value=""/>
     </catalog>
     
     <!-- Download data configuration.
@@ -583,6 +585,9 @@
        
         <!-- Index optimization --> 
         <!-- <thread class="com.esri.gpt.catalog.lucene.LuceneIndexOptimizer" at="03:30"/>-->
+        
+        <!-- DCAT cache generation -->
+        <thread class="com.esri.gpt.control.georss.dcatcache.DcatCacheTask" period='1[DAY]' delay="15[SECOND]"/>
     </scheduler>
     
     <!-- Harvesting protocols configuration.
@@ -610,6 +615,15 @@
 <!--      
       <protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.Agp2AgpProtocolFactory"
                resourceKey="catalog.harvest.manage.edit.protocol.agp2agp"/>  
+-->
+<!--      
+      <protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.Agp2AgpRelaxedProtocolFactory"
+               resourceKey="catalog.harvest.manage.edit.protocol.agp2agp"/>  
+-->
+
+<!--      
+      <protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.Ags2AgpProtocolFactory"
+               resourceKey="catalog.harvest.manage.edit.protocol.ags2agp"/>  
 -->
     </protocols>
 

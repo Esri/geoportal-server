@@ -108,7 +108,7 @@ public class MetadataAcl {
   /**
    * 
    * @param xml
-   * @return
+   * @return document ACL
    * @throws ParserConfigurationException
    * @throws SAXException
    * @throws IOException
@@ -191,7 +191,7 @@ public class MetadataAcl {
   /**
    * 
    * @param group
-   * @return
+   * @return ACL string
    */
   private String makeAclString(Group group) {
     return "g." + group.getDistinguishedName();

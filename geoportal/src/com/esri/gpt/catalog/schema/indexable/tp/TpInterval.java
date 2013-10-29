@@ -83,7 +83,7 @@ public class TpInterval {
   }
   /**
    * Sets the lower boundary.
-   * @param lowerMillis the lower boundary
+   * @param lower the lower boundary
    */
   public void setLower(Long lower) {
     this.lower = lower;

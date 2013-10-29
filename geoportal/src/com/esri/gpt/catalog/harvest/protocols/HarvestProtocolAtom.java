@@ -64,7 +64,7 @@ public class HarvestProtocolAtom extends AbstractHTTPHarvestProtocol {
 
   /**
    * Sets type of atom
-   * @param type of atom
+   * @param atomType type of atom
    */
 	public void setAtomType(String atomType) {
 		this._atomType = atomType;

@@ -14,6 +14,8 @@
  */
 package com.esri.gpt.agp.client;
 
+import com.esri.gpt.framework.util.Val;
+
 /**
  * An ArcGIS Portal connection.
  */
@@ -24,6 +26,7 @@ public class AgpConnection {
   private AgpContext       context;
   private String           host;
   private int              port = 0;
+  private String           webContext;
   private AgpToken         token;
   private AgpTokenCriteria tokenCriteria;
      
@@ -77,6 +80,34 @@ public class AgpConnection {
    */
   public void setHost(String host) {
     this.host = host;
+  }
+
+  /**
+   * Gets a web context.
+   * </p>
+   * Web context (typically: "/arcgis") provides compatibility with 10.2 version
+   * of Portal of ArcGIS.
+   * @return web context or <code>null</code> if no web context
+   */
+  public String getWebContext() {
+    return webContext;
+  }
+
+  /**
+   * Sets web context.
+   * </p>
+   * If web context is an empty string it will be replaced with <code>null</code>.</br>
+   * If web context is a non empty string it will be assured that it has "/" in front of it.
+   * @param webContext web context
+   */
+  public void setWebContext(String webContext) {
+    webContext = Val.chkStr(webContext);
+    if (webContext.isEmpty()) {
+      webContext = null;
+    } else {
+      webContext = webContext.replaceAll("^[/]+", "/");
+    }
+    this.webContext = webContext;
   }
   
   /**
@@ -177,6 +208,9 @@ public class AgpConnection {
     String sUrl = protocol+"://"+this.getHost();
     if (this.getPort() > 0) {
       sUrl += ":"+this.getPort();
+    }
+    if (getWebContext()!=null) {
+      sUrl += getWebContext();
     }
     return sUrl;
   }

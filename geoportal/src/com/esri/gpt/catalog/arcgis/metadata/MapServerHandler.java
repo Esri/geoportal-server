@@ -20,12 +20,19 @@ import com.esri.arcgisws.MapServerBindingStub;
 import com.esri.arcgisws.MapServerInfo;
 import com.esri.arcgisws.PropertySet;
 import com.esri.arcgisws.PropertySetProperty;
+import com.esri.arcgisws.ServiceDescription;
+import com.esri.arcgisws.runtime.exception.ArcGISWebServiceException;
+import com.esri.gpt.framework.resource.api.Resource;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
  * Handles the collection of metadata for an ArcGIS map service (MapServer).
  */
 public class MapServerHandler extends ServiceHandler {
+  private static final Logger LOGGER = Logger.getLogger(MapServerHandler.class.getCanonicalName());
   
   /** constructors ============================================================ */
 
@@ -139,6 +146,63 @@ public class MapServerHandler extends ServiceHandler {
       //}
     }  
     
+  }
+
+  /*
+  @Override
+  public void appendRecord(Collection<Resource> records, ServiceHandlerFactory factory, ServiceInfo serviceInfo, boolean isNative) throws Exception {
+    try {
+      MapServerBindingStub stub =
+        getCredentials()==null || getCredentials().getUsername().length()==0 || getCredentials().getPassword().length()==0?
+        new MapServerBindingStub(serviceInfo.getSoapUrl()):
+        new MapServerBindingStub(serviceInfo.getSoapUrl(), getCredentials().getUsername(), getCredentials().getPassword());
+      MapServerInfo mapInfo = stub.getServerInfo(stub.getDefaultMapName());
+      serviceInfo.setEnvelope(mapInfo.getFullExtent());
+      
+      MapLayerInfo[] mapLayerInfos = mapInfo.getMapLayerInfos();
+      for (MapLayerInfo li: mapLayerInfos) {
+        if (!li.isIsFeatureLayer()) continue;
+        String name = Integer.toString(li.getLayerID());
+        String title = li.getName();
+        serviceInfo.getLayersInfo().add(new ServiceInfo.LayerInfo(name, title));
+      }
+      
+      String copyrightText = mapInfo.getCopyrightText();
+      serviceInfo.setCopyright(copyrightText);
+      
+    } catch (ArcGISWebServiceException ex) {
+      LOGGER.log(Level.FINE, "Error getting MapServerInfo.", ex);
+    }
+    super.appendRecord(records, factory, serviceInfo, isNative);
+  }
+  */
+
+  @Override
+  public ServiceInfo createServiceInfo(ServiceInfo parentInfo, ServiceDescription desc, String currentRestUrl, String currentSoapUrl) {
+    ServiceInfo serviceInfo = super.createServiceInfo(parentInfo, desc, currentRestUrl, currentSoapUrl);
+    try {
+      MapServerBindingStub stub =
+        getCredentials()==null || getCredentials().getUsername().length()==0 || getCredentials().getPassword().length()==0?
+        new MapServerBindingStub(serviceInfo.getSoapUrl()):
+        new MapServerBindingStub(serviceInfo.getSoapUrl(), getCredentials().getUsername(), getCredentials().getPassword());
+      MapServerInfo mapInfo = stub.getServerInfo(stub.getDefaultMapName());
+      serviceInfo.setEnvelope(mapInfo.getFullExtent());
+      
+      MapLayerInfo[] mapLayerInfos = mapInfo.getMapLayerInfos();
+      for (MapLayerInfo li: mapLayerInfos) {
+        if (!li.isIsFeatureLayer()) continue;
+        String name = Integer.toString(li.getLayerID());
+        String title = li.getName();
+        serviceInfo.getLayersInfo().add(new ServiceInfo.LayerInfo(name, title));
+      }
+      
+      String copyrightText = mapInfo.getCopyrightText();
+      serviceInfo.setCopyright(copyrightText);
+      
+    } catch (ArcGISWebServiceException ex) {
+      LOGGER.log(Level.FINE, "Error getting MapServerInfo.", ex);
+    }
+    return serviceInfo;
   }
   
 }

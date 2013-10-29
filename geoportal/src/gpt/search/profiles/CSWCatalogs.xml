@@ -16,18 +16,9 @@
 -->
 <CSWCatalogs>
         <CSWCatalog>
-        <URL>http://geo.data.gov/geoportal/csw/discovery?request=GetCapabilities&amp;service=csw</URL>
-        <Name>Geo.Data.gov</Name>
-        <CSWProfile>urn:ogc:CSW:2.0.2:HTTP:OGCCORE:ESRI:ArcIMS:9.3</CSWProfile>
-        <Credentials>
-            <Username />
-            <Password />
-        </Credentials>
-    </CSWCatalog>
-    <CSWCatalog>
-        <URL>http://www.geoplatform.gov/catalog/csw/discovery?request=GetCapabilities&amp;service=csw</URL>
-        <Name>Geoplatform.gov</Name>
-        <CSWProfile>urn:ogc:CSW:2.0.2:HTTP:OGCCORE:ESRI:ArcIMS:9.3</CSWProfile>
+        <URL>http://gptogc.esri.com/geoportal/csw/discovery?request=GetCapabilities&amp;service=csw&amp;version=2.0.2</URL>
+        <Name>gptogc.esri.com</Name>
+        <CSWProfile>urn:ogc:CSW:2.0.2:HTTP:OGCCORE:ESRI:GPT</CSWProfile>
         <Credentials>
             <Username />
             <Password />

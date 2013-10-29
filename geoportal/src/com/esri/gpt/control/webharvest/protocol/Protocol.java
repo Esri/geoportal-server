@@ -15,6 +15,10 @@
 package com.esri.gpt.control.webharvest.protocol;
 
 import com.esri.gpt.control.webharvest.IterationContext;
+import com.esri.gpt.control.webharvest.engine.DataProcessor;
+import com.esri.gpt.control.webharvest.engine.ExecutionUnit;
+import com.esri.gpt.control.webharvest.engine.Executor;
+import com.esri.gpt.control.webharvest.engine.IWorker;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
 
@@ -63,5 +67,46 @@ public interface Protocol {
    * @param url url
    * @return query builder
    */
-  public abstract QueryBuilder newQueryBuilder(IterationContext context, String url);
+  QueryBuilder newQueryBuilder(IterationContext context, String url);
+  /**
+   * Creates new executor.
+   * @param dataProcessor data processor
+   * @param unit execution unit
+   * @param worker worker
+   * @return executor
+   */
+  Executor newExecutor(DataProcessor dataProcessor, ExecutionUnit unit, IWorker worker);
+  /**
+   * Gets ad-hoc harvesting info.
+   * <p>
+   * Ad-hoc information allows to store precise definition or pattern of the time
+   * when harvesting should occur. Ad-hoc is a pipe (|) separated set of time definitions.
+   * Currently, the following syntax is supported:
+   * <ul>
+   * <li>
+   * <b>hh:mm</b> - daily at a certain time, for example: 10:05 (every day at 10:05)
+   * </li>
+   * <li>
+   * <b>&lt;day of the week&gt;,hh:mm</b> - every specified day of the week at a certain time, for example: SUNDAY,10:05 (every Sunday at 10:05)
+   * </li>
+   * <li>
+   * <b>&lt;day of the month&gt;,hh:mm</b> - every specified day of the month at a certain time, for example: 7,10:05 (every seventh day of the month at 10:05
+   * </li>
+   * <li>
+   * <b>&lt;n-th day of the week&gt;,&lt;day of the week&gt;,hh:mm</b> - every specified day of the week at a certain time, for example: 1,MONDAY,10:05 (every first Monday of the month at 10:05)
+   * </li>
+   * <li>
+   * <b>yyyy-MM-ddThh:mm</b> - at the specific date and time, for example: 2013-03-17T10:05 (precisely on 17-th of March, 2013 at 10:05)
+   * </li>
+   * </ul>
+   * </p>
+   * @return ad-hoc
+   */
+  String getAdHoc();
+  /**
+   * Sets ad-hoc info.
+   * @param adHoc ad-hoc info
+   * @see #setAdHoc
+   */
+  void setAdHoc(String adHoc);
 }

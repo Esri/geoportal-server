@@ -245,8 +245,8 @@ public InputStream submitHttpRequest(String method, String urlString,
 
 /**
  * Returns content encoding value from content type
- * @param contentType
- * @return
+ * @param contentType content type
+ * @return last content encoding
  */
 private String getLastContentEncoding(String contentType){
   if(contentType != null){

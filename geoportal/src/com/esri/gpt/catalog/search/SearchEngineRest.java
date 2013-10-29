@@ -45,6 +45,7 @@ import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.http.CredentialProvider;
 import com.esri.gpt.framework.http.HttpClientRequest;
+import com.esri.gpt.framework.isodate.IsoDateFormat;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.search.SearchXslProfile;
 import com.esri.gpt.framework.search.SearchXslRecord;
@@ -52,6 +53,8 @@ import com.esri.gpt.framework.util.ResourcePath;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.XmlIoUtil;
+import java.text.ParseException;
+import java.util.Date;
 
 /**
  * The class SearchEngineCSW. Accesses a CSW repository to send searTch 
@@ -518,6 +521,28 @@ public SearchResultRecord getMetadataAsSearchResultRecord(String uuid) throws
     .readAsSearchResult(this.getResourceLinkBuilder(),  
         this.readIsExternalSearch(),
         this.getKey());
+}
+
+@Override
+public ARecord getARecord(String uuid) throws SearchException {
+  final SearchXslRecord record = getMetadataAsObjectX(uuid);
+  ARecord aRecord = new ARecord() {
+    @Override
+    public String getMetadataAsText() {
+      return record.getFullMetadata();
+    }
+
+    @Override
+    public Date getModifiedDate() {
+      String modifedDateAsString = record.getModifiedDate();
+      try {
+        return new IsoDateFormat().parseObject(modifedDateAsString);
+      } catch (ParseException ex) {
+        return null;
+      }
+    }
+  };
+  return aRecord;
 }
 
 /**

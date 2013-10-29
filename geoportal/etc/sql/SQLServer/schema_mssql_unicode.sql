@@ -131,7 +131,7 @@ CREATE TABLE [GPT_RESOURCE] (
    [ACL]               [nvarchar](4000),
    [HOST_URL]          [nvarchar](255) NULL,
    [PROTOCOL_TYPE]     [nvarchar](20) NULL, 
-   [PROTOCOL]          [nvarchar](1000) NULL, 
+   [PROTOCOL]          [nvarchar](2000) NULL, 
    [FREQUENCY]         [nvarchar](10),
    [SEND_NOTIFICATION] [nvarchar](10),
    [FINDABLE]          [nvarchar](6),

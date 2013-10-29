@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -243,15 +244,7 @@ public class AGSProcessor extends ResourceProcessor {
         if (handler != null) {
       
           // initialize service information
-          ServiceInfo info = new ServiceInfo();
-          info.setCapabilities(desc.getCapabilities());
-          info.setDescription(desc.getDescription());
-          info.setName(desc.getName());
-          info.setParentType(desc.getParentType());
-          info.setResourceUrl(currentRestUrl);
-          info.setRestUrl(currentRestUrl);
-          info.setSoapUrl(currentSoapUrl);
-          info.setType(desc.getType());
+          ServiceInfo info = handler.createServiceInfo(null, desc, currentRestUrl, currentSoapUrl);
           
           // collect
           try {
@@ -292,8 +285,10 @@ public class AGSProcessor extends ResourceProcessor {
     
   }
 
+  @Override
   public Query createQuery(final IterationContext context, final Criteria criteria) {
     return new Query() {
+      @Override
       public Result execute() {
         ResourceFolders folders = createResourceFolders(context);
         return new CommonResult(new LimitedLengthResourcesAdapter(folders, criteria.getMaxRecords()));
@@ -301,6 +296,7 @@ public class AGSProcessor extends ResourceProcessor {
     };
   }
 
+  @Override
   public Native getNativeResource(IterationContext context) {
     ResourceFolders folders = createResourceFolders(context);
     for (Publishable publishable : new PublishablesAdapter(new FlatResourcesAdapter(folders))) {
@@ -358,15 +354,25 @@ public class AGSProcessor extends ResourceProcessor {
   }
 
   /**
+   * Reads service descriptions.
+   * @return array of service descriptions
+   * @throws ArcGISWebServiceException if accessing service descriptions 
+   */
+  private ServiceDescription[] readServiceDescriptions() throws ArcGISWebServiceException {
+    String soapUrl = extractRootUrl(getTarget().getSoapUrl());
+    ServiceCatalogBindingStub stub = new ServiceCatalogBindingStub(soapUrl);
+    ServiceDescription[] descriptors = stub.getServiceDescriptions();
+    return descriptors;
+  }
+  
+  /**
    * Creates resource folders.
    * @param context iteration context
    * @return resource folders
    */
   private ResourceFolders createResourceFolders(IterationContext context) {
     try {
-      String soapUrl = extractRootUrl(getTarget().getSoapUrl());
-      ServiceCatalogBindingStub stub = new ServiceCatalogBindingStub(soapUrl);
-      ServiceDescription[] descriptors = stub.getServiceDescriptions();
+      ServiceDescription[] descriptors = readServiceDescriptions();
       return new ResourceFolders(context, factory, descriptors);
     } catch (ArcGISWebServiceException ex) {
       context.onIterationException(ex);
@@ -377,7 +383,7 @@ public class AGSProcessor extends ResourceProcessor {
   /**
    * ArcGIS folders.
    */
-  private class ResourceFolders implements Iterable<Resource> {
+  private class ResourceFolders implements Iterable<IServiceInfoProvider> {
   /** iteration context */
   private IterationContext context;
   /** service handler factory */
@@ -390,6 +396,9 @@ public class AGSProcessor extends ResourceProcessor {
   private boolean matchAll;
   /** indicator to check folder */
   private boolean checkFolder;
+  
+  private HashMap<ServiceDescription,ServiceDescription> childToParent = new HashMap<ServiceDescription, ServiceDescription>();
+  private HashMap<ServiceDescription,ServiceInfo> sdToSi = new HashMap<ServiceDescription, ServiceInfo>();
 
   /**
    * Creates instance of the folders.
@@ -407,16 +416,31 @@ public class AGSProcessor extends ResourceProcessor {
     this.normalizedTargetSoapUrl = normalizeUrl(getTarget().getTargetSoapUrl());
     this.matchAll = normalizedTargetSoapUrl.equalsIgnoreCase(extractRootUrl(getTarget().getSoapUrl()));
     this.checkFolder = !normalizedTargetSoapUrl.endsWith("Server");
+    
+    HashMap<String,ServiceDescription> urlToSD = new HashMap<String, ServiceDescription>();
+    for (ServiceDescription sd: descriptors) {
+      String url = sd.getUrl();
+      urlToSD.put(url, sd);
+    }
+    
+    for (ServiceDescription sd: descriptors) {
+      if (sd.getParentType().isEmpty()) continue;
+      int index = sd.getUrl().indexOf(sd.getParentType()) + sd.getParentType().length();
+      String url = sd.getUrl().substring(0, index);
+      
+      ServiceDescription parentSD = urlToSD.get(url);
+      childToParent.put(sd, parentSD);
+    }
   }
 
-  public Iterator<Resource> iterator() {
+  public Iterator<IServiceInfoProvider> iterator() {
     return new AGSRecordsIterator();
   }
 
   /**
    * ArcGIS folders iterator.
    */
-  private class AGSRecordsIterator extends ReadOnlyIterator<Resource> {
+  private class AGSRecordsIterator extends ReadOnlyIterator<IServiceInfoProvider> {
   /** index of the current folder */
   private int index = -1;
   /** service handler */
@@ -449,23 +473,27 @@ public class AGSProcessor extends ResourceProcessor {
     handler = factory.makeHandler(desc.getType());
     if (handler==null) return hasNext();
     handler.setCredentials(getCredentials());
-    info = new ServiceInfo();
-    info.setCapabilities(desc.getCapabilities());
-    info.setDescription(desc.getDescription());
-    info.setName(desc.getName());
-    info.setParentType(desc.getParentType());
-    info.setResourceUrl(currentRestUrl);
-    info.setRestUrl(currentRestUrl);
-    info.setSoapUrl(currentSoapUrl);
-    info.setType(desc.getType());
+    
+    // get parent description if available for the current description
+    ServiceDescription parentDesc = childToParent.get(desc);
+    // get service info for the parent
+    ServiceInfo parentInfo = sdToSi.get(parentDesc);
+    
+    // create servcice info for the current service description
+    info = handler.createServiceInfo(parentInfo, desc, currentRestUrl, currentSoapUrl);
+    
+    // store mapping between service descritpion and service info
+    sdToSi.put(desc, info);
 
     return true;
   }
 
-  public Resource next() {
+  @Override
+  public IServiceInfoProvider next() {
     final ResourceRecordsFamily family = new ResourceRecordsFamily(context, factory, handler, info, !matchAll);
     reset();
-    return new Resource() {
+    return new ServiceInfoProvider(info) {
+      @Override
       public Iterable<Resource> getNodes() {
         return family;
       }

@@ -22,6 +22,7 @@ import com.esri.gpt.framework.sql.BaseDao;
 import com.esri.gpt.framework.sql.HttpExpressionBinder;
 import com.esri.gpt.framework.sql.ManagedConnection;
 import com.esri.gpt.framework.util.Val;
+import java.io.PrintWriter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -72,12 +73,18 @@ public class RepositoriesServlet extends BaseServlet {
     // initilize the writer based upon the requested format
     ResultSetWriter writer = null;
     String format = Val.chkStr(request.getParameter("f"));
+    String callback = Val.chkStr(request.getParameter("callback"));
+    PrintWriter responseWriter = response.getWriter();
     if (format.equalsIgnoreCase("xml")) {
       response.setContentType("text/xml; charset=UTF-8");
-      writer = new XmlResultSetWriter(response.getWriter());
+      writer = new XmlResultSetWriter(responseWriter);
     } else {
       response.setContentType("text/plain; charset=UTF-8");
-      writer = new JsonResultSetWriter(response.getWriter());
+      writer = new JsonResultSetWriter(responseWriter);
+    }
+    if (!callback.isEmpty()) {
+      responseWriter.print(callback+"({");
+      responseWriter.flush();
     }
     writer.begin(response);
     ManagedConnection mCon = null;
@@ -122,6 +129,11 @@ public class RepositoriesServlet extends BaseServlet {
       writer.writeResultSet(rs,0,columnTags);  
       
     } finally {
+      writer.flush();
+      if (!callback.isEmpty()) {
+        responseWriter.print("})");
+        responseWriter.flush();
+      }
       BaseDao.closeResultSet(rs);
       BaseDao.closeStatement(st);
       context.getConnectionBroker().closeConnection(mCon);

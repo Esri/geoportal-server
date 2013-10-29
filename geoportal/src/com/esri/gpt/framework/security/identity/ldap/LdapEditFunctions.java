@@ -28,6 +28,8 @@ import javax.naming.directory.ModificationItem;
 
 import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.jsf.FacesContextBroker;
+import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.security.credentials.CredentialPolicyException;
 import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
 import com.esri.gpt.framework.security.identity.IdentityException;
@@ -113,7 +115,13 @@ private void modifyEntry(DirContext dirContext,
 		dirContext.modifyAttributes(objectDN,operation,attributes);
 	}catch(javax.naming.directory.InvalidAttributeValueException iave){
 		LogUtil.getLogger().severe(iave.getMessage());
-		throw new LdapException("javax.naming.directory.InvalidAttributeValueException");
+		FacesContextBroker contextBroker = new FacesContextBroker();
+		MessageBroker msgBroker = contextBroker.extractMessageBroker();
+		String errMsg = "javax.naming.directory.InvalidAttributeValueException";
+		if(msgBroker != null){
+			errMsg = msgBroker.getMessage("javax.naming.directory.InvalidAttributeValueException").getSummary();
+		}
+		throw new LdapException(errMsg);
 	}
 }
 

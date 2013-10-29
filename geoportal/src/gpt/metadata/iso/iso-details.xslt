@@ -1065,7 +1065,7 @@
 			<xsl:if test="gmd:fileName">
 			<dt>
 				<img>
-					<xsl:attribute name="src"><xsl:value-of select="gmd:fileName"/></xsl:attribute>
+					<xsl:attribute name="src"><xsl:value-of select="gmd:fileName/gco:CharacterString"/></xsl:attribute>
 				</img>
 			</dt>
 			<dt>
@@ -1073,7 +1073,7 @@
 				<xsl:call-template name="get_property">
 				<xsl:with-param name="key">catalog.iso19139.MD_BrowseGraphic</xsl:with-param>
 				</xsl:call-template>: </em>							
-				<xsl:value-of select="gmd:fileName"/>
+				<xsl:value-of select="gmd:fileName/gco:CharacterString"/>
 			</dt>
 			</xsl:if>
 			<xsl:if test="gmd:fileType">

@@ -14,8 +14,6 @@
  */
 package com.esri.gpt.control.webharvest.engine;
 
-import com.esri.gpt.control.webharvest.IterationContext;
-import com.esri.gpt.framework.resource.query.QueryBuilder;
 import com.esri.gpt.framework.util.UuidUtil;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +21,7 @@ import java.util.logging.Logger;
 /**
  * Worker base.
  */
-abstract class WorkerBase implements Runnable {
+abstract class WorkerBase implements Runnable, IWorker {
 /** logger */
 private static final Logger LOGGER = Logger.getLogger(WorkerBase.class.getCanonicalName());
 /** data processor */
@@ -67,7 +65,8 @@ public synchronized ExecutionUnit getExecutionUnit() {
  * @param uuid repository UUID
  * @return <code>true</code> if is executing synchronization of the specific repository
  */
-public synchronized boolean isExecuting(String uuid) {
+  @Override
+  public synchronized boolean isExecuting(String uuid) {
   if (executor == null)
     return false;
   return UuidUtil.removeCurlies(executor.getExecutionUnit().getRepository().getUuid()).equalsIgnoreCase(UuidUtil.removeCurlies(uuid));
@@ -77,8 +76,18 @@ public synchronized boolean isExecuting(String uuid) {
  * Gets shutdown flag.
  * @return shutdown flag
  */
-public boolean isShutdown() {
+  @Override
+  public boolean isShutdown() {
   return shutdown;
+}
+
+/**
+ * Checks if worker is active.
+ * @return <code>true</code> if worker is active
+ */
+  @Override
+  public boolean isActive() {
+  return !isShutdown();
 }
 
 /**
@@ -86,6 +95,9 @@ public boolean isShutdown() {
  * Does not allow to complete pending task execution.
  */
 public synchronized void shutdown() {
+  if (executor!=null) {
+    executor.shutdown();
+  }
   shutdown = true;
   workerThread.interrupt();
 }
@@ -147,7 +159,8 @@ public synchronized void safeResume() {
  * Gets suspended flag.
  * @return suspended flag
  */
-public boolean isSuspended() {
+  @Override
+  public boolean isSuspended() {
   return suspended;
 }
 }

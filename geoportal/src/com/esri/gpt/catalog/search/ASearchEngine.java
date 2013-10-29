@@ -33,6 +33,7 @@ import com.esri.gpt.framework.request.PageCursor;
 import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.server.csw.client.CswRecord;
+import java.util.Date;
 
 
 
@@ -305,7 +306,13 @@ public void setResponseTimeout(int responseTimeout) {
 public abstract void doSearch()
 throws SearchException;
 
-
+/**
+ * Gets record.
+ * @param uuid UUID
+ * @return record
+ * @throws SearchException if searching fails
+ */
+public abstract ARecord getARecord(String uuid) throws SearchException;
 
 /**
  * Gets the metadata as text.
@@ -636,7 +643,21 @@ protected String readInputCharacters(InputStream is, String sEncoding)
   return sb.toString();
 }
 
-
+/**
+ * ASearchEngine record.
+ */
+public static interface ARecord {
+  /**
+   * Gets metadata as text.
+   * @return metadata as text 
+   */
+  String getMetadataAsText();
+  /**
+   * Gets modified date.
+   * @return modified date
+   */
+  Date getModifiedDate();
+}
 }
 
 

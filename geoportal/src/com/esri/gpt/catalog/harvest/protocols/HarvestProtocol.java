@@ -17,6 +17,10 @@ package com.esri.gpt.catalog.harvest.protocols;
 import com.esri.gpt.catalog.harvest.clients.HRClient;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRConnectionException;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidProtocolException;
+import com.esri.gpt.control.webharvest.engine.DataProcessor;
+import com.esri.gpt.control.webharvest.engine.ExecutionUnit;
+import com.esri.gpt.control.webharvest.engine.Executor;
+import com.esri.gpt.control.webharvest.engine.IWorker;
 import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.control.webharvest.protocol.ProtocolSerializer;
 import com.esri.gpt.framework.collection.StringAttribute;
@@ -44,7 +48,13 @@ public abstract class HarvestProtocol implements Protocol, Serializable {
   private long flags;
   /** destinations */
   private List<String> destinations;
-// constructors ================================================================
+  /** ad-hoc */
+  private String addHoc = "";
+
+  // constructors ================================================================
+  public HarvestProtocol() {
+  }
+  
 // properties ==================================================================
   
   /**
@@ -199,6 +209,21 @@ public abstract class HarvestProtocol implements Protocol, Serializable {
     setAttributeMap(attributeMap);
   }
 
+  @Override
+  public String getAdHoc() {
+    return addHoc;
+  }
+
+  @Override
+  public void setAdHoc(String adHoc) {
+    this.addHoc = Val.chkStr(adHoc);
+  }
+
+  @Override
+  public Executor newExecutor(DataProcessor dataProcessor, ExecutionUnit unit, IWorker worker) {
+    return new ExecutorImpl(dataProcessor, unit, worker);
+  }
+
   /**
    * Decrypts string.
    * @param s string to decrypt
@@ -302,6 +327,33 @@ public abstract class HarvestProtocol implements Protocol, Serializable {
       }
       LogUtil.getLogger().log(Level.SEVERE, "Error parsing ProtocolType value: {0}", name);
       return None;
+    }
+  }
+  
+  /**
+   * Executor implementation.
+   */
+  private static class ExecutorImpl extends Executor {
+    private IWorker worker;
+
+    public ExecutorImpl(DataProcessor dataProcessor, ExecutionUnit unit, IWorker worker) {
+      super(dataProcessor, unit);
+      this.worker = worker;
+    }
+
+    @Override
+    protected boolean isActive() {
+      return worker.isActive();
+    }
+
+    @Override
+    protected boolean isShutdown() {
+      return worker.isShutdown();
+    }
+
+    @Override
+    protected boolean isSuspended() {
+      return worker.isSuspended();
     }
   }
 }

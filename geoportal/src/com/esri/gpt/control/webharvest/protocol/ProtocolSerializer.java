@@ -34,7 +34,7 @@ public static String toXmlString(Protocol protocol) {
   sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
   if (protocol!=null) {
     String sDest = getDestinations(protocol);
-    sb.append("<protocol type=\"").append(protocol.getKind()).append("\" flags=\"").append(protocol.getFlags()).append(sDest!=null? " destinations=\"" +sDest+ "\"": "").append("\">");
+    sb.append("<protocol type=\"").append(protocol.getKind()).append("\" flags=\"").append(protocol.getFlags()).append("\"").append(sDest!=null? " destinations=\"" +sDest+ "\"": "").append(" adHoc=\"" +protocol.getAdHoc()+ "\"").append(">");
 
     StringAttributeMap attributes = protocol.extractAttributeMap();
     for (String key : attributes.keySet()) {

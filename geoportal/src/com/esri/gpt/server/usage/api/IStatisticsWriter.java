@@ -12,13 +12,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.esri.gpt.server.usage.api;
 
 import java.sql.ResultSet;
 
-public interface IStatisticsWriter {	
-	public void writeElement(String name, String value) throws Exception;
-	public void writeElement(String name, String value,boolean hasMore,boolean isNumber) throws Exception;
-    public void writeResultSet(String tableName,ResultSet rset, String[] columnTags) throws Exception;
+/**
+ * Statistics writer.
+ */
+public interface IStatisticsWriter {
+
+  /**
+   * Writes an element.
+   *
+   * @param name element name
+   * @param value element value
+   * @throws Exception if writing element fails
+   */
+  public void writeElement(String name, String value) throws Exception;
+
+  /**
+   * Writes an element.
+   *
+   * @param name element name
+   * @param value element value
+   * @param hasMore <code>true</code> to indicate there are more elements
+   * intended to be written
+   * @param isNumber <code>true</code> to indicate that element is a number
+   * @throws Exception if writing element fails
+   */
+  public void writeElement(String name, String value, boolean hasMore, boolean isNumber) throws Exception;
+
+  /**
+   * Writes result set.
+   *
+   * @param tableName table name
+   * @param rset result set instance
+   * @param columnTags column tags
+   * @throws Exception if writing element fails
+   */
+  public void writeResultSet(String tableName, ResultSet rset, String[] columnTags) throws Exception;
 }

@@ -14,9 +14,12 @@
  */
 package com.esri.gpt.catalog.harvest.repository;
 
+import com.esri.gpt.framework.adhoc.AdHocEventFactoryList;
+import com.esri.gpt.framework.adhoc.AdHocEventList;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRConnectionException;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidProtocolException;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
+import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgs2Agp;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolNone;
 import com.esri.gpt.catalog.management.MmdEnums.ApprovalStatus;
 import com.esri.gpt.control.webharvest.IterationContext;
@@ -33,6 +36,7 @@ import com.esri.gpt.framework.util.ResourceXml;
 import com.esri.gpt.framework.util.UuidUtil;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
@@ -232,6 +236,8 @@ public void setName(String name) {
 public String getHostUrl() {
   if (getProtocol() instanceof HarvestProtocolAgp2Agp) {
     return ((HarvestProtocolAgp2Agp)getProtocol()).getHostUrl();
+  } else if (getProtocol() instanceof HarvestProtocolAgs2Agp) {
+    return ((HarvestProtocolAgs2Agp)getProtocol()).getHostUrl();
   } else {
     return _hostUrl;
   }
@@ -335,7 +341,46 @@ public void setLastHarvestDate(Date lastHarvestDate) {
  */
 public Date getNextHarvestDate() {
   Date lastHarvestDate = getLastHarvestDate();
-  return getHarvestFrequency().getDueDate(lastHarvestDate);
+  HarvestFrequency harvestFrequency = getHarvestFrequency();
+  switch (harvestFrequency) {
+    case AdHoc:
+      try {
+        AdHocEventList eventList = getAdHocEventList();
+        if (eventList!=null) {
+          return eventList.getNextHarvestDate(lastHarvestDate);
+        } else {
+          return null;
+        }
+      } catch (ParseException ex) {
+        return null;
+      }
+    default:
+      return harvestFrequency.getDueDate(lastSyncDate);
+  }
+}
+
+/**
+ * Gets ad-hoc event list.
+ * @return ad-hoc event list
+ * @throws ParseException if parsing "ad-hoc" attribute fails
+ */
+public AdHocEventList getAdHocEventList() throws ParseException {
+  return AdHocEventFactoryList.getInstance().parse(Val.chkStr(getProtocol().getAdHoc()));
+}
+
+/**
+ * Sets ad-hoc event list.
+ * @param eventList event list
+ */
+public void setAdHocEventList(AdHocEventList eventList) {
+  getProtocol().setAdHoc(eventList.getCodes());
+}
+
+/**
+ * Clears ad-hoc event list.
+ */
+public void clearAdHocEventList() {
+  getProtocol().getAttributeMap().remove("ad-hoc");
 }
 
 /**
@@ -459,11 +504,15 @@ public String toString() {
  * Checks connection to the remote host.
  * @throws HRInvalidProtocolException when protocol attributes are invalid
  * @throws HRConnectionException if connecting remote repository failed
+ * @deprecated replaced with {@link com.esri.gpt.control.webharvest.validator.ValidatorFactory}
  */
+@Deprecated
 public void checkConnection()
     throws HRInvalidProtocolException, HRConnectionException {
   try {
-    ProtocolInvoker.ping(getProtocol(), getHostUrl());
+    Protocol protocol = getProtocol();
+    String hostUrl = getHostUrl();
+    ProtocolInvoker.ping(protocol, hostUrl);
   } catch (Exception ex) {
     if (ex instanceof HRInvalidProtocolException) {
       throw (HRInvalidProtocolException) ex;
@@ -588,11 +637,13 @@ public Date getDueDate(Date lastDate) {
 }
 },
 /** do not perform scheduled harvests. */
-Skip;
+Skip,
+/** do ad-hoc scheduled harvest. */
+AdHoc;
 
 /**
  * Checks value of the frequency.
- * @param frequency value of frequency to parse
+ * @param frequency value of frequency to parseSingle
  * @return parsed frequency
  */
 public static HarvestFrequency checkValueOf(String frequency) {

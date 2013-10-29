@@ -21,7 +21,7 @@ import com.esri.gpt.framework.util.Val;
 /**
  * ArcGIS server info.
  */
-class ArcGISInfo {
+public class ArcGISInfo {
 /** REST url */
 private String restUrl;
 /** SOAP url */

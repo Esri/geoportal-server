@@ -94,8 +94,9 @@ define({
       "keywords": "Keywords (terms)",
       "keywords_ss": "Keywords (values)",
       "contact.organizations_ss": "Organizations (contact)",
-      "contact.people_ss": "People (contact)"
-
+      "contact.people_ss": "People (contact)",
+      "sys.src.collections_txt": "Collections",
+      "sys.src.collections_ss": "Collections (values)"
     }
     
   }

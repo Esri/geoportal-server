@@ -44,7 +44,7 @@ public class IsPartOfFilter extends Filter {
   /**
    * Constructs with an associated field name, value array and a chained filter.
    * @param fieldName the field name
-   * @param the set of values
+   * @param values set of values
    * @param chained a chained filter
    */
   public IsPartOfFilter(String fieldName, String[] values, Filter chained) {

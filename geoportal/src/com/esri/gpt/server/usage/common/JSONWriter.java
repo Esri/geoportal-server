@@ -93,8 +93,8 @@ public class JSONWriter extends JsonResultSetWriter implements
 	/**
 	 * Serializes key value pair to json object.
 	 * 
-	 * @param key
-	 *            the key
+	 * @param name
+	 *            the name
 	 * @param value
 	 *            the value
 	 */

@@ -97,7 +97,7 @@ public void setManage(boolean manage) {
 
 /**
  * Gets resource key configured for role
- * @return
+ * @return resource key for the role
  */
 public String getResKey() {
 	return _resKey;

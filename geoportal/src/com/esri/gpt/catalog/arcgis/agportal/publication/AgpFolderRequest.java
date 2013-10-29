@@ -188,12 +188,12 @@ public class AgpFolderRequest extends AgpBaseRequest {
   }
 
   /**
-   * Gets content url.
+   * Gets content URL.
    *
-   * @param token
-   * @param currentFolder
-   * @return
-   * @throws IOException
+   * @param token token
+   * @param currentFolder current folder id
+   * @return URL of the content
+   * @throws IOException if generating content URL failed.
    */
   private String getContentUrl(String token, String currentFolder) throws IOException {
     return ep.getBaseArcGISUrl()

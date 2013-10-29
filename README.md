@@ -17,7 +17,7 @@ With the Geoportal Server you can:
 
 Want to learn more? Try our [sandbox site](http://gptogc.esri.com)!
 
-Want to get started right away? Download the [zip/tar ball](http://esri.github.io/geoportal-server/) and look for the binary-distribution directory. 
+Want to get started right away? Download the [compiled distribution and installation files] (http://esri.github.io/geoportal-server/distribution/1.2.4/geoportal-1.2.4.zip).
 
 
 ## Documentation

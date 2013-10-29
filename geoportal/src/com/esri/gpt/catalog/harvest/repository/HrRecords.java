@@ -68,6 +68,7 @@ public HrRecord findByUuid(String uuid) {
  */
 public HrRecords findSelected() {
   return findByCriteria(new ISearchCriteria(){
+    @Override
     public boolean qualified(HrRecord record) {
       return record.getIsSelected();
     }
@@ -81,6 +82,7 @@ public HrRecords findSelected() {
  */
 public HrRecords findSaved(final boolean saved) {
   return findByCriteria(new ISearchCriteria(){
+    @Override
     public boolean qualified(HrRecord record) {
       return UuidUtil.isUuid(record.getUuid())==saved;
     }
@@ -93,6 +95,7 @@ public HrRecords findSaved(final boolean saved) {
  */
 public HrRecords findHarvestDue() {
   return findByCriteria(new ISearchCriteria(){
+    @Override
     public boolean qualified(HrRecord record) {
       return record.getIsHarvestDue() && record.getApprovalStatus()==ApprovalStatus.approved && record.getSynchronizable();
     }
@@ -107,10 +110,12 @@ public HrRecord findNextDue() {
   Date now = new Date();
   HrRecord nextDue = null;
   for (HrRecord record : this) {
-    Date nextHarvestDate = record.getNextHarvestDate();
-    if (nextHarvestDate!=null && nextHarvestDate.after(now)) {
-      if (nextDue==null || nextDue.getNextHarvestDate().after(nextHarvestDate)) {
-        nextDue = record;
+    if ((record.getApprovalStatus()== ApprovalStatus.approved || record.getApprovalStatus()== ApprovalStatus.reviewed) && record.getSynchronizable()) {
+      Date nextHarvestDate = record.getNextHarvestDate();
+      if (nextHarvestDate!=null && nextHarvestDate.after(now)) {
+        if (nextDue==null || nextDue.getNextHarvestDate().after(nextHarvestDate)) {
+          nextDue = record;
+        }
       }
     }
   }

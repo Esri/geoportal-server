@@ -34,6 +34,9 @@ import com.esri.gpt.framework.util.UuidUtil;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.server.usage.api.IStatisticsWriter;
 
+/**
+ * Harvester statistics data access object.
+ */
 public class HarvesterStatisticsDao extends BaseDao {
 	
 	// class variables =============================================================
@@ -44,6 +47,10 @@ public class HarvesterStatisticsDao extends BaseDao {
 	private boolean isDbCaseSensitive = false;
 
 	// constructors ================================================================
+    /**
+     * Creates instance of the DAO.
+     * @param writer response writer
+     */
 	public HarvesterStatisticsDao(ResponseWriter writer){
 		this.writer = writer;
 		this.statWriter = (IStatisticsWriter) writer;

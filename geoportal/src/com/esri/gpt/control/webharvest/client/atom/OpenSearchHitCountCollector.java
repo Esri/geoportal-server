@@ -37,8 +37,8 @@ public class OpenSearchHitCountCollector implements IHitCountCollector{
 
 	/**
 	 * Retrieves hit count from feed xml.
-	 * @param the feed url
-	 * @int hit count.
+	 * @param source source
+	 * @return hit count.
 	 */
 	@Override
 	public int collectHitCount(Object source) throws Exception {

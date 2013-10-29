@@ -634,8 +634,8 @@ protected boolean checkSelf(RequestContext context,String managedUserDn){
 
 /**
  * Checks if user role matches provided groups distinguished name.
- * @param context
- * @param groupDn
+ * @param user user
+ * @param groupDn group distingushed name
  * @return true if managed user role is same as groupDn
  */
 protected boolean checkRole(User user,String groupDn){

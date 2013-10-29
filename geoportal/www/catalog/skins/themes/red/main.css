@@ -1502,3 +1502,49 @@ img.datepicker_trigger {
   display: table-cell;
   padding-top: 10px;
 }
+
+#harvestCreate .timePoints {
+  min-height: 110px;
+  max-height: 110px;
+  min-width: 350px;
+  border: lightgrey solid 1px;
+  width: 350px;
+  margin-bottom: 10px;
+  overflow-y: scroll;
+}
+
+#timeDialog .dijitArrowButton {
+  height: 18px;
+}
+
+#timeDialog #buttonsDiv {
+  margin-top: 10px;
+}
+
+#harvestCreate .timePointDiv {
+  padding: 2px;
+}
+
+#harvestCreate .timePointSpan {
+  
+}
+
+#harvestCreate .timePointDelete {
+  float: right;
+  cursor: pointer;
+  background-image: url(images/Preview_Decline_16.png);
+  width: 16px;
+  height: 16px;
+}
+
+#harvestCreate .hint {
+  font-size: x-small;
+}
+
+#harvestCreate .hint .hint-text {
+  
+}
+
+#harvestCreate .hint .hint-example {
+  
+}

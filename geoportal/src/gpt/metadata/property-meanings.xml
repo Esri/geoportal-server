@@ -365,6 +365,13 @@
   </property-meaning>
   <property-meaning name="dcat.dataDictionary" valueType="String" comparisonType="value">
   </property-meaning>
-  
+  <property-meaning name="dcat.modified" valueType="Timestamp" comparisonType="value">
+  </property-meaning>
+  <property-meaning name="dcat.publisher" valueType="String" comparisonType="value">
+  </property-meaning>  
+ <property-meaning name="dcat.accessUrl" valueType="String" comparisonType="value">
+  </property-meaning>  
+   <property-meaning name="dcat.format" valueType="String" comparisonType="value">
+  </property-meaning>  
         
 </property-meanings>

@@ -14,12 +14,23 @@
  */
 package com.esri.gpt.server.csw.client;
 
+/**
+ * Invalid CSW operation.
+ */
 public class InvalidOperationException extends Exception
 {
+    /**
+     * Creates instance of the exception.
+     */
     InvalidOperationException()
     { 
         super();
     }
+    
+    /**
+     * Creates instance of the exception.
+     * @param mssg message
+     */
     InvalidOperationException(String mssg)
     {
         super(mssg);

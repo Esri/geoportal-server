@@ -495,6 +495,9 @@ public abstract class AgpBaseRequest {
     text
   }
 
+  /**
+   * Attributes map.
+   */
   protected static class AttrMap extends HashMap<String, List<String>> {
     public void put(String name, String value) {
       name = Val.chkStr(name);

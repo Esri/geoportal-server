@@ -29,7 +29,7 @@ import org.json.JSONObject;
 /**
  * Multi-part helper functions for the AgpPush synchronizer.
  */
-class AgpPartHelper { 
+public class AgpPartHelper { 
   
   /** instance variables ====================================================== */
   private AgpItemHelper itemHelper = new AgpItemHelper(); 

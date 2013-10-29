@@ -28,7 +28,7 @@ public class OpenSearchAtomInfoProcessor extends BaseAtomInfoProcessor {
 	
 	/**
 	 * Sets post create options.
-	 * @param base atom info
+	 * @param atomInfo base atom info
 	 */
 	@Override
 	public void postCreate(BaseAtomInfo atomInfo) {

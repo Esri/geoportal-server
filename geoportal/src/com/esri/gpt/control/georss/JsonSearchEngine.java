@@ -21,6 +21,7 @@ import com.esri.gpt.catalog.discovery.rest.RestQuery;
 import com.esri.gpt.catalog.lucene.LuceneIndexAdapter;
 import com.esri.gpt.catalog.lucene.LuceneQueryAdapter;
 import com.esri.gpt.catalog.search.OpenSearchProperties;
+import com.esri.gpt.catalog.search.ResourceIdentifier;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
@@ -174,12 +175,13 @@ public abstract class JsonSearchEngine {
     osProps.setStartRecord(query.getFilter().getStartRecord());
     osProps.setRecordsPerPage(query.getFilter().getMaxRecords());
 
+    ResourceIdentifier resourceIdentifier = ResourceIdentifier.newIdentifier(context);
     DiscoveredRecordsAdapter discoveredRecordsAdapter =
-            new DiscoveredRecordsAdapter(osProps, fields, query.getResult().getRecords(), mapping);
+            new DiscoveredRecordsAdapter(resourceIdentifier, osProps, fields, query.getResult().getRecords(), mapping);
 
     loadCatalog(context, discoveredRecordsAdapter);
 
-    FeedLinkBuilder linkBuilder = new FeedLinkBuilder(RequestContext.resolveBaseContextPath(request), msgBroker);
+    FeedLinkBuilder linkBuilder = new FeedLinkBuilder(context, RequestContext.resolveBaseContextPath(request), msgBroker);
     for (IFeedRecord record : discoveredRecordsAdapter) {
       linkBuilder.build(record);
     }

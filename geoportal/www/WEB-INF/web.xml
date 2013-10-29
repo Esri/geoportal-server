@@ -401,6 +401,15 @@
       <servlet-name>CartServlet</servlet-name>
       <url-pattern>/cart/*</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+      <servlet-name>DcatCacheServlet</servlet-name>
+      <servlet-class>com.esri.gpt.control.georss.DcatCacheServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+      <servlet-name>DcatCacheServlet</servlet-name>
+      <url-pattern>/dcat.json</url-pattern>
+    </servlet-mapping>
 
     <session-config>
       <session-timeout>30</session-timeout>

@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 
 /**
- * @author TM
- * 
  * The Class CsvWriter.
  */
 public class CsvWriter extends AFeedWriter2 {
@@ -33,7 +31,6 @@ private static final String DELIMETER = ",";
  * Writes the records
  * 
  * @param records list of records
- * @see com.esri.gpt.control.georss.FeedWriter#write(com.esri.gpt.catalog.search.SearchResultRecords)
  */
 @Override
 public void write(IFeedRecords records) {

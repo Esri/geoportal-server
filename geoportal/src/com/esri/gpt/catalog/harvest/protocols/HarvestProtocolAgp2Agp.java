@@ -23,7 +23,11 @@ import com.esri.gpt.agp.sync.AgpDestination;
 import com.esri.gpt.agp.sync.AgpSource;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.common.CommonCapabilities;
-import com.esri.gpt.framework.collection.StringAttribute;
+import com.esri.gpt.control.webharvest.engine.Agp2AgpExecutor;
+import com.esri.gpt.control.webharvest.engine.DataProcessor;
+import com.esri.gpt.control.webharvest.engine.ExecutionUnit;
+import com.esri.gpt.control.webharvest.engine.Executor;
+import com.esri.gpt.control.webharvest.engine.IWorker;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
@@ -53,6 +57,26 @@ public class HarvestProtocolAgp2Agp extends AbstractHTTPHarvestProtocol {
    * flags to carry over
    */
   private long flags;
+  /**
+   * flag indicating to stop on error.
+   */
+  private boolean stopOnError = true;
+  
+  /**
+   * Creates instance of the protocol
+   * @param stopOnError <code>true</code> to stop harvesting on error
+   */
+  public HarvestProtocolAgp2Agp(boolean stopOnError) {
+    this.stopOnError = stopOnError;
+  }
+  
+  /**
+   * Checks if stop harvesting on error.
+   * @return <code>true</code> to stop harvesting on error
+   */
+  public boolean getStopOnError() {
+    return stopOnError;
+  }
   
   /**
    * Gets source.
@@ -63,7 +87,9 @@ public class HarvestProtocolAgp2Agp extends AbstractHTTPHarvestProtocol {
 
     AgpSource source = new AgpSource();
     AgpConnection con1 = new AgpConnection();
-    con1.setHost(getSourceHost());
+    HostContextPair pair = HostContextPair.makeHostContextPair(getSourceHost());
+    con1.setHost(pair.getHost());
+    con1.setWebContext(pair.getContext());
     con1.setTokenCriteria(new AgpTokenCriteria());
     con1.getTokenCriteria().setCredentials(new AgpCredentials(
             attrs.getValue("src-u"), attrs.getValue("src-p")));
@@ -87,7 +113,9 @@ public class HarvestProtocolAgp2Agp extends AbstractHTTPHarvestProtocol {
     
     AgpDestination destination = new AgpDestination();
     AgpConnection con2 = new AgpConnection();
-    con2.setHost(getDestinationHost());
+    HostContextPair pair = HostContextPair.makeHostContextPair(getDestinationHost());
+    con2.setHost(pair.getHost());
+    con2.setWebContext(pair.getContext());
     con2.setTokenCriteria(new AgpTokenCriteria());
     con2.getTokenCriteria().setCredentials(new AgpCredentials(
             attrs.getValue("dest-u"), attrs.getValue("dest-p")));
@@ -202,4 +230,38 @@ public static Long getAgp2AgpMaxItems() {
   
   return Val.chkLong(sMaxItems, DEFAULT_MAX_ITEMS_AGP2AGP);
 }
+
+  @Override
+  public Executor newExecutor(DataProcessor dataProcessor, ExecutionUnit unit, IWorker worker) {
+    return new Agp2AgpExecutorImpl(dataProcessor, unit, worker, getStopOnError());
+  }
+
+
+  /**
+   * Agp2Agp executor implementation.
+   */
+  private static class Agp2AgpExecutorImpl extends Agp2AgpExecutor {
+    private IWorker worker;
+
+    public Agp2AgpExecutorImpl(DataProcessor dataProcessor, ExecutionUnit unit, IWorker worker, boolean stopOnError) {
+      super(dataProcessor, unit, stopOnError);
+      this.worker = worker;
+    }
+
+    @Override
+    protected boolean isActive() {
+      return worker.isActive();
+    }
+
+    @Override
+    protected boolean isShutdown() {
+      return worker.isShutdown();
+    }
+
+    @Override
+    protected boolean isSuspended() {
+      return worker.isSuspended();
+    }
+  }
+
 }

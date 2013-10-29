@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.catalog.search;
 
+import com.esri.gpt.control.georss.IFeedRecord;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,7 +44,7 @@ private final static Logger LOG =
  * @return the mapviewer instance
  */
 public static IMapViewer createMapViewer(String resourceUrl, 
-    String hintResourceType, SearchResultRecord searchResultRecord, 
+    String hintResourceType, IFeedRecord searchResultRecord, 
     RequestContext requestContext) {
   if(resourceUrl == null || "".equals(resourceUrl.trim())) {
     return null;

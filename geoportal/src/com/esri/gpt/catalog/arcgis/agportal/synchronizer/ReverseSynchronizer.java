@@ -169,7 +169,7 @@ public class ReverseSynchronizer implements Runnable, IScheduledTask {
 
   /**
    * Gets last synchronization date.
-   * @return 
+   * @return last synchronization date
    */
   private Timestamp getLastSynchronizationDate() {
     File file = new File(getDateStore());

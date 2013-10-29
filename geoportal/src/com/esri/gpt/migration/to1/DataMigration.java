@@ -717,13 +717,12 @@ public class DataMigration {
 	/**
 	 * Fetch metadata xml from Metadata server
 	 * 
-	 * @param parameters
-	 * @param pstmt
-	 * @param docuuid
-	 * @param owner
-	 * @param userid
-	 * @return
-	 * @throws Exception
+	 * @param parameters parameters
+	 * @param pstmt prepared statement
+	 * @param docuuid document UUID
+	 * @param owner owner id
+	 * @return metadata document
+	 * @throws Exception if fetching metadata fails
 	 */
 	private String fetchMetadata(HashMap<String, Object> parameters,
 			PreparedStatement pstmt, String docuuid, int owner)
@@ -799,7 +798,7 @@ public class DataMigration {
 	 * @param fromConn
 	 * @param toTablePrefix
 	 * @param toConn
-	 * @return
+	 * @return new user id
 	 * @throws SQLException
 	 */
 	private int getNewUserId(int oldUserId, String fromTablePrefix,
@@ -854,7 +853,7 @@ public class DataMigration {
 	 * @param fromConn
 	 * @param fromTablePrefix
 	 * @param tableName
-	 * @return
+	 * @return count of migration records
 	 * @throws SQLException
 	 */
 	private int countMigrationRecords(Connection fromConn,
@@ -904,7 +903,7 @@ public class DataMigration {
 	 * 
 	 * @param pattern
 	 * @param value
-	 * @return
+	 * @return custom format
 	 */
 	private String customFormat(String pattern, double value) {
 		DecimalFormat myFormatter = new DecimalFormat(pattern);
