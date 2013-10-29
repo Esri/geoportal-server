@@ -62,7 +62,8 @@ dojo.declare("gpt.gxe.MetadataPanel", null, {
         "ItemMetadata.allowSaveDraft": false,
         "ItemMetadata.documentTypeKeys": null,
         "ItemMetadata.gxeProxyUrl": null,
-        "ItemMetadata.useGxeProxyUrl": false
+        "ItemMetadata.useGxeProxyUrl": false,
+        "ItemMetadata.gemetThemesProxy": null
     },
 
     // i18n strings

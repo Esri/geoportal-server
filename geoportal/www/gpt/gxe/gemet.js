@@ -2,7 +2,8 @@ dojo.require("dijit.Dialog");
 dojo.require("dijit.dijit");
 dojo.require("dojox.layout.TableContainer");
 dojo.require("dijit.form.TextBox");
-dojo.require("dojo.io.script");
+dojo.require("dojox.data.XmlStore");
+dojo.require("dojox.xml.DomParser");
 
 var gxeGemetLangData = [
             
@@ -62,16 +63,40 @@ dojo.declare(
 		conceptsUrl : "http://www.eionet.europa.eu/gemet/"
 			+ "getConceptsMatchingRegexByThesaurus?thesaurus_uri="+
 			"http://www.eionet.europa.eu/gemet/concept/&language={0}&regex={1}",
-	    conceptsThemeUrl: "http://www.eionet.europa.eu/gemet/"
+	    /*conceptsThemeUrl: "http://www.eionet.europa.eu/gemet/"
 			+ "getTopmostConcepts?thesaurus_uri="+
-			"http://inspire-registry.jrc.ec.europa.eu/registers/FCD/items/&language={0}",	
+			"http://inspire.ec.europa.eu/theme/them.{0}.json",*/	
+			conceptsThemeUrl: "http://inspire.ec.europa.eu/theme/theme.{0}.xml",/* only change to json format when endpoint has valid json and is jsonp*/	
 		conceptsKeywordUrl: "http://www.eionet.europa.eu/gemet/"
 			+ "getConceptsMatchingRegexByThesaurus?thesaurus_uri="+
 			"http://www.eionet.europa.eu/gemet/concept/&language={0}&regex={1}",
 		
 		isThemeSearch : false,
 		
+		proxyUrl: "../../gpt/gxe/gxe-proxy.jsp?url=",
+		
+		 config: {
+		        "ItemMetadata.enabled": false,
+		        "ItemMetadata.allowDelete": false,
+		        "ItemMetadata.allowSaveDraft": false,
+		        "ItemMetadata.documentTypeKeys": null,
+		        "ItemMetadata.gxeProxyUrl": null,
+		        "ItemMetadata.useGxeProxyUrl": false,
+		        "ItemMetadata.gemetThemesProxy": null
+		 },
+		
 		// functions ===========================================================
+		 constructor: function() {
+			
+			 GptCore.loadDeclaredConfig(this.config);
+		     if (this.config["ItemMetadata.gemetThemesProxy"]) {
+		            var s = this.config["ItemMetadata.gemetThemesProxy"];
+		            if ((typeof (s) != "undefined") && (s != null)) {
+		                this.proxyUrl = s;
+		            }
+		     }
+			 
+		 },
 		 initFind : function (
 					elHtmlElementWithText	
 				  ) {	
@@ -81,7 +106,7 @@ dojo.declare(
 				  djt.destroy();
 				  dijit.registry.remove("djtDialogGemet");
 			  }
-			  var name = "gemetControlsTable"
+			  var name = "gemetControlsTable";
 			  djt = dijit.byId(name);
 			  if(djt != null) {
 				  djt.destroy();
@@ -333,20 +358,85 @@ dojo.declare(
 						this.lblErrorKeywordEmpty);
 				return;
 			}
-			var promise = dojo.io.script.get ({
-				  url:  urlConcepts, 
-				  content:{},
-				  callbackParamName:"jsonp",
-				  timeout: 60000,
-				  load:dojo.hitch(this, this.findConceptsHandler, 
-						  sIdWordInputOrFunction,
-						  this.isThemeSearch), 
-				  error: dojo.hitch(this, this.findConceptsErrorHandler)
-		    });
-			var dfd = new dojo.Deferred(promise);
-			dfd.addErrback(dojo.hitch(this, this.findConceptsErrorHandler));
+			
+			
+			// TM.  New url for themes has json errors and no jsonp.  Using their xml endpoint and proxy to circumvent this problem.
+			if(urlConcepts.toLowerCase().indexOf('.xml') < 0 /*this.isThemeSearch == false*/) {	
+				 var promise = dojo.io.script.get ({
+	                 url:  urlConcepts, 
+	                 content:{},
+	                 callbackParamName:"jsonp",
+	                 timeout: 60000,
+	                 load:dojo.hitch(this, this.findConceptsHandler, 
+	                                 sIdWordInputOrFunction,
+	                                 this.isThemeSearch), 
+	                 error: dojo.hitch(this, this.findConceptsErrorHandler)
+				   });
+				 var dfd = new dojo.Deferred(promise);
+				 dfd.addErrback(dojo.hitch(this, this.findConceptsErrorHandler));
+				 return;  
+			} else {
+			
+				var tmpUrl =  urlConcepts;
+				if(this.proxyUrl != null) {
+					tmpUrl = this.proxyUrl + ((this.proxyUrl.indexOf("?") > -1 )? "": "?") + urlConcepts;
+				} 
+			    funcFindConceptsHandler = dojo.hitch(this, this.findConceptsHandlerXml, 
+							  sIdWordInputOrFunction,
+							  this.isThemeSearch);
+			
+			    var promise = dojo.xhrGet ({
+					  url:  tmpUrl, 
+					  content:{},
+					  handleAs: 'text',
+					  callbackParamName:"jsonp",
+					  timeout: 60000,
+					  load: funcFindConceptsHandler, 
+					  error: dojo.hitch(this, this.findConceptsErrorHandler)
+			    });
+				var dfd = new dojo.Deferred(promise);
+				dfd.addErrback(dojo.hitch(this, this.findConceptsErrorHandler));
+			}
 			
 		},
+		
+		findConceptsHandlerXml: function(sIdWordInputOrFunction, isThemeSearch, 
+				response) {
+			
+			var jsdom = dojox.xml.DomParser.parse(response);
+			var response = dojo.map(jsdom.getElementsByTagName("theme"), function(elTheme) {
+				var label = elTheme.getElementsByTagName("label");
+				if(label.length < 1 || label[0].childNodes.length < 1) {
+					label = "";
+				} else {
+					label = label[0].childNodes[0].nodeValue;
+				}
+				var description = elTheme.getElementsByTagName("description");
+				if(description.length < 1 || description[0].childNodes.length < 1) {
+					description = "";
+				} else {
+					description = description[0].childNodes[0].nodeValue;
+				}
+				var definition = elTheme.getElementsByTagName("definition");
+				if(definition.length < 1 || definition[0].childNodes.length < 1) {
+					definition = "";
+				} else {
+					definition = definition[0].childNodes[0].nodeValue;
+				}
+			
+				return {
+					definition: {
+						string: definition
+					} ,
+					preferredLabel: {
+						string: label
+					}
+				};
+			});
+            this.findConceptsHandler(sIdWordInputOrFunction, isThemeSearch, response);
+			   console.debug(jsdom);
+		},
+		
 		/**
 		 * Handler called after a concept is found
 		 * 

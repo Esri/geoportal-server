@@ -33,7 +33,8 @@ Deployment instructions:
             "ItemMetadata.enabled": true,
             "ItemMetadata.allowSaveDraft": true,
             "ItemMetadata.gxeProxyUrl": "",
-            "ItemMetadata.useGxeProxyUrl": false
+            "ItemMetadata.useGxeProxyUrl": false,
+            "ItemMetadata.gemetThemesProxy": null
         }
     </script>
     <script type="text/javascript" src="/metadata/gpt/agp/AgpAddins.js">
