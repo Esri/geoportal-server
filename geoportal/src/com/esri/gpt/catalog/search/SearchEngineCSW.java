@@ -32,6 +32,7 @@ import javax.xml.transform.stream.StreamResult;
 import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.geometry.Envelope;
+import com.esri.gpt.framework.isodate.IsoDateFormat;
 import com.esri.gpt.framework.search.SearchXslRecord;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.XmlIoUtil;
@@ -48,6 +49,8 @@ import com.esri.gpt.server.csw.client.CswSearchCriteria;
 import com.esri.gpt.server.csw.client.CswSearchRequest;
 import com.esri.gpt.server.csw.client.InvalidOperationException;
 import com.esri.gpt.server.csw.client.NullReferenceException;
+import java.text.ParseException;
+import java.util.Date;
 
 
 
@@ -768,6 +771,28 @@ private CswProfiles readCswProfiles() throws SearchException {
     .getGptXslProfiles().getCswProfiles();
 }
 
+@Override
+public ARecord getARecord(String uuid) throws SearchException {
+  final CswRecord record = getMetadata(uuid);
+  ARecord aRecord = new ARecord() {
+    @Override
+    public String getMetadataAsText() {
+      return record.getFullMetadata();
+    }
+
+    @Override
+    public Date getModifiedDate() {
+      String modifedDateAsString = record.getModifiedDate();
+      try {
+        return new IsoDateFormat().parseObject(modifedDateAsString);
+      } catch (ParseException ex) {
+        return null;
+      }
+    }
+  };
+  return aRecord;
+}
+
 /**
  * Gets the metadata as text.
  * 
@@ -780,9 +805,9 @@ private CswProfiles readCswProfiles() throws SearchException {
 @Override
 public String getMetadataAsText(String uuid) throws SearchException {
   
-  CswRecord record = this.getMetadata(uuid);
+  ARecord record = getARecord(uuid);
   
-  return record.getFullMetadata();
+  return record.getMetadataAsText();
  
 }
 

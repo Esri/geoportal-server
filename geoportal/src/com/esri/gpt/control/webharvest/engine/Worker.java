@@ -14,7 +14,6 @@
  */
 package com.esri.gpt.control.webharvest.engine;
 
-import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
 import com.esri.gpt.catalog.management.MmdEnums.ApprovalStatus;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
@@ -175,12 +174,7 @@ class Worker extends WorkerBase {
    * @return executor
    */
   private Executor newExecutor(ExecutionUnit unit) {
-    if (unit.getRepository().getProtocol().getKind().equalsIgnoreCase("agp2agp") && (unit.getRepository().getProtocol() instanceof HarvestProtocolAgp2Agp) ) {
-      HarvestProtocolAgp2Agp agpProtocol = (HarvestProtocolAgp2Agp)unit.getRepository().getProtocol();
-      return new Worker.Agp2AgpExecutorImpl(dataProcessor, unit, agpProtocol.getStopOnError());
-    } else {
-      return new Worker.ExecutorImpl(dataProcessor, unit);
-    }
+    return unit.getRepository().getProtocol().newExecutor(dataProcessor, unit, this);
   }
 
   /**
@@ -250,6 +244,11 @@ class Worker extends WorkerBase {
     }
   }
 
+  @Override
+  public boolean isActive() {
+    return super.isActive() && !isDropped();
+  }
+
   private boolean isSuspendedWithAck() {
     if (isSuspended()) {
       Logger.getLogger(Worker.class.getCanonicalName()).log(Level.INFO, "[SYNCHRONIZER] Worker {0} acknowledged suspension", workerThread.getId());
@@ -262,55 +261,5 @@ class Worker extends WorkerBase {
     ApplicationConfiguration appCfg = appCtx.getConfiguration();
     StringAttributeMap parameters = appCfg.getCatalogConfiguration().getParameters();
     return Val.chkInt(parameters.getValue("webharvester.maxAttempts"),DEFAULT_MAX_ATTEMPTS);
-  }
-
-  /**
-   * Agp2Agp executor implementation.
-   */
-  private class Agp2AgpExecutorImpl extends Agp2AgpExecutor {
-
-    public Agp2AgpExecutorImpl(DataProcessor dataProcessor, ExecutionUnit unit, boolean stopOnError) {
-      super(dataProcessor, unit, stopOnError);
-    }
-
-    @Override
-    protected boolean isActive() {
-      return !(isShutdown() || isDropped());
-    }
-
-    @Override
-    protected boolean isShutdown() {
-      return Worker.this.isShutdown();
-    }
-
-    @Override
-    protected boolean isSuspended() {
-      return Worker.this.isSuspended();
-    }
-  }
-
-  /**
-   * Standard executor implementation.
-   */
-  private class ExecutorImpl extends Executor {
-
-    public ExecutorImpl(DataProcessor dataProcessor, ExecutionUnit unit) {
-      super(dataProcessor, unit);
-    }
-
-    @Override
-    protected boolean isActive() {
-      return !(isShutdown() || isDropped());
-    }
-
-    @Override
-    protected boolean isShutdown() {
-      return Worker.this.isShutdown();
-    }
-
-    @Override
-    protected boolean isSuspended() {
-      return Worker.this.isSuspended();
-    }
   }
 }

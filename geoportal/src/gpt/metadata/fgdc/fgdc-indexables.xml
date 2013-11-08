@@ -60,12 +60,14 @@
   </property>
   
   <property meaning="body" xpathType="STRING" xpath="/*"/>
-  
-  <property meaning="dcat.accessLevel"    xpath="/metadata/idinfo/accconst"/>
-  <property meaning="dcat.mbox"           xpath="/metadata/idinfo/ptcontac/cntinfo/cntemail"/>
-  <property meaning="dcat.person"         xpath="/metadata/idinfo/ptcontac/cntinfo/cntorgp/cntper" />
-  <property meaning="dcat.license"        xpath="/metadata/distinfo/distliab" />
-  <property meaning="dcat.dataDictionary" xpath="/metadata/idinfo/keywords/theme/themekt" />
-  
-</indexables>
 
+    <!-- dcat-specific -->
+  <property meaning="dcat.accessLevel" xpath="/metadata/idinfo/accconst | /metadata/idinfo/useconst | /metadata/distinfo/distliab"/>
+  <property meaning="dcat.mbox" xpath="/metadata/idinfo/ptcontac/cntinfo/cntemail"/>
+  <property meaning="dcat.person" xpath="/metadata/idinfo/ptcontac/cntinfo/cntorgp/cntper" />
+  <property meaning="dcat.dataDictionary" xpath="/metadata/idinfo/keywords/theme/themekt | /metadata/eainfo/overview/eadetcit" />
+  <property meaning="dcat.modified" xpath="/metadata/idinfo/citation/citeinfo/pubdate"/>
+  <property meaning="dcat.publisher" xpath="/metadata/idinfo/citation/citeinfo/pubinfo/publish | /metadata/distinfo/distrib/cntinfo/cntperp/cntper | /metadata/distinfo/distrib/cntinfo/cntorgp/cntorg"/>
+  <property meaning="dcat.format" xpath="/metadata/distinfo/storder/digform/digtinfo/fname"/>
+  <property meaning="dcat.accessUrl" xpath="/metadata/distinfo/stdorder/digform/digtopt/onlinopt/computer/networka/networkr"/>
+</indexables>

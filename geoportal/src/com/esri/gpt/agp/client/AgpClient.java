@@ -36,7 +36,7 @@ public class AgpClient {
   /** class variables ========================================================= */
   
   /** The Logger. */
-  private static Logger LOGGER = Logger.getLogger(AgpClient.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(AgpClient.class.getName());
   
   /** instance variables ====================================================== */
   private HttpClient batchHttpClient;

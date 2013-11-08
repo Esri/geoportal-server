@@ -18,6 +18,7 @@ import com.esri.gpt.catalog.context.CatalogConfiguration;
 import com.esri.gpt.catalog.harvest.repository.HrRecord.HarvestFrequency;
 import com.esri.gpt.catalog.harvest.repository.HrRecord.RecentJobStatus;
 import com.esri.gpt.catalog.management.MmdEnums.PublicationMethod;
+import com.esri.gpt.control.webharvest.protocol.ProtocolParseException;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.RoleMap;
@@ -42,6 +43,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -52,7 +55,9 @@ import org.xml.sax.SAXException;
  */
 public class MmdQueryRequest extends MmdRequest {
 
+
 // class variables =============================================================
+private static final Logger LOGGER = Logger.getLogger(MmdQueryRequest.class.getCanonicalName());
 
 // instance variables ==========================================================
 private ImsMetadataAdminDao     adminDao;
@@ -298,7 +303,11 @@ public void execute() throws SQLException, IdentityException, NamingException,
             }
           }
           
-          readRecord(rs,record,sUsername);
+          try {
+            readRecord(rs,record,sUsername);
+          } catch (Exception ex) {
+            LOGGER.log(Level.WARNING, "Error reading record.", ex);
+          }
 
           // break if we hit the max value for the cursor
           if (records.size() >= nRecsPerPage) {
@@ -430,8 +439,9 @@ private String readImsOwnerName(Connection con) throws SQLException {
  * @throws ParserConfigurationException if unable to reach parser configuration
  * @throws IOException if unable to perform IO operation
  * @throws SAXException if unable to parse XML data
+ * @throws ProtocolParseException if unable to parse protocol
  */
-private void readRecord(ResultSet rs, MmdRecord record, String ownername) throws SQLException, ParserConfigurationException, IOException, SAXException {
+private void readRecord(ResultSet rs, MmdRecord record, String ownername) throws SQLException, ParserConfigurationException, IOException, SAXException, ProtocolParseException {
   int n = 1;
 
   // set the title and uuid

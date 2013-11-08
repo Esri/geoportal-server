@@ -158,6 +158,8 @@
     
         for (var i=0; i<layers.length; i++) {
           var layer = layers[i];
+		  if (!layer.defaultVisibility) continue;
+		  
           var subLayersCount = layer.subLayerIds!=null? layer.subLayerIds.length: 0;
           var currId = "layer_" + _layersCount;
           var parentsCount = 0;

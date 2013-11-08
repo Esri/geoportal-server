@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.catalog.search;
 
+import com.esri.gpt.control.georss.IFeedRecord;
 import com.esri.gpt.framework.context.RequestContext;
 
 
@@ -47,7 +48,7 @@ public void setResourceUri(String resourceUri, String hintServiceType);
  * 
  * @param searchResultRecord the new search result record
  */
-public void setSearchResultRecord(SearchResultRecord searchResultRecord);
+public void setSearchResultRecord(IFeedRecord searchResultRecord);
 
 /**
  * Sets the request context.

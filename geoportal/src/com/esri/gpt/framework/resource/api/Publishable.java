@@ -15,6 +15,7 @@
 
 package com.esri.gpt.framework.resource.api;
 
+import com.esri.gpt.server.csw.client.NullReferenceException;
 import java.io.IOException;
 import java.util.Date;
 import javax.xml.transform.TransformerException;
@@ -37,8 +38,9 @@ SourceUri getSourceUri();
  * @throws IOException if getting content fails
  * @throws TransformerException if processing response fails
  * @throws SAXException if processing response fails
+ * @throws NullReferenceException if null reference
  */
-String getContent() throws IOException, TransformerException, SAXException;
+String getContent() throws IOException, TransformerException, SAXException, NullReferenceException;
 /**
  * Gets update date if available.
  * @return update date or <code>null</code> if date not available

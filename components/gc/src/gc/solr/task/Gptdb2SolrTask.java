@@ -20,6 +20,7 @@ import gc.base.task.TaskContext;
 import gc.base.task.TaskStats;
 import gc.base.util.UuidUtil;
 import gc.base.xmltypes.XmlTypes;
+import gc.gpt.db.GptCollections;
 import gc.gpt.db.GptResource;
 import gc.gpt.db.GptResourceXml;
 import gc.gpt.db.GptUser;
@@ -214,8 +215,14 @@ public class Gptdb2SolrTask extends Task implements SqlRowHandler {
 					parentSite = new GptResource();
 					parentSite.querySqlDB(context,con,resource.siteuuid);
 				}
+                
+                GptCollections gptCollections = null;
+                if (gptdb2SolrInstance.isGptIncludeCollections()) {
+                  gptCollections = new GptCollections();
+                  gptCollections.querySqlDB(context,con,resource.docuuid);
+                }
 	
-				SolrInputDocument doc = makeDoc(id,resource,user,resourceXml,parentSite);
+				SolrInputDocument doc = makeDoc(id,resource,user,resourceXml,parentSite,gptCollections);
 				//System.err.println(doc);
 				updateDoc(doc);
 				stats.incrementCount(tn+".solr.sent");
@@ -231,7 +238,7 @@ public class Gptdb2SolrTask extends Task implements SqlRowHandler {
 	}
 	
 	private SolrInputDocument makeDoc(String id, GptResource resource, GptUser user, 
-			GptResourceXml resourceXml, GptResource parentSite) throws Exception {
+			GptResourceXml resourceXml, GptResource parentSite, GptCollections collections) throws Exception {
 		
 		/*
 	   - Collections? Acls?
@@ -298,6 +305,12 @@ public class Gptdb2SolrTask extends Task implements SqlRowHandler {
 		if (!this.approvedOnly) {
 		  builder.setField(doc,"gpt.doc.approvalstatus_s",resource.approvalstatus);
 		}
+        if (collections!=null) {
+          for (String shortName: collections.getShortNames()) {
+            builder.addField(doc,FieldConstants.Sys_Src_Collections,shortName);
+            builder.addField(doc,FieldConstants.Sys_Src_Collections_ss,shortName);
+          }
+        }
 	  //System.err.println(doc);
 		
 		if ((okIds != null) && (okIds.size() <= this.maxIdsInMap)) {
@@ -345,7 +358,7 @@ public class Gptdb2SolrTask extends Task implements SqlRowHandler {
 				String sId = (String)doc.getFieldValue(fldId);
 				String sFs = (String)doc.getFieldValue(fldForeignStamp);
 				result[0] = sId;
-				if (sFs.equals(fs)) {
+				if (sFs.equals(fs) && !gptdb2SolrInstance.isGptIncludeCollections()) {
 					result[1] = "fsMatched";
 				} 
 			} else if (nDocs > 1) {

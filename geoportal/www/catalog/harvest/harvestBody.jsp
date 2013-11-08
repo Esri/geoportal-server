@@ -49,6 +49,38 @@ String basePath = RequestContext.extract(request).resolveBaseContextPath(request
 }
 </style>
 <script type="text/javascript" >
+dojo.require("dijit.form.TimeTextBox");
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.Select");
+dojo.require("dijit.form.CheckBox");
+dojo.require("dijit.form.RadioButton");
+
+var RES = {
+  SpecTimeEvent:               "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.SpecTimeEvent'/>",
+  TimeOfTheDayEvent:           "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.TimeOfTheDayEvent'/>",
+  DayOfTheMonthEvent:          "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.DayOfTheMonthEvent'/>",
+  DayOfTheWeekEvent:           "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.DayOfTheWeekEvent'/>",
+  DayOfTheWeekInTheMonthEvent: "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.DayOfTheWeekInTheMonthEvent'/>",
+
+  DayOfTheWeek: [
+    "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.SUNDAY'/>",
+    "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.MONDAY'/>",
+    "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.TUEASDAY'/>",
+    "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.WEDNESDAY'/>",
+    "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.THURSDAY'/>",
+    "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.FRIDAY'/>",
+    "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.SATURDAY'/>"
+  ],
+          
+  SUNDAY: "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.SUNDAY'/>",
+  MONDAY: "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.MONDAY'/>",
+  TUEASDAY: "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.TUEASDAY'/>",
+  WEDNESDAY: "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.WEDNESDAY'/>",
+  THURSDAY: "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.THURSDAY'/>",
+  FRIDAY: "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.FRIDAY'/>",
+  SATURDAY: "<fmt:message key='catalog.com.esri.gpt.framework.adhoc.events.SATURDAY'/>"
+};
 
 /**
  * Safe function to check if node is checked
@@ -237,6 +269,7 @@ var synchronizableClicked = false;
 
 // store original harvesting options just received from the bean
 dojo.addOnLoad(function() {
+  dojo.query("body").addClass("tundra");
   storeHarvestingOptions();
   dojo.query("#harvestCreate\\:synchronizable").onclick(function(node){
     if (!synchronizableClicked && node.target.checked) {
@@ -258,7 +291,11 @@ var lastSearchable = false;
  */
 function enableSection(section,enable) {
   dojo.query("#harvestCreate ."+section).forEach(function(node, index, arr){
-    node.parentNode.parentNode.style.display = (enable? "": "none");
+    if (!dojo.hasClass(node,"hint")) {
+      node.parentNode.parentNode.style.display = (enable? "": "none");
+    } else {
+      node.style.display = (enable? "": "none");
+    }
   }, null);
 }
 
@@ -267,7 +304,7 @@ function enableSection(section,enable) {
  */
 function selectSection(section) {
   
-  if (section=="agp2agp") {
+  if (section=="agp2agp" || section=="ags2agp" ) {
     dojo.query("#harvestCreate\\:repositoryMain > tbody > tr:nth-child(2)").style("display","none");
   } else {
     dojo.query("#harvestCreate\\:repositoryMain > tbody > tr:nth-child(2)").style("display","table-row");
@@ -290,8 +327,9 @@ function selectSection(section) {
   enableSection("atom", section=="atom");
   
   enableSection("agp2agp", section=="agp2agp");
+  enableSection("ags2agp", section=="ags2agp");
   
-  dojo.query(".onBehalfOf").style("display",section!="agp2agp"? "block": "none");
+  dojo.query(".onBehalfOf").style("display",section!="agp2agp" && section!="ags2agp"? "block": "none");
 
   adjustSearchable(section);
   adjustFindable(section);
@@ -364,7 +402,7 @@ function adjustSearchable(section) {
  * Adjusts searchable.
  */
 function adjustFindable(section) {
-  var enabled = section!="agp2agp";
+  var enabled = section!="agp2agp" && section!="ags2agp";
   dojo.query("#harvestCreate .findable").attr("disabled",!enabled);
   if (!enabled) {
     if (lastFindableEnabled) {
@@ -460,40 +498,53 @@ dojo.addOnLoad(function() {
 dojo.addOnLoad(function() {
   var fetchOwners = dojo.byId("fetchOwners");
   var fetchFolders = dojo.byId("fetchFolders");
+  var fetchAgs2AgpOwners = dojo.byId("ags2agp-fetchOwners");
+  var fetchAgs2AgpFolders = dojo.byId("ags2agp-fetchFolders");
+  
   var closeFoldersDialog = dojo.byId("closeFoldersDialog");
   var foldersDiv = dojo.byId("foldersDiv");
   var ownersDiv = dojo.byId("ownersDiv");
   var ownersSearchText = dojo.byId("ownersSearchText");
   
-  
-  dojo.connect(fetchOwners,"onclick",function(evt){
+  var fetchOwnersFun = function(protocolType) {
     var ownersDialog = dijit.byId("ownersDialog");
     dojo.empty(ownersDiv);
-    var h = dojo.trim(dojo.attr("harvestCreate:dest-h","value"));
-    var u = dojo.trim(dojo.attr("harvestCreate:dest-u","value"));
-    var p = dojo.trim(dojo.attr("harvestCreate:dest-p","value"));
-    if (h.length>0 && u.length>0 && p.length>0) {
+    var content = getDestination(protocolType);
+    if (content.h.length>0 && content.u.length>0 && content.p.length>0) {
       dojo.query("[data-type=search]").style("display","none");
       ownersDialog.show();
-      getSelf();
+      getSelf(protocolType);
     } else {
-      alert("<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.alert"/>");
+      alert("<fmt:message key='catalog.harvest.manage.test.msg.agp2agp.ownersDialog.alert'/>");
     }
+  }
+  
+  dojo.connect(fetchOwners,"onclick",function(evt){
+    fetchOwnersFun("agp2agp");
   });
   
-  dojo.connect(fetchFolders,"onclick",function(evt){
+  dojo.connect(fetchAgs2AgpOwners,"onclick",function(evt){
+    fetchOwnersFun("ags2agp");
+  });
+  
+  var fetchFoldersFun = function(protocolType) {
     var foldersDialog = dijit.byId("foldersDialog");
     dojo.empty(foldersDiv);
-    var h = dojo.trim(dojo.attr("harvestCreate:dest-h","value"));
-    var u = dojo.trim(dojo.attr("harvestCreate:dest-u","value"));
-    var p = dojo.trim(dojo.attr("harvestCreate:dest-p","value"));
-    var o = dojo.trim(dojo.attr("harvestCreate:dest-o","value"));
-    if (h.length>0 && u.length>0 && p.length>0 && o.length>0) {
+    var content = getDestination(protocolType);
+    if (content.h.length>0 && content.u.length>0 && content.p.length>0 && content.o.length>0) {
       foldersDialog.show();
-      searchFolders();
+      searchFolders(protocolType);
     } else {
-      alert("<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.foldersDialog.alert"/>");
+      alert("<fmt:message key='catalog.harvest.manage.test.msg.agp2agp.foldersDialog.alert'/>");
     }
+  }
+  
+  dojo.connect(fetchFolders,"onclick",function(evt){
+    fetchFoldersFun("agp2agp");
+  });
+  
+  dojo.connect(fetchAgs2AgpFolders,"onclick",function(evt){
+    fetchFoldersFun("ags2agp");
   });
 
   dojo.connect(closeFoldersDialog,"onclick",function(evt){
@@ -508,30 +559,82 @@ dojo.addOnLoad(function() {
 
   dojo.connect(searchOwnersDialog,"onclick",function(evt){
     dojo.empty(ownersDiv);
-    searchOwners();
+    searchOwners(getSelectedProtocol());
   });
   
 
   dojo.connect(ownersSearchText,"onkeydown",function(evt){
     if (evt.keyCode==13) {
       dojo.empty(ownersDiv);
-      searchOwners();
+      searchOwners(getSelectedProtocol());
     }
   });
   
   dojo.addClass(dijit.byId("foldersDialog").domNode,"tundra");
   dojo.addClass(dijit.byId("ownersDialog").domNode,"tundra");
+  dojo.addClass(dijit.byId("timeDialog").domNode,"tundra");
 });
 
-function getSelf() {
+function getSelectedProtocol() {
+  var ps = dojo.query("#harvestCreate\\:protocolType input:checked").attr("value");
+  return ps!=null && ps.length>0? ps[0]: "";
+}
+
+function getAgp2AgpDestination() {
+  var destination = {
+    h: dojo.trim(dojo.attr("harvestCreate:dest-h","value")),
+    u: dojo.trim(dojo.attr("harvestCreate:dest-u","value")),
+    p: dojo.trim(dojo.attr("harvestCreate:dest-p","value")),
+    o: dojo.trim(dojo.attr("harvestCreate:dest-o","value")),
+    f: dojo.trim(dojo.attr("harvestCreate:dest-f","value"))
+  };
+  return destination;
+};
+
+function getAgs2AgpDestination() {
+  var destination = {
+    h: dojo.trim(dojo.attr("harvestCreate:ags-dest-h","value")),
+    u: dojo.trim(dojo.attr("harvestCreate:ags-dest-u","value")),
+    p: dojo.trim(dojo.attr("harvestCreate:ags-dest-p","value")),
+    o: dojo.trim(dojo.attr("harvestCreate:ags-dest-o","value")),
+    f: dojo.trim(dojo.attr("harvestCreate:ags-dest-f","value"))
+  };
+  return destination;
+};
+
+function getDestination(protocolType) {
+  if (protocolType=="agp2agp") {
+    return getAgp2AgpDestination();
+  }
+  if (protocolType=="ags2agp") {
+    return getAgs2AgpDestination();
+  }
+  return null;
+}
+
+function setDestinationOwner(protocolType,owner) {
+  if (protocolType=="agp2agp") {
+    dojo.attr("harvestCreate:dest-o","value",owner);
+  }
+  if (protocolType=="ags2agp") {
+    dojo.attr("harvestCreate:ags-dest-o","value",owner);
+  }
+}
+
+function setDestinationFolder(protocolType,folder) {
+  if (protocolType=="agp2agp") {
+    dojo.attr("harvestCreate:dest-f","value",folder);
+  }
+  if (protocolType=="ags2agp") {
+    dojo.attr("harvestCreate:ags-dest-f","value",folder);
+  }
+}
+
+function getSelf(protocolType) {
   var ownersDiv = dojo.byId("ownersDiv");
   esri.request({
     url: "<%=basePath%>/catalog/harvest/getSelf.jsp",
-    content: {
-      h: dojo.trim(dojo.attr("harvestCreate:dest-h","value")),
-      u: dojo.trim(dojo.attr("harvestCreate:dest-u","value")),
-      p: dojo.trim(dojo.attr("harvestCreate:dest-p","value"))
-    },
+    content: getDestination(protocolType),
     handleAs: "json",
     callbackParamName: "callback"
   }).then(function(response){
@@ -543,7 +646,7 @@ function getSelf() {
         var folderDiv = dojo.create("div",null,ownersDiv);
         var folderLink = dojo.create("a",{href:"#", innerHTML: caption},folderDiv);
         dojo.connect(folderLink,"onclick",function(evt){
-          dojo.attr("harvestCreate:dest-o","value",response.username);
+          setDestinationOwner(protocolType,response.username);
           var ownersDialog = dijit.byId("ownersDialog");
           ownersDialog.hide();
         });
@@ -552,16 +655,11 @@ function getSelf() {
   });
 }
 
-function searchOwners() {
+function searchOwners(protocolType) {
   var ownersDiv = dojo.byId("ownersDiv");
   esri.request({
     url: "<%=basePath%>/catalog/harvest/searchOwners.jsp",
-    content: {
-      h: dojo.trim(dojo.attr("harvestCreate:dest-h","value")),
-      u: dojo.trim(dojo.attr("harvestCreate:dest-u","value")),
-      p: dojo.trim(dojo.attr("harvestCreate:dest-p","value")),
-      q: dojo.trim(dojo.attr("ownersSearchText","value"))
-    },
+    content: dojo.mixin(getDestination(protocolType),{q: dojo.trim(dojo.attr("ownersSearchText","value"))}),
     handleAs: "json",
     callbackParamName: "callback"
   }).then(function(response){
@@ -573,8 +671,8 @@ function searchOwners() {
         var caption = owner.fullName + " (" + owner.username + ")";
         var folderDiv = dojo.create("div",null,ownersDiv);
         var folderLink = dojo.create("a",{href:"#", innerHTML: caption},folderDiv);
-        dojo.connect(folderLink,"onclick",dojo.hitch({username: owner.username},function(evt){
-          dojo.attr("harvestCreate:dest-o","value",this.username);
+        dojo.connect(folderLink,"onclick",dojo.hitch({protocolType: protocolType, username: owner.username},function(evt){
+          setDestinationOwner(this.protocolType,this.username);
           var ownersDialog = dijit.byId("ownersDialog");
           ownersDialog.hide();
         }));
@@ -585,16 +683,11 @@ function searchOwners() {
   });
 }
 
-function searchFolders() {
+function searchFolders(protocolType) {
   var foldersDiv = dojo.byId("foldersDiv");
   esri.request({
     url: "<%=basePath%>/catalog/harvest/searchFolders.jsp",
-    content: {
-      h: dojo.trim(dojo.attr("harvestCreate:dest-h","value")),
-      u: dojo.trim(dojo.attr("harvestCreate:dest-u","value")),
-      p: dojo.trim(dojo.attr("harvestCreate:dest-p","value")),
-      o: dojo.trim(dojo.attr("harvestCreate:dest-o","value"))
-    },
+    content: getDestination(protocolType),
     handleAs: "json",
     callbackParamName: "callback"
   }).then(function(response){
@@ -606,8 +699,8 @@ function searchFolders() {
         var caption = folder.title + " (" + folder.id + ")";
         var folderDiv = dojo.create("div",null,foldersDiv);
         var folderLink = dojo.create("a",{href:"#", innerHTML: caption},folderDiv);
-        dojo.connect(folderLink,"onclick",dojo.hitch({folderId: folder.id},function(evt){
-          dojo.attr("harvestCreate:dest-f","value",this.folderId);
+        dojo.connect(folderLink,"onclick",dojo.hitch({protocolType: protocolType, folderId: folder.id},function(evt){
+          setDestinationFolder(this.protocolType,this.folderId);
           var foldersDialog = dijit.byId("foldersDialog");
           foldersDialog.hide();
         }));
@@ -617,6 +710,184 @@ function searchFolders() {
     var folderDiv = dojo.create("div",{innerHTML: '<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.norecords"/>'},foldersDiv);
   });
 }
+
+dojo.addOnLoad(function(){
+  dojo.query("#harvestCreate\\:harvestFrequencyMode input").onchange(function(evt){
+    var target = evt.target;
+    onHarvestFrequencyMode(target);
+    
+  });
+  dojo.query("#harvestCreate\\:harvestFrequencyMode input[checked]").forEach(function(target){
+    onHarvestFrequencyMode(target);
+  });
+  
+  dojo.connect(dojo.byId("addTime"),"onclick",function(evt){
+    var timeDialog = dijit.byId("timeDialog");
+    timeDialog.show();
+  });
+  
+  dojo.connect(dojo.byId("closeTimeDialog"),"onclick",function(evt){
+    var timeDialog = dijit.byId("timeDialog");
+    timeDialog.hide();
+  });
+  
+  dojo.connect(dojo.byId("timeSpecDate"),"onclick",function(evt){
+    dojo.style("timeSpecDateDiv", "display", evt.target.checked? "block": "none");
+  });
+  
+  dojo.connect(dojo.byId("addTimeDialog"), "onclick", function(evt){
+    var timePoint = getTimePoint();
+    if (timePoint && timePoint.code.length>0 && timePoint.msg.length>0) {
+      var timeDialog = dijit.byId("timeDialog");
+      timeDialog.hide();
+      addTimePoint(timePoint);
+    }
+  });
+  
+  if (getRadio()=="") {
+    setRadio("DATE");
+  }
+  
+  var timeCodes = dojo.attr("harvestCreate:timeCodes","value").split("|");
+  var timeMessages = dojo.attr("harvestCreate:timeMessages","value").split("|");
+  
+  if (timeCodes.length == timeMessages.length) {
+    for (i=0; i<timeCodes.length; i++) {
+      if (timeCodes[i].length>0) {
+        var timePoint = {
+          code: timeCodes[i],
+          msg: timeMessages[i]
+        };
+        addTimePoint(timePoint);
+      }
+    }
+  }
+});
+
+function onHarvestFrequencyMode(target) {
+  dojo.query("#harvestCreate\\:harvestFrequency").style("display", target.value=="PERIODICAL"? "block": "none");
+  dojo.query("#harvestTimes").style("display", target.value=="ADHOC"? "block": "none");
+}
+
+function getTimePoint() {
+  var timePoint = {
+    code: "",
+    msg: ""
+  };
+
+  var timeInput = dijit.byId("timeInput");
+  var time = timeInput.get('value');
+  
+  if (time!=null) {
+    var hours = strLPad(time.getHours(),2,"0");
+    var minutes = strLPad(time.getMinutes(),2,"0");
+
+    var timeString = hours +":"+minutes;
+
+    if (!dojo.attr("timeSpecDate","checked")) {
+      timePoint.code = timeString;
+      timePoint.msg = RES.TimeOfTheDayEvent.replace("\{0\}",timeString);
+    } else {
+      switch (getRadio()) {
+        case "DATE":
+          var dateInput = dijit.byId("dateInput");
+          var date = dateInput.get("value");
+          if (date!=null) {
+            var year = strLPad(date.getFullYear(),4,"0");
+            var month = strLPad(date.getMonth()+1,2,"0");
+            var day = strLPad(date.getDate(),2,"0");
+
+            var dateString = year+"-"+month+"-"+day;
+
+            timePoint.code = dateString +"T"+ timeString;
+            timePoint.msg = RES.SpecTimeEvent.replace("\{0\}",dateString +" "+ timeString);
+          }
+          break;
+        case "PATTERN":
+          var dayOfTheWeek = dijit.byId("dayOfTheWeekInput").get("value");
+          var dayOfTheMonthInput=dijit.byId("dayOfTheMonthInput").get("value");
+          if (Number.isNaN(dayOfTheMonthInput)) {
+            if (dayOfTheWeek.length>0) {
+              timePoint.code = dayOfTheWeek +"," + timeString;
+              timePoint.msg = RES.DayOfTheWeekEvent.replace("\{0\}",dayOfTheWeek).replace("\{1\}",timeString);
+            }
+          } else {
+            if (dayOfTheWeek.length>0) {
+              timePoint.code = dayOfTheMonthInput + "," + dayOfTheWeek +"," + timeString;
+              timePoint.msg = RES.DayOfTheWeekInTheMonthEvent.replace("\{0\}",dayOfTheMonthInput).replace("\{1\}",dayOfTheWeek).replace("\{2\}",timeString);
+            } else {
+              timePoint.code = dayOfTheMonthInput + "," + timeString;
+              timePoint.msg = RES.DayOfTheMonthEvent.replace("\{0\}",dayOfTheMonthInput).replace("\{1\}",timeString);
+            }
+          }
+          break;
+      }
+    }
+  }
+  
+  return timePoint;
+}
+
+function getRadio() {
+  var dateRadio = dijit.byId("dateRadio");
+  var patternRadio = dijit.byId("patternRadio");
+  
+  if (dateRadio.get("value")=="on") {
+    return "DATE";
+  } else if (patternRadio.get("value")=="on") {
+    return "PATTERN";
+  } else {
+    return "";
+  }
+}
+
+function setRadio(value) {
+  var dateRadio = dijit.byId("dateRadio");
+  var patternRadio = dijit.byId("patternRadio");
+  
+  switch (value) {
+    case "DATE":
+      dateRadio.set("value","on");
+      patternRadio.set("value",false);
+      break;
+    case "PATTERN":
+      dateRadio.set("value",false);
+      patternRadio.set("value","on");
+      break;
+    default:
+      dateRadio.set("value",false);
+      patternRadio.set("value",false);
+  }
+}
+
+function strLPad(str,len,ch) {
+  str = ""+str;
+  while (str.length<len) {
+    str = ch + str;
+  }
+  return str;
+}
+
+function addTimePoint(timePoint) {
+  var timePoints = dojo.byId("timePoints");
+  
+  var timePointDiv = dojo.create("div",{"class": "timePointDiv"},timePoints);
+  var timePointSpan = dojo.create("span",{innerHTML: timePoint.msg, "class": "timePointSpan"}, timePointDiv);
+  var timePointDelete = dojo.create("span",{"class": "timePointDelete"}, timePointDiv);
+  dojo.attr(timePointDiv, "data-time-code", timePoint.code);
+  
+  dojo.connect(timePointDelete,"onclick",dojo.hitch({timePointDiv: timePointDiv},function(evt){
+    dojo.destroy(this.timePointDiv);
+    dojo.attr("harvestCreate:timeCodes","value",collectTimeCodes());
+  }));
+  
+  dojo.attr("harvestCreate:timeCodes","value",collectTimeCodes());
+}
+
+function collectTimeCodes() {
+  return dojo.query(".timePointDiv").attr("data-time-code").join("|");
+}
+
 </script>
 
 </f:verbatim>
@@ -650,6 +921,10 @@ value="#{HarvestController.prepareSelectedPublishers}"/>
 <%-- lock title flag --%>
 <h:inputHidden id="lockTitle" value="#{HarvestController.editor.lockTitle}"/>
 
+<%-- time codes --%>
+<h:inputHidden id="timeCodes" value="#{HarvestController.timeCodes}"/>
+<h:inputHidden id="timeMessages" value="#{HarvestController.timeMessages}"/>
+
 <%-- Repository id -----------------------------------------------------------%>  
 <h:panelGrid columns="2" summary="#{gptMsg['catalog.general.designOnly']}"
   styleClass="formTable" columnClasses="formLabelColumn,formInputColumn">
@@ -682,20 +957,65 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <h:outputLabel id="hostUrlLabel" for="hostUrl" styleClass="requiredField" value=""/>
 
 <h:panelGroup>
-<h:inputText size="50" value="#{HarvestController.editor.hostUrl}" id="hostUrl"/>
-<h:outputText value="&nbsp;" escape="false"/>
-<h:commandButton 
-  id="testConnection"
-  value="#{gptMsg['catalog.harvest.manage.edit.testConnection']}" 
-  actionListener="#{HarvestController.handleTestConnection}" />
+  <h:inputText size="50" value="#{HarvestController.editor.hostUrl}" id="hostUrl"/>
+  <h:outputText value="&nbsp;" escape="false"/>
+  <h:commandButton 
+    id="testConnection"
+    value="#{gptMsg['catalog.harvest.manage.edit.testConnection']}" 
+    actionListener="#{HarvestController.handleTestConnection}" />
 </h:panelGroup>
 
+<h:panelGroup></h:panelGroup>
+<h:panelGroup>
+  <verbatim>
+    <div class="hint res" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer</span>
+    </div>
+    <div class="hint arcgis" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://server.arcgisonline.com/ArcGIS/rest/services</span>
+    </div>
+    <div class="hint arcims" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://my.server.com</span>
+    </div>
+    <div class="hint oai" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://my.server.com/oai</span>
+    </div>
+    <div class="hint waf" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://my.server.com/waf/metadata</span>
+    </div>
+    <div class="hint csw" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://gptogc.esri.com/geoportal/csw?request=GetCapabilities&service=CSW</span>
+    </div>
+    <div class="hint thredds" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://my.server.com/thredds/catalog.xml</span>
+    </div>
+    <div class="hint atom" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://gptogc.esri.com/geoportal/rest/find/document?f=atom</span>
+    </div>
+  </verbatim>
+</h:panelGroup>
 <%-- ArcGIS specific properties ----------------------------------------------%>
 
 <%-- SOAP URL --%>
 <h:outputLabel styleClass="arcgis requiredField" for="soapUrl" value="#{gptMsg['catalog.harvest.manage.edit.soapUrl']}"/>
 <h:inputText   styleClass="arcgis" size="50" value="#{HarvestController.editor.soapUrl}" id="soapUrl"/>
-
+<h:panelGroup></h:panelGroup>
+<h:panelGroup>
+  <verbatim>
+    <div class="hint arcgis" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://services.arcgisonline.com/ArcGIS/services/?wsdl</span>
+    </div>
+  </verbatim>
+</h:panelGroup>
 <%-- Repository Name --%>
 <h:outputLabel for="name" styleClass="" value="#{gptMsg['catalog.harvest.manage.edit.name']}"/>
 <h:inputText size="50" value="#{HarvestController.editor.name}" id="name"/>
@@ -768,6 +1088,15 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <%-- src host --%>
 <h:outputLabel styleClass="requiredField agp2agp" for="src-h" value="#{gptMsg['catalog.harvest.manage.edit.src.h']}"/>
 <h:inputText   styleClass="agp2agp" size="30" value="#{HarvestController.editor.attrs['src-h']}" id="src-h"/>
+<h:panelGroup></h:panelGroup>
+<h:panelGroup>
+  <verbatim>
+    <div class="hint agp2agp" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">my.host.com/portal</span>
+    </div>
+  </verbatim>
+</h:panelGroup>
 
 <%-- src user name --%>
 <h:outputLabel styleClass="requiredField agp2agp" for="src-u" value="#{gptMsg['catalog.harvest.manage.edit.src.u']}"/>
@@ -784,7 +1113,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <h:commandButton 
   id="testQuery"
   value="#{gptMsg['catalog.harvest.manage.test.msg.agp2agp.button.testQuery']}" 
-  actionListener="#{HarvestController.handleTestAgp2AgpQuery}" />
+  actionListener="#{HarvestController.handleTestConnection}" />
 </h:panelGroup>
 
 <%-- src max items --%>
@@ -797,6 +1126,15 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <%-- dest host --%>
 <h:outputLabel styleClass="requiredField agp2agp" for="dest-h" value="#{gptMsg['catalog.harvest.manage.edit.dest.h']}"/>
 <h:inputText   styleClass="agp2agp" size="30" value="#{HarvestController.editor.attrs['dest-h']}" id="dest-h"/>
+<h:panelGroup></h:panelGroup>
+<h:panelGroup>
+  <verbatim>
+    <div class="hint agp2agp" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">my.host.com/portal</span>
+    </div>
+  </verbatim>
+</h:panelGroup>
 
 <%-- dest user name --%>
 <h:outputLabel styleClass="requiredField agp2agp" for="dest-u" value="#{gptMsg['catalog.harvest.manage.edit.dest.u']}"/>
@@ -809,7 +1147,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <h:commandButton 
   id="testClient"
   value="#{gptMsg['catalog.harvest.manage.test.msg.agp2agp.button.testClient']}" 
-  actionListener="#{HarvestController.handleTestAgp2AgpClient}" />
+  actionListener="#{HarvestController.handleTestAgpDestination}" />
 </h:panelGroup>
 
 <%-- dest owner --%>
@@ -827,6 +1165,91 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <h:inputText   styleClass="agp2agp" size="40" value="#{HarvestController.editor.attrs['dest-f']}" id="dest-f"/>
 <f:verbatim>
   <input type="button" style="left: -4px;" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.button.fetchFolders"/>" id="fetchFolders"/>
+</f:verbatim>
+</h:panelGroup>
+
+<%-- AGS-TO-AGP specific properties ------------------------------------------%>
+<h:outputText styleClass="ags2agp agp2agpCaption" value=""/>
+<h:outputText styleClass="ags2agp agp2agpCaption" value="#{gptMsg['catalog.harvest.manage.edit.src.ags2agp.caption']}"/>
+
+<%-- src host --%>
+<h:outputLabel styleClass="requiredField ags2agp" for="ags-src-restUrl" value="#{gptMsg['catalog.harvest.manage.edit.src.rest']}"/>
+<h:panelGroup>
+<h:inputText   styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-src-restUrl']}" id="ags-src-restUrl"/>
+<h:outputText value="&nbsp;" escape="false"/>
+<h:commandButton 
+  id="ags2agp-testConnection"
+  value="#{gptMsg['catalog.harvest.manage.edit.testConnection']}" 
+  actionListener="#{HarvestController.handleTestConnection}" />
+</h:panelGroup>
+<h:panelGroup></h:panelGroup>
+<h:panelGroup>
+  <verbatim>
+    <div class="hint ags2agp" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://server.arcgisonline.com/ArcGIS/rest/services</span>
+    </div>
+  </verbatim>
+</h:panelGroup>
+
+<%-- src soap --%>
+<h:outputLabel styleClass="requiredField ags2agp" for="ags-src-soapUrl" value="#{gptMsg['catalog.harvest.manage.edit.src.soap']}"/>
+<h:inputText   styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-src-soapUrl']}" id="ags-src-soapUrl"/>
+<h:panelGroup></h:panelGroup>
+<h:panelGroup>
+  <verbatim>
+    <div class="hint ags2agp" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://services.arcgisonline.com/ArcGIS/services/?wsdl</span>
+    </div>
+  </verbatim>
+</h:panelGroup>
+
+<h:outputText styleClass="ags2agp agp2agpCaption" value=""/>
+<h:outputText styleClass="ags2agp agp2agpCaption" value="#{gptMsg['catalog.harvest.manage.edit.dest.caption']}"/>
+
+<%-- dest host --%>
+<h:outputLabel styleClass="requiredField ags2agp" for="ags-dest-h" value="#{gptMsg['catalog.harvest.manage.edit.dest.h']}"/>
+<h:inputText   styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-dest-h']}" id="ags-dest-h"/>
+<h:panelGroup></h:panelGroup>
+<h:panelGroup>
+  <verbatim>
+    <div class="hint ags2agp" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">my.host.com/portal</span>
+    </div>
+  </verbatim>
+</h:panelGroup>
+
+<%-- dest user name --%>
+<h:outputLabel styleClass="requiredField ags2agp" for="ags-dest-u" value="#{gptMsg['catalog.harvest.manage.edit.dest.u']}"/>
+<h:inputText   styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-dest-u']}" id="ags-dest-u"/>
+
+<%-- dest password --%>
+<h:outputLabel styleClass="requiredField ags2agp" for="ags-dest-p" value="#{gptMsg['catalog.harvest.manage.edit.dest.p']}"/>
+<h:panelGroup>
+<h:inputSecret redisplay="true" styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-dest-p']}" id="ags-dest-p"/>
+<h:commandButton 
+  id="ags2agp-testClient"
+  value="#{gptMsg['catalog.harvest.manage.test.msg.agp2agp.button.testClient']}" 
+  actionListener="#{HarvestController.handleTestAgpDestination}" />
+</h:panelGroup>
+
+<%-- dest owner --%>
+<h:outputLabel styleClass="requiredField ags2agp" for="ags-dest-o" value="#{gptMsg['catalog.harvest.manage.edit.dest.o']}"/>
+<h:panelGroup>
+<h:inputText styleClass="ags2agp" size="30" value="#{HarvestController.editor.attrs['ags-dest-o']}" id="ags-dest-o"/>
+<f:verbatim>
+  <input type="button" style="left: -4px;" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.button.fetchOwners"/>" id="ags2agp-fetchOwners"/>
+</f:verbatim>
+</h:panelGroup>
+
+<%-- dest folder ID --%>
+<h:outputLabel styleClass="requiredField ags2agp" for="ags-dest-f" value="#{gptMsg['catalog.harvest.manage.edit.dest.f']}"/>
+<h:panelGroup>
+<h:inputText   styleClass="ags2agp" size="40" value="#{HarvestController.editor.attrs['ags-dest-f']}" id="ags-dest-f"/>
+<f:verbatim>
+  <input type="button" style="left: -4px;" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.button.fetchFolders"/>" id="ags2agp-fetchFolders"/>
 </f:verbatim>
 </h:panelGroup>
 
@@ -888,9 +1311,19 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 </h:panelGrid>
 
 <f:verbatim><br/></f:verbatim>
-
+  
 <%-- Harvesting frequency --%>
 <h:outputText styleClass="syncOptSpec" value="#{gptMsg['catalog.harvest.manage.edit.frequency.caption']}"/>
+
+<%-- Harvesting frequency mode --%>
+<h:selectOneRadio styleClass="syncOptSpecMode" value="#{HarvestController.editor.frequencyModeAsString}" id="harvestFrequencyMode">
+<f:selectItem itemValue="PERIODICAL" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.periodical']}"/>
+<f:selectItem itemValue="ADHOC" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.adhoc']}"/>
+</h:selectOneRadio>
+
+<f:verbatim><br/></f:verbatim>
+
+<%-- Harvesting period --%>
 <h:selectOneRadio styleClass="syncOptSpec" layout="pageDirection" value="#{HarvestController.editor.harvestFrequency}" id="harvestFrequency">
 <f:selectItem itemValue="monthly" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.monthly']}"/>
 <f:selectItem itemValue="biweekly" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.biweekly']}"/>
@@ -900,6 +1333,14 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <f:selectItem itemValue="once" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.once']}"/>
 <f:selectItem itemValue="skip" itemLabel="#{gptMsg['catalog.harvest.manage.edit.frequency.skip']}"/>
 </h:selectOneRadio>
+
+<f:verbatim>
+  <div id="harvestTimes">
+    <div id="timePoints" class="timePoints">
+    </div>
+    <input id="addTime" type="button" value="<fmt:message key="catalog.harvest.manage.addTime.button"/>"/>
+  </div>
+</f:verbatim>
 
 <f:verbatim><br/><hr/><br/></f:verbatim>
 
@@ -968,14 +1409,50 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   value="#{gptMsg['catalog.general.requiredFieldNote']}"/>
 
 <f:verbatim>
-  <div class="tundra" id="ownersDialog" data-dojo-type="dijit.Dialog" data-dojo-id="ownersDialog" title="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.caption"/>" style="min-width: 250px;">
+  <div class="tundra" id="ownersDialog" data-dojo-type="dijit.Dialog" data-dojo-id="ownersDialog" data-dojo-props="title: '<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.caption"/>'" style="min-width: 250px;">
         <label for="ownersSearchText"><fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.lblSearch"/></label>
         <input type="text" id="ownersSearchText" data-type="search"/><input id="searchOwnersDialog" type="button" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.button.search"/>" data-type="search"/>
         <div id="ownersDiv"></div>
         <input id="closeOwnersDialog" type="button" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.ownersDialog.button.close"/>"/>
   </div>
-  <div class="tundra" id="foldersDialog" data-dojo-type="dijit.Dialog" data-dojo-id="foldersDialog" title="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.foldersDialog.caption"/>" style="min-width: 250px;">
+  <div class="tundra" id="foldersDialog" data-dojo-type="dijit.Dialog" data-dojo-id="foldersDialog" data-dojo-props="title: '<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.foldersDialog.caption"/>'" style="min-width: 250px;">
         <div id="foldersDiv"></div>
         <input id="closeFoldersDialog" type="button" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.foldersDialog.button.close"/>"/>
+  </div>
+  <div class="tundra" id="timeDialog" data-dojo-type="dijit.Dialog" data-dojo-id="timeDialog" data-dojo-props="title: '<fmt:message key="catalog.harvest.manage.timeDialog.caption"/>'" style="min-width: 250px;">
+    <div>
+      <label for="timeInput"><fmt:message key="catalog.harvest.manage.timeDialog.timeInput.label"/></label>
+      <input type="text" id="timeInput" dojoType="dijit.form.TimeTextBox" constraints="{clickableIncrement: 'T00:15:00', visibleIncrement: 'T00:15:00'}"/>
+    </div>
+    <input type="checkbox" id="timeSpecDate" dojoType="dijit.form.CheckBox"/>
+    <label for="timeSpecDate"><fmt:message key="catalog.harvest.manage.timeDialog.timeSpecDate.label"/></label>
+    <div id="timeSpecDateDiv" style="display: none;">
+      <div>
+        <input type="button" data-dojo-type="dijit.form.RadioButton" id="dateRadio" name="dateStyle"/><label for="dateRadio"><fmt:message key="catalog.harvest.manage.timeDialog.dateStyle.date.label"/></label>
+        <div>
+          <input type="text" id="dateInput" data-dojo-type="dijit.form.DateTextBox"/>
+        </div>
+      </div>
+      <div>
+        <input type="button" data-dojo-type="dijit.form.RadioButton" id="patternRadio" name="dateStyle"/><label for="patternRadio"><fmt:message key="catalog.harvest.manage.timeDialog.dateStyle.pattern.label"/></label>
+        <div>
+          <input type="text" id="dayOfTheMonthInput" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props="constraints:{min:0}"/>
+          <select id="dayOfTheWeekInput" data-dojo-type="dijit.form.Select">
+              <option value="" selected="true">----------</option>
+              <option value="SUNDAY"><fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.SUNDAY"/></option>
+              <option value="MONDAY"><fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.MONDAY"/></option>
+              <option value="TUEASDAY"><fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.TUEASDAY"/></option>
+              <option value="WEDNESDAY"><fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.WEDNESDAY"/></option>
+              <option value="THURSDAY"><fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.THURSDAY"/></option>
+              <option value="FRIDAY"><fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.FRIDAY"/></option>
+              <option value="SATURDAY"><fmt:message key="catalog.com.esri.gpt.framework.adhoc.events.SATURDAY"/></option>
+          </select>    
+        </div>
+      </div>
+    </div>
+    <div id="buttonsDiv">
+      <input id="addTimeDialog" type="button" value="<fmt:message key="catalog.harvest.manage.timeDialog.button.add"/>"/>
+      <input id="closeTimeDialog" type="button" value="<fmt:message key="catalog.harvest.manage.timeDialog.button.close"/>"/>
+    </div>
   </div>
 </f:verbatim>

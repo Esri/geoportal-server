@@ -21,14 +21,16 @@ import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.api.SourceUri;
-import com.esri.gpt.framework.resource.common.CommonPublishable;
 import com.esri.gpt.framework.resource.common.UrlUri;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -242,23 +244,34 @@ public class GeoDataServerHandler extends ServiceHandler {
   /**
    * Data element specific Record implementation.
    */
-  private class DataElementRecord extends CommonPublishable {
+  private class DataElementRecord extends ServiceInfoProvider implements Publishable {
 
-    private ServiceInfo info;
     private DataElement element;
 
     public DataElementRecord(ServiceInfo info, DataElement element) {
-      this.info = info;
+      super(info);
       this.element = element;
     }
 
+    @Override
     public SourceUri getSourceUri() {
-      return new UrlUri(info.getRestUrl()+"/"+element.getName());
+      return new UrlUri(getServiceInfo().getRestUrl()+"/"+element.getName());
     }
 
+    @Override
     public String getContent() throws IOException {
       XmlPropertySet xmlProps = element.getMetadata();
       return xmlProps!=null? Val.chkStr(xmlProps.getXmlDoc()): "";
+    }
+
+    @Override
+    public Iterable<Resource> getNodes() {
+      return new ArrayList<Resource>();
+    }
+
+    @Override
+    public Date getUpdateDate() {
+      return null;
     }
   }
 }

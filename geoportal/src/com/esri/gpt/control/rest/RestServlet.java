@@ -40,6 +40,8 @@ import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -164,7 +166,12 @@ protected void execute(HttpServletRequest request,
         break;     
       default:
       case xml: {
-          String sMetadata = dao.getMetadataAsText(id);
+          ASearchEngine.ARecord aRecord = dao.getARecord(id);
+          String sMetadata = aRecord.getMetadataAsText();
+          Date lastModified = aRecord.getModifiedDate();
+          if (lastModified!=null) {
+            response.addHeader("Last-Modified", new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", request.getLocale()).format(lastModified));
+          }
           printXml(context, writer, sMetadata);
         }
         break;

@@ -20,9 +20,9 @@
   <schema fileName="gpt/metadata/esri/esri-iso-definition.xml"/>
     
   <schema fileName="gpt/metadata/dc/dc-definition.xml"/>
-  
+  <!--  
   <schema fileName="gpt/metadata/iso/nap/nap-iso-19115-definition.xml"/>
-  <schema fileName="gpt/metadata/iso/nap/nap-iso-19119-definition.xml"/>
+  <schema fileName="gpt/metadata/iso/nap/nap-iso-19119-definition.xml"/> -->
   
   <!-- UK GEMINI 2.1 
     GEMINI document interrogation rules are based upon
@@ -34,10 +34,10 @@
   <schema fileName="gpt/metadata/iso/Gemini2_R1r2/gemini-iso-19119-definition.xml"/>
   
   <!--  NOTE: Only one of INSPIRE or standard ISO should be enabled -->  
-  <!-- 
+  
   <schema fileName="gpt/metadata/iso/inspire/inspire-iso-19115-definition.xml"/>
   <schema fileName="gpt/metadata/iso/inspire/inspire-iso-19119-definition.xml"/>
-  -->
+  
   <schema fileName="gpt/metadata/iso/iso-19115-definition.xml"/>
   <schema fileName="gpt/metadata/iso/iso-19119-definition.xml"/>
 

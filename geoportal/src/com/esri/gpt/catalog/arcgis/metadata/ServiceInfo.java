@@ -25,6 +25,8 @@ import com.esri.arcgisws.SpatialReference;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -40,7 +42,7 @@ public class ServiceInfo {
   /** class variables ========================================================= */
   
   /** Logger */
-  private static Logger LOGGER = Logger.getLogger(ServiceInfo.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(ServiceInfo.class.getName());
   
   /** instance variables ====================================================== */
   private String    capabilities;
@@ -56,6 +58,10 @@ public class ServiceInfo {
   private String    soapUrl;
   private String    thumbnailUrl;
   private String    type;
+  private ServiceInfo parentInfo;
+  private List<LayerInfo> layersInfo = new ArrayList<LayerInfo>();
+  private String    copyright = "";
+  private String    text = "";
   
   /** constructors ============================================================ */
 
@@ -63,6 +69,70 @@ public class ServiceInfo {
   public ServiceInfo() {}
 
   /** properties ============================================================== */
+  /**
+   * Gets text info.
+   * @return text info
+   */
+  public String getText() {
+    return text;
+  }
+
+  /**
+   * Sets text info.
+   * @param text text info
+   */
+  public void setText(String text) {
+    this.text = Val.chkStr(text);
+  }
+
+  /**
+   * Gets layers info.
+   * @return list of layers info
+   */
+  public List<LayerInfo> getLayersInfo() {
+    return layersInfo;
+  }
+  
+  /**
+   * Sets layers info.
+   * @param layersInfo list of layers info
+   */
+  public void setLayersInfo(List<LayerInfo> layersInfo) {
+    this.layersInfo = layersInfo!=null? layersInfo: new ArrayList<LayerInfo>();
+  }
+
+  /**
+   * Gets copyright info.
+   * @return copyright info
+   */
+  public String getCopyright() {
+    return copyright;
+  }
+
+  /**
+   * Sets copyright info.
+   * @param copyright copyright info
+   */
+  public void setCopyright(String copyright) {
+    this.copyright = Val.chkStr(copyright);
+  }
+
+  
+  /**
+   * Gets parent info.
+   * @return parent info
+   */
+  public ServiceInfo getParentInfo() {
+    return parentInfo;
+  }
+
+  /**
+   * Sets parent info.
+   * @param parentInfo parent info 
+   */
+  public void setParentInfo(ServiceInfo parentInfo) {
+    this.parentInfo = parentInfo;
+  }
   
   /**
    * Gets the service creator.
@@ -116,6 +186,7 @@ public class ServiceInfo {
   public Envelope getEnvelope() {
     return this.envelope;
   }
+  
   /**
    * Sets the service envelope.
    * @param envelope the envelope
@@ -522,5 +593,23 @@ public class ServiceInfo {
     }
 
     return null;
+  }
+  
+  public static final class LayerInfo {
+    private String name;
+    private String title;
+    
+    public LayerInfo(String name, String title) {
+      this.name = name;
+      this.title = title;
+    }
+    
+    public String getName() {
+      return name;
+    }
+    
+    public String getTitle() {
+      return title;
+    }
   }
 }

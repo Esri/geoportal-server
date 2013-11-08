@@ -195,8 +195,10 @@ public class GxeServlet extends BaseServlet {
     
     String sMimeType = "application/json";
     String sResponse = "";
+    String sCallback = "";
     MessageBroker msgBroker = null;
     try {
+      sCallback = Val.chkStr(request.getParameter("callback"));
       
       // make the list of defined editor types
       StringBuilder sb = new StringBuilder();
@@ -240,6 +242,9 @@ public class GxeServlet extends BaseServlet {
     // write the response
     //LOGGER.finest("gxeResponse:\n"+sResponse);
     if ((sResponse != null) && (sResponse.length() > 0)) {
+      if ((sCallback != null) && (sCallback.length() > 0)) {
+        sResponse = sCallback+"("+sResponse+")";
+      }
       writeCharacterResponse(response,sResponse,"UTF-8",sMimeType+";charset=UTF-8");
     }
   }   

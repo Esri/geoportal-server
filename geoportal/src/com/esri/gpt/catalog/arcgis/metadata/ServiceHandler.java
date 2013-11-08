@@ -14,17 +14,20 @@
  */
 package com.esri.gpt.catalog.arcgis.metadata;
 
+import com.esri.arcgisws.ServiceDescription;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.resource.api.Native;
+import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.api.SourceUri;
-import com.esri.gpt.framework.resource.common.CommonPublishable;
 import com.esri.gpt.framework.resource.common.UrlUri;
 import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.logging.Logger;
 
 /**
@@ -145,32 +148,65 @@ public abstract class ServiceHandler {
   }
 
   /**
+   * Creates service info.
+   * @param parentInfo parent info
+   * @param desc service description
+   * @param currentRestUrl current REST URL
+   * @param currentSoapUrl current SOAP URL
+   * @return service info
+   */
+  public ServiceInfo createServiceInfo(ServiceInfo parentInfo, ServiceDescription desc, String currentRestUrl, String currentSoapUrl) {
+    ServiceInfo info = new ServiceInfo();
+    info.setCapabilities(desc.getCapabilities());
+    info.setDescription(desc.getDescription());
+    info.setName(desc.getName());
+    info.setParentType(desc.getParentType());
+    info.setResourceUrl(currentRestUrl);
+    info.setRestUrl(currentRestUrl);
+    info.setSoapUrl(currentSoapUrl);
+    info.setType(desc.getType());
+    info.setParentInfo(parentInfo);
+    return info;
+  }
+
+  /**
    * Service specific Record implementation.
    */
-  private class ServiceRecord extends CommonPublishable {
+  public class ServiceRecord extends ServiceInfoProvider implements Publishable {
 
     private ServiceHandlerFactory factory;
-    private ServiceInfo info;
 
     public ServiceRecord(ServiceHandlerFactory factory, ServiceInfo info) {
-      this.info = info;
+      super(info);
       this.factory = factory;
     }
 
+    @Override
     public SourceUri getSourceUri() {
-      return new UrlUri(info.getResourceUrl());
+      return new UrlUri(getServiceInfo().getResourceUrl());
     }
 
+    @Override
     public String getContent() throws IOException {
       ApplicationContext appCtx = ApplicationContext.getInstance();
       ApplicationConfiguration cfg = appCtx.getConfiguration();
-      LOGGER.finer("Collecting metadata for: " + info.getSoapUrl());
+      LOGGER.finer("Collecting metadata for: " + getServiceInfo().getSoapUrl());
       try {
-        ServiceHandler.this.collectMetadata(factory, info);
-        return info.asDublinCore(cfg, http);
+        ServiceHandler.this.collectMetadata(factory, getServiceInfo());
+        return getServiceInfo().asDublinCore(cfg, http);
       } catch (Exception ex) {
         throw new IOException("Error collecting metadata. Cause: "+ex.getMessage());
       }
+    }
+
+    @Override
+    public Iterable<Resource> getNodes() {
+      return new ArrayList<Resource>();
+    }
+
+    @Override
+    public Date getUpdateDate() {
+      return null;
     }
 
   }
@@ -181,6 +217,11 @@ public abstract class ServiceHandler {
   private class NativeServiceRecord extends ServiceRecord implements Native {
     public NativeServiceRecord(ServiceHandlerFactory factory, ServiceInfo info) {
       super(factory, info);
+    }
+
+    @Override
+    public Date getUpdateDate() {
+      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
   }
 }

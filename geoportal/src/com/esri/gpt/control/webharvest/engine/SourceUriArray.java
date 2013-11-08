@@ -65,6 +65,7 @@ public SourceUriArray(String [] names) throws IOException {
   // create folder
   File folder = new File(path);
   folder.mkdirs();
+  folder.deleteOnExit();
   // create Lucene directory within the folder; it has to be no locking directory
   directory = FSDirectory.open(folder,NoLockFactory.getNoLockFactory());
   openForWriting();
@@ -137,15 +138,6 @@ public void remove(String name, String value) throws IOException {
 @Override
 public Iterator<String[]> iterator() {
   return new PairIterator();
-}
-
-@Override
-protected void finalize() throws Throwable {
-  try {
-    close();
-  } catch (IOException ex) {
-  }
-  super.finalize();
 }
 
 /**

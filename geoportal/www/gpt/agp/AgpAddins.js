@@ -48,7 +48,11 @@ An example insert for an ArcGIS Portal home/index.html page:
     "ItemMetadata.allowSaveDraft": false,
     "ItemMetadata.documentTypeKeys": null,
     "ItemMetadata.gxeProxyUrl": "js/custom/gpt/gxe-proxy.jsp",
-    "ItemMetadata.useGxeProxyUrl": true
+    "ItemMetadata.useGxeProxyUrl": true,
+    
+    /* used to fetch the gemet themes endpoint url
+     * */
+    "ItemMetadata.gemetThemesProxy":""
     
   };
   

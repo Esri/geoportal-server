@@ -26,7 +26,7 @@ import java.util.NoSuchElementException;
 public class LimitedLengthResourcesAdapter implements Iterable<Resource> {
 
 /** collection of resources */
-private Iterable<Resource> resources;
+private Iterable<? extends Resource> resources;
 /** max recs */
 private Integer maxRecs;
 
@@ -45,7 +45,7 @@ public LimitedLengthResourcesAdapter(Resource resource, Integer maxRecs) {
  * @param resources collection of resources
  * @param maxRecs maximum records
  */
-public LimitedLengthResourcesAdapter(Iterable<Resource> resources, Integer maxRecs) {
+public LimitedLengthResourcesAdapter(Iterable<? extends Resource> resources, Integer maxRecs) {
   this.resources = resources;
   this.maxRecs = maxRecs;
 }
@@ -59,7 +59,7 @@ public Iterator<Resource> iterator() {
  */
 private class LimitedLengthResourcesIterator extends ReadOnlyIterator<Resource> {
 /** underlying iterator */
-private Iterator<Resource> iterator = resources.iterator();
+private Iterator<? extends Resource> iterator = resources.iterator();
 /** counter */
 private int counter;
 

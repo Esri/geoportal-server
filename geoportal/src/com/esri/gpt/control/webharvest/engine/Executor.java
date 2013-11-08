@@ -24,6 +24,7 @@ import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -32,7 +33,7 @@ import java.util.logging.Logger;
 /**
  * Executes query.
  */
-abstract class Executor {
+public abstract class Executor {
 /** logger */
 private static final Logger LOGGER = Logger.getLogger(Executor.class.getCanonicalName());
 
@@ -157,6 +158,25 @@ private Result executeQuery() {
     return new CommonResult(Arrays.asList(new Resource[]{unit.getNative()}));
   } else {
     return new CommonResult(new ArrayList<Resource>());
+  }
+}
+
+/**
+ * Cleans up.
+ */
+public void shutdown() {
+  if (unit!=null) {
+    ExecutionUnitHelper helper = new ExecutionUnitHelper(unit);
+    ReportBuilder rp = helper.getReportBuilder();
+    if (rp!=null) {
+      rp.cleanup();
+    }
+    SourceUriArray sourceUris = helper.getSourceUris();
+    if (sourceUris!=null) {
+      try {
+        sourceUris.close();
+      } catch (IOException ex) {}
+    }
   }
 }
 

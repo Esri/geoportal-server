@@ -21,6 +21,9 @@ import javax.xml.xpath.XPathFactory;
 import com.esri.gpt.catalog.schema.NamespaceContextImpl;
 import com.esri.gpt.catalog.schema.Namespaces;
 
+/**
+ * Atom name space utility class.
+ */
 public class AtomNamespaceUtil {
 	/**
 	 * Makes ATOM name spaces.

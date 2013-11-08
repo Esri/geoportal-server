@@ -75,9 +75,9 @@ public class ExtJsonFeedWriter implements FeedWriter {
    */
   protected final static IsoDateFormat DF = new IsoDateFormat();
   /**
-   * request
+   * parameter map
    */
-  private HttpServletRequest request;
+  protected Map<String,String[]> parameterMap;
   /**
    * print writer
    */
@@ -106,6 +106,34 @@ public class ExtJsonFeedWriter implements FeedWriter {
   /**
    * Creates instance of the feed writer. 
    *
+   * @param parameterMap parameter map
+   * @param context request context
+   * @param writer writer
+   * @param query query
+   * @param pretty <code>true</code> for 'pretty' JSON output
+   * @return instance of {@link ExtJsonFeedWriter}
+   */
+  public static ExtJsonFeedWriter createInstance(Map<String,String[]> parameterMap, RequestContext context, PrintWriter writer, RestQuery query, Boolean pretty) {
+    String className = getConfigParam("json.writer.className");
+    if (className.isEmpty()) {
+      return new ExtJsonFeedWriter(parameterMap, context, writer, query, pretty);
+    } else {
+      try {
+      	//TODO this code throws exception
+        Class writerClass = Class.forName(className);
+        Constructor constructor = writerClass.getConstructor(new Class[]{Map.class, RequestContext.class, PrintWriter.class, RestQuery.class, Boolean.class});
+        return (ExtJsonFeedWriter) constructor.newInstance(parameterMap,context, writer, query, pretty);
+      	//return new DcatJsonFeedWriter(request, context, writer, query, pretty);
+      } catch (Exception ex) {
+        LOG.log(Level.INFO, "Error creating JSON feed writer class: " + className + ". Using default writer instead.", ex);
+        return new ExtJsonFeedWriter(parameterMap, context, writer, query, pretty);
+      }
+    }
+  }
+
+  /**
+   * Creates instance of the feed writer. 
+   *
    * @param request HTTP servlet request
    * @param context request context
    * @param writer writer
@@ -114,21 +142,7 @@ public class ExtJsonFeedWriter implements FeedWriter {
    * @return instance of {@link ExtJsonFeedWriter}
    */
   public static ExtJsonFeedWriter createInstance(HttpServletRequest request, RequestContext context, PrintWriter writer, RestQuery query, Boolean pretty) {
-    String className = getConfigParam("json.writer.className");
-    if (className.isEmpty()) {
-      return new ExtJsonFeedWriter(request, context, writer, query, pretty);
-    } else {
-      try {
-      	//TODO this code throws exception
-        Class writerClass = Class.forName(className);
-        Constructor constructor = writerClass.getConstructor(new Class[]{HttpServletRequest.class, RequestContext.class, PrintWriter.class, RestQuery.class, Boolean.class});
-        return (ExtJsonFeedWriter) constructor.newInstance(request,context, writer, query, pretty);
-      	//return new DcatJsonFeedWriter(request, context, writer, query, pretty);
-      } catch (Exception ex) {
-        LOG.log(Level.INFO, "Error creating JSON feed writer class: " + className + ". Using default writer instead.", ex);
-        return new ExtJsonFeedWriter(request, context, writer, query, pretty);
-      }
-    }
+    return createInstance(request.getParameterMap(), context, writer, query, pretty);
   }
 
   /**
@@ -251,7 +265,20 @@ public class ExtJsonFeedWriter implements FeedWriter {
    * @param pretty <code>true</code> to print pretty response
    */
   public ExtJsonFeedWriter(HttpServletRequest request, RequestContext context, PrintWriter writer, RestQuery query, Boolean pretty) {
-    this.request = request;
+    this(request.getParameterMap(), context, writer, query, pretty);
+  }
+  
+  /**
+   * Creates instance of the feed.
+   *
+   * @param parameterMap parameter map
+   * @param context request context
+   * @param writer writer to write feed
+   * @param query query
+   * @param pretty <code>true</code> to print pretty response
+   */
+  public ExtJsonFeedWriter(Map<String,String[]> parameterMap, RequestContext context, PrintWriter writer, RestQuery query, Boolean pretty) {
+    this.parameterMap = parameterMap;
     this.writer = writer;
     this.query = query;
     this.pretty = pretty;
@@ -810,7 +837,16 @@ public class ExtJsonFeedWriter implements FeedWriter {
    * @return request parameter
    */
   protected String getRequestParam(String paramName) {
-    return Val.chkStr(request.getParameter(paramName));
+    String[] paramValues = parameterMap.get(paramName);
+    if (paramValues!=null) {
+      for (String param: parameterMap.get(paramName)) {
+        param = Val.chkStr(param);
+        if (!param.isEmpty()) {
+          return param;
+        }
+      }
+    }
+    return "";
   }
   
   /**
@@ -819,7 +855,8 @@ public class ExtJsonFeedWriter implements FeedWriter {
    * @return <code>true</code> if parameter is present (even an empty string)
    */
   protected boolean hasRequestParam(String paramName) {
-    return request.getParameter(paramName)!=null;
+    String[] paramValues = parameterMap.get(paramName);
+    return paramValues!=null && paramValues.length>0;
   }
 
   /**

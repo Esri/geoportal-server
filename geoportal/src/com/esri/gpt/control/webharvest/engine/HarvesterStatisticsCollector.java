@@ -32,6 +32,9 @@ import com.esri.gpt.framework.util.UuidUtil;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.server.usage.api.IStatisticsWriter;
 
+/**
+ * Harvest statistic collector.
+ */
 public class HarvesterStatisticsCollector {
 	
 	// class variables =============================================================

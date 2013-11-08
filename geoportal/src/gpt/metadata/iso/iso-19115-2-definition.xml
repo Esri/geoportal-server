@@ -2,8 +2,8 @@
 <schema key="iso19115-2" 
         templateFile="gpt/metadata/iso/iso-19115-2-template.xml"
         cswOutputSchema="http://www.isotc211.org/2005/gmd" 
-        cswBriefXslt="gpt/metadata/iso/apiso-brief.xslt" 
-        cswSummaryXslt="gpt/metadata/iso/apiso-summary.xslt"
+        cswBriefXslt="gpt/metadata/iso/apiso-2-brief.xslt" 
+        cswSummaryXslt="gpt/metadata/iso/apiso-2-summary.xslt"
         xsdLocation="http://www.isotc211.org/2005/gmi/gmi.xsd">
    
   

@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 /**
  * Agp2Agp executor.
  */
-abstract class Agp2AgpExecutor extends Executor {
+public abstract class Agp2AgpExecutor extends Executor {
 
   /**
    * logger
@@ -42,6 +42,12 @@ abstract class Agp2AgpExecutor extends Executor {
   
   private boolean stopOnError = true;
 
+  /**
+   * Creates instance of the executor.
+   * @param dataProcessor data processor
+   * @param unit execution unit
+   * @param stopOnError <code>true</code> to stop on errors
+   */
   public Agp2AgpExecutor(DataProcessor dataProcessor, ExecutionUnit unit, boolean stopOnError) {
     super(dataProcessor, unit);
     this.stopOnError = stopOnError;

@@ -29,9 +29,8 @@ import javax.servlet.http.HttpServletRequest;
 import com.esri.gpt.catalog.context.CatalogConfiguration;
 import com.esri.gpt.catalog.search.SearchEngineCSW.Scheme;
 import com.esri.gpt.control.georss.RestQueryServlet;
+import com.esri.gpt.control.georss.SearchResultRecordAdapter;
 import com.esri.gpt.framework.collection.StringAttribute;
-import com.esri.gpt.framework.collection.StringAttributeMap;
-import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.ConfigurationException;
 import com.esri.gpt.framework.context.RequestContext;
@@ -246,7 +245,7 @@ protected void buildAddToMapLink(SearchXslRecord xRecord, SearchResultRecord rec
 
   } else {
     iMapViewer = MapViewerFactory.createMapViewer(resourceUrl, serviceType, 
-        record, this.getRequestContext());
+        new SearchResultRecordAdapter(record), this.getRequestContext());
     if (iMapViewer == null) {
       return;
     }
@@ -1020,7 +1019,7 @@ public static ResourceLinkBuilder newBuilder(RequestContext context,
 private void makeAddToMapFromFactory(String resourceUrl, 
     String serviceType, String prefixResource, SearchResultRecord record) {
   IMapViewer iMapViewer = MapViewerFactory.createMapViewer(resourceUrl, serviceType, 
-      record, this.getRequestContext());
+      new SearchResultRecordAdapter(record), this.getRequestContext());
   if (iMapViewer == null) {
     return;
   }

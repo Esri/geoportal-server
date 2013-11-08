@@ -1,14 +1,14 @@
 ===============================================================================
 
 Esri Metadata Editor for ArcGIS Portal
-Copyright ©2013 Esri. 
+Copyright 2013 Esri. 
 
 ===============================================================================
    
 Deployment instructions:
 
 1. Deploy provided 'metadata.war' web application file on the 
-   Oracle (TM) GlassFish application server running Esri ArcGIS Portal.
+   web application server running Portal for ArcGIS, e.g. \\ArcGIS\Portal\framework\runtime\tomcat\webapps.
    
    Use application name: 'metadata'
        application type: 'Web Application'
@@ -33,7 +33,8 @@ Deployment instructions:
             "ItemMetadata.enabled": true,
             "ItemMetadata.allowSaveDraft": true,
             "ItemMetadata.gxeProxyUrl": "",
-            "ItemMetadata.useGxeProxyUrl": false
+            "ItemMetadata.useGxeProxyUrl": false,
+            "ItemMetadata.gemetThemesProxy": null
         }
     </script>
     <script type="text/javascript" src="/metadata/gpt/agp/AgpAddins.js">

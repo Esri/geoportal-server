@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.catalog.arcgis.metadata;
 
+import com.esri.arcgisws.ServiceDescription;
 import java.util.logging.Level;
 
 import com.esri.gpt.framework.jsf.MessageBroker;
@@ -89,6 +90,17 @@ public class OGCServerHandler extends ServiceHandler {
       msg += ", service="+url;
       LogUtil.getLogger().log(Level.FINER,msg,e);
     }
+  }
+
+  @Override
+  public ServiceInfo createServiceInfo(ServiceInfo parentInfo, ServiceDescription desc, String currentRestUrl, String currentSoapUrl) {
+    ServiceInfo serviceInfo = super.createServiceInfo(parentInfo, desc, currentSoapUrl.replaceAll("\\?wsdl$", "") /*currentRestUrl*/, currentSoapUrl);
+    if (parentInfo!=null) {
+      serviceInfo.setLayersInfo(parentInfo.getLayersInfo());
+      serviceInfo.setEnvelope(parentInfo.getEnvelope());
+      serviceInfo.setCopyright(parentInfo.getCopyright());
+    }
+    return serviceInfo;
   }
     
 }
