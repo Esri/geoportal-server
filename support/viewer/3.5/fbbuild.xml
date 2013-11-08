@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="main">
+
+    <property file="local.properties"/>
+    <property file="build.properties"/>
+
+    <target name="main">
+        <echo message="Workspace: ${fb.workspace.path}"/>
+        <echo message="Project: ${fb.workspace.project.name}"/>
+
+        <fb.exportReleaseBuild destdir="${dist.dir}"
+                               project="${fb.workspace.project.name}"/>
+    </target>
+
+</project>

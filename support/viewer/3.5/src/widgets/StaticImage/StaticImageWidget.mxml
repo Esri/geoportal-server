@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:viewer="com.esri.viewer.*"
+                   initialize="basewidget_initializeHandler(event)"
+                   widgetConfigLoaded="init()">
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.viewer.AppEvent;
+            import com.esri.viewer.ViewerContainer;
+
+            import flash.net.navigateToURL;
+
+            import mx.events.FlexEvent;
+
+            //This is the key used by this widget to get image url from published data.
+            private const IMAGE_URL:String = "imageurl"
+
+            private var linkURL:String;
+
+            [Bindable]
+            private var imageToolTip:String;
+
+            private function init():void
+            {
+                if (configXML)
+                {
+                    var imgURL:String = configXML.imageurl;
+                    img.source = imgURL;
+
+                    linkURL = configXML.linkurl;
+                    if (linkURL)
+                    {
+                        img.buttonMode = true;
+                        img.useHandCursor = true;
+                        img.addEventListener(MouseEvent.CLICK, img_clickHandler);
+                    }
+
+                    // tooltip
+                    imageToolTip = configXML.tooltip;
+                }
+            }
+
+            private function basewidget_initializeHandler(event:FlexEvent):void
+            {
+                // Allows other widgets to announce that image URL has been updated.
+                AppEvent.addListener(AppEvent.DATA_PUBLISH, sharedDataUpdated);
+            }
+
+            private function sharedDataUpdated(event:AppEvent):void
+            {
+                var dataTable:Object = event.data;
+
+                if (dataTable.key == IMAGE_URL)
+                {
+                    img.source = dataTable.collection[0];
+                }
+            }
+
+            private function img_clickHandler(event:MouseEvent):void
+            {
+                navigateToURL(new URLRequest(linkURL));
+            }
+        ]]>
+    </fx:Script>
+
+    <mx:Image id="img" toolTip="{imageToolTip}"/>
+
+</viewer:BaseWidget>

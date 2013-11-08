@@ -1,0 +1,1287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:viewer="com.esri.viewer.*"
+                   xmlns:Locate="widgets.Locate.*"
+                   xmlns:esri="http://www.esri.com/2008/ags"
+                   initialize="basewidget_initializeHandler()"
+                   widgetConfigLoaded="basewidget_widgetConfigLoaded()">
+
+    <viewer:states>
+        <s:State name="addrInput"/>
+        <s:State name="coordInput"/>
+        <s:State name="resultsList"/>
+    </viewer:states>
+
+    <viewer:transitions>
+        <s:Transition autoReverse="true" toState="*">
+            <s:Fade id="fade"/>
+        </s:Transition>
+    </viewer:transitions>
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.Graphic;
+            import com.esri.ags.Map;
+            import com.esri.ags.SpatialReference;
+            import com.esri.ags.geometry.Extent;
+            import com.esri.ags.geometry.MapPoint;
+            import com.esri.ags.layers.GraphicsLayer;
+            import com.esri.ags.portal.PopUpRenderer;
+            import com.esri.ags.portal.supportClasses.PopUpInfo;
+            import com.esri.ags.symbols.PictureMarkerSymbol;
+            import com.esri.ags.symbols.Symbol;
+            import com.esri.ags.tasks.JSONTask;
+            import com.esri.ags.tasks.supportClasses.AddressCandidate;
+            import com.esri.ags.tasks.supportClasses.AddressToLocationsParameters;
+            import com.esri.ags.utils.WebMercatorUtil;
+            import com.esri.ags.virtualearth.VEGeocodeResult;
+            import com.esri.viewer.components.toc.utils.MapUtil;
+            import com.esri.viewer.utils.ErrorMessageUtil;
+
+            import mx.collections.ArrayCollection;
+            import mx.collections.ArrayList;
+            import mx.collections.ItemResponder;
+            import mx.containers.FormItem;
+            import mx.core.UIComponent;
+            import mx.events.FlexEvent;
+            import mx.managers.IFocusManagerComponent;
+            import mx.rpc.AsyncResponder;
+            import mx.rpc.Fault;
+
+            import spark.components.DropDownList;
+            import spark.components.RichEditableText;
+            import spark.components.supportClasses.ItemRenderer;
+            import spark.core.NavigationUnit;
+
+            private const ICON_URL:String = "assets/images/";
+
+            private var originatingLocateState:String;
+
+            private var addressLabel:String;
+            private var coordinatesLabel:String;
+            private var loadingLabel:String;
+            private var locationsLabel:String;
+            private var resultsLabel:String;
+            [Bindable]
+            private var addressTitle:String;
+            [Bindable]
+            private var coordinatesTitle:String;
+            [Bindable]
+            private var noResultLabel:String;
+
+            [Bindable]
+            private var addressFieldsLoaded:Boolean;
+            [Bindable]
+            private var bingCulture:String;
+            [Bindable]
+            private var bingKey:String;
+            [Bindable]
+            private var clearLabel:String;
+            [Bindable]
+            private var locateResultAC:ArrayCollection;
+            [Bindable]
+            private var msgVisible:Boolean = false;
+            [Bindable]
+            private var submitLabel:String;
+            [Bindable]
+            private var xLabel:String;
+            [Bindable]
+            private var xExampleValue:String;
+            [Bindable]
+            private var yLabel:String;
+            [Bindable]
+            private var yExampleValue:String;
+
+            private var locatorService:JSONTask;
+            private var addrObjects:Array = [];
+            private var excludeFields:Array;
+            private var graphicsLayer:GraphicsLayer;
+            private var resultSymbol:Symbol;
+            private var hasCustomAddressFields:Boolean;
+            private var customAddressFields:Dictionary;
+            private var minscore:Number;
+            private var useProxy:Boolean;
+            private var useBingLocator:Boolean;
+            private var useSingleLine:Boolean = true;
+            private var zoomScale:Number = 10000;
+            private var serviceWKID:Number;
+            private var useSearchExtent:Boolean;
+            private var searchExtent:Extent;
+
+            private var popUpRenderer:PopUpRenderer = new PopUpRenderer();
+
+            private function basewidget_initializeHandler():void
+            {
+                if (isPartOfPanel) // if widget is part of "left", "right" or "bottom" panel
+                {
+                    this.percentWidth = this.percentHeight = 100;
+                    wTemplate.percentWidth = wTemplate.percentHeight = 100;
+                }
+                else
+                {
+                    wTemplate.width = 290;
+                    wTemplate.height = 240;
+                }
+            }
+
+            private function basewidget_widgetConfigLoaded():void
+            {
+                if (configXML)
+                {
+                    assignLabels();
+                    prepareResultSymbol();
+
+                    excludeFields = [];
+                    var fields:XMLList = configXML.excludefield as XMLList;
+                    for (var i:int = 0; i < fields.length(); i++)
+                    {
+                        excludeFields.push(fields[i].toString());
+                    }
+
+                    configureGraphicsLayer();
+                    assignCustomFields();
+
+                    if (Number(configXML.zoomscale) > 0)
+                    {
+                        zoomScale = Number(configXML.zoomscale);
+                    }
+
+                    minscore = Number(configXML.minscore) || 40;
+                    useSearchExtent = configXML.usesearchextent == "true";
+
+                    searchExtent = MapUtil.createExtent(configXML.searchextent.toString().split(" "));
+                    if (searchExtent)
+                    {
+                        var wkid:Number = parseFloat(configXML.searchextent.@wkid[0]);
+                        var wkt:String = configXML.searchextent.@wkt[0];
+                        if (!isNaN(wkid) || wkt)
+                        {
+                            searchExtent.spatialReference = new SpatialReference(wkid, wkt);
+                        }
+                    }
+
+                    configureLocator();
+                }
+
+                wTemplate.addTitlebarButton(ICON_URL + "i_mailbox.png", addressLabel, showStateAddress);
+                wTemplate.addTitlebarButton(ICON_URL + "i_pushpin.png", coordinatesLabel, showStateCoordinates);
+                wTemplate.addTitlebarButton(ICON_URL + "i_table.png", resultsLabel, showStateResults);
+                setInitialView(configXML.initialview[0]);
+                fade.targets = [ addrInput, coordInput, resultsList ];
+                wTemplate.visible = true;
+            }
+
+            private function assignLabels():void
+            {
+                submitLabel = configXML.labels.submitlabel || getDefaultString("locateSubmitLabel");
+                clearLabel = configXML.labels.clearlabel || getDefaultString("clearLabel");
+                //labels for the three widget states
+                addressLabel = configXML.labels.addresslabel || getDefaultString("addressLabel");
+                coordinatesLabel = configXML.labels.coordinateslabel || getDefaultString("coordinatesLabel");
+                resultsLabel = configXML.labels.resultslabel || getDefaultString("resultsLabel");
+                //titles for the three widget states
+                addressTitle = configXML.labels.addresstitle || getDefaultString("addressTitle");
+                coordinatesTitle = configXML.labels.coordinatestitle || getDefaultString("coordinatesTitle");
+                // noresult label
+                noResultLabel = configXML.labels.noresultlabel || getDefaultString("noFeatures");
+
+                //labels for the "coordinate" tab
+                xLabel = configXML.labels.xlabel || getDefaultString("xLabel");
+                yLabel = configXML.labels.ylabel || getDefaultString("yLabel");
+                xExampleValue = configXML.labels.xexamplevalue || getDefaultString("locateExampleValueX");
+                yExampleValue = configXML.labels.yexamplevalue || getDefaultString("locateExampleValueY");
+
+                //labels for the "results" tab
+                loadingLabel = configXML.labels.loadinglabel || getDefaultString("loadingLabel");
+                locationsLabel = configXML.labels.locationslabel || getDefaultString("locationsLabel");
+            }
+
+            private function prepareResultSymbol():void
+            {
+                const resultSymbolURL:String = configXML.symbols.picturemarkersymbol.@url || widgetIcon;
+                const parsedResultMarkerSymbolHeight:Number = parseFloat(configXML.symbols.picturemarkersymbol.@height[0]);
+                const resultSymbolHeight:Number = isNaN(parsedResultMarkerSymbolHeight) ? 0 : parsedResultMarkerSymbolHeight;
+                const parsedResultMarkerSymbolWidth:Number = parseFloat(configXML.symbols.picturemarkersymbol.@width[0]);
+                const resultSymbolWidth:Number = isNaN(parsedResultMarkerSymbolWidth) ? 0 : parsedResultMarkerSymbolWidth;
+                const resultSymbolXOffset:Number = configXML.symbols.picturemarkersymbol.@xoffset || 0;
+                const resultSymbolYOffset:Number = configXML.symbols.picturemarkersymbol.@yoffset || 0;
+                resultSymbol = new PictureMarkerSymbol(resultSymbolURL, resultSymbolWidth, resultSymbolHeight, resultSymbolXOffset, resultSymbolYOffset);
+            }
+
+            private function configureGraphicsLayer():void
+            {
+                graphicsLayer = new GraphicsLayer();
+                graphicsLayer.name = configXML.layername || widgetTitle;
+                graphicsLayer.symbol = resultSymbol;
+                graphicsLayer.addEventListener(FlexEvent.HIDE, graphicsLayer_hideHandler);
+                map.addLayer(graphicsLayer);
+            }
+
+            private function assignCustomFields():void
+            {
+                customAddressFields = new Dictionary();
+                hasCustomAddressFields = configXML.fields.length() > 0;
+                var customField:AddressField;
+                if (hasCustomAddressFields)
+                {
+                    for each (var field:XML in configXML.fields.field)
+                    {
+                        if (field.@name[0])
+                        {
+                            customField = new AddressField();
+
+                            customField.name = field.@name;
+                            customField.alias = field.@alias;
+                            customField.defaultValue = field.@defaultvalue[0];
+                            customField.type = field.@listvalues[0] ? AddressField.LIST_TYPE : AddressField.TEXT_TYPE;
+                            customField.listValues = field.@listvalues[0] ? field.@listvalues.split(",") : null;
+                            customField.visible = field.@visible[0] ? field.@visible == "true" : true;
+                            customField.editable = field.@editable[0] ? field.@editable == "true" : true;
+
+                            customAddressFields[customField.name] = customField;
+                        }
+                    }
+                }
+                else if (configXML.listfield.length() > 0 && configXML.listvalues.length() > 0)
+                {
+                    //backwards compatibility - 1 field with respective values
+                    customField = new AddressField();
+                    customField.name = configXML.listfield;
+                    customField.listValues = configXML.listvalues.split(",");
+                    customField.visible = true;
+                    customField.editable = true;
+                    customAddressFields[customField.name] = customField;
+                }
+            }
+
+            private function configureLocator():void
+            {
+                var locatorType:String = configXML.locator;
+                if (locatorType.toLowerCase() == "bing")
+                {
+                    setUpBingLocator();
+                }
+                else
+                {
+                    if (configXML.usesingleline.length() > 0)
+                    {
+                        useSingleLine = configXML.usesingleline == "true";
+                    }
+
+                    if (configXML.useproxy.length() > 0)
+                    {
+                        useProxy = configXML.useproxy == "true";
+                    }
+
+                    if (configXML.locator.@wkid[0])
+                    {
+                        // for 9.X servers that are missing the SR in the metadata
+                        serviceWKID = Number(configXML.locator.@wkid[0]);
+                    }
+
+                    var url:String = configXML.locator;
+                    locatorService = new JSONTask();
+                    locatorService.url = url;
+                    locator.url = url;
+
+                    if (useProxy && configData.proxyUrl)
+                    {
+                        locatorService.proxyURL = configData.proxyUrl;
+                        locator.proxyURL = configData.proxyUrl;
+                    }
+
+                    var urlVars:URLVariables = new URLVariables();
+                    urlVars.f = "json";
+
+                    locatorService.execute(urlVars, new AsyncResponder(locatorService_resultHandler, locatorService_faultHandler));
+                }
+            }
+
+            private function setUpBingLocator():void
+            {
+                useBingLocator = true;
+                addressFieldsLoaded = true;
+                bingKey = configData.bingKey;
+                bingCulture = configXML.bingculture || getDefaultString("bingCulture");
+
+                var bingLocatorTextItem:TextInput = new TextInput();
+                bingLocatorTextItem.percentWidth = 100;
+
+                addrObjects.push({ item: bingLocatorTextItem });
+
+                frmLocateAddress.addChildAt(bingLocatorTextItem, 0);
+            }
+
+            private function setInitialView(view:String):void
+            {
+                if (view == "coordinates")
+                {
+                    showStateCoordinates();
+                }
+                else if (view == "address")
+                {
+                    showStateAddress();
+                }
+            }
+
+            private function graphicsLayer_hideHandler(event:FlexEvent):void
+            {
+                hideInfoWindow();
+            }
+
+            private function showStateAddress():void
+            {
+                this.currentState = "addrInput";
+                addressRequiredFieldsLabel.visible = false;
+                addressRequiredFieldsLabel.includeInLayout = false;
+                wTemplate.selectedTitlebarButtonIndex = 0;
+            }
+
+            private function showStateCoordinates():void
+            {
+                this.currentState = "coordInput";
+                coordinatesRequiredFieldsLabel.visible = false;
+                coordinatesRequiredFieldsLabel.includeInLayout = false;
+                wTemplate.selectedTitlebarButtonIndex = 1;
+            }
+
+            private function showStateResults():void
+            {
+                this.currentState = "resultsList";
+                wTemplate.selectedTitlebarButtonIndex = 2;
+            }
+
+            private function locatorService_resultHandler(addressFieldData:Object, token:Object = null):void
+            {
+                // make all the labels and button visible
+                addressFieldsLoaded = true;
+
+                if (addressFieldData.singleLineAddressField && useSingleLine)
+                {
+                    createSingleLineAddressField(addressFieldData);
+                }
+                else
+                {
+                    useSingleLine = false; //single line not supported
+                    createMultipleAddressFields(addressFieldData);
+                }
+
+                if (addressFieldData.spatialReference && !isNaN(addressFieldData.spatialReference.wkid))
+                {
+                    serviceWKID = addressFieldData.spatialReference.wkid;
+                }
+            }
+
+            private function locatorService_faultHandler(fault:Fault, token:Object = null):void
+            {
+                var msg:String = getDefaultString("locatorServiceConnectionError",
+                                                  locator.url,
+                                                  ErrorMessageUtil.getKnownErrorCauseMessage(fault),
+                                                  ErrorMessageUtil.makeHTMLSafe(fault.toString()));
+                showError(msg);
+            }
+
+            private function createSingleLineAddressField(singleLineAddressData:Object):void
+            {
+                var singleAddressLabel:Label = new Label();
+                singleAddressLabel.percentWidth = 100;
+
+                var singleAddressFormItem:FormItem = new FormItem();
+                singleAddressFormItem.percentWidth = 100;
+
+                var singleAddressTextItem:TextInput = new TextInput();
+                singleAddressTextItem.percentWidth = 100;
+                singleAddressTextItem.id = singleLineAddressData.singleLineAddressField.name;
+
+                singleAddressFormItem.addChild(singleAddressTextItem);
+
+                addrObjects.push({ item: singleAddressTextItem, required: singleLineAddressData.singleLineAddressField.required });
+
+                frmLocateAddress.setStyle("indicatorGap", 0);
+                frmLocateAddress.addChildAt(singleAddressLabel, 0);
+                frmLocateAddress.addChildAt(singleAddressFormItem, 1);
+            }
+
+            private function createMultipleAddressFields(customAddressFieldsData:Object):void
+            {
+                var shownAddressFields:Array = customAddressFieldsData.addressFields;
+
+                if (!hasCustomAddressFields) //backwards compatibility
+                {
+                    //remove excluded fields
+                    for (var i:int = 0; i < shownAddressFields.length; i++)
+                    {
+                        for (var j:int = 0; j < excludeFields.length; j++)
+                        {
+                            if (shownAddressFields[i].name == excludeFields[j])
+                            {
+                                shownAddressFields.splice(i, 1);
+                            }
+                        }
+                    }
+                }
+
+                // loop through the shown fields to create form items
+                var formItemIndex:int = 0;
+                for (var k:int = 0; k < shownAddressFields.length; k++)
+                {
+                    var addressFieldName:String = shownAddressFields[k].name;
+                    var customAddressField:AddressField = customAddressFields[addressFieldName];
+
+                    var frmItem:FormItem = new FormItem();
+                    var addItem:Boolean = false;
+                    frmItem.percentWidth = 100;
+
+                    frmItem.label = addressFieldName;
+                    var fieldType:String = AddressField.TEXT_TYPE;
+
+                    if (customAddressField)
+                    {
+                        if (customAddressField.alias)
+                        {
+                            frmItem.label = customAddressField.alias;
+                        }
+
+                        if (hasCustomAddressFields && customAddressField.type)
+                        {
+                            fieldType = customAddressField.type;
+                        }
+                        else if (customAddressField.listValues.length > 1) //backwards compatibility
+                        {
+                            fieldType = AddressField.LIST_TYPE;
+                        }
+                    }
+
+                    if (fieldType.toLowerCase() == AddressField.TEXT_TYPE)
+                    {
+                        var isAddressFieldRequired:Boolean = shownAddressFields[k].required;
+                        frmItem.required = isAddressFieldRequired;
+
+                        //special case
+                        if (customAddressField && !customAddressField.editable)
+                        {
+                            var label:RichEditableText = new RichEditableText();
+                            label.text = customAddressField.defaultValue;
+
+                            label.visible = customAddressField.visible;
+                            label.editable = false;
+                            label.percentWidth = 100;
+                            label.id = addressFieldName;
+
+                            if (label.visible)
+                            {
+                                addItem = true;
+                                frmItem.addChild(label);
+                                frmItem.setStyle("paddingTop", 5);
+                            }
+
+                            addrObjects.push({ item: label, required: isAddressFieldRequired });
+                        }
+                        else
+                        {
+                            var txtItem:TextInput = new TextInput();
+
+                            if (customAddressField)
+                            {
+                                txtItem.text = customAddressField.defaultValue;
+
+                                txtItem.visible = customAddressField.visible;
+                                txtItem.enabled = customAddressField.editable;
+                            }
+
+                            txtItem.percentWidth = 100;
+                            txtItem.id = addressFieldName;
+
+                            if (txtItem.visible)
+                            {
+                                addItem = true;
+                                frmItem.addChild(txtItem);
+                            }
+
+                            addrObjects.push({ item: txtItem, required: isAddressFieldRequired });
+                        }
+                    }
+                    else if (fieldType.toLowerCase() == AddressField.LIST_TYPE)
+                    {
+                        var selectionItem:DropDownList = new DropDownList();
+                        selectionItem.requireSelection = true;
+                        selectionItem.id = addressFieldName;
+
+                        if (customAddressField)
+                        {
+                            selectionItem.dataProvider = new ArrayList(customAddressField.listValues);
+                            selectionItem.selectedIndex = findItemIndex(customAddressField.defaultValue, customAddressField.listValues); //assumes dataprovider >= 1 value
+                            selectionItem.visible = customAddressField.visible;
+                            selectionItem.enabled = customAddressField.editable;
+                        }
+
+                        frmItem.required = shownAddressFields[k].required;
+
+                        if (selectionItem.visible)
+                        {
+                            addItem = true;
+                            frmItem.addChild(selectionItem);
+                        }
+
+                        addrObjects.push({ item: selectionItem, required: shownAddressFields[k].required });
+                    }
+
+                    if (addItem)
+                    {
+                        frmLocateAddress.addChildAt(frmItem, formItemIndex++);
+                    }
+                }
+            }
+
+            private function findItemIndex(item:String, source:Array):int
+            {
+                return source.indexOf(item, source);
+            }
+
+            private function locate():void
+            {
+                originatingLocateState = currentState;
+
+                if (useBingLocator)
+                {
+                    locateBingAddress();
+                }
+                else
+                {
+                    locateAddress();
+                }
+            }
+
+            private function locateAddress():void
+            {
+                // refresh before each request
+                hideInfoWindow();
+                graphicsLayer.clear();
+
+                if (locateResultAC)
+                {
+                    locateResultAC.removeAll();
+                }
+
+                var data:Object = new Object();
+                var requiredFieldEmpty:Boolean;
+                var emptyRequiredFieldNames:Array = [];
+                for (var i:int = 0; i < addrObjects.length; i++)
+                {
+                    var name:String = addrObjects[i].item.id;
+                    var value:String;
+                    if (addrObjects[i].item is TextInput)
+                    {
+                        var txtInput:TextInput = addrObjects[i].item as TextInput;
+                        if (addrObjects[i].required && txtInput.text == "")
+                        {
+                            requiredFieldEmpty = true;
+                            emptyRequiredFieldNames.push(txtInput.id);
+                        }
+                        else
+                        {
+                            value = txtInput.text;
+                        }
+                    }
+                    else if (addrObjects[i].item is RichEditableText)
+                    {
+                        var label:RichEditableText = addrObjects[i].item as RichEditableText;
+                        if (addrObjects[i].required && label.text == "")
+                        {
+                            requiredFieldEmpty = true;
+                            emptyRequiredFieldNames.push(label.id);
+                        }
+                        else
+                        {
+                            value = label.text;
+                        }
+                    }
+                    else
+                    {
+                        // an item is always selected, so no check for required fields
+                        value = DropDownList(addrObjects[i].item).selectedItem;
+                    }
+
+                    data[name] = value;
+                }
+
+                showStateResults();
+                var parameters:AddressToLocationsParameters = new AddressToLocationsParameters();
+                parameters.address = data;
+                if (searchExtent)
+                {
+                    parameters.searchExtent = searchExtent;
+                }
+                else if (useSearchExtent)
+                {
+                    parameters.searchExtent = map.extent;
+                }
+                locator.addressToLocations(parameters, new ItemResponder(locateResult, locateError));
+                showMessage(loadingLabel, true);
+            }
+
+            private function locateBingAddress():void
+            {
+                hideInfoWindow();
+                graphicsLayer.clear();
+                if (locateResultAC)
+                {
+                    locateResultAC.removeAll();
+                }
+
+                showStateResults();
+                veGeocoder.addressToLocations(TextInput(addrObjects[0].item).text, new ItemResponder(locateResult, locateError));
+                showMessage(loadingLabel, true);
+            }
+
+            private function locateResult(data:Array, token:Object = null):void
+            {
+                if (data.length > 0)
+                {
+                    locateResultAC = createLocateResults(data);
+                    addSharedData(widgetTitle, locateResultAC);
+                    showMessage(locationsLabel + " " + locateResultAC.length, false);
+                    locateResultAC.getItemAt(0).selected = true;
+                    if (locateResultAC.length > 0)
+                    {
+                        showLocation(locateResultAC.getItemAt(0));
+                    }
+                }
+                else
+                {
+                    showMessage(noResultLabel, false);
+                }
+            }
+
+            private function locateError(info:Object, token:Object = null):void
+            {
+                showMessage(info.toString(), false);
+            }
+
+            private function createLocateResults(data:Array):ArrayCollection
+            {
+                var result:ArrayCollection = new ArrayCollection();
+                var mapWKID:Number = map.spatialReference ? map.spatialReference.wkid : NaN;
+                var mapIsWebMercator:Boolean = map.spatialReference.isWebMercator();
+                if (useBingLocator)
+                {
+                    for each (var veGeocodeResult:VEGeocodeResult in data)
+                    {
+                        var bingLocateResult:LocateResult = new LocateResult();
+                        bingLocateResult.symbol = resultSymbol;
+                        bingLocateResult.title = veGeocodeResult.address.formattedAddress ? veGeocodeResult.address.formattedAddress : widgetTitle;
+                        bingLocateResult.content = getDefaultString("bingResultConfidenceText") + " " + veGeocodeResult.confidence;
+                        bingLocateResult.point = veGeocodeResult.location;
+                        if (mapIsWebMercator)
+                        {
+                            bingLocateResult.point = WebMercatorUtil.geographicToWebMercator(bingLocateResult.point) as MapPoint;
+                        }
+                        bingLocateResult.link = "";
+                        bingLocateResult.selected = false;
+
+                        result.addItem(bingLocateResult);
+                    }
+                }
+                else
+                {
+                    for each (var addrCandidate:AddressCandidate in data)
+                    {
+                        if (addrCandidate.score >= minscore)
+                        {
+                            var locateResult:LocateResult = new LocateResult();
+                            locateResult.symbol = resultSymbol;
+                            locateResult.title = addrCandidate.address ? String(addrCandidate.address) : widgetTitle;
+                            locateResult.content = getDefaultString("resultScoreText") + " " + (addrCandidate.score % 1 == 0 ? addrCandidate.score : addrCandidate.score.toFixed(1));
+                            locateResult.point = addrCandidate.location;
+                            if (!locateResult.point.spatialReference && !isNaN(serviceWKID)) // AGS 9.X returns locations w/o a SR and doesn't support outSR
+                            {
+                                var serviceIsWebMercator:Boolean = serviceWKID == 102100 || serviceWKID == 3857 || serviceWKID == 102113;
+                                if (mapIsWebMercator && serviceWKID == 4326)
+                                {
+                                    locateResult.point = WebMercatorUtil.geographicToWebMercator(locateResult.point) as MapPoint;
+                                }
+                                else if (serviceIsWebMercator && mapWKID == 4326)
+                                {
+                                    locateResult.point = WebMercatorUtil.webMercatorToGeographic(locateResult.point) as MapPoint;
+                                }
+                            }
+                            locateResult.link = "";
+                            locateResult.selected = false;
+
+                            result.addItem(locateResult);
+                        }
+                    }
+                }
+                return result;
+            }
+
+            private function locateCoordinates():void
+            {
+                originatingLocateState = currentState;
+
+                // refresh before each request
+                hideInfoWindow();
+                graphicsLayer.clear();
+                if (locateResultAC)
+                {
+                    locateResultAC.removeAll();
+                }
+
+                try
+                {
+                    var long:String = txtLong.text;
+                    var lat:String = txtLat.text;
+                    if (long && lat)
+                    {
+                        var numLong:Number = Number(long);
+                        var numLat:Number = Number(lat);
+                        if (!isNaN(numLong) && !isNaN(numLat))
+                        {
+                            showStateResults();
+
+                            var locateResult:LocateResult = new LocateResult();
+                            locateResult.symbol = resultSymbol;
+                            locateResult.title = coordinatesLabel;
+                            locateResult.content = long + " " + lat;
+                            locateResult.point = new MapPoint(numLong, numLat);
+                            var mapWKID:Number = map.spatialReference ? map.spatialReference.wkid : NaN;
+                            var mapIsWebMercator:Boolean = mapWKID == 102100 || mapWKID == 3857 || mapWKID == 102113;
+                            if (mapIsWebMercator)
+                            {
+                                // clip the locate result, so it's not going to Infinity; otherwise gives an error                           
+                                locateResult.point.x = Math.min(Math.max(locateResult.point.x, -180), 180);
+                                locateResult.point.y = Math.min(Math.max(locateResult.point.y, -89.99), 89.99);
+                                locateResult.point = WebMercatorUtil.geographicToWebMercator(locateResult.point) as MapPoint;
+                            }
+                            locateResult.link = "";
+                            locateResult.selected = true;
+
+                            locateResultAC = new ArrayCollection([ locateResult ]);
+
+                            addSharedData(widgetTitle, locateResultAC);
+                            showLocation(locateResult);
+                            showMessage(locationsLabel + " " + locateResultAC.length, false);
+                        }
+                    }
+                    else
+                    {
+                        // dont send any request as the required field(s) not completed
+                        coordinatesRequiredFieldsLabel.visible = true;
+                        coordinatesRequiredFieldsLabel.includeInLayout = true;
+                        if (long == "" && lat == "")
+                        {
+                            coordinatesRequiredFieldsLabel.text = getDefaultString("requiredFields") + " " + xLabel + ", " + yLabel;
+                        }
+                        else
+                        {
+                            coordinatesRequiredFieldsLabel.text = long == "" ? getDefaultString("requiredField") + " " + xLabel : getDefaultString("requiredField") + " " + yLabel;
+                        }
+                    }
+                }
+                catch (error:Error)
+                {
+                    showMessage(error.message, false);
+                }
+            }
+
+            private function showLocation(data:Object):void
+            {
+                hideInfoWindow();
+                graphicsLayer.clear();
+
+                var ptGraphic:Graphic = new Graphic();
+                ptGraphic.geometry = data.point;
+                graphicsLayer.add(ptGraphic);
+
+                var popUpInfo:PopUpInfo = new PopUpInfo();
+                popUpInfo.title = data.title;
+                popUpInfo.description = data.content;
+
+                var infoWindowRenderer:ClassFactory = new ClassFactory(PopUpRenderer);
+                infoWindowRenderer.properties = { popUpInfo: popUpInfo };
+                graphicsLayer.infoWindowRenderer = infoWindowRenderer;
+
+                popUpRenderer.popUpInfo = popUpInfo;
+                popUpRenderer.graphic = ptGraphic;
+
+                if (map.scale > zoomScale)
+                {
+                    map.scale = zoomScale;
+                }
+                map.centerAt(data.point);
+
+                infoWindowShow();
+            }
+
+            private function locateResultDG_locationSelectHandler(event:Event):void
+            {
+                deselectLocateResults();
+
+                var selectedLocateResult:LocateResult = ItemRenderer(event.target).data as LocateResult;
+                selectedLocateResult.selected = true;
+
+                showLocation(selectedLocateResult);
+            }
+
+            private function deselectLocateResults():void
+            {
+                for each (var result:LocateResult in locateResultDG.dataProvider)
+                {
+                    result.selected = false;
+                }
+            }
+
+            private function clearInputFieldsAndResults():void
+            {
+                hideInfoWindow();
+                if (currentState == "addrInput")
+                {
+                    clearAddressFields();
+                }
+                else if (currentState == "coordInput")
+                {
+                    txtLong.text = "";
+                    txtLat.text = "";
+                }
+
+                clearMessage();
+                graphicsLayer.clear();
+                if (locateResultAC)
+                {
+                    locateResultAC.removeAll();
+                }
+            }
+
+            private function clearAddressFields():void
+            {
+                for (var i:int = 0; i < addrObjects.length; i++)
+                {
+                    var addressInput:UIComponent = addrObjects[i].item;
+                    var addressFieldName:String = addressInput.id;
+                    var customAddressField:AddressField = customAddressFields[addressFieldName];
+
+                    if (addressInput is TextInput)
+                    {
+                        var txtInput:TextInput = addressInput as TextInput;
+                        if (txtInput && txtInput.enabled) //clear only editable fields
+                        {
+                            txtInput.text = customAddressField ? customAddressField.defaultValue : "";
+                        }
+                    }
+                    else if (addressInput is DropDownList)
+                    {
+                        var selectionInput:DropDownList = addressInput as DropDownList;
+                        if (selectionInput && selectionInput.enabled) //reset only editable fields
+                        {
+                            selectionInput.selectedIndex = findItemIndex(customAddressField.defaultValue, customAddressField.listValues);
+                        }
+                    }
+                }
+            }
+
+            private function infoWindowShow():void
+            {
+                map.infoWindow.content = popUpRenderer;
+                map.infoWindow.contentOwner = popUpRenderer.graphic;
+                map.infoWindow.show(popUpRenderer.graphic.geometry as MapPoint);
+            }
+
+            private function showMessage(msg:String, swfVisible:Boolean):void
+            {
+                txtMessage.text = msg;
+                swfMessage.visible = swfVisible;
+                msgVisible = true;
+            }
+
+            private function clearMessage():void
+            {
+                msgVisible = false;
+            }
+
+            private function wTemplate_widgetClosedHandler(event:Event):void
+            {
+                if (graphicsLayer)
+                {
+                    graphicsLayer.visible = false;
+                    hideInfoWindow();
+                }
+            }
+
+            private function wTemplate_widgetOpenedHandler(event:Event):void
+            {
+                if (graphicsLayer)
+                {
+                    graphicsLayer.visible = true;
+                }
+            }
+
+            protected function locateResultDG_locateResultDeleteHandler(event:Event):void
+            {
+                var locateResult:LocateResult = ItemRenderer(event.target).data as LocateResult;
+                for (var i:int = 0; i < locateResultAC.length; )
+                {
+                    if (locateResultAC.getItemAt(i) === locateResult)
+                    {
+                        locateResultAC.removeItemAt(i);
+
+                        if (locateResultAC.length == 0)
+                        {
+                            clearMessage();
+                            hideInfoWindow();
+                            graphicsLayer.clear();
+                        }
+                        else
+                        {
+                            // if a selected item is deleted, show the 1st one, by default
+                            if (locateResult.selected)
+                            {
+                                locateResultAC.getItemAt(0).selected = true;
+                                showLocation(locateResultAC.getItemAt(0));
+                                //scroll to the top
+                                locateResultDG.verticalScrollPosition = locateResultDG.layout.getVerticalScrollPositionDelta(NavigationUnit.HOME);
+                            }
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+                txtMessage.text = locationsLabel + " " + locateResultAC.length;
+
+                if (locateResultAC.length == 0)
+                {
+                    returnToOriginatingLocateView();
+                }
+            }
+
+            private function returnToOriginatingLocateView():void
+            {
+                if (originatingLocateState == "addrInput")
+                {
+                    showStateAddress();
+                }
+                else if (originatingLocateState == "coordInput")
+                {
+                    showStateCoordinates();
+                }
+            }
+
+            private function frmLocateAddress_formKeyDownHandler(event:KeyboardEvent):void
+            {
+                if (event.keyCode == Keyboard.ENTER)
+                {
+                    const focusedComponent:IFocusManagerComponent = focusManager.getFocus();
+
+                    if (focusedComponent == addressClearButton)
+                    {
+                        clearAddressFields();
+                    }
+                    else
+                    {
+                        locateIfAddressFieldInputValid();
+                    }
+                }
+            }
+
+            private function locateIfAddressFieldInputValid():void
+            {
+                if (useSingleLine)
+                {
+                    if (singleLineInputValid())
+                    {
+                        locate();
+                    }
+                }
+                else
+                {
+                    if (multiLineInputValid())
+                    {
+                        locate();
+                    }
+                    else
+                    {
+                        showRequiredFieldsMessage();
+                    }
+                }
+            }
+
+            private function singleLineInputValid():Boolean
+            {
+                return (addrObjects[0].item as TextInput).text != "";
+            }
+
+            private function multiLineInputValid():Boolean
+            {
+                var isInputValid:Boolean = true;
+
+                for (var i:int = 0; i < addrObjects.length; i++)
+                {
+                    if (addrObjects[i].item is TextInput)
+                    {
+                        var txtInput:TextInput = addrObjects[i].item as TextInput;
+                        if (addrObjects[i].required && txtInput.text == "")
+                        {
+                            isInputValid = false;
+                            break;
+                        }
+                    }
+                    else if (addrObjects[i].item is Label)
+                    {
+                        var label:Label = addrObjects[i].item as Label;
+                        if (addrObjects[i].required && label.text == "")
+                        {
+                            isInputValid = false;
+                            break;
+                        }
+                    }
+                }
+
+                return isInputValid;
+            }
+
+            private function showRequiredFieldsMessage():void
+            {
+                var emptyRequiredFieldNames:Array = findEmptyFieldNames();
+                if (emptyRequiredFieldNames.length > 0)
+                {
+                    addressRequiredFieldsLabel.visible = true;
+                    addressRequiredFieldsLabel.includeInLayout = true;
+                    addressRequiredFieldsLabel.text = buildRequiredFieldsMessage(emptyRequiredFieldNames);
+                }
+            }
+
+            private function buildRequiredFieldsMessage(emptyRequiredFieldNames:Array):String
+            {
+                var requiredFieldsMessage:String;
+
+                if (emptyRequiredFieldNames.length > 1)
+                {
+                    requiredFieldsMessage = getDefaultString("requiredFields") + " ";
+                    for each (var str:String in emptyRequiredFieldNames)
+                    {
+                        requiredFieldsMessage += str + ", ";
+                    }
+                }
+                else
+                {
+                    requiredFieldsMessage = getDefaultString("requiredField") + " " + emptyRequiredFieldNames[0];
+                }
+
+                return requiredFieldsMessage;
+            }
+
+            private function findEmptyFieldNames():Array
+            {
+                var requiredFieldEmpty:Boolean;
+                var fieldName:String;
+                var emptyRequiredFieldNames:Array = [];
+
+                for (var i:int = 0; i < addrObjects.length; i++)
+                {
+                    requiredFieldEmpty = false;
+                    fieldName = addrObjects[i].item.id;
+
+                    if (addrObjects[i].item is TextInput)
+                    {
+                        var txtInput:TextInput = addrObjects[i].item as TextInput;
+                        if (addrObjects[i].required && txtInput.text == "")
+                        {
+                            requiredFieldEmpty = true;
+                        }
+                    }
+                    else if (addrObjects[i].item is Label)
+                    {
+                        var label:Label = addrObjects[i].item as Label;
+                        if (addrObjects[i].required && label.text == "")
+                        {
+                            requiredFieldEmpty = true;
+                        }
+                    }
+
+                    if (requiredFieldEmpty)
+                    {
+                        emptyRequiredFieldNames.push(fieldName);
+                    }
+                }
+
+                return emptyRequiredFieldNames;
+            }
+
+            private function frmLocateCoords_formKeyDownHandler(event:KeyboardEvent):void
+            {
+                if (event.keyCode == Keyboard.ENTER)
+                {
+                    const focusedComponent:IFocusManagerComponent = focusManager.getFocus();
+
+                    if (focusedComponent == clearCoordinatesButton)
+                    {
+                        clearInputFieldsAndResults();
+                    }
+                    else
+                    {
+                        locateCoordinates();
+                    }
+                }
+            }
+
+            private function hideInfoWindow():void
+            {
+                if (map.infoWindow.contentOwner &&
+                    ((map.infoWindow.contentOwner is Graphic && Graphic(map.infoWindow.contentOwner).graphicsLayer === graphicsLayer) || map.infoWindow.contentOwner is Map))
+                {
+                    map.infoWindow.hide();
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <fx:Declarations>
+        <esri:Locator id="locator"
+                      outSpatialReference="{map.spatialReference}"
+                      url="http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"/>
+        <esri:VEGeocoder id="veGeocoder"
+                         culture="{bingCulture}"
+                         key="{bingKey}"/>
+    </fx:Declarations>
+
+    <viewer:WidgetTemplate id="wTemplate"
+                           closed="wTemplate_widgetClosedHandler(event)"
+                           open="wTemplate_widgetOpenedHandler(event)"
+                           visible="false">
+        <s:Scroller width="100%" height="100%"
+                    horizontalScrollPolicy="off"
+                    verticalScrollPolicy="auto">
+            <s:Group id="addrInput"
+                     width="100%" height="100%"
+                     visible="false"
+                     visible.addrInput="true">
+                <s:layout>
+                    <s:VerticalLayout gap="0"/>
+                </s:layout>
+                <s:Label id="addressText"
+                         text="{addressTitle}"
+                         visible="{addressFieldsLoaded}"/>
+                <mx:Form id="frmLocateAddress"
+                         width="100%" height="100%"
+                         keyDown="frmLocateAddress_formKeyDownHandler(event)"
+                         paddingBottom="0"
+                         verticalScrollPolicy="off">
+                    <s:HGroup width="100%"
+                              horizontalAlign="center"
+                              paddingTop="5">
+                        <s:Button id="addressSubmitButton"
+                                  click="locateIfAddressFieldInputValid()"
+                                  label="{submitLabel}"
+                                  visible="{addressFieldsLoaded}"/>
+                        <s:Button id="addressClearButton"
+                                  click="clearInputFieldsAndResults()"
+                                  label="{clearLabel}"
+                                  visible="{addressFieldsLoaded}"/>
+                    </s:HGroup>
+                    <s:Label id="addressRequiredFieldsLabel"
+                             color="0xff0000"
+                             includeInLayout="false"
+                             visible="false"/>
+                </mx:Form>
+            </s:Group>
+        </s:Scroller>
+        <s:Group id="coordInput"
+                 width="100%" height="100%"
+                 visible="false"
+                 visible.coordInput="true">
+            <s:layout>
+                <s:VerticalLayout gap="1"/>
+            </s:layout>
+            <s:Label id="coordsText" text="{coordinatesTitle}"/>
+            <mx:Form id="frmLocateCoords"
+                     width="100%" height="100%"
+                     keyDown="frmLocateCoords_formKeyDownHandler(event)"
+                     paddingBottom="0"
+                     verticalScrollPolicy="off">
+                <mx:FormItem width="100%"
+                             label="{xLabel}"
+                             required="true">
+                    <s:TextInput id="txtLong"
+                                 width="100%"
+                                 enter="locateCoordinates()"
+                                 restrict="0-9\.\-"
+                                 text="{xExampleValue}"/>
+                </mx:FormItem>
+                <mx:FormItem width="100%"
+                             label="{yLabel}"
+                             required="true">
+                    <s:TextInput id="txtLat"
+                                 width="100%"
+                                 enter="locateCoordinates()"
+                                 restrict="0-9\.\-"
+                                 text="{yExampleValue}"/>
+                </mx:FormItem>
+                <s:HGroup width="100%"
+                          horizontalAlign="center"
+                          paddingTop="5">
+                    <s:Button click="locateCoordinates()" label="{submitLabel}"/>
+                    <s:Button id="clearCoordinatesButton"
+                              click="clearInputFieldsAndResults()"
+                              label="{clearLabel}"/>
+                </s:HGroup>
+                <s:Label id="coordinatesRequiredFieldsLabel"
+                         color="0xff0000"
+                         includeInLayout="false"
+                         visible="false"/>
+            </mx:Form>
+        </s:Group>
+        <s:Group id="resultsList"
+                 width="100%" height="100%"
+                 visible="false"
+                 visible.resultsList="true">
+            <s:layout>
+                <s:VerticalLayout gap="1"/>
+            </s:layout>
+            <s:HGroup id="boxMessage"
+                      width="100%"
+                      includeInLayout="{msgVisible}"
+                      visible="{msgVisible}">
+                <mx:Image id="swfMessage"
+                          source="assets/images/loader.swf"
+                          visible="false"/>
+                <s:Label id="txtMessage"
+                         width="90%"
+                         text=""/>
+            </s:HGroup>
+            <s:Scroller width="100%" height="100%"
+                        horizontalScrollPolicy="off">
+                <Locate:LocateResultDataGroup id="locateResultDG"
+                                              dataProvider="{locateResultAC}"
+                                              locateResultClick="locateResultDG_locationSelectHandler(event)"
+                                              locateResultDelete="locateResultDG_locateResultDeleteHandler(event)">
+                    <Locate:layout>
+                        <s:VerticalLayout gap="2"
+                                          horizontalAlign="justify"
+                                          useVirtualLayout="true"/>
+                    </Locate:layout>
+                </Locate:LocateResultDataGroup>
+            </s:Scroller>
+        </s:Group>
+    </viewer:WidgetTemplate>
+</viewer:BaseWidget>

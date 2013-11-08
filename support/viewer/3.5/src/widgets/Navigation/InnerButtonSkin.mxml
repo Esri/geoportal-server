@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+             xmlns:s="library://ns.adobe.com/flex/spark"
+             xmlns:mx="library://ns.adobe.com/flex/mx"
+             currentStateChanging="onCurrentStateChanging(event)">
+
+    <fx:Metadata>
+        [HostComponent("widgets.Navigation.IconButton")]
+    </fx:Metadata>
+
+    <fx:Script>
+        <![CDATA[
+            import mx.events.StateChangeEvent;
+
+            private function onCurrentStateChanging(event:StateChangeEvent):void
+            {
+                switch (event.newState)
+                {
+                    case "up":
+                    {
+                        setIcon("iconUp");
+                        break;
+                    }
+                    case "over":
+                    {
+                        setIcon("iconOver");
+                        break;
+                    }
+                    case "down":
+                    {
+                        setIcon("iconDown");
+                        break;
+                    }
+                    case "disabled":
+                    {
+                        setIcon("iconDisabled");
+                        break;
+                    }
+                }
+            }
+
+            private function setIcon(type:String):void
+            {
+                if (hostComponent.getStyle(type) != null)
+                {
+                    icon.source = hostComponent.getStyle(type);
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <s:states>
+        <s:State name="up"/>
+        <s:State name="over"/>
+        <s:State name="down"/>
+        <s:State name="disabled"/>
+    </s:states>
+
+    <s:Group>
+        <s:Ellipse id="ellipse3"
+                   x="0" y="0" width="26" height="26">
+            <s:fill>
+                <s:SolidColor alpha="{getStyle('contentBackgroundAlpha')}"
+                              alpha.down="1"
+                              color="{getStyle('contentBackgroundColor')}"
+                              color.down="{getStyle('selectionColor')}"
+                              color.over="{getStyle('rollOverColor')}"/>
+            </s:fill>
+            <s:stroke>
+                <s:SolidColorStroke color="{getStyle('color')}"
+                                    color.disabled="#888888"
+                                    color.down="{getStyle('focusColor')}"
+                                    color.over="{getStyle('focusColor')}"
+                                    joints="miter"
+                                    miterLimit="10"
+                                    weight="2"/>
+            </s:stroke>
+        </s:Ellipse>
+
+        <mx:Image id="icon"
+                  width="17" height="17"
+                  alpha="{(this.currentState == 'up')?.8:1}"
+                  horizontalCenter="-0.5"
+                  source="{hostComponent.getStyle('iconUp')}"
+                  verticalCenter="-0.5"/>
+    </s:Group>
+
+</s:SparkSkin>

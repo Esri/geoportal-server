@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (c) 2010 Esri
+
+     All rights reserved under the copyright laws of the United States
+     and applicable international laws, treaties, and conventions.
+
+     You may freely redistribute and use this sample code, with or
+     without modification, provided you include the original copyright
+     notice and use restrictions.
+
+     See use restrictions in use_restrictions.txt.
+-->
+<!---
+     Custom skin class for the AttributeInspector component.
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+             xmlns:mx="library://ns.adobe.com/flex/mx"
+             xmlns:s="library://ns.adobe.com/flex/spark"
+             xmlns:fieldClasses="com.esri.ags.skins.fieldClasses.*">
+
+    <fx:Metadata>
+        /**
+         * A strongly typed property that references the component to which this skin is applied.
+         */
+        [HostComponent("com.esri.ags.components.AttributeInspector")]
+
+        [Event(name="attachmentGroupClicked", type="flash.events.Event")]     
+        [Event(name="relatedRecordsGroupClicked", type="flash.events.Event")]  
+    </fx:Metadata>
+
+    <fx:Declarations>
+        <fx:Component id="codedValueDomainField">
+            <fieldClasses:CodedValueDomainField minWidth="200"/>
+        </fx:Component>
+        <fx:Component id="dateField">
+            <!--
+            Display dates in local time, using a localized short date format. eg: for en_US: MM/DD/YYYY
+            See PopUpFieldFormat date formats or provide a custom one.
+            -->
+            <fieldClasses:CalendarField dateFormat="shortDate" useUTC="false"/>
+        </fx:Component>
+        <fx:Component id="doubleField">
+            <!--
+            By default the number of digits after de decimal separator is 16, but it's customizable.
+            -->
+            <fieldClasses:DoubleField fractionalDigits="16" minWidth="200"/>
+        </fx:Component>
+        <fx:Component id="integerField">
+            <fieldClasses:IntegerField minWidth="200"/>
+        </fx:Component>
+        <fx:Component id="labelField">
+            <fieldClasses:LabelField minWidth="200"/>
+        </fx:Component>
+        <fx:Component id="memoField">
+            <fieldClasses:MemoField minWidth="200"/>
+        </fx:Component>
+        <fx:Component id="rangeDomainField">
+            <fieldClasses:RangeDomainField minWidth="200"/>
+        </fx:Component>
+        <fx:Component id="singleField">
+            <fieldClasses:DoubleField minWidth="200"/>
+        </fx:Component>
+        <fx:Component id="smallIntegerField">
+            <fieldClasses:IntegerField minWidth="200"/>
+        </fx:Component>
+        <fx:Component id="stringField">
+            <fieldClasses:StringField minWidth="200"/>
+        </fx:Component>
+        <fx:Component id="textField">
+            <fieldClasses:TextField minWidth="200"/>
+        </fx:Component>
+        <fx:Component id="typeField">
+            <fieldClasses:TypeField minWidth="200"/>
+        </fx:Component>
+    </fx:Declarations>
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.Graphic;
+            import com.esri.ags.layers.FeatureLayer;
+            import com.esri.ags.layers.supportClasses.FeatureLayerDetails;
+            import com.esri.ags.layers.supportClasses.FeatureTableDetails;
+
+            // configurable through the edit widget's config file
+            [Bindable]
+            public static var showAttachmentsText:String;
+            [Bindable]
+            public static var showRelatedRecordsText:String;
+            [Bindable]
+            public static var deleteLabel:String;
+            [Bindable]
+            public static var saveLabel:String;
+
+            private function isAttachmentGroupShown(activeFeature:Graphic):Boolean
+            {
+                var result:Boolean;
+
+                if (activeFeature.graphicsLayer is FeatureLayer)
+                {
+                    const featureLayer:FeatureLayer = FeatureLayer(activeFeature.graphicsLayer);
+                    if (featureLayer.layerDetails is FeatureLayerDetails)
+                    {
+                        const featureLayerDetails:FeatureLayerDetails = FeatureLayerDetails(featureLayer.layerDetails);
+                        result = featureLayerDetails.hasAttachments;
+                    }
+                    else if (featureLayer.tableDetails is FeatureTableDetails)
+                    {
+                        const featureTableDetails:FeatureTableDetails = FeatureTableDetails(featureLayer.tableDetails);
+                        result = featureTableDetails.hasAttachments;
+                    }
+                }
+
+                return result;
+            }
+
+            private function isRelatedRecordsGroupShown(activeFeature:Graphic):Boolean
+            {
+                var result:Boolean;
+
+                if (activeFeature.graphicsLayer is FeatureLayer)
+                {
+                    const featureLayer:FeatureLayer = FeatureLayer(activeFeature.graphicsLayer);
+                    if (featureLayer.layerDetails is FeatureLayerDetails)
+                    {
+                        const featureLayerDetails:FeatureLayerDetails = FeatureLayerDetails(featureLayer.layerDetails);
+                        result = featureLayerDetails.relationships.length > 0;
+                    }
+                    else if (featureLayer.tableDetails is FeatureTableDetails)
+                    {
+                        const featureTableDetails:FeatureTableDetails = FeatureTableDetails(featureLayer.tableDetails);
+                        result = featureTableDetails.relationships.length > 0;
+                    }
+                }
+
+                return result;
+            }
+
+            private function attachmentGroup_clickHandler(event:MouseEvent):void
+            {
+                dispatchEvent(new Event("attachmentGroupClicked", true, true));
+            }
+
+            private function relatedRecordsGroup_clickHandler(event:MouseEvent):void
+            {
+                dispatchEvent(new Event("relatedRecordsGroupClicked", true, true));
+            }
+        ]]>
+    </fx:Script>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="disabled"/>
+        <s:State name="invalid"/>
+    </s:states>
+
+    <s:layout>
+        <s:VerticalLayout horizontalAlign="center"/>
+    </s:layout>
+
+    <s:HGroup gap="8"
+              includeInLayout="{hostComponent.numFeatures&gt;1}"
+              verticalAlign="middle"
+              visible="{hostComponent.numFeatures&gt;1}">
+        <!--- Button to go to the previous feature in the selection set. -->
+        <s:Button id="previousButton"
+                  enabled.disabled="false"
+                  skinClass="com.esri.ags.skins.AttributeInspectorPreviousButtonSkin"/>
+        <!--- Form to display the attributes of the active feature. -->
+        <s:Label width="100%"
+                 fontSize="14"
+                 fontWeight="bold"
+                 text="{hostComponent.activeFeatureIndex+1} {resourceManager.getString('ESRIMessages','attributeInspectorOf')} {hostComponent.numFeatures}"
+                 textAlign="center"/>
+        <!--- Button to go to the next feature in the selection set. -->
+        <s:Button id="nextButton"
+                  enabled.disabled="false"
+                  skinClass="com.esri.ags.skins.AttributeInspectorNextButtonSkin"/>
+    </s:HGroup>
+    <!--- List to display the attributes of the active feature. -->
+    <!--- @private -->
+    <s:List id="list"
+            width="100%" height="100%"
+            borderVisible="false"
+            enabled.disabled="false"
+            hasFocusableChildren="true"
+            horizontalScrollPolicy="off"
+            itemRenderer="com.esri.ags.skins.supportClasses.AttributeInspectorRenderer"
+            maxHeight="{hostComponent.getStyle('formMaxHeight')}"
+            useVirtualLayout="false"
+            verticalScrollPolicy="auto">
+        <s:layout>
+            <s:FormLayout gap="0"
+                          paddingBottom="10"
+                          paddingLeft="10"
+                          paddingRight="10"
+                          paddingTop="10"/>
+        </s:layout>
+    </s:List>
+    <!--- Label to show the edit summary. -->
+    <s:Label id="editSummaryLabel"
+             width="100%"
+             enabled.disabled="false"
+             fontStyle="italic"/>
+    <s:HGroup verticalAlign="middle">
+        <!--- Button to delete the active feature. -->
+        <s:Button id="deleteButton"
+                  buttonMode="true"
+                  enabled.disabled="false"
+                  label="{deleteLabel}"
+                  skinClass="com.esri.ags.skins.AttributeInspectorDeleteButtonSkin"/>
+        <!--- Button to indicate completion of editing/viewing attributes -->
+        <s:Button id="okButton"
+                  enabled.disabled="false"
+                  label="{saveLabel}"/>
+    </s:HGroup>
+
+    <s:VGroup width="100%"
+              horizontalAlign="right"
+              verticalAlign="middle">
+        <s:Button buttonMode="true"
+                  click="attachmentGroup_clickHandler(event)"
+                  fontWeight="bold"
+                  includeInLayout="{isAttachmentGroupShown(hostComponent.activeFeature)}"
+                  label="{showAttachmentsText}"
+                  skinClass="com.esri.viewer.skins.ViewerLinkButtonSkin"
+                  visible="{isAttachmentGroupShown(hostComponent.activeFeature)}"/>
+        <s:Button buttonMode="true"
+                  click="relatedRecordsGroup_clickHandler(event)"
+                  fontWeight="bold"
+                  includeInLayout="{isRelatedRecordsGroupShown(hostComponent.activeFeature)}"
+                  label="{showRelatedRecordsText}"
+                  skinClass="com.esri.viewer.skins.ViewerLinkButtonSkin"
+                  textDecoration="underline"
+                  visible="{isRelatedRecordsGroupShown(hostComponent.activeFeature)}"/>
+    </s:VGroup>
+
+</s:SparkSkin>

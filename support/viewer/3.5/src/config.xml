@@ -1,0 +1,77 @@
+<?xml version="1.0" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////
+//
+// Read more about ArcGIS Viewer for Flex - http://links.esri.com/flexviewer
+//
+////////////////////////////////////////////////////////////////////////////////
+-->
+<configuration>
+    <title>ArcGIS Viewer for Flex</title>
+    <subtitle>a configurable web mapping application</subtitle>
+    <logo>assets/images/logo.png</logo>
+    <style>
+        <colors>0xFFFFFF,0x333333,0x101010,0x000000,0xFFD700</colors>
+        <alpha>0.8</alpha>
+    </style>
+    <!-- replace the following url with your own geometryservice -->
+    <geometryservice url="http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer" />
+
+    <!-- UI elements -->
+    <widget left="10"  top="50"    config="widgets/Navigation/NavigationWidget.xml" url="widgets/Navigation/NavigationWidget.swf"/>
+    <widget right="0" bottom="0"   config="widgets/OverviewMap/OverviewMapWidget.xml" url="widgets/OverviewMap/OverviewMapWidget.swf"/>
+    <widget right="20" top="55"    config="widgets/MapSwitcher/MapSwitcherWidget.xml" url="widgets/MapSwitcher/MapSwitcherWidget.swf"/>
+    <widget left="0"   top="0"     config="widgets/HeaderController/HeaderControllerWidget.xml" url="widgets/HeaderController/HeaderControllerWidget.swf"/>
+
+    <map wraparound180="true" initialextent="-14083000 3139000 -10879000 5458000" fullextent="-20000000 -20000000 20000000 20000000" top="40" addarcgisbasemaps="true">
+        <operationallayers>
+            <layer label="Demographics" type="tiled" visible="false" alpha="0.5"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/Demographics/USA_Median_Household_Income/MapServer">
+                <sublayer id="1" popupconfig="popups/PopUp_Demographics_BlockGroups.xml"/>
+                <sublayer id="2" popupconfig="popups/PopUp_Demographics_Tracts.xml"/>
+                <sublayer id="3" popupconfig="popups/PopUp_Demographics_Counties.xml"/>
+                <sublayer id="4" popupconfig="popups/PopUp_Demographics_States.xml"/>
+            </layer>
+            <layer label="Fires" type="feature" visible="false" alpha="1.0"
+                   popupconfig="popups/PopUp_Fires.xml"
+                   url="http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Fire/Sheep/FeatureServer/0"/>
+        </operationallayers>
+    </map>
+
+    <!-- widgets organized into widget containers that manage close/open etc -->
+    <!-- supported layout property options: horizontal(default)|float|vertical|fix-->
+    <widgetcontainer layout="float">
+        <widget label="Bookmarks"         left="430" top="90"
+                icon="assets/images/i_bookmark.png"
+                config="widgets/Bookmark/BookmarkWidget.xml"
+                url="widgets/Bookmark/BookmarkWidget.swf"/>
+        <widget label="Louisville Police" left="590" top="280"
+                icon="assets/images/i_police.png"
+                config="widgets/Query/QueryWidget_Louisville_PoliceStations.xml"
+                url="widgets/Query/QueryWidget.swf"/>
+        <widget label="Search" left="80" top="280"
+                icon="assets/images/i_search.png"
+                config="widgets/Search/SearchWidget_Louisville.xml"
+                url="widgets/Search/SearchWidget.swf"/>
+        <widget label="Earthquakes (GeoRSS)" left="410" top="280"
+                icon="assets/images/i_rss.png"
+                config="widgets/GeoRSS/GeoRSSWidget.xml"
+                url="widgets/GeoRSS/GeoRSSWidget.swf"/>
+        <widget label="Draw" left="60" top="400"
+                icon="assets/images/i_draw2.png"
+                config="widgets/Draw/DrawWidget.xml"
+                url="widgets/Draw/DrawWidget.swf"/>
+        <widget label="Print" left="390" top="400"
+                icon="assets/images/i_print.png"
+                config="widgets/Print/PrintWidget.xml"
+                url="widgets/Print/PrintWidget.swf"/>
+
+        <!--
+        <widget label="My first widget"
+                icon="assets/images/i_widget.png"
+                config="widgets/Samples/HelloWorld/HelloWorldWidget.xml"
+                url="widgets/Samples/HelloWorld/HelloWorldWidget.swf"/>
+        -->
+    </widgetcontainer>
+    
+</configuration>

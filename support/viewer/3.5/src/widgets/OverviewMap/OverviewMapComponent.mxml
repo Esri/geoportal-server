@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                      xmlns:s="library://ns.adobe.com/flex/spark"
+                      xmlns:mx="library://ns.adobe.com/flex/mx"
+                      xmlns:esri="http://www.esri.com/2008/ags"
+                      creationComplete="init()">
+
+    <!-- this component is used by the OverviewMapWidget -->
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.Graphic;
+            import com.esri.ags.Map;
+            import com.esri.ags.events.ExtentEvent;
+            import com.esri.ags.events.MapEvent;
+            import com.esri.ags.geometry.MapPoint;
+            import com.esri.ags.geometry.Polygon;
+            import com.esri.ags.layers.Layer;
+            import com.esri.ags.symbols.SimpleFillSymbol;
+            import com.esri.ags.symbols.SimpleLineSymbol;
+            import com.esri.viewer.AppEvent;
+            import com.esri.viewer.ConfigData;
+            import com.esri.viewer.managers.LayerCreator;
+            import com.esri.viewer.utils.LayerObjectUtil;
+
+            import mx.collections.ArrayCollection;
+            import mx.core.FlexGlobals;
+            import mx.events.EffectEvent;
+
+            private var _map:Map;
+
+            [Bindable]
+            public function get map():Map
+            {
+                return _map;
+            }
+
+            public function set map(value:Map):void
+            {
+                _map = value;
+                if (_map)
+                {
+                    if (map.loaded)
+                    {
+                        startTrackingIfMapsLoaded();
+                    }
+                    else
+                    {
+                        map.addEventListener(MapEvent.LOAD, map_loadHandler);
+                    }
+                }
+            }
+
+            public var configData:ConfigData;
+            public var openDefaultToolTip:String;
+            public var closeDefaultToolTip:String;
+
+            private var overviewGraphic:Graphic = new Graphic();
+            private var useBaseMapLayer:Boolean;
+            private var baseMapSwitched:Boolean;
+            private var currentBaseMapId:String;
+            private var hasOverviewGraphicBeenMoved:Boolean = false;
+            private var lastMouseMapX:Number;
+            private var lastMouseMapY:Number;
+            private var basemapLayerObjectToLayer:Dictionary;
+            private var isCollapsible:Boolean = true;
+
+            [Bindable]
+            private var openToolTip:String;
+            [Bindable]
+            private var closeToolTip:String;
+
+            private function init():void
+            {
+                // wait for the current state to be updated based on config
+                viewBox.visible = false;
+                borderRect1.visible = false;
+
+                const outlineSym:SimpleLineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, 0xFF0000, 0.7, 2);
+                const extentSym:SimpleFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, 0xFF0000, 0.2, outlineSym);
+
+                overviewGraphic.symbol = extentSym;
+                overviewGraphic.buttonMode = true;
+
+                toggleIcon.addEventListener(MouseEvent.CLICK, toggleIcon_clickHandler);
+                viewBox.setStyle("backgroundColor", FlexGlobals.topLevelApplication.getStyle("backgroundColor"));
+            }
+
+            private function toggleIcon_clickHandler(event:MouseEvent):void
+            {
+                currentState = (currentState == "collapsed") ? "expanded" : "collapsed";
+            }
+
+            public function set expansionDirection(direction:String):void
+            {
+                switch (direction)
+                {
+                    case ExpansionDirection.UP_RIGHT:
+                    {
+                        toggleIcon.rotation = 90;
+                        toggleIcon.left = toggleIcon.bottom = iconMask.left = iconMask.bottom = null;
+                        toggleIcon.right = toggleIcon.top = iconMask.right = iconMask.top = 0;
+                        break;
+                    }
+                    case ExpansionDirection.DOWN_RIGHT:
+                    {
+                        toggleIcon.rotation = 180;
+                        toggleIcon.left = toggleIcon.top = iconMask.left = iconMask.top = null;
+                        toggleIcon.right = toggleIcon.bottom = iconMask.right = iconMask.bottom = 0;
+                        break;
+                    }
+                    case ExpansionDirection.DOWN_LEFT:
+                    {
+                        toggleIcon.rotation = 270;
+                        toggleIcon.right = toggleIcon.top = iconMask.right = iconMask.top = null;
+                        toggleIcon.left = toggleIcon.bottom = iconMask.left = iconMask.bottom = 0;
+                        break;
+                    }
+                }
+            }
+
+            private var _configXML:XML;
+
+            public function get configXML():XML
+            {
+                return _configXML;
+            }
+
+            public function set configXML(value:XML):void
+            {
+                _configXML = value;
+
+                if (configXML)
+                {
+                    openToolTip = configXML.labels.opentooltip || openDefaultToolTip;
+                    closeToolTip = configXML.labels.closetooltip || closeDefaultToolTip;
+
+                    var layerToAdd:Layer;
+                    if (configXML.layer[0])
+                    {
+                        useBaseMapLayer = false;
+                        layerToAdd =
+                            LayerCreator.createLayerFromLayerObject(
+                            LayerObjectUtil.getLayerObject(configXML.layer[0], -1,
+                                                           false, configData.bingKey,
+                                                           null, configData.proxyUrl));
+
+                        if (layerToAdd)
+                        {
+                            overviewMap.addLayer(layerToAdd);
+                        }
+                    }
+                    else
+                    {
+                        useBaseMapLayer = true;
+                        basemapLayerObjectToLayer = new Dictionary();
+
+                        // get the base map layers
+                        for each (var basemapLayerObject:Object in configData.basemaps)
+                        {
+                            layerToAdd = LayerCreator.createLayerFromLayerObject(basemapLayerObject);
+                            if (layerToAdd)
+                            {
+                                overviewMap.addLayer(layerToAdd);
+                                basemapLayerObjectToLayer[basemapLayerObject] = layerToAdd;
+                            }
+                        }
+                        AppEvent.addListener(AppEvent.BASEMAP_SWITCH, viewContainer_basemapSwitchHandler);
+                    }
+                    if (configXML.collapsible.length() > 0)
+                    {
+                        isCollapsible = configXML.collapsible == "true";
+                    }
+                    if (isCollapsible)
+                    {
+                        currentState = configXML.initialstate == "open" ? "expanded" : "collapsed";
+                    }
+                    else
+                    {
+                        currentState = "noncollapsible";
+                    }
+                    if (currentState == "collapsed")
+                    {
+                        for each (var layer:Layer in overviewMap.layers)
+                        {
+                            layer.visible = false;
+                        }
+                    }
+                    viewBox.visible = true;
+                    borderRect1.visible = true;
+                }
+            }
+
+            private function viewContainer_basemapSwitchHandler(event:AppEvent):void
+            {
+                baseMapSwitched = true;
+                currentBaseMapId = event.data as String;
+                if (currentState == "expanded" || currentState == "noncollapsible")
+                {
+                    showCurrentBaseMap(currentBaseMapId);
+                }
+            }
+
+            private function showCurrentBaseMap(currentBaseMapId:String):void
+            {
+                var configBasemaps:Array = configData.basemaps;
+
+                if (currentBaseMapId)
+                {
+                    var selectedLabel:String;
+                    for (var i:uint = 0; i < configBasemaps.length; i++)
+                    {
+                        if (configBasemaps[i].id == currentBaseMapId)
+                        {
+                            selectedLabel = configBasemaps[i].label;
+                            break;
+                        }
+                    }
+                    if (selectedLabel)
+                    {
+                        // turn on the selected basemap layers (more than one layer can have the same label)
+                        var layers:ArrayCollection = overviewMap.layers as ArrayCollection;
+                        for (i = 0; i < configBasemaps.length; i++)
+                        {
+                            var basemapLabel:String = configBasemaps[i].label;
+                            for each (var layer:Layer in layers)
+                            {
+                                if (layer.id == basemapLabel)
+                                {
+                                    layer.visible = (layer.id == selectedLabel);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            private function overviewMap_loadHandler(event:MapEvent):void
+            {
+                startTrackingIfMapsLoaded();
+            }
+
+            private function startTrackingIfMapsLoaded():void
+            {
+                if (map && map.loaded && overviewMap && overviewMap.loaded)
+                {
+                    map.addEventListener(ExtentEvent.EXTENT_CHANGE, map_extentChangeHandler);
+                    overviewMap.addEventListener(MouseEvent.ROLL_OUT, overviewMap_mouseRollOutHandler);
+                    overviewGraphic.addEventListener(MouseEvent.MOUSE_DOWN, overviewGraphic_mouseDownHandler);
+
+                    updateOverviewExtentFromMap();
+
+                    overviewMap.defaultGraphicsLayer.add(overviewGraphic);
+                }
+            }
+
+            private function overviewGraphic_mouseDownHandler(event:MouseEvent):void
+            {
+                overviewGraphic.removeEventListener(MouseEvent.MOUSE_DOWN, overviewGraphic_mouseDownHandler);
+                overviewMap.addEventListener(MouseEvent.MOUSE_UP, overviewMap_mouseUpHandler);
+                overviewMap.addEventListener(MouseEvent.MOUSE_MOVE, overviewMap_mouseMoveHandler);
+
+                var mouseMapPoint:MapPoint = overviewMap.toMapFromStage(event.stageX, event.stageY);
+                lastMouseMapX = mouseMapPoint.x;
+                lastMouseMapY = mouseMapPoint.y;
+            }
+
+            private function overviewMap_mouseMoveHandler(event:MouseEvent):void
+            {
+                hasOverviewGraphicBeenMoved = true;
+
+                var overviewPolygon:Polygon = overviewGraphic.geometry as Polygon;
+                var mouseMapPoint:MapPoint = overviewMap.toMapFromStage(event.stageX, event.stageY);
+                var deltaMapX:Number = mouseMapPoint.x - lastMouseMapX;
+                var deltaMapY:Number = mouseMapPoint.y - lastMouseMapY;
+                lastMouseMapX = mouseMapPoint.x;
+                lastMouseMapY = mouseMapPoint.y;
+
+                var ring:Array = overviewPolygon.removeRing(0)[0];
+                for (var iMapPoint:int = 4; iMapPoint >= 0; iMapPoint--)
+                {
+                    ring[iMapPoint].x += deltaMapX;
+                    ring[iMapPoint].y += deltaMapY;
+                }
+                overviewPolygon.addRing(ring);
+
+                overviewGraphic.refresh();
+            }
+
+            private function overviewMap_mouseRollOutHandler(event:MouseEvent):void
+            {
+                overviewMap.removeEventListener(MouseEvent.MOUSE_MOVE, overviewMap_mouseMoveHandler);
+                overviewMap.removeEventListener(MouseEvent.MOUSE_UP, overviewMap_mouseUpHandler);
+                overviewGraphic.addEventListener(MouseEvent.MOUSE_DOWN, overviewGraphic_mouseDownHandler);
+                if (hasOverviewGraphicBeenMoved)
+                {
+                    hasOverviewGraphicBeenMoved = false;
+                    updateMapExtentFromOverview();
+                }
+            }
+
+            private function updateMapExtentFromOverview():void
+            {
+                map.center = overviewGraphic.geometry.extent.center;
+            }
+
+            private function overviewMap_mouseUpHandler(event:MouseEvent):void
+            {
+                overviewMap.removeEventListener(MouseEvent.MOUSE_MOVE, overviewMap_mouseMoveHandler);
+                overviewMap.removeEventListener(MouseEvent.MOUSE_UP, overviewMap_mouseUpHandler);
+                overviewGraphic.addEventListener(MouseEvent.MOUSE_DOWN, overviewGraphic_mouseDownHandler);
+
+                if (hasOverviewGraphicBeenMoved)
+                {
+                    hasOverviewGraphicBeenMoved = false;
+                    updateMapExtentFromOverview();
+                }
+            }
+
+            private function updateOverviewExtentFromMap():void
+            {
+                overviewMap.extent = map.extent.expand(3);
+                overviewGraphic.geometry = map.visibleArea;
+                //hide overview box if larger than overview map
+                overviewGraphic.visible = overviewMap.extent.contains(overviewGraphic.geometry);
+            }
+
+            private function map_extentChangeHandler(event:ExtentEvent):void
+            {
+                updateOverviewExtentFromMap();
+            }
+
+            private function map_loadHandler(event:MapEvent):void
+            {
+                map.removeEventListener(MapEvent.LOAD, map_loadHandler);
+                startTrackingIfMapsLoaded();
+            }
+
+            private function sequence_effectStartHandler(event:EffectEvent):void
+            {
+                if (currentState == "expanded" || currentState == "noncollapsible")
+                {
+                    if (useBaseMapLayer)
+                    {
+                        if (baseMapSwitched)
+                        {
+                            showCurrentBaseMap(currentBaseMapId);
+                        }
+                        else
+                        {
+                            // on start up and if basemap is not switched
+                            for (var basemapLayerObject:Object in basemapLayerObjectToLayer)
+                            {
+                                var layer:Layer = basemapLayerObjectToLayer[basemapLayerObject];
+                                layer.visible = basemapLayerObject.visible;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for each (var overviewMapLayer:Layer in overviewMap.layers)
+                        {
+                            overviewMapLayer.visible = true;
+                        }
+                    }
+                }
+            }
+
+            private function sequence_effectEndHandler(event:EffectEvent):void
+            {
+                if (currentState == "collapsed")
+                {
+                    for each (var layer:Layer in overviewMap.layers)
+                    {
+                        layer.visible = false;
+                    }
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <s:states>
+        <s:State name="collapsed"/>
+        <s:State name="expanded"/>
+        <s:State name="noncollapsible"/>
+    </s:states>
+
+    <s:transitions>
+        <s:Transition fromState="collapsed" toState="expanded">
+            <s:Sequence effectEnd="sequence_effectEndHandler(event)" effectStart="sequence_effectStartHandler(event)">
+                <s:Resize duration="800" target="{viewBox}"/>
+                <s:Rotate angleBy="180"
+                          autoCenterTransform="true"
+                          duration="300"
+                          target="{toggleIcon}"/>
+            </s:Sequence>
+        </s:Transition>
+        <s:Transition fromState="expanded" toState="collapsed">
+            <s:Sequence effectEnd="sequence_effectEndHandler(event)" effectStart="sequence_effectStartHandler(event)">
+                <s:Resize duration="800" target="{viewBox}"/>
+                <s:Rotate angleBy="180"
+                          autoCenterTransform="true"
+                          duration="300"
+                          target="{toggleIcon}"/>
+            </s:Sequence>
+        </s:Transition>
+    </s:transitions>
+
+    <s:BorderContainer id="viewBox"
+                       width="250" width.collapsed="{toggleIcon.width}" height="250" height.collapsed="{toggleIcon.height}"
+                       backgroundAlpha="1.0">
+        <esri:Map id="overviewMap"
+                  width="250" height="250"
+                  attributionVisible="false"
+                  clickRecenterEnabled="false"
+                  doubleClickZoomEnabled="false"
+                  keyboardNavigationEnabled="false"
+                  load="overviewMap_loadHandler(event)"
+                  logoVisible="false"
+                  mask="{mapMask}"
+                  panArrowsVisible="false"
+                  panEnabled="false"
+                  rubberbandZoomEnabled="false"
+                  scaleBarVisible="false"
+                  scrollWheelZoomEnabled="false"
+                  wrapAround180="{map.wrapAround180}"
+                  zoomSliderVisible="false"/>
+        <s:BorderContainer id="mapMask"
+                           width="{viewBox.width}" height="{viewBox.height}"/>
+        <s:Group width="{viewBox.width}" height="{viewBox.height}"
+                 includeInLayout.noncollapsible="false"
+                 visible.noncollapsible="false">
+            <mx:Image id="toggleIcon"
+                      width="23" height="23"
+                      buttonMode="true"
+                      mask="{iconMask}"
+                      smoothBitmapContent="true"
+                      source="assets/images/i_expand2.png"
+                      toolTip.collapsed="{openToolTip}"
+                      toolTip.expanded="{closeToolTip}"
+                      useHandCursor="true"/>
+            <s:BorderContainer id="iconMask"
+                               width="{toggleIcon.width}" height="{toggleIcon.height}"/>
+        </s:Group>
+    </s:BorderContainer>
+    <s:Rect id="borderRect1"
+            left="-1" right="-1" top="-1" bottom="-1">
+        <s:stroke>
+            <s:SolidColorStroke color="{getStyle('contentBackgroundColor')}" weight="1"/>
+        </s:stroke>
+    </s:Rect>
+
+</s:SkinnableContainer>

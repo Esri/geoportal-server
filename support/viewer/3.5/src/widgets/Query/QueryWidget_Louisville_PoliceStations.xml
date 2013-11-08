@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<configuration label="Louisville Police Stations">
+    <layer>http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Louisville/LOJIC_PublicSafety_Louisville/MapServer/3</layer>
+    <titlefield>PD_NAME</titlefield>
+    <fields all="false">
+        <field name="PD_NAME"/>
+        <field name="ADDRESS" alias="Address"/>
+    </fields>
+    <filterfield>
+        <name>ADDRESS</name>
+        <alias>Filter by ADDRESS (Example: 29TH ST )</alias>
+    </filterfield>
+    <linkfield></linkfield>
+    <refreshrate></refreshrate>
+    <zoomscale>20000</zoomscale>
+    <query>1=1</query>
+</configuration>
+
+<!--
+    See Query widget tag reference at
+    http://links.esri.com/querywidget
+-->

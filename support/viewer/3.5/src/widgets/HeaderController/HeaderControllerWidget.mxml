@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:viewer="com.esri.viewer.*"
+                   xmlns:components="com.esri.viewer.components.*"
+                   xmlns:HeaderController="widgets.HeaderController.*"
+                   width="100%"
+                   borderSkin="{null}"
+                   creationComplete="creationCompleteHandler(event)"
+                   widgetConfigLoaded="widgetConfigLoadedHandler()">
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.viewer.AppEvent;
+            import com.esri.viewer.WidgetStates;
+
+            import mx.collections.ArrayCollection;
+            import mx.collections.ArrayList;
+            import mx.events.FlexEvent;
+
+            import spark.components.supportClasses.ItemRenderer;
+            import spark.layouts.HorizontalAlign;
+            import spark.layouts.TileLayout;
+            import spark.layouts.TileOrientation;
+            import spark.layouts.VerticalAlign;
+
+            private const NONSTOP_RESIZE_GAP:Number = 25;
+
+            private const MIN_HEADING_WIDTH:Number = 100;
+
+            private var minHeadingGroupWidth:Number;
+
+            [Bindable]
+            private var linkList:ArrayList;
+
+            [Bindable]
+            private var headingWidth:Number = MIN_HEADING_WIDTH;
+
+            [Bindable]
+            private var widgetItemArrCol:ArrayCollection;
+
+            [Bindable]
+            private var groupWidgetArrCol:ArrayCollection;
+
+            [Bindable]
+            private var title:String;
+
+            private function creationCompleteHandler(event:FlexEvent):void
+            {
+                if (configData)
+                {
+                    // if an explicit font size is specified, auto shrinking will not happen
+                    bannerTitle.autoShrinking = configData.titleFont.size == 0
+                    bannerSubtitle.autoShrinking = configData.subTitleFont.size == 0;
+
+                    widgetItemArrCol = getWidgetItems(configData.widgets);
+                    var uiList:Array = configData.viewerUI;
+
+                    for (var i:int = 0; i < uiList.length; i++)
+                    {
+                        if (uiList[i].id == "title")
+                        {
+                            bannerTitle.text = uiList[i].value;
+                        } // default is no title at all
+
+                        if (uiList[i].id == "subtitle")
+                        {
+                            bannerSubtitle.text = uiList[i].value;
+                        } // default is no subtitle at all
+
+                        if (uiList[i].id == "logo")
+                        {
+                            logoIcon.source = uiList[i].value;
+                        } // default is no logo at all
+                    }
+
+                    if (!bannerTitle.text && !bannerSubtitle.text)
+                    {
+                        headingGroup.includeInLayout = false;
+                        headingGroup.visible = false;
+                    }
+
+                    AppEvent.addListener(AppEvent.SET_LOGO, setLogoHandler);
+                    AppEvent.addListener(AppEvent.SET_TITLES, setTitlesHandler);
+                    AppEvent.addListener(AppEvent.WIDGET_STATE_CHANGED, widgetStateChangedHandler);
+                }
+            }
+
+            private function setLogoHandler(event:AppEvent):void
+            {
+                logoIcon.source = event.data;
+            }
+
+            private function setTitlesHandler(event:AppEvent):void
+            {
+                bannerTitle.text = event.data.title;
+                bannerSubtitle.text = event.data.subtitle;
+            }
+
+            private function widgetConfigLoadedHandler():void
+            {
+                if (configXML)
+                {
+                    var geocoderXML:XML = configXML.geocoder[0] || configXML.search[0];
+
+                    const shouldEnableGeocoder:Boolean = geocoderXML && (geocoderXML.@visible[0] != "false");
+                    if (shouldEnableGeocoder)
+                    {
+                        singleLineSearch.hostBaseWidget = this;
+                        singleLineSearch.includeInLayout = true;
+                        singleLineSearch.visible = true;
+                    }
+
+                    configureLinks();
+                }
+            }
+
+            private function configureLinks():void
+            {
+                const links:Array = [];
+
+                //backwards compatibility
+                if (configXML.about[0])
+                {
+                    links.push(aboutXMLToLinkXML(configXML.about[0]));
+                }
+
+                const linksXML:XMLList = configXML.links.link;
+                var link:Link;
+                for each (var linkXML:XML in linksXML)
+                {
+                    link = createLinkFromXML(linkXML);
+                    if (link)
+                    {
+                        links.push(link);
+                    }
+                }
+
+                if (links.length == 0)
+                {
+                    return;
+                }
+
+                linkList = new ArrayList(links);
+
+                if (links.length > 1)
+                {
+                    const tileLayout:TileLayout = new TileLayout();
+                    tileLayout.verticalGap = 4;
+                    tileLayout.horizontalGap = 10;
+                    tileLayout.requestedRowCount = 2;
+                    tileLayout.orientation = TileOrientation.COLUMNS;
+                    tileLayout.verticalAlign = VerticalAlign.MIDDLE;
+                    tileLayout.horizontalAlign = HorizontalAlign.LEFT;
+
+                    linkGroup.layout = tileLayout;
+                }
+
+                linkGroup.visible = true;
+                linkGroup.includeInLayout = true;
+            }
+
+            private function aboutXMLToLinkXML(aboutXML:XML):Link
+            {
+                var aboutLink:Link;
+
+                if (configXML.about.visible[0] != "false")
+                {
+                    aboutLink = new Link();
+                    aboutLink.content = configXML.about.content || "";
+                    aboutLink.label = configXML.labels.abouttext[0] || configXML.about.label[0] || getDefaultString("aboutLabel");
+                    aboutLink.contentCloseLabel = configXML.labels.btnlabel[0] || configXML.about.btnlabel[0] || getDefaultString("okLabel");
+                    aboutLink.contentWidth = configXML.about.width || 300;
+                    aboutLink.contentHeight = configXML.about.height || 300;
+                }
+
+                return aboutLink;
+            }
+
+            private function createLinkFromXML(linkXML:XML):Link
+            {
+                var link:Link;
+
+                const isValidLinkXML:Boolean = linkXML.@url[0] || linkXML.content[0];
+                if (isValidLinkXML)
+                {
+                    link = new Link();
+                    link.url = linkXML.@url[0];
+                    link.content = linkXML.content[0];
+                    link.label = linkXML.@label[0] || getDefaultString("aboutLabel");
+                    link.contentHeight = linkXML.content.@height[0] || 300;
+                    link.contentWidth = linkXML.content.@width[0] || 300;
+                    link.contentCloseLabel = linkXML.content.@closelabel[0] || getDefaultString("okLabel");
+                }
+
+                return link;
+            }
+
+            private function getWidgetItems(widgetList:Array):ArrayCollection
+            {
+                var menuItems:ArrayCollection = new ArrayCollection();
+                var widgetItem:WidgetItem;
+                for (var i:int = 0; i < widgetList.length; )
+                {
+                    const isPartOfPanel:Boolean = widgetList[i].isPartOfPanel && widgetList[i].isPartOfPanel == true;
+                    if (!isPartOfPanel)
+                    {
+                        if (widgetList[i].grouped)
+                        {
+                            // grouped
+                            var widgetArray:Array = [];
+                            var length:Number = widgetList[i].groupLength;
+                            for (var k:int = 0; k < length; k++)
+                            {
+                                widgetArray.push({ widget: widgetList[i + k], open: (widgetList[i].preload && (widgetList[i].preload == "open" || widgetList[i].preload == "minimized")) ? true : false });
+                            }
+                            widgetItem = new WidgetItem();
+                            widgetItem.isGroup = true;
+                            widgetItem.label = widgetList[i].groupLabel;
+                            widgetItem.icon = widgetList[i].groupIcon;
+                            widgetItem.widgets = widgetArray;
+
+                            menuItems.addItem(widgetItem);
+
+                            // move to the next group
+                            i = i + length;
+                        }
+                        else
+                        {
+                            // upgrouped
+                            widgetItem = new WidgetItem();
+                            widgetItem.id = widgetList[i].id;
+                            widgetItem.label = widgetList[i].label;
+                            widgetItem.icon = widgetList[i].icon;
+                            widgetItem.url = widgetList[i].url;
+                            widgetItem.open = widgetList[i].preload && (widgetList[i].preload == "open" || widgetList[i].preload == "minimized");
+
+                            menuItems.addItem(widgetItem);
+
+                            // move to the next individual widget
+                            i++;
+                        }
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+
+                return menuItems;
+            }
+
+            private function widgetItemDG_widgetItemClickHandler(event:Event):void
+            {
+                var widgetItem:WidgetItem = ItemRenderer(event.target).data as WidgetItem;
+                if (widgetItem.isGroup)
+                {
+                    groupWidgetArrCol = new ArrayCollection();
+                    // check the array of widgets if they are open before hand
+                    for each (var widgetObj:Object in widgetItem.widgets)
+                    {
+                        var widgetItem1:WidgetItem = new WidgetItem();
+                        widgetItem1.id = widgetObj.widget.id;
+                        widgetItem1.label = widgetObj.widget.label;
+                        widgetItem1.icon = widgetObj.widget.icon;
+                        widgetItem1.url = widgetObj.widget.url;
+                        widgetItem1.open = widgetObj.open;
+
+                        groupWidgetArrCol.addItem(widgetItem1);
+                    }
+                    menuToolTip.visible = false;
+                    widgetList.visible = true;
+                    widgetListDG.setFocus();
+                }
+                else
+                {
+                    AppEvent.dispatch(AppEvent.WIDGET_RUN, widgetItem.id);
+                }
+            }
+
+            private function widgetList_widgetItemClickHandler(event:Event):void
+            {
+                var widgetItem:WidgetItem = ItemRenderer(event.target).data as WidgetItem;
+                AppEvent.dispatch(AppEvent.WIDGET_RUN, widgetItem.id);
+            }
+
+            [Bindable]
+            private var xOver:int;
+
+            private function widgetItemDG_widgetItemMouseOverHandler(event:Event):void
+            {
+                var pointGlobal:Point = ItemRenderer(event.target).localToGlobal(new Point(0, 0));
+                var pointLocal:Point = headerGroup.globalToLocal(pointGlobal); // get the local coordinates where the menuItem will be shown
+
+                xOver = pointLocal.x;
+
+                widgetList.visible = false;
+                if (WidgetItem(ItemRenderer(event.target).data).label)
+                {
+                    menuToolTip.visible = true;
+                    menuTitle.text = WidgetItem(ItemRenderer(event.target).data).label;
+                }
+            }
+
+            private function widgetItemDG_widgetItemMouseOutHandler(event:Event):void
+            {
+                menuToolTip.visible = false;
+            }
+
+            private function widgetStateChangedHandler(event:AppEvent):void
+            {
+                var data:Object = event.data;
+                if (widgetItemArrCol.length)
+                {
+                    for (var i:Number = 0; i < widgetItemArrCol.length; )
+                    {
+                        if (widgetItemArrCol.getItemAt(i).isGroup)
+                        {
+                            // make sure to check it for the array of widgets(group) if they are open before hand
+                            var widgetFound:Boolean;
+                            for each (var widgetObj:Object in widgetItemArrCol.getItemAt(i).widgets)
+                            {
+                                if (data.id as Number == widgetObj.widget.id)
+                                {
+                                    widgetFound = true;
+                                    widgetObj.open = (data.state as String == WidgetStates.WIDGET_OPENED) || (data.state as String == WidgetStates.WIDGET_MINIMIZED);
+                                    break;
+                                }
+                            }
+                            if (widgetFound)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            if (data.id as Number == widgetItemArrCol.getItemAt(i).id)
+                            {
+                                widgetItemArrCol.getItemAt(i).open = (data.state as String == WidgetStates.WIDGET_OPENED) || (data.state as String == WidgetStates.WIDGET_MINIMIZED);
+                                break;
+                            }
+                            else
+                            {
+                                i++;
+                            }
+                        }
+                    }
+                    // check for any grouped widgets
+                    if (groupWidgetArrCol && groupWidgetArrCol.length > 0)
+                    {
+                        for (var j:Number = 0; j < groupWidgetArrCol.length; )
+                        {
+                            if (data.id as Number == groupWidgetArrCol.getItemAt(j).id)
+                            {
+                                groupWidgetArrCol.getItemAt(j).open = (data.state as String == WidgetStates.WIDGET_OPENED) || (data.state as String == WidgetStates.WIDGET_MINIMIZED);
+                                widgetList.visible = false;
+                                break;
+                            }
+                            else
+                            {
+                                j++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            private function widgetList_rollOutHandler(event:MouseEvent):void
+            {
+                widgetList.visible = false;
+            }
+
+            private function arrangeHeadingsAndWidgets():void
+            {
+                updateSubtitleInclusion();
+
+                const availableHeadingWidth:Number = centerContainer.width - widgetItemDG.measuredWidth - NONSTOP_RESIZE_GAP;
+                const desiredHeadingsWidth:Number = Math.max(bannerTitle.getRequiredWidthToDisplayFullText(availableHeadingWidth),
+                                                             bannerSubtitle.getRequiredWidthToDisplayFullText(availableHeadingWidth));
+
+                if (desiredHeadingsWidth >= availableHeadingWidth)
+                {
+                    headingWidth = availableHeadingWidth;
+                    widgetItemDG.percentWidth = NaN;
+                }
+                else
+                {
+                    headingWidth = (desiredHeadingsWidth > MIN_HEADING_WIDTH) ? desiredHeadingsWidth : MIN_HEADING_WIDTH;
+                    widgetItemDG.percentWidth = 100;
+                }
+            }
+
+            private function updateSubtitleInclusion():void
+            {
+                bannerSubtitle.visible = bannerSubtitle.text != "" && bannerSubtitle.text != null;
+                bannerSubtitle.includeInLayout = bannerSubtitle.text != "" && bannerSubtitle.text != null;
+            }
+        ]]>
+    </fx:Script>
+
+    <s:Group id="headerGroup"
+             width="100%" height="85">
+        <s:Group id="headerContent"
+                 width="100%" height="{headerGroup.height - 45}">
+            <s:Rect width="100%" height="100%"
+                    alpha="{getStyle('contentBackgroundAlpha')}">
+                <s:fill>
+                    <s:SolidColor color="{getStyle('contentBackgroundColor')}"/>
+                </s:fill>
+            </s:Rect>
+
+            <s:HGroup width="100%" height="100%"
+                      gap="5"
+                      paddingLeft="5"
+                      paddingRight="5"
+                      verticalAlign="middle">
+                <s:BitmapImage id="logoIcon"
+                               horizontalAlign="left"
+                               maxHeight="{headerContent.height}"
+                               verticalAlign="middle"/>
+
+                <s:HGroup id="centerContainer"
+                          width="100%"
+                          resize="arrangeHeadingsAndWidgets()"
+                          verticalAlign="middle">
+                    <s:VGroup id="headingGroup"
+                              height="{headerContent.height}"
+                              gap="0"
+                              minWidth="100"
+                              verticalAlign="middle">
+                        <components:AutoFontLabel id="bannerTitle"
+                                                  maxWidth="{headingWidth}"
+                                                  styleName="BannerTitle"
+                                                  textChanged="arrangeHeadingsAndWidgets()"/>
+
+                        <components:AutoFontLabel id="bannerSubtitle"
+                                                  maxWidth="{headingWidth}"
+                                                  styleName="BannerSubtitle"
+                                                  textChanged="arrangeHeadingsAndWidgets()"/>
+                    </s:VGroup>
+
+                    <HeaderController:WidgetItemDataGroup id="widgetItemDG"
+                                                          width="100%"
+                                                          dataProvider="{widgetItemArrCol}"
+                                                          horizontalCenter="0"
+                                                          widgetItemClick="widgetItemDG_widgetItemClickHandler(event)"
+                                                          widgetItemMouseOut="widgetItemDG_widgetItemMouseOutHandler(event)"
+                                                          widgetItemMouseOver="widgetItemDG_widgetItemMouseOverHandler(event)">
+                        <HeaderController:layout>
+                            <s:HorizontalLayout gap="12"
+                                                horizontalAlign="center"
+                                                useVirtualLayout="true"
+                                                verticalAlign="middle"/>
+                        </HeaderController:layout>
+                    </HeaderController:WidgetItemDataGroup>
+                </s:HGroup>
+
+                <components:GeocoderComponent id="singleLineSearch"
+                                              width="230" height="28"
+                                              includeInLayout="false"
+                                              visible="false"/>
+
+                <s:DataGroup id="linkGroup"
+                             dataProvider="{linkList}"
+                             includeInLayout="false"
+                             itemRenderer="widgets.HeaderController.LinkItemRenderer"
+                             visible="false"/>
+            </s:HGroup>
+        </s:Group>
+
+        <s:VGroup id="menuToolTip"
+                  x="{xOver + 12 - menuToolTipBox.width/2}" y="{headerContent.height}"
+                  gap="0"
+                  horizontalAlign="center"
+                  visible="false">
+            <s:Graphic id="menuTriangle" visible="{menuToolTip.visible}">
+                <s:Group>
+                    <s:Path data="m 7 0 l 7 14 l -14 0 z">
+                        <s:fill>
+                            <s:SolidColor alpha="1" color="{getStyle('contentBackgroundColor')}"/>
+                        </s:fill>
+                    </s:Path>
+                </s:Group>
+            </s:Graphic>
+
+            <s:BorderContainer id="menuToolTipBox"
+                               width="{menuTitle.width + 8}" height="{menuTitle.height +2}"
+                               backgroundColor="{getStyle('contentBackgroundColor')}"
+                               borderVisible="false"
+                               cornerRadius="10"
+                               visible="{menuToolTip.visible}">
+                <s:layout>
+                    <s:HorizontalLayout horizontalAlign="center" verticalAlign="middle"/>
+                </s:layout>
+
+                <s:Label id="menuTitle"
+                         paddingBottom="4"
+                         paddingLeft="5"
+                         paddingRight="5"
+                         paddingTop="5"
+                         visible="{menuToolTip.visible}"/>
+            </s:BorderContainer>
+        </s:VGroup>
+
+        <s:BorderContainer id="widgetList"
+                           x="{xOver + 4 - widgetListDG.width/2}" y="{headerContent.height}" width="{widgetListDG.width + 4}" height="{widgetListDG.height + 2}"
+                           backgroundColor="{getStyle('contentBackgroundColor')}"
+                           borderColor="{getStyle('color')}"
+                           borderVisible="true"
+                           cornerRadius="3"
+                           rollOut="widgetList_rollOutHandler(event)"
+                           visible="false">
+            <HeaderController:WidgetListDataGroup id="widgetListDG"
+                                                  width="150"
+                                                  dataProvider="{groupWidgetArrCol}"
+                                                  focusEnabled="false"
+                                                  tabChildren="true"
+                                                  widgetListItemClick="widgetList_widgetItemClickHandler(event)">
+                <HeaderController:layout>
+                    <s:VerticalLayout paddingTop="6"
+                                      useVirtualLayout="true"
+                                      verticalAlign="middle"/>
+                </HeaderController:layout>
+            </HeaderController:WidgetListDataGroup>
+        </s:BorderContainer>
+
+        <s:filters>
+            <s:DropShadowFilter alpha="0.5"
+                                blurX="10"
+                                blurY="10"/>
+        </s:filters>
+    </s:Group>
+</viewer:BaseWidget>

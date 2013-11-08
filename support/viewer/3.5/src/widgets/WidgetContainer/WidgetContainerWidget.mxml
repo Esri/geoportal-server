@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:viewer="com.esri.viewer.*"
+                   xmlns:widgetContainer="widgets.WidgetContainer.*"
+                   width="100%" height="100%"
+                   borderSkin="{null}"
+                   creationComplete="creationCompleteHandler()"
+                   implements="com.esri.viewer.IWidgetContainer">
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.viewer.IBaseWidget;
+            import com.esri.viewer.IWidgetContainer;
+
+            import mx.core.IVisualElement;
+
+            [Bindable]
+            private var _configParams:Object;
+
+            private function creationCompleteHandler():void
+            {
+                widgetContainer.config = _configParams;
+            }
+
+            public function isBasicLayout():Boolean
+            {
+                return widgetContainer.widgetlayout != "horizontal"
+                    && widgetContainer.widgetlayout != "vertical"
+                    && widgetContainer.widgetlayout != "tile";
+            }
+
+            public function addWidget(value:IBaseWidget):void
+            {
+                const visualElement:IVisualElement = value as IVisualElement;
+                if (visualElement)
+                {
+                    widgetContainer.addElement(visualElement);
+                }
+            }
+
+            public function focusWidget(id:Number):void
+            {
+                widgetContainer.focusWidget = id;
+            }
+
+            public function set configParams(value:Object):void
+            {
+                _configParams = value;
+            }
+        ]]>
+    </fx:Script>
+
+    <widgetContainer:WidgetContainer id="widgetContainer" config="{_configParams}"/>
+
+</viewer:BaseWidget>

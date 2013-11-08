@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<!---
+    Pop-up component used to display error messages.
+-->
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+               xmlns:s="library://ns.adobe.com/flex/spark"
+               xmlns:mx="library://ns.adobe.com/flex/mx"
+               x="60" y="150" width="400" height="200"
+               close="close()"
+               title="Application Error">
+
+    <fx:Script>
+        <![CDATA[
+            import flashx.textLayout.conversion.TextConverter;
+            import flashx.textLayout.elements.TextFlow;
+
+            import mx.managers.PopUpManager;
+
+            [Bindable]
+            /**
+             * errorMessage is the message displayed in the Error Window.
+             */
+            public var errorMessage:String = "";
+
+            private function close():void
+            {
+                PopUpManager.removePopUp(this);
+            }
+
+            private function convertToTextFlow(value:String):TextFlow
+            {
+                if (!value)
+                {
+                    return null;
+                }
+                value = value.replace(/\n/g, "<br>"); // replace newlines
+                return TextConverter.importToFlow(value, TextConverter.TEXT_FIELD_HTML_FORMAT);
+            }
+        ]]>
+    </fx:Script>
+
+    <s:Scroller left="6" right="6" top="6" bottom="6">
+        <s:RichEditableText id="msg"
+                            editable="false"
+                            selectable="true"
+                            textFlow="{convertToTextFlow(errorMessage)}"/>
+    </s:Scroller>
+
+</s:TitleWindow>

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2008-2013 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<project name="ArcGIS Viewer for Flex" default="main" basedir=".">
+
+    <property file="env.properties"/>
+    <property environment="env"/>
+    <property file="local.properties"/>
+    <property file="build.properties"/>
+
+    <target name="main"
+            depends="clean,run-flash-builder,check-fb-result"
+            description="Runs Flash Builder"/>
+
+    <target name="full-build"
+            depends="clean,backup-actionScriptProperties,update-actionScriptProperties,run-flash-builder,restore-actionScriptProperties,check-fb-result,build-all-resource-modules,update-index.html,copy-index.html,copy-version.xml"
+            description="Runs a full build"/>
+
+    <target name="clean" description="Deletes dist directory">
+        <delete dir="${dist.dir}"/>
+    </target>
+
+    <target name="backup-actionScriptProperties"
+            depends="check-backup-exists"
+            unless="backup.exists">
+        <copy file=".actionScriptProperties" tofile=".actionScriptProperties.bak"/>
+    </target>
+
+    <target name="check-backup-exists">
+        <available property="backup.exists" file=".actionScriptProperties.bak"/>
+    </target>
+
+    <target name="restore-actionScriptProperties">
+        <move file=".actionScriptProperties.bak" tofile=".actionScriptProperties"/>
+    </target>
+
+    <target name="update-actionScriptProperties">
+        <replace file=".actionScriptProperties"
+                 token="-locale=${fb.locale}"
+                 value="-locale= -resource-bundle-list=bundle-list.txt"/>
+    </target>
+
+    <target name="run-flash-builder" description="Compile a release build using Flash Builder">
+        <!-- mac -->
+        <exec executable="${basedir}/fbbuild.sh"
+              osfamily="mac"
+              resultproperty="fb.result">
+            <env key="FB_PATH" value="${fb.path}"/>
+            <env key="WORKSPACE" value="${fb.workspace.path}"/>
+        </exec>
+        <!-- windows -->
+        <exec executable="cmd"
+              osfamily="windows"
+              resultproperty="fb.result">
+            <arg value="/c"/>
+            <arg value="fbbuild.bat"/>
+            <env key="FB_PATH" value="${fb.path}"/>
+            <env key="WORKSPACE" value="${fb.workspace.path}"/>
+        </exec>
+    </target>
+
+    <target name="check-fb-result">
+        <fail message="Flash Builder failed">
+            <condition>
+                <isfailure code="${fb.result}"/>
+            </condition>
+        </fail>
+    </target>
+
+    <target name="build-all-resource-modules" depends="get-bundles">
+        <script language="javascript">
+            <![CDATA[
+                var locales = project.getProperty("locale.modules");
+                locales = locales.split(",");
+
+                for each (var locale in locales)
+                {
+                    var antCall = project.createTask("antcall");
+                    antCall.setTarget("build-resource-module");
+                    var param = antCall.createParam();
+                    param.setName("LOCALE");
+                    param.setValue(locale);
+                    antCall.perform();
+                }
+            ]]>
+        </script>
+    </target>
+
+    <target name="build-resource-module">
+        <java jar="${env.FLEX_HOME}/lib/mxmlc.jar"
+              failonerror="true"
+              maxmemory="1024m"
+              fork="true">
+            <jvmarg value="-Dsun.io.useCanonCaches=false"/>
+            <arg line="+flexlib='${env.FLEX_HOME}/frameworks'"/>
+            <arg line="-headless-server"/>
+            <arg line="-locale=${LOCALE}"/>
+            <arg line="-include-resource-bundles=${BUNDLES}"/>
+            <arg line="-source-path=locale/{locale}"/>
+            <arg line="-library-path+=libs"/>
+            <arg line="-output=${dist.dir}/assets/locale/${LOCALE}.swf"/>
+        </java>
+    </target>
+
+    <target name="get-bundles">
+        <loadfile property="bundleList" srcFile="${fb.debug.dir}/bundle-list.txt"/>
+        <script language="javascript">
+            <![CDATA[
+                if (bundleList.indexOf(" ViewerStrings ") == -1)
+                {
+                    // add missing ViewerStrings
+                    bundleList += "ViewerStrings ";
+                }
+                // change from: bundles = ESRIMessages SharedResources ViewerStrings ...
+                // to ESRIMessages,SharedResources,ViewerStrings,...
+                var bundles = bundleList.substring(10); // remove "bundles = "
+                bundles = bundles.split(" ") // create Array
+                bundles = bundles.join(); // create CSV
+                var property = project.createTask("property");
+                property.setName("BUNDLES");
+                property.setValue(bundles);
+                property.perform();
+            ]]>
+        </script>
+    </target>
+
+    <target name="update-index.html">
+        <replace file="${dist.dir}/index.html" token="var flashvars = {};">
+            <replacevalue expandProperties="true"><![CDATA[var flashvars = {};
+            flashvars.localeChain = "${fb.locale}";
+            flashvars.resourceModuleURLs = "assets/locale/${fb.locale}.swf";
+            //flashvars.localeChain = "ar";
+            //flashvars.resourceModuleURLs = "assets/locale/ar.swf";
+            //flashvars.localeChain = "da_DK";
+            //flashvars.resourceModuleURLs = "assets/locale/da_DK.swf";
+            //flashvars.localeChain = "de_DE";
+            //flashvars.resourceModuleURLs = "assets/locale/de_DE.swf";
+            //flashvars.localeChain = "es_ES";
+            //flashvars.resourceModuleURLs = "assets/locale/es_ES.swf";
+            //flashvars.localeChain = "et_EE";
+            //flashvars.resourceModuleURLs = "assets/locale/et_EE.swf";
+            //flashvars.localeChain = "fi_FI";
+            //flashvars.resourceModuleURLs = "assets/locale/fi_FI.swf";
+            //flashvars.localeChain = "fr_FR";
+            //flashvars.resourceModuleURLs = "assets/locale/fr_FR.swf";
+            //flashvars.localeChain = "he_IL";
+            //flashvars.resourceModuleURLs = "assets/locale/he_IL.swf";
+            //flashvars.localeChain = "it_IT";
+            //flashvars.resourceModuleURLs = "assets/locale/it_IT.swf";
+            //flashvars.localeChain = "ja_JP";
+            //flashvars.resourceModuleURLs = "assets/locale/ja_JP.swf";
+            //flashvars.localeChain = "ko_KR";
+            //flashvars.resourceModuleURLs = "assets/locale/ko_KR.swf";
+            //flashvars.localeChain = "lt_LT";
+            //flashvars.resourceModuleURLs = "assets/locale/lt_LT.swf";
+            //flashvars.localeChain = "lv_LV";
+            //flashvars.resourceModuleURLs = "assets/locale/lv_LV.swf";
+            //flashvars.localeChain = "nb_NO";
+            //flashvars.resourceModuleURLs = "assets/locale/nb_NO.swf";
+            //flashvars.localeChain = "nl_NL";
+            //flashvars.resourceModuleURLs = "assets/locale/nl_NL.swf";
+            //flashvars.localeChain = "pl_PL";
+            //flashvars.resourceModuleURLs = "assets/locale/pl_PL.swf";
+            //flashvars.localeChain = "pt_BR";
+            //flashvars.resourceModuleURLs = "assets/locale/pt_BR.swf";
+            //flashvars.localeChain = "pt_PT";
+            //flashvars.resourceModuleURLs = "assets/locale/pt_PT.swf";
+            //flashvars.localeChain = "ro_RO";
+            //flashvars.resourceModuleURLs = "assets/locale/ro_RO.swf";
+            //flashvars.localeChain = "ru_RU";
+            //flashvars.resourceModuleURLs = "assets/locale/ru_RU.swf";
+            //flashvars.localeChain = "sv_SE";
+            //flashvars.resourceModuleURLs = "assets/locale/sv_SE.swf";
+            //flashvars.localeChain = "zh_CN";
+            //flashvars.resourceModuleURLs = "assets/locale/zh_CN.swf";]]></replacevalue>
+        </replace>
+    </target>
+
+    <target name="copy-index.html">
+        <copy file="${dist.dir}/index.html" tofile="${dist.dir}/default.htm"/>
+    </target>
+
+    <target name="copy-version.xml">
+        <tstamp>
+            <format property="today" pattern="yyyy-MM-dd"/>
+        </tstamp>
+        <copy file="src/version.xml"
+              todir="${dist.dir}"
+              overwrite="true">
+            <filterset>
+                <filter token="BUILD_DATE" value="${today}"/>
+            </filterset>
+        </copy>
+    </target>
+
+</project>

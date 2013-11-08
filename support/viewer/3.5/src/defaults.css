@@ -1,0 +1,55 @@
+/* CSS file - Standard Stylesheet */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+@namespace esri "http://www.esri.com/2008/ags";
+@namespace viewer "com.esri.viewer.*";
+@namespace viewerComps "com.esri.viewer.components.*";
+@namespace apiComps "com.esri.ags.components.*";
+
+viewer|WidgetTemplate
+{
+    skinClass: ClassReference("com.esri.viewer.skins.WidgetTemplateSkin");
+}
+
+viewerComps|TitlebarButton
+{
+    skinClass: ClassReference("com.esri.viewer.skins.TitlebarButtonSkin");
+}
+
+s|VScrollBar
+{
+    skinClass: ClassReference("com.esri.viewer.skins.VScrollBarSkin");
+}
+
+mx|VScrollBar
+{
+    downArrowUpSkin: Embed(source="assets/images/arrow_down.png");
+    downArrowOverSkin: Embed(source="assets/images/arrow_down.png");
+    downArrowDownSkin: Embed(source="assets/images/arrow_down.png");
+    upArrowUpSkin: Embed(source="assets/images/arrow_up.png");
+    upArrowOverSkin: Embed(source="assets/images/arrow_up.png");
+    upArrowDownSkin: Embed(source="assets/images/arrow_up.png");
+    thumbDownSkin: Embed(source="assets/images/thumb.png");
+    thumbUpSkin: Embed(source="assets/images/thumb.png");
+    thumbOverSkin: Embed(source="assets/images/thumb.png");
+    trackSkin: Embed(source="assets/images/track.png");
+}
+
+s|HScrollBar
+{
+    skinClass: ClassReference("com.esri.viewer.skins.HScrollBarSkin");
+}
+
+mx|HScrollBar
+{
+    downArrowUpSkin: Embed(source="assets/images/arrow_down.png");
+    downArrowOverSkin: Embed(source="assets/images/arrow_down.png");
+    downArrowDownSkin: Embed(source="assets/images/arrow_down.png");
+    upArrowUpSkin: Embed(source="assets/images/arrow_up.png");
+    upArrowOverSkin: Embed(source="assets/images/arrow_up.png");
+    upArrowDownSkin: Embed(source="assets/images/arrow_up.png");
+    thumbDownSkin: Embed(source="assets/images/thumb.png");
+    thumbUpSkin: Embed(source="assets/images/thumb.png");
+    thumbOverSkin: Embed(source="assets/images/thumb.png");
+    trackSkin: Embed(source="assets/images/track.png");
+}

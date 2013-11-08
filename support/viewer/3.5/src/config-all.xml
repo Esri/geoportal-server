@@ -1,0 +1,137 @@
+<?xml version="1.0" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////
+//
+// Read more about ArcGIS Viewer for Flex - http://links.esri.com/flexviewer
+//
+////////////////////////////////////////////////////////////////////////////////
+-->
+<configuration>
+    <title>ArcGIS Viewer for Flex</title>
+    <subtitle>a configurable web mapping application</subtitle>
+    <style>
+        <!-- Black Gold -->
+        <colors>0xFFFFFF,0x333333,0x101010,0x000000,0xFFD700</colors>
+    </style>
+    <!-- replace the following url with your own geometryservice -->
+    <geometryservice url="http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer" />
+
+    <splashpage label="ArcGIS Viewer for Flex" config="widgets/Splash/SplashWidget.xml" url="widgets/Splash/SplashWidget.swf"/>
+
+    <widget left="10" top="50" config="widgets/Navigation/NavigationWidget.xml" url="widgets/Navigation/NavigationWidget.swf"/>
+    <widget bottom="35" right="5" config="widgets/StaticImage/StaticImageWidget.xml" url="widgets/StaticImage/StaticImageWidget.swf"/>
+    <widget right="0" bottom="0" config="widgets/OverviewMap/OverviewMapWidget.xml" url="widgets/OverviewMap/OverviewMapWidget.swf"/>
+    <widget right="15" top="55" config="widgets/MapSwitcher/MapSwitcherWidget.xml" url="widgets/MapSwitcher/MapSwitcherWidget.swf"/>
+    <widget left="0" top="0" config="widgets/HeaderController/HeaderControllerWidget.xml" url="widgets/HeaderController/HeaderControllerWidget.swf"/>
+    <widget left="3" bottom="3" config="widgets/Coordinate/CoordinateWidget.xml" url="widgets/Coordinate/CoordinateWidget.swf"/>
+
+    <map wraparound180="true" initialextent="-14083000 3139000 -10879000 5458000" fullextent="-20000000 -20000000 20000000 20000000" top="40" addarcgisbasemaps="true">
+        <operationallayers>
+            <!-- Example of editable feature layer -->
+            <layer label="San Francisco 3-1-1 Incidents" type="feature" visible="false" alpha="1.0"
+                   popupconfig="http://resources.arcgis.com/en/help/flex-viewer/live/popups/PopUp_311.xml"
+                   url="http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/SanFrancisco/311Incidents/FeatureServer/0"/>
+            <!-- Example time-aware feature layer -->
+            <layer label="Earthquakes" type="feature" visible="true"
+                   url="http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Earthquakes/Since_1970/MapServer/0"/>
+            <!-- Example data used with data extract widget -->
+            <layer label="Data Extract Incidents" type="dynamic" visible="false" alpha="0.6"
+                   url="http://sampleserver4.arcgisonline.com/ArcGIS/rest/services/HomelandSecurity/Incident_Data_Extraction/MapServer"/>
+            <!-- Example for chart widget -->
+            <layer label="USA Diversity Index" type="feature" visible="false"
+                   url="http://server.arcgisonline.com/ArcGIS/rest/services/Demographics/USA_Diversity_Index/MapServer/4"/>
+        </operationallayers>
+    </map>
+
+    <widgetcontainer layout="horizontal"> <!--horizontal(default)|float|vertical|fix-->
+        <widget label="Bookmarks"
+            icon="assets/images/i_bookmark.png"
+            config="widgets/Bookmark/BookmarkWidget.xml"
+            url="widgets/Bookmark/BookmarkWidget.swf"/>
+        <widget label="Draw"
+            icon="assets/images/i_draw2.png"
+            config="widgets/Draw/DrawWidget.xml"
+            url="widgets/Draw/DrawWidget.swf"/>
+        <widget label="Earthquakes (GeoRSS)"
+            icon="assets/images/i_rss.png"
+            config="widgets/GeoRSS/GeoRSSWidget.xml"
+            url="widgets/GeoRSS/GeoRSSWidget.swf"/>
+        <widget label="Print"
+            icon="assets/images/i_print.png"
+            config="widgets/Print/PrintWidget.xml"
+            url="widgets/Print/PrintWidget.swf"/>
+        <widget label="Traffic Camera (QueryWidget)"
+            icon="assets/images/i_camera.png"
+            config="http://resources.arcgis.com/en/help/flex-viewer/live/widgets/Query/QueryWidget_Louisville_TrafficCams.xml"
+            url="widgets/Query/QueryWidget.swf"/>
+        <widget label="Louisville Police (QueryWidget)"
+            icon="assets/images/i_policestation.png"
+            config="http://resources.arcgis.com/en/help/flex-viewer/live/widgets/Query/QueryWidget_Louisville_PoliceStations.xml"
+            url="widgets/Query/QueryWidget.swf"/>
+        <widget label="Search"
+            icon="assets/images/i_search.png"
+            config="http://resources.arcgis.com/en/help/flex-viewer/live/widgets/Search/SearchWidget_Louisville.xml"
+            url="widgets/Search/SearchWidget.swf"/>
+        <widget label="Legend"
+            preload="open"
+            config="widgets/Legend/LegendWidget.xml"
+            icon="assets/images/Legend32.png"
+            url="widgets/Legend/LegendWidget.swf"/>
+        <widget label="Chart"
+            config="widgets/Chart/ChartWidget.xml"
+            icon="assets/images/i_piechart.png"
+            preload="open"
+            url="widgets/Chart/ChartWidget.swf"
+            left="80" bottom="80"/>
+        <widgetgroup label="Geoprocessing tasks">
+        <widget label="Calculate viewshed"
+                config="http://resources.arcgis.com/en/help/flex-viewer/live/widgets/Geoprocessing/GeoprocessingWidget_CalculateViewshed.xml"
+                icon="assets/images/i_options.png"
+                url="widgets/Geoprocessing/GeoprocessingWidget.swf"/>
+        <widget label="Drive times"
+                config="http://resources.arcgis.com/en/help/flex-viewer/live/widgets/Geoprocessing/GeoprocessingWidget_DriveTimes.xml"
+                icon="assets/images/i_servicearea.png"
+                url="widgets/Geoprocessing/GeoprocessingWidget.swf"/>
+        <widget label="Extract Data"
+                config="http://resources.arcgis.com/en/help/flex-viewer/live/widgets/Geoprocessing/GeoprocessingWidget_ExtractData.xml"
+                icon="assets/images/i_layers.png"
+                url="widgets/Geoprocessing/GeoprocessingWidget.swf"/>
+        <widget label="Message in a bottle"
+                config="http://resources.arcgis.com/en/help/flex-viewer/live/widgets/Geoprocessing/GeoprocessingWidget_MessageInABottle.xml"
+                icon="assets/images/i_hydro.png"
+                url="widgets/Geoprocessing/GeoprocessingWidget.swf"/>
+        <widget label="Population summary"
+                config="http://resources.arcgis.com/en/help/flex-viewer/live/widgets/Geoprocessing/GeoprocessingWidget_PopulationSummary.xml"
+                icon="assets/images/i_demographics.png"
+                url="widgets/Geoprocessing/GeoprocessingWidget.swf"/>
+        </widgetgroup>
+        <widgetgroup label="More widgets">
+            <widget label="Data Extract"
+                icon="assets/images/i_scissors.png"
+                config="widgets/DataExtract/DataExtractWidget.xml"
+                url="widgets/DataExtract/DataExtractWidget.swf"/>
+            <widget label="Edit"
+                icon="assets/images/i_edit.png"
+                config="widgets/Edit/EditWidget.xml"
+                url="widgets/Edit/EditWidget.swf"/>
+            <widget label="Layer List"
+                icon="assets/images/i_layers.png"
+                config="widgets/LayerList/LayerListWidget.xml"
+                url="widgets/LayerList/LayerListWidget.swf"/>
+            <widget label="Filter by Time"
+                icon="assets/images/i_clock.png"
+                config="http://resources.arcgis.com/en/help/flex-viewer/live/widgets/Time/TimeWidget_QuakesSince1970.xml"
+                url="widgets/Time/TimeWidget.swf"/>
+        </widgetgroup>
+    </widgetcontainer>
+    <widgetcontainer paneltype="bottom" initialstate="collapsed" size="250">
+            <widget label="Attribute Table"
+                config="widgets/AttributeTable/AttributeTableWidget.xml"
+                url="widgets/AttributeTable/AttributeTableWidget.swf"/>
+    </widgetcontainer>
+    <widgetcontainer paneltype="left" initialstate="collapsed" size="300">
+            <widget label="Directions"
+                config="widgets/Directions/DirectionsWidget.xml"
+                url="widgets/Directions/DirectionsWidget.swf"/>
+    </widgetcontainer>
+</configuration>

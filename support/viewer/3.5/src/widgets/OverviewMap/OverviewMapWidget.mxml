@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:viewer="com.esri.viewer.*"
+                   xmlns:OverviewMap="widgets.OverviewMap.*"
+                   layoutDirection="ltr"
+                   widgetConfigLoaded="init()">
+    <!--
+         This is the OverviewMapWidget widget.
+         @@includeFiles widgets/OverviewMapWidget/OverviewMapComponent.mxml
+    -->
+
+    <fx:Script>
+        <![CDATA[
+            private function init():void
+            {
+                var rtl:Boolean = false;
+                if (parent.hasOwnProperty("layoutDirection"))
+                {
+                    rtl = parent["layoutDirection"] == "rtl";
+                }
+
+                if (left != null || right != null || top != null || bottom != null)
+                {
+                    var expandToLeft:Boolean = (right != null && !rtl) || (left != null && rtl);
+                    var expandToUp:Boolean = bottom != null;
+                    if (expandToLeft && expandToUp)
+                    {
+                        overviewMap.expansionDirection = ExpansionDirection.UP_LEFT;
+                    }
+                    else if (expandToLeft && !expandToUp)
+                    {
+                        overviewMap.expansionDirection = ExpansionDirection.DOWN_LEFT;
+                    }
+                    else if (!expandToLeft && expandToUp)
+                    {
+                        overviewMap.expansionDirection = ExpansionDirection.UP_RIGHT;
+                    }
+                    else if (!expandToLeft && !expandToUp)
+                    {
+                        overviewMap.expansionDirection = ExpansionDirection.DOWN_RIGHT;
+                    }
+                }
+                else
+                {
+                    overviewMap.expansionDirection = ExpansionDirection.DOWN_RIGHT;
+                }
+                // set these properties before setting the configXML
+                overviewMap.openDefaultToolTip = getDefaultString("openToolTip");
+                overviewMap.closeDefaultToolTip = getDefaultString("closeToolTip");
+                overviewMap.configData = configData;
+                if (configXML)
+                {
+                    overviewMap.configXML = configXML;
+                }
+                overviewMap.map = map;
+            }
+        ]]>
+    </fx:Script>
+
+    <OverviewMap:OverviewMapComponent id="overviewMap"/>
+
+</viewer:BaseWidget>

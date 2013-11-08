@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<configuration>
+    <title>{address}</title>
+    <fields>
+        <field name="address"/>
+        <field name="district" alias="District" visible="true"/>
+        <field name="req_type" alias="Request Type" visible="true"/>
+        <field name="req_date" alias="Request Date" visible="true"/>
+        <field name="req_time" alias="Request Time" visible="true"/>
+        <field name="status"   alias="Status" visible="true"/>
+    </fields>
+    <showattachments>true</showattachments>
+</configuration>
+
+<!--
+    Pop-up configuration file for:
+    http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/SanFrancisco/311Incidents/FeatureServer/0
+
+    See pop-up documentation at
+    http://links.esri.com/flexviewer/popups
+-->

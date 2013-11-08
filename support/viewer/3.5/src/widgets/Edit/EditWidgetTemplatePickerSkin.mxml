@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2010-2011 Esri
+
+All rights reserved under the copyright laws of the United States
+and applicable international laws, treaties, and conventions.
+
+You may freely redistribute and use this sample code, with or
+without modification, provided you include the original copyright
+notice and use restrictions.
+
+See use restrictions in use_restrictions.txt.
+-->
+<!---
+Custom skin class for the TemplatePicker component.
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+             xmlns:s="library://ns.adobe.com/flex/spark"
+             xmlns:mx="library://ns.adobe.com/flex/mx"
+             initialize="sparkskin1_initializeHandler(event)">
+
+    <!-- host component -->
+    <fx:Metadata>
+        /**
+        * A strongly typed property that references the component to which this skin is applied.
+        */
+        [HostComponent("com.esri.ags.components.TemplatePicker")]
+    </fx:Metadata>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="loading"/>
+        <s:State name="disabled"/>
+    </s:states>
+
+    <s:layout>
+        <s:VerticalLayout horizontalAlign="center"/>
+    </s:layout>
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.components.supportClasses.Template;
+            import com.esri.ags.events.LayerEvent;
+            import com.esri.ags.layers.FeatureLayer;
+
+            import flash.text.engine.FontPosture;
+
+            import mx.binding.utils.ChangeWatcher;
+            import mx.collections.ArrayCollection;
+            import mx.controls.Label;
+            import mx.controls.Text;
+            import mx.events.FlexEvent;
+
+            import spark.components.CheckBox;
+            import spark.components.List;
+            import spark.events.IndexChangeEvent;
+
+            private var _changeWatcher:ChangeWatcher;
+            private var _templateCollectionChanged:Boolean;
+            private var _selectedTemplateChanged:Boolean;
+            private var _skinSelectedTemplate:Template;
+            private var _currentList:List;
+
+            private var _selectedTemplateChangeWatcher:ChangeWatcher;
+            private var _templatePickerListItemRenderer:ClassFactory = new ClassFactory(EditWidgetTemplatePickerListItemRenderer);
+            private var _itemRenderer:EditWidgetTemplatePickerListItemRenderer = new EditWidgetTemplatePickerListItemRenderer;
+
+            // configurable through the edit widget's config file
+            public static var featureLayerOutOfScaleText:String;
+
+            private function sparkskin1_initializeHandler(event:FlexEvent):void
+            {
+                _changeWatcher = ChangeWatcher.watch(hostComponent, "templateCollection", templateCollectionChangeHandler);
+                _selectedTemplateChangeWatcher = ChangeWatcher.watch(hostComponent, "selectedTemplate", selectTemplateChangeWatcher);
+            }
+
+            private function templateCollectionChangeHandler(event:Event = null):void
+            {
+                invalidateProperties();
+                _templateCollectionChanged = true;
+            }
+
+            private function selectTemplateChangeWatcher(event:Event = null):void
+            {
+                invalidateProperties();
+                _selectedTemplateChanged = true;
+            }
+
+            /**
+             * @private
+             */
+            override protected function commitProperties():void
+            {
+                super.commitProperties();
+
+                if (_templateCollectionChanged)
+                {
+                    _templateCollectionChanged = false;
+
+                    //First remove everything from the group
+                    vGrp.removeAllElements();
+
+                    //create list and label for each featureLayer
+                    for (var i:Number = 0; i < hostComponent.templateCollection.length; i++)
+                    {
+                        var featureLayer:FeatureLayer = hostComponent.templateCollection[i].featureLayer;
+
+                        featureLayer.removeEventListener(FlexEvent.HIDE, featureLayer_hideShowHandler);
+                        featureLayer.removeEventListener(FlexEvent.SHOW, featureLayer_hideShowHandler);
+                        featureLayer.removeEventListener(LayerEvent.IS_IN_SCALE_RANGE_CHANGE, featureLayer_isInScaleRangeChangeHandler);
+
+                        featureLayer.addEventListener(FlexEvent.HIDE, featureLayer_hideShowHandler);
+                        featureLayer.addEventListener(FlexEvent.SHOW, featureLayer_hideShowHandler);
+                        featureLayer.addEventListener(LayerEvent.IS_IN_SCALE_RANGE_CHANGE, featureLayer_isInScaleRangeChangeHandler);
+
+                        var featureLayerDisplayName:String;
+                        var name:String = getQualifiedClassName(featureLayer);
+                        // If there is a package name, strip it off.
+                        var index:int = name.indexOf("::");
+                        if (index != -1)
+                        {
+                            name = name.substr(index + 2);
+                        }
+
+                        var regExp:RegExp = new RegExp("^" + name + "\\d*$", i);
+                        if (featureLayer.name.search(regExp) != -1)
+                        {
+                            featureLayerDisplayName = featureLayer.layerDetails.name;
+                        }
+                        else
+                        {
+                            featureLayerDisplayName = featureLayer.name;
+                        }
+                        if (featureLayerDisplayName.indexOf("hiddenLayer_") != -1)
+                        {
+                            featureLayerDisplayName = featureLayerDisplayName.substring(12, featureLayerDisplayName.length);
+                        }
+
+                        var checkbox:CheckBox = new CheckBox;
+                        checkbox.addEventListener(Event.CHANGE, checkBoxSelectionChangeHandler);
+                        checkbox.name = featureLayer.name;
+                        checkbox.label = featureLayerDisplayName;
+                        checkbox.setStyle("fontWeight", "bold");
+                        checkbox.selected = featureLayer.visible;
+                        vGrp.addElement(checkbox);
+
+                        var templateList:List = new List;
+                        templateList.scroller = null;
+                        templateList.name = featureLayer.name;
+                        templateList.addEventListener(IndexChangeEvent.CHANGE, listChangeHandler, false, -1, true);
+                        templateList.dataProvider = new ArrayCollection(hostComponent.templateCollection[i].selectedTemplates);
+                        templateList.itemRenderer = _templatePickerListItemRenderer;
+                        // style and layout
+                        templateList.setStyle("borderVisible", false);
+                        const verticalLayout:VerticalLayout = new VerticalLayout();
+                        verticalLayout.gap = 0;
+                        templateList.layout = verticalLayout;
+                        templateList.visible = templateList.includeInLayout = featureLayer.visible && featureLayer.isInScaleRange;
+                        vGrp.addElement(templateList);
+
+                        var text:Text = new Text;
+                        text.percentWidth = 100;
+                        text.name = featureLayer.name;
+                        text.text = featureLayerOutOfScaleText;
+                        text.setStyle("fontStyle", FontPosture.ITALIC);
+                        text.visible = text.includeInLayout = !featureLayer.isInScaleRange;
+                        vGrp.addElement(text);
+                    }
+                    invalidateDisplayList();
+                    selectTemplateFromList();
+                }
+
+                if (_selectedTemplateChanged)
+                {
+                    _selectedTemplateChanged = false;
+                    selectTemplateFromList()
+                }
+            }
+
+            private function checkBoxSelectionChangeHandler(event:Event):void
+            {
+                // loop through the featureLayers and make them visible
+                for (var i:Number = 0; i < hostComponent.templateCollection.length; )
+                {
+                    if (hostComponent.templateCollection[i].featureLayer.name == event.target.name)
+                    {
+                        hostComponent.templateCollection[i].featureLayer.visible = event.target.selected;
+                        break;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+            }
+
+            /**
+             * @private
+             */
+            override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+            {
+                super.updateDisplayList(unscaledWidth, unscaledHeight);
+
+                var templatesPerList:int;
+
+                for (var i:Number = 0; i < vGrp.numElements; i++)
+                {
+                    if (vGrp.getElementAt(i) is List)
+                    {
+                        List(vGrp.getElementAt(i)).percentWidth = 100;
+
+                        templatesPerList = List(vGrp.getElementAt(i)).dataProvider.length;
+
+                        List(vGrp.getElementAt(i)).height = (_itemRenderer.height * templatesPerList) + 5;
+                    }
+                }
+                vGrp.invalidateSize();
+            }
+
+            private function selectTemplateFromList():void
+            {
+                if (!hostComponent.templateCollection)
+                {
+                    // Do nothing -  as there is no collection.
+                }
+                else if (hostComponent.selectedTemplate == _skinSelectedTemplate)
+                {
+                    // Do nothing -  as the template is already selected and is same as hostComponent.selectedTemplate.
+                }
+                else if (!hostComponent.selectedTemplate)
+                {
+                    // clear selection is called
+                    _skinSelectedTemplate = null;
+                    for (var i:Number = 0; i < vGrp.numElements; i++)
+                    {
+                        if (vGrp.getElementAt(i) is List)
+                        {
+                            if (List(vGrp.getElementAt(i)).selectedIndex != -1)
+                            {
+                                List(vGrp.getElementAt(i)).selectedIndex = -1;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    for (var k:Number = 0; k < vGrp.numElements; k++)
+                    {
+                        if (vGrp.getElementAt(k) is List)
+                        {
+                            for (var n:Number = 0; n < List(vGrp.getElementAt(k)).dataProvider.length; n++)
+                            {
+                                if ((List(vGrp.getElementAt(k)).dataProvider.getItemAt(n).featureLayer === hostComponent.selectedTemplate.featureLayer) &&
+                                    (List(vGrp.getElementAt(k)).dataProvider.getItemAt(n).featureType === hostComponent.selectedTemplate.featureType) &&
+                                    (List(vGrp.getElementAt(k)).dataProvider.getItemAt(n).featureTemplate === hostComponent.selectedTemplate.featureTemplate))
+                                {
+                                    List(vGrp.getElementAt(k)).selectedIndex = n;
+                                    _skinSelectedTemplate = hostComponent.selectedTemplate;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            private function featureLayer_hideShowHandler(event:FlexEvent):void
+            {
+                enableDisableList(event.target as FeatureLayer);
+            }
+
+            private function featureLayer_isInScaleRangeChangeHandler(event:LayerEvent):void
+            {
+                enableDisableList(event.target as FeatureLayer);
+            }
+
+            private function enableDisableList(featureLayer:FeatureLayer):void
+            {
+                var layerName:String = featureLayer.name;
+                for (var i:Number = 0; i < vGrp.numElements; i++)
+                {
+                    if (vGrp.getElementAt(i) is List && List(vGrp.getElementAt(i)).name == layerName)
+                    {
+                        const list:List = List(vGrp.getElementAt(i));
+                        list.visible = featureLayer.isInScaleRange && featureLayer.visible;
+                        list.includeInLayout = featureLayer.isInScaleRange && featureLayer.visible;
+                    }
+                    if (vGrp.getElementAt(i) is CheckBox && CheckBox(vGrp.getElementAt(i)).name == layerName)
+                    {
+                        const checkBox:CheckBox = CheckBox(vGrp.getElementAt(i));
+                        checkBox.selected = featureLayer.visible;
+                    }
+                    if (vGrp.getElementAt(i) is Label && Label(vGrp.getElementAt(i)).name == layerName)
+                    {
+                        const label:Label = Label(vGrp.getElementAt(i));
+                        label.visible = !featureLayer.isInScaleRange;
+                        label.includeInLayout = !featureLayer.isInScaleRange;
+                    }
+                }
+                invalidateDisplayList();
+            }
+
+            private function listChangeHandler(event:IndexChangeEvent):void
+            {
+                vGrp.removeEventListener(MouseEvent.MOUSE_DOWN, vGrp_mouseDownHandler);
+                callLater(addListener);
+
+                if (event.newIndex != -1)
+                {
+                    _currentList = List(event.target);
+
+                    _skinSelectedTemplate = List(event.target).selectedItem;
+                    hostComponent.selectedTemplate = _skinSelectedTemplate;
+
+                    for (var i:Number = 0; i < vGrp.numElements; i++)
+                    {
+                        if (vGrp.getElementAt(i) is List)
+                        {
+                            if (List(vGrp.getElementAt(i)) !== _currentList)
+                            {
+                                List(vGrp.getElementAt(i)).selectedIndex = -1;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // no template selected
+                    if (hostComponent.selectedTemplate)
+                    {
+                        for (var j:Number = 0; j < vGrp.numElements; j++)
+                        {
+                            if (vGrp.getElementAt(j) is List)
+                            {
+                                // user deselected template on the list
+                                if (List(event.target) === _currentList)
+                                {
+                                    _skinSelectedTemplate = null;
+                                    hostComponent.selectedTemplate = null;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            private function addListener():void
+            {
+                vGrp.addEventListener(MouseEvent.MOUSE_DOWN, vGrp_mouseDownHandler);
+            }
+
+            private function vGrp_mouseDownHandler(event:MouseEvent):void
+            {
+                if (event.target is EditWidgetTemplatePickerListItemRenderer)
+                {
+                    if (hostComponent.selectedTemplate && List(EditWidgetTemplatePickerListItemRenderer(event.target).owner).selectedItem == hostComponent.selectedTemplate) // shows a template already selected, hence clear selection
+                    {
+                        hostComponent.clearSelection();
+                    }
+                }
+                else
+                {
+                    hostComponent.clearSelection();
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <mx:Image width="30" height="30"
+              autoLoad="true"
+              horizontalCenter="0"
+              includeIn="loading"
+              scaleContent="true"
+              source="assets/images/loader.swf"
+              verticalCenter="0"/>
+    <!--- @private -->
+    <s:VGroup id="vGrp"
+              width="100%" height="100%"/>
+
+</s:SparkSkin>

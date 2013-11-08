@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:mx="library://ns.adobe.com/flex/mx"
+                autoDrawBackground="false">
+    <fx:Script>
+        <![CDATA[
+            import com.esri.viewer.components.HTMLPopup;
+
+            [Bindable]
+            private var link:Link;
+            [Bindable]
+            private var isNotFirst:Boolean;
+
+            override public function set data(value:Object):void
+            {
+                if (value)
+                {
+                    link = value as Link;
+                    invalidateRendererState();
+                    super.data = value;
+                }
+            }
+
+            override public function set itemIndex(value:int):void
+            {
+                isNotFirst = value != 0;
+                super.itemIndex = value;
+            }
+
+            private function showContent():void
+            {
+                HTMLPopup.show(link.content,
+                               link.contentCloseLabel,
+                               link.contentWidth,
+                               link.contentHeight);
+            }
+
+            private function openLink():void
+            {
+                navigateToURL(new URLRequest(link.url), '_blank');
+            }
+
+            override protected function getCurrentRendererState():String
+            {
+                return (link && link.url) ? 'urlLink' : 'contentLink';
+            }
+        ]]>
+    </fx:Script>
+
+    <s:states>
+        <s:State name="urlLink"/>
+        <s:State name="contentLink"/>
+    </s:states>
+
+    <s:Button left="0" right="0" top="0" bottom="0"
+              click="showContent()"
+              click.urlLink="openLink()"
+              label="{link.label}"
+              skinClass="com.esri.viewer.skins.LinkButtonSkin"/>
+</s:ItemRenderer>
