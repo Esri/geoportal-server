@@ -33,7 +33,7 @@ Required tools for project compilation and testing:
 
 1) Adobe Flex SDK
 
-2) ESRI Flex Viewer
+2) ESRI Flex Viewer (3.3 or 3.5)
 
 3) Optional: Adobe Flex IDE
 
