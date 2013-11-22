@@ -32,6 +32,7 @@ that begin with 'dcat.'. Do not change the other property meanings, only add the
 is that a schedulable cached JSON file listing the entire contents of your catalog will be made available at a URL http://your_server/geoportal/dcat.json.  This cached file is generated the first time Tomcat is started after applying the patch, and then 
 it is updated at the interval specified in the thread class you configured in the earlier step for gpt.xml.
 - Additional step for gpt-1.2.2.jar: open your geoportal/WEB-INF/web.xml file and copy the snippet from the web_snippet.xml file into the servlet section.
+- If you have geoportal version 1.2.4, then you will want to apply the metadata configuration file changes described earlier (the metadata.zip step). Also, you will not need to update your gpt.jar file in the WEB-INF/lib folder; instead, follow instructions included in the ReadMe_124.txt file that is in the 'geoportal_1.2.4_dcatCache.zip' file.
 - Save any files you changed, and restart your web app server (e.g., Tomcat).
 - Re-index your FGDC and ISO metadata so they will be available through the REST API for DCAT. To force an immediate reindex for testing purposes, login as an administrator and reapprove a few metadata documents. 
 - Next, test. You can see the new dcat indices when you view the REST document statistics at http://your_server/geoportal/rest/index/stats.
