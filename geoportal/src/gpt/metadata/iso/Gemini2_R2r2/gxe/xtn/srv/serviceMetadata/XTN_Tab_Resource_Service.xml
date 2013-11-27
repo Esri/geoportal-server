@@ -18,11 +18,11 @@
 	        h:tag="div" g:jsClass="gxe.control.Element">
 	        <g:element g:targetName="gmd:EX_Extent" g:minOccurs="0" g:maxOccurs="1"
 	          h:tag="div" g:jsClass="gxe.control.Element">
-            <g:element g:minOccurs="0" g:maxOccurs="1"
+            <g:element g:minOccurs="0" g:maxOccurs="unbounded"
               g:extends="$base/xtn/gmd/extent/XTN_GeographicBoundingBox.xml"/>
             <g:element 
               g:extends="$base/xtn/gmd/extent/XTN_GeographicDescription.xml"/>
-            <g:element g:minOccurs="0" g:maxOccurs="1"
+            <g:element g:minOccurs="0" g:maxOccurs="unbounded"
               g:extends="$base/xtn/gmd/extent/XTN_TemporalElement.xml"/>
             <g:element 
                g:extends="$base/xtn/gmd/extent/XTN_VerticalElement.xml"/>                

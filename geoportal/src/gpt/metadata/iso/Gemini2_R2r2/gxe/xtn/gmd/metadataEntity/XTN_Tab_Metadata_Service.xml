@@ -30,7 +30,7 @@
   
       <h:div g:label="$i18n.catalog.iso19139.MD_Metadata.section.metadata.reference">
         <g:element g:extends="$base/xtn/gmd/referenceSystem/XTN_ReferenceSystemInfo.xml"
-          g:minOccurs="0" g:maxOccurs="1"/>
+          g:minOccurs="0" g:maxOccurs="unbounded"/>
       </h:div>
       
     </g:body>

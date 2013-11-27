@@ -13,7 +13,7 @@
    
    <g:element g:targetName="gmd:levelDescription" g:minOccurs="1" g:maxOccurs="unbounded"
    	  g:label="$i18n.catalog.iso19139.DQ_Scope.levelDescription"
-      g:extends="$base/schema/gmd/maintenance/MD_ScopeDescription_PropertyType.xml">
+      g:extends="$base/xtn/gmd/maintenance/MD_ScopeDescription_PropertyType.xml">
     </g:element>
            
   </g:element>
