@@ -2903,8 +2903,12 @@ dojo.declare("gxe.control.Control",null,{
     if ((domProcessor != null) && (domNode != null)) {
       domMatch = domProcessor.findMatchingChildAttribute(domNode,cfgAttribute);
     } else {
-      if (sDefault != null) xmlAttribute.nodeInfo.nodeValue = sDefault;
+      if (sDefault != null) xmlAttribute.nodeInfo.nodeValue = sDefault;      
     }
+    
+    if(sTargetName == "gml:id" && xmlAttribute){
+	  xmlAttribute.nodeInfo.nodeValue = "Temporal-" + (Math.floor((Math.random()*100000)+1)).toString();
+	}
 
     var ctl = this.context.makeXhtmlControl(cfgAttribute,this,true);
     ctl.xmlNode = xmlAttribute;

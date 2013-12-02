@@ -13,7 +13,7 @@
         h:tag="div" g:jsClass="gxe.control.Element">
         <g:element g:targetName="gml:TimePeriod" g:minOccurs="0" g:maxOccurs="1"
           h:tag="div" g:jsClass="gxe.control.Element">
-          <g:attribute g:targetName="gml:id" g:value="Temporal"
+          <g:attribute g:targetName="gml:id" 
             g:rendered="false" g:jsClass="gxe.control.Attribute"/>
             
           <!-- 
