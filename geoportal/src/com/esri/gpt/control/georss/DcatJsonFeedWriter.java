@@ -69,10 +69,13 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     String sDescription = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.description"));
     String sKeyword = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.keyword"));
     String sPublisher = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.publisher"));
-    String sPerson = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.person"));
+    String sPerson = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.contactPoint"));
     String sMbox = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.mbox"));
     String sIdentifier = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.identifier"));
     String sAccessLevel = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.accessLevel"));
+    String sAccessLevelComment = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.accessLevelComment"));
+    String sBureauCode = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.bureauCode"));
+    String sProgramCode = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.programCode"));
     String sDataDictionary = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.dataDictionary"));
     String sAccessUrl = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.accessURL"));
     String sWebService = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.webService"));
@@ -83,12 +86,19 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 
     defaultValues.put("title", sTitle);
     defaultValues.put("description", sDescription);
+    
     defaultValues.put("keyword", sKeyword);
+    
     defaultValues.put("publisher", sPublisher);
-    defaultValues.put("person", sPerson);
+    defaultValues.put("contactPoint", sPerson);
     defaultValues.put("mbox", sMbox);
     defaultValues.put("identifier", "");
     defaultValues.put("accessLevel", sAccessLevel);
+    defaultValues.put("accessLevelComment", sAccessLevelComment);
+
+    defaultValues.put("bureauCode", sBureauCode);
+    defaultValues.put("programCode", sProgramCode);
+    
     defaultValues.put("dataDictionary", sDataDictionary);
     defaultValues.put("acessURL", sAccessUrl);
     defaultValues.put("webService", sWebService);
@@ -107,10 +117,13 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     printArg("keyword", sKeyword, true);
     printArg("modified", DF.format(new Date()), true);
     printArg("publisher", sPublisher, true);
-    printArg("person", sPerson, true);
+    printArg("contactPoint", sPerson, true);
     printArg("mbox", sMbox, true);
     printArg("identifier", sIdentifier, true);
     printArg("accessLevel", sAccessLevel, true);
+    printArg("accessLevelComment", sAccessLevelComment, true);
+    printArg("bureauCode", sBureauCode, true);
+    printArg("programCode", sProgramCode, true);
     printArg("dataDictionary", sDataDictionary, true);
 
     if (sAccessUrl.length() > 0) {
@@ -208,10 +221,10 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     String indexKey = dcatField.getIndex();
     Map<String, IFeedAttribute> index = r.getData(IFeedRecord.STD_COLLECTION_INDEX);
     if (indexKey.length() > 0) {
-      before = writeField(index, indexKey, dcatField.getName(), COMMA, before, dcatField.isDate());
+      before = writeField(index, dcatField, COMMA, before);
     } else if (dcatField.getName().equalsIgnoreCase("identifier") && indexKey.length() == 0) {
       ResourceLinks links = r.getResourceLinks();
-      before = writeFieldValue(getIdentifierUrl(links), "identifier", COMMA, before);
+      before = writeFieldValue("\"" + getIdentifierUrl(links) + "\"", "identifier", COMMA, before);
     }
     return before;
   }
@@ -229,7 +242,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     Map<String, IFeedAttribute> index = r.getData(IFeedRecord.STD_COLLECTION_INDEX);
     IFeedAttribute schemaKeyAttr = index.get("sys.schema.key");
     if (schemaKeyAttr != null) {
-      schemaKey = cleanValue(schemaKeyAttr + "");
+      schemaKey = cleanValue(schemaKeyAttr + "","","");
     }
     DcatFields dcatFields = null;
     Set<String> keys = this.dcatSchemas.keySet();
@@ -300,7 +313,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
         } else {
           moreLinks = false;
         }
-        format = "xml";
+        format = "text/xml";
       }
       if (link.getTag().equals(ResourceLink.TAG_DETAILS)) {
         bPrintLink = true;
@@ -309,7 +322,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
         } else {
           moreLinks = false;
         }
-        format = "html";
+        format = "text/html";
       }
       if (bPrintLink) {
         printLink(link, moreLinks, format);
@@ -357,20 +370,48 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    * @param value value to clean
    * @return cleaned value
    */
-  private String cleanValue(String value) {
+  private String cleanValue(String value, String type, String dcatFieldName) {
     if (value == null) {
       return "";
     }
     if (value == "null") {
       return "";
     }
-    value = value.replaceAll("\"", "");
+    if(type.equalsIgnoreCase("date") || dcatFieldName.equalsIgnoreCase("spatial")) { 
+      value = value.replaceAll("\"", "");
+    }
     if (value.startsWith("[")) {
       value = value.replace("[", "");
+      if(type.equalsIgnoreCase("string")){
+        value = value.replaceAll("\",\"", ",");
+      }
     }
     if (value.endsWith("]")) {
       value = value.replace("]", "");
     }
+        
+    if (value != null && value.length() > 0){
+	    if(type.equalsIgnoreCase("date")) {      
+	    	value = parseDateTime(value);
+	    }else if(type.equalsIgnoreCase("array")) {
+	    	value = value.replace("\"", "").replace("\"", "");
+	    	String[] parts = value.split(",");
+	    	StringBuilder sb = new StringBuilder();
+	    	sb.append("[");
+	    	boolean hasValue = false;
+	    	for (String part : parts){
+	    		if(!part.startsWith("\"") && !part.endsWith("\"")){
+	    			if(hasValue){
+	    				sb.append(",");
+	    			}
+	    			sb.append("\"").append(part.trim()).append("\"");
+	    			hasValue = true;
+	    		}
+	    	}	    		    
+	    	sb.append("]");
+	    	value = sb.toString();
+	    }
+    }    
     return value;
   }
 
@@ -384,12 +425,12 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    * @return always <code>true</code>
    */
   private boolean writeFieldValue(String fieldValue, String jsonKey, String delimiter, boolean before) {
-    String cleanedVal = cleanValue(fieldValue);
+    String cleanedVal = cleanValue(fieldValue,"",jsonKey);
     if (before) {
       print(false, ",");
       print(false, "\r\n");
     }
-    print(before, "\"" + jsonKey + "\"" + sp() + ":" + sp() + "\"" + Val.escapeStrForJson(cleanedVal) + "\"");
+    print(before, "\"" + jsonKey + "\"" + sp() + ":" + sp() +  cleanedVal);
     before = true;
     return before;
   }
@@ -405,26 +446,31 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    * @param isDate true if date field
    * @return always <code>true</code>
    */
-  private boolean writeField(Map<String, IFeedAttribute> index, String fieldName, String jsonKey, String delimiter, boolean before,
-          boolean isDate) {
+  private boolean writeField(Map<String, IFeedAttribute> index,DcatField dcatField, String delimiter, boolean before) {
+	String indexFieldName = dcatField.getIndex();
+	String dcatFieldName = dcatField.getName();
+	String fieldType = dcatField.getType();
     String fldValues = "";
-    String[] flds = fieldName.split(",");
+    String[] flds = indexFieldName.split(",");
     for (String fld : flds) {
       IFeedAttribute indexValue = index.get(fld);
       if (indexValue == null) {
         continue;
       }
-      if (fldValues.length() > 0) {
-        fldValues += delimiter;
+      String cleanedVal = cleanValue("" + indexValue,fieldType,dcatFieldName);
+      if(dcatFieldName.equalsIgnoreCase("dataDictionary") && !(cleanedVal.startsWith("http://") || cleanedVal.startsWith("https://"))){
+    	  continue;
       }
-      String cleanedVal = cleanValue("" + indexValue);
-      if (cleanedVal != null && cleanedVal.length() > 0 && isDate) {
-        cleanedVal = parseDateTime(cleanedVal);
+     
+      if(!fldValues.contains(cleanedVal)){     
+    	  if (fldValues.length() > 0) {
+	        fldValues += delimiter;
+	      }
+    	  fldValues += cleanedVal;
       }
-      fldValues += cleanedVal;
     }
     if (fldValues.length() == 0) {
-      fldValues = defaultValues.get(jsonKey);
+      fldValues = defaultValues.get(indexFieldName);
       if (fldValues == null) {
         fldValues = "";
       }
@@ -434,7 +480,10 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
         print(false, ",");
         print(false, "\r\n");
       }
-      print(before, "\"" + jsonKey + "\"" + sp() + ":" + sp() + "\"" + Val.escapeStrForJson(fldValues) + "\"");
+      if(!fldValues.startsWith("\"") && !fldValues.startsWith("[") && !fldValues.endsWith("\"") && !fldValues.endsWith("]")){
+    	  fldValues = "\"" + fldValues + "\"";
+      }
+      print(before, "\"" + dcatFieldName + "\"" + sp() + ":" + sp()  + fldValues);
       before = true;
     }
     return before;
@@ -450,6 +499,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
   private String parseDateTime(String dateTime) {
     dateTime = Val.chkStr(dateTime);
     String lc = dateTime.toLowerCase();
+    if(lc.contains(",")) return dateTime;
     if (lc.equals("*")) {
       return "";
     } else if (lc.equals("now") || lc.equals("present")) {

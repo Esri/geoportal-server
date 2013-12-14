@@ -455,11 +455,8 @@ private void loadDcatMappings(DcatSchemas dcatSchemas, String dcatMappings) thro
 	  		DcatField df = new DcatField();
 	  		String name = xpath.evaluate("@name", field);
 	  		df.setName(name);
-	  		df.setIndex(xpath.evaluate("@index", field));	 	  		
-	  		String isDate = xpath.evaluate("@isDate", field);
-				if(isDate.length()  > 0){
-					df.setDate(Boolean.parseBoolean(isDate));
-				}  			  		
+	  		df.setType(xpath.evaluate("@type", field));
+	  		df.setIndex(xpath.evaluate("@index", field));	 	  			  			
 	  		dcatFields.add(df);
 	  	}
 	  	dcatSchemas.put(schema, dcatFields);
