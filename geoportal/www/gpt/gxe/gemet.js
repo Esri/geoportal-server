@@ -64,7 +64,7 @@ dojo.declare(
 			"http://www.eionet.europa.eu/gemet/concept/&language={0}&regex={1}",
 	    conceptsThemeUrl: "http://www.eionet.europa.eu/gemet/"
 			+ "getTopmostConcepts?thesaurus_uri="+
-			"http://inspire-registry.jrc.ec.europa.eu/registers/FCD/items/&language={0}",	
+			"http://inspire.ec.europa.eu/theme/&language={0}",	
 		conceptsKeywordUrl: "http://www.eionet.europa.eu/gemet/"
 			+ "getConceptsMatchingRegexByThesaurus?thesaurus_uri="+
 			"http://www.eionet.europa.eu/gemet/concept/&language={0}&regex={1}",
