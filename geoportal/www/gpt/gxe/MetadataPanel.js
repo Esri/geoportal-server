@@ -345,6 +345,22 @@ dojo.declare("gpt.gxe.MetadataPanel", null, {
         elControlBar.appendChild(elPlaceholder);
     },
 
+    _checkBrowserVersion:function ()
+	{
+	  var msg = "You're not using Internet Explorer.";
+	  var ver = this._getInternetExplorerVersion();
+
+	  if ( ver > -1 )
+	  {		
+		if ( ver >= 8.0 ) 
+		  msg = "You're using a recent copy of Internet Explorer."
+		else
+		  msg = "You should upgrade your copy of Internet Explorer.";
+		return true;
+	  }
+	  return false;
+	},
+    
     // change the dialog mode
     _changeMode: function (sMode) {
         var b162 = false;
@@ -591,6 +607,25 @@ dojo.declare("gpt.gxe.MetadataPanel", null, {
         }
     },
 
+    _getInternetExplorerVersion:function()
+	// Returns the version of Internet Explorer or a -1
+	// (indicating the use of another browser).
+	{
+	  var rv = -1; // Return value assumes failure.
+	  if (navigator.appName == 'Microsoft Internet Explorer')
+	  {
+		var ua = navigator.userAgent;
+		var re  = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+		if (re.exec(ua) != null)
+		  rv = parseFloat( RegExp.$1 );
+	  }
+	  return rv;
+	},
+		
+	_isIE:function(){
+		return this._checkBrowserVersion();
+	},
+    
     // make and connect a form for document download
     _makeDownloadForm: function (elButtonBar, elDownloadButton) {
         var sDownloadUrl = this.gxeContext.contextPath + "/gxe/echo/attachment";
@@ -720,6 +755,115 @@ dojo.declare("gpt.gxe.MetadataPanel", null, {
         }));
 
         return elButton;
+    },
+    
+    // make the import button for IE (file upload)
+    _makeImportButtonForIE: function (eIOptions,elOffScreen, sLabel, oParentDialog) {
+        var b162 = false;
+        if ((dojo.version.major <= 1) && (dojo.version.minor <= 6)) {
+          b162 = true;
+		}
+		var elfrm = document.createElement("iframe");
+		elfrm.setAttribute("name", "uploadFrame");
+		elfrm.setAttribute("id", "uploadFrame");
+		elfrm.setAttribute("frameborder", "0");
+		elfrm.setAttribute("scrolling", "no");	
+		elfrm.style.width = 1+"px";
+		elfrm.style.height = 1+"px";		
+	    
+        var elForm = document.createElement("form");
+		elForm.setAttribute("method", "POST");
+		elForm.id = "loadXmlForm";
+		elForm.setAttribute('target', 'uploadFrame');
+		elForm.setAttribute("enctype", "multipart/form-data");
+        var elButton = document.createElement("button");
+		var oThis = this;
+        var oWorking = null;
+        var sImportMsg = null;
+		dojo.connect(elButton, "onclick", this, dojo.hitch(this, function (e) {
+			dojo.stopEvent(e);
+			if(dijit.byId("uploader").domNode.children.uploadedfile.value.length == 0){
+				oThis._showErrorDialog(oThis.i18n["catalog.gxe.dialog.loadTitle"],
+							oThis.i18n["catalog.gxe.dialog.genericError"], oThis.i18n["catalog.gxe.dialog.selectXmlFile"]);				
+				return false;
+			}
+			var sImportFileName = "";
+            sImportMsg = this.i18n["catalog.gxe.dialog.importingFilename"];
+            sImportMsg = sImportMsg.replace("{0}", sImportFileName);
+            oWorking = this._showWorking(sImportMsg);
+            if ((typeof (oParentDialog) != "undefined") && (oParentDialog != null)) {
+                oParentDialog.hide();
+            }
+			elForm.submit();
+		 }));
+		elButton.className = "gxeButton gxeButton-enabled";
+	    elButton.id = "importBtn";
+        if ((typeof (sLabel) != "undefined") && (sLabel != null)) {
+		    elButton.appendChild(document.createTextNode(this.i18n["catalog.gxe.dialog.load"]));
+        } else {
+			sLabel = this.i18n["catalog.gxe.dialog.import"];
+			elButton.appendChild(document.createTextNode(this.i18n["catalog.gxe.dialog.load"]));
+        }
+
+        var sImportUrl =  this.gxeContext.contextPath + "/gxe/interrogate/multipart?isIE=true";
+        // HTML5 based dojox.form.Uploader 1.6 requires a wrapped response.
+        // i.e. responseObject={}
+        if (b162) sImportUrl += "?wrap=true";
+        sImportUrl = this._adaptProxyUrl(sImportUrl);
+						
+        var djUploader = new dojox.form.Uploader({
+			xclass: "gxeButton gxeButton-enabled",
+			id: "uploader",
+            label: sLabel,
+            multiple: false,
+            uploadOnSelect: false 
+        });
+		elForm.action = sImportUrl;
+		elForm.appendChild(djUploader.domNode);
+		elForm.appendChild(elButton);
+        eIOptions.appendChild(elForm);
+		eIOptions.appendChild(elfrm);
+		
+		dojo.connect(elfrm, "onload", this, dojo.hitch(this, function (e) {
+			var responseObject = elfrm.contentWindow["gxeImportFileResponse"];
+			if(!responseObject){
+				return;
+			}
+			var handleError = function (sError) {
+			if(oWorking)
+                oWorking.hide();
+                oThis._showErrorDialog(oThis.i18n["catalog.gxe.dialog.import"],
+            sImportMsg, sError);
+            };
+
+            if ((typeof (responseObject) == "undefined") || (responseObject == null)) {
+                handleError(this.i18n["catalog.gxe.dialog.invalidResponse"]);
+            } else {
+                var oError = responseObject.error;
+                if ((typeof (oError) != "undefined") && (oError != null)) {
+                    handleError(oError.message);
+                } else {
+                    var cfgDefinition = responseObject.cfgDefinition;
+                    var sXml = responseObject.xml;
+                    if ((typeof (cfgDefinition) == "undefined") || (cfgDefinition == null)) {
+                        handleError(this.i18n["catalog.gxe.dialog.invalidResponse"]);
+                    } else if ((typeof (sXml) == "undefined") || (sXml == null)) {
+                        handleError(this.i18n["catalog.gxe.dialog.invalidResponse"]);
+                    } else {
+                        var dom = this._makeXmlDom(sXml);
+                        this._prepForEditorLoad();
+                        gxe.cfg.initialize(cfgDefinition);
+                        var elHtmlParent = dojo.byId("gxeDocument");
+                        elHtmlParent.style.display = "none";
+                        this.gxeContext.buildUI(cfgDefinition, elHtmlParent, dom);
+                        elHtmlParent.style.display = "block";
+                        this._onEditorLoaded();
+						if(oWorking)
+							oWorking.hide();
+                    }
+                }
+            }
+		}));
     },
 
     // make an XML document from a string
@@ -875,9 +1019,14 @@ dojo.declare("gpt.gxe.MetadataPanel", null, {
             eIPanel.appendChild(eIOptions);
             dojo.style(eIOptions, { marginLeft: "10px" });
             var sILabel = this.i18n["catalog.gxe.dialog.selectXmlFile"];
-            var elIButton = this._makeImportButton(elOffScreen, sILabel, oDialog);
-            elIButton.className = "gxeButton gxeButton-enabled";
-            eIOptions.appendChild(elIButton);
+            var elIButton;
+			if(this._isIE()){
+				this._makeImportButtonForIE(eIOptions,elOffScreen, sILabel, oDialog);
+			}else{
+				elIButton = this._makeImportButton(elOffScreen, sILabel, oDialog);
+				elIButton.className = "gxeButton gxeButton-enabled";
+                eIOptions.appendChild(elIButton);
+			}
         }
 
         var handleError = function (sError) {
@@ -1000,7 +1149,8 @@ dojo.declare("gpt.gxe.MetadataPanel", null, {
             })
         });
     },
-
+    
+    
     _showWorking: function (sMsg) {
 
         var elPos = dojo.byId("gxeMainWorkingMessageArea.anchor");
