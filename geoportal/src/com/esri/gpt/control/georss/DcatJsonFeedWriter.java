@@ -15,6 +15,8 @@
 package com.esri.gpt.control.georss;
 
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,6 +36,7 @@ import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.util.Val;
+
 import java.util.logging.Logger;
 
 /**
@@ -43,7 +46,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
   private static final Logger LOGGER = Logger.getLogger(DcatJsonFeedWriter.class.getCanonicalName());
 
   private HashMap<String, String> defaultValues = new HashMap<String, String>();
-  private DcatSchemas dcatSchemas;
+  private DcatSchemas dcatSchemas; 
 
   protected DcatJsonFeedWriter(HttpServletRequest request,
           RequestContext context, PrintWriter writer, RestQuery query,
@@ -68,6 +71,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     String sTitle = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.title"));
     String sDescription = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.description"));
     String sKeyword = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.keyword"));
+    String sModified = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.modified"));
     String sPublisher = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.publisher"));
     String sPerson = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.contactPoint"));
     String sMbox = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.mbox"));
@@ -88,6 +92,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     defaultValues.put("description", sDescription);
     
     defaultValues.put("keyword", sKeyword);
+    defaultValues.put("modified", sModified);
     
     defaultValues.put("publisher", sPublisher);
     defaultValues.put("contactPoint", sPerson);
@@ -115,7 +120,11 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     printArg("title", sTitle, true);
     printArg("description", sDescription, true);
     printArg("keyword", sKeyword, true);
-    printArg("modified", DF.format(new Date()), true);
+    if(sModified.length() > 0 ){
+    	printArg("modified", sModified, true);
+    }else {
+    	printArg("modified", DF.format(new Date()), true);
+    }
     printArg("publisher", sPublisher, true);
     printArg("contactPoint", sPerson, true);
     printArg("mbox", sMbox, true);
@@ -217,14 +226,18 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    * @return the indentation boolean cursor
    */
   private boolean lookUpFieldFromDcat(IFeedRecord r, DcatField dcatField, boolean before) {
-    String COMMA = ",";
+    String delimiter = ",";
+    String dl = dcatField.getDelimiter();
+	 if(dl.length() > 0){
+		 delimiter = dl;
+	 }
     String indexKey = dcatField.getIndex();
     Map<String, IFeedAttribute> index = r.getData(IFeedRecord.STD_COLLECTION_INDEX);
     if (indexKey.length() > 0) {
-      before = writeField(index, dcatField, COMMA, before);
+      before = writeField(index, dcatField, delimiter, before);
     } else if (dcatField.getName().equalsIgnoreCase("identifier") && indexKey.length() == 0) {
       ResourceLinks links = r.getResourceLinks();
-      before = writeFieldValue("\"" + getIdentifierUrl(links) + "\"", "identifier", COMMA, before);
+      before = writeFieldValue("\"" + getIdentifierUrl(links) + "\"", "identifier", delimiter, before,dcatField);
     }
     return before;
   }
@@ -242,7 +255,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     Map<String, IFeedAttribute> index = r.getData(IFeedRecord.STD_COLLECTION_INDEX);
     IFeedAttribute schemaKeyAttr = index.get("sys.schema.key");
     if (schemaKeyAttr != null) {
-      schemaKey = cleanValue(schemaKeyAttr + "","","");
+      schemaKey = cleanValue(schemaKeyAttr + "","","",null);
     }
     DcatFields dcatFields = null;
     Set<String> keys = this.dcatSchemas.keySet();
@@ -371,7 +384,20 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    * @param value value to clean
    * @return cleaned value
    */
-  private String cleanValue(String value, String type, String dcatFieldName) {
+  private String cleanValue(String value, String type, String dcatFieldName,DcatField dcatField) {
+	 String delimiter = ",";
+	 String dateFormat = "";
+	 int maxChars = -1;
+	 if(dcatField != null){		 
+		 String df = dcatField.getDateFormat();
+		 if(df.length() > 0){
+			 dateFormat = df;
+		 }
+		 int mc = dcatField.getMaxChars();
+		 if(mc > -1){
+			 maxChars = mc;
+		 }
+	 }
     if (value == null) {
       return "";
     }
@@ -392,8 +418,20 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     }
         
     if (value != null && value.length() > 0){
-	    if(type.equalsIgnoreCase("date")) {      
+	    if(type.equalsIgnoreCase("date")) {
+	    	int firstIdx = value.indexOf(",");
+	    	if(firstIdx > -1){
+	    		value = value.substring(0,firstIdx);
+	    	}
 	    	value = parseDateTime(value);
+	    	if(dateFormat.length() > 0){
+	    		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+	    		Date dt = null;
+				try {
+					dt = sdf.parse(value);
+				} catch (ParseException e) {}
+	    		value = sdf.format(dt);
+	    	}
 	    }else if(type.equalsIgnoreCase("array")) {
 	    	value = value.replace("\"", "").replace("\"", "");
 	    	String[] parts = value.split(",");
@@ -403,7 +441,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	    	for (String part : parts){
 	    		if(!part.startsWith("\"") && !part.endsWith("\"")){
 	    			if(hasValue){
-	    				sb.append(",");
+	    				sb.append(delimiter);
 	    			}
 	    			sb.append("\"").append(part.trim()).append("\"");
 	    			hasValue = true;
@@ -411,6 +449,12 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	    	}	    		    
 	    	sb.append("]");
 	    	value = sb.toString();
+	    }
+	    
+	    if(maxChars > -1 && type.equalsIgnoreCase("string")){
+	    	if(value.length() > maxChars +1){
+	    		value = value.substring(0,maxChars +1) + "\"";
+	    	}
 	    }
     }    
     return value;
@@ -425,8 +469,8 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    * @param before the indentation flag
    * @return always <code>true</code>
    */
-  private boolean writeFieldValue(String fieldValue, String jsonKey, String delimiter, boolean before) {
-    String cleanedVal = cleanValue(fieldValue,"",jsonKey);
+  private boolean writeFieldValue(String fieldValue, String jsonKey, String delimiter, boolean before,DcatField dcatField) {
+    String cleanedVal = cleanValue(fieldValue,"",jsonKey,dcatField);
     if (before) {
       print(false, ",");
       print(false, "\r\n");
@@ -458,7 +502,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
       if (indexValue == null) {
         continue;
       }
-      String cleanedVal = cleanValue("" + indexValue,fieldType,dcatFieldName);
+      String cleanedVal = cleanValue("" + indexValue,fieldType,dcatFieldName,dcatField);
       if(dcatFieldName.equalsIgnoreCase("dataDictionary") && !(cleanedVal.startsWith("http://") || cleanedVal.startsWith("https://"))){
     	  continue;
       }
@@ -471,7 +515,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
       }
     }
     if (fldValues.length() == 0) {
-      fldValues = defaultValues.get(indexFieldName);
+      fldValues = defaultValues.get(dcatFieldName);
       if (fldValues == null) {
         fldValues = "";
       }

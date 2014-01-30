@@ -20,6 +20,9 @@ public class DcatField {
 	private String name = "";
 	private String index= "";
 	private String type = "string";
+	private String dateFormat = "";
+	private String delimiter = "";
+	private int maxChars = -1;
 	
 	public String getType() {
 		return type;
@@ -54,5 +57,24 @@ public class DcatField {
 	 */
 	public void setIndex(String index) {
 		this.index = index;
+	}
+	public String getDateFormat() {
+		return dateFormat;
+	}
+	public void setDateFormat(String dateFormat) {
+		this.dateFormat = dateFormat;
+	}
+	public String getDelimiter() {
+		return delimiter;
+	}
+	public void setDelimiter(String delimiter) {
+		this.delimiter = delimiter;
+	}
+	public int getMaxChars() {
+		return maxChars;
+	}
+	public void setMaxChars(int maxChars) {
+		this.maxChars = maxChars;
 	}	
+	
 }

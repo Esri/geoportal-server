@@ -456,7 +456,13 @@ private void loadDcatMappings(DcatSchemas dcatSchemas, String dcatMappings) thro
 	  		String name = xpath.evaluate("@name", field);
 	  		df.setName(name);
 	  		df.setType(xpath.evaluate("@type", field));
-	  		df.setIndex(xpath.evaluate("@index", field));	 	  			  			
+	  		df.setIndex(xpath.evaluate("@index", field));
+	  		df.setDateFormat(xpath.evaluate("@dateFormat", field));
+	  		String max = Val.chkStr(xpath.evaluate("@maxChars", field));
+	  		if(max.length() > 0){
+	  			df.setMaxChars(Integer.parseInt(max));
+	  		}
+	  		df.setDelimiter(xpath.evaluate("@delimiter", field));
 	  		dcatFields.add(df);
 	  	}
 	  	dcatSchemas.put(schema, dcatFields);

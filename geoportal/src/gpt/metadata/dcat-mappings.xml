@@ -19,13 +19,13 @@
 	  <field name="title" index="title" type="string"/>  
 	  <field name="description" index="abstract" type="string"/>
 	  <field name="keyword" index="keywords,dataTheme,apisoTopicCategory" type="array"/>
-	  <field name="modified" index="dateModified" isDate="true" />
+	  <field name="modified" index="dateModified" isDate="true" dateFormat="yyyy-MM-dd" delimiter="/" />
 	  <field name="publisher" index="apiso.OrganizationName,publisher" />
 	  <field name="contactPoint" index="dcat.person" />
 	  <field name="mbox"	index="dcat.mbox" />
 	  <field name="identifier" />  
 	  <field name="accessLevel" index="accessLevel" />
-	  <field name="accessLevelComment" index="dcat.accessLevelComment" />
+	  <field name="accessLevelComment" index="dcat.accessLevelComment" maxChars="255" />
 	  <field name="bureauCode" index="bureauCode" type="array"/>
 	  <field name="programCode" index="programCode" type="array"/>
 	  <field name="dataDictionary" index="dcat.dataDictionary" />
@@ -39,13 +39,13 @@
 	  <field name="title" index="title" />  
 	  <field name="description" index="abstract" />
 	  <field name="keyword" index="keywords" type="array" />
-	  <field name="modified" index="dcat.modified" isDate="true" type="date"/>
+	  <field name="modified" index="dcat.modified" isDate="true" type="date" dateFormat="yyyy-MM-dd" delimiter="/"/>
 	  <field name="publisher" index="dcat.publisher" />
 	  <field name="contactPoint" index="dcat.person" />
 	  <field name="mbox" index="dcat.mbox" />
 	  <field name="identifier"/>  
 	  <field name="accessLevel" index="accessLevel"/>
-	  <field name="accessLevelComment" index="dcat.accessLevelComment" />
+	  <field name="accessLevelComment" index="dcat.accessLevelComment" maxChars="255" />
 	  <field name="bureauCode" index="bureauCode" type="array"/>
 	  <field name="programCode" index="programCode" type="array"/>
 	  <field name="dataDictionary" index="dcat.dataDictionary" />
@@ -60,13 +60,13 @@
 	  <field name="title" index="title"  />  
 	  <field name="description" index="abstract" />
 	  <field name="keyword" index="keywords" type="array"/>
-	  <field name="modified" index="apiso.RevisionDate" isDate="true" type="date"/>
+	  <field name="modified" index="apiso.RevisionDate" isDate="true" type="date" />
 	  <field name="publisher" index="dcat.publisher" />
 	  <field name="contactPoint" index="dcat.person" />
 	  <field name="mbox" index="dcat.mbox" />
 	  <field name="identifier" index="fileIdentifier" /> 
 	  <field name="accessLevel" index="accessLevel"/>
-	  <field name="accessLevelComment" index="apiso.AccessConstraints" />
+	  <field name="accessLevelComment" index="apiso.AccessConstraints" maxChars="255" />
 	  <field name="bureauCode" index="bureauCode" type="array"/>
 	  <field name="programCode" index="programCode" type="array"/>
 	  <field name="dataDictionary" index="dcat.dataDictionary" />
@@ -75,6 +75,6 @@
 	  <field name="format" index="apiso.Format" />
 	  <field name="license" index="dcat.license" />
 	  <field name="spatial" index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" />
-	  <field name="temporal" index="apiso.TempExtent_begin,apiso.TempExtent_end"  isDate="true" type="date"/>
+	  <field name="temporal" index="apiso.TempExtent_begin,apiso.TempExtent_end"  isDate="true" type="date" dateFormat="yyyy-MM-dd" delimiter="/"/>
 	</fields>
 </dcat>
