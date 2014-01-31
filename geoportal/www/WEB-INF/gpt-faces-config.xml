@@ -427,7 +427,7 @@
     <description>Search harvesting sites</description>
     <managed-bean-name>SearchFilterHarvestSites</managed-bean-name>
     <managed-bean-class>com.esri.gpt.catalog.search.SearchFilterHarvestSites</managed-bean-class>
-    <managed-bean-scope>session</managed-bean-scope>
+    <managed-bean-scope>request</managed-bean-scope>
     <managed-property>
       <property-name>selectedHarvestSiteName</property-name>
       <property-class>java.lang.String</property-class>
