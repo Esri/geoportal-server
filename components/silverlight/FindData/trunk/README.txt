@@ -37,7 +37,7 @@ Required tools for project compilation and testing:
 
 2) ArcGIS API for Microsoft Silverlight/WPF version 2.0
 
-3) ESRI ArcGIS Sample for WMS Data Source (http://resources.esri.com/arcgisserver/apis/silverlight/index.cfm?fa=codeGalleryDetails&scriptID=16249)
+3) ESRI ArcGIS Sample for WMS Data Source (http://arcscripts.esri.com/details.asp?dbid=16249)
 
 5) Microsoft Visual Studio 2010 IDE
 
