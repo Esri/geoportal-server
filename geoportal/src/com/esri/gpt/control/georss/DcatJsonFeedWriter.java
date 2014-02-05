@@ -87,7 +87,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     String sLicense = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.license"));
     String sSpatial = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.spatial"));
     String sTemporal = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.temporal"));
-
+    
     defaultValues.put("title", sTitle);
     defaultValues.put("description", sDescription);
     
@@ -119,7 +119,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 
     printArg("title", sTitle, true);
     printArg("description", sDescription, true);
-    printArg("keyword", sKeyword, true);
+    printArg2("keyword", sKeyword, true);
     if(sModified.length() > 0 ){
     	printArg("modified", sModified, true);
     }else {
@@ -131,8 +131,8 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     printArg("identifier", sIdentifier, true);
     printArg("accessLevel", sAccessLevel, true);
     printArg("accessLevelComment", sAccessLevelComment, true);
-    printArg("bureauCode", sBureauCode, true);
-    printArg("programCode", sProgramCode, true);
+    printArg2("bureauCode", sBureauCode, true);
+    printArg2("programCode", sProgramCode, true);
     printArg("dataDictionary", sDataDictionary, true);
 
     if (sAccessUrl.length() > 0) {
@@ -279,6 +279,22 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     }
     ResourceLinks links = r.getResourceLinks();
     printLinks(links, false, before);
+  }
+  
+  /**
+   * Prints argument.
+   *
+   * @param argName argument name
+   * @param argVal argument value
+   * @param more flag to indicate if there will be more arguments
+   */
+  
+  protected  void printArg2(String argName, String argVal, boolean more) {
+    argName = Val.chkStr(argName);
+    argVal = Val.chkStr(argVal);
+    if (argName.length() > 0) {
+      println("\"" + Val.escapeStrForJson(argName) + "\"" + sp() + ":" + sp() +   Val.escapeStrForJson(argVal) +  (more ? "," : ""));
+    }
   }
 
   /**
