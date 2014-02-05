@@ -21,7 +21,7 @@ To add this DCAT support to your Geoportal Server 1.2.4 instance, take the follo
 
 Very First Step: Make a backup copy of your existing geoportal web application before applying any of these changes.
 
-1) Copy the folder structure and new classes from the \\geoportal_124_dcatCache\WEB-INF\classes\com folder into your \\geoportal\WEB-INFO\classes folder.
+1) Copy the folder structure and new classes from the \\geoportal_124_dcatCache\WEB-INF\classes\com folder into your \\geoportal\WEB-INF\classes folder.
 
 2) Open your \\geoportal\WEB-INF\web.xml file, and add the following section just after the closing </servlet-mapping> section for the <servlet-name>CartServlet</servlet-name>, and just above the <session-config>:
 
