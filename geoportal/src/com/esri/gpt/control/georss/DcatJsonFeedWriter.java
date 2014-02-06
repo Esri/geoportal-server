@@ -105,7 +105,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     defaultValues.put("programCode", sProgramCode);
     
     defaultValues.put("dataDictionary", sDataDictionary);
-    defaultValues.put("acessURL", sAccessUrl);
+    defaultValues.put("accessURL", sAccessUrl);
     defaultValues.put("webService", sWebService);
     defaultValues.put("format", sFormat);
     defaultValues.put("spatial", sSpatial);
@@ -151,7 +151,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
       printArg("webService", "", true);
     }
 
-    printArg("format", sFormat, true);
+    printArg("format", "application/json", true);
     printArg("license", sLicense, true);
     printArg("spatial", sSpatial, true);
     printArg("temporal", sTemporal, false);
@@ -234,7 +234,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     String indexKey = dcatField.getIndex();
     Map<String, IFeedAttribute> index = r.getData(IFeedRecord.STD_COLLECTION_INDEX);
     if (indexKey.length() > 0) {
-      before = writeField(index, dcatField, delimiter, before);
+      before = writeField(r,index, dcatField, delimiter, before);
     } else if (dcatField.getName().equalsIgnoreCase("identifier") && indexKey.length() == 0) {
       ResourceLinks links = r.getResourceLinks();
       before = writeFieldValue("\"" + getIdentifierUrl(links) + "\"", "identifier", delimiter, before,dcatField);
@@ -293,7 +293,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     argName = Val.chkStr(argName);
     argVal = Val.chkStr(argVal);
     if (argName.length() > 0) {
-      println("\"" + Val.escapeStrForJson(argName) + "\"" + sp() + ":" + sp() +   Val.escapeStrForJson(argVal) +  (more ? "," : ""));
+      println("\"" + Val.escapeStrForJson(argName) + "\"" + sp() + ":" + sp() +   (argVal) +  (more ? "," : ""));
     }
   }
 
@@ -426,11 +426,22 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     if (value.startsWith("[")) {
       value = value.replace("[", "");
       if(type.equalsIgnoreCase("string")){
-        value = value.replaceAll("\",\"", ",");
+        value = value.replaceAll("\",\"", ",");       
       }
     }
     if (value.endsWith("]")) {
       value = value.replace("]", "");
+    }
+    
+    // only one webService url
+    if(dcatFieldName.equalsIgnoreCase("webService") && value != null && value.length() > 0){
+	    String[] parts = value.split(",http");
+	    if(parts != null && parts.length > 0){
+	    	value = parts[0];
+	    	if(!value.endsWith("\"")){
+	    		value += "\""; 
+	    	}
+	    }
     }
         
     if (value != null && value.length() > 0){
@@ -507,7 +518,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    * @param isDate true if date field
    * @return always <code>true</code>
    */
-  private boolean writeField(Map<String, IFeedAttribute> index,DcatField dcatField, String delimiter, boolean before) {
+  private boolean writeField(IFeedRecord r,Map<String, IFeedAttribute> index,DcatField dcatField, String delimiter, boolean before) {
 	String indexFieldName = dcatField.getIndex();
 	String dcatFieldName = dcatField.getName();
 	String fieldType = dcatField.getType();
@@ -515,10 +526,31 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     String[] flds = indexFieldName.split(",");
     for (String fld : flds) {
       IFeedAttribute indexValue = index.get(fld);
+      String val = "";
       if (indexValue == null) {
-        continue;
+    	  if(dcatField.isRequired()){
+    		  if(dcatFieldName.equalsIgnoreCase("accessURL")){
+    			  ResourceLinks links = r.getResourceLinks();
+    			  for (int j = 0; j < links.size(); j++) {
+    			      ResourceLink link = links.get(j);
+    			      if (link.getTag().equals(ResourceLink.TAG_METADATA)) { 			       
+    			    	  val = link.getUrl();
+    			    	  break;
+    			      }
+    			  }
+    		  }else{
+    			  val =  defaultValues.get(dcatFieldName);
+    		  }
+    	  }else{
+    		  continue;
+    	  }
+      }else{
+    	  val = "" + indexValue;
+    	  if(dcatFieldName.equalsIgnoreCase("format") && val.equalsIgnoreCase("[\"unknown\"]")){
+    		  val =  defaultValues.get(dcatFieldName);
+    	  }
       }
-      String cleanedVal = cleanValue("" + indexValue,fieldType,dcatFieldName,dcatField);
+      String cleanedVal = cleanValue(val,fieldType,dcatFieldName,dcatField);
       if(dcatFieldName.equalsIgnoreCase("dataDictionary") && !(cleanedVal.startsWith("http://") || cleanedVal.startsWith("https://"))){
     	  continue;
       }

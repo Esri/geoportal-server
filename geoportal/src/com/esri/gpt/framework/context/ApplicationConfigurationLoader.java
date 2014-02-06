@@ -459,6 +459,10 @@ private void loadDcatMappings(DcatSchemas dcatSchemas, String dcatMappings) thro
 	  		df.setIndex(xpath.evaluate("@index", field));
 	  		df.setDateFormat(xpath.evaluate("@dateFormat", field));
 	  		String max = Val.chkStr(xpath.evaluate("@maxChars", field));
+	  		String required = Val.chkStr(xpath.evaluate("@required", field));
+	  		if(required.length() > 0){
+	  			df.setRequired(Boolean.parseBoolean(required));
+	  		}
 	  		if(max.length() > 0){
 	  			df.setMaxChars(Integer.parseInt(max));
 	  		}

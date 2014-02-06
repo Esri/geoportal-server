@@ -23,10 +23,19 @@ public class DcatField {
 	private String dateFormat = "";
 	private String delimiter = "";
 	private int maxChars = -1;
+	private boolean required;
+	
+	public boolean isRequired() {
+		return required;
+	}
+	public void setRequired(boolean required) {
+		this.required = required;
+	}
 	
 	public String getType() {
 		return type;
 	}
+		
 	public void setType(String type) {
 		if(type != null && type.length() > 0){
 			this.type = type;
