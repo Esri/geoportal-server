@@ -133,7 +133,9 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     printArg("accessLevelComment", sAccessLevelComment, true);
     printArg2("bureauCode", sBureauCode, true);
     printArg2("programCode", sProgramCode, true);
-    printArg("dataDictionary", sDataDictionary, true);
+    if(sDataDictionary.length() > 0){
+    	printArg("dataDictionary", sDataDictionary, true);
+    }
 
     if (sAccessUrl.length() > 0) {
       printLinkArg("accessURL", sAccessUrl, true);
@@ -438,6 +440,9 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	    String[] parts = value.split(",http");
 	    if(parts != null && parts.length > 0){
 	    	value = parts[0];
+	    	if(!value.startsWith("\"")){
+	    		value = "\"" + value;
+	    	}
 	    	if(!value.endsWith("\"")){
 	    		value += "\""; 
 	    	}
