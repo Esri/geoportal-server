@@ -47,7 +47,9 @@ Very First Step: Make a backup copy of your existing geoportal web application b
  <!-- DCAT cache generation -->
         <thread class="com.esri.gpt.control.georss.dcatcache.DcatCacheTask" period='1[DAY]' delay="15[SECOND]"/>
 
-5b) (OPTIONAL) The changes you will be applying with this patch will add new indices to your geoportal's index store, and may change the existing indexed content.  For best results, we highly recommended re-indexing your metadata content in the geoportal. For a complete reindex, first update the lucene        'indexLocation' attribute in this gpt.xml file such that it points to a new empty folder location. When you make this change, you will no longer see search results on your geoportal search page because content is not discoverable in your geoportal until it is indexed.  You will be reindexing your content in a later step.  
+5b) (OPTIONAL) The changes you will be applying with this patch will add new indices to your geoportal's index store, and may change the existing indexed content.  For best results, we highly recommended re-indexing your metadata content in the geoportal. For a complete reindex, first update the lucene 'indexLocation' attribute in this gpt.xml file such that it points to a new empty folder location. When you make this change, you will no longer see search results on your geoportal search page because content is not discoverable in your geoportal until it is indexed.  You will be reindexing your content in a later step. 
+
+5c) (Optional) The accessURL links in the DCAT JSON response will be populated with relative filepaths unless you set the reverseProxy.baseContextPath value in gpt.xml. If you are deploying in production, this may already be populated as part of your reverse proxy strategy; if not, set this to the URL of your public geoportal URL so the accessURL links will be valid. 
 
 6) Save the gpt.xml file
 
@@ -107,7 +109,7 @@ b) Near the end of the file, add the following:
     <property meaning="dcat.person" xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString | /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString |  /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
     <property meaning="dcat.mbox" xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"/> 
     
-    <property meaning="dcat.dataDictionary" xpath="/gmd:MD_Metadata/gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage"/>
+    <property meaning="dcat.dataDictionary" xpath="/gmd:MD_Metadata/gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
     
     <property meaning="dcat.accessUrl"
  xpath="
@@ -129,7 +131,7 @@ b) Near the end of the file, add the following:
 | /gmi:MI_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorContact/gmd:CI_ResponsibleParty/gmd:organisationName"/>
    <property meaning="dcat.person" xpath="/gmi:MI_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString |  /gmi:MI_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
    <property meaning="dcat.mbox" xpath="/gmi:MI_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"/> 
-   <property meaning="dcat.dataDictionary" xpath="/gmi:MI_Metadata/gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage"/>
+   <property meaning="dcat.dataDictionary" xpath="/gmi:MI_Metadata/gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
    <property meaning="dcat.accessUrl"
  xpath="
 /gmi:MI_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/gmd:URL[../../gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue='download']"/>
@@ -141,21 +143,22 @@ b) Near the end of the file, add the following:
 catalog.json.dcat.title = Geoportal Server Dcat Json
 catalog.json.dcat.description = Dcat json response of geoportal metadata catalog
 catalog.json.dcat.keyword = ["Geoportal Server", "Dcat Json"]
-catalog.json.dcat.publisher =
-catalog.json.dcat.contactPoint = 
-catalog.json.dcat.mbox =
-catalog.json.dcat.identifier =
+catalog.json.dcat.modified = 2014
+catalog.json.dcat.publisher = Publishing Organization
+catalog.json.dcat.contactPoint = Contact Person Name
+catalog.json.dcat.mbox = contactperson@example.org
+catalog.json.dcat.identifier = geoportal
 catalog.json.dcat.accessLevel = public 
 catalog.json.dcat.accessLevelComment =
 catalog.json.dcat.bureauCode = ["010:86"]
 catalog.json.dcat.programCode = ["015:001", "015:002"]
-catalog.json.dcat.dataDictionary = Places 
-catalog.json.dcat.accessURL =
-catalog.json.dcat.webService =
-catalog.json.dcat.format = Json
-catalog.json.dcat.license = Apache 2.0
+catalog.json.dcat.dataDictionary =  
+catalog.json.dcat.accessURL = http://changeMeToYourGeoportalDCATURL
+catalog.json.dcat.webService = http://changeMeToYourGeoportalWebServiceURL
+catalog.json.dcat.format = text/xml
+catalog.json.dcat.license = Apache 2
 catalog.json.dcat.spatial = -180 -90 180 90
-catalog.json.dcat.temporal = 2013
+catalog.json.dcat.temporal = 2013/2014
 
 17) Now, update the strings in this section to suit the needs of your organization. These values will be used as default values for your catalog and metadata records if and when the information is not available from the metadata itself (this patch generally follows the metadata indexing guidance for DCAT as described at http://project-open-data.github.io/metadata-resources). If you are a federal agency, use the guidance at http://project-open-data.github.io/schema to find out more about the codes to update the 'catalog.json.dcat.bureauCode' with your Bureau Code and 'catalog.json.dcat.programCode' with your Program Code.
 
