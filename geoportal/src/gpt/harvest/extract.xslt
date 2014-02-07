@@ -38,6 +38,7 @@ deleted=<number>
 <xsl:text>
 </xsl:text>
 <xsl:text>published=</xsl:text><xsl:call-template name="published"/>
+<xsl:text>
 </xsl:text>
 <xsl:text>deleted=</xsl:text><xsl:call-template name="deleted"/>
 </xsl:template>
