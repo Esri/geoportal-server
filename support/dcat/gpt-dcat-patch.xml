@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<gptConfig version="1.x.x">
+   
+    <catalog gptTablePrefix="GPT_">
+          
+       <search
+				searchTimeoutMillisecs="10000"
+				distributedSearchTimeoutMillisecs="5000"
+				distributedSearchMaxSelectedSites="5"
+				searchResultsPerPage="10"
+				searchResultsReviewsShown="only-reviewed"
+				maxSavedSearches="10"
+				allowExternalSiteSearch="true">
+				
+		  <!-- backport patch for dcat support, Append this to your existing gpt.xml if not already present -->
+          <searchResultFormat>
+            <format regexFormat="csv" class="com.esri.gpt.control.georss.CsvWriter">
+            </format>
+            </searchResultFormat>
+		  <!-- backport patch for dcat support -->
+		  
+      </search>		
+		
+	  
+	  <!-- backport patch for dcat support -->
+		<parameter key="dcat.mappings" value="gpt/metadata/dcat-mappings.xml"/>
+	  <!-- backport patch for dcat support -->
+	  
+   	</catalog>
+
+    <scheduler>
+  <!-- backport patch for dcat support for generating a cached JSON file of all records
+		- period: days to wait to regenerate the cached file
+		- delay: cache is regenerated when web app server (e.g., Tomcat) is restarted. 'delay' sets the seconds to delay initiating regeneration of cache after restarting. -->
+<thread class="com.esri.gpt.control.georss.dcatcache.DcatCacheTask" period='1[DAY]' delay="15[SECOND]"/>
+ </scheduler>
+</gptConfig>
+
