@@ -31,6 +31,7 @@ gptConfig = {
 "ItemMetadata.allowSaveDraft": true,
 "ItemMetadata.gxeProxyUrl": "",
 "ItemMetadata.useGxeProxyUrl": false
+"ItemMetadata.gemetThemesProxy": null
 }
 </script>
 <script type="text/javascript" src=" http://your_web_app_server_URL/metadata/gpt/agp/AgpAddins.js">
