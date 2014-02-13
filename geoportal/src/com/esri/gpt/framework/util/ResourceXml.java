@@ -18,6 +18,8 @@ import java.io.IOException;
 
 import com.esri.gpt.framework.http.HttpClientRequest;
 import java.net.HttpURLConnection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Resource XML helper.
@@ -38,6 +40,40 @@ public String makeResourceXmlFromResponse(String resourceUrl) throws IOException
     throw new IOException("Invalid response received: "+client.getResponseInfo().getResponseMessage());
   }
   return response;
+}
+
+/**
+ * makes resource from CSW 'get record by id' response.
+ * @param cswResponse CSW response
+ * @param about about identifier
+ * @return resource string
+ */
+public String makeResourceFromCswResponse(String cswResponse, String about)  {
+  Pattern cswRecordStart = Pattern.compile("<csw:Record>");
+  Pattern cswRecordEnd = Pattern.compile("</csw:Record>");
+  
+  Matcher cswRecordStartMatcher = cswRecordStart.matcher(cswResponse);
+  Matcher cswRecordEndMatcher = cswRecordEnd.matcher(cswResponse);
+  
+  if (cswRecordStartMatcher.find() && cswRecordEndMatcher.find()) {
+    String dcResponse = cswResponse.substring(cswRecordStartMatcher.end(), cswRecordEndMatcher.start());
+    StringBuilder xml = new StringBuilder();
+    xml.append("<?xml version=\"1.0\"?><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:ows=\"http://www.opengis.net/ows\" xmlns:dct=\"http://purl.org/dc/terms/\">");
+    xml.append("<rdf:Description ");
+    if (about.length()>0) {
+      xml.append("rdf:about=\"").append(Val.escapeXml(about)).append("\"");
+    }
+    xml.append(">");
+    
+    xml.append(dcResponse);
+      
+    xml.append("</rdf:Description>");
+    xml.append("</rdf:RDF>");
+    
+    return xml.toString();
+  }
+  
+  return cswResponse;
 }
 
 /**
