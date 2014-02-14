@@ -775,12 +775,12 @@ private CswProfiles readCswProfiles() throws SearchException {
 public ARecord getARecord(String uuid) throws SearchException {
   final CswRecord record = getMetadata(uuid);
   ARecord aRecord = new ARecord() {
-    @Override
+   
     public String getMetadataAsText() {
       return record.getFullMetadata();
     }
 
-    @Override
+ 
     public Date getModifiedDate() {
       String modifedDateAsString = record.getModifiedDate();
       try {
@@ -908,6 +908,15 @@ public static CswSearchCriteria marshallGptToCswClientCriteria2(
   cswClientCriteria.setMaxRecords(
       gptSearchCriteria.getSearchFilterPageCursor().getRecordsPerPage()
       );
+  
+  boolean bDataWithinExtent = gptSearchCriteria.getSearchFilterSpatial().getSelectedBounds().equals(
+		  ISearchFilterSpatialObj.OptionsBounds.dataWithinExtent);
+  boolean bDataIntersectsWithExtent = gptSearchCriteria.getSearchFilterSpatial().getSelectedBounds().equals(
+		  ISearchFilterSpatialObj.OptionsBounds.useGeogExtent);
+   
+  cswClientCriteria.setUseGeographicExtent(bDataIntersectsWithExtent || bDataWithinExtent);
+  cswClientCriteria.setEnvelopeIntersects(bDataIntersectsWithExtent);
+  cswClientCriteria.setEnvelopeContains(bDataWithinExtent);
   return cswClientCriteria;
 }
 
