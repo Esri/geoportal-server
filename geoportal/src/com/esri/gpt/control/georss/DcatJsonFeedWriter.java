@@ -335,9 +335,9 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
       boolean bPrintLink = false;
       String format = "";
       ResourceLink link = links.get(j);
-      if (link.getTag().equals(ResourceLink.TAG_OPEN)) {
+      /*if (link.getTag().equals(ResourceLink.TAG_OPEN)) {
         defaultValues.put("webService", link.getUrl());
-      }
+      }*/
       if (link.getTag().equals(ResourceLink.TAG_METADATA)) {
         bPrintLink = true;
         if (!moreLinks) {
