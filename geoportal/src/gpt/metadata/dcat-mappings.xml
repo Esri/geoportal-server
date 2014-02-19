@@ -34,7 +34,7 @@
 	  <field name="license" index="dcat.license" required="true"/>
 	  <field name="accessURL" index="dcat.accessUrl" required="true"/>
 	  <field name="spatial" index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" required="true"/>
-	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" required="true"/>
+	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" required="true" dateFormat="yyyy-MM-dd" delimiter="/"/>
 	</fields>
 	<fields schema="fgdc">
 	  <field name="title" index="title" required="true"/>  
@@ -55,7 +55,7 @@
 	  <field name="format" index="dcat.format" required="true"/>
 	  <field name="license" index="dcat.license" required="true"/>
 	  <field name="spatial" index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" required="true"/>
-	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" required="true"/>
+	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" required="true" dateFormat="yyyy-MM-dd" delimiter="/"/>
 	</fields>
 	<fields schema="iso-19115,iso-19119,iso19115-2,gemini-iso-19115,gemini-iso-19119,inspire-iso-19115,inspire-iso-19119"> 
 	  <field name="title" index="title"  required="true"/>  

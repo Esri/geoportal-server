@@ -16,6 +16,7 @@ package com.esri.gpt.server.csw.client;
 
 import com.esri.gpt.framework.search.DcList;
 import com.esri.gpt.framework.search.SearchXslProfile;
+import com.esri.gpt.framework.util.ResourceXml;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +24,7 @@ import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -42,7 +44,7 @@ public class CswProfile extends
 	/** The class logger *. */
 private static Logger LOG = Logger.getLogger(CswProfile.class
 	                                    .getCanonicalName());	
-	
+private static final Pattern XML_TEST_PATTERN = Pattern.compile("^\\p{Space}*(<!--(.|\\p{Space})*?-->\\p{Space}*)+<\\?xml");	
 // instance variables ==========================================================
 
 
@@ -301,7 +303,13 @@ public void readCSWGetMetadataByIDResponse(CswClient cswClient, String recordByI
       record.setFullMetadata(indirectUrlXml);
     } else if(!Val.chkStr(sRecordByIdXslt).equals("")) {
       // Get record by id xsl if its not intermidiate type
-      record.setFullMetadata(sRecordByIdXslt);
+      if (XML_TEST_PATTERN.matcher(sRecordByIdXslt).matches()) {
+        record.setFullMetadata(sRecordByIdXslt);
+      } else {
+        ResourceXml resourceXml = new ResourceXml();
+        String fullMetadata = resourceXml.makeResourceFromCswResponse(recordByIdResponse, record.getId());
+        record.setFullMetadata(fullMetadata);
+      }
     } else {
       // The get record by id
       record.setFullMetadata(recordByIdResponse);

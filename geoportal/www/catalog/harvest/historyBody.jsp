@@ -280,7 +280,7 @@ value="#{HarvestHistoryController.result.queryResult.protocolTypeAsString}"/>
 <h:outputLabel for="heUuid" 
   value="#{gptMsg['catalog.harvest.manage.history.search.uuid']}"/>
 <h:inputText id="heUuid" size="50" maxlength="128" 
-  value="#{HarvestHistoryController.criteria.queryCriteria.uuid}"/>
+  value="#{HarvestHistoryController.criteria.queryCriteria.eventUuid}"/>
 
 <h:outputLabel for="heFromDate" 
   value="#{gptMsg['catalog.harvest.manage.history.search.fromDate']}"/>
