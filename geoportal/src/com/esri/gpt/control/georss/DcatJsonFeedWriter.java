@@ -403,7 +403,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    * @return cleaned value
    */
   private String cleanValue(String value, String type, String dcatFieldName,DcatField dcatField) {
-	 String delimiter = ",";
+	 String delimiter = ", ";
 	 String dateFormat = "";
 	 int maxChars = -1;
 	 if(dcatField != null){		 
@@ -564,9 +564,25 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
      
       if(!fldValues.contains(cleanedVal)){     
     	  if (fldValues.length() > 0) {
-	        fldValues += delimiter;
+    		  StringBuilder sb = new StringBuilder();
+    		  if(fieldType.equalsIgnoreCase("array")){
+    			  if(!cleanedVal.equalsIgnoreCase(defaultValues.get(dcatFieldName))){
+	    			  if(fldValues.startsWith("[") && fldValues.endsWith("]")){
+	    				  fldValues = fldValues.replace("[", "").replace("]", "");
+	    			  }
+	    			  if(cleanedVal.startsWith("[") && cleanedVal.endsWith("]")){
+	    				  cleanedVal = cleanedVal.replace("[", "").replace("]", "");
+	    			  }    			  
+	    			  sb.append("[").append(fldValues).append(delimiter).append(cleanedVal).append("]");
+	    			  fldValues = sb.toString();
+    			  }
+    		  }else{
+    			  sb.append(fldValues).append(delimiter).append(cleanedVal);
+    			  fldValues = sb.toString();
+    		  }
+	      }else{
+	    	  fldValues += cleanedVal;
 	      }
-    	  fldValues += cleanedVal;
       }
     }
     if (fldValues.length() == 0) {
@@ -576,6 +592,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
       }
     }
     if (fldValues.length() > 0) {
+    	fldValues = fldValues.replaceAll(",", ", ");
       if (before) {
         print(false, ",");
         print(false, "\r\n");
