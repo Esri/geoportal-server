@@ -141,10 +141,7 @@
         }
       }
     );
-      // Preloading the search gif
-      var img = new Image();
-      img.src = dojo.byId("/catalog/images/loading.gif");
-      //scInitDistrPane();
+ 
     }
   );
 
@@ -1496,7 +1493,7 @@
         <table width="100%">
           <tr>
             <td/>
-            <td valign="top"><img id="djtCntDistributedSearchesImg" alt="" src="/geoportal/catalog/images/section_closed.gif"/></td>
+            <td valign="top"><img id="djtCntDistributedSearchesImg" alt="" src="../images/section_closed.gif"/></td>
             <td>
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr><td id="djtCntDistributedSearchesTitle" class="sectionCaption"/></tr>
