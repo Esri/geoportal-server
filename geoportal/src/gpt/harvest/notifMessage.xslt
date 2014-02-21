@@ -24,7 +24,7 @@
           You can view harvest report following the link <a href="{reportLink}"><xsl:value-of select="reportLink"/></a><br/>
           <br/>
         </xsl:if>
-		Thank you, from the ArcGIS Server Geoportal extension 10.
+		Thank you.
 	</body>
 </html>
 </xsl:template>
