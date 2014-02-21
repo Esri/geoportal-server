@@ -30,7 +30,7 @@ gptConfig = {
 "ItemMetadata.enabled": true,
 "ItemMetadata.allowSaveDraft": true,
 "ItemMetadata.gxeProxyUrl": "",
-"ItemMetadata.useGxeProxyUrl": false
+"ItemMetadata.useGxeProxyUrl": false,
 "ItemMetadata.gemetThemesProxy": null
 }
 </script>
@@ -40,5 +40,10 @@ gptConfig = {
 
 5. Update the snippet at the ‘GptCore.serverContextPath’ and second ‘script’ src to reference the URL to your web application server.
 
-6. Save the item.html file
+6. If the geoportal metadata instance and Portal for ArcGIS instance are served on different hostname/port, need to configure proxy using the following steps:
+	a. Copy gpt/gxe/gxe-proxy.jsp to arcgis#sharing/gxe-proxy.jsp
+	b. Set "ItemMetadata.useGxeProxyUrl" to true
+	c. Set "ItemMetadata.gxeProxyUrl" to http://portalforarcgisservername/arcgis/sharing/gxe-proxy.jsp
+
+7. Save the item.html file
 
