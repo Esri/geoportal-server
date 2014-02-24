@@ -42,6 +42,7 @@ import com.esri.gpt.framework.util.Val;
 import javax.faces.component.UIComponent;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Handles actions associated with user self care.
@@ -378,9 +379,10 @@ private void executeSendFeedback(ActionEvent event, RequestContext context)
     sBody = sBody.replaceAll("<", "&lt;");
     
     // build the message subject and body
-    String[] args = new String[2];
+    String[] args = new String[3];
     args[0] = sSender;
     args[1] = sBody;
+    args[2] = RequestContext.resolveBaseContextPath((HttpServletRequest) context.getServletRequest());
     String sSubject = msgBroker.retrieveMessage("identity.feedback.email.subject");
     sBody = msgBroker.retrieveMessage("identity.feedback.email.body",args);
     
