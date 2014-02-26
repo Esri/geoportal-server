@@ -18,13 +18,23 @@ package com.esri.gpt.control.webharvest.client.dcat;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolDCAT;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.common.CommonCapabilities;
+import com.esri.gpt.framework.dcat.DcatParser;
+import com.esri.gpt.framework.dcat.DcatParserAdaptor;
 import com.esri.gpt.framework.resource.api.Native;
+import com.esri.gpt.framework.resource.api.Publishable;
+import com.esri.gpt.framework.resource.api.SourceUri;
+import com.esri.gpt.framework.resource.common.CommonPublishable;
+import com.esri.gpt.framework.resource.common.UrlUri;
 import com.esri.gpt.framework.resource.query.Capabilities;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.transform.TransformerException;
 
 /**
  * DCAT query builder.
@@ -68,9 +78,46 @@ public class DCATQueryBuilder implements QueryBuilder {
 
   @Override
   public Native getNativeResource() {
+    DCATIteratorAdaptor adaptor = null;
+    try {
+      URL url = new URL(info.getUrl());
+      adaptor = new DCATIteratorAdaptor(info.getFormat(), new DcatParserAdaptor(new DcatParser(url.openStream())));
+      Iterator<Publishable> iterator = adaptor.iterator();
+      if (iterator.hasNext()) {
+        return new NativeImpl(iterator.next().getContent());
+      }
+    } catch (Exception ex) {
+      LOGGER.log(Level.WARNING, "Error reading native resource.", ex);
+    } finally {
+      if (adaptor!=null) {
+        adaptor.close();
+      }
+    }
     return null;
   }
 
+
+/**
+ * Native implementation.
+ */
+  private class NativeImpl extends CommonPublishable implements Native {
+      private String content;
+
+      public NativeImpl(String content) {
+        this.content = content;
+      }
+
+      @Override
+      public SourceUri getSourceUri() {
+        return new UrlUri(info.getUrl());
+      }
+
+      @Override
+      public String getContent() throws IOException {
+        return content;
+      }
+  }
+  
   /**
    * DCAT capabilities.
    */
