@@ -319,10 +319,11 @@ gpt.LiveData.handleHttpError = function(response, io) {
 
 // handles internal exception
 gpt.LiveData.handleInternalException = function(e) {
+  console.error("Preview error", e);
   if (e!=null && e.message!=null) {
-    dojo.publish("livedata-error", ["internal error: " + e.message]);
+    dojo.publish("livedata-error", ["Unable to provide preview for the service."]);
   } else {
-    dojo.publish("livedata-error", ["internal error"]);
+    dojo.publish("livedata-error", ["Unable to provide preview for the service."]);
   }
 };
 

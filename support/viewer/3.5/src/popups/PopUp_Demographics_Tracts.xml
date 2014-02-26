@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<configuration>
+    <title>Tract: {ID}</title>
+    <fields>
+        <field name="ID"/>  <!-- Used in title, do not repeat in content -->
+        <field name="TOTPOP_CY"  alias="Population" visible="true"/>  <!-- Overwrite alias specified in Map Service -->
+        <field name="MEDHINC_CY" alias="Household Income, Median ($)" visible="true"/>
+        <field name="HINC0_CY"   alias="less than $10,000"/>
+        <field name="HINC10_CY"  alias="$10,000 - $14,999"/>
+        <field name="HINC15_CY"  alias="$15,000 - $19,999"/>
+        <field name="HINC20_CY"  alias="$20,000 - $24,999"/>
+        <field name="HINC25_CY"  alias="$25,000 - $29,999"/>
+        <field name="HINC30_CY"  alias="$30,000 - $34,999"/>
+        <field name="HINC35_CY"  alias="$35,000 - $39,999"/>
+        <field name="HINC40_CY"  alias="$40,000 - $44,999"/>
+        <field name="HINC45_CY"  alias="$45,000 - $49,999"/>
+        <field name="HINC50_CY"  alias="$50,000 - $59,999"/>
+        <field name="HINC60_CY"  alias="$60,000 - $74,999"/>
+        <field name="HINC75_CY"  alias="$75,000 - $99,999"/>
+        <field name="HINC100_CY" alias="$100,000 - $124,999"/>
+        <field name="HINC125_CY" alias="$125,000 - $149,999"/>
+        <field name="HINC150_CY" alias="$150,000 - $199,999"/>
+        <field name="HINC200_CY" alias="$200,000 - $249,999"/>
+        <field name="HINC250_CY" alias="$250,000 - $499,999"/>
+        <field name="HINC500_CY" alias="$500,000 or greater"/>
+    </fields>
+    <medias>
+        <media type="columnchart" title="Households by income"
+               chartfields="HINC0_CY,HINC10_CY,HINC15_CY,HINC20_CY,HINC25_CY,HINC30_CY,HINC35_CY,HINC40_CY,HINC45_CY,HINC50_CY,HINC60_CY,HINC75_CY,HINC100_CY,HINC125_CY,HINC150_CY,HINC200_CY,HINC250_CY,HINC500_CY"/>
+    </medias>
+</configuration>
+
+<!--
+    Pop-up configuration file for:
+    http://server.arcgisonline.com/ArcGIS/rest/services/Demographics/USA_Median_Household_Income/MapServer/2
+
+    See pop-up documentation at
+    http://links.esri.com/flexviewer/popups
+-->

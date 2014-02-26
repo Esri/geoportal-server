@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:mx="library://ns.adobe.com/flex/mx"
+                autoDrawBackground="false"
+                buttonMode="true"
+                click="itemrenderer_clickHandler(event)"
+                dataChange="itemrenderer_dataChangeHandler(event)"
+                minHeight="30"
+                useHandCursor="true">
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.viewer.utils.LocalizationUtil;
+
+            import mx.events.FlexEvent;
+
+            private const BOOKMARK_CLICK:String = "bookmarkClick";
+
+            private const BOOKMARK_DELETE:String = "bookmarkDelete";
+
+            [Bindable]
+            private var bookmark:Bookmark;
+
+            private function itemrenderer_dataChangeHandler(event:FlexEvent):void
+            {
+                bookmark = data as Bookmark;
+            }
+
+            private function itemrenderer_clickHandler(event:MouseEvent):void
+            {
+                dispatchEvent(new Event(BOOKMARK_CLICK, true)); // bubbles
+            }
+
+            private function deleteBookmark(event:MouseEvent):void
+            {
+                event.stopPropagation(); // don't let this click event go up to the ItemRenderer
+                dispatchEvent(new Event(BOOKMARK_DELETE, true)); // bubbles
+            }
+        ]]>
+    </fx:Script>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="hovered" stateGroups="drawBackground"/>
+        <s:State name="normalAndShowsCaret" stateGroups="drawBackground"/>
+        <s:State name="hoveredAndShowsCaret" stateGroups="drawBackground"/>
+    </s:states>
+
+    <!-- border -->
+    <s:Rect left="1" right="1" top="0" bottom="0"
+            radiusX="4"
+            radiusY="4">
+        <s:stroke>
+            <s:SolidColorStroke alpha="{getStyle('borderAlpha')}"
+                                color="{getStyle('borderColor')}"
+                                weight="1"/>
+        </s:stroke>
+    </s:Rect>
+
+    <!-- background fill -->
+    <s:Rect left="2" right="2" top="2" bottom="2"
+            radiusX="4"
+            radiusY="4">
+        <s:fill>
+            <s:SolidColor alpha="0.3"
+                          alpha.drawBackground="0.8"
+                          color.drawBackground="{getStyle('rollOverColor')}"
+                          color.normal="{getStyle('contentBackgroundColor')}"/>
+        </s:fill>
+    </s:Rect>
+
+    <mx:Image left="5"
+              maxHeight="20"
+              maxWidth="20"
+              source="{bookmark.icon}"
+              verticalCenter="0">
+        <mx:filters>
+            <mx:GlowFilter alpha="0.5"
+                           blurX="10"
+                           blurY="10"
+                           color="#000000"/>
+        </mx:filters>
+    </mx:Image>
+
+    <s:Label left="30" right="40"
+             fontWeight="normal"
+             text="{bookmark.name}"
+             verticalCenter="0"/>
+
+    <mx:Image width="20" height="20"
+              right="15"
+              click="deleteBookmark(event)"
+              source="assets/images/w_close_red.png"
+              toolTip="{LocalizationUtil.getDefaultString('deleteBookmarkTooltip')}"
+              verticalCenter="0"
+              visible="{bookmark.userCreated}"/>
+
+</s:ItemRenderer>

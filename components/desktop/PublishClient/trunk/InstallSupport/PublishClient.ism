@@ -4250,6 +4250,7 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<row><td>ISTheme</td><td>ESRI ArcGIS10.1.theme</td></row>
 		<row><td>ISUSLock</td><td>{72A6B247-09FC-4684-B981-71586BC23ECB}</td></row>
 		<row><td>ISUSSignature</td><td>{646F8791-0FAC-4477-B130-B178631A747D}</td></row>
+		<row><td>LockPermissionMode</td><td>1</td></row>
 		<row><td>MsiExecCmdLineOptions</td><td/></row>
 		<row><td>MsiLogFile</td><td/></row>
 		<row><td>OnUpgrade</td><td>1</td></row>

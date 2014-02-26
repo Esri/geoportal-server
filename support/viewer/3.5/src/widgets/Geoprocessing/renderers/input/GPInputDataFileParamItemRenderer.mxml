@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:mx="library://ns.adobe.com/flex/mx"
+                width="100%"
+                autoDrawBackground="false">
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.components.IdentityManager;
+            import com.esri.ags.components.supportClasses.Credential;
+            import com.esri.viewer.utils.LocalizationUtil;
+
+            import widgets.Geoprocessing.parameters.DataFileParameter;
+            import widgets.Geoprocessing.supportClasses.ParamErrorEvent;
+
+            private const UPLOAD_FILE_PARAM_NAME:String = "file";
+
+            [Bindable]
+            private var uploadedFile:String;
+
+            private var param:DataFileParameter;
+            private var fileRef:FileReference;
+
+            private function updateURL():void
+            {
+                data.defaultValue.url = urlInput.text;
+            }
+
+            private function clearURL():void
+            {
+                data.defaultValue.url = "";
+            }
+
+            override public function set data(value:Object):void
+            {
+                param = value as DataFileParameter;
+                super.data = value;
+
+                if (!param || !param.serviceInfo.supportsUploads)
+                {
+                    currentState = "urlInputModeOnly";
+                }
+            }
+
+            private function browseForUpload():void
+            {
+                fileRef = new FileReference();
+                fileRef.addEventListener(Event.CANCEL, fileRef_cancelHandler);
+                fileRef.addEventListener(Event.SELECT, fileRef_selectHandler);
+                fileRef.browse();
+            }
+
+            protected function fileRef_cancelHandler(event:Event):void
+            {
+                fileRef.removeEventListener(Event.CANCEL, fileRef_cancelHandler);
+                fileRef.removeEventListener(Event.SELECT, fileRef_selectHandler);
+            }
+
+            protected function fileRef_selectHandler(event:Event):void
+            {
+                fileRef.removeEventListener(Event.CANCEL, fileRef_cancelHandler);
+                fileRef.removeEventListener(Event.SELECT, fileRef_selectHandler);
+
+                var maxAllowedUploadSizeInMB:Number = param.serviceInfo.maxUploadFileSize;
+
+                if (toMegaBytes(fileRef.size) <= maxAllowedUploadSizeInMB)
+                {
+                    addFileReferenceListeners();
+
+                    var uploadURL:String = param.serviceInfo.url + "uploads/upload";
+                    if (param.serviceInfo.proxyURL)
+                    {
+                        uploadURL = param.serviceInfo.proxyURL + "?" + uploadURL;
+                    }
+
+                    fileRef.upload(createURLRequest(uploadURL), UPLOAD_FILE_PARAM_NAME);
+                    currentState = "uploading";
+                    progressBar.setProgress(0, toMegaBytes(fileRef.size));
+                }
+                else
+                {
+                    dispatchError(LocalizationUtil.getDefaultString('fileExceedsAllowedUploadSize', maxAllowedUploadSizeInMB),
+                                  LocalizationUtil.getDefaultString('fileUploadError'));
+                }
+            }
+
+            private function toMegaBytes(bytes:Number):Number
+            {
+                return bytes * 0.000001;
+            }
+
+            private function addFileReferenceListeners():void
+            {
+                fileRef.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, fileRef_uploadCompleteDataHandler);
+                fileRef.addEventListener(IOErrorEvent.IO_ERROR, fileRef_ioErrorHandler);
+                fileRef.addEventListener(SecurityErrorEvent.SECURITY_ERROR, fileRef_securityErrorHandler);
+                fileRef.addEventListener(ProgressEvent.PROGRESS, fileRef_progressHandler);
+            }
+
+            private function createURLRequest(url:String):URLRequest
+            {
+                var urlRequest:URLRequest = new URLRequest(url);
+                var urlVars:URLVariables = new URLVariables();
+                urlVars.f = "json";
+                urlRequest.data = urlVars;
+                urlRequest.method = URLRequestMethod.POST;
+                var credential:Credential = IdentityManager.instance.findCredential(url);
+                if (credential && credential.token)
+                {
+                    urlVars.token = credential.token;
+                }
+                return urlRequest;
+            }
+
+            protected function fileRef_uploadCompleteDataHandler(event:DataEvent):void
+            {
+                removeFileReferenceListeners();
+
+                try
+                {
+                    handleResponseObject(JSON.parse(event.data));
+                }
+                catch (error:Error)
+                {
+                    dispatchError(LocalizationUtil.getDefaultString('couldNotProcessUploadResponse'), LocalizationUtil.getDefaultString('fileUploadError'));
+                    currentState = "inputModeSelection";
+                }
+            }
+
+            private function handleResponseObject(response:Object):void
+            {
+                if (response.item)
+                {
+                    uploadedFile = fileRef.name;
+                    param.defaultValue.itemID = response.item.itemID;
+                    currentState = "fileReady";
+                }
+                else if (response.error)
+                {
+                    dispatchError(response.error.message, LocalizationUtil.getDefaultString('fileUploadError'));
+                    currentState = "inputModeSelection";
+                }
+                else
+                {
+                    dispatchError(LocalizationUtil.getDefaultString('uploadUnknownError'), LocalizationUtil.getDefaultString('fileUploadError'));
+                    currentState = "inputModeSelection";
+                }
+            }
+
+            protected function fileRef_progressHandler(event:ProgressEvent):void
+            {
+                progressBar.setProgress(toMegaBytes(event.bytesLoaded), toMegaBytes(event.bytesTotal));
+            }
+
+            private function cancelUpload():void
+            {
+                fileRef.cancel();
+                removeFileReferenceListeners();
+                currentState = "inputModeSelection";
+            }
+
+            private function removeFileReferenceListeners():void
+            {
+                fileRef.removeEventListener(DataEvent.UPLOAD_COMPLETE_DATA, fileRef_uploadCompleteDataHandler);
+                fileRef.removeEventListener(IOErrorEvent.IO_ERROR, fileRef_ioErrorHandler);
+                fileRef.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, fileRef_securityErrorHandler);
+                fileRef.removeEventListener(ProgressEvent.PROGRESS, fileRef_progressHandler);
+            }
+
+            private function fileRef_ioErrorHandler(event:IOErrorEvent):void
+            {
+                removeFileReferenceListeners();
+                dispatchError(LocalizationUtil.getDefaultString('uploadIOError', event.errorID), LocalizationUtil.getDefaultString('fileUploadError'));
+                currentState = "inputModeSelection";
+            }
+
+            private function fileRef_securityErrorHandler(event:SecurityErrorEvent):void
+            {
+                removeFileReferenceListeners();
+                dispatchError(LocalizationUtil.getDefaultString('uploadSecurityError', event.errorID), LocalizationUtil.getDefaultString('fileUploadError'));
+                currentState = "inputModeSelection";
+            }
+
+            private function dispatchError(message:String, title:String = null):void
+            {
+                owner.dispatchEvent(new ParamErrorEvent(ParamErrorEvent.ERROR, message, title));
+            }
+
+            private function removeFile():void
+            {
+                param.defaultValue.itemID = null;
+                currentState = "inputModeSelection";
+            }
+
+            private function removeURL():void
+            {
+                clearURL();
+                urlInput.text = "";
+                urlInput.errorString = "";
+                urlInput.validateNow();
+                currentState = "inputModeSelection";
+            }
+        ]]>
+    </fx:Script>
+
+    <fx:Declarations>
+        <mx:RegExpValidator id="urlValidator"
+                            enabled="false"
+                            enabled.urlInputMode="true"
+                            enabled.urlInputModeOnly="true"
+                            expression="^(ht|f)tps?:\/\/[^\s\.]+(\.[^\s\.]+)*((\/|\.)[^\s\.]+)+\/?$"
+                            invalid="clearURL()"
+                            property="text"
+                            source="{urlInput}"
+                            trigger="{urlInput}"
+                            triggerEvent="change"
+                            valid="updateURL()"/>
+    </fx:Declarations>
+
+    <s:states>
+        <s:State name="inputModeSelection"/>
+        <s:State name="browsing" stateGroups="fileInputMode"/>
+        <s:State name="uploading" stateGroups="fileInputMode"/>
+        <s:State name="fileReady" stateGroups="fileInputMode"/>
+        <s:State name="urlInputMode"/>
+        <s:State name="urlInputModeOnly"/>
+    </s:states>
+
+    <mx:FormItem width="100%"
+                 label="{data.label}"
+                 required="{data.required}">
+        <s:HGroup width="100%" verticalAlign="middle">
+            <s:Button click="browseForUpload()"
+                      includeIn="inputModeSelection"
+                      label="{LocalizationUtil.getDefaultString('uploadFile')}"/>
+
+            <s:Label includeIn="inputModeSelection" text="{LocalizationUtil.getDefaultString('or')}"/>
+
+            <s:Button click="currentState = 'urlInputMode'"
+                      includeIn="inputModeSelection"
+                      label="{LocalizationUtil.getDefaultString('byURL')}"/>
+
+            <mx:ProgressBar id="progressBar"
+                            width="65"
+                            includeIn="uploading"
+                            label="%3%"
+                            labelPlacement="center"
+                            mode="manual"/>
+
+            <s:Label buttonMode="true"
+                     click="cancelUpload()"
+                     fontWeight="bold"
+                     includeIn="uploading"
+                     text="{LocalizationUtil.getDefaultString('attachmentCancelLabel')}"
+                     textDecoration="underline"/>
+
+            <s:Label fontWeight="bold"
+                     includeIn="fileReady"
+                     maxDisplayedLines="1"
+                     maxWidth="150"
+                     showTruncationTip="true"
+                     text="{uploadedFile}"/>
+
+            <s:Label buttonMode="true"
+                     click="removeFile()"
+                     fontWeight="bold"
+                     includeIn="fileReady"
+                     text="{LocalizationUtil.getDefaultString('showAttributesText')}"
+                     textDecoration="underline"/>
+
+            <s:TextInput id="urlInput"
+                         width="100%"
+                         includeIn="urlInputMode, urlInputModeOnly"
+                         prompt="{LocalizationUtil.getDefaultString('fileURL')}"
+                         text="{data.defaultValue.url}"
+                         toolTip="{data.toolTip}"/>
+
+            <s:Label buttonMode="true"
+                     click="removeURL()"
+                     fontWeight="bold"
+                     includeIn="urlInputMode"
+                     text="{LocalizationUtil.getDefaultString('showAttributesText')}"
+                     textDecoration="underline"/>
+        </s:HGroup>
+    </mx:FormItem>
+</s:ItemRenderer>

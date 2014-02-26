@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:viewer="com.esri.viewer.*"
+                   xmlns:Navigation="widgets.Navigation.*"
+                   initialize="basewidget_initializeHandler(event)"
+                   widgetConfigLoaded="init()">
+    <fx:Declarations>
+        <s:Fade id="rollOverFade" target="{navigation}"/>
+        <s:Fade id="rollOutFade" target="{navigation}"/>
+    </fx:Declarations>
+    <fx:Script>
+        <![CDATA[
+            import com.esri.viewer.AppEvent;
+
+            import mx.events.FlexEvent;
+
+            private var buttonBarLastSelectedIndex:int;
+
+            protected function basewidget_initializeHandler(event:FlexEvent):void
+            {
+                AppEvent.addListener(AppEvent.DATA_PUBLISH, sharedDataUpdated);
+            }
+
+            private function sharedDataUpdated(event:AppEvent):void
+            {
+                var data:Object = event.data;
+
+                if (data.key == "Edit_Widget") // disable buttonbar when edit widget is opened
+                {
+                    if (data.collection[0])
+                    {
+                        map.cursorManager.removeAllCursors();
+                        buttonBarLastSelectedIndex = navigation.btnBar.selectedIndex;
+                        navigation.btnBar.selectedIndex = 0;
+                        navigation.btnBar.enabled = false;
+                    }
+                    else
+                    {
+                        navigation.btnBar.selectedIndex = buttonBarLastSelectedIndex;
+                        navigation.btnBar.enabled = true;
+                    }
+                }
+            }
+
+            private function init():void
+            {
+                if (configXML)
+                {
+                    var rollOverAlpha:Number = configXML.rolloveralpha[0] ? parseFloat(configXML.rolloveralpha) : 1;
+                    var rollOutAlpha:Number = configXML.rolloutalpha[0] ? parseFloat(configXML.rolloutalpha) : 0.39;
+
+                    rollOutFade.alphaTo = rollOutAlpha;
+                    rollOverFade.alphaTo = rollOverAlpha;
+                    navigation.alpha = rollOutAlpha;
+                    navigation.visible = true;
+
+                    navigation.panwheelItem = new NavToolItem("PanWheel", "", configXML.panwheel.@visible == 'true');
+                    navigation.zoomFullextItem = new NavToolItem(configXML.panwheel.@fullextlabel || getDefaultString("fullExtentLabel"), configXML.panwheel.@fullexticon, true);
+                    navigation.pandownItem = new NavToolItem(configXML.panwheel.@pandownlabel || getDefaultString("panDownLabel"), "", true);
+                    navigation.panleftItem = new NavToolItem(configXML.panwheel.@panleftlabel || getDefaultString("panLeftLabel"), "", true);
+                    navigation.panrightItem = new NavToolItem(configXML.panwheel.@panrightlabel || getDefaultString("panRightLabel"), "", true);
+                    navigation.panupItem = new NavToolItem(configXML.panwheel.@panuplabel || getDefaultString("panUpLabel"), "", true);
+                    navigation.prevextItem = new NavToolItem(configXML.prevextbutton.@label || getDefaultString("previousExtentLabel"), "", configXML.prevextbutton.@visible == 'true');
+                    navigation.nextextItem = new NavToolItem(configXML.nextextbutton.@label || getDefaultString("nextExtentLabel"), "", configXML.nextextbutton.@visible == 'true');
+                    navigation.panItem = new NavToolItem(configXML.panbutton.@label || getDefaultString("panLabel"), configXML.panbutton.@icon, configXML.panbutton.@visible == 'true');
+                    navigation.zoominItem = new NavToolItem(configXML.zoominbutton.@label || getDefaultString("zoomInLabel"), configXML.zoominbutton.@icon, configXML.zoominbutton.@visible == 'true');
+                    navigation.zoomoutItem = new NavToolItem(configXML.zoomoutbutton.@label || getDefaultString("zoomOutLabel"), configXML.zoomoutbutton.@icon, configXML.zoomoutbutton.@visible == 'true');
+                    navigation.initButtonBar();
+                }
+            }
+        ]]>
+    </fx:Script>
+    <Navigation:Navigation id="navigation"
+                           focusIn="rollOverFade.play()"
+                           focusOut="rollOutFade.play()"
+                           includeInLayout="false"
+                           map="{map}"
+                           rollOut="rollOutFade.play()"
+                           rollOver="rollOverFade.play()"
+                           visible="false"/>
+</viewer:BaseWidget>

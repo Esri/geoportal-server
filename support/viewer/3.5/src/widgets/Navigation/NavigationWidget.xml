@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<configuration>
+    <panwheel visible="true" fullexticon="assets/images/i_globe.png"  />
+    <prevextbutton visible="true"/>
+    <nextextbutton visible="true"/>
+    <panbutton visible="true" icon="assets/images/i_pan.png" />
+    <zoominbutton visible="true" icon="assets/images/i_zoomin.png" />
+    <zoomoutbutton visible="true" icon="assets/images/i_zoomout.png" />
+</configuration>
+
+<!--
+    See Navigation widget tag reference at
+    http://links.esri.com/navigationwidget
+-->

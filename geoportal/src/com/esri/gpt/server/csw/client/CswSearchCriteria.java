@@ -42,6 +42,15 @@ private String _searchText;
 /** The _start position. */
 private int _startPosition;
 
+
+private boolean envelopeIntersects;
+
+private boolean envelopeContains;
+
+private boolean useGeographicExtent;
+
+
+
 // constructors ================================================================
 /**
  * Instantiates a new csw search criteria.
@@ -88,6 +97,8 @@ public boolean isLiveDataAndMapsOnly() {
 public void setLiveDataAndMapsOnly(boolean liveDataAndMapsOnly) {
   _liveDataAndMapsOnly = liveDataAndMapsOnly;
 }
+
+
 
 /**
  * Gets the max records.
@@ -144,6 +155,37 @@ public void setStartPosition(int position) {
 }
 
 /**
+ * @return
+ */
+
+
+public boolean isEnvelopeIntersects() {
+	return envelopeIntersects;
+}
+
+public void setEnvelopeIntersects(boolean envelopeIntersects) {
+	this.envelopeIntersects = envelopeIntersects;
+}
+
+public boolean isEnvelopeContains() {
+	return envelopeContains;
+}
+
+public void setEnvelopeContains(boolean envelopeContains) {
+	this.envelopeContains = envelopeContains;
+}
+
+public boolean isUseGeographicExtent() {
+	return useGeographicExtent;
+}
+
+public void setUseGeographicExtent(boolean useGeographicExtent) {
+	this.useGeographicExtent = useGeographicExtent;
+}
+
+// methods ================================================================================================================
+
+/**
  * To xml.
  * 
  * @return the string
@@ -163,12 +205,17 @@ public String toXml() {
     request += "<MaxX>" + search.getEnvelope().getMaxX() + "</MaxX>";
     request += "<MaxY>" + search.getEnvelope().getMaxY() + "</MaxY>";
     request += "</Envelope>";
+    request += "<RecordsFullyWithinEnvelope>"+ this.isEnvelopeContains() +"</RecordsFullyWithinEnvelope>";
+    request += "<RecordsIntersectWithEnvelope>"+ this.isEnvelopeIntersects() +"</RecordsIntersectWithEnvelope>";
+   
   }
   request += "</GetRecords>";
 
   return request;
 
 }
+
+
 
 /* 
  * Reset of criteria

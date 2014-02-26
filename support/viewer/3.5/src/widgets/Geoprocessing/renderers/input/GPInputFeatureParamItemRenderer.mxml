@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:mx="library://ns.adobe.com/flex/mx"
+                width="100%"
+                autoDrawBackground="false">
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.events.DrawEvent;
+            import com.esri.ags.events.GraphicEvent;
+            import com.esri.ags.events.GraphicsLayerEvent;
+            import com.esri.ags.layers.GraphicsLayer;
+            import com.esri.ags.tools.DrawTool;
+            import com.esri.viewer.utils.LocalizationUtil;
+
+            import mx.collections.ArrayCollection;
+            import mx.collections.ArrayList;
+            import mx.events.CollectionEvent;
+            import mx.utils.ObjectUtil;
+
+            import widgets.Geoprocessing.parameters.FeatureLayerParameter;
+            import widgets.Geoprocessing.parameters.IGPFeatureParameter;
+            import widgets.Geoprocessing.supportClasses.FeatureInputParamEvent;
+            import widgets.Geoprocessing.supportClasses.FeatureLayerCollectionHandler;
+            import widgets.Geoprocessing.supportClasses.InputParamDataGroup;
+            import widgets.Geoprocessing.supportClasses.VisibleGraphicsLayersWatcher;
+
+            [Bindable]
+            private var visibleValidGraphicsLayers:ArrayList;
+            [Bindable]
+            private var hasFeatures:Boolean;
+            [Bindable]
+            private var singleGraphicsLayerSelectionName:String;
+
+            private var visibleGraphicsLayers:ArrayList;
+
+            private var selectedDrawingIcon:Image;
+
+            private var selectedGraphicsLayer:GraphicsLayer;
+
+            private var validLayerNames:Dictionary;
+
+            private var inputParamDataGroup:InputParamDataGroup
+
+            private var featureParam:IGPFeatureParameter;
+
+            private var visibleGraphicsLayersWatcher:VisibleGraphicsLayersWatcher;
+
+            override public function setCurrentState(stateName:String, playTransition:Boolean = true):void
+            {
+                //ignore these states to prevent item renderer changing custom states
+                var isIgnorableState:Boolean = (!stateName || stateName == "normal" || stateName == "hovered" || stateName == "selected");
+                if (!isIgnorableState)
+                {
+                    super.setCurrentState(stateName, playTransition);
+                }
+            }
+
+            override public function set data(value:Object):void
+            {
+                if (value)
+                {
+                    featureParam = value as IGPFeatureParameter;
+                    inputParamDataGroup = owner as InputParamDataGroup;
+
+                    switch (featureParam.mode)
+                    {
+                        case FeatureLayerParameter.MAP_EXTENT_SOURCE:
+                        {
+                            currentState = "fromMapExtent";
+                            break;
+                        }
+                        case FeatureLayerParameter.LAYERS_SOURCE:
+                        {
+                            initializeAndSetLayerSelectionMode();
+                            break;
+                        }
+                        case FeatureLayerParameter.DRAW_SOURCE:
+                        default:
+                        {
+                            initializeAndSetDrawSelectionMode();
+                        }
+                    }
+                }
+
+                super.data = value;
+            }
+
+            private function initializeAndSetLayerSelectionMode():void
+            {
+                var hasSingleInputLayer:Boolean = false;
+                if (featureParam.layerNames)
+                {
+                    setValidLayerNames(featureParam.layerNames);
+                    if (featureParam.layerNames.length == 1)
+                    {
+                        hasSingleInputLayer = true;
+                        singleGraphicsLayerSelectionName = featureParam.layerNames[0];
+                    }
+                }
+
+                visibleValidGraphicsLayers = new ArrayList();
+
+                visibleGraphicsLayers = inputParamDataGroup.visibleGraphicsLayers;
+                visibleGraphicsLayers.addEventListener(CollectionEvent.COLLECTION_CHANGE, visibleGraphicsLayersWatcher_layersUpdatedHandler);
+
+                if (hasSingleInputLayer)
+                {
+                    setSingleLayerSelectionMode();
+                }
+                else
+                {
+                    setLayerSelectionMode();
+                }
+            }
+
+            private function setValidLayerNames(layerList:Array):void
+            {
+                validLayerNames = new Dictionary();
+                for each (var layerName:String in layerList)
+                {
+                    validLayerNames[layerName] = true;
+                }
+            }
+
+            protected function visibleGraphicsLayersWatcher_layersUpdatedHandler(event:CollectionEvent):void
+            {
+                refreshVisibleGraphicsLayersSelection();
+            }
+
+            private function refreshVisibleGraphicsLayersSelection():void
+            {
+                visibleValidGraphicsLayers.source = getValidVisibleLayers();
+                restorePreviousSelectedGraphicsLayerIfFound();
+                updateSelectedGraphicsLayer();
+            }
+
+            private function getValidVisibleLayers():Array
+            {
+                var validVisibleLayers:Array = [];
+                var visibleGraphicsLayers:Array = visibleGraphicsLayers.source;
+
+                for each (var graphicsLayer:GraphicsLayer in visibleGraphicsLayers)
+                {
+                    if (isValidLayer(graphicsLayer))
+                    {
+                        validVisibleLayers.push(graphicsLayer);
+                    }
+                }
+
+                return validVisibleLayers;
+            }
+
+            private function isValidLayer(graphicsLayer:GraphicsLayer):Boolean
+            {
+                return validLayerNames ? validLayerNames[graphicsLayer.name] : true;
+            }
+
+            private function restorePreviousSelectedGraphicsLayerIfFound():void
+            {
+                if (visibleGraphicsLayersSelection)
+                {
+                    var selectedLayerIndex:int = visibleValidGraphicsLayers.getItemIndex(selectedGraphicsLayer);
+                    if (selectedLayerIndex > -1)
+                    {
+                        visibleGraphicsLayersSelection.selectedItem = selectedGraphicsLayer;
+                    }
+                }
+            }
+
+            private function updateSelectedGraphicsLayer():void
+            {
+                removeSelectedGraphicsLayerListeners();
+                selectedGraphicsLayer = getSelectedGraphicsLayer();
+                addSelectedGraphicsLayerListeners();
+                updateFeatureParamValueWithSelectedLayer();
+            }
+
+            private function removeSelectedGraphicsLayerListeners():void
+            {
+                if (selectedGraphicsLayer)
+                {
+                    selectedGraphicsLayer.removeEventListener(GraphicsLayerEvent.GRAPHICS_CLEAR, graphicsClearHandler);
+                    selectedGraphicsLayer.removeEventListener(GraphicEvent.GRAPHIC_ADD, graphicAddHandler);
+                    selectedGraphicsLayer.removeEventListener(GraphicEvent.GRAPHIC_REMOVE, graphicRemoveHandler);
+                }
+            }
+
+            private function graphicsClearHandler(event:GraphicsLayerEvent):void
+            {
+                updateFeatureParamValueWithSelectedLayer();
+            }
+
+            private function graphicAddHandler(event:GraphicEvent):void
+            {
+                updateFeatureParamValueWithSelectedLayer();
+            }
+
+            private function graphicRemoveHandler(event:GraphicEvent):void
+            {
+                updateFeatureParamValueWithSelectedLayer();
+            }
+
+            private function getSelectedGraphicsLayer():GraphicsLayer
+            {
+                var currentSelectedGraphicsLayer:GraphicsLayer;
+                if ((currentState == "selectLayers") && visibleGraphicsLayersSelection)
+                {
+                    currentSelectedGraphicsLayer = visibleGraphicsLayersSelection.selectedItem as GraphicsLayer;
+                }
+                else if (currentState == "selectSingleLayer")
+                {
+                    if (visibleValidGraphicsLayers.length > 0)
+                    {
+                        currentSelectedGraphicsLayer = visibleValidGraphicsLayers.getItemAt(0) as GraphicsLayer;
+                    }
+                }
+
+                return currentSelectedGraphicsLayer;
+            }
+
+            private function addSelectedGraphicsLayerListeners():void
+            {
+                if (selectedGraphicsLayer)
+                {
+                    selectedGraphicsLayer.addEventListener(GraphicsLayerEvent.GRAPHICS_CLEAR, graphicsClearHandler, false, 0, true);
+                    selectedGraphicsLayer.addEventListener(GraphicEvent.GRAPHIC_ADD, graphicAddHandler, false, 0, true);
+                    selectedGraphicsLayer.addEventListener(GraphicEvent.GRAPHIC_REMOVE, graphicRemoveHandler, false, 0, true);
+                }
+            }
+
+            private function updateFeatureParamValueWithSelectedLayer():void
+            {
+                if (featureParam)
+                {
+                    if (selectedGraphicsLayer)
+                    {
+                        var selectedLayerGraphicProvider:ArrayCollection = selectedGraphicsLayer.graphicProvider as ArrayCollection;
+                        var graphicProvider:ArrayCollection = ObjectUtil.copy(selectedLayerGraphicProvider) as ArrayCollection;
+                        FeatureLayerCollectionHandler.updateFeatures(graphicProvider.source, featureParam.layer);
+                    }
+                    else
+                    {
+                        FeatureLayerCollectionHandler.clear(featureParam.layer);
+                    }
+                }
+            }
+
+            private function setSingleLayerSelectionMode():void
+            {
+                currentState = "selectSingleLayer";
+                refreshVisibleGraphicsLayersSelection();
+            }
+
+            private function setLayerSelectionMode():void
+            {
+                currentState = "selectLayers";
+                refreshVisibleGraphicsLayersSelection();
+            }
+
+            private function initializeAndSetDrawSelectionMode():void
+            {
+                featureParam.layer.addEventListener(GraphicEvent.GRAPHIC_ADD, outputLayer_graphicsRemoveHandler, false, 0, true);
+                featureParam.layer.addEventListener(GraphicEvent.GRAPHIC_REMOVE, outputLayer_graphicsRemoveHandler, false, 0, true);
+                featureParam.layer.addEventListener(GraphicsLayerEvent.GRAPHICS_CLEAR, outputLayer_graphicsClearHandler, false, 0, true);
+                updateFeatureCount();
+                inputParamDataGroup.addEventListener(DrawEvent.DRAW_END, map_drawEndHandler, false, 0, true);
+                setDrawSelectionMode();
+            }
+
+            private function updateFeatureCount():void
+            {
+                hasFeatures = featureParam.layer.featureCollection.featureSet.features.length > 0;
+            }
+
+            protected function outputLayer_graphicsClearHandler(event:GraphicsLayerEvent):void
+            {
+                updateFeatureCount();
+            }
+
+            protected function outputLayer_graphicsRemoveHandler(event:GraphicEvent):void
+            {
+                updateFeatureCount();
+            }
+
+            private function map_drawEndHandler(event:DrawEvent):void
+            {
+                selectedDrawingIcon = null;
+                clearSelectionFilter();
+            }
+
+            private function clearSelectionFilter():void
+            {
+                var totalChildren:int = drawImageGroup.numChildren;
+                var currentDisplayObject:DisplayObject;
+
+                for (var i:int = 0; i < totalChildren; i++)
+                {
+                    currentDisplayObject = drawImageGroup.getChildAt(i);
+                    if (currentDisplayObject != selectedDrawingIcon)
+                    {
+                        currentDisplayObject.filters = [];
+                    }
+                }
+            }
+
+            private function setDrawSelectionMode():void
+            {
+                if (featureParam.geometryType == FeatureLayerParameter.POINT)
+                {
+                    currentState = "drawPoint";
+                }
+                else if (featureParam.geometryType == FeatureLayerParameter.POLYGON)
+                {
+                    currentState = "drawPolygon";
+                }
+                else if (featureParam.geometryType == FeatureLayerParameter.POLYLINE)
+                {
+                    currentState = "drawPolyline";
+                }
+                else
+                {
+                    currentState = "drawAll";
+                }
+            }
+
+            private function drawIcon_rollOverHandler(event:MouseEvent):void
+            {
+                clearSelectionFilter();
+                event.target.filters = [ glowFilter ];
+            }
+
+            private function drawIcon_rollOutHandler(event:MouseEvent):void
+            {
+                clearSelectionFilter();
+            }
+
+            private function drawIcon_clickHandler(event:MouseEvent):void
+            {
+                selectedDrawingIcon = event.currentTarget as Image;
+                clearSelectionFilter();
+                selectedDrawingIcon.filters = [ glowFilter ];
+                dispatchFeatureInputDrawEvent(selectedDrawingIcon.name);
+            }
+
+            private function dispatchFeatureInputDrawEvent(drawType:String):void
+            {
+                var featureInputParamEvent:FeatureInputParamEvent = new FeatureInputParamEvent(FeatureInputParamEvent.DRAW, data as IGPFeatureParameter, drawType);
+                inputParamDataGroup.dispatchFeatureInputParamEvent(featureInputParamEvent);
+            }
+        ]]>
+    </fx:Script>
+
+    <fx:Declarations>
+        <mx:GlowFilter id="glowFilter"
+                       alpha="1"
+                       color="{getStyle('focusColor')}"
+                       inner="true"
+                       strength="2"/>
+    </fx:Declarations>
+
+    <s:states>
+        <s:State name="selectSingleLayer"/>
+        <s:State name="selectLayers"/>
+        <s:State name="drawPoint"/>
+        <s:State name="drawPolyline"/>
+        <s:State name="drawPolygon"/>
+        <s:State name="drawAll"/>
+        <s:State name="fromMapExtent"/>
+    </s:states>
+
+    <mx:FormItem width="100%"
+                 label="{data.label}"
+                 required="{data.required}">
+        <s:Label includeIn="fromMapExtent" text="{LocalizationUtil.getDefaultString('currentExtentWillBeUsedAsInput')}"/>
+
+        <s:Label includeIn="selectSingleLayer" text="{singleGraphicsLayerSelectionName}"/>
+
+        <s:DropDownList id="visibleGraphicsLayersSelection"
+                        width="100%"
+                        change="updateSelectedGraphicsLayer()"
+                        creationComplete="updateSelectedGraphicsLayer()"
+                        dataProvider="{visibleValidGraphicsLayers}"
+                        includeIn="selectLayers"
+                        labelField="name"
+                        requireSelection="true"/>
+
+        <s:HGroup id="drawImageGroup"
+                  width="100%"
+                  gap="0">
+            <mx:Image name="{DrawTool.MAPPOINT}"
+                      width="40" height="40"
+                      buttonMode="true"
+                      click="drawIcon_clickHandler(event)"
+                      includeIn="drawPoint,drawAll"
+                      rollOut="drawIcon_rollOutHandler(event)"
+                      rollOver="drawIcon_rollOverHandler(event)"
+                      source="assets/images/i_draw_point.png"
+                      toolTip="{LocalizationUtil.getDefaultString('drawPointLabel')}"
+                      useHandCursor="true"/>
+
+            <mx:Image name="{DrawTool.POLYLINE}"
+                      width="40" height="40"
+                      buttonMode="true"
+                      click="drawIcon_clickHandler(event)"
+                      includeIn="drawPolyline,drawAll"
+                      rollOut="drawIcon_rollOutHandler(event)"
+                      rollOver="drawIcon_rollOverHandler(event)"
+                      source="assets/images/i_draw_line.png"
+                      toolTip="{LocalizationUtil.getDefaultString('drawLineLabel')}"
+                      useHandCursor="true"/>
+
+            <mx:Image name="{DrawTool.FREEHAND_POLYLINE}"
+                      width="40" height="40"
+                      buttonMode="true"
+                      click="drawIcon_clickHandler(event)"
+                      includeIn="drawPolyline,drawAll"
+                      rollOut="drawIcon_rollOutHandler(event)"
+                      rollOver="drawIcon_rollOverHandler(event)"
+                      source="assets/images/i_draw_freeline.png"
+                      toolTip="{LocalizationUtil.getDefaultString('drawFreehandLineLabel')}"
+                      useHandCursor="true"/>
+
+            <mx:Image name="{DrawTool.EXTENT}"
+                      width="40" height="40"
+                      buttonMode="true"
+                      click="drawIcon_clickHandler(event)"
+                      includeIn="drawPolygon,drawAll"
+                      rollOut="drawIcon_rollOutHandler(event)"
+                      rollOver="drawIcon_rollOverHandler(event)"
+                      source="assets/images/i_draw_rect.png"
+                      toolTip="{LocalizationUtil.getDefaultString('drawRectangleLabel')}"
+                      useHandCursor="true"/>
+
+            <mx:Image name="{DrawTool.CIRCLE}"
+                      width="40" height="40"
+                      buttonMode="true"
+                      click="drawIcon_clickHandler(event)"
+                      includeIn="drawPolygon,drawAll"
+                      rollOut="drawIcon_rollOutHandler(event)"
+                      rollOver="drawIcon_rollOverHandler(event)"
+                      source="assets/images/i_draw_circle.png"
+                      toolTip="{LocalizationUtil.getDefaultString('drawCircleLabel')}"
+                      useHandCursor="true"/>
+
+            <mx:Image name="{DrawTool.ELLIPSE}"
+                      width="40" height="40"
+                      buttonMode="true"
+                      click="drawIcon_clickHandler(event)"
+                      includeIn="drawPolygon,drawAll"
+                      rollOut="drawIcon_rollOutHandler(event)"
+                      rollOver="drawIcon_rollOverHandler(event)"
+                      source="assets/images/i_draw_ellipse.png"
+                      toolTip="{LocalizationUtil.getDefaultString('drawEllipseLabel')}"
+                      useHandCursor="true"/>
+
+            <mx:Image name="{DrawTool.POLYGON}"
+                      width="40" height="40"
+                      buttonMode="true"
+                      click="drawIcon_clickHandler(event)"
+                      includeIn="drawPolygon,drawAll"
+                      rollOut="drawIcon_rollOutHandler(event)"
+                      rollOver="drawIcon_rollOverHandler(event)"
+                      source="assets/images/i_draw_poly.png"
+                      toolTip="{LocalizationUtil.getDefaultString('drawPolygonLabel')}"
+                      useHandCursor="true"/>
+
+            <mx:Image name="{DrawTool.FREEHAND_POLYGON}"
+                      width="40" height="40"
+                      buttonMode="true"
+                      click="drawIcon_clickHandler(event)"
+                      includeIn="drawPolygon,drawAll"
+                      rollOut="drawIcon_rollOutHandler(event)"
+                      rollOver="drawIcon_rollOverHandler(event)"
+                      source="assets/images/i_draw_freepoly.png"
+                      toolTip="{LocalizationUtil.getDefaultString('drawFreehandPolygonLabel')}"
+                      useHandCursor="true"/>
+        </s:HGroup>
+
+        <s:Label buttonMode="true"
+                 click="inputParamDataGroup.dispatchFeatureInputParamEvent(new FeatureInputParamEvent(FeatureInputParamEvent.CLEAR, data as IGPFeatureParameter))"
+                 excludeFrom="selectLayers, selectSingleLayer, fromMapExtent"
+                 fontWeight="bold"
+                 text="{LocalizationUtil.getDefaultString('clearLabel')}"
+                 textDecoration="underline"
+                 toolTip="{LocalizationUtil.getDefaultString('drawClearLabel')}"
+                 visible="{hasFeatures}"/>
+    </mx:FormItem>
+</s:ItemRenderer>

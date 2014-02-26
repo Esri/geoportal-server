@@ -31,6 +31,7 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.store.AlreadyClosedException;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.NoLockFactory;
 
@@ -51,6 +52,8 @@ private FSDirectory directory;
 private IndexWriter writer;
 /** reader */
 private IndexReader reader;
+/** folder */
+private File folder;
 
 /**
  * Creates instance of the collection.
@@ -63,7 +66,7 @@ public SourceUriArray(String [] names) throws IOException {
   // construct full path to the Lucene directory
   String path = System.getProperty("java.io.tmpdir") + File.separator + SUBFOLDER + File.separator + name;
   // create folder
-  File folder = new File(path);
+  folder = new File(path);
   folder.mkdirs();
   folder.deleteOnExit();
   // create Lucene directory within the folder; it has to be no locking directory
@@ -76,8 +79,6 @@ public SourceUriArray(String [] names) throws IOException {
  * @throws IOException if clossing collection fails
  */
 public void close() throws IOException {
-  File folder = null;
-
   if (reader != null) {
     reader.close();
     reader = null;
@@ -89,10 +90,9 @@ public void close() throws IOException {
   }
 
   if (directory != null) {
-    folder = directory.getFile();
     try {
       directory.close();
-    } catch (Exception ex) {}
+    } catch (AlreadyClosedException ex) {}
   }
 
   if (folder != null) {
@@ -100,6 +100,7 @@ public void close() throws IOException {
       f.delete();
     }
     folder.delete();
+    folder = null;
   }
 }
 

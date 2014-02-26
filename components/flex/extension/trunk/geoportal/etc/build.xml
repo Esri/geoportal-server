@@ -51,7 +51,7 @@
     <!--<unzip src="../../support/viewer/flexviewer-3.3-src4bld.zip" dest="../../"/>-->
     <!-- Copy flex viewer -->
     <copy todir="../../">
-      <fileset dir="../../support/viewer/3.3" includes="**" />
+      <fileset dir="../../support/viewer/3.5" includes="**" />
     </copy>
 	</target>
   

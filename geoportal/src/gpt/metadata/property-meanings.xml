@@ -355,7 +355,7 @@
   <property-meaning name="fgdc.multidate" valueType="Timestamp" comparisonType="value">
   </property-meaning>
   
-  <property-meaning name="dcat.accessLevel" valueType="String" comparisonType="value">
+  <property-meaning name="dcat.accessLevelComment" valueType="String" comparisonType="value">
   </property-meaning>
   <property-meaning name="dcat.mbox" valueType="String" comparisonType="value">
   </property-meaning>

@@ -38,6 +38,7 @@ public class Gptdb2SolrInstance {
 	
 	private String gptInstanceId;
 	private String gptInstanceUrl;
+    private boolean gptIncludeCollections;
 	private String solrCollectionUrl;
 	
 	private String sqlDriver;
@@ -71,6 +72,14 @@ public class Gptdb2SolrInstance {
 	public Connection makeSqlConnection() {
 		return SqlConnectionBroker.makeConnection(sqlDriver,sqlUrl,sqlUsername,sqlPassword);
 	}
+
+    public boolean isGptIncludeCollections() {
+      return gptIncludeCollections;
+    }
+
+    public void setGptIncludeCollections(boolean gptIncludeCollections) {
+      this.gptIncludeCollections = gptIncludeCollections;
+    }
 	
 	private void putSqlConInfo(String driver, String url, String username, String password) {
 		this.sqlDriver = driver;
@@ -89,6 +98,8 @@ public class Gptdb2SolrInstance {
   			xpath.evaluate("@value",ndI)));
   	instance.setGptInstanceUrl(ValueUtil.trim(
     		xpath.evaluate("property[@name='gpt.instance.url']/@value",ndI)));
+  	instance.setGptIncludeCollections("true".equalsIgnoreCase(ValueUtil.trim(
+    		xpath.evaluate("property[@name='gpt.include.collections']/@value",ndI))));
   	instance.setSolrCollectionUrl(ValueUtil.trim(
     		xpath.evaluate("property[@name='solr.collection.url']/@value",ndI)));
   	

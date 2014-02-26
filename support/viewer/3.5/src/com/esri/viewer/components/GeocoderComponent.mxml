@@ -1,0 +1,801 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+         xmlns:s="library://ns.adobe.com/flex/spark"
+         xmlns:esri="http://www.esri.com/2008/ags">
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.Graphic;
+            import com.esri.ags.Map;
+            import com.esri.ags.SpatialReference;
+            import com.esri.ags.components.supportClasses.GeocoderLocatorOptions;
+            import com.esri.ags.components.supportClasses.GeocoderMapService;
+            import com.esri.ags.components.supportClasses.GeocoderSearchResult;
+            import com.esri.ags.events.GeocoderEvent;
+            import com.esri.ags.geometry.Extent;
+            import com.esri.ags.geometry.Geometry;
+            import com.esri.ags.geometry.MapPoint;
+            import com.esri.ags.geometry.Multipoint;
+            import com.esri.ags.geometry.Polygon;
+            import com.esri.ags.geometry.Polyline;
+            import com.esri.ags.portal.PopUpRenderer;
+            import com.esri.ags.portal.supportClasses.PopUpInfo;
+            import com.esri.ags.symbols.SimpleFillSymbol;
+            import com.esri.ags.symbols.SimpleLineSymbol;
+            import com.esri.ags.symbols.SimpleMarkerSymbol;
+            import com.esri.ags.symbols.Symbol;
+            import com.esri.ags.tasks.GeometryServiceSingleton;
+            import com.esri.ags.tasks.JSONTask;
+            import com.esri.ags.tasks.supportClasses.AddressCandidate;
+            import com.esri.ags.tasks.supportClasses.FindResult;
+            import com.esri.ags.tasks.supportClasses.ProjectParameters;
+            import com.esri.ags.utils.WebMercatorUtil;
+            import com.esri.viewer.BaseWidget;
+            import com.esri.viewer.ConfigData;
+            import com.esri.viewer.ViewerContainer;
+            import com.esri.viewer.components.toc.utils.MapUtil;
+            import com.esri.viewer.utils.ErrorMessageUtil;
+
+            import mx.rpc.AsyncResponder;
+            import mx.rpc.Fault;
+            import mx.rpc.events.FaultEvent;
+
+            private const SINGLE_LINE_SEARCH:String = "SingleLineSearch";
+
+            private var zoomScale:Number = 10000;
+            private var resultSimpleMarkerSymbol:SimpleMarkerSymbol;
+            private var resultSimpleLineSymbol:SimpleLineSymbol;
+            private var resultSimpleFillSymbol:SimpleFillSymbol;
+            private var configXML:XML;
+            private var configData:ConfigData;
+            private var popUpRenderer:PopUpRenderer = new PopUpRenderer();
+            private var searchResultGraphic:Graphic;
+
+            [Bindable]
+            private var map:Map;
+
+            private var searchResultTitle:String;
+
+            private var searchResultDescription:String;
+
+            private var _mapServicesConfigured:Boolean;
+
+            public function get mapServicesConfigured():Boolean
+            {
+                return _mapServicesConfigured;
+            }
+
+            public function set mapServicesConfigured(value:Boolean):void
+            {
+                _mapServicesConfigured = value;
+                invalidateProperties();
+            }
+
+            private var _locatorServiceConfigured:Boolean;
+
+            public function get locatorServiceConfigured():Boolean
+            {
+                return _locatorServiceConfigured;
+            }
+
+            public function set locatorServiceConfigured(value:Boolean):void
+            {
+                _locatorServiceConfigured = value;
+                invalidateProperties();
+            }
+
+            private var _hostBaseWidget:BaseWidget;
+
+            public function get hostBaseWidget():BaseWidget
+            {
+                return _hostBaseWidget;
+            }
+
+            public function set hostBaseWidget(value:BaseWidget):void
+            {
+                _hostBaseWidget = value;
+                if (_hostBaseWidget)
+                {
+                    configXML = ensureLatestConfig(_hostBaseWidget.configXML.search[0]
+                                                   || _hostBaseWidget.configXML.geocoder[0]);
+                    configData = _hostBaseWidget.configData;
+                    map = _hostBaseWidget.map;
+                    init();
+                }
+            }
+
+            private function ensureLatestConfig(configXML:XML):XML
+            {
+                if (configXML && configXML.name() == "search")
+                {
+                    configXML.setName("geocoder");
+
+                    var geocodingXML:XML = configXML.geocoding[0];
+                    if (geocodingXML)
+                    {
+                        var geocoderEnabled:Boolean = geocodingXML.@enabled != "false";
+                        if (geocoderEnabled)
+                        {
+                            var locatorURL:String = geocodingXML.locator[0];
+                            if (locatorURL)
+                            {
+                                configXML.appendChild(<url>{locatorURL}</url>);
+                            }
+                        }
+                        else
+                        {
+                            configXML.appendChild(<usemapservicesonly>true</usemapservicesonly>);
+                        }
+
+                        var minScore:Number = parseFloat(geocodingXML.minscore[0]);
+                        if (!isNaN(minScore))
+                        {
+                            configXML.appendChild(<minscore>{minScore}</minscore>);
+                        }
+
+                        delete configXML.geocoding[0];
+                    }
+
+                    var searchLayersXML:XML = configXML.searchlayers[0];
+                    if (searchLayersXML)
+                    {
+                        var searchLayersEnabled:Boolean = searchLayersXML.@enabled != "false";
+
+                        if (searchLayersEnabled)
+                        {
+                            searchLayersXML.setName("mapservices");
+
+                            for each (var searchLayerXML:XML in searchLayersXML.searchlayer)
+                            {
+                                searchLayerXML.setName("mapservice");
+                            }
+
+                            delete searchLayersXML.@enabled;
+                        }
+                        else
+                        {
+                            delete configXML.searchlayers;
+                        }
+                    }
+                }
+
+                return configXML;
+            }
+
+            private function init():void
+            {
+                if (configXML)
+                {
+                    const configZoomScale:Number = parseFloat(configXML.zoomscale[0]);
+                    if (configZoomScale > 0)
+                    {
+                        zoomScale = configZoomScale;
+                    }
+
+                    const configMinScore:Number = parseFloat(configXML.minscore[0]);
+                    geocoder.minScore = (configMinScore > 0) ? configMinScore : 40;
+
+                    geocoder.autoComplete = configXML.autocomplete != "false";
+
+                    const configMaxLocations:int = parseInt(configXML.maxlocations[0]);
+                    if (!isNaN(configMaxLocations) && configMaxLocations > 0)
+                    {
+                        geocoder.maxLocations = configMaxLocations;
+                    }
+
+                    const configMinChars:int = parseInt(configXML.minchars[0]);
+                    if (configMinChars && configMinChars > 0)
+                    {
+                        geocoder.minCharacters = configMinChars;
+                    }
+
+                    const configSearchDelay:int = parseInt(configXML.searchdelay[0]);
+                    if (configSearchDelay && configSearchDelay > 0)
+                    {
+                        geocoder.searchDelay = configSearchDelay;
+                    }
+
+                    geocoder.prompt = configXML.labels.searchprompt[0] || hostBaseWidget.getDefaultString("searchPrompt");
+                    searchResultTitle = configXML.result.title[0] || configXML.labels.searchresulttitle[0] || hostBaseWidget.getDefaultString("searchResultTitleLabel");
+                    searchResultDescription = configXML.result.description[0];
+
+                    configureResultSymbols();
+                    configureResultGraphic();
+
+                    configureLocator();
+                    configureMapServices();
+                }
+            }
+
+            private function configureLocator():void
+            {
+                var locatorDisabled:Boolean = (configXML.usemapservicesonly[0] == "true");
+                if (locatorDisabled)
+                {
+                    geocoder.url = null;
+                    locatorServiceConfigured = true;
+                    return;
+                }
+
+                var locatorURL:String = configXML.url.toString();
+                if (locatorURL)
+                {
+                    geocoder.url = locatorURL;
+                }
+
+                var useProxy:Boolean = configXML.useproxy[0] == "true";
+                if (useProxy && configData.proxyUrl)
+                {
+                    geocoder.proxyURL = configData.proxyUrl;
+                }
+
+                geocoder.locatorOptions = parseLocatorOptions(configXML.locatoroptions[0]);
+
+                var hasUserDefinedLocatorWithMissingSingleLineAddressField:Boolean =
+                    locatorURL && !geocoder.locatorOptions.singleLineAddressFieldName;
+
+                if (hasUserDefinedLocatorWithMissingSingleLineAddressField)
+                {
+                    const locatorInfoRequest:JSONTask = new JSONTask();
+                    locatorInfoRequest.url = locatorURL;
+                    if (useProxy && configData.proxyUrl)
+                    {
+                        locatorInfoRequest.proxyURL = configData.proxyUrl;
+                    }
+
+                    var urlVars:URLVariables = new URLVariables();
+                    urlVars.f = "json";
+
+                    locatorInfoRequest.execute(urlVars,
+                                               new AsyncResponder(locatorInfoRequest_resultHandler,
+                                                                  locatorInfoRequest_faultHandler));
+
+                    function locatorInfoRequest_resultHandler(locatorInfo:Object, token:Object = null):void
+                    {
+                        if (locatorInfo.singleLineAddressField)
+                        {
+                            geocoder.locatorOptions.singleLineAddressFieldName = locatorInfo.singleLineAddressField.name;
+                        }
+                        else
+                        {
+                            showError(hostBaseWidget.getDefaultString("singleLineGeocodingNotSupportedError"), SINGLE_LINE_SEARCH);
+                        }
+
+                        locatorServiceConfigured = true;
+                    }
+
+                    function locatorInfoRequest_faultHandler(fault:Fault, token:Object = null):void
+                    {
+                        const errorMessage:String = hostBaseWidget.getDefaultString("locatorServiceConnectionError",
+                                                                                    locatorInfoRequest.url,
+                                                                                    ErrorMessageUtil.getKnownErrorCauseMessage(fault),
+                                                                                    ErrorMessageUtil.makeHTMLSafe(fault.toString()));
+                        showError(errorMessage, SINGLE_LINE_SEARCH);
+                        locatorServiceConfigured = true;
+                    }
+                }
+                else
+                {
+                    locatorServiceConfigured = true;
+                }
+            }
+
+            private function parseLocatorOptions(locatorOptionsXML:XML):GeocoderLocatorOptions
+            {
+                var locatorOptions:GeocoderLocatorOptions = new GeocoderLocatorOptions();
+
+                if (locatorOptionsXML)
+                {
+                    locatorOptions.name = locatorOptionsXML.name.toString();
+                    locatorOptions.sourceCountry = locatorOptionsXML.sourcecountry.toString();
+                    locatorOptions.prefix = locatorOptionsXML.prefix.toString();
+                    locatorOptions.suffix = locatorOptionsXML.suffix.toString();
+
+                    var configOutFields:String = locatorOptionsXML.outfields.toString();
+                    if (configOutFields)
+                    {
+                        locatorOptions.outFields = configOutFields.split(',');
+                    }
+
+                    var singleLineAddressField:String = locatorOptionsXML.singlelineaddressfield.toString();
+                    if (singleLineAddressField)
+                    {
+                        locatorOptions.singleLineAddressFieldName = singleLineAddressField;
+                    }
+
+                    var searchExtent:Extent = MapUtil.createExtent(locatorOptionsXML.searchextent.toString().split(" "));
+                    if (searchExtent)
+                    {
+                        var wkid:Number = parseFloat(locatorOptionsXML.searchextent.@wkid[0]);
+                        var wkt:String = locatorOptionsXML.searchextent.@wkt[0];
+                        if (!isNaN(wkid) || wkt)
+                        {
+                            searchExtent.spatialReference = new SpatialReference(wkid, wkt);
+                        }
+
+                        locatorOptions.searchExtent = searchExtent;
+                    }
+                }
+
+                return locatorOptions;
+            }
+
+            private function configureMapServices():void
+            {
+                if (configXML.mapservices.length() > 0
+                    && configXML.mapservices.@enabled != "false")
+                {
+                    var mapService:GeocoderMapService;
+                    var mapServices:Array = [];
+                    var useMapServiceProxy:Boolean;
+
+                    for each (var mapServiceXML:XML in configXML.mapservices.mapservice)
+                    {
+                        mapService = new GeocoderMapService();
+                        mapService.layerIds = mapServiceXML.layerids.toString().split(",");
+                        mapService.url = mapServiceXML.url.toString();
+                        mapService.searchFields = mapServiceXML.searchfields.toString().split(",");
+                        mapService.name = mapServiceXML.name.toString();
+                        useMapServiceProxy = mapServiceXML.useproxy[0] == "true";
+
+                        if (useMapServiceProxy && configData.proxyUrl)
+                        {
+                            mapService.proxyURL = configData.proxyUrl;
+                        }
+
+                        mapServices.push(mapService);
+                    }
+
+                    geocoder.mapServices = mapServices;
+                }
+
+                mapServicesConfigured = true;
+            }
+
+            private function configureResultSymbols():void
+            {
+                if (configXML.symbols[0])
+                {
+                    const smsColor:uint = (configXML.symbols.simplemarkersymbol.@color[0] != null) ? configXML.symbols.simplemarkersymbol.@color : 0xFF0000;
+                    const smsAlpha:Number = (configXML.symbols.simplemarkersymbol.@alpha[0] != null) ? configXML.symbols.simplemarkersymbol.@alpha : 0.8;
+                    const smsSize:Number = (configXML.symbols.simplemarkersymbol.@size[0] != null) ? configXML.symbols.simplemarkersymbol.@size : 15;
+                    const smsOutlineColor:uint = (configXML.symbols.simplefillsymbol.outline.@color[0] != null) ? configXML.symbols.simplefillsymbol.outline.@color : 0xFF0000;
+                    const smsOutlineAlpha:Number = (configXML.symbols.simplefillsymbol.outline.@alpha[0] != null) ? configXML.symbols.simplefillsymbol.outline.@alpha : 0.8;
+                    const smsOutlineWidth:Number = (configXML.symbols.simplefillsymbol.outline.@width[0] != null) ? configXML.symbols.simplefillsymbol.outline.@width : 2;
+
+                    resultSimpleMarkerSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, smsSize, smsColor, smsAlpha, 0, 0, 0,
+                                                                      new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+                                                                                           smsOutlineColor,
+                                                                                           smsOutlineAlpha,
+                                                                                           smsOutlineWidth));
+
+                    const slsColor:uint = (configXML.symbols.simplelinesymbol.@color[0] != null) ? configXML.symbols.simplelinesymbol.@color : 0xFF0000;
+                    const slsAlpha:Number = (configXML.symbols.simplelinesymbol.@alpha[0] != null) ? configXML.symbols.simplelinesymbol.@alpha : 0.8;
+                    const slsWidth:Number = (configXML.symbols.simplelinesymbol.@width[0] != null) ? configXML.symbols.simplelinesymbol.@width : 2;
+
+                    resultSimpleLineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, slsColor, slsAlpha, slsWidth);
+
+                    const sfsColor:uint = (configXML.symbols.simplefillsymbol.@color[0] != null) ? configXML.symbols.simplefillsymbol.@color : 0xFF0000;
+                    const sfsAlpha:Number = (configXML.symbols.simplefillsymbol.@alpha[0] != null) ? configXML.symbols.simplefillsymbol.@alpha : 0.5;
+                    const sfsOutlineColor:uint = (configXML.symbols.simplefillsymbol.outline.@color[0] != null) ? configXML.symbols.simplefillsymbol.outline.@color : 0xFF0000;
+                    const sfsOutlineAlpha:Number = (configXML.symbols.simplefillsymbol.outline.@alpha[0] != null) ? configXML.symbols.simplefillsymbol.outline.@alpha : 0.8;
+                    const sfsOutlineWidth:Number = (configXML.symbols.simplefillsymbol.outline.@width[0] != null) ? configXML.symbols.simplefillsymbol.outline.@width : 2;
+
+                    resultSimpleFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, sfsColor, sfsAlpha,
+                                                                  new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+                                                                                       sfsOutlineColor,
+                                                                                       sfsOutlineAlpha,
+                                                                                       sfsOutlineWidth));
+                }
+            }
+
+            private function configureResultGraphic():void
+            {
+                searchResultGraphic = new Graphic();
+                const clearFeatureLabel:String = configXML.labels.clearfeaturelabel[0] || hostBaseWidget.getDefaultString("clearLabel");
+                const customContextMenu:ContextMenu = new ContextMenu();
+                customContextMenu.hideBuiltInItems();
+                const menuItem:ContextMenuItem = new ContextMenuItem(clearFeatureLabel);
+                menuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItem_contextMenuDeleteHandler);
+                customContextMenu.customItems.push(menuItem);
+                searchResultGraphic.contextMenu = customContextMenu;
+            }
+
+            private function menuItem_contextMenuDeleteHandler(event:ContextMenuEvent):void
+            {
+                if (map.infoWindow.contentOwner == searchResultGraphic)
+                {
+                    map.infoWindow.hide();
+                }
+                map.defaultGraphicsLayer.remove(searchResultGraphic);
+            }
+
+            override protected function commitProperties():void
+            {
+                super.commitProperties();
+
+                if (locatorServiceConfigured && mapServicesConfigured)
+                {
+                    configureSearchInput();
+                }
+            }
+
+            private function configureSearchInput():void
+            {
+                const urlSearchTerm:String = ViewerContainer.urlConfigParams.search;
+                if (urlSearchTerm)
+                {
+                    geocoder.text = urlSearchTerm;
+                    geocoder.search();
+                }
+            }
+
+            //assumes search result SR compatible with map's
+            private function showSearchResultOnMap(searchResult:GeocoderSearchResult):void
+            {
+                if (!searchResult)
+                {
+                    return;
+                }
+
+                searchResultGraphic.geometry = searchResult.geometry;
+                searchResultGraphic.symbol = getSymbolForGeometryType(searchResultGraphic.geometry.type);
+                searchResultGraphic.attributes = getAttributes(searchResult.data);
+                var resultExtent:Extent = searchResult.extent;
+
+                const popUpInfo:PopUpInfo = new PopUpInfo();
+                popUpInfo.description = searchResultDescription ? searchResultDescription : searchResult.label;
+                popUpInfo.title = searchResultTitle;
+                popUpInfo.showZoomToButton = false; //hide the zoom to button as map would be zoomed-in
+
+                const infoWindowRenderer:ClassFactory = new ClassFactory(PopUpRenderer);
+                infoWindowRenderer.properties = { popUpInfo: popUpInfo };
+                searchResultGraphic.infoWindowRenderer = infoWindowRenderer;
+
+                popUpRenderer.popUpInfo = popUpInfo;
+                popUpRenderer.graphic = searchResultGraphic;
+
+                map.defaultGraphicsLayer.remove(searchResultGraphic);
+                if (searchResultGraphic.symbol)
+                {
+                    map.defaultGraphicsLayer.add(searchResultGraphic);
+                }
+
+                const resultPoint:MapPoint = getGeometryCenter(searchResultGraphic.geometry);
+
+                if (resultExtent)
+                {
+                    map.zoomTo(resultExtent);
+                }
+                else
+                {
+                    if (searchResultGraphic.geometry.type == Geometry.MAPPOINT)
+                    {
+                        if (map.scale > zoomScale)
+                        {
+                            map.scale = zoomScale;
+                        }
+                    }
+
+                    map.zoomTo(searchResultGraphic.geometry);
+                }
+
+                infoWindowShow(resultPoint);
+            }
+
+            private function getAttributes(data:Object):Object
+            {
+                var findResult:FindResult = data as FindResult;
+                if (findResult && findResult.feature)
+                {
+                    return findResult.feature.attributes;
+                }
+
+                var addressCandidate:AddressCandidate = data as AddressCandidate;
+                if (addressCandidate)
+                {
+                    return addressCandidate.attributes;
+                }
+
+                return null;
+            }
+
+            private function getSymbolForGeometryType(geometryType:String):Symbol
+            {
+                var symbol:Symbol;
+
+                switch (geometryType)
+                {
+                    case Geometry.POLYLINE:
+                    {
+                        symbol = resultSimpleLineSymbol;
+                        break;
+                    }
+                    case Geometry.POLYGON:
+                    {
+                        symbol = resultSimpleFillSymbol;
+                        break;
+                    }
+                    case Geometry.MAPPOINT:
+                    default:
+                    {
+                        symbol = resultSimpleMarkerSymbol;
+                    }
+                }
+
+                return symbol;
+            }
+
+            private function getGeometryCenter(geometry:Geometry):MapPoint
+            {
+                var center:MapPoint;
+
+                if (geometry is MapPoint)
+                {
+                    center = geometry as MapPoint;
+                }
+                else if (geometry)
+                {
+                    center = geometry.extent.center;
+                }
+
+                return center;
+            }
+
+            private function infoWindowShow(point:MapPoint):void
+            {
+                map.infoWindow.content = popUpRenderer;
+                map.infoWindow.contentOwner = popUpRenderer.graphic;
+                map.infoWindow.show(point);
+            }
+
+            protected function geocoder_resultSelectedHandler(event:GeocoderEvent):void
+            {
+                projectToMapSpatialReferenceAndShowResultOnMap(event.result);
+            }
+
+            private function projectToMapSpatialReferenceAndShowResultOnMap(searchResult:GeocoderSearchResult):void
+            {
+                var needToProjectGeometryServerSide:Boolean;
+                if (map.spatialReference.isWebMercator()
+                    && searchResult.geometry.spatialReference
+                    && searchResult.geometry.spatialReference.wkid == 4326)
+                {
+                    searchResult.geometry = WebMercatorUtil.geographicToWebMercator(searchResult.geometry);
+                }
+                else if (map.spatialReference.wkid == 4326
+                    && searchResult.geometry.spatialReference
+                    && searchResult.geometry.spatialReference.isWebMercator())
+                {
+                    searchResult.geometry = WebMercatorUtil.webMercatorToGeographic(searchResult.geometry);
+                }
+                else if (!map.spatialReference.equals(searchResult.geometry.spatialReference))
+                {
+                    needToProjectGeometryServerSide = true;
+                }
+
+                var needToProjectExtentServerSide:Boolean;
+                if (searchResult.extent)
+                {
+                    if (map.spatialReference.isWebMercator()
+                        && searchResult.extent.spatialReference.wkid == 4326)
+                    {
+                        searchResult.extent = WebMercatorUtil.geographicToWebMercator(searchResult.extent) as Extent;
+                    }
+                    else if (map.spatialReference.wkid == 4326
+                        && searchResult.extent.spatialReference
+                        && searchResult.extent.spatialReference.isWebMercator())
+                    {
+                        //do nothing since we're assuming the search result extent's SR is in Geographic
+                    }
+                    else if (!map.spatialReference.equals(searchResult.extent.spatialReference))
+                    {
+                        needToProjectExtentServerSide = true;
+                    }
+                }
+
+                var previousShowBusyCursorValue:Boolean = GeometryServiceSingleton.instance.showBusyCursor;
+                if (needToProjectGeometryServerSide)
+                {
+                    projectGeometryServerSide();
+                }
+                else if (needToProjectExtentServerSide)
+                {
+                    projectExtentServerSide();
+                }
+                else
+                {
+                    handleProjectionComplete();
+                }
+
+                function projectGeometryServerSide():void
+                {
+                    var projectionParams:ProjectParameters = new ProjectParameters();
+                    projectionParams.geometries = [ searchResult.geometry ];
+                    projectionParams.outSpatialReference = map.spatialReference;
+                    GeometryServiceSingleton.instance.showBusyCursor = true;
+                    GeometryServiceSingleton.instance.project(
+                        projectionParams, new AsyncResponder(projectGeometryResultHandler,
+                                                             projectFaultHandler));
+                }
+
+                function projectGeometryResultHandler(geometry:Array, token:Object = null):void
+                {
+                    searchResult.geometry = geometry[0];
+                    if (needToProjectExtentServerSide)
+                    {
+                        projectExtentServerSide();
+                    }
+                    else
+                    {
+                        handleProjectionComplete();
+                    }
+                }
+
+                function projectExtentServerSide():void
+                {
+                    var projectionParams:ProjectParameters = new ProjectParameters();
+                    projectionParams.geometries = [ searchResult.extent ];
+                    projectionParams.outSpatialReference = map.spatialReference;
+                    GeometryServiceSingleton.instance.showBusyCursor = true;
+                    GeometryServiceSingleton.instance.project(
+                        projectionParams, new AsyncResponder(projectExtentResultHandler,
+                                                             projectFaultHandler));
+                }
+
+                function projectExtentResultHandler(extent:Array, token:Object = null):void
+                {
+                    searchResult.extent = extent[0];
+                    handleProjectionComplete();
+                }
+
+                function handleProjectionComplete():void
+                {
+                    GeometryServiceSingleton.instance.showBusyCursor = previousShowBusyCursorValue;
+                    var resultHasValidGeometry:Boolean = hasValidGeometry(searchResult.geometry);
+                    var resultHasExtentAndIsValid:Boolean = searchResult.extent && hasValidGeometry(searchResult.extent);
+                    if (resultHasExtentAndIsValid && resultHasValidGeometry
+                        || resultHasValidGeometry)
+                    {
+                        showSearchResultOnMap(searchResult);
+                    }
+                    else
+                    {
+                        showError(hostBaseWidget.getDefaultString("cannotDisplayResult"), SINGLE_LINE_SEARCH);
+                    }
+                }
+
+                function projectFaultHandler(fault:Fault, token:Object = null):void
+                {
+                    showError(hostBaseWidget.getDefaultString("projectionError",
+                                                              ErrorMessageUtil.makeHTMLSafe(fault.toString())), SINGLE_LINE_SEARCH);
+                }
+            }
+
+            private function hasValidGeometry(geometry:Geometry):Boolean
+            {
+                var isValid:Boolean;
+                if (geometry)
+                {
+                    if (geometry.type == Geometry.MAPPOINT)
+                    {
+                        isValid = isValidMapPoint(geometry as MapPoint);
+                    }
+                    else if (geometry.type == Geometry.MULTIPOINT)
+                    {
+                        isValid = isValidMultiPoint(geometry as Multipoint);
+                    }
+                    else if (geometry.type == Geometry.EXTENT)
+                    {
+                        isValid = isValidPolygon((geometry as Extent).toPolygon());
+                    }
+                    else if (geometry.type == Geometry.POLYGON)
+                    {
+                        isValid = isValidPolygon(geometry as Polygon);
+                    }
+                    else if (geometry.type == Geometry.POLYLINE)
+                    {
+                        isValid = isValidPolyline(geometry as Polyline);
+                    }
+                }
+                return isValid;
+            }
+
+            private function isValidMapPoint(point:MapPoint):Boolean
+            {
+                return point && !isNaN(point.x) && !isNaN(point.y);
+            }
+
+            private function isValidMultiPoint(multiPoint:Multipoint):Boolean
+            {
+                return hasValidMapPoints(multiPoint.points);
+            }
+
+            private function hasValidMapPoints(points:Array):Boolean
+            {
+                var isValid:Boolean;
+                if (points && points.length > 0)
+                {
+                    isValid = true;
+                    for each (var point:MapPoint in points)
+                    {
+                        if (!isValidMapPoint(point))
+                        {
+                            isValid = false;
+                            break;
+                        }
+                    }
+                }
+                return isValid;
+            }
+
+            private function isValidPolyline(polyline:Polyline):Boolean
+            {
+                var isValid:Boolean;
+                if (polyline && polyline.paths && polyline.paths.length > 0)
+                {
+                    isValid = true;
+                    for each (var path:Array in polyline.paths)
+                    {
+                        if (!hasValidMapPoints(path))
+                        {
+                            isValid = false;
+                            break;
+                        }
+                    }
+                }
+                return isValid;
+            }
+
+            private function isValidPolygon(polygon:Polygon):Boolean
+            {
+                var isValid:Boolean;
+                if (polygon && polygon.rings && polygon.rings.length > 0)
+                {
+                    isValid = true;
+                    for each (var ring:Array in polygon.rings)
+                    {
+                        if (!hasValidMapPoints(ring))
+                        {
+                            isValid = false;
+                            break;
+                        }
+                    }
+                }
+                return isValid;
+            }
+
+            protected function geocoder_faultHandler(event:FaultEvent):void
+            {
+                showError(ErrorMessageUtil.buildFaultMessage(event.fault), SINGLE_LINE_SEARCH);
+            }
+
+            private function showError(message:String, title:String = null):void
+            {
+                _hostBaseWidget.showError(message, title);
+            }
+        ]]>
+    </fx:Script>
+
+    <esri:Geocoder id="geocoder"
+                   left="0" right="0" top="0" bottom="0"
+                   fault="geocoder_faultHandler(event)"
+                   map="{map}"
+                   resultSelected="geocoder_resultSelectedHandler(event)"/>
+</s:Group>

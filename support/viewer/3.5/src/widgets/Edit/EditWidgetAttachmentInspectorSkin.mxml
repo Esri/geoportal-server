@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (c) 2010-2011 Esri
+
+     All rights reserved under the copyright laws of the United States
+     and applicable international laws, treaties, and conventions.
+
+     You may freely redistribute and use this sample code, with or
+     without modification, provided you include the original copyright
+     notice and use restrictions.
+
+     See use restrictions in use_restrictions.txt.
+-->
+<!---
+     @private
+     Custom skin class for the AttachmentInspector component.
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+             xmlns:mx="library://ns.adobe.com/flex/mx"
+             xmlns:s="library://ns.adobe.com/flex/spark"
+             xmlns:supportClasses="com.esri.ags.skins.supportClasses.*"
+             creationComplete="sparkskin1_creationCompleteHandler(event)"
+             initialize="sparkskin1_initializeHandler(event)">
+
+    <fx:Metadata>
+        [HostComponent("com.esri.ags.components.AttachmentInspector")]
+    </fx:Metadata>
+    <fx:Declarations>
+        <s:Animate id="animate" target="{attachmentLayout}">
+            <!--- @private -->
+            <s:SimpleMotionPath id="simpleMotionPath" property="horizontalScrollPosition"/>
+        </s:Animate>
+
+        <mx:NumberFormatter id="numberFormatter"
+                            precision="2"
+                            rounding="nearest"/>
+    </fx:Declarations>
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.components.supportClasses.AttachmentRemoveEvent;
+            import com.esri.ags.layers.supportClasses.AttachmentInfo;
+            import com.esri.ags.skins.supportClasses.AttachmentMouseEvent;
+            import com.esri.viewer.utils.LocalizationUtil;
+
+            import mx.binding.utils.ChangeWatcher;
+            import mx.events.FlexEvent;
+
+            import spark.components.DataGroup;
+            import spark.components.HScrollBar;
+            import spark.events.IndexChangeEvent;
+
+            [Bindable]
+            public static var noAttachmentsText:String;
+            [Bindable]
+            public static var chooseFileText:String;
+            [Bindable]
+            public static var attachmentSubmitLabel:String;
+            [Bindable]
+            public static var attachmentCancelLabel:String;
+            [Bindable]
+            public static var showAttributesText:String;
+
+            private var _changeWatcher:ChangeWatcher;
+
+            protected function sparkskin1_initializeHandler(event:FlexEvent):void
+            {
+                _changeWatcher = ChangeWatcher.watch(hostComponent, "attachmentInfos", attachmentInfos_changeHandler);
+            }
+
+            protected function sparkskin1_creationCompleteHandler(event:FlexEvent):void
+            {
+                numAttachmentsText();
+            }
+
+            private function attachmentInfos_changeHandler(event:Event = null):void
+            {
+                numAttachmentsText();
+            }
+
+            protected function attachmentInfoList_caretChangeHandler(event:IndexChangeEvent):void
+            {
+                const scrollPoint:Point = attachmentInfoList.layout.getScrollPositionDeltaToElement(event.newIndex);
+
+                const duration:Number = (Math.max(scrollPoint.x, attachmentInfoList.layout.target.horizontalScrollPosition) - Math.min(scrollPoint.x, attachmentInfoList.layout.target.horizontalScrollPosition)) * 4;
+
+                simpleMotionPath.valueFrom = attachmentInfoList.layout.target.horizontalScrollPosition;
+                simpleMotionPath.valueTo = scrollPoint.x;
+
+                animate.duration = duration;
+                animate.play();
+
+                event.target.invalidateDisplayList();
+            }
+
+            protected function attachmentInfoList_keyUpHandler(event:KeyboardEvent):void
+            {
+                if (event.eventPhase === EventPhase.AT_TARGET && (event.keyCode === 46 || event.keyCode === 8) && hostComponent.deleteEnabled) // Delete
+                {
+                    const attachmentInfo:AttachmentInfo = attachmentInfoList.selectedItem as AttachmentInfo;
+                    if (attachmentInfo)
+                    {
+                        dispatchEvent(new AttachmentRemoveEvent(attachmentInfo));
+                    }
+                }
+            }
+
+            private function attachmentInfoList_clickHandler(event:MouseEvent):void
+            {
+                if (!(event.target is Button || event.target is HScrollBar)) // AttachmentMouseEvent not fired while scrolling
+                {
+                    if (!(event.target is DataGroup))
+                    {
+                        const attachmentInfo:AttachmentInfo = attachmentInfoList.selectedItem as AttachmentInfo;
+                        if (attachmentInfo)
+                        {
+                            const type:String = event.type === MouseEvent.CLICK ? AttachmentMouseEvent.ATTACHMENT_CLICK : AttachmentMouseEvent.ATTACHMENT_DOUBLE_CLICK;
+                            const newEvent:AttachmentMouseEvent = new AttachmentMouseEvent(type, attachmentInfo);
+                            newEvent.copyProperties(event);
+                            dispatchEvent(newEvent);
+                            attachmentInfoList.setFocus();
+                        }
+                    }
+                    else
+                    {
+                        attachmentInfoList.selectedIndex = -1;
+                    }
+                }
+            }
+
+            private function attachmentInfoList_addHandler():void
+            {
+                attachmentInfoList.selectedIndex = 0;
+            }
+
+            private function numAttachmentsText():void
+            {
+                if (hostComponent.attachmentInfos.length > 0)
+                {
+                    if (hostComponent.attachmentInfos.length == 1)
+                    {
+                        numAttachments.text = LocalizationUtil.getDefaultString('singleAttachmentText', 1);
+                    }
+                    else
+                    {
+                        numAttachments.text = LocalizationUtil.getDefaultString('multipleAttachmentsText', hostComponent.attachmentInfos.length);
+                    }
+                }
+            }
+
+            private function attributeGroup_clickHandler(event:MouseEvent):void
+            {
+                dispatchEvent(new Event("attributeGroupClicked", true, true));
+            }
+        ]]>
+    </fx:Script>
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="disabled"/>
+        <s:State name="queryAttachmentInfos" stateGroups="queryAttachmentInfosGroup"/>
+        <s:State name="queryAttachmentInfosWithList" stateGroups="queryAttachmentInfosGroup"/>
+        <s:State name="attachmentLoaded" stateGroups="loadState"/>
+        <s:State name="attachmentLoadedNoAttachmentsInList" stateGroups="noAttachmentsState,loadState"/>
+        <s:State name="noAttachmentsInList" stateGroups="noAttachmentsState"/>
+    </s:states>
+    <s:layout>
+        <s:VerticalLayout horizontalAlign="center"/>
+    </s:layout>
+    <!--- @private -->
+    <mx:SWFLoader horizontalAlign="center"
+                  includeIn="queryAttachmentInfosGroup"
+                  source="assets/images/loader.swf"/>
+    <s:Label id="numAttachments"
+             width="100%"
+             excludeFrom="noAttachmentsState, disabled"
+             fontWeight="bold"
+             includeInLayout.queryAttachmentInfos="false"
+             maxDisplayedLines="1"
+             paddingTop="5"
+             showTruncationTip="true"
+             textAlign="center"
+             visible.queryAttachmentInfos="false"/>
+    <s:Spacer/>
+    <s:BorderContainer width="80%" height="100%"
+                       cornerRadius="3"
+                       excludeFrom="noAttachmentsState, queryAttachmentInfos, disabled">
+        <s:borderStroke>
+            <mx:SolidColorStroke weight="2"/>
+        </s:borderStroke>
+        <supportClasses:AttachmentInfoList id="attachmentInfoList"
+                                           width="100%" height="100%"
+                                           add="callLater(attachmentInfoList_addHandler)"
+                                           caretChange="attachmentInfoList_caretChangeHandler(event)"
+                                           click="attachmentInfoList_clickHandler(event)"
+                                           dataProvider="{hostComponent.attachmentInfos}"
+                                           deleteEnabled="{hostComponent.deleteEnabled 
+                                           &amp;&amp; hostComponent.featureLayer.isUpdateAllowed(hostComponent.feature) 
+                                           &amp;&amp; hostComponent.featureLayer.isDeleteAllowed(hostComponent.feature)}"
+                                           doubleClick="attachmentInfoList_clickHandler(event)"
+                                           doubleClickEnabled="true"
+                                           enabled.disabled="false"
+                                           excludeFrom="noAttachmentsState,queryAttachmentInfosGroup,disabled"
+                                           isEditable="{hostComponent.featureLayer.isEditable}"
+                                           itemRenderer="com.esri.viewer.skins.supportClasses.AttachmentRenderer"
+                                           keyUp="attachmentInfoList_keyUpHandler(event)"
+                                           useVirtualLayout="false">
+            <supportClasses:layout>
+                <supportClasses:AttachmentLayout id="attachmentLayout"
+                                                 distance="100"
+                                                 index="{attachmentInfoList.selectedIndex}"/>
+            </supportClasses:layout>
+        </supportClasses:AttachmentInfoList>
+    </s:BorderContainer>
+    <s:Label width="100%"
+             fontWeight="bold"
+             includeIn="noAttachmentsInList"
+             maxDisplayedLines="1"
+             paddingTop="5"
+             showTruncationTip="true"
+             text="{noAttachmentsText}"
+             textAlign="center"/>
+    <s:Spacer/>
+    <s:Button id="browseButton"
+              width="180"
+              enabled.disabled="false"
+              enabled.queryAttachmentInfos="false"
+              excludeFrom="loadState"
+              includeInLayout="{hostComponent.addEnabled &amp;&amp; hostComponent.featureLayer.isUpdateAllowed(hostComponent.feature)}"
+              label="{chooseFileText}"
+              visible="{hostComponent.addEnabled &amp;&amp; hostComponent.featureLayer.isUpdateAllowed(hostComponent.feature)}"/>
+    <s:VGroup width="100%"
+              includeIn="loadState"
+              verticalAlign="middle">
+        <s:Label width="100%"
+                 maxDisplayedLines="-1"
+                 text="{hostComponent.attachmentName}"
+                 textAlign="center"/>
+        <s:Label width="100%"
+                 text="{numberFormatter.format(hostComponent.attachmentSize / 1024.0)+' '+resourceManager.getString('ESRIMessages', 'attachmentInspectorKiloBytes')}"
+                 textAlign="center"/>
+    </s:VGroup>
+    <s:HGroup width="100%"
+              horizontalAlign="center"
+              includeIn="loadState"
+              verticalAlign="middle">
+        <s:Button id="addButton"
+                  height="30"
+                  label="{attachmentSubmitLabel}"
+                  skinClass="com.esri.viewer.skins.AttachmentInspectorSubmitButtonSkin"/>
+        <s:Button id="cancelButton"
+                  height="30"
+                  label="{attachmentCancelLabel}"
+                  skinClass="com.esri.viewer.skins.AttachmentInspectorCancelButtonSkin"/>
+    </s:HGroup>
+    <s:Spacer width="100%" height="100%"/>
+    <s:HGroup width="100%"
+              horizontalAlign="left"
+              paddingBottom="5"
+              paddingLeft="5"
+              verticalAlign="middle">
+        <s:Button buttonMode="true"
+                  click="attributeGroup_clickHandler(event)"
+                  fontWeight="bold"
+                  label="{showAttributesText}"
+                  skinClass="com.esri.viewer.skins.ViewerLinkButtonSkin"/>
+    </s:HGroup>
+</s:SparkSkin>

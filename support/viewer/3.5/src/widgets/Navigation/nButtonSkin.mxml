@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+
+<s:Skin xmlns:s="library://ns.adobe.com/flex/spark" xmlns:fx="http://ns.adobe.com/mxml/2009">
+    <fx:Metadata>
+        [HostComponent("spark.components.Button")]
+    </fx:Metadata>
+    <s:states>
+        <s:State name="up"/>
+        <s:State name="over"/>
+        <s:State name="down"/>
+        <s:State name="disabled"/>
+    </s:states>
+    <s:Group id="group3"
+             x="0" y="0">
+        <s:Path id="path52"
+                x="0.027" y="0.286"
+                data="M 18.072 16.575 L 18.072 16.575 L 23.619 2.637 L 23.619 2.637 C 15.915 -0.428 7.706 -0.084 0.657 2.952 L 6.592 16.732 C 10.116 15.214 14.22 15.041 18.072 16.575 Z"
+                winding="nonZero">
+            <s:fill>
+                <s:SolidColor alpha="{getStyle('contentBackgroundAlpha')}"
+                              alpha.down="1"
+                              color="{getStyle('contentBackgroundColor')}"
+                              color.down="{getStyle('selectionColor')}"
+                              color.over="{getStyle('rollOverColor')}"/>
+            </s:fill>
+        </s:Path>
+        <s:Path id="path59"
+                x="8.341" y="3.004" width="8" height="5.372"
+                data="M 8.166 1.5 L 1.5 11.696 M 8.166 1.5 L 15.772 11.696"
+                winding="nonZero">
+            <s:stroke>
+                <s:SolidColorStroke color="{getStyle('color')}"
+                                    color.disabled="#888888"
+                                    color.down="{getStyle('focusColor')}"
+                                    color.over="{getStyle('focusColor')}"
+                                    joints="miter"
+                                    miterLimit="10"
+                                    weight="2"/>
+            </s:stroke>
+        </s:Path>
+    </s:Group>
+</s:Skin>

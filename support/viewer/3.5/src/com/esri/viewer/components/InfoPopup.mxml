@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<!---
+    Pop-up component used to show feature information.
+-->
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+         xmlns:s="library://ns.adobe.com/flex/spark"
+         xmlns:mx="library://ns.adobe.com/flex/mx"
+         xmlns:flash="flash.filters.*"
+         creationComplete="init()"
+         currentState="">
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.Map;
+            import com.esri.ags.events.ExtentEvent;
+            import com.esri.ags.events.PanEvent;
+            import com.esri.ags.geometry.MapPoint;
+
+            import mx.core.FlexGlobals;
+            import mx.events.FlexEvent;
+
+            import spark.components.Application;
+
+            private function init():void
+            {
+                map.addEventListener(PanEvent.PAN_UPDATE, repositionInfo);
+                map.addEventListener(ExtentEvent.EXTENT_CHANGE, repositionInfo);
+            }
+
+            private var _map:Map;
+
+            public function set map(value:Map):void
+            {
+                _map = value;
+            }
+
+            public function get map():Map
+            {
+                return _map;
+            }
+
+            private var _infoData:Object;
+
+            public function set infoData(value:Object):void
+            {
+                _infoData = value;
+                if (value)
+                {
+                    setInfoParameters();
+                }
+                else
+                {
+                    currentState = "";
+                }
+            }
+
+            public function get infoData():Object
+            {
+                return _infoData;
+            }
+
+            private function setInfoParameters():void
+            {
+                positionInfo();
+
+                infoIcon.source = infoData.icon;
+                infoTitle.text = infoData.title;
+                infoContent.text = infoData.content;
+
+                //clear picture and link button
+                infoImage.source = "";
+                infoImage.height = 0;
+                infoImage.visible = false;
+                infoImage.includeInLayout = false;
+                infoLink.visible = false;
+                infoLink.includeInLayout = false;
+
+                if (infoData.link)
+                {
+                    var link:String = infoData.link as String;
+                    var pos:Number = link.length - 4;
+                    var sfx:String = link.substr(pos, 4).toLowerCase();
+                    if ((sfx == ".jpg") || (sfx == ".png") || (sfx == ".gif"))
+                    {
+                        infoImage.source = link;
+                        infoImage.height = 150;
+                        infoImage.visible = true;
+                        infoImage.includeInLayout = true;
+                    }
+                    else
+                    {
+                        infoLink.visible = true;
+                        infoLink.includeInLayout = true;
+                    }
+                }
+
+                //point icon based on direction
+                if (infoData.content)
+                {
+                    var content:String = infoData.content;
+                    if ((content.indexOf("BEARING: NE") != -1) || (content.indexOf("BEARING: SE") != -1) || (content.indexOf("BEARING: E") != -1))
+                    {
+                        flipIcon("RIGHT");
+                    }
+                    else
+                    {
+                        flipIcon("LEFT");
+                    }
+                }
+            }
+
+            public function positionInfo():void
+            {
+                if ((map.extent) && (infoData))
+                {
+                    var pt:MapPoint = infoData.point;
+                    var infoPt:Point = map.toScreen(pt);
+                    var reg:String = "regLeft";
+                    if (infoPt.x > map.width / 2)
+                    {
+                        reg = "regRight";
+                    }
+                    currentState = reg;
+                    this.x = infoPt.x - (infoIconCanvas.x + 20);
+                    this.y = infoPt.y - (infoIconCanvas.y + 20);
+                }
+            }
+
+            public function repositionInfo(event:Event):void
+            {
+                if ((map.extent) && (infoData))
+                {
+                    var pt:MapPoint = infoData.point;
+                    var infoPt:Point = map.toScreen(pt);
+                    var reg:String = "regLeft";
+                    if (infoPt.x > map.width / 2)
+                    {
+                        reg = "regRight";
+                    }
+                    currentState = reg;
+                    this.x = infoPt.x - (infoIconCanvas.x + 20);
+                    this.y = infoPt.y - (infoIconCanvas.y + 20);
+                }
+            }
+
+            private function closeInfo():void
+            {
+                infoData = null;
+            }
+
+            private function showLink():void
+            {
+                navigateToURL(new URLRequest(infoData.link));
+            }
+
+            private function flipIcon(dir:String):void
+            {
+                var invertMatrix:Matrix = new Matrix(1, 0, 0);
+                // set matrix to invert horizontally
+
+                if (dir == "RIGHT")
+                {
+                    invertMatrix.scale(-1, 1);
+                    // move matrix, so right is at left, and vice versa
+                    invertMatrix.translate(40, 0);
+                }
+
+                var iconTrans:Transform = new Transform(infoIcon);
+                iconTrans.matrix = invertMatrix;
+            }
+
+            protected function infoLink_preinitializeHandler(event:FlexEvent):void
+            {
+                if (isRtl())
+                {
+                    infoLink.source = "assets/images/w_link_rtl.png";
+                }
+                else
+                {
+                    infoLink.source = "assets/images/w_link.png";
+                }
+            }
+
+            public function isRtl():Boolean
+            {
+                var result:Boolean = false;
+                try
+                {
+                    result = (FlexGlobals.topLevelApplication as Application).layoutDirection == "rtl";
+                }
+                catch (error:Error)
+                {
+                    result = false;
+                }
+                return result;
+            }
+        ]]>
+    </fx:Script>
+
+    <s:states>
+        <s:State name="regLeft"/>
+        <s:State name="regRight" basedOn="regLeft"/>
+    </s:states>
+
+    <s:transitions>
+        <s:Transition id="maximize"
+                      fromState=""
+                      toState="*">
+            <s:Resize duration="600" target="{infoContainer}"/>
+        </s:Transition>
+        <s:Transition id="minimize"
+                      fromState="*"
+                      toState="">
+            <s:Parallel>
+                <s:Resize duration="300" target="{infoContainer}"/>
+            </s:Parallel>
+        </s:Transition>
+        <s:Transition id="regSwitch"
+                      fromState="*"
+                      toState="+">
+            <s:Parallel>
+                <s:Move duration="300" target="{infoCanvas}"/>
+            </s:Parallel>
+        </s:Transition>
+    </s:transitions>
+
+    <s:Group id="infoContainer"
+             x="0" y="0" width="0" height="0">
+        <mx:HRule id="infoRule"
+                  x="40" x.regRight="200" y="40" width="40" height="1"
+                  alpha="1"
+                  shadowColor="#ffffff"
+                  strokeColor="#FFFFFF"
+                  visible="false"
+                  visible.regLeft="true">
+            <mx:filters>
+                <flash:GlowFilter alpha="0.3"
+                                  blurX="5"
+                                  blurY="5"
+                                  color="#000000"/>
+            </mx:filters>
+        </mx:HRule>
+        <s:Group id="infoCanvas"
+                 x="80" x.regRight="0" y="10" width="200"
+                 minHeight="60">
+            <mx:VBox width="100%" height="100%"
+                     horizontalAlign="left"
+                     paddingBottom="4"
+                     paddingLeft="4"
+                     paddingRight="4"
+                     paddingTop="4"
+                     verticalAlign="middle"
+                     verticalGap="0">
+                <mx:Text id="infoTitle"
+                         width="100%"
+                         text="Title"
+                         visible="false"
+                         visible.regLeft="true"/>
+                <mx:Text id="infoContent"
+                         width="100%"
+                         text="Content"
+                         visible="false"
+                         visible.regLeft="true"/>
+                <mx:Image id="infoImage"
+                          height="0"
+                          includeInLayout="false"
+                          visible="false"/>
+                <mx:Image id="infoLink"
+                          buttonMode="true"
+                          click="showLink()"
+                          includeInLayout="false"
+                          preinitialize="infoLink_preinitializeHandler(event)"
+                          source="assets/images/w_link.png"
+                          useHandCursor="true"
+                          visible="false"/>
+            </mx:VBox>
+            <mx:HBox width="100%"
+                     horizontalAlign="right"
+                     paddingRight="2"
+                     paddingTop="2">
+                <mx:Image alpha="0.7"
+                          buttonMode="true"
+                          click="closeInfo()"
+                          source="assets/images/w_close.png"
+                          useHandCursor="true"
+                          visible="false"/>
+            </mx:HBox>
+        </s:Group>
+        <s:Group id="infoIconCanvas"
+                 x="20" x.regRight="220" y="20">
+            <mx:Image id="infoIcon"
+                      x="0" y="0" width="40" height="40"
+                      source="assets/images/i_pushpin.png"
+                      visible="false"
+                      visible.regLeft="true">
+                <mx:filters>
+                    <flash:GlowFilter alpha="0.5"
+                                      blurX="10"
+                                      blurY="10"
+                                      color="#000000"/>
+                </mx:filters>
+            </mx:Image>
+        </s:Group>
+    </s:Group>
+
+</s:Group>

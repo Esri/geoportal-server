@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<configuration>
+    <content>
+        <![CDATA[
+             <p align='center'>
+                 <img src='assets/images/globe.png'/>
+                 <br/>
+                 <b><a href="http://links.esri.com/flexviewer" target='_blank'><font size="+2" color="#FFFF00">ArcGIS Viewer for Flex</font></a></b>
+             </p>
+       ]]>
+    </content>
+</configuration>
+
+<!--
+    For valid HTML tags in Flash applications (that can be used for 'content'), see
+    http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flashx/textLayout/conversion/TextConverter.html#TEXT_FIELD_HTML_FORMAT
+-->
+<!--
+    See Splash widget tag reference at
+    http://links.esri.com/splashwidget
+-->

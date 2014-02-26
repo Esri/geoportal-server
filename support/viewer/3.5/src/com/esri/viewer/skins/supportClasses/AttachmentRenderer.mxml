@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (c) 2010 Esri
+
+     All rights reserved under the copyright laws of the United States
+     and applicable international laws, treaties, and conventions.
+
+     You may freely redistribute and use this sample code, with or
+     without modification, provided you include the original copyright
+     notice and use restrictions.
+
+     See use restrictions in use_restrictions.txt.
+-->
+<!---
+     @private
+     Custom AttachmentRenderer
+-->
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:mx="library://ns.adobe.com/flex/mx"
+                buttonMode="true"
+                focusEnabled="false">
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.components.supportClasses.AttachmentRemoveEvent;
+            import com.esri.ags.layers.supportClasses.AttachmentInfo;
+            import com.esri.ags.skins.supportClasses.AttachmentInfoList;
+
+            import spark.components.List;
+
+            [Bindable]
+            override public function get owner():DisplayObjectContainer // override 'owner' to make it bindable
+            {
+                return super.owner;
+            }
+
+            /**
+             * @private
+             */
+            override public function set owner(value:DisplayObjectContainer):void
+            {
+                super.owner = value;
+            }
+
+            override public function set data(value:Object):void
+            {
+                super.data = value;
+
+                const attachmentInfo:AttachmentInfo = value as AttachmentInfo;
+                if (attachmentInfo)
+                {
+                    if (isContentTypeAnImage(attachmentInfo))
+                    {
+                        if (urlContainsToken(attachmentInfo.url))
+                        {
+                            loadImageUsingPostToAddReferHeader(attachmentInfo.url);
+                        }
+                        else
+                        {
+                            image.source = attachmentInfo.url;
+                        }
+                    }
+                    setLabelName(attachmentInfo);
+                    setLabelSize(attachmentInfo);
+                }
+            }
+
+            private function loadImageUsingPostToAddReferHeader(url:String):void
+            {
+                function doNothingAndShowDefault(event:Event):void
+                {
+                    const loader:URLLoader = event.target as URLLoader;
+                    loader.close();
+                }
+                function completeHandler(event:Event):void
+                {
+                    const loader:URLLoader = event.target as URLLoader;
+                    loader.close();
+                    image.source = loader.data;
+                }
+                const urlLoader:URLLoader = new URLLoader();
+                urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
+                urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, doNothingAndShowDefault);
+                urlLoader.addEventListener(IOErrorEvent.IO_ERROR, doNothingAndShowDefault);
+                urlLoader.addEventListener(Event.COMPLETE, completeHandler);
+                const request:URLRequest = new URLRequest(url);
+                request.method = URLRequestMethod.POST;
+                urlLoader.load(request);
+            }
+
+            private function urlContainsToken(url:String):Boolean
+            {
+                return url.indexOf("token=") > -1;
+            }
+
+            protected function isContentTypeAnImage(attachment:AttachmentInfo):Boolean
+            {
+                if (attachment.contentType === "image/gif")
+                {
+                    return true;
+                }
+                if (attachment.contentType === "image/png")
+                {
+                    return true;
+                }
+                if (attachment.contentType === "image/jpeg")
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            protected function setLabelName(attachmentInfo:AttachmentInfo):void
+            {
+                const len:int = attachmentInfo.name.length;
+                if (len > 12)
+                {
+                    const index:int = attachmentInfo.name.lastIndexOf(".");
+                    if (index > -1)
+                    {
+                        const part1:String = attachmentInfo.name.substr(0, 8) + "..";
+                        const part2:String = attachmentInfo.name.substr(index, 4);
+                        labelName.text = part1 + part2;
+                    }
+                    else
+                    {
+                        labelName.text = attachmentInfo.name.substr(0, 8) + "...";
+                    }
+                    labelName.toolTip = attachmentInfo.name;
+                }
+                else
+                {
+                    labelName.text = attachmentInfo.name;
+                    labelName.toolTip = null;
+                }
+            }
+
+            protected function setLabelSize(attachmentInfo:AttachmentInfo):void
+            {
+                if (attachmentInfo.size < 1024.0)
+                {
+                    labelSize.text = attachmentInfo.size + " " + resourceManager.getString("ESRIMessages", "attachmentInspectorBytes");
+                }
+                else if (attachmentInfo.size < 1048576.0)
+                {
+                    labelSize.text = numberFormatter.format(attachmentInfo.size / 1024.0) + " " + resourceManager.getString("ESRIMessages", "attachmentInspectorKiloBytes");
+                }
+                else
+                {
+                    labelSize.text = numberFormatter.format(attachmentInfo.size / 1048576.0) + " " + resourceManager.getString("ESRIMessages", "attachmentInspectorMegaBytes");
+                }
+            }
+
+            protected function deleteButton_clickHandler(event:MouseEvent):void
+            {
+                event.stopImmediatePropagation();
+
+                const attachmentInfo:AttachmentInfo = List(owner).dataProvider.getItemAt(itemIndex) as AttachmentInfo;
+                if (attachmentInfo)
+                {
+                    dispatchEvent(new AttachmentRemoveEvent(attachmentInfo));
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <fx:Declarations>
+        <mx:NumberFormatter id="numberFormatter"
+                            precision="2"
+                            rounding="nearest"/>
+    </fx:Declarations>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="hovered"/>
+        <s:State name="selected"/>
+    </s:states>
+
+    <s:Rect left="0" right="0" top="0" bottom="0"
+            radiusX="2">
+    </s:Rect>
+
+    <s:VGroup left="8" right="8" top="8" bottom="8"
+              horizontalAlign="center">
+        <mx:Image id="image"
+                  maintainAspectRatio="true"
+                  maxHeight="64"
+                  maxWidth="64"
+                  source="@Embed('/assets/images/edit_genericdocument.png')"
+                  toolTip="{data.name}"/>
+        <s:Label id="labelName"/>
+        <s:Label id="labelSize"/>
+    </s:VGroup>
+
+    <s:Button id="deleteButton"
+              right="-4" top="-6"
+              buttonMode="true"
+              emphasized="true"
+              includeIn="hovered,selected"
+              includeInLayout="{AttachmentInfoList(owner).deleteEnabled &amp;&amp; AttachmentInfoList(owner).isEditable}"
+              mouseDown="deleteButton_clickHandler(event)"
+              skinClass="com.esri.ags.skins.supportClasses.AttachmentRendererDeleteButtonSkin"
+              visible="{AttachmentInfoList(owner).deleteEnabled &amp;&amp; AttachmentInfoList(owner).isEditable}"/>
+</s:ItemRenderer>

@@ -158,9 +158,9 @@ public String getResourceKey(String protocolKey) {
  * Parses protocol.
  * @param xmlString protocol as XML string
  * @return protocol
- * @throws ProtocolException if error parsing protocol
+ * @throws ProtocolParseException if error parsing protocol
  */
-public Protocol parseProtocol(String xmlString) {
+public Protocol parseProtocol(String xmlString) throws ProtocolParseException {
   try {
     Document doc = DomUtil.makeDomFromString(xmlString, false);
 
@@ -200,7 +200,7 @@ public Protocol parseProtocol(String xmlString) {
 
     ProtocolFactory protocolFactory = get(protocolName);
     if (protocolFactory == null) {
-      throw new IllegalArgumentException("Unsupported protocol: " + protocolName);
+      throw new ProtocolParseException("Unsupported protocol: " + protocolName);
     }
 
     Protocol protocol = protocolFactory.newProtocol();
@@ -211,11 +211,11 @@ public Protocol parseProtocol(String xmlString) {
 
     return protocol;
   } catch (ParserConfigurationException ex) {
-    throw new IllegalArgumentException("Error parsing protocol.", ex);
+    throw new ProtocolParseException("Error parsing protocol.", ex);
   } catch (SAXException ex) {
-    throw new IllegalArgumentException("Error parsing protocol.", ex);
+    throw new ProtocolParseException("Error parsing protocol.", ex);
   } catch (IOException ex) {
-    throw new IllegalArgumentException("Error parsing protocol.", ex);
+    throw new ProtocolParseException("Error parsing protocol.", ex);
   }
 }
 

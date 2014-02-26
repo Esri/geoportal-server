@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (c) 2012 Esri
+
+     All rights reserved under the copyright laws of the United States
+     and applicable international laws, treaties, and conventions.
+
+     You may freely redistribute and use this sample code, with or
+     without modification, provided you include the original copyright
+     notice and use restrictions.
+
+     See use restrictions in use_restrictions.txt.
+-->
+<!---
+     Custom skin class for the RelationshipInspector component.
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+             xmlns:s="library://ns.adobe.com/flex/spark"
+             xmlns:mx="library://ns.adobe.com/flex/mx"
+             xmlns:esri="http://www.esri.com/2008/ags">
+    <!-- host component -->
+    <fx:Metadata>
+        [HostComponent("com.esri.ags.components.RelationshipInspector")]
+    </fx:Metadata>
+
+    <fx:Script>
+        <![CDATA[
+            import mx.events.EffectEvent;
+
+            [Bindable]
+            public static var showAttributesText:String;
+
+            /* Define the symbol fill items that should be colored by the "symbolColor" style.*/
+            private static const symbols:Array = [ "borderLineSymbol" ];
+
+            /**
+             * @private
+             */
+            override public function get symbolItems():Array
+            {
+                return symbols;
+            }
+
+            private function fade_effectEndHandler(event:EffectEvent):void
+            {
+                editOperationCompleteLabel.includeInLayout = false;
+            }
+
+            private function attributeGroup_clickHandler(event:Event):void
+            {
+                dispatchEvent(new Event("attributeGroupClicked", true, true));
+            }
+        ]]>
+    </fx:Script>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="disabled"/>
+        <s:State name="queryRelatedRecords"/>
+        <s:State name="addingNewRecord"/>
+        <s:State name="noRelationships"/>
+        <s:State name="noRelatedRecords"/>
+    </s:states>
+
+    <fx:Declarations>
+        <s:Fade id="fade"
+                alphaFrom="1"
+                alphaTo="0"
+                duration="1000"
+                effectEnd="fade_effectEndHandler(event)"/>
+        <fx:Component id="relationshipButton">
+            <s:ToggleButton/>
+        </fx:Component>
+    </fx:Declarations>
+
+    <s:Rect left="0" right="0" top="0" bottom="30"
+            radiusX="5"
+            radiusY="5">
+        <s:stroke>
+            <s:SolidColorStroke id="borderLineSymbol"
+                                color="black"
+                                weight="1"/>
+        </s:stroke>
+    </s:Rect>
+
+    <!--- @private -->
+    <mx:SWFLoader horizontalAlign="center"
+                  horizontalCenter="0"
+                  includeIn="queryRelatedRecords"
+                  source="assets/images/loader.swf"
+                  verticalCenter="0"/>
+
+    <!--- @private -->
+    <s:Label horizontalCenter="0"
+             includeIn="noRelationships"
+             text="{resourceManager.getString('ESRIMessages', 'relationshipInspectorNoRelationships')}"
+             verticalCenter="0"/>
+
+    <!--- @private -->
+    <s:Label horizontalCenter="0"
+             includeIn="noRelatedRecords"
+             text="{resourceManager.getString('ESRIMessages', 'relationshipInspectorNoRelatedRecords')}"
+             verticalCenter="0"/>
+
+    <s:VGroup width="100%" height="100%"
+              left="5" right="5" top="5" bottom="50"
+              excludeFrom="noRelationships"
+              horizontalAlign="right">
+        <s:Scroller width="100%" verticalScrollPolicy="off">
+            <s:HGroup id="relationshipButtonsGroup"
+                      width="100%"
+                      includeInLayout="false"
+                      visible="false"/>
+        </s:Scroller>
+        <s:Button id="addRecordButton"
+                  buttonMode="true"
+                  excludeFrom="noRelationships,addingNewRecord"
+                  includeInLayout="false"
+                  label="{resourceManager.getString('ESRIMessages', 'relationshipInspectorAddRecord')}"
+                  visible="false"/>
+        <esri:AttributeInspector id="attributeInspector"
+                                 width="100%" height="100%"
+                                 deleteButtonLabel.addingNewRecord="{resourceManager.getString('ESRIMessages', 'relationshipInspectorCancel')}"
+                                 deleteButtonVisible="{hostComponent.editEnabled}"
+                                 excludeFrom="queryRelatedRecords,noRelationships,noRelatedRecords"
+                                 okButtonLabel.addingNewRecord="{resourceManager.getString('ESRIMessages', 'relationshipInspectorAdd')}"
+                                 okButtonVisible="{hostComponent.editEnabled}"
+                                 skinClass="com.esri.ags.skins.RelationshipInspectorAttributeInspectorSkin"
+                                 updateEnabled="{hostComponent.editEnabled &amp;&amp; hostComponent.featureLayer.isEditable}"/>
+    </s:VGroup>
+    <s:HGroup id="editOperationStartGroup"
+              width="100%"
+              left="5" bottom="35"
+              includeInLayout="false"
+              verticalAlign="middle"
+              visible="false">
+        <mx:SWFLoader source="assets/images/loader.swf"/>
+        <!--- Label shown when operation starts. -->
+        <s:Label id="editOperationStartLabel" width="100%"/>
+    </s:HGroup>
+    <!--- Label shown when operation completes. -->
+    <s:Label id="editOperationCompleteLabel"
+             width="100%"
+             left="5" bottom="35"
+             hideEffect="{fade}"
+             includeInLayout="false"
+             visible="false"/>
+    <!--- @private -->
+    <s:Button width="100%"
+              left="5" bottom="5"
+              buttonMode="true"
+              click="attributeGroup_clickHandler(event)"
+              fontWeight="bold"
+              label="{showAttributesText}"
+              skinClass="com.esri.viewer.skins.ViewerLinkButtonSkin"/>
+</s:SparkSkin>

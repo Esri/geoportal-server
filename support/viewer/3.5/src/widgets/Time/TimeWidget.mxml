@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:esri="http://www.esri.com/2008/ags"
+                   xmlns:viewer="com.esri.viewer.*"
+                   initialize="basewidget_initializeHandler()"
+                   layout="absolute"
+                   widgetConfigLoaded="basewidget_widgetConfigLoaded()">
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.TimeExtent;
+            import com.esri.ags.events.LayerEvent;
+            import com.esri.ags.layers.ArcGISDynamicMapServiceLayer;
+            import com.esri.ags.layers.ArcGISImageServiceLayer;
+            import com.esri.ags.layers.ArcGISTiledMapServiceLayer;
+            import com.esri.ags.layers.FeatureLayer;
+            import com.esri.ags.layers.Layer;
+            import com.esri.ags.layers.supportClasses.TimeInfo;
+
+            [Bindable]
+            private var sliderLoop:Boolean = false;
+            [Bindable]
+            private var sliderSingleThumbAsTimeInstant:Boolean = false;
+            [Bindable]
+            private var sliderThumbCount:int = 1;
+            [Bindable]
+            private var sliderThumbMovingRate:int = 1000;
+
+            private var timeStopsInterval:Number
+            private var timeStopsUnits:String;
+            private var timeStopsCount:Number;
+
+            private function basewidget_initializeHandler():void
+            {
+                if (isPartOfPanel) // if widget is part of "left", "right" or "bottom" panel
+                {
+                    this.percentWidth = this.percentHeight = 100;
+                    wTemplate.percentWidth = wTemplate.percentHeight = 100;
+                }
+                else
+                {
+                    wTemplate.width = 335;
+                    wTemplate.height = 115;
+                }
+            }
+
+            protected function basewidget_widgetConfigLoaded():void
+            {
+                if (configXML)
+                {
+                    var dateFormat:String = configXML.dateformat;
+                    if (dateFormat)
+                    {
+                        myDateFormatter.formatString = dateFormat;
+                    }
+                    sliderLoop = configXML.loop == "true";
+                    sliderSingleThumbAsTimeInstant = configXML.singlethumbastimeinstant == "true";
+                    if (!isNaN(parseInt(configXML.thumbcount)))
+                    {
+                        sliderThumbCount = parseInt(configXML.thumbcount);
+                    }
+                    if (!isNaN(parseInt(configXML.thumbmovingrate)))
+                    {
+                        sliderThumbMovingRate = parseInt(configXML.thumbmovingrate);
+                    }
+                    timeStopsInterval = parseFloat(configXML..timestopsinterval);
+                    var timeStopsUnitsConfig:String = configXML..timestopsunits || "";
+                    if (timeStopsUnitsConfig)
+                    {
+                        switch (timeStopsUnitsConfig.toLowerCase())
+                        {
+                            case "years":
+                            {
+                                timeStopsUnits = TimeInfo.UNIT_YEARS;
+                                break;
+                            }
+                            case "months":
+                            {
+                                timeStopsUnits = TimeInfo.UNIT_MONTHS;
+                                break;
+                            }
+                            case "days":
+                            {
+                                timeStopsUnits = TimeInfo.UNIT_DAYS;
+                                break;
+                            }
+                            case "hours":
+                            {
+                                timeStopsUnits = TimeInfo.UNIT_HOURS;
+                                break;
+                            }
+                            case "minutes":
+                            {
+                                timeStopsUnits = TimeInfo.UNIT_MINUTES;
+                                break;
+                            }
+                            case "seconds":
+                            {
+                                timeStopsUnits = TimeInfo.UNIT_SECONDS;
+                                break;
+                            }
+                        }
+                    }
+                    timeStopsCount = parseInt(configXML..timestopscount);
+                    var timeExtentFromLayer:String = configXML.timeextent.@setfromlayer[0];
+                    if (timeExtentFromLayer)
+                    {
+                        var layer:Layer = map.getLayer(timeExtentFromLayer);
+                        if (layer)
+                        {
+                            if (layer.loaded)
+                            {
+                                createTimeStopsFromLayer(layer);
+                            }
+                            else
+                            {
+                                layer.addEventListener(LayerEvent.LOAD, layerLoadHandler);
+                                function layerLoadHandler(event:LayerEvent):void
+                                {
+                                    createTimeStopsFromLayer(layer);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var startTime:Number = Date.parse(configXML.timeextent.starttime);
+                        var endTime:Number = Date.parse(configXML.timeextent.endtime);
+                        if (!isNaN(startTime) && !isNaN(endTime))
+                        {
+                            var timeExtent:TimeExtent = new TimeExtent();
+                            timeExtent.startTime = new Date(startTime);
+                            timeExtent.endTime = new Date(endTime);
+                            createTimeStops(timeExtent);
+                        }
+                    }
+                }
+            }
+
+            protected function widgetClosedHandler(event:Event):void
+            {
+                timeSlider.pause();
+                map.timeSlider = null;
+                map.timeExtent = null;
+            }
+
+            protected function widgetOpenedHandler(event:Event):void
+            {
+                map.timeSlider = timeSlider;
+            }
+
+            protected function createTimeStopsFromLayer(layer:Layer):void
+            {
+                var timeInfo:TimeInfo;
+                if (layer is ArcGISTiledMapServiceLayer)
+                {
+                    timeInfo = (layer as ArcGISTiledMapServiceLayer).timeInfo;
+                }
+                else if (layer is ArcGISDynamicMapServiceLayer)
+                {
+                    timeInfo = (layer as ArcGISDynamicMapServiceLayer).timeInfo;
+                }
+                else if (layer is ArcGISImageServiceLayer)
+                {
+                    timeInfo = (layer as ArcGISImageServiceLayer).timeInfo;
+                }
+                else if (layer is FeatureLayer)
+                {
+                    var feaLayer:FeatureLayer = layer as FeatureLayer;
+                    if (feaLayer.layerDetails)
+                    {
+                        timeInfo = feaLayer.layerDetails.timeInfo;
+                    }
+                }
+                if (timeInfo)
+                {
+                    if ((isNaN(timeStopsInterval) || !timeStopsUnits) && isNaN(timeStopsCount))
+                    {
+                        timeStopsInterval = timeInfo.timeInterval;
+                        timeStopsUnits = timeInfo.timeIntervalUnits;
+                    }
+                    createTimeStops(timeInfo.timeExtent);
+                }
+            }
+
+            protected function createTimeStops(timeExtent:TimeExtent):void
+            {
+                if (timeExtent)
+                {
+                    if (!isNaN(timeStopsInterval) && timeStopsUnits)
+                    {
+                        timeSlider.createTimeStopsByTimeInterval(timeExtent, timeStopsInterval, timeStopsUnits);
+                    }
+                    else
+                    {
+                        if (isNaN(timeStopsCount))
+                        {
+                            timeStopsCount = 10;
+                        }
+                        timeSlider.createTimeStopsByCount(timeExtent, timeStopsCount);
+                    }
+                }
+            }
+        ]]>
+    </fx:Script>
+    <fx:Declarations>
+        <mx:DateFormatter id="myDateFormatter" formatString="MMMM, YYYY"/>
+    </fx:Declarations>
+    <viewer:WidgetTemplate id="wTemplate"
+                           closed="widgetClosedHandler(event)"
+                           open="widgetOpenedHandler(event)">
+        <viewer:layout>
+            <s:VerticalLayout gap="10"
+                              horizontalAlign="center"
+                              paddingTop="4"/>
+        </viewer:layout>
+        <s:Label fontSize="14"
+                 horizontalCenter="true"
+                 text="{myDateFormatter.format(timeSlider.timeExtent.endTime)}"/>
+        <esri:TimeSlider id="timeSlider"
+                         width="100%"
+                         loop="{sliderLoop}"
+                         singleThumbAsTimeInstant="{sliderSingleThumbAsTimeInstant}"
+                         thumbCount="{sliderThumbCount}"
+                         thumbMovingRate="{sliderThumbMovingRate}"/>
+    </viewer:WidgetTemplate>
+</viewer:BaseWidget>

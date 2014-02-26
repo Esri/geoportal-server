@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<configuration>
+    <!-- possible values for initialstate: open or closed (default) -->
+    <initialstate>closed</initialstate>
+    <!-- by default it will use the same basemap as current main map,
+         you can hardcode as below if you wish -->
+    <!-- <layer
+            type="tiled"
+            url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer"/>
+    -->
+</configuration>
+
+<!--
+    See Overview Map widget tag reference at
+    http://links.esri.com/overviewmapwidget
+-->

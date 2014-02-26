@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<configuration>
+    <title>{NAME}</title>
+    <fields>
+        <field name="NAME"/> <!-- Used in title, do not repeat in content -->
+        <field name="TOTPOP_CY" alias="Population" visible="true"/>  <!-- Overwrite alias specified in Map Service -->
+        <field name="MEDHINC_CY_12" alias="Household Income, Median ($)" visible="true"/>
+        <field name="HINC0_CY_12"  alias="less than $10,000"/>
+        <field name="HINC10_CY_12" alias="$10,000 - $14,999"/>
+        <field name="HINC15_CY_12" alias="$15,000 - $19,999"/>
+        <field name="HINC20_CY_12" alias="$20,000 - $24,999"/>
+        <field name="HINC25_CY_12" alias="$25,000 - $29,999"/>
+        <field name="HINC30_CY_12" alias="$30,000 - $34,999"/>
+        <field name="HINC35_CY_12" alias="$35,000 - $39,999"/>
+        <field name="HINC40_CY_12" alias="$40,000 - $44,999"/>
+        <field name="HINC45_CY_12" alias="$45,000 - $49,999"/>
+        <field name="HINC50_CY_12" alias="$50,000 - $59,999"/>
+        <field name="HINC60_CY_12" alias="$60,000 - $74,999"/>
+        <field name="HINC75_CY_12" alias="$75,000 - $99,999"/>
+        <field name="HINC100_CY_12" alias="$100,000 - $124,999"/>
+        <field name="HINC125_CY_12" alias="$125,000 - $149,999"/>
+        <field name="HINC150_CY_12" alias="$150,000 - $199,999"/>
+        <field name="HINC200_CY_12" alias="$200,000 - $249,999"/>
+        <field name="HINC250_CY_12" alias="$250,000 - $499,999"/>
+        <field name="HINC500_CY_12" alias="$500,000 or greater"/>
+        <field name="POPU5_CY_12" alias="0-4 Years"/>
+        <field name="POP5_CY_12"  alias="5-9 Years"/>
+        <field name="POP10_CY_12" alias="10-14 Years"/>
+        <field name="POP15_CY_12" alias="15-19 Years"/>
+        <field name="POP20_CY_12" alias="20-24 Years"/>
+        <field name="POP25_CY_12" alias="25-29 Years"/>
+        <field name="POP30_CY_12" alias="30-34 Years"/>
+        <field name="POP35_CY_12" alias="35-39 Years"/>
+        <field name="POP40_CY_12" alias="40-44 Years"/>
+        <field name="POP45_CY_12" alias="45-49 Years"/>
+        <field name="POP50_CY_12" alias="50-54 Years"/>
+        <field name="POP55_CY_12" alias="55-59 Years"/>
+        <field name="POP60_CY_12" alias="60-64 Years"/>
+        <field name="POP65_CY_12" alias="65-69 Years"/>
+        <field name="POP70_CY_12" alias="70-74 Years"/>
+        <field name="POP75_CY_12" alias="75-79 Years"/>
+        <field name="POP80_CY_12" alias="80-84 Years"/>
+        <field name="POP85_CY_12" alias="85-89 Years"/>
+        <field name="OWNER_CY_12" alias="Owner Occupied"/>
+        <field name="RENTER_CY_12" alias="Renter Occupied"/>
+    </fields>
+    <medias>
+        <media type="columnchart" title="Households by income"
+               chartfields="HINC0_CY_12,HINC10_CY_12,HINC15_CY_12,HINC20_CY_12,HINC25_CY_12,HINC30_CY_12,HINC35_CY_12,HINC40_CY_12,HINC45_CY_12,HINC50_CY_12,HINC60_CY_12,HINC75_CY_12,HINC100_CY_12,HINC125_CY_12,HINC150_CY_12,HINC200_CY_12,HINC250_CY_12,HINC500_CY_12"/>
+        <media type="barchart" title="Owners vs Renters" chartfields="OWNER_CY_12,RENTER_CY_12"/>
+        <media type="linechart" title="Population by age"
+               chartfields="POPU5_CY_12,POP5_CY_12,POP10_CY_12,POP15_CY_12,POP20_CY_12,POP25_CY_12,POP30_CY_12,POP35_CY_12,POP40_CY_12,POP45_CY_12,POP50_CY_12,POP55_CY_12,POP60_CY_12,POP60_CY_12,POP65_CY_12,POP70_CY_12,POP75_CY_12,POP80_CY_12,POP85_CY_12"/>
+    </medias>
+</configuration>
+
+<!--
+    Pop-up configuration file for:
+    http://server.arcgisonline.com/ArcGIS/rest/services/Demographics/USA_Median_Household_Income/MapServer/4
+
+    See pop-up documentation at
+    http://links.esri.com/flexviewer/popups
+-->

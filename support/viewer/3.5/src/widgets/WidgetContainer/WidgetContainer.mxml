@@ -1,0 +1,826 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                      xmlns:s="library://ns.adobe.com/flex/spark"
+                      xmlns:mx="library://ns.adobe.com/flex/mx"
+                      width="100%" height="100%"
+                      creationComplete="init()">
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.viewer.AppEvent;
+            import com.esri.viewer.IBaseWidget;
+            import com.esri.viewer.ViewerContainer;
+            import com.esri.viewer.WidgetStates;
+
+            import mx.core.FlexGlobals;
+            import mx.core.IVisualElement;
+            import mx.events.EffectEvent;
+            import mx.events.FlexEvent;
+
+            import spark.events.ElementExistenceEvent;
+            import spark.layouts.BasicLayout;
+            import spark.layouts.HorizontalLayout;
+            import spark.layouts.TileLayout;
+            import spark.layouts.VerticalLayout;
+
+            private const PADDING:int = 28;
+
+            private const UP:String = "up";
+            private const DOWN:String = "down";
+            private const LEFT:String = "left";
+            private const RIGHT:String = "right";
+
+            private const HORIZONTAL:String = "horizontal";
+            private const VERTICAL:String = "vertical";
+            private const TILE:String = "tile";
+            private const FIX:String = "fix";
+            private const FLOAT:String = "float";
+
+            private var isDraggable:Boolean = true;
+            private var isResizeable:Boolean = true;
+
+            [Bindable]
+            private var _left:Number = 0;
+            [Bindable]
+            private var _right:Number = 0;
+            [Bindable]
+            private var _top:Number = 0;
+            [Bindable]
+            private var _bottom:Number = 0;
+
+            private var _transitionInProgress:Boolean = false;
+
+            private function init():void
+            {
+                AppEvent.addListener(AppEvent.WIDGET_STATE_CHANGED, widgetClosedHandler);
+            }
+
+            private var curId:Number;
+
+            private function widgetClosedHandler(event:AppEvent):void
+            {
+                var data:Object = event.data;
+
+                if (data.state as String == WidgetStates.WIDGET_CLOSED)
+                {
+                    curId = data.id as Number;
+
+                    var timer:Timer = new Timer(500, 1);
+                    timer.addEventListener(TimerEvent.TIMER_COMPLETE, removeWidget);
+                    timer.start();
+                }
+            }
+
+            private function removeWidget(event:TimerEvent):void
+            {
+                var widget:IVisualElement;
+                for (var i:int = 0; i < widgetContainer.numElements; i++)
+                {
+                    widget = widgetContainer.getElementAt(i);
+
+                    var baseWidget:IBaseWidget = widget as IBaseWidget;
+
+                    if (baseWidget.widgetId == curId)
+                    {
+                        widgetContainer.removeElement(widget);
+
+                        if (widgetContainer.numElements == 0)
+                        {
+                            setHVcontrol(null);
+                            widgetAdded = false;
+                        }
+
+                        return;
+                    }
+                }
+            }
+
+            private var elmToAdd:IVisualElement = null;
+
+            override public function addElement(element:IVisualElement):IVisualElement
+            {
+
+                if (this.currentState != "normal")
+                {
+                    elmToAdd = element;
+                    this.currentState = "normal";
+                }
+                else
+                {
+                    var id:int = containWidget(element);
+                    if (id < 0)
+                    {
+                        addWidget(element);
+                    }
+                    else
+                    {
+                        focusWidget = id;
+                    }
+                }
+
+                return element;
+            }
+
+            private function addWidget(element:IVisualElement):void
+            {
+                var baseWidget:IBaseWidget = element as IBaseWidget;
+                baseWidget.isDraggable = this.isDraggable;
+                constrainWidget(baseWidget);
+
+                widgetContainer.addElement(element);
+            }
+
+            private function containWidget(element:IVisualElement):int
+            {
+                var baseElm:IBaseWidget = element as IBaseWidget;
+                var id:int = baseElm.widgetId;
+
+                var widget:IVisualElement;
+                for (var i:int = 0; i < widgetContainer.numElements; i++)
+                {
+                    widget = widgetContainer.getElementAt(i);
+
+                    var baseWidget:IBaseWidget = widget as IBaseWidget;
+
+                    if (baseWidget.widgetId == id)
+                    {
+                        return id;
+                    }
+                }
+
+                return -1;
+            }
+
+            public function set config(value:Object):void
+            {
+                if (value.layout)
+                {
+                    setWidgetLayout(value.layout);
+                }
+                else
+                {
+                    setWidgetLayout(ViewerContainer.DEFAULT_WIDGET_LAYOUT);
+                }
+
+                if (value.left)
+                {
+                    _left = value.left;
+                }
+                if (value.right)
+                {
+                    _right = value.right;
+                }
+                if (value.top)
+                {
+                    _top = value.top;
+                }
+                if (value.bottom)
+                {
+                    _bottom = value.bottom;
+                }
+            }
+
+            private var widgetAdded:Boolean = false;
+
+            private function widgetAddedHandler(event:ElementExistenceEvent):void
+            {
+                if (!widgetAdded)
+                {
+                    widgetAdded = true;
+                    setHVcontrol(widgetlayout);
+                }
+                var wObj:IVisualElement = event.element;
+                scrollToWidget(wObj);
+                AppEvent.dispatch(AppEvent.WIDGET_ADDED, wObj);
+            }
+
+            public function set focusWidget(id:Number):void
+            {
+                var widget:IVisualElement;
+
+                for (var i:int = 0; i < widgetContainer.numElements; i++)
+                {
+                    widget = widgetContainer.getElementAt(i);
+
+                    var baseWidget:IBaseWidget = widget as IBaseWidget;
+
+                    if (baseWidget.widgetId == id)
+                    {
+
+                        if ((widgetlayout == HORIZONTAL) || (widgetlayout == VERTICAL))
+                        {
+                            if (!_transitionInProgress)
+                            {
+                                // if state transition is in progress, the calculation of the scroll positions will be not correct.
+                                scrollToWidget(widget);
+                            }
+                        }
+                        else
+                        {
+                            if (i != widgetContainer.numElements - 1)
+                            {
+                                widgetContainer.setElementIndex(widget, widgetContainer.numElements - 1);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            /** --------------------------------------------------
+             * SCROLL FUNCTIONS
+             ** --------------------------------------------------*/
+
+            private var scrollint:uint;
+            private var scrolldist:Number;
+            private var dist:Number = 10;
+            private var scrolldir:String;
+
+            private function startScroll(dir:String):void
+            {
+                AppEvent.dispatch(AppEvent.TOC_HIDDEN); // always hide the toc layer menu
+
+                widgetContainer.clipAndEnableScrolling = true;
+                scrollint = setInterval(scrollWidgetBox, 30, [ dir ]);
+                stage.addEventListener(MouseEvent.MOUSE_UP, onStageMouseUp);
+                AppEvent.addListener(AppEvent.APP_ERROR, onAppError);
+            }
+
+            private function onStageMouseUp(event:MouseEvent):void
+            {
+                stopScroll();
+            }
+
+            private function onAppError(event:AppEvent):void
+            {
+                stopScroll();
+            }
+
+            private function stopScroll():void
+            {
+                stage.removeEventListener(MouseEvent.MOUSE_UP, onStageMouseUp);
+                AppEvent.removeListener(AppEvent.APP_ERROR, onAppError);
+                clearInterval(scrollint);
+            }
+
+            public function scrollWidgetBox(dir:String):void
+            {
+                if (!isValidScroll(dir))
+                {
+                    return;
+                }
+
+                if (dir == UP)
+                {
+                    widgetContainer.verticalScrollPosition += 10;
+                }
+                else if (dir == DOWN)
+                {
+                    widgetContainer.verticalScrollPosition -= 10;
+                }
+                else if (dir == LEFT)
+                {
+                    widgetContainer.horizontalScrollPosition += 10;
+                }
+                else if (dir == RIGHT)
+                {
+                    widgetContainer.horizontalScrollPosition -= 10;
+                }
+            }
+
+            private function isValidScroll(dir:String):Boolean
+            {
+                var boxRect:Rectangle = widgetContainer.getRect(this);
+
+                var screenW:Number = boxRect.width;
+                var screenH:Number = boxRect.height;
+
+                var lastVisibleWidget:IVisualElement;
+
+                if (dir == UP)
+                {
+                    lastVisibleWidget = widgetContainer.getElementAt(widgetContainer.numElements - 1);
+                    return widgetContainer.verticalScrollPosition < widgetContainer.contentHeight - lastVisibleWidget.height - PADDING;
+                }
+                else if (dir == DOWN)
+                {
+                    lastVisibleWidget = widgetContainer.getElementAt(0);
+                    return widgetContainer.verticalScrollPosition > 0 - screenH + lastVisibleWidget.height + PADDING;
+                }
+                else if (dir == LEFT)
+                {
+                    lastVisibleWidget = widgetContainer.getElementAt(widgetContainer.numElements - 1);
+                    return widgetContainer.horizontalScrollPosition < widgetContainer.contentWidth - lastVisibleWidget.width - PADDING;
+                }
+                else if (dir == RIGHT)
+                {
+                    lastVisibleWidget = widgetContainer.getElementAt(0);
+                    return widgetContainer.horizontalScrollPosition > 0 - screenW + lastVisibleWidget.width + PADDING;
+                }
+
+                return false;
+            }
+
+            private function scrollToWidget(wObj:IVisualElement):void
+            {
+                setTimeout(scrollToWidgetStart, 1000, [ wObj ]);
+            }
+
+            private function scrollToWidgetStart(params:Array):void
+            {
+                if (widgetlayout != HORIZONTAL &&
+                    widgetlayout != VERTICAL)
+                {
+                    return;
+                }
+
+                var wObj:DisplayObject = params[0];
+                if (containWidget(wObj as IVisualElement) < 0)
+                {
+                    //widget has been closed.
+                    return;
+                }
+
+                var boxRect:Rectangle = widgetContainer.getVisibleRect(this);
+
+                var screenW:Number = boxRect.width;
+                var screenH:Number = boxRect.height;
+
+                if (screenW <= 0 || screenH <= 0)
+                {
+                    // safety guard
+                    return;
+                }
+
+                var horizonX:Number = widgetContainer.horizontalScrollPosition;
+                var verticalY:Number = widgetContainer.verticalScrollPosition;
+
+                var wRect:Rectangle = wObj.getRect(widgetContainer);
+
+                if (wRect.height <= 0 || wRect.width <= 0)
+                {
+                    // safety guard
+                    return;
+                }
+
+                var wTop:Number = wRect.y;
+                var wBottom:Number = wTop + wRect.height;
+                var wLeft:Number = wRect.x;
+                var wRight:Number = wLeft + wRect.width;
+
+                var rightDelta:Number = wRight - (screenW + horizonX);
+                var leftDelta:Number = horizonX - wLeft;
+                var topDelta:Number = verticalY - wTop;
+                var bottomDelta:Number = wBottom - (screenH + verticalY);
+
+                if (rightDelta <= 0 && leftDelta <= 0 &&
+                    topDelta <= 0 && bottomDelta <= 0)
+                {
+                    return;
+                }
+
+                if (widgetlayout == HORIZONTAL)
+                {
+                    if (leftDelta > 0)
+                    {
+                        scrolldist = leftDelta;
+                        scrolldir = RIGHT;
+                    }
+                    else if (rightDelta > 0)
+                    {
+                        scrolldist = rightDelta;
+                        scrolldir = LEFT;
+                    }
+                }
+                else if (widgetlayout == VERTICAL)
+                {
+                    if (topDelta > 0)
+                    {
+                        scrolldist = topDelta;
+                        scrolldir = UP;
+                    }
+                    else if (bottomDelta > 0)
+                    {
+                        scrolldist = bottomDelta;
+                        scrolldir = DOWN;
+                    }
+                }
+
+                var scrollInterval:uint = setInterval(
+                    function():void
+                    {
+                        scrollToWidgetAction(scrollInterval);
+                    },
+                    30);
+
+                dist = 0;
+            }
+
+            private function scrollToWidgetAction(interval:uint):void
+            {
+                if (dist < scrolldist)
+                {
+                    if (scrolldir == UP)
+                    {
+                        widgetContainer.verticalScrollPosition -= 10;
+                    }
+                    else if (scrolldir == DOWN)
+                    {
+                        widgetContainer.verticalScrollPosition += 10;
+                    }
+                    else if (scrolldir == LEFT)
+                    {
+                        widgetContainer.horizontalScrollPosition += 10;
+                    }
+                    else if (scrolldir == RIGHT)
+                    {
+                        widgetContainer.horizontalScrollPosition -= 10;
+                    }
+                    dist += 10;
+                }
+                else
+                {
+                    clearInterval(interval);
+                }
+            }
+
+            //========================================================
+            // Setting Layout
+            //========================================================
+            //layout
+            /*TODO: only when there is widget opened the position controller shows up
+             */
+            private var _widgetLayout:String;
+
+            private function isConstrainedLayout():Boolean
+            {
+                return widgetlayout == HORIZONTAL || widgetlayout == VERTICAL || widgetlayout == TILE || widgetlayout == FIX;
+            }
+
+            public function get widgetlayout():String
+            {
+                return _widgetLayout;
+            }
+
+            private function setWidgetLayout(layout:String):void
+            {
+                if (_widgetLayout != layout)
+                {
+                    _widgetLayout = layout;
+
+                    switch (layout)
+                    {
+                        case HORIZONTAL:
+                        {
+                            var hLayout:HorizontalLayout = new HorizontalLayout;
+                            hLayout.verticalAlign = "bottom";
+                            hLayout.paddingLeft = 20;
+                            hLayout.paddingBottom = 23;
+                            hLayout.gap = 35;
+                            widgetContainer.layout = hLayout;
+                            isDraggable = false;
+                            isResizeable = false;
+                            break;
+                        }
+                        case VERTICAL:
+                        {
+                            var vLayout:VerticalLayout = new VerticalLayout;
+                            vLayout.horizontalAlign = "right";
+                            vLayout.paddingBottom = 10;
+                            vLayout.paddingRight = 25;
+                            vLayout.paddingTop = 10;
+                            vLayout.gap = 35;
+                            widgetContainer.layout = vLayout;
+                            isDraggable = false;
+                            isResizeable = false;
+                            break;
+                        }
+                        case TILE:
+                        {
+                            var tLayout:TileLayout = new TileLayout;
+                            widgetContainer.layout = tLayout;
+                            tLayout.verticalAlign = "bottom";
+                            isResizeable = false;
+                            isDraggable = false;
+                            break;
+                        }
+                        case FIX:
+                        {
+                            widgetContainer.layout = new BasicLayout;
+                            isResizeable = false;
+                            isDraggable = false;
+                            break;
+                        }
+                        case FLOAT:
+                        {
+                            widgetContainer.layout = new BasicLayout();
+                            widgetContainer.clipAndEnableScrolling = false;
+                            isResizeable = true;
+                            isDraggable = true;
+                            break;
+                        }
+                        default:
+                        {
+                            widgetContainer.layout = new BasicLayout();
+                            isResizeable = true;
+                            isDraggable = true;
+                            break;
+                        }
+                    }
+
+                    if (widgetAdded)
+                    {
+                        setHVcontrol(widgetlayout);
+                    }
+                    setWidgetControl();
+                }
+            }
+
+            [Bindable]
+            private var _hv:Boolean;
+            [Bindable]
+            private var _vv:Boolean;
+
+            private function setHVcontrol(layout:String):void
+            {
+                switch (layout)
+                {
+                    case HORIZONTAL:
+                    {
+                        _hv = true;
+                        _vv = false;
+                        break;
+                    }
+                    case VERTICAL:
+                    {
+                        _hv = false;
+                        _vv = true;
+                        break;
+                    }
+                    default:
+                    {
+                        _hv = false;
+                        _vv = false;
+                        break;
+                    }
+                }
+            }
+
+            /* go through widget to change it visual based on the layout */
+
+            private function setWidgetControl():void
+            {
+                var widget:IVisualElement;
+                for (var i:int = 0; i < widgetContainer.numElements; i++)
+                {
+                    widget = widgetContainer.getElementAt(i);
+
+                    var baseWidget:IBaseWidget = widget as IBaseWidget;
+                    baseWidget.isDraggable = isDraggable;
+                    constrainWidget(baseWidget);
+                }
+            }
+
+            private function constrainWidget(baseWidget:IBaseWidget):void
+            {
+                // if the layout is constrained, override the base widget's settings,
+                // otherwise, the base widget's settings will be respected.
+                if (isConstrainedLayout())
+                {
+                    baseWidget.isResizeable = isResizeable;
+                }
+            }
+
+            [Bindable]
+            private var containerWidth:Number;
+            [Bindable]
+            private var containerHeight:Number;
+
+            private function toggleState(state:String):void
+            {
+                AppEvent.dispatch(AppEvent.TOC_HIDDEN); // always hide the toc layer menu
+
+                if (state == VERTICAL)
+                {
+                    containerWidth = widgetContainer.width;
+                    if (currentState != "collapsedRight")
+                    {
+                        currentState = "collapsedRight";
+                    }
+                    else
+                    {
+                        widgetContainer.clipAndEnableScrolling = true;
+                        currentState = "normal";
+                    }
+                }
+                else if (state == HORIZONTAL)
+                {
+                    containerHeight = widgetContainer.height;
+                    if (currentState != "collapsedDown")
+                    {
+                        currentState = "collapsedDown";
+                    }
+                    else
+                    {
+                        widgetContainer.clipAndEnableScrolling = true;
+                        currentState = "normal";
+                    }
+                }
+            }
+
+            protected function hControl_creationCompleteHandler(event:FlexEvent):void
+            {
+                hControl.setStyle("backgroundColor", getStyle("contentBackgroundColor"));
+                hControl.setStyle("backgroundAlpha", getStyle("backgroundAlpha"));
+                hControl.setStyle("borderColor", FlexGlobals.topLevelApplication.getStyle("color"));
+            }
+
+
+            protected function vControl_creationCompleteHandler(event:FlexEvent):void
+            {
+                vControl.setStyle("backgroundColor", getStyle("contentBackgroundColor"));
+                vControl.setStyle("backgroundAlpha", getStyle("backgroundAlpha"));
+                vControl.setStyle("borderColor", FlexGlobals.topLevelApplication.getStyle("color"));
+            }
+
+            private function toNormal_effectEndHandler(event:EffectEvent):void
+            {
+                if (elmToAdd != null)
+                {
+                    addWidget(elmToAdd);
+                    elmToAdd = null;
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="collapsedRight"/>
+        <s:State name="collapsedDown"/>
+        <s:State name="resized"/>
+    </s:states>
+
+    <s:transitions>
+        <s:Transition fromState="normal" toState="collapsedDown">
+            <s:Sequence effectEnd="{_transitionInProgress=false;}" effectStart="{_transitionInProgress=true;}">
+                <s:Resize duration="500" target="{widgetContainer}"/>
+                <s:Rotate angleBy="180"
+                          autoCenterTransform="true"
+                          duration="500"
+                          excludeFrom="resized"
+                          target="{btnHCollapse}"/>
+            </s:Sequence>
+        </s:Transition>
+        <s:Transition fromState="normal" toState="collapsedRight">
+            <s:Sequence effectEnd="{_transitionInProgress=false;}" effectStart="{_transitionInProgress=true;}">
+                <s:Resize duration="500" target="{widgetContainer}"/>
+                <s:Rotate angleBy="180"
+                          autoCenterTransform="true"
+                          duration="500"
+                          excludeFrom="resized"
+                          target="{btnVCollapse}"/>
+            </s:Sequence>
+        </s:Transition>
+        <s:Transition fromState="collapsedDown" toState="normal">
+            <s:Sequence effectEnd="{toNormal_effectEndHandler(event); _transitionInProgress=false;}" effectStart="{_transitionInProgress=true;}">
+                <s:Resize id="htoNormal"
+                          duration="300"
+                          target="{widgetContainer}"/>
+                <s:Rotate angleBy="180"
+                          autoCenterTransform="true"
+                          duration="500"
+                          excludeFrom="resized"
+                          target="{btnHCollapse}"/>
+            </s:Sequence>
+        </s:Transition>
+        <s:Transition fromState="collapsedRight" toState="normal">
+            <s:Sequence effectEnd="{toNormal_effectEndHandler(event); _transitionInProgress=false;}" effectStart="{_transitionInProgress=true;}">
+                <s:Resize id="vtoNormal"
+                          duration="500"
+                          target="{widgetContainer}"/>
+                <s:Rotate angleBy="180"
+                          autoCenterTransform="true"
+                          duration="500"
+                          excludeFrom="resized"
+                          target="{btnVCollapse}"/>
+            </s:Sequence>
+        </s:Transition>
+    </s:transitions>
+
+    <s:BorderContainer id="vControl"
+                       y="300" width="22" height="80"
+                       right="0"
+                       borderVisible="true"
+                       borderWeight="1"
+                       cornerRadius="3"
+                       creationComplete="vControl_creationCompleteHandler(event)"
+                       layoutDirection="ltr"
+                       visible="{_vv}">
+        <s:layout>
+            <s:VerticalLayout gap="2"
+                              horizontalAlign="center"
+                              verticalAlign="middle"/>
+        </s:layout>
+        <s:filters>
+            <s:DropShadowFilter alpha="0.5"
+                                blurX="10"
+                                blurY="10"/>
+        </s:filters>
+        <mx:Image id="btnVCollapse"
+                  alpha="0.9"
+                  buttonMode="true"
+                  click="toggleState(VERTICAL)"
+                  source="assets/images/w_collapse.png"
+                  transformX="10"
+                  transformY="10"
+                  useHandCursor="true"
+                  visible="{_vv}"/>
+        <mx:Image id="btnUp"
+                  alpha="0.9"
+                  buttonMode="true"
+                  mouseDown="startScroll(UP)"
+                  source="assets/images/w_up.png"
+                  useHandCursor="true"
+                  visible="{_vv}"
+                  visible.collapsedRight="false"/>
+        <mx:Image id="btnDown"
+                  alpha="0.9"
+                  buttonMode="true"
+                  mouseDown="startScroll(DOWN)"
+                  source="assets/images/w_down.png"
+                  useHandCursor="true"
+                  visible="{_vv}"
+                  visible.collapsedRight="false"/>
+    </s:BorderContainer>
+
+    <s:BorderContainer id="hControl"
+                       x="300" width="80" height="24"
+                       bottom="0"
+                       borderVisible="true"
+                       borderWeight="1"
+                       cornerRadius="3"
+                       creationComplete="hControl_creationCompleteHandler(event)"
+                       layoutDirection="ltr"
+                       visible="{_hv}">
+        <s:layout>
+            <s:HorizontalLayout gap="2"
+                                horizontalAlign="center"
+                                verticalAlign="middle"/>
+        </s:layout>
+        <s:filters>
+            <s:DropShadowFilter alpha="0.5"
+                                blurX="10"
+                                blurY="10"/>
+        </s:filters>
+        <mx:Image id="btnHCollapse"
+                  alpha="0.9"
+                  buttonMode="true"
+                  click="toggleState(HORIZONTAL)"
+                  source="assets/images/w_collapse_down.png"
+                  transformX="10"
+                  transformY="10"
+                  useHandCursor="true"
+                  visible="{_hv}"/>
+        <mx:Image id="btnLeft"
+                  alpha="0.9"
+                  buttonMode="true"
+                  mouseDown="startScroll(LEFT)"
+                  source="assets/images/w_left.png"
+                  useHandCursor="true"
+                  visible="{_hv}"
+                  visible.collapsedDown="false"/>
+        <mx:Image id="btnRight"
+                  alpha="0.9"
+                  buttonMode="true"
+                  mouseDown="startScroll(RIGHT)"
+                  source="assets/images/w_right.png"
+                  useHandCursor="true"
+                  visible="{_hv}"
+                  visible.collapsedDown="false"/>
+    </s:BorderContainer>
+
+    <s:Group id="widgetContainer"
+             width="100%" height="100%"
+             left="{_left}" left.collapsedRight="{containerWidth}" left.resized="{_left}" right="{_right}" right.normal="{_right}" right.resized="{_right}" top="{_top}" top.collapsedDown="{containerHeight}" top.resized="{_top}" bottom="{_bottom}" bottom.resized="{_bottom}"
+             clipAndEnableScrolling="true"
+             elementAdd="widgetAddedHandler(event)"/>
+
+</s:SkinnableContainer>

@@ -456,6 +456,7 @@ private void executeEdit(ActionEvent event, RequestContext context)
 private void executeHistory(ActionEvent event, RequestContext context)
   throws Exception {
   // history
+  getHarvestContext().getHistoryCriteria().getQueryCriteria().setEventUuid("");
   getHarvestContext().getHistoryCriteria().getActionCriteria().setUuid(getOpenDocumentUuid());
   setOpenSchemaKey("");
   setNavigationOutcome("catalog.harvest.manage.history");

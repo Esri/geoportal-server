@@ -1534,8 +1534,9 @@ protected function resultgroups_creationCompleteHandler(event:FlexEvent):void
 					<widgets:layout>
 						<s:VerticalLayout
 							gap="2"
+							
 						  horizontalAlign="justify"
-							useVirtualLayout="true"/>
+							useVirtualLayout="false"/>
 					</widgets:layout>
 				</widgets:RecordDataGroup>
 			</s:Scroller>	

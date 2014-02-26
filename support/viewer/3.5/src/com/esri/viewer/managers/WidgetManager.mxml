@@ -1,0 +1,1483 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<!---
+    Class used to configure and handle Flex Viewer widgets.
+-->
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                      xmlns:s="library://ns.adobe.com/flex/spark"
+                      xmlns:mx="library://ns.adobe.com/flex/mx"
+                      width="100%" height="100%"
+                      creationComplete="creationCompleteHandler()">
+
+    <fx:Declarations>
+        <mx:Resize id="bottomContainerCollapse"
+                   duration="400"
+                   effectEnd="bottomContainerCollapse_effectEndHandler(event)"
+                   heightTo="0"
+                   target="{bottomContainer}"/>
+        <mx:Resize id="bottomContainerOpen"
+                   duration="400"
+                   heightTo="{bcSize}"
+                   target="{bottomContainer}"/>
+
+        <mx:Resize id="leftContainerCollapse"
+                   duration="400"
+                   effectEnd="leftContainerCollapse_effectEndHandler(event)"
+                   target="{leftContainer}"
+                   widthTo="0"/>
+        <mx:Resize id="leftContainerOpen"
+                   duration="400"
+                   target="{leftContainer}"
+                   widthTo="{lcSize}"/>
+
+        <mx:Resize id="rightContainerCollapse"
+                   duration="400"
+                   effectEnd="rightContainerCollapse_effectEndHandler(event)"
+                   target="{rightContainer}"
+                   widthTo="0"/>
+        <mx:Resize id="rightContainerOpen"
+                   duration="400"
+                   target="{rightContainer}"
+                   widthTo="{rcSize}"/>
+    </fx:Declarations>
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.Map;
+            import com.esri.ags.layers.supportClasses.LayerInfoWindowRenderer;
+            import com.esri.viewer.AppEvent;
+            import com.esri.viewer.ConfigData;
+            import com.esri.viewer.IBaseWidget;
+            import com.esri.viewer.IInfowindowTemplate;
+            import com.esri.viewer.IWidgetContainer;
+            import com.esri.viewer.WidgetStates;
+            import com.esri.viewer.utils.Hashtable;
+            import com.esri.viewer.utils.LocalizationUtil;
+            import com.esri.viewer.utils.PanelBox;
+            import com.esri.viewer.utils.PanelBoxButtonClickEvent;
+
+            import mx.core.IVisualElement;
+            import mx.core.UIComponent;
+            import mx.events.EffectEvent;
+            import mx.events.ModuleEvent;
+            import mx.events.ResizeEvent;
+            import mx.managers.HistoryManager;
+            import mx.managers.IFocusManagerComponent;
+            import mx.modules.IModuleInfo;
+            import mx.modules.ModuleManager;
+
+            import spark.components.Group;
+            import spark.components.HGroup;
+            import spark.components.VGroup;
+
+            private const WIDGET_MANAGER:String = "WidgetManager";
+
+            private var hist:HistoryManager;
+
+            private var configData:ConfigData;
+
+            private var map:Map;
+
+            private var moduleTable:Hashtable = new Hashtable();
+
+            private var widgetTable:Hashtable = new Hashtable();
+
+            private var controlTable:Hashtable = new Hashtable();
+
+            private var containerTable:Hashtable = new Hashtable();
+
+            private var infowidgetTable:Hashtable = new Hashtable();
+
+            private var wgtInfo:IModuleInfo;
+
+            private var ctlInfo:IModuleInfo;
+
+            private var ctnInfo:IModuleInfo;
+
+            private var isDraggable:Boolean = true;
+
+            private var preloadArray:Array = [];
+
+            private var panelWidgetArray:Array = [];
+
+            private var _refX:Number = 0;
+
+            private var _refY:Number = 0;
+
+            private var controlContainer:Group;
+
+            private var _mapManager:MapManager;
+
+            // setting securityDomain is not allowed on non-REMOTE sandboxes
+            private var securityDomain:SecurityDomain =
+                Security.sandboxType == Security.REMOTE ? SecurityDomain.currentDomain : null;
+
+            private var simpleWidgetContainersContainer:Group;
+
+            // panels
+
+            [Bindable]
+            private var bottomContainer:HGroup;
+            [Bindable]
+            public var bottomContainerVisible:Boolean = true;
+            [Bindable]
+            private var leftContainer:VGroup;
+            [Bindable]
+            public var leftContainerVisible:Boolean = true;
+            [Bindable]
+            private var rightContainer:VGroup;
+            [Bindable]
+            public var rightContainerVisible:Boolean = true;
+
+            private var bcOrder:int;
+            private var lcOrder:int;
+            private var rcOrder:int;
+
+            [Bindable]
+            private var bcSize:int;
+            [Bindable]
+            private var lcSize:int;
+            [Bindable]
+            private var rcSize:int;
+
+            private var vPanelBox:PanelBox;
+            private var hPanelBox:PanelBox;
+            private var iHPanelBox1:PanelBox;
+            private var iHPanelBox2:PanelBox;
+
+            /**
+             * Gets the widget by the widget ID.
+             * Returns the widget by ID if the widget has been loaded.
+             * Returns null if the widget has not been loaded, and at the same time, triggers the loading of the widget.
+             *
+             * @param widgetId The widget ID.
+             * @param openWidgetIfNot Indicates whether to open the widget if it is not already in the open state.
+             *
+             * @return The widget for the specified widget ID, null if the widget has not been loaded.
+             *
+             * @throws ArgumentError The widget ID does not exist.
+             *
+             */
+            public function getWidget(widgetId:Number, openWidgetIfNot:Boolean = false):IBaseWidget
+            {
+                var idx:Object = configData.widgetIndex[widgetId];
+
+                if (idx == null)
+                {
+                    throw new ArgumentError(LocalizationUtil.getDefaultString("invalidWidgetId", widgetId));
+                }
+
+                var widget:IBaseWidget = null;
+                var wgt:Object = configData.widgetContainers[idx.container].widgets[idx.widget];
+                var wgtContainer:IWidgetContainer = configData.widgetContainers[idx.container].container.obj;
+
+                if (widgetTable.containsKey(widgetId))
+                {
+                    widget = widgetTable.find(widgetId) as IBaseWidget;
+
+                    if (openWidgetIfNot && widget.getState() == WidgetStates.WIDGET_CLOSED)
+                    {
+                        openWidget(widget);
+                    }
+                }
+                else
+                {
+                    if (moduleTable.containsKey(wgt.url))
+                    {
+                        widget = createWidget(widgetId);
+                        if (openWidgetIfNot && widget.getState() == WidgetStates.WIDGET_CLOSED)
+                        {
+                            openWidget(widget);
+                        }
+                    }
+                    else
+                    {
+                        loadWidget(widgetId);
+                    }
+                }
+                return widget;
+            }
+
+            /**
+             * Returns an array of widget IDs for widgets that have already been loaded, whether or not they still are open.
+             * Note that closing a widget does not unload it, thus this method will return all widgets that are, or have been, opened.
+             *
+             * @return Array of widget IDs that have already been loaded.
+             *
+             */
+            public function getAllLoadedWidgetIds():Array
+            {
+                return widgetTable.getKeySet();
+            }
+
+            /**
+             * Returns the total number of widgets in application.
+             *
+             * @return Total number of widgets.
+             *
+             */
+            public function getNumWidgets():Number
+            {
+                return configData.widgetIndex.length;
+            }
+
+            /**
+             * Returns the widget ID for a specific widget based on the widget label.
+             *
+             * @return Widget ID for the specified widget.
+             *
+             */
+            public function getWidgetId(widgetLabel:String):Number
+            {
+                var id:Number = Number.NaN;
+                for (var i:Number = 0; i < configData.widgets.length; i++)
+                {
+                    if (configData.widgets[i].label == widgetLabel)
+                    {
+                        id = configData.widgets[i].id;
+                    }
+                }
+                return id;
+            }
+
+            public function get mapManager():MapManager
+            {
+                return _mapManager;
+            }
+
+            public function set mapManager(value:MapManager):void
+            {
+                _mapManager = value;
+                addMapManager();
+            }
+
+            private function addMapManager():void
+            {
+                simpleWidgetContainersContainer = new Group;
+                simpleWidgetContainersContainer.percentHeight = 100;
+                simpleWidgetContainersContainer.percentWidth = 100;
+                simpleWidgetContainersContainer.addElement(mapManager);
+
+                this.addElement(simpleWidgetContainersContainer);
+
+                mapManager.visible = false;
+            }
+
+            private function creationCompleteHandler():void
+            {
+                AppEvent.addListener(AppEvent.CONFIG_LOADED, configLoadedHandler);
+                AppEvent.addListener(AppEvent.MAP_LOADED, mapLoadedHandler);
+                AppEvent.addListener(AppEvent.WIDGET_RUN, onRunWidget);
+                AppEvent.addListener(AppEvent.WIDGET_ADDED, widgetAddedHandler);
+                AppEvent.addListener(AppEvent.DATA_CREATE_INFOWIDGET, onInfowidgetRequest);
+                AppEvent.addListener(AppEvent.WIDGET_FOCUS, focusWidgetHandler);
+                AppEvent.addListener(AppEvent.WIDGET_STATE_CHANGED, widgetClosedHandler);
+                AppEvent.addListener(AppEvent.WIDGET_CLOSE, widgetCloseHandler);
+
+                //TODO: no real time change layout for V2.0
+                //AppEvent.addListener(AppEvent.CHANGE_LAYOUT, changeLayoutHandler);
+
+                //TODO: no real time resizing for V2.0
+                //AppEvent.addListener(AppEvent.WIDGET_MGR_RESIZE, resizeManagerView);
+            }
+
+            private function configLoadedHandler(event:AppEvent):void
+            {
+                configData = event.data as ConfigData;
+
+                startLoadWidgetContainers();
+            }
+
+            private function mapLoadedHandler(event:AppEvent):void
+            {
+                map = event.data as Map;
+            }
+
+            //=====================================================================
+            // Load widget containers
+            //=====================================================================
+            private var containerList:Array = new Array();
+
+            private function startLoadWidgetContainers():void
+            {
+                var containers:Array = configData.widgetContainers;
+                if (containers)
+                {
+                    for (var i:int = 0; i < containers.length; i++)
+                    {
+                        containerList.push(containers[i].container);
+                    }
+                    loadNextContainer();
+                }
+            }
+
+            private var containerCount:int = 0;
+
+            private function loadNextContainer():void
+            {
+                if (containerList.length)
+                {
+                    containerCount++;
+                    var ctn:Object = containerList[0];
+                    containerList.splice(0, 1);
+                    if (!ctn.panelType)
+                    {
+                        loadContainer(ctn);
+                    }
+                    else
+                    {
+                        if (ctn.panelType == "bottom")
+                        {
+                            bottomContainerVisible = ctn.initialState == "collapsed" ? false : true;
+
+                            bcSize = ctn.size ? ctn.size : 250;
+                            bottomContainer = getBottomContainer(bcSize, bottomContainerVisible);
+                            bottomContainer.addEventListener(ResizeEvent.RESIZE, handleBottomContainerResize);
+                            bottomContainer.gap = 2;
+                            bcOrder = containerCount;
+                        }
+                        if (ctn.panelType == "left")
+                        {
+                            leftContainerVisible = ctn.initialState == "collapsed" ? false : true;
+
+                            lcSize = ctn.size ? ctn.size : 250;
+                            leftContainer = getLeftRightContainer(lcSize, leftContainerVisible);
+                            leftContainer.addEventListener(ResizeEvent.RESIZE, handleLeftContainerResize);
+                            leftContainer.gap = 2;
+                            lcOrder = containerCount;
+                        }
+                        if (ctn.panelType == "right")
+                        {
+                            rightContainerVisible = ctn.initialState == "collapsed" ? false : true;
+
+                            rcSize = ctn.size ? ctn.size : 250;
+                            rightContainer = getLeftRightContainer(rcSize, rightContainerVisible);
+                            rightContainer.addEventListener(ResizeEvent.RESIZE, handleRightContainerResize);
+                            rightContainer.gap = 2;
+                            rcOrder = containerCount;
+                        }
+
+                        loadNextContainer();
+                    }
+                }
+                else
+                {
+                    mapManager.visible = true;
+
+                    // before loading controls position the "panel" containers
+                    positionPanelContainers();
+                    startLoadControls();
+                }
+            }
+
+            private function positionPanelContainers():void
+            {
+                // before loading controls position the containers
+                if (bottomContainer || leftContainer || rightContainer)
+                {
+                    this.removeAllElements();
+
+                    hPanelBox = new PanelBox;
+                    hPanelBox.addEventListener("buttonClick", handleHPanelBoxButtonClick);
+                    hPanelBox.direction = "horizontal";
+                    hPanelBox.setStyle("dividerThickness", 10);
+                    hPanelBox.percentHeight = 100;
+                    hPanelBox.percentWidth = 100;
+
+                    vPanelBox = new PanelBox;
+                    vPanelBox.addEventListener("buttonClick", handleVPanelBoxButtonClick);
+                    vPanelBox.direction = "vertical";
+                    vPanelBox.setStyle("dividerThickness", 10);
+                    vPanelBox.percentHeight = 100;
+                    vPanelBox.percentWidth = 100;
+                    if (bottomContainer && leftContainer && rightContainer) // all three
+                    {
+                        var lorder:int = Math.min(bcOrder, lcOrder, rcOrder);
+                        if (bcOrder == lorder)
+                        {
+                            hPanelBox.hasRightPanelContainer = true;
+                            hPanelBox.addElement(leftContainer);
+                            hPanelBox.addElement(simpleWidgetContainersContainer);
+                            hPanelBox.addElement(rightContainer);
+
+                            vPanelBox.addElement(hPanelBox);
+                            vPanelBox.addElement(bottomContainer);
+
+                            this.addElement(vPanelBox);
+                            // change panel box button state based on panel's initial state
+                            vPanelBox.changeButtonSelection(0, !bottomContainerVisible);
+                            hPanelBox.changeButtonSelection(0, !leftContainerVisible);
+                            hPanelBox.changeButtonSelection(0, rightContainerVisible);
+                        }
+                        else if (lcOrder == lorder)
+                        {
+                            if (bcOrder < rcOrder)
+                            {
+                                iHPanelBox1 = new PanelBox;
+                                iHPanelBox1.addEventListener("buttonClick", handleHPanelBoxButtonClick);
+                                iHPanelBox1.direction = "horizontal";
+                                iHPanelBox1.setStyle("dividerThickness", 10);
+                                iHPanelBox1.percentHeight = 100;
+                                iHPanelBox1.percentWidth = 100;
+                                iHPanelBox1.addElement(simpleWidgetContainersContainer);
+                                iHPanelBox1.addElement(rightContainer);
+                                iHPanelBox1.hasRightPanelContainer = true;
+
+                                vPanelBox.addElement(iHPanelBox1);
+                                vPanelBox.addElement(bottomContainer);
+
+                                hPanelBox.addElement(leftContainer);
+                                hPanelBox.addElement(vPanelBox);
+
+                                this.addElement(hPanelBox);
+                                // change panel box button state based on panel's initial state
+                                vPanelBox.changeButtonSelection(0, !bottomContainerVisible);
+                                hPanelBox.changeButtonSelection(0, !leftContainerVisible);
+                                iHPanelBox1.changeButtonSelection(0, rightContainerVisible);
+                            }
+                            else
+                            {
+                                vPanelBox.addElement(simpleWidgetContainersContainer);
+                                vPanelBox.addElement(bottomContainer);
+
+                                hPanelBox.hasRightPanelContainer = true;
+                                hPanelBox.addElement(leftContainer);
+                                hPanelBox.addElement(vPanelBox);
+                                hPanelBox.addElement(rightContainer);
+
+                                this.addElement(hPanelBox);
+                                // change panel box button state based on panel's initial state
+                                vPanelBox.changeButtonSelection(0, !bottomContainerVisible);
+                                hPanelBox.changeButtonSelection(0, !leftContainerVisible);
+                                hPanelBox.changeButtonSelection(1, rightContainerVisible);
+                            }
+                        }
+                        else if (rcOrder == lorder)
+                        {
+                            if (lcOrder < bcOrder)
+                            {
+                                vPanelBox.addElement(simpleWidgetContainersContainer);
+                                vPanelBox.addElement(bottomContainer);
+
+                                hPanelBox.hasRightPanelContainer = true;
+                                hPanelBox.addElement(leftContainer);
+                                hPanelBox.addElement(vPanelBox);
+                                hPanelBox.addElement(rightContainer);
+
+                                this.addElement(hPanelBox);
+                                // change panel box button state based on panel's initial state
+                                vPanelBox.changeButtonSelection(0, !bottomContainerVisible);
+                                hPanelBox.changeButtonSelection(0, !leftContainerVisible);
+                                hPanelBox.changeButtonSelection(1, rightContainerVisible);
+                            }
+                            else
+                            {
+                                iHPanelBox2 = new PanelBox;
+                                iHPanelBox2.addEventListener("buttonClick", handleHPanelBoxButtonClick);
+                                iHPanelBox2.direction = "horizontal";
+                                iHPanelBox2.setStyle("dividerThickness", 10);
+                                iHPanelBox2.percentHeight = 100;
+                                iHPanelBox2.percentWidth = 100;
+                                iHPanelBox2.addElement(leftContainer);
+                                iHPanelBox2.addElement(simpleWidgetContainersContainer);
+
+                                vPanelBox.addElement(iHPanelBox2);
+                                vPanelBox.addElement(bottomContainer);
+
+                                hPanelBox.hasRightPanelContainer = true;
+                                hPanelBox.addElement(vPanelBox);
+                                hPanelBox.addElement(rightContainer);
+
+                                this.addElement(hPanelBox);
+                                // change panel box button state based on panel's initial state
+                                vPanelBox.changeButtonSelection(0, !bottomContainerVisible);
+                                iHPanelBox2.changeButtonSelection(0, !leftContainerVisible);
+                                hPanelBox.changeButtonSelection(0, rightContainerVisible);
+                            }
+                        }
+                    }
+                    else if (bottomContainer && leftContainer)
+                    {
+                        if (bcOrder < lcOrder)
+                        {
+                            hPanelBox.addElement(leftContainer);
+                            hPanelBox.addElement(simpleWidgetContainersContainer);
+
+                            vPanelBox.addElement(hPanelBox);
+                            vPanelBox.addElement(bottomContainer);
+
+                            this.addElement(vPanelBox);
+                        }
+                        else
+                        {
+                            vPanelBox.addElement(simpleWidgetContainersContainer);
+                            vPanelBox.addElement(bottomContainer);
+
+                            hPanelBox.addElement(leftContainer);
+                            hPanelBox.addElement(vPanelBox);
+
+                            this.addElement(hPanelBox);
+                        }
+                        // change panel box button state based on panel's initial state
+                        vPanelBox.changeButtonSelection(0, !bottomContainerVisible);
+                        hPanelBox.changeButtonSelection(0, !leftContainerVisible);
+                    }
+                    else if (bottomContainer && rightContainer)
+                    {
+                        if (bcOrder < rcOrder)
+                        {
+                            hPanelBox.hasRightPanelContainer = true;
+                            hPanelBox.addElement(simpleWidgetContainersContainer);
+                            hPanelBox.addElement(rightContainer);
+
+                            vPanelBox.addElement(hPanelBox);
+                            vPanelBox.addElement(bottomContainer);
+
+                            this.addElement(vPanelBox);
+                        }
+                        else
+                        {
+                            vPanelBox.addElement(simpleWidgetContainersContainer);
+                            vPanelBox.addElement(bottomContainer);
+
+                            hPanelBox.hasRightPanelContainer = true;
+                            hPanelBox.addElement(vPanelBox);
+                            hPanelBox.addElement(rightContainer);
+
+                            this.addElement(hPanelBox);
+                        }
+                        // change panel box button state based on panel's initial state
+                        vPanelBox.changeButtonSelection(0, !bottomContainerVisible);
+                        hPanelBox.changeButtonSelection(0, rightContainerVisible);
+                    }
+                    else if (leftContainer && rightContainer)
+                    {
+                        hPanelBox.hasRightPanelContainer = true;
+                        hPanelBox.addElement(leftContainer);
+                        hPanelBox.addElement(simpleWidgetContainersContainer);
+                        hPanelBox.addElement(rightContainer);
+
+                        this.addElement(hPanelBox);
+                        // change panel box button state based on panel's initial state
+                        hPanelBox.changeButtonSelection(0, !leftContainerVisible);
+                        hPanelBox.changeButtonSelection(1, rightContainerVisible);
+                    }
+                    else if (bottomContainer)
+                    {
+                        vPanelBox.addElement(simpleWidgetContainersContainer);
+                        vPanelBox.addElement(bottomContainer);
+
+                        this.addElement(vPanelBox);
+                        // change panel box button state based on panel's initial state
+                        vPanelBox.changeButtonSelection(0, !bottomContainerVisible);
+                    }
+                    else if (leftContainer)
+                    {
+                        hPanelBox.addElement(leftContainer);
+                        hPanelBox.addElement(simpleWidgetContainersContainer);
+
+                        this.addElement(hPanelBox);
+                        // change panel box button state based on panel's initial state
+                        hPanelBox.changeButtonSelection(0, !leftContainerVisible);
+                    }
+                    else if (rightContainer)
+                    {
+                        hPanelBox.hasRightPanelContainer = true;
+                        hPanelBox.addElement(simpleWidgetContainersContainer);
+                        hPanelBox.addElement(rightContainer);
+
+                        this.addElement(hPanelBox);
+                        // change panel box button state based on panel's initial state
+                        hPanelBox.changeButtonSelection(0, rightContainerVisible);
+                    }
+                }
+            }
+
+            private function getBottomContainer(size:int, isOpen:Boolean):HGroup
+            {
+                var bGroup:HGroup = new HGroup;
+
+                bGroup.percentWidth = 100;
+                bGroup.height = isOpen ? size : 0;
+
+                return bGroup;
+            }
+
+            private function getLeftRightContainer(size:int, isOpen:Boolean):VGroup
+            {
+                var lrGroup:VGroup = new VGroup;
+
+                lrGroup.percentHeight = 100;
+                lrGroup.width = isOpen ? size : 0;
+
+                return lrGroup;
+            }
+
+            private function handleVPanelBoxButtonClick(event:PanelBoxButtonClickEvent):void
+            {
+                if (bottomContainerVisible)
+                {
+                    bcSize = bottomContainer.height;
+                    bottomContainerCollapse.play();
+                    bottomContainerVisible = false;
+                }
+                else
+                {
+                    bottomContainerOpen.play();
+                    bottomContainerVisible = true;
+                    updatePanelWidgetsVisibility(bottomContainer, true);
+                }
+            }
+
+            private function handleHPanelBoxButtonClick(event:PanelBoxButtonClickEvent):void
+            {
+                if (PanelBox(event.currentTarget).numElements == 3)
+                {
+                    if (event.buttonIndex == 0)
+                    {
+                        if (leftContainerVisible)
+                        {
+                            lcSize = leftContainer.width;
+                            leftContainerCollapse.play();
+                            leftContainerVisible = false;
+                        }
+                        else
+                        {
+                            leftContainerOpen.play();
+                            leftContainerVisible = true;
+                            updatePanelWidgetsVisibility(leftContainer, true);
+                        }
+                    }
+                    else
+                    {
+                        if (rightContainerVisible)
+                        {
+                            rcSize = rightContainer.width;
+                            rightContainerCollapse.play();
+                            rightContainerVisible = false;
+                        }
+                        else
+                        {
+                            rightContainerOpen.play();
+                            rightContainerVisible = true;
+                            updatePanelWidgetsVisibility(rightContainer, true);
+                        }
+                    }
+                }
+                else
+                {
+                    var firstElement:IVisualElement = PanelBox(event.currentTarget).getElementAt(0);
+                    var secondElement:IVisualElement = PanelBox(event.currentTarget).getElementAt(1);
+
+                    if (firstElement is VGroup)
+                    {
+                        if (!(secondElement is VGroup))
+                        {
+                            if (leftContainerVisible)
+                            {
+                                lcSize = leftContainer.width;
+                                leftContainerCollapse.play();
+                                leftContainerVisible = false;
+                            }
+                            else
+                            {
+                                leftContainerOpen.play();
+                                leftContainerVisible = true;
+                                updatePanelWidgetsVisibility(leftContainer, true);
+                            }
+                        }
+                        else
+                        {
+                            if (rightContainerVisible)
+                            {
+                                rcSize = rightContainer.width;
+                                rightContainerCollapse.play();
+                                rightContainerVisible = false;
+                            }
+                            else
+                            {
+                                rightContainerOpen.play();
+                                rightContainerVisible = true;
+                                updatePanelWidgetsVisibility(rightContainer, true);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (rightContainerVisible)
+                        {
+                            rcSize = rightContainer.width;
+                            rightContainerCollapse.play();
+                            rightContainerVisible = false;
+                        }
+                        else
+                        {
+                            rightContainerOpen.play();
+                            rightContainerVisible = true;
+                            updatePanelWidgetsVisibility(rightContainer, true);
+                        }
+                    }
+                }
+            }
+
+            private function handleBottomContainerResize(event:ResizeEvent):void
+            {
+                if (bottomContainer.height > 5 && vPanelBox.isButtonSelected())
+                {
+                    vPanelBox.changeButtonSelection();
+                    bottomContainerVisible = true;
+                    updatePanelWidgetsVisibility(bottomContainer, true);
+                }
+                else
+                {
+                    if (bottomContainer.height < 5)
+                    {
+                        if (!vPanelBox.isButtonSelected())
+                        {
+                            vPanelBox.changeButtonSelection();
+                        }
+                        bottomContainerVisible = false;
+                        bottomContainer.height = 0;
+                        updatePanelWidgetsVisibility(bottomContainer, false);
+                    }
+                }
+            }
+
+            private function handleLeftContainerResize(event:ResizeEvent):void
+            {
+                if (leftContainer.parent === hPanelBox)
+                {
+                    updateHDividedBox(hPanelBox);
+                }
+                else if (leftContainer.parent === iHPanelBox2)
+                {
+                    updateHDividedBox(iHPanelBox2);
+                }
+
+                function updateHDividedBox(dividedBox:PanelBox):void
+                {
+                    if (leftContainer.width > 5 && dividedBox.isButtonSelected())
+                    {
+                        dividedBox.changeButtonSelection();
+                        leftContainerVisible = true;
+                        updatePanelWidgetsVisibility(leftContainer, true);
+                    }
+                    else
+                    {
+                        if (leftContainer.width < 5)
+                        {
+                            if (!dividedBox.isButtonSelected())
+                            {
+                                dividedBox.changeButtonSelection();
+                            }
+                            leftContainerVisible = false;
+                            leftContainer.width = 0;
+                            updatePanelWidgetsVisibility(leftContainer, false);
+                        }
+                    }
+                }
+            }
+
+            private function handleRightContainerResize(event:ResizeEvent):void
+            {
+                if (rightContainer.parent === hPanelBox)
+                {
+                    updateHDividedBox(hPanelBox, hPanelBox.getElementIndex(rightContainer) - 1);
+                }
+                else if (rightContainer.parent === iHPanelBox1)
+                {
+                    updateHDividedBox(iHPanelBox1, iHPanelBox1.getElementIndex(rightContainer) - 1);
+                }
+
+                function updateHDividedBox(panelBox:PanelBox, buttonIndex:int):void
+                {
+                    if (rightContainer.width > 5 && !panelBox.isButtonSelected(buttonIndex))
+                    {
+                        panelBox.changeButtonSelection(buttonIndex);
+                        rightContainerVisible = true;
+                        updatePanelWidgetsVisibility(rightContainer, true);
+                    }
+                    else
+                    {
+                        if (rightContainer.width < 5)
+                        {
+                            if (panelBox.isButtonSelected(buttonIndex))
+                            {
+                                panelBox.changeButtonSelection(buttonIndex);
+                            }
+                            rightContainerVisible = false;
+                            rightContainer.width = 0;
+                            updatePanelWidgetsVisibility(rightContainer, false);
+                        }
+                    }
+                }
+            }
+
+            private function bottomContainerCollapse_effectEndHandler(event:EffectEvent):void
+            {
+                updatePanelWidgetsVisibility(bottomContainer, false);
+            }
+
+            private function leftContainerCollapse_effectEndHandler(event:EffectEvent):void
+            {
+                updatePanelWidgetsVisibility(leftContainer, false);
+            }
+
+            private function rightContainerCollapse_effectEndHandler(event:EffectEvent):void
+            {
+                updatePanelWidgetsVisibility(rightContainer, false);
+            }
+
+            private function updatePanelWidgetsVisibility(panel:Group, visible:Boolean):void
+            {
+                for (var i:int = 0; i < panel.numElements; i++)
+                {
+                    panel.getElementAt(i).visible = visible;
+                }
+            }
+
+            private function loadContainer(ctn:Object):void
+            {
+                ctnInfo = ModuleManager.getModule(ctn.url);
+                ctnInfo.data = ctn;
+                ctnInfo.addEventListener(ModuleEvent.READY, onContainerReady);
+                ctnInfo.addEventListener(ModuleEvent.ERROR, moduleErrorHandler);
+                ctnInfo.load(null, securityDomain, null, moduleFactory);
+            }
+
+            private var containers:Array = [];
+
+            private function onContainerReady(event:ModuleEvent):void
+            {
+                var moduleInfo:IModuleInfo = event.module;
+                var moduleData:Object = moduleInfo.data;
+                containerTable.add(moduleData.url, moduleInfo);
+
+                var widgetContainer:IWidgetContainer = moduleInfo.factory.create() as IWidgetContainer;
+
+                moduleData.obj = widgetContainer;
+                widgetContainer.configParams = moduleData;
+
+                var visualElement:IVisualElement = widgetContainer as IVisualElement;
+
+                if (visualElement)
+                {
+                    simpleWidgetContainersContainer.addElement(visualElement);
+                }
+                containers.push({ widgetContainer: widgetContainer, type: moduleData.panelType });
+
+                loadNextContainer();
+            }
+
+            //=====================================================================
+            // Load controllers
+            //=====================================================================
+            private var controllerList:Array = [];
+
+            private function startLoadControls():void
+            {
+                controlContainer = new Group();
+                controlContainer.percentHeight = 100;
+                controlContainer.percentWidth = 100;
+
+                simpleWidgetContainersContainer.addElementAt(controlContainer, 1);
+
+                var controls:Array = configData.controls;
+                if (controls)
+                {
+                    for (var i:uint = 0; i < controls.length; i++)
+                    {
+                        controllerList.push(controls[i]);
+                    }
+                }
+                this.cursorManager.setBusyCursor();
+                loadNextControl();
+            }
+
+            private function loadNextControl():void
+            {
+                if (controllerList.length)
+                {
+                    var ctl:Object = controllerList[0];
+                    controllerList.splice(0, 1);
+                    loadControl(ctl);
+                }
+                else
+                {
+                    //load panel widgets after controllers are loaded
+                    this.cursorManager.removeBusyCursor();
+                    startLoadPanelWidgets();
+                }
+            }
+
+            private function loadControl(ctl:Object):void
+            {
+                ctlInfo = ModuleManager.getModule(ctl.url);
+                ctlInfo.data = ctl;
+                ctlInfo.addEventListener(ModuleEvent.READY, moduleReadyHandler);
+                ctlInfo.addEventListener(ModuleEvent.ERROR, moduleErrorHandler);
+                ctlInfo.load(null, securityDomain, null, moduleFactory);
+            }
+
+            private function moduleReadyHandler(event:ModuleEvent):void
+            {
+                var moduleInfo:IModuleInfo = event.module;
+                var moduleData:Object = moduleInfo.data;
+                controlTable.add(moduleData.url, moduleInfo);
+
+                var config:String = moduleData.config as String; // config URL
+
+                var baseWidget:IBaseWidget = moduleInfo.factory.create() as IBaseWidget;
+
+                baseWidget.widgetId = moduleData.id as Number;
+                baseWidget.widgetTitle = moduleData.label;
+                baseWidget.widgetIcon = moduleData.icon;
+                baseWidget.config = config; // config URL
+                baseWidget.configXML = moduleData.configXML; // embedded config XML - if any
+                baseWidget.configData = configData;
+                baseWidget.map = map;
+                baseWidget.setRelativePosition(moduleData.left, moduleData.right, moduleData.top, moduleData.bottom);
+                baseWidget.horizontalCenter = moduleData.horizontalCenter
+                baseWidget.verticalCenter = moduleData.verticalCenter;
+                baseWidget.run();
+
+                var visualElement:IVisualElement = baseWidget as IVisualElement;
+                if (visualElement)
+                {
+                    controlContainer.addElement(visualElement);
+                }
+                loadNextControl();
+            }
+
+            //=====================================================================
+            // Load widgets that are part of a panel
+            //=====================================================================
+            private function startLoadPanelWidgets():void
+            {
+                for (var i:Number = 0; i < configData.widgets.length; i++)
+                {
+                    var isPartOfPanel:Boolean = configData.widgets[i].isPartOfPanel && configData.widgets[i].isPartOfPanel == true;
+                    if (isPartOfPanel)
+                    {
+                        panelWidgetArray.push(configData.widgets[i]);
+                    }
+                }
+                loadNextPanelWidget();
+            }
+
+            private function loadNextPanelWidget():void
+            {
+                if (panelWidgetArray.length)
+                {
+                    var id:Number = panelWidgetArray[0].id;
+                    panelWidgetArray.splice(0, 1);
+                    AppEvent.dispatch(AppEvent.WIDGET_RUN, id);
+                }
+                else
+                {
+                    // load preloaded widgets after the panel widgets have been loaded
+                    this.cursorManager.removeBusyCursor();
+                    preloadWidgets();
+                }
+            }
+
+            //=====================================================================
+            // Load preload widgets
+            //=====================================================================
+            private function preloadWidgets():void
+            {
+                for (var i:Number = 0; i < configData.widgets.length; i++)
+                {
+                    var id:Number = configData.widgets[i].id;
+                    var preload:String = configData.widgets[i].preload;
+                    if (preload == "open" || preload == "minimized")
+                    {
+                        preloadArray.push(configData.widgets[i]);
+                    }
+                }
+                preloadNextWidget();
+            }
+
+            private function preloadNextWidget():void
+            {
+                if (preloadArray.length > 0)
+                {
+                    var id:Number = preloadArray[0].id;
+                    preloadArray.splice(0, 1);
+                    AppEvent.dispatch(AppEvent.WIDGET_RUN, id);
+                }
+            }
+
+            //=====================================================================
+            // Load widgets
+            //=====================================================================
+            private var widgetAdded:Boolean = false;
+
+            private function createWidget(widgetId:Number):IBaseWidget
+            {
+                var widgetIndex:Object = configData.widgetIndex[widgetId];
+                var widgetContainer:Object = configData.widgetContainers[widgetIndex.container];
+                var widgetObject:Object = widgetContainer.widgets[widgetIndex.widget];
+
+                var preload:String = widgetObject.preload;
+                var label:String = widgetObject.label;
+                var icon:String = widgetObject.icon;
+                var config:String = widgetObject.config;
+                var configXML:XML = widgetObject.configXML;
+                var url:String = widgetObject.url;
+                var isPartOfPanel:Boolean = widgetObject.isPartOfPanel;
+
+                var wWidth:Number = Number(widgetObject.width);
+                var wHeight:Number = Number(widgetObject.height);
+                var wx:Number = Number(widgetObject.x);
+                var wy:Number = Number(widgetObject.y);
+                var wleft:String = widgetObject.left;
+                var wtop:String = widgetObject.top;
+                var wright:String = widgetObject.right;
+                var wbottom:String = widgetObject.bottom;
+                var wHorizontalCenter:String = widgetObject.horizontalCenter;
+                var wVerticalCenter:String = widgetObject.verticalCenter;
+
+                var modInfo:IModuleInfo = moduleTable.find(url) as IModuleInfo;
+                var widget:IBaseWidget;
+                widget = modInfo.factory.create() as IBaseWidget;
+                widget.widgetId = widgetId;
+                widget.widgetTitle = label;
+                widget.widgetIcon = icon;
+                widget.config = config;
+                widget.configXML = configXML;
+                widget.configData = configData;
+                widget.map = map;
+                widget.isDraggable = this.isDraggable;
+                widget.isPartOfPanel = isPartOfPanel;
+
+                if (!isPartOfPanel)
+                {
+                    widget.setPreload(preload);
+
+                    widget.initialHeight = wHeight;
+                    widget.initialWidth = wWidth;
+
+                    widget.horizontalCenter = wHorizontalCenter;
+                    widget.verticalCenter = wVerticalCenter;
+
+                    // if no X and Y both configured, use system X/Y for positioning
+                    if (wleft || wtop || wright || wbottom)
+                    {
+                        widget.setRelativePosition(wleft, wright, wtop, wbottom);
+                    }
+                    else if (wx && wy)
+                    {
+                        widget.setXYPosition(wx, wy);
+                    }
+                    else
+                    {
+                        setAutoXY();
+                        wx = _refX;
+                        wy = _refY
+                        widget.setXYPosition(wx, wy);
+                    }
+                }
+                else
+                {
+                    widget.isResizeable = false;
+                }
+                widgetTable.add(widgetId, widget);
+
+                return widget;
+            }
+
+            private function openWidget(widget:IBaseWidget):void
+            {
+                var idx:Object = configData.widgetIndex[widget.widgetId];
+                var wgtContainerObj:Object = configData.widgetContainers[idx.container].container;
+                var wgtContainer:IWidgetContainer = wgtContainerObj.obj;
+
+                widget.setState(WidgetStates.WIDGET_OPENED);
+                widget.addEventListener(MouseEvent.MOUSE_DOWN, onWidgetMouseDown);
+                if (wgtContainer)
+                {
+                    wgtContainer.addWidget(widget);
+                }
+                else
+                {
+                    // widget inside a typed container
+                    if (wgtContainerObj.panelType == "bottom")
+                    {
+                        bottomContainer.addElement(widget as IVisualElement);
+                    }
+                    else if (wgtContainerObj.panelType == "left")
+                    {
+                        leftContainer.addElement(widget as IVisualElement);
+                    }
+                    else if (wgtContainerObj.panelType == "right")
+                    {
+                        rightContainer.addElement(widget as IVisualElement);
+                    }
+
+                    loadNextPanelWidget();
+                }
+            }
+
+            private function runWidget(widgetId:Number):void
+            {
+                var widget:IBaseWidget = createWidget(widgetId);
+                openWidget(widget);
+            }
+
+            private function onRunWidget(event:AppEvent):void
+            {
+                var id:Number = event.data as Number;
+                var idx:Object = configData.widgetIndex[id];
+
+                var wgtContainer:IWidgetContainer = configData.widgetContainers[idx.container].container.obj;
+                var wgt:Object = configData.widgetContainers[idx.container].widgets[idx.widget];
+
+                if (!widgetAdded)
+                {
+                    widgetAdded = true;
+                }
+
+                //widget loaded
+                var widget:IBaseWidget;
+                if (widgetTable.containsKey(id))
+                {
+                    widget = widgetTable.find(id) as IBaseWidget;
+
+                    //add back the container if exists
+                    widget.setState(WidgetStates.WIDGET_OPENED);
+                    wgtContainer.addWidget(widget);
+                }
+                else
+                {
+                    //module loaded
+                    if (moduleTable.containsKey(wgt.url))
+                    {
+                        runWidget(id);
+                    }
+                    else
+                    {
+                        loadWidget(id);
+                    }
+                }
+            }
+
+            private function loadWidget(id:Number):void
+            {
+                var idx:Object = configData.widgetIndex[id];
+                var wgt:Object = configData.widgetContainers[idx.container].widgets[idx.widget];
+                var preload:String = wgt.preload;
+                var url:String = wgt.url;
+
+                wgtInfo = ModuleManager.getModule(url);
+                wgtInfo.data =
+                    {
+                        id: id,
+                        preload: preload
+                    };
+                wgtInfo.addEventListener(ModuleEvent.READY, widgetReadyHandler);
+                wgtInfo.addEventListener(ModuleEvent.ERROR, moduleErrorHandler);
+                wgtInfo.load(null, securityDomain, null, moduleFactory);
+                this.cursorManager.setBusyCursor();
+            }
+
+            private function widgetReadyHandler(event:ModuleEvent):void
+            {
+                this.cursorManager.removeBusyCursor();
+
+                var moduleInfo:IModuleInfo = event.module;
+                moduleTable.add(moduleInfo.url, moduleInfo);
+
+                var id:Number = moduleInfo.data.id;
+                runWidget(id);
+            }
+
+            private function setAutoXY():void
+            {
+                var widgetWidget:Number = 300;
+
+                var siftUnit:Number = 20;
+
+                if (_refX == 0)
+                {
+                    _refX = siftUnit;
+                }
+                else
+                {
+                    _refX = _refX + widgetWidget + 20;
+                }
+
+                if (_refY == 0)
+                {
+                    _refY = Math.round(widgetWidget / 2);
+                }
+
+                if (((_refX + widgetWidget) > this.width))
+                {
+                    _refX = siftUnit
+                    _refY = _refY + Math.round(widgetWidget + siftUnit) / 2;
+                }
+                else if ((_refY + widgetWidget) > this.height)
+                {
+                    _refX = siftUnit;
+                    _refY = Math.round(widgetWidget / 2);
+                }
+            }
+
+            private function onWidgetMouseDown(event:MouseEvent):void
+            {
+                var currentWidget:IBaseWidget = event.currentTarget as IBaseWidget;
+
+                if (currentWidget == null)
+                {
+                    return;
+                }
+
+                var wgtContainer:IWidgetContainer = getWidgetContainer(currentWidget.widgetId);
+                if (wgtContainer != null && wgtContainer.isBasicLayout())
+                {
+                    wgtContainer.focusWidget(currentWidget.widgetId);
+                }
+
+                if ((currentWidget is UIComponent)
+                    && !isFocusInWidget(currentWidget))
+                {
+                    (currentWidget as UIComponent).setFocus();
+                }
+            }
+
+            private function getWidgetContainer(widgetId:Number):IWidgetContainer
+            {
+                var idx:Object = configData.widgetIndex[widgetId];
+                var wgtContainer:IWidgetContainer = null;
+
+                if (idx)
+                {
+                    wgtContainer = configData.widgetContainers[idx.container].container.obj;
+                }
+
+                return wgtContainer;
+            }
+
+            private function isFocusInWidget(widget:IBaseWidget):Boolean
+            {
+                var currentFocusedObj:IFocusManagerComponent = focusManager.getFocus();
+                if (currentFocusedObj == null)
+                {
+                    return false;
+                }
+
+                var temp:DisplayObject = currentFocusedObj as DisplayObject;
+                while (temp != null && temp != widget)
+                {
+                    temp = temp.parent;
+                }
+
+                return temp != null;
+            }
+
+            /* --------------------------------------------------------------------
+               Load Infowindow Template Widgets
+             * -------------------------------------------------------------------- */
+            private var m_infoWidgetInfo:IModuleInfo;
+
+            private var m_infoWidgetCallback:Function;
+
+            private function onInfowidgetRequest(event:AppEvent):void
+            {
+                m_infoWidgetCallback = event.callback;
+                var url:String = event.data.url as String;
+                var id:String = event.data.id as String;
+                var config:String = event.data.config as String;
+                var isOptLayer:Boolean = event.data.isOptLayer as Boolean;
+                var layerInfoWindowRenderer:LayerInfoWindowRenderer = event.data.layerInfoWindowRenderer as LayerInfoWindowRenderer;
+
+                if (infowidgetTable.containsKey(url))
+                {
+                    m_infoWidgetInfo = infowidgetTable.find(url) as IModuleInfo;
+                    m_infoWidgetInfo.data.id = id;
+                    m_infoWidgetInfo.data.config = config;
+                    m_infoWidgetInfo.data.isOptLayer = isOptLayer;
+                    m_infoWidgetInfo.data.layerInfoWindowRenderer = layerInfoWindowRenderer;
+                    createInfoTemplate(m_infoWidgetInfo);
+                }
+                else
+                {
+                    loadInfoWidget(url, id, config, isOptLayer, layerInfoWindowRenderer);
+                }
+            }
+
+            private function loadInfoWidget(url:String, id:String, config:String, isOptLayer:Boolean, layerInfoWindowRenderer:LayerInfoWindowRenderer):void
+            {
+                m_infoWidgetInfo = ModuleManager.getModule(url);
+                m_infoWidgetInfo.data =
+                    {
+                        url: url,
+                        id: id,
+                        config: config,
+                        isOptLayer: isOptLayer,
+                        layerInfoWindowRenderer: layerInfoWindowRenderer
+                    };
+                m_infoWidgetInfo.addEventListener(ModuleEvent.READY, infoWidgetReadyHandler);
+                m_infoWidgetInfo.addEventListener(ModuleEvent.ERROR, moduleErrorHandler);
+                m_infoWidgetInfo.load(null, securityDomain, null, moduleFactory);
+            }
+
+            private function infoWidgetReadyHandler(event:ModuleEvent):void
+            {
+                var moduleInfo:IModuleInfo = event.module;
+                var url:String = moduleInfo.data.url as String;
+                infowidgetTable.add(url, moduleInfo);
+                createInfoTemplate(moduleInfo);
+            }
+
+            private var _infoData:Object;
+
+            private function createInfoTemplate(moduleInfo:IModuleInfo):void
+            {
+                var infoWidget:IInfowindowTemplate = moduleInfo.factory.create() as IInfowindowTemplate;
+                var url:String = moduleInfo.data.url as String;
+                var id:String = moduleInfo.data.id as String;
+                var config:String = moduleInfo.data.config as String;
+                var configXML:XML = moduleInfo.data.configXML;
+                var isOptLayer:Boolean = moduleInfo.data.isOptLayer as Boolean;
+                var layerInfoWindowRenderer:LayerInfoWindowRenderer = moduleInfo.data.layerInfoWindowRenderer as LayerInfoWindowRenderer;
+
+                if (infoWidget)
+                {
+                    _infoData =
+                        {
+                            url: url,
+                            id: id,
+                            config: config,
+                            configXML: configXML,
+                            infoWidget: infoWidget,
+                            isOptLayer: isOptLayer,
+                            layerInfoWindowRenderer: layerInfoWindowRenderer
+                        };
+
+                    if (config)
+                    {
+                        var baseWidget:IBaseWidget = infoWidget as IBaseWidget;
+
+                        baseWidget.setInfoConfig(config, false);
+
+                        baseWidget.addEventListener("widgetConfigLoaded", widgetConfigLoadedHandler);
+                    }
+                    else
+                    {
+                        m_infoWidgetCallback(new AppEvent(AppEvent.DATA_CREATE_INFOWIDGET, _infoData));
+                    }
+                }
+            }
+
+            private function widgetConfigLoadedHandler(event:Event):void
+            {
+                m_infoWidgetCallback(new AppEvent(AppEvent.DATA_CREATE_INFOWIDGET, _infoData));
+            }
+
+            private function moduleErrorHandler(event:ModuleEvent):void
+            {
+                this.cursorManager.removeBusyCursor();
+
+                AppEvent.showError(event.errorText, WIDGET_MANAGER);
+            }
+
+            //child change handler
+            //TODO: load preload the same way of loading controller
+            private function widgetAddedHandler(event:AppEvent):void
+            {
+                preloadNextWidget();
+            }
+
+            private function focusWidgetHandler(event:AppEvent):void
+            {
+                var widgetId:int = Number(event.data);
+                focusWidgetById(widgetId);
+            }
+
+            private function focusWidgetById(widgetId:int):void
+            {
+                var wgtContainer:IWidgetContainer = getWidgetContainer(widgetId);
+                if (wgtContainer != null)
+                {
+                    wgtContainer.focusWidget(widgetId);
+                }
+            }
+
+            private function widgetCloseHandler(event:AppEvent):void
+            {
+                var widgetId:Number = event.data as Number;
+
+                var idx:Object = configData.widgetIndex[widgetId];
+
+                if (idx == null)
+                {
+                    return;
+                }
+
+                var widget:IBaseWidget = null;
+
+                if (widgetTable.containsKey(widgetId))
+                {
+                    widget = widgetTable.find(widgetId) as IBaseWidget;
+                    widget.setState(WidgetStates.WIDGET_CLOSED);
+                }
+            }
+
+            /**
+             * in case regular widget is configured as controller and can be closed.
+             */
+            private var curId:Number;
+
+            private function widgetClosedHandler(event:AppEvent):void
+            {
+                var data:Object = event.data;
+
+                if (data.state as String == WidgetStates.WIDGET_CLOSED)
+                {
+                    curId = data.id as Number;
+
+                    var timer:Timer = new Timer(500, 1);
+                    timer.addEventListener(TimerEvent.TIMER_COMPLETE, removeWidget);
+                    timer.start();
+                }
+            }
+
+            private function removeWidget(event:TimerEvent):void
+            {
+                var widget:IVisualElement;
+                for (var i:int = 0; i < controlContainer.numElements; i++)
+                {
+                    widget = controlContainer.getElementAt(i);
+
+                    var baseWidget:IBaseWidget = widget as IBaseWidget;
+
+                    if (baseWidget.widgetId == curId)
+                    {
+                        controlContainer.removeElement(widget);
+
+                        return;
+                    }
+                }
+            }
+        ]]>
+    </fx:Script>
+
+</s:SkinnableContainer>

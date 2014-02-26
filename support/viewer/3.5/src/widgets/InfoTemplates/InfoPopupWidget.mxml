@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2010-2011 Esri. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////
+-->
+<viewer:BaseWidget xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx"
+                   xmlns:viewer="com.esri.viewer.*"
+                   creationComplete="creationCompleteHandler()"
+                   implements="com.esri.viewer.IInfowindowTemplate, com.esri.ags.components.supportClasses.IGraphicRenderer">
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.Graphic;
+            import com.esri.viewer.IInfowindowTemplate;
+
+            import mx.events.FlexEvent;
+
+            private var _graphic:Graphic;
+
+            //set info parameters
+            [Bindable]
+            private var _content:String = "";
+
+            [Bindable]
+            private var _title:String = "";
+
+            private var _infoClass:Class;
+
+            public function set infoClass(value:Class):void
+            {
+                _infoClass = value;
+            }
+
+            public function get infoClass():Class
+            {
+                return _infoClass;
+            }
+
+            private function creationCompleteHandler():void
+            {
+                this.removeEventListener(FlexEvent.CREATION_COMPLETE, creationCompleteHandler);
+                this.addEventListener(FlexEvent.DATA_CHANGE, dataChangeHandler);
+
+                infoClass = InfoPopupWidget;
+                infoImage.loaderContext = new LoaderContext(true); // set checkPolicyFile to true
+                dataChangeHandler(null);
+            }
+
+            public function set graphic(value:Graphic):void
+            {
+                _graphic = value;
+            }
+
+            public function set infoConfig(value:XML):void
+            {
+            }
+
+            private function dataChangeHandler(event:FlexEvent):void
+            {
+                if (data == null)
+                {
+                    return;
+                }
+
+                _title = data.title || "";
+                _content = data.content;
+
+                if (_content)
+                {
+                    infoContent.visible = true;
+                }
+
+                //clear picture and link button
+                infoImage.source = "";
+                infoImage.visible = false;
+                infoImage.includeInLayout = false;
+                infoLink.visible = false;
+                infoLink.includeInLayout = false;
+
+                if (data.link)
+                {
+                    var link:String = data.link as String;
+                    var pos:Number = link.length - 4;
+                    var sfx:String = link.substr(pos, 4).toLowerCase();
+                    if ((sfx == ".jpg") || (sfx == ".png") || (sfx == ".gif"))
+                    {
+                        infoImage.source = link;
+                        infoImage.visible = true;
+                        infoImage.includeInLayout = true;
+                    }
+                    else
+                    {
+                        infoLink.text = link;
+                        infoLink.visible = true;
+                        infoLink.includeInLayout = true;
+                    }
+                }
+            }
+
+            //show link
+            private function showLink():void
+            {
+                navigateToURL(new URLRequest(data.link));
+            }
+        ]]>
+    </fx:Script>
+
+    <s:Group id="infoCanvas"
+             width="210"
+             minHeight="30">
+        <s:layout>
+            <s:VerticalLayout gap="0"
+                              horizontalAlign="left"
+                              paddingBottom="4"
+                              paddingLeft="4"
+                              paddingRight="4"
+                              paddingTop="0"
+                              verticalAlign="middle"/>
+        </s:layout>
+        <s:RichEditableText id="infoTitle"
+                            width="100%"
+                            editable="false"
+                            text="{_title}"
+                            visible="false"/>
+        <s:RichEditableText id="infoContent"
+                            width="100%"
+                            editable="false"
+                            text="{_content}"
+                            visible="false"/>
+        <mx:Image id="infoImage"
+                  height="150"
+                  buttonMode="true"
+                  click="showLink()"
+                  includeInLayout="false"
+                  maxWidth="{infoCanvas.width - 10}"
+                  useHandCursor="true"
+                  visible="false"/>
+        <s:Label id="infoLink"
+                 width="100%"
+                 click="showLink()"
+                 includeInLayout="false"
+                 maxDisplayedLines="1"
+                 showTruncationTip="true"
+                 textDecoration="underline"
+                 visible="false"/>
+    </s:Group>
+
+</viewer:BaseWidget>

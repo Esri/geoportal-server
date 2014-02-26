@@ -114,10 +114,7 @@
         }
       }
     );
-      // Preloading the search gif
-      var img = new Image();
-      img.src = dojo.byId("/catalog/images/loading.gif");
-      //scInitDistrPane();
+   
     }
   );
 

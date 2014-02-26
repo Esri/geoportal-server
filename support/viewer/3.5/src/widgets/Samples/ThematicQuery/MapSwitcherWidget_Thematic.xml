@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<configuration>
+    <layerlist label="More...">
+        <excludelayer>Unemployment</excludelayer>
+        <excludelayer>Population Density</excludelayer>
+        <excludelayer>Thematic Selection Layer</excludelayer>
+    </layerlist>
+</configuration>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Form xmlns:fx="http://ns.adobe.com/mxml/2009"
+         xmlns:s="library://ns.adobe.com/flex/spark"
+         xmlns:mx="library://ns.adobe.com/flex/mx"
+         width="100%" height="100%"
+         creationComplete="init()"
+         implements="widgets.Print.IPrintWidgetComponent"
+         paddingBottom="0"
+         verticalScrollPolicy="off">
+    <fx:Style>
+        .PrintBox
+        {
+            color: #000000; /* for the printed page */
+        }
+    </fx:Style>
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.viewer.BaseWidget;
+
+            import mx.graphics.ImageSnapshot;
+            import mx.printing.FlexPrintJob;
+            import mx.printing.FlexPrintJobScaleType;
+
+            import spark.components.Label;
+            import spark.components.VGroup;
+            import spark.primitives.BitmapImage;
+
+            [Bindable]
+            private var title:String;
+            [Bindable]
+            private var subtitle:String;
+            private var copyright:String = "";
+
+            [Bindable]
+            private var titleLabel:String;
+            [Bindable]
+            private var subtitleLabel:String;
+            [Bindable]
+            private var submitLabel:String;
+
+            private var _hostBaseWidget:BaseWidget;
+
+            [Bindable]
+            public function get hostBaseWidget():BaseWidget
+            {
+                return _hostBaseWidget;
+            }
+
+            public function set hostBaseWidget(value:BaseWidget):void
+            {
+                _hostBaseWidget = value;
+            }
+
+            private var _configXML:XML;
+
+            public function get configXML():XML
+            {
+                return _configXML;
+            }
+
+            public function set configXML(value:XML):void
+            {
+                _configXML = value;
+            }
+
+            private function init():void
+            {
+                if (configXML)
+                {
+                    title = configXML.title[0] || hostBaseWidget.getDefaultString("printTitle");
+                    subtitle = configXML.subtitle[0] || hostBaseWidget.getDefaultString("printSubtitle");
+                    copyright = configXML.copyright[0] || hostBaseWidget.getDefaultString("printCopyright");
+
+                    titleLabel = configXML.labels.titlelabel[0] || hostBaseWidget.getDefaultString("printTitleLabel");
+                    subtitleLabel = configXML.labels.subtitlelabel[0] || hostBaseWidget.getDefaultString("printSubtitleLabel");
+                    submitLabel = configXML.labels.submitlabel[0] || hostBaseWidget.getDefaultString("printSubmitLabel");
+                }
+            }
+
+            private function printMap():void
+            {
+                var zoomSliderVisibleBeforePrint:Boolean;
+                if (hostBaseWidget.map.zoomSliderVisible)
+                {
+                    hostBaseWidget.map.zoomSliderVisible = false;
+                    zoomSliderVisibleBeforePrint = true;
+                }
+                var printJob:FlexPrintJob = new FlexPrintJob();
+                printJob.printAsBitmap = false;
+                if (printJob.start())
+                {
+                    var h:Number = printJob.pageHeight;
+                    var w:Number = printJob.pageWidth;
+                    //VGROUP
+                    var printBox:VGroup = new VGroup();
+                    printBox.styleName = "PrintBox";
+                    printBox.width = hostBaseWidget.map.width;
+                    this.addChild(printBox); // add now to workaround https://bugs.adobe.com/jira/browse/SDK-26906
+                    try
+                    {
+                        var layoutDirection:String = getStyle('layoutDirection');
+
+                        //TITLE
+                        var printTitle:Label = new Label();
+                        printTitle.text = txtTitle.text;
+                        // TODO: make fontsize specified in stylename overwrite this fontSize
+                        printTitle.setStyle("fontSize", h / 12);
+                        printTitle.percentWidth = 100;
+                        printTitle.setStyle('layoutDirection', layoutDirection);
+                        printBox.addElement(printTitle);
+                        //SUBTITLE
+                        var printSubtitle:Label = new Label();
+                        printSubtitle.text = txtSubtitle.text;
+                        // TODO: make fontsize specified in stylename overwrite this fontSize
+                        printSubtitle.setStyle("fontSize", h / 24);
+                        printSubtitle.percentWidth = 100;
+                        printSubtitle.setStyle('layoutDirection', layoutDirection);
+                        printBox.addElement(printSubtitle);
+                        //MAP
+                        var bmpMap:BitmapData = ImageSnapshot.captureBitmapData(hostBaseWidget.map);
+                        var printImg:BitmapImage = new BitmapImage();
+                        printImg.smooth = true;
+                        printImg.source = bmpMap;
+                        printBox.addElement(printImg);
+                        //COPYRIGHT
+                        var now:Date = new Date();
+                        var printCopy:Label = new Label();
+                        printCopy.text = copyright + " " + now.toLocaleString() + ".";
+                        // TODO: make fontsize specified in stylename overwrite this fontSize
+                        printCopy.setStyle("fontSize", h / 48);
+                        printCopy.percentWidth = 100;
+                        printCopy.setStyle('layoutDirection', layoutDirection);
+                        printBox.addElement(printCopy);
+                        //PRINT
+                        printBox.setStyle('layoutDirection', 'ltr'); //fixes the map image layout direction.
+                        printJob.addObject(printBox, FlexPrintJobScaleType.SHOW_ALL);
+                        printJob.send();
+                        bmpMap.dispose();
+                    }
+                    catch (error:Error)
+                    {
+                        hostBaseWidget.showError(error.toString());
+                    }
+                    finally
+                    {
+                        this.removeChild(printBox);
+                    }
+                }
+
+                if (zoomSliderVisibleBeforePrint)
+                {
+                    hostBaseWidget.map.zoomSliderVisible = true;
+                }
+            }
+        ]]>
+    </fx:Script>
+    <mx:FormItem width="100%" label="{titleLabel}">
+        <s:TextInput id="txtTitle"
+                     width="100%"
+                     text="{title}"/>
+    </mx:FormItem>
+    <mx:FormItem width="100%" label="{subtitleLabel}">
+        <s:TextInput id="txtSubtitle"
+                     width="100%"
+                     text="{subtitle}"/>
+    </mx:FormItem>
+    <s:HGroup width="100%" horizontalAlign="center">
+        <s:Button click="printMap()" label="{submitLabel}"/>
+    </s:HGroup>
+</mx:Form>
