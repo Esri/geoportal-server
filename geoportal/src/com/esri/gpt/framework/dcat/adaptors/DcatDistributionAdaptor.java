@@ -16,7 +16,7 @@
 package com.esri.gpt.framework.dcat.adaptors;
 
 import com.esri.gpt.framework.dcat.dcat.DcatDistribution;
-import com.esri.gpt.framework.dcat.raw.RawDcatAttributes;
+import com.esri.gpt.framework.dcat.json.JsonAttributes;
 
 
 /**
@@ -24,7 +24,7 @@ import com.esri.gpt.framework.dcat.raw.RawDcatAttributes;
  */
 class DcatDistributionAdaptor extends DcatAdaptor implements DcatDistribution {
 
-  public DcatDistributionAdaptor(RawDcatAttributes attrs) {
+  public DcatDistributionAdaptor(JsonAttributes attrs) {
     super(attrs);
   }
 
@@ -45,6 +45,6 @@ class DcatDistributionAdaptor extends DcatAdaptor implements DcatDistribution {
   
   @Override
   public String toString() {
-    return attrs.toString();
+    return "{ " +attrs.toString() + " }";
   }
 }

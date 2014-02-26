@@ -61,8 +61,7 @@ public class DCATQueryBuilder implements QueryBuilder {
 
   @Override
   public Query newQuery(Criteria crt) {
-    DCATProxy proxy = new DCATProxy(info, crt);
-    Query q = new DCATQuery(context, info, proxy, crt);
+    Query q = new DCATQuery(context, info, crt);
     LOGGER.log(Level.FINER, "Query created: {0}", q);
     return q;
   }

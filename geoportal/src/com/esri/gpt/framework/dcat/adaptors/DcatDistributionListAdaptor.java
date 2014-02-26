@@ -17,17 +17,17 @@ package com.esri.gpt.framework.dcat.adaptors;
 
 import com.esri.gpt.framework.dcat.dcat.DcatDistribution;
 import com.esri.gpt.framework.dcat.dcat.DcatDistributionList;
-import com.esri.gpt.framework.dcat.raw.RawDcatArray;
-import com.esri.gpt.framework.dcat.raw.RawDcatAttributes;
+import com.esri.gpt.framework.dcat.json.JsonArray;
+import com.esri.gpt.framework.dcat.json.JsonAttributes;
 import java.util.AbstractList;
 
 /**
  * DCAT distribution list adaptor.
  */
 class DcatDistributionListAdaptor extends AbstractList<DcatDistribution> implements DcatDistributionList  {
-  private RawDcatArray<RawDcatAttributes> attrsList;
+  private JsonArray<JsonAttributes> attrsList;
 
-  public DcatDistributionListAdaptor(RawDcatArray<RawDcatAttributes> attrsList) {
+  public DcatDistributionListAdaptor(JsonArray<JsonAttributes> attrsList) {
     this.attrsList = attrsList;
   }
 

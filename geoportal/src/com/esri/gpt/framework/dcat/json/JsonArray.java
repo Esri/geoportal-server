@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.framework.dcat.raw;
+package com.esri.gpt.framework.dcat.json;
 
 import java.util.ArrayList;
 
 /**
  * Raw DCAT array of attributes.
  */
-public class RawDcatArray<T extends RawDcatAttributes> extends ArrayList<T> {
+public class JsonArray<T extends JsonAttributes> extends ArrayList<T> {
   
 }

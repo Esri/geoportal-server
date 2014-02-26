@@ -34,19 +34,16 @@ import java.util.NoSuchElementException;
 class DCATRootResource implements DestroyableResource {
   private IterationContext context;
   private DCATInfo info;
-  private DCATProxy proxy;
   private DCATIteratorAdaptor adaptor;
 
   /**
    * Creates instance of the resource.
    * @param context iteration context
    * @param info info
-   * @param proxy proxy
    */
-  public DCATRootResource(IterationContext context, DCATInfo info, DCATProxy proxy) {
+  public DCATRootResource(IterationContext context, DCATInfo info) {
     this.context = context;
     this.info = info;
-    this.proxy = proxy;
   }
 
   @Override
@@ -122,7 +119,7 @@ class DCATRootResource implements DestroyableResource {
         try {
           passCount = 0;
           URL url = getNextUrl();
-          adaptor = new DCATIteratorAdaptor(info.getFormat(), proxy, new DcatParserAdaptor(new DcatParser(url.openStream())));
+          adaptor = new DCATIteratorAdaptor(info.getFormat(), new DcatParserAdaptor(new DcatParser(url.openStream())));
           iterator = adaptor.iterator();
         } catch (IOException ex) {
           context.onIterationException(ex);
@@ -134,6 +131,10 @@ class DCATRootResource implements DestroyableResource {
       // check for the next available data
       while (iterator.hasNext()) {
         Publishable next = iterator.next();
+        if (totalCount==0) {
+          totalCount++;
+          continue;
+        }
         resource = next;
         return true;
       }

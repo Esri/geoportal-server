@@ -17,4 +17,4 @@
 /**
  * Raw data classes.
  */
-package com.esri.gpt.framework.dcat.raw;
+package com.esri.gpt.framework.dcat.json;

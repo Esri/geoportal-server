@@ -17,19 +17,22 @@ package com.esri.gpt.framework.dcat.adaptors;
 
 import com.esri.gpt.framework.dcat.dcat.DcatDistributionList;
 import com.esri.gpt.framework.dcat.dcat.DcatRecord;
-import com.esri.gpt.framework.dcat.raw.RawDcatRecord;
+import com.esri.gpt.framework.dcat.json.JsonAttribute;
+import com.esri.gpt.framework.dcat.json.JsonRecord;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DCAT record adaptor.
  */
 public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
-  private RawDcatRecord record;
+  private JsonRecord record;
 
   /**
    * Creates instance of the adaptor.
    * @param record raw record
    */
-  public DcatRecordAdaptor(RawDcatRecord record) {
+  public DcatRecordAdaptor(JsonRecord record) {
     super(record);
     this.record = record;
   }
@@ -45,8 +48,12 @@ public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
   }
 
   @Override
-  public String getKeyword() {
-    return getString("keyword");
+  public List<String> getKeywords() {
+    ArrayList<String> keywords = new ArrayList<String>();
+    for (JsonAttribute keyword: record.getKeywords()) {
+      keywords.add(keyword.getString());
+    }
+    return keywords;
   }
 
   @Override

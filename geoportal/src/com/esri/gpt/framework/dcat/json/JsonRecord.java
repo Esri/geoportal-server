@@ -13,16 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.framework.dcat.raw;
+package com.esri.gpt.framework.dcat.json;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Raw DCAT record.
  */
-public class RawDcatRecord extends RawDcatAttributes {
-  private RawDcatArray<RawDcatAttributes> distribution = new RawDcatArray<RawDcatAttributes>();
+public class JsonRecord extends JsonAttributes {
+  private final JsonArray<JsonAttributes> distribution = new JsonArray<JsonAttributes>();
+  private final List<JsonAttribute> keywords = new ArrayList<JsonAttribute>();
 
-  public RawDcatArray<RawDcatAttributes> getDistribution() {
+  public JsonArray<JsonAttributes> getDistribution() {
     return distribution;
+  }
+  
+  public List<JsonAttribute> getKeywords() {
+    return keywords;
   }
   
   @Override

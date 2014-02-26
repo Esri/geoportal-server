@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Esri.
+ * Copyright 2014 Esri, Inc..
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,108 +15,67 @@
  */
 package com.esri.gpt.control.webharvest.client.dcat;
 
+import com.esri.gpt.framework.dcat.dcat.DcatDistribution;
+import com.esri.gpt.framework.dcat.dcat.DcatRecord;
 import com.esri.gpt.framework.resource.api.SourceUri;
 import com.esri.gpt.framework.resource.common.CommonPublishable;
-import com.esri.gpt.framework.resource.common.UrlUri;
-import com.esri.gpt.framework.resource.common.UuidUri;
-import com.esri.gpt.framework.util.Val;
+import com.esri.gpt.framework.resource.common.StringUri;
+import com.esri.gpt.server.csw.client.NullReferenceException;
 import java.io.IOException;
-import java.util.Date;
-import java.util.regex.Pattern;
-import org.apache.commons.httpclient.URIException;
-import org.apache.commons.httpclient.util.URIUtil;
+import javax.xml.transform.TransformerException;
+import org.xml.sax.SAXException;
 
 /**
- * DCAT record.
+ *
  */
-class DCATRecord extends CommonPublishable {
-  private static final Pattern pattern = Pattern.compile("/rest/document\\?id=\\{[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}\\}$", Pattern.CASE_INSENSITIVE);
+public class DCATRecord extends CommonPublishable {
 
-  private SourceUri uri;
-  private DCATProxy proxy;
-  private DCATProxy.Content content;
-  private IOException storedException;
-  private String encodedUrl;
+  private final DcatRecord baseRecord;
 
-  /**
-   * Creates instance of the record.
-   * @param proxy proxy
-   * @param url record URL
-   */
-  public DCATRecord(DCATProxy proxy, String url) {
-    this.proxy = proxy;
-    this.uri = createUri(url);
-    this.encodedUrl = encode(url);
+  public DCATRecord(DcatRecord baseRecord) {
+    this.baseRecord = baseRecord;
   }
 
   @Override
   public SourceUri getSourceUri() {
-    return uri;
+    return new StringUri(baseRecord.getIdentifier());
+  }
+
+  @Override
+  public String getContent() throws IOException, TransformerException, SAXException, NullReferenceException {
+    return "<?xml version='1.0' encoding='UTF-8'?>"
+      + "<rdf:RDF xmlns:dct='http://purl.org/dc/terms/' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:fo='http://www.w3.org/1999/XSL/Format' xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#' xmlns:exslt='http://exslt.org/common' xmlns:rim='urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0' xmlns:dcmiBox='http://dublincore.org/documents/2000/07/11/dcmi-box/' xmlns:ows='http://www.opengis.net/ows'>"
+      + "<rdf:Description rdf:about='rdf_about'>"
+      + "<dc:title>" + baseRecord.getTitle() + "</dc:title>"
+      + "<dc:description>" + baseRecord.getAbstract() + "</dc:description>"
+      + "<dct:abstract>" + baseRecord.getAbstract() + "</dct:abstract>"
+      + "<dc:format>" + baseRecord.getFormat() + "</dc:format>"
+      + "<dct:publisher>" + baseRecord.getPublisher() + "</dct:publisher>"
+      + "<dc:identifier>" + baseRecord.getIdentifier() + "</dc:identifier>"
+      + getSubjects() +
+      "<dct:modified>" + baseRecord.getModified() + "</dct:modified>"
+      + //getReferences() +
+      "<ows:WGS84BoundingBox>" + baseRecord.getSpatial() + "</ows:WGS84BoundingBox>"
+      + "</rdf:Description>"
+      + "</rdf:RDF>";
+
   }
   
-  /**
-   * Creates URI.
-   * @param url URL of the record
-   * @return source URI
-   */
-  private SourceUri createUri(String url) {
-    try {
-      String decoded = URIUtil.decode(url, "UTF-8");
-      // consider Geoportal Server URI; if URL matches pattern, create UUID-based
-      // URI.
-      if (decoded.length()>=38 && pattern.matcher(decoded).find()) {
-        decoded = decoded.substring(decoded.length()-38);
-        return new UuidUri(decoded);
-      } else {
-        return new UrlUri(url);
-      }
-    } catch (IOException ex) {
-      return new UrlUri(url);
+  private String getSubjects() {
+    StringBuilder sb = new StringBuilder();
+    for (String keyword: baseRecord.getKeywords()) {
+      sb.append("<dc:subject>").append(keyword).append("</dc:subject>");
     }
+    return sb.toString();
+  }
+  
+  private String getReferences() {
+    StringBuilder sb = new StringBuilder();
+    for (DcatDistribution distribution: baseRecord.getDistribution()) {
+      String accessURL = distribution.getAccessURL();
+      sb.append("<dct:references>").append(accessURL).append("</dct:references>");
+    }
+    return sb.toString();
   }
 
-  @Override
-  public String getContent() throws IOException {
-    // rethrow stored exception which occured during getUpdateDate()
-    if (storedException != null) {
-      throw storedException;
-    }
-    if (content == null) {
-      content = proxy.readContent(encodedUrl);
-    }
-    String metadata = "";
-    if (content != null) {
-      metadata = Val.chkStr(content.getText());
-      content = null;
-    }
-    return metadata;
-  }
-
-  @Override
-  public Date getUpdateDate() {
-    try {
-      if (content == null) {
-        content = proxy.readContent(encodedUrl);
-      }
-    } catch (IOException ex) {
-      // store that exception here because getUpdateDate can not throw any exception by interface
-      // instead getContent() would rethrow this exception
-      storedException = ex;
-    }
-    return content != null ? content.getLastModifedDate() : null;
-  }
-
-  /**
-   * Encodes URL.
-   * @param url URL to encode
-   * @return encoded URL
-   */
-  private String encode(String url) {
-    url = Val.chkStr(url);
-    try {
-      return URIUtil.encodePathQuery(URIUtil.decode(url, "UTF-8"), "UTF-8");
-    } catch (URIException ex) {
-      return url;
-    }
-  }
 }

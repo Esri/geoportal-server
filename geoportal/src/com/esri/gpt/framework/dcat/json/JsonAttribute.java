@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.framework.dcat.raw;
+package com.esri.gpt.framework.dcat.json;
 
 /**
  * Raw DCAT attribute.
  */
-public class RawDcatAttribute {
+public class JsonAttribute {
   private TYPE type;
   private getter getter;
   
@@ -26,7 +26,7 @@ public class RawDcatAttribute {
    * Creates instance of the string attribute.
    * @param value value
    */
-  public RawDcatAttribute(String value) {
+  public JsonAttribute(String value) {
     this.type = TYPE.STRING;
     this.getter = new FromStringGetter(value);
   }
@@ -35,7 +35,7 @@ public class RawDcatAttribute {
    * Creates instance of the double attribute.
    * @param value value
    */
-  public RawDcatAttribute(Double value) {
+  public JsonAttribute(Double value) {
     this.type = TYPE.NUMBER;
     this.getter = new FromNumberGetter(value);
   }
@@ -44,7 +44,7 @@ public class RawDcatAttribute {
    * Creates instance of the boolean attribute.
    * @param value value
    */
-  public RawDcatAttribute(Boolean value) {
+  public JsonAttribute(Boolean value) {
     this.type = TYPE.BOOLEAN;
     this.getter = new FromBooleanGetter(value);
   }

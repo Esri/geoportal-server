@@ -15,6 +15,8 @@
  */
 package com.esri.gpt.framework.dcat.dcat;
 
+import java.util.List;
+
 /**
  * DCAT record.
  */
@@ -30,10 +32,10 @@ public interface DcatRecord {
    */
   String getAbstract();
   /**
-   * Gets keyword.
-   * @return keyword
+   * Gets keywords
+   * @return list of keywords
    */
-  String getKeyword();
+  List<String> getKeywords();
   /**
    * Gets identifier.
    * @return identifier

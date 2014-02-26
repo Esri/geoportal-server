@@ -18,6 +18,7 @@ package com.esri.gpt.framework.dcat;
 import com.esri.gpt.framework.dcat.DcatParser.ListenerInternal;
 import com.esri.gpt.framework.dcat.dcat.DcatRecord;
 import com.esri.gpt.framework.util.ReadOnlyIterator;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
@@ -52,7 +53,11 @@ public class DcatParserAdaptor implements Iterable<DcatRecord> {
    */
   public void close() {
     if (parser!=null) {
-      parser.close();
+      try {
+        parser.close();
+      } catch (IOException ex) {
+        Logger.getLogger(DcatParserAdaptor.class.getName()).log(Level.SEVERE, null, ex);
+      }
       parser = null;
     }
   }
@@ -61,8 +66,9 @@ public class DcatParserAdaptor implements Iterable<DcatRecord> {
    * Called upon parsing exception thrown during iteration.
    * @param ex 
    */
-  protected void onException(DcatParseException ex) {
+  protected void onException(Exception ex) {
     // TODO: override if needed
+    LOGGER.log(Level.SEVERE, "Error parsing DCAT response.", ex);
   }
   
   @Override
@@ -114,6 +120,10 @@ public class DcatParserAdaptor implements Iterable<DcatRecord> {
           close();
         }
         return hasNext;
+      } catch (IOException ex) {
+        close();
+        onException(ex);
+        return false;
       } catch (DcatParseException ex) {
         close();
         onException(ex);

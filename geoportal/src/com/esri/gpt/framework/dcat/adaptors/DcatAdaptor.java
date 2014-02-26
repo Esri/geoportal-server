@@ -15,20 +15,20 @@
  */
 package com.esri.gpt.framework.dcat.adaptors;
 
-import com.esri.gpt.framework.dcat.raw.RawDcatAttribute;
-import com.esri.gpt.framework.dcat.raw.RawDcatAttributes;
+import com.esri.gpt.framework.dcat.json.JsonAttribute;
+import com.esri.gpt.framework.dcat.json.JsonAttributes;
 
 /**
  * DCAT base adaptor.
  */
 public abstract class DcatAdaptor {
-  protected RawDcatAttributes attrs;
+  protected JsonAttributes attrs;
 
   /**
    * Creates instance of the adaptor.
    * @param attrs attributes
    */
-  public DcatAdaptor(RawDcatAttributes attrs) {
+  public DcatAdaptor(JsonAttributes attrs) {
     this.attrs = attrs;
   }
   
@@ -38,7 +38,7 @@ public abstract class DcatAdaptor {
    * @return attribute value
    */
   protected String getString(String name) {
-    RawDcatAttribute attr = attrs.get(name);
+    JsonAttribute attr = attrs.get(name);
     return attr!=null? attr.getString(): "";
   }
 }

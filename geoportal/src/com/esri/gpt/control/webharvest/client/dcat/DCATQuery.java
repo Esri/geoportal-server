@@ -36,8 +36,6 @@ class DCATQuery implements Query {
   private IterationContext context;
   /** service info */
   private DCATInfo info;
-  /** proxy */
-  private DCATProxy proxy;
   /** query criteria */
   private Criteria criteria;
 
@@ -45,28 +43,24 @@ class DCATQuery implements Query {
    * Creates instance of the query.
    * @param context iteration context
    * @param info DCAT info
-   * @param proxy DCAT proxy
    * @param criteria harvest criteria
    */
-  public DCATQuery(IterationContext context, DCATInfo info, DCATProxy proxy, Criteria criteria) {
+  public DCATQuery(IterationContext context, DCATInfo info, Criteria criteria) {
     if (context == null) {
       throw new IllegalArgumentException("No context provided.");
     }
     if (info == null) {
       throw new IllegalArgumentException("No info provided.");
     }
-    if (proxy == null)
-      throw new IllegalArgumentException("No proxy provided.");
     this.context = context;
     this.info = info;
-    this.proxy = proxy;
     this.criteria = criteria;
   }
 
   @Override
   public Result execute() {
     LOGGER.log(Level.FINER, "Executing query: {0}", this);
-    final DestroyableResource root = new DCATRootResource(context, info, proxy);
+    final DestroyableResource root = new DCATRootResource(context, info);
     Result r = new CommonResult(new LimitedLengthResourcesAdapter(root,criteria.getMaxRecords())) {
         @Override
         public void destroy() {

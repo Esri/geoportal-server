@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.framework.dcat.raw;
+package com.esri.gpt.framework.dcat.json;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,11 +21,11 @@ import java.util.Map;
 /**
  * Raw DCAT attributes.
  */
-public class RawDcatAttributes extends HashMap<String,RawDcatAttribute> {
+public class JsonAttributes extends HashMap<String,JsonAttribute> {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    for (Map.Entry<String,RawDcatAttribute> attr: this.entrySet()) {
+    for (Map.Entry<String,JsonAttribute> attr: this.entrySet()) {
       if (sb.length()>0) {
         sb.append(",");
       }

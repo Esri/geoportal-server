@@ -18,39 +18,39 @@ package com.esri.gpt.framework.dcat;
 import com.esri.gpt.framework.dcat.adaptors.DcatRecordAdaptor;
 import com.esri.gpt.framework.dcat.dcat.DcatRecord;
 import com.esri.gpt.framework.dcat.dcat.DcatRecordList;
-import com.esri.gpt.framework.dcat.raw.RawDcatArray;
-import com.esri.gpt.framework.dcat.raw.RawDcatAttribute;
-import com.esri.gpt.framework.dcat.raw.RawDcatAttributes;
-import com.esri.gpt.framework.dcat.raw.RawDcatRecord;
-import javax.json.stream.JsonParser;
-import static javax.json.stream.JsonParser.Event.END_ARRAY;
-import static javax.json.stream.JsonParser.Event.START_OBJECT;
+import com.esri.gpt.framework.dcat.json.JsonArray;
+import com.esri.gpt.framework.dcat.json.JsonAttribute;
+import com.esri.gpt.framework.dcat.json.JsonAttributes;
+import com.esri.gpt.framework.dcat.json.JsonRecord;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import java.io.IOException;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
-import java.math.BigDecimal;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.json.spi.JsonProvider;
-import static javax.json.stream.JsonParser.Event.END_OBJECT;
-import static javax.json.stream.JsonParser.Event.KEY_NAME;
 
 /**
  * DCAT parser.
  */
 public class DcatParser {
+
   private static final Logger LOGGER = Logger.getLogger(DcatParser.class.getCanonicalName());
 
-  private JsonParser jsonParser;
+  private JsonReader jsonReader;
 
   /**
    * Creates instance of the parser.
    *
    * @param input input stream to parse
    */
-  public DcatParser(InputStream input) {
-    this.jsonParser = JsonProvider.provider().createParser(input);
+  public DcatParser(InputStream input) throws UnsupportedEncodingException {
+    this.jsonReader = new JsonReader(new InputStreamReader(input, "UTF-8"));
   }
 
   /**
@@ -59,14 +59,14 @@ public class DcatParser {
    * @param reader data reader
    */
   public DcatParser(Reader reader) {
-    this.jsonParser = JsonProvider.provider().createParser(reader);
+    this.jsonReader = new JsonReader(reader);
   }
 
   /**
    * Closes parser.
    */
-  public void close() {
-    jsonParser.close();
+  public void close() throws IOException {
+    jsonReader.close();
   }
 
   /**
@@ -75,11 +75,11 @@ public class DcatParser {
    * @param listener event listener
    * @throws DcatParseException if parsing fails
    */
-  public void parse(final Listener listener) throws DcatParseException {
+  public void parse(final Listener listener) throws DcatParseException, IOException {
     ListenerInternal localListener = new ListenerInternal() {
       @Override
       public boolean onRecord(DcatRecord record) {
-        LOGGER.log(Level.FINEST, record!=null? record.toString(): "<empty record>");
+        LOGGER.log(Level.FINEST, record != null ? record.toString() : "<empty record>");
         listener.onRecord(record);
         return true;
       }
@@ -89,30 +89,30 @@ public class DcatParser {
 
   /**
    * Parses data (DOM building style).
+   *
    * @param policy limit policy
    * @return list of records.
    * @throws DcatParseException if parsing fails
    */
-  public DcatRecordList parse(final LimitPolicy policy) throws DcatParseException {
+  public DcatRecordList parse(final LimitPolicy policy) throws DcatParseException, IOException {
     final DcatRecordListImpl list = new DcatRecordListImpl();
     DcatParser.ListenerInternal listener = new DcatParser.ListenerInternal() {
-      private void parse(final ListenerInternal listener) throws DcatParseException {
-        if (!jsonParser.hasNext()) {
-          throw new DcatParseException("No more data available.");
-        }
+      private void parse(final ListenerInternal listener) throws DcatParseException, IOException {
+          if (!jsonReader.hasNext()) {
+            throw new DcatParseException("No more data available.");
+          }
+          JsonToken token = jsonReader.peek();
+          if (token != JsonToken.BEGIN_ARRAY) {
+            throw new DcatParseException("No array found.");
+          }
 
-        JsonParser.Event event = jsonParser.next();
-        if (event != JsonParser.Event.START_ARRAY) {
-          throw new DcatParseException("No array found.");
-        }
-
-        parseRecords(listener);
+          parseRecords(listener);
       }
 
       @Override
       public boolean onRecord(DcatRecord record) {
         list.add(record);
-        if (policy == null || list.size()>=policy.getLimit()) {
+        if (policy == null || list.size() >= policy.getLimit()) {
           return true;
         } else {
           policy.onLimit(list);
@@ -126,148 +126,175 @@ public class DcatParser {
 
   /**
    * Parses DCAT using internal listener.
+   *
    * @param listener internal listener
    * @throws DcatParseException if parsing DCAT fails
    */
-  void parse(final ListenerInternal listener) throws DcatParseException {
-    if (!jsonParser.hasNext()) {
-      throw new DcatParseException("No more data available.");
-    }
+  void parse(final ListenerInternal listener) throws DcatParseException, IOException {
+      if (!jsonReader.hasNext()) {
+        throw new DcatParseException("No more data available.");
+      }
 
-    JsonParser.Event event = jsonParser.next();
-    if (event != JsonParser.Event.START_ARRAY) {
-      throw new DcatParseException("No array found.");
-    }
+      JsonToken token = jsonReader.peek();
+      if (token != JsonToken.BEGIN_ARRAY) {
+        throw new DcatParseException("No array found.");
+      }
+      jsonReader.beginArray();
 
-    parseRecords(listener);
+      parseRecords(listener);
   }
 
   /**
    * Parses DCAT records using internal listener.
+   *
    * @param listener internal listener
    * @throws DcatParseException if parsing DCAT fails
    */
-  void parseRecords(ListenerInternal listener) throws DcatParseException {
+  void parseRecords(ListenerInternal listener) throws DcatParseException, IOException {
 
-    while (jsonParser.hasNext()) {
-      JsonParser.Event event = jsonParser.next();
-      switch (event) {
-        case END_ARRAY:
-          return;
-        case START_OBJECT:
-          if (!parseRecord(listener)) {
+      while (jsonReader.hasNext()) {
+        JsonToken token = jsonReader.peek();
+        switch (token) {
+          case END_ARRAY:
+            jsonReader.endArray();
             return;
-          }
-          break;
-        default:
-          throw new DcatParseException("Unexpected token in the data: " + event);
+          case BEGIN_OBJECT:
+            jsonReader.beginObject();
+            if (!parseRecord(listener)) {
+              return;
+            }
+            break;
+          default:
+            throw new DcatParseException("Unexpected token in the data: " + token);
+        }
       }
-    }
 
     throw new DcatParseException("Unexpected end of data.");
   }
 
-  private boolean parseRecord(ListenerInternal listener) throws DcatParseException {
-    RawDcatRecord record = new RawDcatRecord();
-    while (jsonParser.hasNext()) {
-      JsonParser.Event event = jsonParser.next();
-      switch (event) {
-        case END_OBJECT:
-          return listener.onRecord(new DcatRecordAdaptor(record));
-        case KEY_NAME:
+  private boolean parseRecord(ListenerInternal listener) throws DcatParseException, IOException {
+    JsonRecord record = new JsonRecord();
+    while (jsonReader.hasNext()) {
+      JsonToken token = jsonReader.peek();
+      switch (token) {
+        case NAME:
           parseAttribute(record);
           break;
         default:
-          throw new DcatParseException("Unexpected token in the data: " + event);
+          throw new DcatParseException("Unexpected token in the data: " + token);
       }
     }
 
-    throw new DcatParseException("Unexpected end of data.");
+    jsonReader.endObject();
+    return listener.onRecord(new DcatRecordAdaptor(record));
   }
 
-  private void parseAttribute(RawDcatRecord record) throws DcatParseException {
-    String attrName = jsonParser.getString();
-    while (jsonParser.hasNext()) {
-      JsonParser.Event event = jsonParser.next();
-      switch (event) {
-        case VALUE_STRING:
-          record.put(attrName, new RawDcatAttribute(jsonParser.getString()));
+  private void parseAttribute(JsonRecord record) throws DcatParseException, IOException {
+    String attrName = jsonReader.nextName();
+    while (jsonReader.hasNext()) {
+      JsonToken token = jsonReader.peek();
+      switch (token) {
+        case STRING:
+          record.put(attrName, new JsonAttribute(jsonReader.nextString()));
           return;
-        case VALUE_NUMBER:
-          record.put(attrName, new RawDcatAttribute(jsonParser.getBigDecimal().doubleValue()));
+        case NUMBER:
+          record.put(attrName, new JsonAttribute(jsonReader.nextDouble()));
           return;
-        case VALUE_FALSE:
-          record.put(attrName, new RawDcatAttribute(false));
+        case BOOLEAN:
+          record.put(attrName, new JsonAttribute(jsonReader.nextBoolean()));
           return;
-        case VALUE_TRUE:
-          record.put(attrName, new RawDcatAttribute(true));
-          return;
-        case START_ARRAY:
-          parseDistributions(record.getDistribution());
+        case BEGIN_ARRAY:
+          if ("distribution".equals(attrName)) {
+            jsonReader.beginArray();
+            parseDistributions(record.getDistribution());
+            jsonReader.endArray();
+          } else if ("keyword".equals(attrName)) {
+            jsonReader.beginArray();
+            parseKeywords(record.getKeywords());
+            jsonReader.endArray();
+          } else {
+            // skip
+            jsonReader.skipValue();
+          }
           return;
         default:
-          throw new DcatParseException("Unexpected token in the data: " + event);
+          throw new DcatParseException("Unexpected token in the data: " + token);
       }
     }
   }
+  
+  private void parseKeywords(List<JsonAttribute> keywords) throws DcatParseException, IOException {
 
-  private void parseDistributions(RawDcatArray<RawDcatAttributes> distributions) throws DcatParseException {
-
-    while (jsonParser.hasNext()) {
-      JsonParser.Event event = jsonParser.next();
-      switch (event) {
+    while (jsonReader.hasNext()) {
+      JsonToken token = jsonReader.peek();
+      switch (token) {
         case END_ARRAY:
-          return;
-        case START_OBJECT:
-          parseDistribution(distributions);
+          jsonReader.endArray();
+          break;
+        case STRING:
+          keywords.add(new JsonAttribute(jsonReader.nextString()));
+          break;
+        case NUMBER:
+          keywords.add(new JsonAttribute(jsonReader.nextDouble()));
+          break;
+        case BOOLEAN:
+          keywords.add(new JsonAttribute(jsonReader.nextBoolean()));
           break;
         default:
-          throw new DcatParseException("Unexpected token in the data: " + event);
+          throw new DcatParseException("Unexpected token in the data: " + token);
+      }
+    }
+  }
+
+  private void parseDistributions(JsonArray<JsonAttributes> distributions) throws DcatParseException, IOException {
+
+    while (jsonReader.hasNext()) {
+      JsonToken token = jsonReader.peek();
+      switch (token) {
+        case BEGIN_OBJECT:
+          jsonReader.beginObject();
+          parseDistribution(distributions);
+          jsonReader.endObject();
+          break;
+        default:
+          throw new DcatParseException("Unexpected token in the data: " + token);
       }
     }
 
-    throw new DcatParseException("Unexpected end of data.");
   }
 
-  private void parseDistribution(RawDcatArray<RawDcatAttributes> distributions) throws DcatParseException {
-    RawDcatAttributes attributes = new RawDcatAttributes();
-    while (jsonParser.hasNext()) {
-      JsonParser.Event event = jsonParser.next();
-      switch (event) {
-        case END_OBJECT:
-          distributions.add(attributes);
-          return;
-        case KEY_NAME:
+  private void parseDistribution(JsonArray<JsonAttributes> distributions) throws DcatParseException, IOException {
+    JsonAttributes attributes = new JsonAttributes();
+    while (jsonReader.hasNext()) {
+      JsonToken token = jsonReader.peek();
+      switch (token) {
+        case NAME:
           parseAttribute(attributes);
           break;
         default:
-          throw new DcatParseException("Unexpected token in the data: " + event);
+          throw new DcatParseException("Unexpected token in the data: " + token);
       }
     }
 
-    throw new DcatParseException("Unexpected end of data.");
+    distributions.add(attributes);
   }
 
-  private void parseAttribute(RawDcatAttributes attributes) throws DcatParseException {
-    String attrName = jsonParser.getString();
-    while (jsonParser.hasNext()) {
-      JsonParser.Event event = jsonParser.next();
-      switch (event) {
-        case VALUE_STRING:
-          attributes.put(attrName, new RawDcatAttribute(jsonParser.getString()));
+  private void parseAttribute(JsonAttributes attributes) throws DcatParseException, IOException {
+    String attrName = jsonReader.nextName();
+    while (jsonReader.hasNext()) {
+      JsonToken token = jsonReader.peek();
+      switch (token) {
+        case STRING:
+          attributes.put(attrName, new JsonAttribute(jsonReader.nextString()));
           return;
-        case VALUE_NUMBER:
-          BigDecimal bd = jsonParser.getBigDecimal();
-          attributes.put(attrName, new RawDcatAttribute(bd.doubleValue()));
+        case NUMBER:
+          attributes.put(attrName, new JsonAttribute(jsonReader.nextDouble()));
           return;
-        case VALUE_FALSE:
-          attributes.put(attrName, new RawDcatAttribute(false));
-          return;
-        case VALUE_TRUE:
-          attributes.put(attrName, new RawDcatAttribute(true));
+        case BOOLEAN:
+          attributes.put(attrName, new JsonAttribute(jsonReader.nextBoolean()));
           return;
         default:
-          throw new DcatParseException("Unexpected token in the data: " + event);
+          throw new DcatParseException("Unexpected token in the data: " + token);
       }
     }
   }
@@ -292,12 +319,14 @@ public class DcatParser {
 
     /**
      * Gets size limit.
+     *
      * @return size limit
      */
     long getLimit();
 
     /**
      * Called when size reached limit.
+     *
      * @param recordsList current list of records
      */
     void onLimit(DcatRecordList recordsList);

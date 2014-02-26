@@ -31,7 +31,6 @@ import java.util.regex.Pattern;
  * DCAT adaptor.
  */
 class DCATIteratorAdaptor implements Iterable<Publishable> {
-  private DCATProxy proxy;
   private DcatParserAdaptor adaptor;
   private Pattern formatPattern;
   
@@ -43,11 +42,9 @@ class DCATIteratorAdaptor implements Iterable<Publishable> {
    * array in the DCAT JSON response.
    * </p>
    * @param format format;
-   * @param proxy DCAT proxy
    * @param adaptor parser adaptor
    */
-  public DCATIteratorAdaptor(String format, DCATProxy proxy, DcatParserAdaptor adaptor) {
-    this.proxy = proxy;
+  public DCATIteratorAdaptor(String format, DcatParserAdaptor adaptor) {
     this.adaptor = adaptor;
     try {
       formatPattern = Pattern.compile(format, Pattern.CASE_INSENSITIVE);
@@ -80,7 +77,7 @@ class DCATIteratorAdaptor implements Iterable<Publishable> {
   private class DCATIterator extends ReadOnlyIterator<Publishable> {
     private Pattern formatPattern;
     private Iterator<DcatRecord> iterator = adaptor!=null? adaptor.iterator(): null;
-    private String accessUrl;
+    private DcatRecord record;
 
     /**
      * Creates instance of the iterator.
@@ -97,7 +94,7 @@ class DCATIteratorAdaptor implements Iterable<Publishable> {
         return false;
       }
       // cached accessUrl non empty? next() hasn't been called yet
-      if (accessUrl!=null) {
+      if (record!=null) {
         return true;
       }
       // anything more in the iterator?
@@ -106,10 +103,8 @@ class DCATIteratorAdaptor implements Iterable<Publishable> {
       }
       // find something with access URL present
       while(iterator.hasNext()) {
-        DcatRecord record = iterator.next();
-        String url = selectAccessUrl(record);
-        if (!url.isEmpty()) {
-          accessUrl = url;
+        record = iterator.next();
+        if (record!=null) {
           return true;
         }
       }
@@ -118,13 +113,12 @@ class DCATIteratorAdaptor implements Iterable<Publishable> {
 
     @Override
     public Publishable next() {
-      if (accessUrl==null) {
+      if (record==null) {
         throw new NoSuchElementException();
       }
-      DCATRecord record = new DCATRecord(proxy,accessUrl);
-      // clear cached access URL
-      accessUrl = null;
-      return record;
+      DCATRecord dcatRecord = new DCATRecord(record);
+      record = null;
+      return dcatRecord;
     }
     
     /**
