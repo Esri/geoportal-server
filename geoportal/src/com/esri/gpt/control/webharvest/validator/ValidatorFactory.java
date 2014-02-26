@@ -38,6 +38,7 @@ public class ValidatorFactory {
     register(new Agp2AgpValidatorFactory());
     register(new Ags2AgpValidatorFactory());
     register(new WAFValidatorFactory());
+    register(new DCATValidatorFactory());
   }
   
   /**

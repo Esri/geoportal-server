@@ -1271,10 +1271,3 @@ dojo.declare("gpt.gxe.ProxyUrlAdapter",null,{
   }
 
 });
-
-
-
-
-
-
-

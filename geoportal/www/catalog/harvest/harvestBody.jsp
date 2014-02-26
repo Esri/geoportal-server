@@ -328,6 +328,7 @@ function selectSection(section) {
   
   enableSection("agp2agp", section=="agp2agp");
   enableSection("ags2agp", section=="ags2agp");
+  enableSection("dcat", section=="dcat");
   
   dojo.query(".onBehalfOf").style("display",section!="agp2agp" && section!="ags2agp"? "block": "none");
 
@@ -1000,6 +1001,14 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
       <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
       <span class="hint-example">http://gptogc.esri.com/geoportal/rest/find/document?f=atom</span>
     </div>
+    <div class="hint dcat" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://gptogc.esri.com/geoportal/dcat.json</span>
+    </div>
+    <div class="hint dcat" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://gptogc.esri.com/geoportal/rest/find/document?f=dcat&start={start}&max={max}</span>
+    </div>
   </verbatim>
 </h:panelGroup>
 <%-- ArcGIS specific properties ----------------------------------------------%>
@@ -1253,6 +1262,10 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 </f:verbatim>
 </h:panelGroup>
 
+<%-- DCAT Portal specific properties -----------------------------------------%>
+<h:outputLabel styleClass="requiredField dcat" for="dcat-format" value="#{gptMsg['catalog.harvest.manage.edit.dcat.format']}"/>
+<h:inputText styleClass="dcat" size="30" value="#{HarvestController.editor.attrs['dcatFormat']}" id="dcat-format"/>
+  
 <%-- End of the panel --%>
 </h:panelGrid>
 
