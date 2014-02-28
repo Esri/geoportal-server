@@ -18,6 +18,8 @@ import com.esri.gpt.framework.search.DcList;
 import com.esri.gpt.framework.search.SearchXslProfile;
 import com.esri.gpt.framework.util.ResourceXml;
 import com.esri.gpt.framework.util.Val;
+import com.esri.gpt.framework.xml.XmlIoUtil;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
@@ -25,9 +27,11 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
+
 import org.xml.sax.SAXException;
 
  
@@ -302,13 +306,15 @@ public void readCSWGetMetadataByIDResponse(CswClient cswClient, String recordByI
       // Indirect xml
       record.setFullMetadata(indirectUrlXml);
     } else if(!Val.chkStr(sRecordByIdXslt).equals("")) {
-      // Get record by id xsl if its not intermidiate type
-      if (XML_TEST_PATTERN.matcher(sRecordByIdXslt).matches()) {
-        record.setFullMetadata(sRecordByIdXslt);
-      } else {
+    	
+      try {
+    	  // Check if it is an  xml document
+    	  XmlIoUtil.transform(sRecordByIdXslt);
+    	  record.setFullMetadata(sRecordByIdXslt);
+      } catch(Exception e) {
         ResourceXml resourceXml = new ResourceXml();
         String fullMetadata = resourceXml.makeResourceFromCswResponse(recordByIdResponse, record.getId());
-        record.setFullMetadata(fullMetadata);
+        record.setFullMetadata(fullMetadata); 
       }
     } else {
       // The get record by id

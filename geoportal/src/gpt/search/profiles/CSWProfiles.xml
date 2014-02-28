@@ -68,6 +68,7 @@
         <SupportContentTypeQuery>True</SupportContentTypeQuery> 
         <SupportSpatialBoundary>True</SupportSpatialBoundary> 
      </Profile>
+
           
      
      <!--  OGCCORE ESRI ArcIMS 9.3 --> 
