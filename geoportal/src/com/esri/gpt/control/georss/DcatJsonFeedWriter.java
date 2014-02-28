@@ -577,7 +577,13 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	    			  fldValues = sb.toString();
     			  }
     		  }else{
-    			  sb.append(fldValues).append(delimiter).append(cleanedVal);
+    			  if(fldValues.startsWith("\"") && fldValues.endsWith("\"")){
+    				  fldValues = fldValues.replace("\"", "").replace("\"", "");
+    			  }
+    			  if(cleanedVal.startsWith("\"") && cleanedVal.endsWith("\"")){
+    				  cleanedVal = cleanedVal.replace("\"", "").replace("\"", "");
+    			  }
+    			  sb.append("\"").append(fldValues).append(delimiter).append(cleanedVal).append("\"");
     			  fldValues = sb.toString();
     		  }
 	      }else{

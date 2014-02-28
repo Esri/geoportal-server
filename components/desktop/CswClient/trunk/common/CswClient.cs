@@ -17,6 +17,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Net;
+using System.Security.Cryptography;
+using com.esri.gpt.security;
+
 
 namespace com.esri.gpt.csw
 {
@@ -57,6 +60,7 @@ namespace com.esri.gpt.csw
         {
             return SubmitHttpRequest(method, URL, postdata, "", "");
         }
+        
         /// <summary>
         /// Submit HTTP Request 
         /// </summary>
@@ -76,6 +80,9 @@ namespace com.esri.gpt.csw
             Uri uri = new Uri(URL);
             request = (HttpWebRequest)WebRequest.Create(uri);
             request.AllowAutoRedirect = true;
+            
+            ClientCertRequest.handleClientCert(request, URL);
+
             if(method.Equals("SOAP")){
                 request.Method = "POST";
                 request.Headers.Add("SOAPAction: Some-URI");
@@ -127,6 +134,14 @@ namespace com.esri.gpt.csw
             }
             catch (UnauthorizedAccessException ua)
             {
+                /*if (ua is CryptographicException)
+                {
+                    // handle client certificate
+                    ClientCertRequest.handleClientCert(request, URL);
+                    response = (HttpWebResponse)request.GetResponse();
+                    retryAttempt = false;
+                }*/
+
                 if (retryAttempt)
                 {
                     PromptCredentials pc = new PromptCredentials();
@@ -152,6 +167,14 @@ namespace com.esri.gpt.csw
             }
                 catch (WebException we)
             {
+               /* if (we is CryptographicException)
+                {
+                    // handle client certificate
+                    ClientCertRequest.handleClientCert(request, URL);
+                    response = (HttpWebResponse)request.GetResponse();
+                    retryAttempt = false;
+                }*/
+                
                 if (retryAttempt)
                 {
                     PromptCredentials pc = new PromptCredentials();

@@ -133,12 +133,15 @@ public void execute() {
     LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Failed harvesting through unit: {0}. Cause: {1}", new Object[]{unit, ex.getMessage()});
     dataProcessor.onIterationException(unit, ex);
   } finally {
-    if (!isShutdown()) {
-      dataProcessor.onEnd(unit, success);
-      context.onExecutionPhaseCompleted();
-    }
-    if (result!=null) {
-      result.destroy();
+    try {
+      if (!isShutdown()) {
+        dataProcessor.onEnd(unit, success);
+        context.onExecutionPhaseCompleted();
+      }
+    } finally {
+      if (result!=null) {
+        result.destroy();
+      }
     }
     LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Completed harvesting through unit: {0}. Obtained {1} records.", new Object[]{unit, count});
   }

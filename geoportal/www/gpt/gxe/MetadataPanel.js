@@ -1020,13 +1020,15 @@ dojo.declare("gpt.gxe.MetadataPanel", null, {
             dojo.style(eIOptions, { marginLeft: "10px" });
             var sILabel = this.i18n["catalog.gxe.dialog.selectXmlFile"];
             var elIButton;
-			if(this._isIE()){
+			/*
+			 * IE10 supports HTML5 plugin. IE9 not supported with post 2.1 release of Portal 
+            if(this._isIE()){
 				this._makeImportButtonForIE(eIOptions,elOffScreen, sILabel, oDialog);
-			}else{
+			}else{*/
 				elIButton = this._makeImportButton(elOffScreen, sILabel, oDialog);
 				elIButton.className = "gxeButton gxeButton-enabled";
                 eIOptions.appendChild(elIButton);
-			}
+			// }
         }
 
         var handleError = function (sError) {
@@ -1269,10 +1271,3 @@ dojo.declare("gpt.gxe.ProxyUrlAdapter",null,{
   }
 
 });
-
-
-
-
-
-
-

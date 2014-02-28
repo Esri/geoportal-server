@@ -4,8 +4,8 @@
     </description>
 
   <target name="main">      
-    <ant antfile="build.xml" dir="${BuildDirectory}/Sources/geoportal/etc" inheritrefs="true">
-     <property file="${BuildDirectory}/Sources/geoportal/etc/tfsbuild.properties"/>
+    <ant antfile="build.xml" dir="${BuildDirectory}/src/geoportal/etc" inheritrefs="true">
+     <property file="${BuildDirectory}/src/geoportal/etc/tfsbuild.properties"/>
     </ant>
     <!--<ant antfile="build.xml" dir="C:/Projects/GeoportalServer/components/flex/extension/trunk/geoportal/etc" inheritrefs="true">
       <property file="C:/Projects/GeoportalServer/components/flex/extension/trunk/geoportal/etc/tempbuild.properties"/>
