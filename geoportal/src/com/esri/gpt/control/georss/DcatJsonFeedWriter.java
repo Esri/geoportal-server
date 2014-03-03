@@ -262,11 +262,14 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     DcatFields dcatFields = null;
     Set<String> keys = this.dcatSchemas.keySet();
     schemaKey = schemaKey.replaceAll("\"", "");
-    for (String key : keys) {    	
-      if (key.contains(schemaKey)) {
-        dcatFields = this.dcatSchemas.get(key);
-        break;
-      }
+    for (String key : keys) {
+	    String[] parts = key.split(",");
+	    for(String part : parts){
+	      if (part.equalsIgnoreCase(schemaKey)) {
+	        dcatFields = this.dcatSchemas.get(schemaKey);
+	        break;
+	      }
+	    }
     }
     if (dcatFields == null) {
       dcatFields = this.dcatSchemas.get("others");
