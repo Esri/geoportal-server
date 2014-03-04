@@ -349,6 +349,10 @@ namespace com.esri.gpt.csw
                     if (node != null)
                     {
                         record.IsLiveDataOrMap = node.InnerText.Equals("liveData", StringComparison.OrdinalIgnoreCase);
+                        if (!record.IsLiveDataOrMap)
+                        {
+                            record.IsLiveDataOrMap = node.InnerText.Equals("downloadableData", StringComparison.OrdinalIgnoreCase);
+                        }
                     }
                     else
                     {
