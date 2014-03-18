@@ -70,7 +70,7 @@
 							</UpperCorner>
 
 							<xsl:for-each
-								select="./gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString='OGC:WMS']/gmd:linkage/gmd:URL">
+								select="./gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[gmd:protocol[contains(gco:CharacterString,'OGC:WMS')]]/gmd:linkage/gmd:URL">
 								<References>
 									<xsl:value-of select="." />
 									<xsl:text>&#x2714;</xsl:text>
