@@ -910,9 +910,9 @@ public static CswSearchCriteria marshallGptToCswClientCriteria2(
       );
   
   boolean bDataWithinExtent = gptSearchCriteria.getSearchFilterSpatial().getSelectedBounds().equals(
-		  ISearchFilterSpatialObj.OptionsBounds.dataWithinExtent);
+		  ISearchFilterSpatialObj.OptionsBounds.dataWithinExtent.toString());
   boolean bDataIntersectsWithExtent = gptSearchCriteria.getSearchFilterSpatial().getSelectedBounds().equals(
-		  ISearchFilterSpatialObj.OptionsBounds.useGeogExtent);
+		  ISearchFilterSpatialObj.OptionsBounds.useGeogExtent.toString());
    
   cswClientCriteria.setUseGeographicExtent(bDataIntersectsWithExtent || bDataWithinExtent);
   cswClientCriteria.setEnvelopeIntersects(bDataIntersectsWithExtent);

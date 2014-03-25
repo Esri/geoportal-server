@@ -195,6 +195,8 @@ public String generateCSWGetRecordsRequest(CswSearchCriteria search)
     request += "<MaxX>" + search.getEnvelope().getMaxX() + "</MaxX>";
     request += "<MaxY>" + search.getEnvelope().getMaxY() + "</MaxY>";
     request += "</Envelope>";
+    request += "<RecordsFullyWithinEnvelope>"+ search.isEnvelopeContains() +"</RecordsFullyWithinEnvelope>";
+    request += "<RecordsIntersectWithEnvelope>"+ search.isEnvelopeIntersects() +"</RecordsIntersectWithEnvelope>";
   }
   request += "</GetRecords>";
   

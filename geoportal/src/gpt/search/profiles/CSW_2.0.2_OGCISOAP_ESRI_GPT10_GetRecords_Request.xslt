@@ -62,16 +62,34 @@
 
     <!-- envelope search -->
     <xsl:template match="/GetRecords/Envelope" xmlns:ogc="http://www.opengis.net/ogc">
+        
         <!-- generate BBOX query if minx, miny, maxx, maxy are provided -->
         <xsl:if test="./MinX and ./MinY and ./MaxX and ./MaxY">
-            <ogc:BBOX xmlns:gml="http://www.opengis.net/gml">
-                <ogc:PropertyName>Geometry</ogc:PropertyName>
-                <gml:Box srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
-                    <gml:coordinates>
-                        <xsl:value-of select="MinX"/>,<xsl:value-of select="MinY"/>,<xsl:value-of select="MaxX"/>,<xsl:value-of select="MaxY"/>
-                    </gml:coordinates>
-                </gml:Box>
-            </ogc:BBOX>
+             <xsl:choose>
+		        <xsl:when test="/GetRecords/RecordsFullyWithinEnvelope/text() = 'true'">
+		          
+		             <ogc:Within xmlns:gml="http://www.opengis.net/gml">
+		                <ogc:PropertyName>Geometry</ogc:PropertyName>
+		                <gml:Box srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+		                  <gml:coordinates>
+		                    <xsl:value-of select="MinX"/>,<xsl:value-of select="MinY"/>,<xsl:value-of select="MaxX"/>,<xsl:value-of select="MaxY"/>
+		                  </gml:coordinates>
+		                </gml:Box>
+		             </ogc:Within>
+		         
+		        </xsl:when>
+		        <xsl:otherwise>
+		            <ogc:BBOX xmlns:gml="http://www.opengis.net/gml">
+		                <ogc:PropertyName>Geometry</ogc:PropertyName>
+		                <gml:Box srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+		                  <gml:coordinates>
+		                    <xsl:value-of select="MinX"/>,<xsl:value-of select="MinY"/>,<xsl:value-of select="MaxX"/>,<xsl:value-of select="MaxY"/>
+		                  </gml:coordinates>
+		                </gml:Box>
+		             </ogc:BBOX>
+		        </xsl:otherwise>
+		      
+		      </xsl:choose>
         </xsl:if>
     </xsl:template>
     
