@@ -711,9 +711,9 @@ namespace com.esri.gpt.csw
                 // retrieve metadata
                 XmlDocument xmlDoc = RetrieveSelectedMetadataFromCatalog(false);
                 if (xmlDoc == null) return;
-
-                Cursor.Current = Cursors.Default;
-
+                
+                Cursor.Current = Cursors.Default;    
+                
                 // save to file
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Filter = StringResources.XmlFilesFilter;
@@ -786,6 +786,7 @@ namespace com.esri.gpt.csw
                 else
                 {
                     _mapServerUrl = record.MapServerURL;
+                    
                 }
 
                 if (_mapServerUrl != null && _mapServerUrl.Trim().Length > 0)
@@ -796,8 +797,13 @@ namespace com.esri.gpt.csw
                     {
                         serviceType = CswProfile.getServiceType(_mapServerUrl);
                     }
-
-                    if (serviceType.Equals("ags"))
+                    if (serviceType.Equals("unknown"))
+                    {
+                        System.Diagnostics.Process.Start("IExplore", _mapServerUrl);
+                        Cursor.Current = Cursors.Default;
+                        return;
+                    }
+                    else if (serviceType.Equals("ags"))
                     {
                         if (_mapServerUrl.ToLower().Contains("arcgis/rest"))
                         {

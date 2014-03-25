@@ -12,8 +12,7 @@ namespace com.esri.gpt.security
     public class ClientCertRequest
     {
         private static Hashtable certificates = new Hashtable();
-        private static int count = 0;
-        
+
         private static bool AcceptValidCertificates(object sender, X509Certificate certificate, X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
         {
             // If the certificate is a valid, signed certificate, return true.
@@ -88,12 +87,12 @@ namespace com.esri.gpt.security
 
                 // Established what should happen when validating Server certificates when establishing an SSL connection
                 ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptValidCertificates);
-                count++;
+                
                 // Create a connection to the current user's Certificate Repository in order to retrieve potential user certificates for passing
                 X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
                 store.Open(OpenFlags.ReadOnly);
                 X509Certificate2Collection col = store.Certificates.Find(X509FindType.FindByKeyUsage, X509KeyUsageFlags.DigitalSignature, true);
-                X509Certificate2Collection sel = X509Certificate2UI.SelectFromCollection(col, "PKI User Certificates that support Digital Signatures", "Select your internal PKI Certificates " + count, X509SelectionFlag.SingleSelection);
+                X509Certificate2Collection sel = X509Certificate2UI.SelectFromCollection(col, "PKI User Certificates that support Digital Signatures", "Select your internal PKI Certificates", X509SelectionFlag.SingleSelection);
                 if (sel.Count > 0)
                 {
                     X509Certificate2Enumerator en = sel.GetEnumerator();
