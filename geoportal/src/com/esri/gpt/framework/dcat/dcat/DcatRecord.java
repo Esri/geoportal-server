@@ -32,6 +32,11 @@ public interface DcatRecord {
    */
   String getAbstract();
   /**
+   * Gets description.
+   * @return description
+   */
+  String getDescription();
+  /**
    * Gets keywords
    * @return list of keywords
    */
