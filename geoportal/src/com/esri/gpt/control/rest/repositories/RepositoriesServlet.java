@@ -70,6 +70,8 @@ public class RepositoriesServlet extends BaseServlet {
                            RequestContext context)
     throws Exception {
         
+    
+    String protocol = Val.chkStr(request.getParameter("protocol"));
     // initilize the writer based upon the requested format
     ResultSetWriter writer = null;
     String format = Val.chkStr(request.getParameter("f"));
@@ -96,6 +98,7 @@ public class RepositoriesServlet extends BaseServlet {
       // initialize the query string
       String table = context.getCatalogConfiguration().getResourceTableName();
       StringBuffer sql = new StringBuffer(); 
+      
       String[] columnTags = {"id","uuid","protocol","name","url"};
       sql.append("SELECT ID,DOCUUID,PROTOCOL_TYPE,TITLE,HOST_URL FROM "+table);
       
@@ -103,6 +106,10 @@ public class RepositoriesServlet extends BaseServlet {
       HttpExpressionBinder binder = new HttpExpressionBinder(request);
       binder.parse("id","ID","=",",",HttpExpressionBinder.PARAMETERTYPE_INTEGER);
       binder.parse("uuid","DOCUUID",",",false,false);
+      
+      if(protocol.toLowerCase().equals("all")) {
+        binder.parse("csw","PROTOCOL_TYPE",",",true,false);
+      }
       binder.parse("protocol","PROTOCOL_TYPE",",",true,false);
       binder.parse("name","TITLE",null,true,true);
       binder.parse("url","HOST_URL",null,true,true);
@@ -125,7 +132,12 @@ public class RepositoriesServlet extends BaseServlet {
       con = mCon.getJdbcConnection();
       st = con.prepareStatement(sql.toString());
       binder.applyBindings(st,1);
-      rs = st.executeQuery();
+      //rs = new RepositoriesResultSetWrapper(st.executeQuery());
+      if(protocol.toLowerCase().equals("csw") == true) {
+        rs = st.executeQuery();
+      } else {
+        rs = new RepositoriesResultSetWrapper(st.executeQuery());
+      }
       writer.writeResultSet(rs,0,columnTags);  
       
     } finally {

@@ -19,6 +19,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
+import com.esri.gpt.control.rest.repositories.RepositoriesResultSet;
+
 /**
  * Super-class for a rest response writer based upon a JDBC ResultSet.
  */
@@ -84,13 +86,14 @@ public abstract class ResultSetWriter extends ResponseWriter {
   public void writeResultSet(ResultSet rs, int depth, String[] columnTags) 
     throws IOException, SQLException {
     this.startRows(depth);
-    ResultSetMetaData md = rs.getMetaData();
-    int nColumns = md.getColumnCount();
+    
     while (rs.next()) {
+      ResultSetMetaData md = rs.getMetaData();// T.M. needed for ResultSetWrapper
+      int nColumns = md.getColumnCount();
       this.startRow(depth+1);
       for (int i=1;i<=nColumns;i++) {
         String name = md.getColumnName(i);
-        if (columnTags != null) {
+        if ( !(rs instanceof RepositoriesResultSet) && columnTags != null) {
           name = columnTags[i-1];
         }
         this.writeCell(name,rs.getObject(i),depth+2);
