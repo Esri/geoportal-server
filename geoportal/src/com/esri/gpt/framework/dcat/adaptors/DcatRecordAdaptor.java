@@ -19,6 +19,7 @@ import com.esri.gpt.framework.dcat.dcat.DcatDistributionList;
 import com.esri.gpt.framework.dcat.dcat.DcatRecord;
 import com.esri.gpt.framework.dcat.json.JsonAttribute;
 import com.esri.gpt.framework.dcat.json.JsonRecord;
+import com.esri.gpt.framework.util.Val;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +45,12 @@ public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
 
   @Override
   public String getAbstract() {
-    return getString("abstract");
+    return Val.chkStr(getString("abstract"),getString("description"));
+  }
+
+  @Override
+  public String getDescription() {
+    return Val.chkStr(getString("description"),getString("abstract"));
   }
 
   @Override

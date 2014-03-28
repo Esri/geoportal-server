@@ -47,14 +47,14 @@ public class DCATRecord extends CommonPublishable {
       + "<rdf:RDF xmlns:dct='http://purl.org/dc/terms/' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:fo='http://www.w3.org/1999/XSL/Format' xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#' xmlns:exslt='http://exslt.org/common' xmlns:rim='urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0' xmlns:dcmiBox='http://dublincore.org/documents/2000/07/11/dcmi-box/' xmlns:ows='http://www.opengis.net/ows'>"
       + "<rdf:Description rdf:about='rdf_about'>"
       + "<dc:title>" + baseRecord.getTitle() + "</dc:title>"
-      + "<dc:description>" + baseRecord.getAbstract() + "</dc:description>"
+      + "<dc:description>" + baseRecord.getDescription()+ "</dc:description>"
       + "<dct:abstract>" + baseRecord.getAbstract() + "</dct:abstract>"
       + "<dc:format>" + baseRecord.getFormat() + "</dc:format>"
       + "<dct:publisher>" + baseRecord.getPublisher() + "</dct:publisher>"
       + "<dc:identifier>" + baseRecord.getIdentifier() + "</dc:identifier>"
       + getSubjects() +
       "<dct:modified>" + baseRecord.getModified() + "</dct:modified>"
-      + //getReferences() +
+      + getReferences() +
       "<ows:WGS84BoundingBox>" + baseRecord.getSpatial() + "</ows:WGS84BoundingBox>"
       + "</rdf:Description>"
       + "</rdf:RDF>";
