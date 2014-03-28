@@ -155,9 +155,6 @@ public class DcatParser {
       while (jsonReader.hasNext()) {
         JsonToken token = jsonReader.peek();
         switch (token) {
-          case END_ARRAY:
-            jsonReader.endArray();
-            return;
           case BEGIN_OBJECT:
             jsonReader.beginObject();
             if (!parseRecord(listener)) {
@@ -169,7 +166,7 @@ public class DcatParser {
         }
       }
 
-    throw new DcatParseException("Unexpected end of data.");
+      jsonReader.endArray();
   }
 
   private boolean parseRecord(ListenerInternal listener) throws DcatParseException, IOException {
