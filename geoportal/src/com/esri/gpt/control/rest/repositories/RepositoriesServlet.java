@@ -108,9 +108,10 @@ public class RepositoriesServlet extends BaseServlet {
       binder.parse("uuid","DOCUUID",",",false,false);
       
       if(protocol.toLowerCase().equals("all")) {
-        binder.parse("csw","PROTOCOL_TYPE",",",true,false);
+        binder.parse("","PROTOCOL_TYPE",",",true,false);
+      } else {
+        binder.parse("protocol","PROTOCOL_TYPE",",",true,false);
       }
-      binder.parse("protocol","PROTOCOL_TYPE",",",true,false);
       binder.parse("name","TITLE",null,true,true);
       binder.parse("url","HOST_URL",null,true,true);
             
