@@ -473,14 +473,20 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	    	StringBuilder sb = new StringBuilder();
 	    	sb.append("[");
 	    	boolean hasValue = false;
+            HashMap<String, String> repKeyword = new HashMap<String, String>();
 	    	for (String part : parts){
-	    		if(!part.startsWith("\"") && !part.endsWith("\"")){
-	    			if(hasValue){
-	    				sb.append(delimiter);
-	    			}
-	    			sb.append("\"").append(Val.escapeStrForJson(part.trim())).append("\"");
-	    			hasValue = true;
-	    		}
+                String partTrimUpper = part.trim().toUpperCase();
+                if (!part.startsWith("\"") && !part.endsWith("\"")) {
+                    if ((!dcatFieldName.equalsIgnoreCase("keyword")) || (!repKeyword.containsKey(partTrimUpper))) {
+                        repKeyword.put(partTrimUpper, partTrimUpper);
+                        if (hasValue) {
+                          sb.append(delimiter);
+                        }
+
+                        sb.append("\"").append(Val.escapeStrForJson(part.trim())).append("\"");
+                        hasValue = true;
+                    }
+                }
 	    	}	    		    
 	    	sb.append("]");
 	    	value = sb.toString();
