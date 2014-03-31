@@ -29,6 +29,16 @@ import java.util.Map;
  */
 public class RepositoriesResultSet implements ResultSet {
 
+
+public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+  return null;
+}
+
+public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
+  return null;
+}
+
+
 /* (non-Javadoc)
  * @see java.sql.Wrapper#unwrap(java.lang.Class)
  */
