@@ -465,7 +465,12 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	    		Date dt = null;
 				try {
                     dt = new IsoDateFormat().parseObject(value);
-                    value = sdf.format(dt);
+                    if (dt!=null) {
+                      value = sdf.format(dt);
+                    } else {
+                      value = "";
+                    }
+                    
 				} catch (ParseException e) {
                     value = "";
                 }
