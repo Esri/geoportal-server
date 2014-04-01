@@ -69,6 +69,16 @@ dojo.declare("AsnMain", null, {
 	  el.appendChild(document.createTextNode(text));
 	  return el;
 	},
+	
+	makeLabel: function(text, className, forId) {
+	  var el = document.createElement("span");
+	  if (className != null) el.className = className;
+	  
+	  var lbl = dojo.create("label", {"for": forId});
+	  lbl.appendChild(document.createTextNode(text));
+	  el.appendChild(lbl);
+	  return el;	
+	},
 	    
 	onPageModified: function() {}
 
@@ -558,7 +568,7 @@ dojo.declare("gpt.AsnComments", gpt.AsnAssertionSet, {
       elAdd.id = "asn-comments-add";
       elAdd.className = "asn-subSection asn-comments-add";
       elAdd.style.display = "none";
-      elAdd.appendChild(this.main.makeSpan(commentResources.addComment,"sectionCaption"));
+      elAdd.appendChild(this.main.makeLabel(commentResources.addComment,"sectionCaption", "inner-editor"));
       var elEdit = this.makeEditArea("asn-comments-add-editarea","asn-comments-add-textarea",null);
       elAdd.appendChild(elEdit);
       elComments.appendChild(elAdd);
