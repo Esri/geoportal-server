@@ -35,6 +35,7 @@ import com.esri.gpt.catalog.search.ResourceLinks;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.geometry.Envelope;
+import com.esri.gpt.framework.isodate.IsoDateFormat;
 import com.esri.gpt.framework.util.Val;
 
 import java.util.logging.Logger;
@@ -422,7 +423,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     if (value == null) {
       return "";
     }
-    if (value == "null") {
+    if ("null".equals(value)) {
       return "";
     }
     if(type.equalsIgnoreCase("date") || dcatFieldName.equalsIgnoreCase("spatial")) { 
@@ -463,9 +464,16 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	    		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
 	    		Date dt = null;
 				try {
-					dt = sdf.parse(value);
-				} catch (ParseException e) {}
-	    		value = sdf.format(dt);
+                    dt = new IsoDateFormat().parseObject(value);
+                    if (dt!=null) {
+                      value = sdf.format(dt);
+                    } else {
+                      value = "";
+                    }
+                    
+				} catch (ParseException e) {
+                    value = "";
+                }
 	    	}
 	    }else if(type.equalsIgnoreCase("array")) {
 	    	value = value.replace("\"", "").replace("\"", "");
