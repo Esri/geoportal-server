@@ -975,7 +975,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
     </div>
     <div class="hint arcgis" style="display: none;">
       <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
-      <span class="hint-example">http://server.arcgisonline.com/ArcGIS/rest/services</span>
+      <span class="hint-example">http://server.arcgisonline.com/arcgis/rest/services</span>
     </div>
     <div class="hint arcims" style="display: none;">
       <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
@@ -1021,7 +1021,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   <verbatim>
     <div class="hint arcgis" style="display: none;">
       <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
-      <span class="hint-example">http://services.arcgisonline.com/ArcGIS/services/?wsdl</span>
+      <span class="hint-example">http://services.arcgisonline.com/arcgis/services/?wsdl</span>
     </div>
   </verbatim>
 </h:panelGroup>
@@ -1196,7 +1196,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   <verbatim>
     <div class="hint ags2agp" style="display: none;">
       <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
-      <span class="hint-example">http://server.arcgisonline.com/ArcGIS/rest/services</span>
+      <span class="hint-example">http://server.arcgisonline.com/arcgis/rest/services</span>
     </div>
   </verbatim>
 </h:panelGroup>
@@ -1209,7 +1209,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   <verbatim>
     <div class="hint ags2agp" style="display: none;">
       <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
-      <span class="hint-example">http://services.arcgisonline.com/ArcGIS/services/?wsdl</span>
+      <span class="hint-example">http://services.arcgisonline.com/arcgis/services/?wsdl</span>
     </div>
   </verbatim>
 </h:panelGroup>
