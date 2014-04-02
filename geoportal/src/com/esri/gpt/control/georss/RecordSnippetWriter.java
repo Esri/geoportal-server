@@ -86,6 +86,11 @@ public class RecordSnippetWriter {
   }
   
   // properties ==================================================================
+  
+  private MessageBroker getMessageBroker(){ 
+    return this._messageBroker;
+  }
+  
   /**
    * Checks if showing title allowed.
    * @return <code>true</code> if showing title allowed
@@ -267,7 +272,9 @@ public class RecordSnippetWriter {
         url = Val.escapeXml(url);
         String imgStyle = "float:right; margin-left:0.5em; width:64px; height:64px; border:1px solid #000000;";
         //imgStyle = "border:1px solid #000000;";
-        _writer.println("<img class=\""+THUMBNAIL_STYLE_CLASS+"\" src=\""+url+"\" style=\""+imgStyle+"\"/>");
+        _writer.println("<img class=\""+THUMBNAIL_STYLE_CLASS+"\" "+ 
+            " alt=\""+ this.getMessageBroker().retrieveMessage("catalog.rest.thumbNail")+ "\" " +
+            " src=\""+ url+"\" style=\""+imgStyle+"\"/>");
       }
       _writer.println(Val.escapeXmlForBrowser(sAbstract));
       _writer.println("</div>");

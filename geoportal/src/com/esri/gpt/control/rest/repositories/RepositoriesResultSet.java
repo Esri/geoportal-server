@@ -30,10 +30,21 @@ import java.util.Map;
 public class RepositoriesResultSet implements ResultSet {
 
 
+/**
+ * Added for java 1.7
+ * 
+ * @param columnIndex
+ * @param type
+ * @return
+ * @throws SQLException
+ */
 public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
   return null;
 }
 
+/*
+ * Added for java 1.7
+ */
 public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
   return null;
 }
