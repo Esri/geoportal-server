@@ -503,7 +503,8 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	    if(type.equalsIgnoreCase("string")){
 		    if(maxChars > -1 && value.length() > maxChars){		    	
 	        	if(value.startsWith("\"") && value.endsWith("\"")){
-	        		value = "\"" + Val.escapeStrForJson(value.substring(1,maxChars)) + "\"";
+                    value = value.replaceAll("^\"|\"$", "");
+	        		value = "\"" + Val.escapeStrForJson(value.substring(0,maxChars)) + "\"";
 	        	}
 		    }
 	    }
