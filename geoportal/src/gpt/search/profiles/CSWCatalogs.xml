@@ -15,13 +15,34 @@
  limitations under the License.
 -->
 <CSWCatalogs>
-        <CSWCatalog>
-        <URL>http://gptogc.esri.com/geoportal/csw/discovery?request=GetCapabilities&amp;service=csw&amp;version=2.0.2</URL>
-        <Name>gptogc.esri.com</Name>
-        <CSWProfile>urn:ogc:CSW:2.0.2:HTTP:OGCCORE:ESRI:GPT</CSWProfile>
-        <Credentials>
-            <Username />
-            <Password />
-        </Credentials>
-    </CSWCatalog>
+  <!-- Geoportal Server Sandbox -->
+  <CSWCatalog>
+    <URL>http://gptogc.esri.com/geoportal/csw/discovery?request=GetCapabilities&amp;service=csw&amp;version=2.0.2</URL>
+    <Name>Geoportal Server Sandbox</Name>
+    <CSWProfile>urn:ogc:CSW:2.0.2:HTTP:OGCCORE:ESRI:GPT</CSWProfile>
+    <Credentials>
+      <Username/>
+      <Password/>
+    </Credentials>
+  </CSWCatalog>
+  
+  <CSWCatalog>
+    <URL>http://catalog.data.gov/csw-all?request=GetCapabilities&amp;service=CSW&amp;version=2.0.2</URL>
+    <Name>Data.gov (all)</Name>
+    <CSWProfile>urn:ogc:CSW:2.0.2:HTTP:APISO:DATA.GOV</CSWProfile>
+    <Credentials>
+      <Username/>
+      <Password/>
+    </Credentials>
+  </CSWCatalog>
+  
+  <CSWCatalog>
+    <URL>http://production.geodab.eu/gi-cat-StP/services/cswiso?request=GetCapabilities&amp;service=CSW&amp;version=2.0.2</URL>
+    <Name>GEOSS DAB</Name>
+    <CSWProfile>urn:ogc:CSW:2.0.2:HTTP:APISO:GICAT</CSWProfile>
+    <Credentials>
+      <Username/>
+      <Password/>
+    </Credentials>
+  </CSWCatalog>
 </CSWCatalogs>
