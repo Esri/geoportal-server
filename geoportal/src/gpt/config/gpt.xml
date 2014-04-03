@@ -164,6 +164,7 @@
 		- searchResultsReviewsShown: How should the reviews be shown on the results page.  Options are "none", "only-reviewed" or "all"
 		- maxSavedSearches: maximum number of allowed searches in storage, per user.
 		- allowExternalSiteSearch: Flag enabling federated search
+                - allowTemporalSearch: Flag enabling temporal search on metadata fields
     -->   
         
     <search
@@ -173,7 +174,8 @@
         searchResultsPerPage="10"
         searchResultsReviewsShown="only-reviewed"
         maxSavedSearches="10"
-        allowExternalSiteSearch="true">
+        allowExternalSiteSearch="true"
+        allowTemporalSearch="true">
         <!-- Settings for repositories available in federated search
             - key: regular expression, can be used to identify the rid for the repository.
             - class: search engine instance, a Java class that will process the search request.
