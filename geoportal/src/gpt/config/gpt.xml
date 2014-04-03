@@ -205,6 +205,28 @@
                 <parameter key="profileId" 
                     value="urn:esri:gpt:HTTP:JSON:ESRI:AGSONLINE" /> 
             </repository>
+             <repository
+                 key="dataGov"
+                 class="com.esri.gpt.catalog.search.SearchEngineExternalCsw"
+                 labelResourceKey="catalog.search.searchSite.dataGov"
+                 abstractResourceKey="catalog.search.searchSite.dataGov.abstract"
+                >
+                <parameter key="profileId" 
+                    value="urn:ogc:CSW:2.0.2:HTTP:OGCCORE:ESRI:GPT" /> 
+                <parameter key="url" 
+                    value="http://catalog.data.gov/csw?service=CSW&amp;version=2.0.2&amp;request=GetCapabilities" /> 
+            </repository>
+            <repository
+                 key="geodab"
+                 class="com.esri.gpt.catalog.search.SearchEngineExternalCsw"
+                 labelResourceKey="catalog.search.searchSite.geoDab"
+                 abstractResourceKey="catalog.search.searchSite.geoDab.abstract"
+                >
+                <parameter key="profileId" 
+                    value="urn:ogc:CSW:2.0.2:HTTP:OGCCORE:ESRI:GPT" /> 
+                <parameter key="url" 
+                    value="http://production.geodab.eu/gi-cat-StP/services/cswiso?request=GetCapabilities&amp;service=CSW&amp;version=2.0.2" /> 
+            </repository>
             <!-- For the registered CS-W repositories flagged for viewing in federated search -->
             <repository key="*" 
                  class="com.esri.gpt.catalog.search.SearchEngineExternalCsw"/>

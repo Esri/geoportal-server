@@ -48,9 +48,7 @@ public RepositoriesResultSetWrapper(ResultSet rs) {
  
   _searchRepos = new  LinkedHashMap<String, Map<String, String>>();
   
-  if(allowExt == false) {
-    return;
-  }
+ 
   LinkedHashMap<String, Map<String, String>> tmpSearchRepos = 
       SearchConfig.getConfiguredInstance().getSearchFactoryRepos();
   Iterator<String>iter = tmpSearchRepos.keySet().iterator();
@@ -75,11 +73,12 @@ public RepositoriesResultSetWrapper(ResultSet rs) {
           } else if (key1.toLowerCase().equals(("labelresourcekey"))) {
             MessageBroker messageBroker = new MessageBroker();
             messageBroker.setBundleBaseName("gpt.resources.gpt");
-            params1.put("title",
+            params1.put("name",
                 messageBroker.retrieveMessage(params.get(key1)));
           }
         }
-        _searchRepos.put(key, params1);
+        if(allowExt || key.toLowerCase().equals("local"))
+          _searchRepos.put(key, params1);
         break;
       }
           
@@ -129,6 +128,10 @@ public boolean next() throws SQLException {
     
   }
 
+}
+
+public boolean isDbFinishedIterating() {
+  return _nextIter >= 0;
 }
 
 /* (non-Javadoc)

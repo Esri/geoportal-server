@@ -134,7 +134,7 @@ public class RepositoriesServlet extends BaseServlet {
       st = con.prepareStatement(sql.toString());
       binder.applyBindings(st,1);
       //rs = new RepositoriesResultSetWrapper(st.executeQuery());
-      if(protocol.toLowerCase().equals("csw") == true) {
+      if(protocol.toLowerCase().equals("all") != true) {
         rs = st.executeQuery();
       } else {
         rs = new RepositoriesResultSetWrapper(st.executeQuery());
