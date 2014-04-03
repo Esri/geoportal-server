@@ -531,7 +531,7 @@
 	<!-- Data.gov Profile of pyCSW -->
   <Profile>
 		<ID>urn:ogc:CSW:2.0.2:HTTP:APISO:PYCSW</ID>
-		<Name>pyCSW</Name>
+		<Name>pycsw</Name>
 		<CswNamespace>http://www.opengis.net/cat/csw/2.0.2</CswNamespace>
 		<Description/>
 		<GetRecords>
