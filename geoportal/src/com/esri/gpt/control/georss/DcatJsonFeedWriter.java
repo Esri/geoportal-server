@@ -483,7 +483,9 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	    	boolean hasValue = false;
             HashMap<String, String> repKeyword = new HashMap<String, String>();
 	    	for (String part : parts){
-                String partTrimUpper = part.trim().toUpperCase();
+                part = part.trim();
+                if (part.isEmpty()) continue;
+                String partTrimUpper = part.toUpperCase();
                 if (!part.startsWith("\"") && !part.endsWith("\"")) {
                     if ((!dcatFieldName.equalsIgnoreCase("keyword")) || (!repKeyword.containsKey(partTrimUpper))) {
                         repKeyword.put(partTrimUpper, partTrimUpper);
@@ -491,7 +493,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
                           sb.append(delimiter);
                         }
 
-                        sb.append("\"").append(Val.escapeStrForJson(part.trim())).append("\"");
+                        sb.append("\"").append(Val.escapeStrForJson(part)).append("\"");
                         hasValue = true;
                     }
                 }
