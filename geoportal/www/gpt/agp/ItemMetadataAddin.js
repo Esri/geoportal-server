@@ -70,6 +70,7 @@ dojo.declare("gpt.agp.ItemMetadataButton",null,{
       label: sLabel
     },elButtonNode);
     dojo.addClass(djButton.domNode,"readOnly");
+    dojo.addClass(djButton.domNode,"calcite narrow transparent");
     dojo.connect(djButton,"onClick",this,dojo.hitch(this,function() {
       var oMetadata = new gpt.gxe.MetadataPanel();
       oMetadata.initialize();
