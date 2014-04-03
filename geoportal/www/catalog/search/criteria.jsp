@@ -141,7 +141,10 @@
         }
       }
     );
- 
+      // Preloading the search gif
+      var img = new Image();
+      img.src = dojo.byId("/catalog/images/loading.gif");
+      //scInitDistrPane();
     }
   );
 
@@ -292,6 +295,7 @@
       scPopulateHarvestSites();
       scWriteToDistrEndPointComponents();
       scInitDistrPane();
+      scInitContentDatePane();
       scReconfigureCriteria();
       if(typeof(rsInsertReviews) != 'undefined') {
           rsInsertReviews();
@@ -807,12 +811,18 @@
     if(scRids != "") {
       restParams += "&rids=" +  encodeURIComponent(scRids);
     }
-   
-    var scText = GptUtils.valChkStr(
-    dojo.byId('frmSearchCriteria:scText').value);
-    if(scText != "") {
-      restParams += "&searchText=" +  encodeURIComponent(scText);
+    
+    var scText = GptUtils.valChkStr(dojo.byId('frmSearchCriteria:scText').value);
+    var contentDateQuery = makeContentDateQuery();
+    if (contentDateQuery.length>0) {
+      if (scText.length > 0) {
+      	//scText = "+("+scText+") +("+contentDateQuery+")";
+      	scText = "("+scText+") AND ("+contentDateQuery+")";
+      } else {
+        scText = contentDateQuery;
+      }
     }
+    if (scText != "") restParams += "&searchText="+ encodeURIComponent(scText);
 
     // &filter parameter based on window.location.href
     restParams = scAppendExtendedFilter(restParams,bIsRemoteCatalog);
@@ -1217,6 +1227,74 @@
    
     if (typeof(scMap) != 'undefined') scMap.reposition();
   }
+  
+  function scInitContentDatePane() {
+  	var check = dojo.byId('djtContentDateSearchesCheck');
+  	if (check === null) return;
+  	dojo.byId('djtContentDateSearches').style.display = "block";
+    //dojo.query("#contentDateTitle").onclick(function(evt) {scShowContentDateSearch();});
+    //dojo.style("djtContentDateSearchesTitle", "cursor", "pointer");
+    dojo.query("#djtContentDateSearchesTitle").empty().addContent(_csTitleContentDateSearch);
+    dojo.query("#djtCntDistributedSearchesTitleRemark").empty().addContent(_csTitleDistributedSearchRemark);
+    dojo.query("#djtContentDateSearchesTitleRemark").empty().addContent(_csTitleContentDateSearchRemark);
+    dojo.query("#djtContentDateAnytime").addContent(_csTitleContentDateAnytime);
+    dojo.query("#djtContentDateIntersecting").addContent(_csTitleContentDateIntersecting);
+    dojo.query("#djtContentDateWithin").addContent(_csTitleContentDateWithin);
+    dojo.query("#djtContentDateStartDate").addContent(_csTitleContentDateStartDate);
+    dojo.query("#djtContentDateStartDatePattern").addContent(_csTitleContentDatePattern);
+    dojo.query("#djtContentDateEndDate").addContent(_csTitleContentDateEndDate);
+    dojo.query("#djtContentDateEndDatePattern").addContent(_csTitleContentDatePattern);
+    dojo.query(".contentDateType[value$='intersecting']").attr("checked",true);
+    scShowContentDateSearch(true);
+  }
+  var _showingContentDateSearch = false;
+  function scShowContentDateSearch(show) {
+    var elDvContent = dojo.byId("dvContentDateSearchesContent");
+    dojo.style("djtContentDateSearches", {visibility: "visible"});
+    var lShow = true;
+    if(typeof(show) == 'boolean') {
+      lShow = show;
+    } else {
+      lShow = elDvContent.style.display=="none";
+    }
+    if(lShow == true) {
+      _showingContentDateSearch = true;
+      dojo.style(elDvContent, {visibility:"visible", display:"block"} );
+    } else {
+      _showingContentDateSearch = false;
+      dojo.style(elDvContent, {visibility:"visible", display:"none"} );
+    }
+    var elCheck = dojo.byId("djtContentDateSearchesCheck");
+    if (elCheck!=null) {
+      elCheck.checked = lShow;
+    }
+    if (typeof(scMap) != 'undefined') scMap.reposition();
+  }
+  function makeContentDateQuery() {
+    var result = "";
+    var check = dojo.byId('djtContentDateSearchesCheck');
+    var enabled = check!=null? check.checked: false;
+    if (enabled) {
+      var sdate = GptUtils.valChkStr(dojo.query("#dvContentDateSearchesContent input[name$='sdate']")[0].value);
+      var edate = GptUtils.valChkStr(dojo.query("#dvContentDateSearchesContent input[name$='edate']")[0].value);
+      var mode = GptUtils.valChkStr(dojo.query(".contentDateType:checked").attr("value")[0]);
+
+      if ((sdate.length == 0) && (edate.length == 0)) {
+        return result;
+      } else if (sdate.length == 0) {
+        sdate = "*";
+      } else if (edate.length == 0) {
+        edate = "*";
+      }
+      
+      if (mode=="intersecting") {
+        result = "timeperiod:["+sdate+" TO "+edate+"]";
+      } else if (mode=="within") {
+        result = "timeperiod:{"+sdate+" TO "+edate+"}";
+      } 
+    }
+    return result;
+  }
 
   /**
   Shows distributed search box or not.
@@ -1459,6 +1537,56 @@
   quoted="true"
   value="#{SearchController.searchConfig.timeOut}"
   variableName="_csDefaultSearchSite"/>
+  
+<gpt:jscriptVariable 
+  id="_csTitleContentDateSearch"
+  quoted="true"
+  value="#{gptMsg['catalog.search.contentDateSearch.WindowTitle']}"
+  variableName="_csTitleContentDateSearch"/>
+
+<gpt:jscriptVariable
+  id="_csTitleContentDateSearchRemark"
+  quoted="true"
+  value="#{gptMsg['catalog.search.contentDateSearch.WindowTitleRemark']}"
+  variableName="_csTitleContentDateSearchRemark"/>
+  
+<gpt:jscriptVariable
+  id="_csTitleContentDateAnytime"
+  quoted="true"
+  value="#{gptMsg['catalog.search.contentDateSearch.anytime']}"
+  variableName="_csTitleContentDateAnytime"/>
+
+<gpt:jscriptVariable
+  id="_csTitleContentDateIntersecting"
+  quoted="true"
+  value="#{gptMsg['catalog.search.contentDateSearch.intersecting']}"
+  variableName="_csTitleContentDateIntersecting"/>
+
+<gpt:jscriptVariable
+  id="_csTitleContentDateWithin"
+  quoted="true"
+  value="#{gptMsg['catalog.search.contentDateSearch.within']}"
+  variableName="_csTitleContentDateWithin"/>
+
+<gpt:jscriptVariable
+  id="_csTitleContentDateStartDate"
+  quoted="true"
+  value="#{gptMsg['catalog.search.contentDateSearch.startDate']}"
+  variableName="_csTitleContentDateStartDate"/>
+
+<gpt:jscriptVariable
+  id="_csTitleContentDateEndDate"
+  quoted="true"
+  value="#{gptMsg['catalog.search.contentDateSearch.endDate']}"
+  variableName="_csTitleContentDateEndDate"/>
+
+<gpt:jscriptVariable
+  id="_csTitleContentDatePattern"
+  quoted="true"
+  value="#{gptMsg['catalog.search.contentDateSearch.datePattern']}"
+  variableName="_csTitleContentDatePattern"/>
+    
+  
 
 <% // search text and submit button %>
 <h:panelGrid columns="4">
@@ -1475,11 +1603,8 @@
                  value="#{SearchController.searchEvent.eventExecuteSearch}" />
     <f:attribute name="onSearchPage" value="true"/>
   </h:commandButton>
-  <h:graphicImage
-    id="loadingGif" 
-    style="visibility: hidden;"
-    url="/catalog/images/loading.gif" alt="" 
-    width="30px">
+  <h:graphicImage id="loadingGif" style="visibility: hidden;"
+    url="/catalog/images/loading.gif" alt="" width="20px" height="20px">
   </h:graphicImage>
    <f:verbatim>
    	<div id="hints"></div>
@@ -1493,7 +1618,7 @@
         <table width="100%">
           <tr>
             <td/>
-            <td valign="top"><img id="djtCntDistributedSearchesImg" alt="" src="../images/section_closed.gif"/></td>
+            <td valign="top"><img id="djtCntDistributedSearchesImg" alt="" src="/geoportal/catalog/images/section_closed.gif"/></td>
             <td>
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr><td id="djtCntDistributedSearchesTitle" class="sectionCaption"/></tr>
@@ -1526,19 +1651,66 @@
   </f:verbatim>
 </h:panelGroup>
 
-<h:outputText id="brkscLnkAdditionals" escape="false" value="<br/>"/>
-<h:outputLink id="scLnkAdditionals" 
-              onclick="javascript:scShowDialog('crtAdvOptnsContent', true)" value="javascript:void(0)">
+<h:outputText id="brkscLnkAdditionals" escape="false" rendered="true" value="<br/>"/>
+<h:outputLink id="scLnkAdditionals" onclick="javascript:scShowDialog('crtAdvOptnsContent', true)" value="javascript:void(0)">
   <h:outputText escape="false" value="#{gptMsg['catalog.search.additionalOptions']}" />
 </h:outputLink>
-
-<h:outputText id="txtClearHtml" escape="false" value="<br/>"/>
-<h:outputLink
-  value="#"
-  onclick="javascript:scDoAjaxSearch(true); return false;">
-  <h:outputText escape="false" 
-    value="#{gptMsg['catalog.search.search.btnReset']}" />
+<h:outputText id="txtClearHtml" escape="false" value="<span style='margin-left:20px;'></span>"/>
+<h:outputLink value="#" onclick="javascript:scDoAjaxSearch(true); return false;">
+  <h:outputText escape="false" value="#{gptMsg['catalog.search.search.btnReset']}" />
 </h:outputLink>
+
+<h:outputText id="dockNoContentDateSearch" escape="false" value="<div style='margin-top:20px;'></div>"
+  rendered="#{SearchController.searchConfig.allowTemporalSearch != true}"/>
+<h:panelGroup id="dockContentDateSearch" rendered="#{SearchController.searchConfig.allowTemporalSearch == true}">
+  <f:verbatim>
+    <div id="djtContentDateSearches" style="width:400px;display:none;">
+      <div id="contentDateTitle">
+        <table width="100%">
+          <tr>
+            <td valign="top" style="width: 13px; display: none;" >
+              <input type="checkbox" id="djtContentDateSearchesCheck"/>
+            </td>
+            <td>
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr><td><h3 id="djtContentDateSearchesTitle" class="xsectionCaption"></h3></tr>
+                <tr style="display:none"><td id="djtContentDateSearchesTitleRemark"  class="xsectionCaptionRemark"/></tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="dvContentDateSearchesContent">
+        <div>
+          <table>
+            <tbody>
+              <tr>
+                <td><label id="djtContentDateIntersecting"><input class="contentDateType" type="radio" name="contentDateType" value="intersecting"></label></td>
+                <td><label id="djtContentDateWithin"><input class="contentDateType" type="radio" name="contentDateType" value="within"></label></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <table>
+            <tbody>
+              <tr>
+                <td id="djtContentDateStartDate"></td>
+                <td><input type="text" name="sdate"/></td>
+                <td id="djtContentDateStartDatePattern"></td>
+              </tr>
+              <tr>
+                <td id="djtContentDateEndDate"></td>
+                <td><input type="text" name="edate"/></td>
+                <td id="djtContentDateEndDatePattern"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </f:verbatim>
+</h:panelGroup>
 
 <h:inputHidden id="_harvestSiteName"
                value="#{SearchFilterHarvestSites.selectedHarvestSiteName}" />
@@ -1562,6 +1734,7 @@
 <h:outputText escape="false" value="<h3>"/>
 <h:outputText id="scLblSptial" value="#{gptMsg['catalog.search.filterSpatial.title']}" />
 <h:outputText escape="false" value="</h3>"/>
+<h:outputText escape="false" value="<div>"/>
 <h:panelGrid columns="1" id="scPnlSpatial">
   <h:selectOneRadio id="scSelSpatial"
                     value="#{SearchController.searchCriteria.searchFilterSpatial.selectedBounds}"
@@ -1577,7 +1750,7 @@
 
   <% // map %>
   <h:panelGrid id="pnlMap">
-    <h:panelGroup id="mapToolbar" styleClass="mapToolbar">
+    <h:panelGroup id="mapToolbar" styleClass="mapToolbar" style="display:none">
       <h:outputLabel for="mapInput-locate" value="#{gptMsg['catalog.search.search.lblLocator']}"/>
       <h:inputText id="mapInput-locate" styleClass="locatorInput"
                    maxlength="1024" onkeypress="return scMap.onLocatorKeyPress(event);"/>
@@ -1614,7 +1787,7 @@
 
   </h:panelGrid>
 </h:panelGrid>
-
+<h:outputText escape="false" value="</div>"/>
 
 <h:outputText escape="false" 
               value='<div id="crtAdvOptnsContent" dojoType="dijit.Dialog"

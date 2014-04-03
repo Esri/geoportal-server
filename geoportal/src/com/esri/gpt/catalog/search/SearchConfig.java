@@ -126,6 +126,9 @@ private String mvsPassword;
 /** The allow external search. */
 private boolean allowExternalSearch;
 
+/** The allow temporal search. */
+private boolean allowTemporalSearch = false;
+
 /** XSL workflow object *. */
 private SearchGptXslProfiles gptXslProfiles = new SearchGptXslProfiles();
 
@@ -162,6 +165,21 @@ public boolean getAllowExternalSearch() {
  */
 public void setAllowExternalSearch(boolean allowExternalSearch) {
   this.allowExternalSearch = allowExternalSearch;
+}
+
+/**
+ * Checks if is allow temporal search.
+ * @return true, if is allow temporal search
+ */
+public boolean getAllowTemporalSearch() {
+  return allowTemporalSearch;
+}
+/**
+ * Sets the allow temporal search.
+ * @param allowTemporalSearch allow temporal search
+ */
+public void setAllowTemporalSearch(boolean allowTemporalSearch) {
+  this.allowTemporalSearch = allowTemporalSearch;
 }
 
 /**
