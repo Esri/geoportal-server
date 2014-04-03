@@ -535,9 +535,12 @@ dojo.declare("gxe.Client",null,{
     if ((id != null) && (id.length > 0)) u += "&id="+encodeURIComponent(id);
     if (asDraft) u += "&asDraft=true";
    
+    var nd = document.createElement("p");
+    nd.appendChild(document.createTextNode("..."));
     var dialog = new dijit.Dialog({
       title: context.getI18NString("client.saving.title"),
-      style: "width: 300px; display: none;"
+      style: "width: 300px; display: none;",
+      content: nd
     });
     dojo.addClass(dialog.domNode,"tundra");
     dialog.show();
@@ -553,8 +556,10 @@ dojo.declare("gxe.Client",null,{
         this.onError(errorObject,ioArgs);
       }),
       load: dojo.hitch(this,function(responseObject,ioArgs) {
-        dialog.hide();
-        dialog.destroy();
+      	setTimeout(function(){
+          dialog.hide();
+          dialog.destroy();
+      	},2000);
         try {
           if (responseObject!=null) {
             jErr = null;
@@ -2903,12 +2908,8 @@ dojo.declare("gxe.control.Control",null,{
     if ((domProcessor != null) && (domNode != null)) {
       domMatch = domProcessor.findMatchingChildAttribute(domNode,cfgAttribute);
     } else {
-      if (sDefault != null) xmlAttribute.nodeInfo.nodeValue = sDefault;      
+      if (sDefault != null) xmlAttribute.nodeInfo.nodeValue = sDefault;
     }
-    
-    if(sTargetName == "gml:id" && xmlAttribute){
-	  xmlAttribute.nodeInfo.nodeValue = "Temporal-" + (Math.floor((Math.random()*100000)+1)).toString();
-	}
 
     var ctl = this.context.makeXhtmlControl(cfgAttribute,this,true);
     ctl.xmlNode = xmlAttribute;
