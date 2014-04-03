@@ -47,11 +47,12 @@ dojo.declare("BrowseMain", null, {
     elFilterControl.className = "nav";
     
     var label = this.resources.filterLabel;
-    var elSearchLabelText = document.createElement("label");
-    elSearchLabelText.id = this.resultsHeaderId+"-FilterLabel";
-    elSearchLabelText['for'] = this.resultsHeaderId+"-filterText";
-    //elSearchLabelText.className = "result";
-    elSearchLabelText.appendChild(document.createTextNode(label));
+    
+    var elSearchLabelText = dojo.create("label", {
+    	id: this.resultsHeaderId+"-FilterLabel",
+    	"for": this.resultsHeaderId+"-filterText",
+    	innerHTML: label
+    });
     elFilterControl.appendChild(elSearchLabelText);
     
     

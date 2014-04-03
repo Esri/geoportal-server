@@ -383,7 +383,7 @@
 
     // Adds the 'this site" and the arcgis website and any other
     // end points in gpt.xml
-    function scAddLocalSites() {
+    /*function scAddLocalSites() {
       var rows = _scSearchSites.rows;
   
       if(typeof(csExteriorRepositories) == 'undefined'
@@ -391,17 +391,27 @@
         || typeof(csExteriorRepositories.length) != 'number') {
         return;
       }
+      // T.M. adding only local.  The rest we should get from
+      // geoportal/rest/repositories since 1.2.5
       for(var i = csExteriorRepositories.length-1;  i >= 0 ; i--) {
+    	if(obj.uuid != "local") {
+    		con
+    	}
         var obj = new Object();
-        if(typeof(csExteriorRepositories[i].name) == 'undefined'
-          || typeof(csExteriorRepositories[i].uuid) == 'undefined') {
+        if(typeof(csExteriorRepositories[i].name) == 'undefined') {
           continue;
         }
         obj.name = csExteriorRepositories[i].name;
-        obj.uuid = csExteriorRepositories[i].uuid;
+        if(typeof(csExteriorRepositories[i].uuid) != 'undefined') {
+          obj.uuid = csExteriorRepositories[i].uuid;
+        } else if(typeof(csExteriorRepositories[i].id) != 'undefined') {
+          obj.uuid = csExteriorRepositories[i].id;
+        } else {
+          continue;
+        }
         rows.unshift(obj);
       }
-    }
+    }*/
     
     function scGetHarvesterSitesHandler(data) {
     	 if(typeof(data) == 'undefined' || data == null) {
@@ -416,14 +426,19 @@
         if(typeof(_scSearchSites.rows) == 'undefined') {
           _scSearchSites.rows = new Array();
         }
-        scAddLocalSites();
+        for(var i = 0; i < _scSearchSites.rows.length; i++) {
+        	if(typeof(_scSearchSites.rows[i].uuid) == 'undefined') {
+        		_scSearchSites.rows[i].uuid = _scSearchSites.rows[i].id;
+        	}
+        }
+        //scAddLocalSites();
         
     }
     
     // Gets the harvest sites via ajax
     var triedAddSitesFromError  = false; 
     function scGetHarvestSites() {
-      var url = contextPath + '/rest/repositories?protocol=csw';
+      var url = contextPath + '/rest/repositories?protocol=all';
       var nTimeout = parseInt(_csDistributedSearchTimeoutMillisecs);
       if(nTimeout == NaN) {
         nTimeout = -1;
@@ -454,7 +469,7 @@
           if (typeof(scMap) != 'undefined') scMap.reposition();
           if(triedAddSitesFromError == false) {
             triedAddSitesFromError = true;
-            scAddLocalSites();
+            //scAddLocalSites();
             
           }  
          
@@ -508,6 +523,7 @@
         } else {
           continue;
         }
+        
    
         var aSiteIds = GptUtils.valChkStr(elSiteId.value).toLowerCase().split(",");
         var sUuid = GptUtils.valChkStr(_scSearchSites.rows[i].uuid).toLowerCase();

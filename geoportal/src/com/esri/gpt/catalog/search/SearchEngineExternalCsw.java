@@ -308,6 +308,7 @@ private void init(boolean calledByFactory) throws SearchException {
         sessionProfileId);
     Object objGetCapabUrl = reqContext.extractFromSession(
         sessionCapabUrl); 
+    
     if (objGetMetadataUrl == null 
         || "".equals(objGetMetadataUrl.toString().trim())
         || objGetRecordsUrl == null
@@ -327,25 +328,39 @@ private void init(boolean calledByFactory) throws SearchException {
     // Checking the db to check if profile and url are still the same
     GptRepository repos = new GptRepository();
     
-    if(record == null){
-      record = repos.readHarvestRecord(uuid, this.getRequestContext());
-    }
-    Protocol harvestProtocol = record.getProtocol();
-    if (harvestProtocol instanceof HarvestProtocolCsw) {
-      HarvestProtocolCsw harvestProtocolCsw = 
-        (HarvestProtocolCsw) harvestProtocol;
-      if (!this.getProfileId().equals(harvestProtocolCsw.getProfile())
-          || !this.getGetCapabiltiesUrl().equals(record.getHostUrl())) {
-        doCapabilities = true;
-        this.setProfileId(harvestProtocolCsw.getProfile());
-        this.setGetCapabiltiesUrl(record.getHostUrl());
+    try {
+      if (record == null) {
+
+        record = repos.readHarvestRecord(uuid, this.getRequestContext());
+
       }
-      
-    } else {
-      throw new SearchException("repository id " + uuid + " is not expected"
-          + " CSW protocol");
+      Protocol harvestProtocol = record.getProtocol();
+      if (harvestProtocol instanceof HarvestProtocolCsw) {
+        HarvestProtocolCsw harvestProtocolCsw = (HarvestProtocolCsw) harvestProtocol;
+        if (!this.getProfileId().equals(harvestProtocolCsw.getProfile())
+            || !this.getGetCapabiltiesUrl().equals(record.getHostUrl())) {
+          doCapabilities = true;
+          this.setProfileId(harvestProtocolCsw.getProfile());
+          this.setGetCapabiltiesUrl(record.getHostUrl());
+        }
+
+      } else {
+        throw new SearchException("repository id " + uuid + " is not expected"
+            + " CSW protocol");
+      }
+    } catch (SearchException e) {
+      // T.M. accomodates gpt.xml values
+      String url = Val.chkStr(this.getFactoryAttributes().get("url"));
+      String profileId = Val.chkStr(this.getFactoryAttributes()
+          .get("profileid"));
+      if(!"".equals(url) && !"".equals(profileId)) {
+        doCapabilities = true;
+        this.setProfileId(profileId);
+        this.setGetCapabiltiesUrl(url);
+      } else {
+        throw e;
+      }
     }
-    
     // Do the capabilities if requested
     if (doCapabilities) {
       super.init();
