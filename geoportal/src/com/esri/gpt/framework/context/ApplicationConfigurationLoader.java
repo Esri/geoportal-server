@@ -55,6 +55,8 @@ import com.esri.gpt.control.webharvest.engine.LocalDataProcessorFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactories;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInitializer;
+import com.esri.gpt.control.webharvest.validator.IValidatorFactory;
+import com.esri.gpt.control.webharvest.validator.ValidatorFactory;
 import com.esri.gpt.framework.collection.StringAttribute;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.http.HttpClientRequest;
@@ -276,9 +278,11 @@ private void loadCatalog(ApplicationConfiguration appConfig, Document dom,
         Val.chkStr(xpath.evaluate("@distributedSearchTimeoutMillisecs", 
             ndSearch)));
         
-    sCfg.setAllowExternalSearch(Val.chkBool(xpath.evaluate("@allowExternalSiteSearch",ndSearch),false));
+    sCfg.setAllowExternalSearch(Val.chkBool(xpath.evaluate(
+        "@allowExternalSiteSearch", ndSearch), false));
     sCfg.setAllowTemporalSearch(Val.chkBool(xpath.evaluate("@allowTemporalSearch",ndSearch),false));
-    sCfg.setJsfSuffix(Val.chkStr(xpath.evaluate("@jsfSuffix", ndSearch)));
+    sCfg.setJsfSuffix(Val.chkStr(xpath.evaluate(
+        "@jsfSuffix", ndSearch)));
     sCfg.setGptToCswXsltPath(xpath.evaluate("@gpt2cswXslt", ndSearch));
     sCfg.setMapViewerUrl(Val.chkStr(xpath.evaluate("@mapViewerUrl", ndSearch),""));
     sCfg.validate();
@@ -452,11 +456,18 @@ private void loadDcatMappings(DcatSchemas dcatSchemas, String dcatMappings) thro
 	  		DcatField df = new DcatField();
 	  		String name = xpath.evaluate("@name", field);
 	  		df.setName(name);
-	  		df.setIndex(xpath.evaluate("@index", field));	 	  		
-	  		String isDate = xpath.evaluate("@isDate", field);
-				if(isDate.length()  > 0){
-					df.setDate(Boolean.parseBoolean(isDate));
-				}  			  		
+	  		df.setType(xpath.evaluate("@type", field));
+	  		df.setIndex(xpath.evaluate("@index", field));
+	  		df.setDateFormat(xpath.evaluate("@dateFormat", field));
+	  		String max = Val.chkStr(xpath.evaluate("@maxChars", field));
+	  		String required = Val.chkStr(xpath.evaluate("@required", field));
+	  		if(required.length() > 0){
+	  			df.setRequired(Boolean.parseBoolean(required));
+	  		}
+	  		if(max.length() > 0){
+	  			df.setMaxChars(Integer.parseInt(max));
+	  		}
+	  		df.setDelimiter(xpath.evaluate("@delimiter", field));
 	  		dcatFields.add(df);
 	  	}
 	  	dcatSchemas.put(schema, dcatFields);
@@ -1198,6 +1209,17 @@ private void loadProtocolFactories(ApplicationConfiguration appConfig, Document 
         factories.put(factory.getName(), factory, resourceKey);
       } catch (Exception ex) {
         getLogger().log(Level.WARNING, "Error loading protocol: "+factoryClass, ex);
+      }
+      
+      String validatorFactoryClass = Val.chkStr((String) xpath.evaluate("validator/@factoryClass", ndProto, XPathConstants.STRING));
+      if (!validatorFactoryClass.isEmpty()) {
+        try {
+          Class fc = Class.forName(validatorFactoryClass);
+          IValidatorFactory factory = (IValidatorFactory) fc.newInstance();
+          ValidatorFactory.register(factory);
+        } catch (Exception ex) {
+          getLogger().log(Level.WARNING, "Error loading protocol validator factory: "+validatorFactoryClass, ex);
+        }
       }
     }
   } else {
