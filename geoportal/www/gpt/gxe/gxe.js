@@ -556,10 +556,10 @@ dojo.declare("gxe.Client",null,{
         this.onError(errorObject,ioArgs);
       }),
       load: dojo.hitch(this,function(responseObject,ioArgs) {
-      	setTimeout(function(){
+        setTimeout(function(){
           dialog.hide();
           dialog.destroy();
-      	},2000);
+        },2000);
         try {
           if (responseObject!=null) {
             jErr = null;
@@ -2908,8 +2908,12 @@ dojo.declare("gxe.control.Control",null,{
     if ((domProcessor != null) && (domNode != null)) {
       domMatch = domProcessor.findMatchingChildAttribute(domNode,cfgAttribute);
     } else {
-      if (sDefault != null) xmlAttribute.nodeInfo.nodeValue = sDefault;
+      if (sDefault != null) xmlAttribute.nodeInfo.nodeValue = sDefault;      
     }
+    
+    if(sTargetName == "gml:id" && xmlAttribute){
+	  xmlAttribute.nodeInfo.nodeValue = "Temporal-" + (Math.floor((Math.random()*100000)+1)).toString();
+	}
 
     var ctl = this.context.makeXhtmlControl(cfgAttribute,this,true);
     ctl.xmlNode = xmlAttribute;
