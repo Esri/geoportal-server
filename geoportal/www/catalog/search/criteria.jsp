@@ -141,10 +141,7 @@
         }
       }
     );
-      // Preloading the search gif
-      var img = new Image();
-      img.src = dojo.byId("/catalog/images/loading.gif");
-      //scInitDistrPane();
+ 
     }
   );
 
@@ -395,12 +392,12 @@
         || typeof(csExteriorRepositories.length) != 'number') {
         return;
       }
-      // T.M. adding only local.  The rest we should get from
+      // T.M. adding only local. The rest we should get from
       // geoportal/rest/repositories since 1.2.5
-      for(var i = csExteriorRepositories.length-1;  i >= 0 ; i--) {
-    	if(obj.uuid != "local") {
-    		con
-    	}
+      for(var i = csExteriorRepositories.length-1; i >= 0 ; i--) {
+     if(obj.uuid != "local") {
+     con
+     }
         var obj = new Object();
         if(typeof(csExteriorRepositories[i].name) == 'undefined') {
           continue;
@@ -418,29 +415,29 @@
     }*/
     
     function scGetHarvesterSitesHandler(data) {
-    	 if(typeof(data) == 'undefined' || data == null) {
-    		 data = "";
-    	 }
-    	 _scSearchSites = dojo.eval("[{" + data + "}]");
-        if(typeof(_scSearchSites.length) != 'undefined'
-          && _scSearchSites.length == 1) {
-          _scSearchSites = _scSearchSites[0];
-          
-        }
-        if(typeof(_scSearchSites.rows) == 'undefined') {
-          _scSearchSites.rows = new Array();
-        }
-        for(var i = 0; i < _scSearchSites.rows.length; i++) {
-        	if(typeof(_scSearchSites.rows[i].uuid) == 'undefined') {
-        		_scSearchSites.rows[i].uuid = _scSearchSites.rows[i].id;
-        	}
-        }
-        //scAddLocalSites();
-        
-    }
+      if(typeof(data) == 'undefined' || data == null) {
+      data = "";
+      }
+      _scSearchSites = dojo.eval("[{" + data + "}]");
+         if(typeof(_scSearchSites.length) != 'undefined'
+           && _scSearchSites.length == 1) {
+           _scSearchSites = _scSearchSites[0];
+           
+         }
+         if(typeof(_scSearchSites.rows) == 'undefined') {
+           _scSearchSites.rows = new Array();
+         }
+         for(var i = 0; i < _scSearchSites.rows.length; i++) {
+          if(typeof(_scSearchSites.rows[i].uuid) == 'undefined') {
+          _scSearchSites.rows[i].uuid = _scSearchSites.rows[i].id;
+          }
+         }
+         //scAddLocalSites();
+         
+     }
     
     // Gets the harvest sites via ajax
-    var triedAddSitesFromError  = false; 
+    var triedAddSitesFromError = false;
     function scGetHarvestSites() {
       var url = contextPath + '/rest/repositories?protocol=all';
       var nTimeout = parseInt(_csDistributedSearchTimeoutMillisecs);
@@ -448,8 +445,8 @@
         nTimeout = -1;
       }
       if(GptUtils.valChkBool(_csAllowDistributedSearch) == false) {
-    	  scGetHarvesterSitesHandler("");
-    	  return;
+     scGetHarvesterSitesHandler("");
+     return;
       }
       dojo.xhrGet ({
       
@@ -466,7 +463,7 @@
           "scGetHarvestSites could not get harvesting sites body" +
             "Error: " +data);
           dojo.query("#cmPlPgpGptMessages").addContent(
-            "<div class=\"errorMessage searchInjectedError\">" + data.message 
+            "<div class=\"errorMessage searchInjectedError\">" + data.message
               + " : " + data.description + " : " + url +
             "</div>"
           );
@@ -475,15 +472,14 @@
             triedAddSitesFromError = true;
             //scAddLocalSites();
             
-          }  
+          }
          
         },
       
         sync: true
       });
     }
-
-
+    
 
     //Injects harvest sites the user can choose from
     function scPopulateHarvestSites() {
@@ -527,7 +523,6 @@
         } else {
           continue;
         }
-        
    
         var aSiteIds = GptUtils.valChkStr(elSiteId.value).toLowerCase().split(",");
         var sUuid = GptUtils.valChkStr(_scSearchSites.rows[i].uuid).toLowerCase();
@@ -827,7 +822,7 @@
     if(scRids != "") {
       restParams += "&rids=" +  encodeURIComponent(scRids);
     }
-    
+   
     var scText = GptUtils.valChkStr(dojo.byId('frmSearchCriteria:scText').value);
     var contentDateQuery = makeContentDateQuery();
     if (contentDateQuery.length>0) {
@@ -1310,7 +1305,7 @@
       } 
     }
     return result;
-  }
+  }  
 
   /**
   Shows distributed search box or not.
@@ -1554,6 +1549,7 @@
   value="#{SearchController.searchConfig.timeOut}"
   variableName="_csDefaultSearchSite"/>
   
+  
 <gpt:jscriptVariable 
   id="_csTitleContentDateSearch"
   quoted="true"
@@ -1601,7 +1597,6 @@
   quoted="true"
   value="#{gptMsg['catalog.search.contentDateSearch.datePattern']}"
   variableName="_csTitleContentDatePattern"/>
-    
   
 
 <% // search text and submit button %>
@@ -1619,8 +1614,11 @@
                  value="#{SearchController.searchEvent.eventExecuteSearch}" />
     <f:attribute name="onSearchPage" value="true"/>
   </h:commandButton>
-  <h:graphicImage id="loadingGif" style="visibility: hidden;"
-    url="/catalog/images/loading.gif" alt="" width="20px" height="20px">
+  <h:graphicImage
+    id="loadingGif" 
+    style="visibility: hidden;"
+    url="/catalog/images/loading.gif" alt="" 
+    width="30px">
   </h:graphicImage>
    <f:verbatim>
    	<div id="hints"></div>
@@ -1634,7 +1632,7 @@
         <table width="100%">
           <tr>
             <td/>
-            <td valign="top"><img id="djtCntDistributedSearchesImg" alt="" src="/geoportal/catalog/images/section_closed.gif"/></td>
+            <td valign="top"><img id="djtCntDistributedSearchesImg" alt="" src="../images/section_closed.gif"/></td>
             <td>
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr><td id="djtCntDistributedSearchesTitle" class="sectionCaption"/></tr>
@@ -1750,7 +1748,6 @@
 <h:outputText escape="false" value="<h3>"/>
 <h:outputText id="scLblSptial" value="#{gptMsg['catalog.search.filterSpatial.title']}" />
 <h:outputText escape="false" value="</h3>"/>
-<h:outputText escape="false" value="<div>"/>
 <h:panelGrid columns="1" id="scPnlSpatial">
   <h:selectOneRadio id="scSelSpatial"
                     value="#{SearchController.searchCriteria.searchFilterSpatial.selectedBounds}"
@@ -1803,7 +1800,7 @@
 
   </h:panelGrid>
 </h:panelGrid>
-<h:outputText escape="false" value="</div>"/>
+
 
 <h:outputText escape="false" 
               value='<div id="crtAdvOptnsContent" dojoType="dijit.Dialog"
@@ -2024,5 +2021,4 @@
                value="#{SearchController.searchFilterHarvestSites.distributedPanelOpen}"/>
 <h:inputHidden id="scSearchUrl" 
                value="#{SearchController.searchFilterHarvestSites.searchUrl}"/>
-              
-
+               
