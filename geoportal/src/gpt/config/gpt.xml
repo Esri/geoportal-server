@@ -210,7 +210,7 @@
                  abstractResourceKey="catalog.search.searchSite.dataGov.abstract"
                 >
                 <parameter key="profileId" 
-                    value="urn:ogc:CSW:2.0.2:HTTP:OGCCORE:ESRI:GPT" /> 
+                    value="urn:ogc:CSW:2.0.2:HTTP:APISO:PYCSW" /> 
                 <parameter key="url" 
                     value="http://catalog.data.gov/csw?service=CSW&amp;version=2.0.2&amp;request=GetCapabilities" /> 
             </repository>
@@ -221,7 +221,7 @@
                  abstractResourceKey="catalog.search.searchSite.geoDab.abstract"
                 >
                 <parameter key="profileId" 
-                    value="urn:ogc:CSW:2.0.2:HTTP:OGCCORE:ESRI:GPT" /> 
+                    value="urn:ogc:CSW:2.0.2:HTTP:APISO:GICAT" /> 
                 <parameter key="url" 
                     value="http://production.geodab.eu/gi-cat-StP/services/cswiso?request=GetCapabilities&amp;service=CSW&amp;version=2.0.2" /> 
             </repository>
