@@ -40,6 +40,11 @@ public interface IFeedAttribute {
    * @return attribute length
    */
   int getLength();
+  /**
+   * Simplifies attribute (if array).
+   * @return attribute
+   */
+  IFeedAttribute simplify();
   
   /**
    * Feed attribute factory.
@@ -93,6 +98,7 @@ public interface IFeedAttribute {
       }
       return new FeedNull();
     }
+    
     static IFeedAttribute create(List<IFeedAttribute> list) {
       return new FeedList(list);
     }
@@ -120,6 +126,11 @@ public interface IFeedAttribute {
     @Override
     public int getLength() {
       return 0;
+    }
+
+    @Override
+    public IFeedAttribute simplify() {
+      return this;
     }
   }
   
@@ -158,6 +169,11 @@ public interface IFeedAttribute {
     public int getLength() {
       return length;
     }
+
+    @Override
+    public IFeedAttribute simplify() {
+      return this;
+    }
   }
   
   /**
@@ -189,6 +205,11 @@ public interface IFeedAttribute {
     @Override
     public int getLength() {
       return length;
+    }
+
+    @Override
+    public IFeedAttribute simplify() {
+      return this;
     }
   }
   
@@ -222,6 +243,11 @@ public interface IFeedAttribute {
     public int getLength() {
       return 20;
     }
+
+    @Override
+    public IFeedAttribute simplify() {
+      return this;
+    }
   }
   
   /**
@@ -253,6 +279,11 @@ public interface IFeedAttribute {
     @Override
     public int getLength() {
       return length;
+    }
+
+    @Override
+    public IFeedAttribute simplify() {
+      return this;
     }
   }
   
@@ -293,6 +324,18 @@ public interface IFeedAttribute {
     @Override
     public int getLength() {
       return list.size();
+    }
+
+    @Override
+    public IFeedAttribute simplify() {
+      switch (list.size()) {
+        case 0:
+          return new FeedNull();
+        case 1:
+          return list.get(0);
+        default:
+          return this;
+      }
     }
  }
 }
