@@ -395,6 +395,17 @@
 		
 		<!-- delete the copy of the CSS file at the root level -->
 		<!--<delete file="${BUILD_DIR}/viewer/${STYLE}.css"/>-->
+		<!-- Compiling resource strings-->
+		    <mxmlc output="${DEPLOY_DIR}/en_US_gptResourceModule.swf">
+		      <locale>en_US</locale>
+		      <source-path>${GEOPORTAL_ROOT_DIR}/locale/{locale}</source-path>
+		      <include-resource-bundles>gptStrings</include-resource-bundles>
+		    </mxmlc>
+		    <mxmlc output="${DEPLOY_DIR}/fr_FR_gptResourceModule.swf">
+		      <locale>fr_FR</locale>
+		      <source-path>${GEOPORTAL_ROOT_DIR}/locale/{locale}</source-path>
+		      <include-resource-bundles>gptStrings</include-resource-bundles>
+		    </mxmlc>
 	</target>
 	
 	<!--
