@@ -16,6 +16,14 @@
 -->
 <web-app id="WebApp_ID" version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
     <display-name>Geoportal Server</display-name>
+    <filter>
+        <filter-name>MultipartFilter</filter-name>
+        <filter-class>com.esri.gpt.control.filter.MultipartFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>MultipartFilter</filter-name>
+        <url-pattern>/gxe/interrogate/multipart</url-pattern>
+    </filter-mapping>
     <context-param>
         <param-name>javax.faces.CONFIG_FILES</param-name>
         <param-value>/WEB-INF/faces-config.xml, /WEB-INF/gpt-faces-config.xml</param-value>

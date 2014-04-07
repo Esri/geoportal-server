@@ -1,7 +1,0 @@
-<?xml version="1.0" ?>
-<configuration>
-    <fields>incident_number,ftype,collection_time</fields>
-    <titlefield>incident_number</titlefield>
-    <datefields>collection_time</datefields>
-    <zoomscale>25000</zoomscale>
-</configuration>

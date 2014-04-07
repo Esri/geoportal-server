@@ -131,8 +131,8 @@ package com.esri.gpt.finddata
       
      for each (var xmlRow:XML in xml.children()) {
         try {
-          id = xmlRow.uuid;
-          name = xmlRow.name;
+          id = xmlRow.uuid || xmlRow.id;
+          name = xmlRow.name || xmlRow.label || xmlRow.title; 
           endPoint = new EndPoint(name, parentEndpoint.readRepositoryUrl(id), 
             this._agsGptModel.config, parentEndpoint.linkParserId, 
             parentEndpoint.useParentNameAsPrefix, parentEndpoint.siteName);

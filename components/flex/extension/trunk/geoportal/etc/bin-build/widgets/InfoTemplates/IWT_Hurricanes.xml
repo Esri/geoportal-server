@@ -1,7 +1,0 @@
-<?xml version="1.0" ?>
-<configuration>
-    <fields>NAME,WIND_KTS,PRESSURE,CAT,BASIN,TRACK_DATE</fields>
-    <titlefield>NAME</titlefield>
-    <datefields>TRACK_DATE</datefields>
-    <zoomscale>150000</zoomscale>
-</configuration>

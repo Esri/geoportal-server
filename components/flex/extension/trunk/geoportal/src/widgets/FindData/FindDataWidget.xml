@@ -36,15 +36,9 @@ limitations under the License.
      specifies whether the @name should be used as the prefix  
   -->
 
-  <gptEndpoint url="rest/find/document" 
-    name="Default Site"/> 
-  <gptEndpoint url="rest/find/document?rid=ArcGIS.com" 
-    name="ArcGIS.com"/>  
-  <gptEndpoint url="rest/repositories?f=xml" 
-    name="Default Site: " useNameAsPrefix="true"/>   
-  <gptEndpoint url="http://gpt10.esri.com:8080/geoportal/rest/find/document" 
-    name="gpt10" useNameAsPrefix="true"/>   
-    
+  <gptEndpoint url="rest/repositories?protocol=all&f=xml" 
+    name="Default Site"/>  
+  
   <!-- GP Service needs to be set up for this to work. Feature coming next 
   release after GPT version 10 -->
   <gpShapefile
