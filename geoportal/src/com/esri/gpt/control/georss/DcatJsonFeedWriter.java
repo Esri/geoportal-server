@@ -504,10 +504,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	    
 	    if(type.equalsIgnoreCase("string")){
 		    if(maxChars > -1 && value.length() > maxChars){		    	
-	        	if(value.startsWith("\"") && value.endsWith("\"")){
-                    value = value.replaceAll("^\"|\"$", "");
-	        		value = "\"" + Val.escapeStrForJson(value.substring(0,maxChars)) + "\"";
-	        	}
+              value = Val.escapeStrForJson(value.substring(0,maxChars));
 		    }
 	    }
     }    
@@ -572,7 +569,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     		  continue;
     	  }
       }else{
-    	  val = "" + indexValue;
+    	  val = "" + indexValue.simplify();
     	  if(dcatFieldName.equalsIgnoreCase("format") && val.equalsIgnoreCase("[\"unknown\"]")){
     		  val =  defaultValues.get(dcatFieldName);
     	  }
@@ -618,7 +615,9 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
       }
     }
     if (fldValues.length() > 0) {
+      if (fieldType.equalsIgnoreCase("array")) {
     	fldValues = fldValues.replaceAll(",", ", ");
+      }
       if (before) {
         print(false, ",");
         print(false, "\r\n");
