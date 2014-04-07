@@ -435,6 +435,15 @@ public Map<String, Object> createInstances(StringSet rids) throws SearchExceptio
     if(repositoryRecord.containsKey(rid)) {
       continue;
     }
+   ASearchEngine engine = SearchEngineFactory.createSearchEngine(
+       new SearchCriteria(), 
+       new SearchResult(),
+       this.getRequestContext(), rid, this.getMessageBroker());
+      
+    if(engine != null) {
+      mRidEngine.put(rid, engine);
+      continue;
+    }
     if(msgErr == null) {
       msgErr = this.getMessageBroker().retrieveMessage(
           "catalog.search.distributedSearch.ridDbEntryNotFound");

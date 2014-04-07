@@ -276,6 +276,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       if (numberOfRecordsReturned > 0) {
         if (numberOfRecordsReturned < numberOfRecordsMatched) {
           nextRecord = query.getFilter().getStartRecord() + numberOfRecordsReturned;
+          if (nextRecord > numberOfRecordsMatched) nextRecord = 0;
         }
       }
     } 

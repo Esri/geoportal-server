@@ -7,30 +7,16 @@
 				<csw:ElementSetName>full</csw:ElementSetName>
 				<csw:Constraint version="1.1.0">
 					<ogc:Filter xmlns="http://www.opengis.net/ogc">
-            <xsl:choose>
-              <xsl:when test="count(/GetRecords/Envelope) + count(/GetRecords/KeyWord) &gt; 1">
-                <ogc:And>
-                  <!-- Key Word search -->
-                  <xsl:apply-templates select="/GetRecords/KeyWord"/>
-                  
-                  <!-- Spatial search -->
-                  <xsl:apply-templates select="/GetRecords/Envelope"/>
-
-                  <!-- Date Range Search -->
-                  <xsl:call-template name="tmpltDate"/>
-                </ogc:And>
-              </xsl:when>
-              <xsl:otherwise>
-                  <!-- Key Word search -->
-                  <xsl:apply-templates select="/GetRecords/KeyWord"/>
-                  
-                  <!-- Spatial search -->
-                  <xsl:apply-templates select="/GetRecords/Envelope"/>
-
-                  <!-- Date Range Search -->
-                  <xsl:call-template name="tmpltDate"/>
-              </xsl:otherwise>
-            </xsl:choose>
+						<ogc:And>
+							<!-- Key Word search -->
+							<xsl:apply-templates select="/GetRecords/KeyWord"/>
+							<!-- LiveDataOrMaps search -->
+							<xsl:apply-templates select="/GetRecords/LiveDataMap"/>
+							<!-- Envelope search, e.g. ogc:BBOX -->
+							<xsl:apply-templates select="/GetRecords/Envelope"/>
+							<!-- Date Range Search -->
+							<xsl:call-template name="tmpltDate"/>
+						</ogc:And>
 					</ogc:Filter>
 				</csw:Constraint>
 			</csw:Query>
@@ -40,8 +26,7 @@
 	
 	<!-- key word search -->
 	<xsl:template match="/GetRecords/KeyWord" xmlns:ogc="http://www.opengis.net/ogc">
-	   <xsl:choose>
-		<xsl:when test="normalize-space(.)!=''">
+		<xsl:if test="normalize-space(.)!=''">
 			<ogc:PropertyIsLike escapeChar="!" singleChar="#" wildCard="*">
 				<ogc:PropertyName>apiso:AnyText</ogc:PropertyName>
 				<ogc:Literal>
@@ -50,8 +35,8 @@
 					</xsl:call-template>
 				</ogc:Literal>
 			</ogc:PropertyIsLike>
-		</xsl:when>
-		<xsl:otherwise>
+		</xsl:if>
+		<xsl:if test="normalize-space(.)=''">
             <ogc:PropertyIsLike escapeChar="!" singleChar="#" wildCard="*">
                 <ogc:PropertyName>apiso:AnyText</ogc:PropertyName>
                 <ogc:Literal>
@@ -60,56 +45,75 @@
                     </xsl:call-template>
                 </ogc:Literal>
             </ogc:PropertyIsLike>
-        </xsl:otherwise>
-        </xsl:choose>
+        </xsl:if>
 	</xsl:template>
 	
 	
+	<!-- LiveDataOrMaps search -->
+	<xsl:template match="/GetRecords/LiveDataMap" xmlns:ogc="http://www.opengis.net/ogc">
+		<xsl:if test="translate(normalize-space(./text()),'true', 'TRUE') ='TRUE'">
+			<ogc:PropertyIsEqualTo>
+				<ogc:PropertyName>dc:type</ogc:PropertyName>
+				<ogc:Literal>liveData</ogc:Literal>
+			</ogc:PropertyIsEqualTo>
+		</xsl:if>
+	</xsl:template>
 	<!-- envelope search -->
 	<xsl:template match="/GetRecords/Envelope" xmlns:ogc="http://www.opengis.net/ogc">
-	<!-- generate BBOX query if minx, miny, maxx, maxy are provided -->
-	<xsl:if test="./MinX and ./MinY and ./MaxX and ./MaxY">
-		<xsl:choose>
-			<xsl:when test="/GetRecords/RecordsFullyWithinEnvelope/text() = 'true'">
-				<ogc:Within xmlns:gml="http://www.opengis.net/gml">
-					<ogc:PropertyName>apiso:BoundingBox</ogc:PropertyName>
-					<gml:Envelope>
-						<gml:lowerCorner>
-							<xsl:value-of select="MinX" />
-							<xsl:text> </xsl:text>
-							<xsl:value-of select="MinY" />
-						</gml:lowerCorner>
-						<gml:upperCorner>
-							<xsl:value-of select="MaxX" />
-							<xsl:text> </xsl:text>
-							<xsl:value-of select="MaxY" />
-						</gml:upperCorner>
-					</gml:Envelope>
-				</ogc:Within>
-			</xsl:when>
-			<xsl:otherwise>
-			  <ogc:Intersects xmlns:gml="http://www.opengis.net/gml">
-                    <ogc:PropertyName>apiso:BoundingBox</ogc:PropertyName>
-                    <gml:Envelope>
-                        <gml:lowerCorner>
-                            <xsl:value-of select="MinX" />
-                            <xsl:text> </xsl:text>
-                            <xsl:value-of select="MinY" />
-                        </gml:lowerCorner>
-                        <gml:upperCorner>
-                            <xsl:value-of select="MaxX" />
-                            <xsl:text> </xsl:text>
-                            <xsl:value-of select="MaxY" />
-                        </gml:upperCorner>
-                    </gml:Envelope>
-                </ogc:Intersects>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:if>
-</xsl:template>
-
-
-  <!-- date search -->
+		<!-- generate BBOX query if minx, miny, maxx, maxy are provided -->
+		<xsl:if test="./MinX and ./MinY and ./MaxX and ./MaxY">
+		     <xsl:choose>
+        <xsl:when test="/GetRecords/RecordsFullyWithinEnvelope/text() = 'true'">
+       
+             <ogc:Within xmlns:gml="http://www.opengis.net/gml">
+                <ogc:PropertyName>apiso:BoundingBox</ogc:PropertyName>
+                <gml:Envelope>
+                    <gml:lowerCorner>
+                        <xsl:value-of select="MinX"/>
+                        <xsl:text> </xsl:text>
+                        <xsl:value-of select="MinY"/>
+                    </gml:lowerCorner>
+                    <gml:upperCorner>
+                        <xsl:value-of select="MaxX"/>
+                        <xsl:text> </xsl:text>
+                        <xsl:value-of select="MaxY"/>
+                    </gml:upperCorner>
+                </gml:Envelope>
+            </ogc:Within>
+         
+        </xsl:when>
+        <xsl:otherwise>
+            <ogc:Intersects xmlns:gml="http://www.opengis.net/gml">
+                <ogc:PropertyName>apiso:BoundingBox</ogc:PropertyName>
+                <gml:Envelope>
+                    <gml:lowerCorner>
+                        <xsl:value-of select="MinX"/>
+                        <xsl:text> </xsl:text>
+                        <xsl:value-of select="MinY"/>
+                    </gml:lowerCorner>
+                    <gml:upperCorner>
+                        <xsl:value-of select="MaxX"/>
+                        <xsl:text> </xsl:text>
+                        <xsl:value-of select="MaxY"/>
+                    </gml:upperCorner>
+                </gml:Envelope>
+            </ogc:Intersects>
+        </xsl:otherwise>
+      
+      </xsl:choose>
+			
+		</xsl:if>
+	</xsl:template>
+	<!--    
+	<ogc:PropertyIsLessThanOrEqualTo>
+		<ogc:PropertyName>apiso:TempExtent_begin</ogc:PropertyName>
+		<ogc:Literal>2011-01-30T23:00:00</ogc:Literal>
+	</ogc:PropertyIsLessThanOrEqualTo>
+	<ogc:PropertyIsGreaterThan>
+		<ogc:PropertyName>apiso:TempExtent_end</ogc:PropertyName>
+		<ogc:Literal>2008-01-10T23:00:00</ogc:Literal>
+	</ogc:PropertyIsGreaterThan>
+-->
 	<xsl:template name="tmpltDate" xmlns:ogc="http://www.opengis.net/ogc">
 		<!-- xsl:if test="string-length(normalize-space(/GetRecords/FromDate/text())) &gt; 0" -->
 		<xsl:if test="contains(/GetRecords/KeyWord, 'from:') &gt; 0">
@@ -143,7 +147,6 @@
 			</ogc:PropertyIsLessThanOrEqualTo>
 		</xsl:if>
 	</xsl:template>
-	
 	
 	<xsl:template name="string-replace-all">
 		<xsl:param name="text"/>

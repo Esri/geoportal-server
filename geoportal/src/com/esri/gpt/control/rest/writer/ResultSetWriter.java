@@ -131,7 +131,7 @@ public abstract class ResultSetWriter extends ResponseWriter {
     //this.startRows(depth);
     
     Map<String, LinkedList<RecordElement>> mapIds = 
-        new TreeMap<String, LinkedList<RecordElement>>();
+        new TreeMap<String, LinkedList<RecordElement>>(String.CASE_INSENSITIVE_ORDER);
         
     LinkedList<RecordElement> repLocal = null;
     LinkedList<RecordElement> repAgs = null;
