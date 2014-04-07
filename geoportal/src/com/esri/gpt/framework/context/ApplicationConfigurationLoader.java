@@ -280,6 +280,7 @@ private void loadCatalog(ApplicationConfiguration appConfig, Document dom,
         
     sCfg.setAllowExternalSearch(Val.chkBool(xpath.evaluate(
         "@allowExternalSiteSearch", ndSearch), false));
+    sCfg.setAllowTemporalSearch(Val.chkBool(xpath.evaluate("@allowTemporalSearch",ndSearch),false));
     sCfg.setJsfSuffix(Val.chkStr(xpath.evaluate(
         "@jsfSuffix", ndSearch)));
     sCfg.setGptToCswXsltPath(xpath.evaluate("@gpt2cswXslt", ndSearch));
@@ -455,11 +456,18 @@ private void loadDcatMappings(DcatSchemas dcatSchemas, String dcatMappings) thro
 	  		DcatField df = new DcatField();
 	  		String name = xpath.evaluate("@name", field);
 	  		df.setName(name);
-	  		df.setIndex(xpath.evaluate("@index", field));	 	  		
-	  		String isDate = xpath.evaluate("@isDate", field);
-				if(isDate.length()  > 0){
-					df.setDate(Boolean.parseBoolean(isDate));
-				}  			  		
+	  		df.setType(xpath.evaluate("@type", field));
+	  		df.setIndex(xpath.evaluate("@index", field));
+	  		df.setDateFormat(xpath.evaluate("@dateFormat", field));
+	  		String max = Val.chkStr(xpath.evaluate("@maxChars", field));
+	  		String required = Val.chkStr(xpath.evaluate("@required", field));
+	  		if(required.length() > 0){
+	  			df.setRequired(Boolean.parseBoolean(required));
+	  		}
+	  		if(max.length() > 0){
+	  			df.setMaxChars(Integer.parseInt(max));
+	  		}
+	  		df.setDelimiter(xpath.evaluate("@delimiter", field));
 	  		dcatFields.add(df);
 	  	}
 	  	dcatSchemas.put(schema, dcatFields);

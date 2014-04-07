@@ -14,7 +14,17 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<xsl:stylesheet version="1.0"  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"  xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" exclude-result-prefixes="csw dc dct ows">
+<xsl:stylesheet version="1.0"  
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"  
+    xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+    xmlns:dct="http://purl.org/dc/terms/" 
+    xmlns:ows="http://www.opengis.net/ows" 
+    xmlns:dc="http://purl.org/dc/elements/1.1/" 
+    xmlns:gmd="http://www.isotc211.org/2005/gmd" 
+    xmlns:gco="http://www.isotc211.org/2005/gco" 
+    xmlns:srv="http://www.isotc211.org/2005/srv"
+    xmlns:gmi="http://www.isotc211.org/2005/gmi" 
+    exclude-result-prefixes="csw dc dct ows gmi">
   <xsl:output method="xml" indent="no"  encoding="UTF-8" omit-xml-declaration="yes" />
   <xsl:template match="/">
  <xsl:choose>
@@ -32,11 +42,12 @@
       <xsl:attribute name="maxRecords">
         <xsl:value-of select="/csw:GetRecordsResponse/csw:SearchResults/@numberOfRecordsMatched"/>
       </xsl:attribute>
-      <xsl:for-each select="/csw:GetRecordsResponse/csw:SearchResults/gmd:MD_Metadata | /csw:GetRecordByIdResponse/gmd:MD_Metadata">
+      <xsl:for-each select="/csw:GetRecordsResponse/csw:SearchResults/gmd:MD_Metadata | /csw:GetRecordByIdResponse/gmd:MD_Metadata | /csw:GetRecordsResponse/csw:SearchResults/gmi:MI_Metadata">
         <Record>
           <ID>
           <xsl:value-of select="./gmd:fileIdentifier/gco:CharacterString"/>
           </ID>
+          
           <Title>
             <xsl:value-of select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString | ./gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
           </Title>

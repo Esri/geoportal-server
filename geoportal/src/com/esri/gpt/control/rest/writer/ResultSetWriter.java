@@ -18,6 +18,15 @@ import java.io.Writer;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.TreeMap;
+
+import com.esri.gpt.control.rest.repositories.RepositoriesResultSet;
+import com.esri.gpt.control.rest.repositories.RepositoriesResultSetWrapper;
+
+import com.esri.gpt.framework.util.Val;
 
 /**
  * Super-class for a rest response writer based upon a JDBC ResultSet.
@@ -75,6 +84,9 @@ public abstract class ResultSetWriter extends ResponseWriter {
   
   /**
    * Writes a ResultSet to the response.
+   * 
+   * 
+   * 
    * @param rs the ResultSet
    * @param depth the indent depth
    * @param columnTags optional, the tag names per column
@@ -82,7 +94,11 @@ public abstract class ResultSetWriter extends ResponseWriter {
    * @throws SQLException if an SQL exception occurs
    */
   public void writeResultSet(ResultSet rs, int depth, String[] columnTags) 
-    throws IOException, SQLException {
+      throws IOException, SQLException {
+    if(rs instanceof RepositoriesResultSet) {
+      writeResultSet1(rs, depth, columnTags);
+      return;
+    }
     this.startRows(depth);
     ResultSetMetaData md = rs.getMetaData();
     int nColumns = md.getColumnCount();
@@ -98,6 +114,120 @@ public abstract class ResultSetWriter extends ResponseWriter {
       this.endRow(depth+1); 
     }
     this.endRows(depth);
+  }
+  /**
+   * Writes a ResultSet to the response.
+   * 
+   * 1.2.5 changed to combine values with gpt.xml.
+   * 
+   * @param rs the ResultSet
+   * @param depth the indent depth
+   * @param columnTags optional, the tag names per column
+   * @throws IOException if an I/O exception occurs
+   * @throws SQLException if an SQL exception occurs
+   */
+  private void writeResultSet1(ResultSet rs, int depth, String[] columnTags) 
+    throws IOException, SQLException {
+    //this.startRows(depth);
+    
+    Map<String, LinkedList<RecordElement>> mapIds = 
+        new TreeMap<String, LinkedList<RecordElement>>();
+        
+    LinkedList<RecordElement> repLocal = null;
+    LinkedList<RecordElement> repAgs = null;
+    
+    while (rs.next()) {
+      ResultSetMetaData md = rs.getMetaData();// T.M. needed for ResultSetWrapper
+      int nColumns = md.getColumnCount();
+      //this.startRow(depth+1);
+      
+      LinkedList<RecordElement> lre = 
+          new LinkedList<ResultSetWriter.RecordElement>();
+      String repositoryName = null;
+      String repositoryId = null;
+      
+      for (int i=1;i<=nColumns;i++) {
+        String name = md.getColumnName(i);
+        boolean isIteratingDb = true;
+        if (rs instanceof RepositoriesResultSetWrapper) {
+          RepositoriesResultSetWrapper reposRs = (RepositoriesResultSetWrapper) rs;
+          isIteratingDb = reposRs == null
+              || (reposRs != null && reposRs.isDbFinishedIterating() == false);
+        }
+        
+        if (isIteratingDb && columnTags != null) {
+          name = columnTags[i-1];
+        } 
+        if(Val.chkStr(name).toLowerCase().equals("id")) {
+          repositoryId = rs.getObject(i).toString();        
+        }
+        if(Val.chkStr(name).toLowerCase().equals("name")) {
+          repositoryName = rs.getObject(i).toString();
+        }
+        RecordElement re = 
+            new RecordElement(name, rs.getObject(i), depth+2);
+        lre.push(re);
+        //this.writeCell(name,rs.getObject(i),depth+2);
+      }
+      if(nColumns < 1) {
+        // ignore
+      } else if(Val.chkStr(repositoryId).equals("local")) {
+        repLocal = lre;
+      } else if(Val.chkStr(repositoryId).equals("arcgis.com")) {
+        repAgs = lre;
+      } else if(repositoryName != null) {
+        mapIds.put(repositoryName, lre);
+      }
+      //this.endRow(depth+1); 
+    }
+    //this.endRows(depth);
+    
+    
+    this.startRows(depth);
+    
+    if(repLocal != null) { 
+      mapIds.remove("local");
+      writeResultSetRecord(repLocal, depth);
+    }
+      
+    if(repAgs != null) {
+      mapIds.remove("arcgis.com");
+      writeResultSetRecord(repAgs, depth);
+    }
+    
+        
+    Iterator<String> iter =  mapIds.keySet().iterator();
+    while(iter.hasNext()) {
+      String key = iter.next();
+      LinkedList<RecordElement> rep = mapIds.get(key);
+      writeResultSetRecord(rep, depth);
+      
+    }
+    this.endRows(depth);
+  }
+  
+  private void writeResultSetRecord(LinkedList<RecordElement> lre, int depth) 
+      throws IOException {
+    
+    this.startRow(depth+1);
+    Iterator<RecordElement> iter = lre.iterator();
+    while(iter.hasNext()) {
+      RecordElement re = iter.next();
+      this.writeCell(re.name,re.object,depth+2);
+    }
+    this.endRow(depth+1);
+    
+  }
+  
+  private class RecordElement {
+    private String name;
+    private Object object;
+    private int depth;
+    private RecordElement(String name, Object obj, int depth) {
+      this.name = name;
+      this.object = obj;
+      this.depth = depth;
+    }
   }
 
 }

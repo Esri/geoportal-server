@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<schema key="gemini-iso-19115" 
+	cswOutputSchema="http://www.isotc211.org/2005/gmd" 
+	cswBriefXslt="gpt/metadata/iso/apiso-brief.xslt" 
+	cswSummaryXslt="gpt/metadata/iso/apiso-summary.xslt"
+  xsdLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmd/metadataEntity.xsd"
+	schematronXslt="gpt/metadata/iso/Gemini2_R2r2/Gemini2_R2r2-schematron.xslt"
+	tmp_schematronXslt="gpt/metadata/iso/Gemini2_R2r2/ISOTS19139A1Constraints-schematron_v1.3.xslt"
+	detailsXslt="gpt/metadata/iso/iso-details.xslt">
+  	
+	<!-- schema label -->
+	<label resourceKey="catalog.gemini.schema.dataset"/>
+	
+	<!-- schema interrogation namespaces -->
+	<namespace prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
+	<namespace prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
+	
+	<!-- schema interrogation -->
+  <interrogation count="count(/gmd:MD_Metadata/gmd:metadataStandardName[gco:CharacterString='UK GEMINI'])*count(/gmd:MD_Metadata/gmd:metadataStandardVersion[gco:CharacterString='2.2'])*count(/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification)"/>
+	
+	<!-- indexables -->
+	<indexables fileName="gpt/metadata/iso/inspire/inspire-apiso-indexables.xml"/>
+	
+  <!-- Geopoprtal XML editor -->
+  <editor fileName="gpt/metadata/iso/Gemini2_R2r2/gxe/gemini-iso19139-dataset-editor.xml"/>
+
+</schema>
+
+

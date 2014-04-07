@@ -328,6 +328,7 @@ function selectSection(section) {
   
   enableSection("agp2agp", section=="agp2agp");
   enableSection("ags2agp", section=="ags2agp");
+  enableSection("dcat", section=="dcat");
   
   dojo.query(".onBehalfOf").style("display",section!="agp2agp" && section!="ags2agp"? "block": "none");
 
@@ -974,7 +975,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
     </div>
     <div class="hint arcgis" style="display: none;">
       <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
-      <span class="hint-example">http://server.arcgisonline.com/ArcGIS/rest/services</span>
+      <span class="hint-example">http://server.arcgisonline.com/arcgis/rest/services</span>
     </div>
     <div class="hint arcims" style="display: none;">
       <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
@@ -1000,6 +1001,14 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
       <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
       <span class="hint-example">http://gptogc.esri.com/geoportal/rest/find/document?f=atom</span>
     </div>
+    <div class="hint dcat" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://gptogc.esri.com/geoportal/dcat.json</span>
+    </div>
+    <div class="hint dcat" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">http://gptogc.esri.com/geoportal/rest/find/document?f=dcat&start={start}&max={max}</span>
+    </div>
   </verbatim>
 </h:panelGroup>
 <%-- ArcGIS specific properties ----------------------------------------------%>
@@ -1012,7 +1021,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   <verbatim>
     <div class="hint arcgis" style="display: none;">
       <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
-      <span class="hint-example">http://services.arcgisonline.com/ArcGIS/services/?wsdl</span>
+      <span class="hint-example">http://services.arcgisonline.com/arcgis/services/?wsdl</span>
     </div>
   </verbatim>
 </h:panelGroup>
@@ -1187,7 +1196,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   <verbatim>
     <div class="hint ags2agp" style="display: none;">
       <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
-      <span class="hint-example">http://server.arcgisonline.com/ArcGIS/rest/services</span>
+      <span class="hint-example">http://server.arcgisonline.com/arcgis/rest/services</span>
     </div>
   </verbatim>
 </h:panelGroup>
@@ -1200,7 +1209,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   <verbatim>
     <div class="hint ags2agp" style="display: none;">
       <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
-      <span class="hint-example">http://services.arcgisonline.com/ArcGIS/services/?wsdl</span>
+      <span class="hint-example">http://services.arcgisonline.com/arcgis/services/?wsdl</span>
     </div>
   </verbatim>
 </h:panelGroup>
@@ -1253,6 +1262,10 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 </f:verbatim>
 </h:panelGroup>
 
+<%-- DCAT Portal specific properties -----------------------------------------%>
+<h:outputLabel styleClass="requiredField dcat" for="dcat-format" value="#{gptMsg['catalog.harvest.manage.edit.dcat.format']}"/>
+<h:inputText styleClass="dcat" size="30" value="#{HarvestController.editor.attrs['dcatFormat']}" id="dcat-format"/>
+  
 <%-- End of the panel --%>
 </h:panelGrid>
 

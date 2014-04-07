@@ -68,6 +68,7 @@
         <SupportContentTypeQuery>True</SupportContentTypeQuery> 
         <SupportSpatialBoundary>True</SupportSpatialBoundary> 
      </Profile>
+
           
      
      <!--  OGCCORE ESRI ArcIMS 9.3 --> 
@@ -502,5 +503,52 @@
         <SupportContentTypeQuery>True</SupportContentTypeQuery>
         <SupportSpatialBoundary>True</SupportSpatialBoundary>
 	  </Profile>
+
+
+	<!-- GI-CAT Support used in GEOSS Discovery and Access Broker -->
+	<Profile>
+		<ID>urn:ogc:CSW:2.0.2:HTTP:APISO:GICAT</ID>
+		<Name>GI-CAT</Name>
+		<CswNamespace>http://www.opengis.net/cat/csw/2.0.2</CswNamespace>
+		<Description/>
+		<GetRecords>
+			<XSLTransformations>
+				<Request>CSW_2.0.2_APISO_GICAT_GetRecords_Request.xslt</Request>
+				<Response>CSW_2.0.2_APISO_GICAT_GetRecords_Response.xslt</Response>
+			</XSLTransformations>
+		</GetRecords>
+		<GetRecordByID>
+			<RequestKVPs><![CDATA[service=CSW&request=GetRecordById&version=2.0.2&ElementSetName=full&outputschema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd]]></RequestKVPs>
+			<XSLTransformations>
+				<Response>CSW_2.0.2_APISO_GICAT_GetRecordById_Response.xslt</Response>
+			</XSLTransformations>
+		</GetRecordByID>
+		<SupportSpatialQuery>True</SupportSpatialQuery>
+		<SupportContentTypeQuery>False</SupportContentTypeQuery>
+		<SupportSpatialBoundary>True</SupportSpatialBoundary>
+	</Profile>
+
+	<!-- Data.gov Profile of pyCSW -->
+  <Profile>
+		<ID>urn:ogc:CSW:2.0.2:HTTP:APISO:PYCSW</ID>
+		<Name>pycsw</Name>
+		<CswNamespace>http://www.opengis.net/cat/csw/2.0.2</CswNamespace>
+		<Description/>
+		<GetRecords>
+			<XSLTransformations>
+				<Request>CSW_2.0.2_APISO_pyCSW_GetRecords_Request.xslt</Request>
+				<Response>CSW_2.0.2_APISO_pyCSW_GetRecords_Response.xslt</Response>
+			</XSLTransformations>
+		</GetRecords>
+		<GetRecordByID>
+			<RequestKVPs><![CDATA[service=CSW&request=GetRecordById&version=2.0.2&ElementSetName=full&outputschema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd]]></RequestKVPs>
+			<XSLTransformations>
+				<Response>CSW_2.0.2_APISO_pyCSW_GetRecordByID_Response.xslt</Response>
+			</XSLTransformations>
+		</GetRecordByID>
+		<SupportSpatialQuery>True</SupportSpatialQuery>
+		<SupportContentTypeQuery>False</SupportContentTypeQuery>
+		<SupportSpatialBoundary>True</SupportSpatialBoundary>
+	</Profile>
 
 </CSWProfiles>

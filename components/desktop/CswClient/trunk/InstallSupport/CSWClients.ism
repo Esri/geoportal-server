@@ -263,6 +263,7 @@
 		<col key="yes" def="s72">Name</col>
 		<col def="V0">Data</col>
 		<col def="S255">ISBuildSourcePath</col>
+		<row><td>ISLockPermissions.dll</td><td/><td>&lt;ISProductFolder&gt;\redist\Language Independent\i386\ISLockPermissions.dll</td></row>
 		<row><td>ISSELFREG.DLL</td><td/><td>&lt;ISProductFolder&gt;\redist\language independent\i386\isregsvr.dll</td></row>
 		<row><td>ISSetup.dll</td><td/><td>&lt;ISProductFolder&gt;\redist\language independent\i386\ISSetup.dll</td></row>
 		<row><td>ISSetupFilesHelper</td><td/><td>&lt;ISProductFolder&gt;\redist\language independent\i386\SFHelper.dll</td></row>
@@ -357,7 +358,6 @@
 		<row><td>AGXHomeFiles</td><td>{BF8F2CFB-EBE0-4A57-AEC5-639C277749B7}</td><td>AGXHOME</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ARCGISBinFiles</td><td>{99C7404A-58F6-4150-84A7-5854F21C3A04}</td><td>BIN</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ARCGISHomeFiles</td><td>{477F7ABB-B079-4F99-8149-CCE2D72075B3}</td><td>ARCGISHOME</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>AllOtherFiles</td><td>{64424820-0F2B-470A-9992-7D1DAFA6F050}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>AppLogger.dll</td><td>{A26A0F1B-6694-4F9E-B2CC-87FC88BE55D2}</td><td>BIN1</td><td>8</td><td/><td>applogger.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ArcGISHomeBinAddinsFiles</td><td>{541BC22D-A7EF-454B-84AE-83847BEA1CB4}</td><td>ADDINS</td><td>8</td><td>ALLUSERS = 1</td><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>BinFiles</td><td>{56B5696D-1CF6-4BEA-8FD9-36EF046BFDFF}</td><td>BIN1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -972,10 +972,10 @@
 		<row><td>CustomSetup</td><td>ChangeFolder</td><td>SelectionBrowse</td><td>InstallChangeFolder</td><td>1</td><td>0</td></row>
 		<row><td>CustomSetup</td><td>Details</td><td>SelectionBrowse</td><td>DiskSpaceRequirements</td><td>1</td><td>1</td></row>
 		<row><td>CustomSetup</td><td>Help</td><td>SpawnDialog</td><td>CustomSetupTips</td><td>1</td><td>1</td></row>
-		<row><td>CustomSetup</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.1" And &amp;CSWArcMap=3</td><td>2</td></row>
+		<row><td>CustomSetup</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.2" And &amp;CSWArcMap = 3</td><td>2</td></row>
 		<row><td>CustomSetup</td><td>Next</td><td>NewDialog</td><td>DestinationFolder</td><td>OutOfNoRbDiskSpace &lt;&gt; 1</td><td>5</td></row>
 		<row><td>CustomSetup</td><td>Next</td><td>NewDialog</td><td>OutOfSpace</td><td>OutOfNoRbDiskSpace = 1</td><td>4</td></row>
-		<row><td>CustomSetup</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10" And &amp;CSWArcMap=3</td><td>3</td></row>
+		<row><td>CustomSetup</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.2" And &amp;CSWArcMap = 3</td><td>3</td></row>
 		<row><td>CustomSetup</td><td>Next</td><td>[_IsSetupTypeMin]</td><td>Custom</td><td>1</td><td>1</td></row>
 		<row><td>CustomSetupTips</td><td>OK</td><td>EndDialog</td><td>Return</td><td>1</td><td>1</td></row>
 		<row><td>CustomerInformation</td><td>Back</td><td>NewDialog</td><td>LicenseAgreement</td><td>1</td><td>1</td></row>
@@ -1117,7 +1117,7 @@
 		<row><td>SetupResume</td><td>Next</td><td>NewDialog</td><td>OutOfSpace</td><td>OutOfNoRbDiskSpace = 1</td><td>0</td></row>
 		<row><td>SetupType</td><td>Back</td><td>NewDialog</td><td>CustomerInformation</td><td>1</td><td>1</td></row>
 		<row><td>SetupType</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
-		<row><td>SetupType</td><td>Next</td><td>AddLocal</td><td>ALL</td><td>_IsSetupTypeMin = "Typical" And ARCGISVERSION &lt;&lt; "10.1"</td><td>1</td></row>
+		<row><td>SetupType</td><td>Next</td><td>AddLocal</td><td>ALL</td><td>_IsSetupTypeMin = "Typical" And ARCGISVERSION &lt;&lt; "10.2"</td><td>1</td></row>
 		<row><td>SetupType</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.2" And _IsSetupTypeMin &lt;&gt; "Custom" And &amp;CSWArcMap = 3</td><td>2</td></row>
 		<row><td>SetupType</td><td>Next</td><td>NewDialog</td><td>CustomSetup</td><td>_IsSetupTypeMin = "Custom"</td><td>4</td></row>
 		<row><td>SetupType</td><td>Next</td><td>NewDialog</td><td>DestinationFolder</td><td>_IsSetupTypeMin &lt;&gt; "Custom"</td><td>6</td></row>
@@ -1132,7 +1132,6 @@
 		<col key="yes" def="s72">Component_</col>
 		<row><td>AGXHOME</td><td>AGXHomeFiles</td></row>
 		<row><td>ARCGISHOME</td><td>ARCGISHomeFiles</td></row>
-		<row><td>INSTALLDIR</td><td>AllOtherFiles</td></row>
 		<row><td>INSTALLDIR</td><td>ISRegistryComponent</td></row>
 		<row><td>INSTALLDIR</td><td>InstallDirFiles</td></row>
 		<row><td>LOGDIR</td><td>LogDirFiles</td></row>
@@ -1151,6 +1150,8 @@
 		<row><td>Fn_FindReplaceArcGISBinFiles</td><td>3073</td><td>ISSetup.dll</td><td>f8</td><td/><td/></row>
 		<row><td>Fn_FindReplaceBinFiles</td><td>3073</td><td>ISSetup.dll</td><td>f9</td><td/><td/></row>
 		<row><td>FolderBrowse_LogLoc</td><td>1</td><td>ISSetup.dll</td><td>f5</td><td/><td/></row>
+		<row><td>ISLockPermissionsCost</td><td>1</td><td>ISLockPermissions.dll</td><td>ISLockPermissionsCostAction</td><td/><td/></row>
+		<row><td>ISLockPermissionsInstall</td><td>3073</td><td>ISLockPermissions.dll</td><td>ISLockPermissionsInstallAction</td><td/><td/></row>
 		<row><td>ISPrint</td><td>1</td><td>SetAllUsers.dll</td><td>PrintScrollableText</td><td/><td>Prints the contents of a ScrollableText control on a dialog.</td></row>
 		<row><td>ISSelfRegisterCosting</td><td>1</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterCosting</td><td/><td/></row>
 		<row><td>ISSelfRegisterFiles</td><td>3073</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFiles</td><td/><td/></row>
@@ -1999,7 +2000,6 @@
 		<row><td>CSWArcMap</td><td>ArcGISHomeBinAddinsFiles</td></row>
 		<row><td>CSWArcMap</td><td>CswSearch.dll</td></row>
 		<row><td>CSWArcMap</td><td>MyDocsArcGISAddInsDesktop10Files</td></row>
-		<row><td>Common</td><td>AllOtherFiles</td></row>
 		<row><td>Common</td><td>AppLogger.dll</td></row>
 		<row><td>Common</td><td>BinFiles</td></row>
 		<row><td>Common</td><td>CSWClients.chm</td></row>
@@ -2299,7 +2299,6 @@
 		<row><td>AGXHomeFiles</td><td/><td/><td>_BFE22798_5CE2_409D_A498_3F27D9BF1308_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ARCGISBinFiles</td><td/><td/><td>_A64E335D_130E_46C0_8F21_CDE8C0E66E90_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ARCGISHomeFiles</td><td/><td/><td>_D5488209_3E8E_4158_8C40_A702AE5B221A_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>AllOtherFiles</td><td/><td/><td>_0B0E01E5_56D8_465B_8150_3C9C60FF1586_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>AppLogger.dll</td><td/><td/><td>_C531D835_B745_4C60_B310_1060567B0DDC_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ArcGISHomeBinAddinsFiles</td><td/><td/><td>_2423DC1B_5FB2_4121_9E22_CF89DC99D462_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>BinFiles</td><td/><td/><td>_D3B8671E_911A_4F74_BD3D_C5ED9496D739_FILTER</td><td/><td/><td/><td/></row>
@@ -2531,6 +2530,8 @@
 		<col key="yes" def="s255">User</col>
 		<col def="I4">Permission</col>
 		<col def="I4">Attributes</col>
+		<row><td>INSTALLDIR</td><td>CreateFolder</td><td></td><td>Users</td><td>1610809791</td><td>0</td></row>
+		<row><td>INSTALLDIR</td><td>CreateFolder</td><td>[%USERDOMAIN]</td><td>[LogonUser]</td><td>1610809791</td><td>0</td></row>
 	</table>
 
 	<table name="ISLogicalDisk">
@@ -4250,6 +4251,8 @@
 		<row><td>Fn_FindReplaceAGXBinFiles</td><td>&amp;CSWAgx=3</td><td>5790</td><td/><td/></row>
 		<row><td>Fn_FindReplaceArcGISBinFiles</td><td>&amp;CSWArcMap=3</td><td>5762</td><td/><td/></row>
 		<row><td>Fn_FindReplaceBinFiles</td><td>&amp;Common=3</td><td>5650</td><td/><td/></row>
+		<row><td>ISLockPermissionsCost</td><td/><td>801</td><td/><td/></row>
+		<row><td>ISLockPermissionsInstall</td><td/><td>5901</td><td/><td/></row>
 		<row><td>ISSelfRegisterCosting</td><td/><td>1751</td><td/><td/></row>
 		<row><td>ISSelfRegisterFiles</td><td/><td>5001</td><td/><td/></row>
 		<row><td>ISSelfRegisterFinalize</td><td/><td>6601</td><td/><td/></row>
@@ -4346,6 +4349,7 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<row><td>ISTheme</td><td>ESRI ArcGIS10.1.theme</td></row>
 		<row><td>ISUSLock</td><td>{9C080904-A540-47AB-AE51-19A335264647}</td></row>
 		<row><td>ISUSSignature</td><td>{87EE5EE2-BBD1-4F94-9F78-B1C5BC3FBB6A}</td></row>
+		<row><td>LockPermissionMode</td><td>1</td></row>
 		<row><td>MsiExecCmdLineOptions</td><td/></row>
 		<row><td>MsiLogFile</td><td/></row>
 		<row><td>OnUpgrade</td><td>0</td></row>
@@ -4429,9 +4433,6 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<col key="yes" def="S255">Domain</col>
 		<col key="yes" def="s255">User</col>
 		<col def="I4">Permission</col>
-		<row><td>INSTALLDIR</td><td>CreateFolder</td><td></td><td>Administrators</td><td>1880031743</td></row>
-		<row><td>INSTALLDIR</td><td>CreateFolder</td><td></td><td>Users</td><td>1610809791</td></row>
-		<row><td>INSTALLDIR</td><td>CreateFolder</td><td>[%USERDOMAIN]</td><td>[LogonUser]</td><td>1610809791</td></row>
 	</table>
 
 	<table name="MIME">

@@ -373,9 +373,11 @@ public class GxeServlet extends BaseServlet {
     
     String sMimeType = "application/json";
     String sResponse = "";
+    boolean isIE = false;
     boolean bWrap = false;
     MessageBroker msgBroker = null;
     try {
+       isIE = Val.chkBool(request.getParameter("isIE"),false);
       
       // interrogate the posted XMl, generate the definition
       bWrap = Val.chkBool(request.getParameter("wrap"),false);
@@ -411,9 +413,13 @@ public class GxeServlet extends BaseServlet {
     // write the response
     //LOGGER.finest("gxeResponse:\n"+sResponse);
     if ((sResponse != null) && (sResponse.length() > 0)) {
+    	if(isIE){
+    		sMimeType = "text/html";
+    		sResponse = "<script type=\"text/javascript\">var gxeImportFileResponse="+sResponse+";</script>";    		
+    	}
       // responseObject= is required for the 
       // HTML5 based dojox.form.Uploader 1.6
-      if (bWrap) sResponse = "responseObject="+sResponse;
+    	else if (bWrap) sResponse = "responseObject="+sResponse;
       writeCharacterResponse(response,sResponse,"UTF-8",sMimeType+";charset=UTF-8");
     }
   }

@@ -62,7 +62,7 @@
   <property meaning="body" xpathType="STRING" xpath="/*"/>
 
     <!-- dcat-specific -->
-  <property meaning="dcat.accessLevel" xpath="/metadata/idinfo/accconst | /metadata/idinfo/useconst | /metadata/distinfo/distliab"/>
+  <property meaning="dcat.accessLevelComment" xpath="/metadata/idinfo/accconst | /metadata/idinfo/useconst | /metadata/distinfo/distliab"/>
   <property meaning="dcat.mbox" xpath="/metadata/idinfo/ptcontac/cntinfo/cntemail"/>
   <property meaning="dcat.person" xpath="/metadata/idinfo/ptcontac/cntinfo/cntorgp/cntper" />
   <property meaning="dcat.dataDictionary" xpath="/metadata/idinfo/keywords/theme/themekt | /metadata/eainfo/overview/eadetcit" />

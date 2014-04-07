@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+	<!-- Data.gov (CKAN) -->
+	<GptProfile>
+		<ID>urn:esri:gpt:HTTP:JSON:CKAN</ID>
+		<Name>CKAN</Name>
+		<GetRecords>
+			<XSLTransformations>
+				<Request expectedGptXmlOutput="FULL_NATIVE_GPTXML">OpenSearchXmlParams_1.0_GetRecords_Request.xslt</Request>
+				<Response>CKAN_GetRecords_Response.xslt</Response>
+			</XSLTransformations>
+		</GetRecords>
+		<GetRecordByID>
+			<RequestKVPs><![CDATA[http://ckan.net/api/rest/package/{id}]]></RequestKVPs>
+			<XSLTransformations>
+				<Response>CKAN_GetRecordByID_Response.xslt</Response>
+			</XSLTransformations>
+		</GetRecordByID>
+		<SupportSpatialQuery>True</SupportSpatialQuery>
+		<SupportContentTypeQuery>False</SupportContentTypeQuery>
+		<SupportSpatialResponse>True</SupportSpatialResponse>
+		<Harvestable>False</Harvestable>
+	</GptProfile>

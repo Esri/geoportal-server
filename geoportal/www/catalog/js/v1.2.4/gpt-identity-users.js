@@ -96,7 +96,7 @@ dojo.declare("gpt.identity.Users", null, {
     var elLoadingImg = document.createElement("img");
     elLoadingImg.id = "user-loadingGif";
     elLoadingImg.src = this.contextPath + "/catalog/images/loading.gif";
-	elLoadingImg.alt = "Loaging";
+	elLoadingImg.alt = "Loading";
     elLoadingImg.style.visibility = "hidden";
     elLoadingImg.style.verticalAlign = "middle";
     elLoadingImg.style.width = "25px";

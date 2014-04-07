@@ -1453,7 +1453,7 @@
     <value>CSW Client for ArcGIS Help</value>
   </data>
   <data name="linkLblHelp.ToolTip" xml:space="preserve">
-    <value>http://sourceforge.net/apps/mediawiki/geoportal/index.php?title=Geoportal_CSW_Clients</value>
+    <value>https://github.com/Esri/geoportal-server/wiki/Geoportal-CSW-Clients</value>
   </data>
   <data name="&gt;&gt;linkLblHelp.Name" xml:space="preserve">
     <value>linkLblHelp</value>

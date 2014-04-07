@@ -19,7 +19,28 @@ package com.esri.gpt.control.georss;
 public class DcatField {
 	private String name = "";
 	private String index= "";
-	private boolean isDate = false;	
+	private String type = "string";
+	private String dateFormat = "";
+	private String delimiter = "";
+	private int maxChars = -1;
+	private boolean required;
+	
+	public boolean isRequired() {
+		return required;
+	}
+	public void setRequired(boolean required) {
+		this.required = required;
+	}
+	
+	public String getType() {
+		return type;
+	}
+		
+	public void setType(String type) {
+		if(type != null && type.length() > 0){
+			this.type = type;
+		}
+	}
 	/**
 	 * @return the name
 	 */
@@ -30,7 +51,9 @@ public class DcatField {
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
-		this.name = name;
+		if(name != null && name.length() >0){
+			this.name = name;
+		}
 	}
 	/**
 	 * @return the index
@@ -44,16 +67,23 @@ public class DcatField {
 	public void setIndex(String index) {
 		this.index = index;
 	}
-	/**
-	 * @return the isDate
-	 */
-	public boolean isDate() {
-		return isDate;
+	public String getDateFormat() {
+		return dateFormat;
 	}
-	/**
-	 * @param isDate the isDate to set
-	 */
-	public void setDate(boolean isDate) {
-		this.isDate = isDate;
+	public void setDateFormat(String dateFormat) {
+		this.dateFormat = dateFormat;
+	}
+	public String getDelimiter() {
+		return delimiter;
+	}
+	public void setDelimiter(String delimiter) {
+		this.delimiter = delimiter;
+	}
+	public int getMaxChars() {
+		return maxChars;
+	}
+	public void setMaxChars(int maxChars) {
+		this.maxChars = maxChars;
 	}	
+	
 }

@@ -34,6 +34,7 @@ dojo.declare("BrowseMain", null, {
     clear: "Clear",
     first: "First",
     last: "Last",
+    filterLabel : 'Text: ',
     summaryPattern: "{0} results",
     summaryPatternFiltered: "{0} filtered results",
     pageSummaryPattern: "Showing {0}-{1}"
@@ -45,14 +46,15 @@ dojo.declare("BrowseMain", null, {
     var elFilterControl = document.createElement("div");
     elFilterControl.className = "nav";
     
-    var sSummaryText = this.resources.summaryPattern;
-    if (wasFiltered) sSummaryText = this.resources.summaryPatternFiltered;
-    sSummaryText = sSummaryText.replace("{0}",nTotalResults);
-    var elSummaryText = document.createElement("span");
-    elSummaryText.id = this.resultsHeaderId+"-summaryText";
-    elSummaryText.className = "result";
-    elSummaryText.appendChild(document.createTextNode(sSummaryText));
-    elFilterControl.appendChild(elSummaryText);
+    var label = this.resources.filterLabel;
+    
+    var elSearchLabelText = dojo.create("label", {
+    	id: this.resultsHeaderId+"-FilterLabel",
+    	"for": this.resultsHeaderId+"-filterText",
+    	innerHTML: label
+    });
+    elFilterControl.appendChild(elSearchLabelText);
+    
     
     var elFilterText = document.createElement("input");
     elFilterText.id = this.resultsHeaderId+"-filterText";
@@ -77,6 +79,16 @@ dojo.declare("BrowseMain", null, {
     elClearBtn.value = this.resources.clear;
     elFilterControl.appendChild(elClearBtn);
     dojo.connect(elClearBtn,"onclick",this,"onClearFilterClicked");
+    
+    var sSummaryText = this.resources.summaryPattern;
+    if (wasFiltered) sSummaryText = this.resources.summaryPatternFiltered;
+    sSummaryText = sSummaryText.replace("{0}",nTotalResults);
+    var elSummaryText = document.createElement("span");
+    elSummaryText.id = this.resultsHeaderId+"-summaryText";
+    elSummaryText.className = "result";
+    elSummaryText.appendChild(document.createTextNode(sSummaryText));
+    elFilterControl.appendChild(elSummaryText);
+    
     
     elHdr.innerHTML = "";
     elHdr.appendChild(elFilterControl);

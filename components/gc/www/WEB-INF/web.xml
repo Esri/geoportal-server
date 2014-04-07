@@ -21,7 +21,7 @@
 	    <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
 	    <init-param>
 	      <param-name>targetUri</param-name>
-	      <param-value>http://datagov:80/solr</param-value>
+	      <param-value>http://example_solr_server/solr</param-value>
 	    </init-param>
   	</servlet>
   	<servlet-mapping>

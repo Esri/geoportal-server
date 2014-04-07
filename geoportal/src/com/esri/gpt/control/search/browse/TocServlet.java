@@ -13,12 +13,17 @@
  * limitations under the License.
  */
 package com.esri.gpt.control.search.browse;
+import com.esri.gpt.catalog.search.SearchFilterHarvestSites;
 import com.esri.gpt.framework.context.BaseServlet;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
 import com.esri.gpt.framework.util.Val;
 
 import java.util.logging.Logger;
+
+import javax.el.ELContext;
+import javax.el.ELResolver;
+import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -72,14 +77,30 @@ public class TocServlet extends BaseServlet {
         FacesContextBroker fcb = new FacesContextBroker(request,response);
         tocContext.setMessageBroker(fcb.extractMessageBroker());
         
+        RequestContext requestCtx = fcb.extractRequestContext();
         // determine the XML file path
         String relativePath = "";
-        TocCollection tocs = fcb.extractRequestContext().getCatalogConfiguration().getConfiguredTocs();
+        TocCollection tocs = requestCtx.getCatalogConfiguration().getConfiguredTocs();
         if(tocs!= null && tocs.containsKey(key)){
         	relativePath = tocs.get(key);
         } else{
         	response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Toc not configured.");
         	LOGGER.finer("Toc not configured for key " + key);
+        }
+        
+        // the search filter harvest sites selected site is set to local
+        FacesContext fc = FacesContext.getCurrentInstance();
+        if(fc != null){
+	        ELContext elCtx = fc.getELContext();
+	        if(elCtx != null){
+		        ELResolver resolver = elCtx.getELResolver();
+		        if(resolver != null){
+		        	SearchFilterHarvestSites searchFilterHarvestSites = (SearchFilterHarvestSites) resolver.getValue(elCtx, null, "SearchFilterHarvestSites");
+		        	if(searchFilterHarvestSites != null){
+		        		searchFilterHarvestSites.setSelectedHarvestSiteId("local");
+		        	}
+		        }
+	        }
         }
         
         // generate the tree

@@ -83,7 +83,7 @@ protected boolean isFtp() {
 @Override
 protected void validateProtocol() throws HRInvalidProtocolException {
   super.validateProtocol();
-  if (!isHttp() && !isFtp()) {
+  if (!isHttp() && !isFtp() && !isHttps()) {
     throw new HRInvalidProtocolException(
       HRInvalidProtocolException.ProtocolElement.url,
       "Neither HTTP nor FTP protocol.");

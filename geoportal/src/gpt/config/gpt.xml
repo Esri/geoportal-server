@@ -164,6 +164,7 @@
 		- searchResultsReviewsShown: How should the reviews be shown on the results page.  Options are "none", "only-reviewed" or "all"
 		- maxSavedSearches: maximum number of allowed searches in storage, per user.
 		- allowExternalSiteSearch: Flag enabling federated search
+                - allowTemporalSearch: Flag enabling temporal search on metadata fields
     -->   
         
     <search
@@ -173,7 +174,8 @@
         searchResultsPerPage="10"
         searchResultsReviewsShown="only-reviewed"
         maxSavedSearches="10"
-        allowExternalSiteSearch="true">
+        allowExternalSiteSearch="true"
+        allowTemporalSearch="true">
         <!-- Settings for repositories available in federated search
             - key: regular expression, can be used to identify the rid for the repository.
             - class: search engine instance, a Java class that will process the search request.
@@ -202,6 +204,28 @@
                     value="q&#x2714;access:shared || access:public || access:private "/>  
                 <parameter key="profileId" 
                     value="urn:esri:gpt:HTTP:JSON:ESRI:AGSONLINE" /> 
+            </repository>
+             <repository
+                 key="dataGov"
+                 class="com.esri.gpt.catalog.search.SearchEngineExternalCsw"
+                 labelResourceKey="catalog.search.searchSite.dataGov"
+                 abstractResourceKey="catalog.search.searchSite.dataGov.abstract"
+                >
+                <parameter key="profileId" 
+                    value="urn:ogc:CSW:2.0.2:HTTP:OGCCORE:ESRI:GPT" /> 
+                <parameter key="url" 
+                    value="http://catalog.data.gov/csw?service=CSW&amp;version=2.0.2&amp;request=GetCapabilities" /> 
+            </repository>
+            <repository
+                 key="geodab"
+                 class="com.esri.gpt.catalog.search.SearchEngineExternalCsw"
+                 labelResourceKey="catalog.search.searchSite.geoDab"
+                 abstractResourceKey="catalog.search.searchSite.geoDab.abstract"
+                >
+                <parameter key="profileId" 
+                    value="urn:ogc:CSW:2.0.2:HTTP:OGCCORE:ESRI:GPT" /> 
+                <parameter key="url" 
+                    value="http://production.geodab.eu/gi-cat-StP/services/cswiso?request=GetCapabilities&amp;service=CSW&amp;version=2.0.2" /> 
             </repository>
             <!-- For the registered CS-W repositories flagged for viewing in federated search -->
             <repository key="*" 
@@ -625,6 +649,8 @@
       <protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.Ags2AgpProtocolFactory"
                resourceKey="catalog.harvest.manage.edit.protocol.ags2agp"/>  
 -->
+      <protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.DCATProtocolFactory"
+               resourceKey="catalog.harvest.manage.edit.protocol.dcat"/>  
     </protocols>
 
 </gptConfig>

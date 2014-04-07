@@ -17,6 +17,7 @@ package com.esri.gpt.catalog.search;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.faces.context.ExternalContext;
 import javax.servlet.http.HttpServletRequest;
 
 import com.esri.gpt.framework.context.RequestContext;
@@ -67,8 +68,13 @@ public String getUrl() {
 	if(url != null && url.contains("{contextPath}") == true) {
 		  
 		  FacesContextBroker broker = new FacesContextBroker();
-		  url = url.replace("{contextPath}",
-				  broker.getExternalContext().getRequestContextPath());
+		  if(broker != null){
+			  ExternalContext ec = broker.getExternalContext();
+			  if(ec != null){
+				  url = url.replace("{contextPath}",
+						  ec.getRequestContextPath());
+			  }
+		  }
 		  
 	}	
   return url;

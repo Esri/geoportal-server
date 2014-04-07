@@ -1,50 +1,54 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CswSearch", "CswSearch.csproj", "{52601F47-5166-41CE-B4B1-01858054B949}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppLogger", "..\..\..\AppLogger\trunk\src\AppLogger.csproj", "{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CswClient", "..\common\CswClient.csproj", "{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientCert", "..\..\..\ClientCert\trunk\src\ClientCert.csproj", "{D101ED10-5252-4BB3-A278-F13B94AF6D4F}"
+EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://pstfsarr:8080/tfs/consultingservices
-		SccProjectUniqueName0 = CswSearch.csproj
-		SccProjectName0 = .
-		SccAuxPath0 = http://pstfsarr:8080/tfs/consultingservices
-		SccLocalPath0 = .
-		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName1 = ..\\..\\..\\AppLogger\\trunk\\src\\AppLogger.csproj
-		SccProjectName1 = ../../../AppLogger/trunk/src
-		SccAuxPath1 = http://pstfsarr:8080/tfs/consultingservices
-		SccLocalPath1 = ..\\..\\..\\AppLogger\\trunk\\src
-		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName2 = ..\\common\\CswClient.csproj
-		SccProjectName2 = ../common
-		SccAuxPath2 = http://pstfsarr:8080/tfs/consultingservices
-		SccLocalPath2 = ..\\common
-		SccProvider2 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{52601F47-5166-41CE-B4B1-01858054B949}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{52601F47-5166-41CE-B4B1-01858054B949}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52601F47-5166-41CE-B4B1-01858054B949}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{52601F47-5166-41CE-B4B1-01858054B949}.Debug|x86.Build.0 = Debug|Any CPU
 		{52601F47-5166-41CE-B4B1-01858054B949}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52601F47-5166-41CE-B4B1-01858054B949}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52601F47-5166-41CE-B4B1-01858054B949}.Release|x86.ActiveCfg = Release|x86
+		{52601F47-5166-41CE-B4B1-01858054B949}.Release|x86.Build.0 = Release|x86
 		{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}.Debug|x86.Build.0 = Debug|Any CPU
 		{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}.Release|x86.ActiveCfg = Release|x86
+		{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}.Release|x86.Build.0 = Release|x86
 		{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}.Debug|x86.Build.0 = Debug|Any CPU
 		{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}.Release|x86.ActiveCfg = Release|x86
+		{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}.Release|x86.Build.0 = Release|x86
+		{D101ED10-5252-4BB3-A278-F13B94AF6D4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D101ED10-5252-4BB3-A278-F13B94AF6D4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D101ED10-5252-4BB3-A278-F13B94AF6D4F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D101ED10-5252-4BB3-A278-F13B94AF6D4F}.Debug|x86.Build.0 = Debug|Any CPU
+		{D101ED10-5252-4BB3-A278-F13B94AF6D4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D101ED10-5252-4BB3-A278-F13B94AF6D4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D101ED10-5252-4BB3-A278-F13B94AF6D4F}.Release|x86.ActiveCfg = Release|x86
+		{D101ED10-5252-4BB3-A278-F13B94AF6D4F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

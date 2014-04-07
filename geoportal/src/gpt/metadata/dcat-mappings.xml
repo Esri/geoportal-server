@@ -14,58 +14,68 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<dcat>
-	<fields schema="others">
-		<field name="title" index="title" />  
-	  <field name="abstract" index="abstract" />
-	  <field name="keyword" index="keywords,dataTheme,apisoTopicCategory" />
-	  <field name="modified" index="dateModified" isDate="true" />
-	  <field name="publisher" index="apiso.OrganizationName,publisher" />
-	  <field name="person" index="dcat.person" />
-	  <field name="mbox"	index="dcat.mbox" />
-	  <field name="identifier" />  
-	  <field name="accessLevel" index="dcat.accessLevel" />
-	  <field name="dataDictionary" index="dcat.dataDictionary" />
-	  <field name="webService" index="resource.url" />
-	  <field name="format" index="dcat.format" />
-	  <field name="license" index="dcat.license" />
-	  <field name="spatial" index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" />
-	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" />
-	</fields>
+<dcat>	
 	<fields schema="fgdc">
-		<field name="title" index="title" />  
-	  <field name="abstract" index="abstract" />
-	  <field name="keyword" index="keywords" />
-	  <field name="modified" index="dcat.modified" isDate="true" />
-	  <field name="publisher" index="dcat.publisher" />
-	  <field name="person" index="dcat.person" />
-	  <field name="mbox" index="dcat.mbox" />
-	  <field name="identifier"/>  
-	  <field name="accessLevel" index="dcat.accessLevel" />
-	  <field name="dataDictionary" index="dcat.dataDictionary" />
-	  <field name="webService" index="resource.url" />
-	  <field name="accessUrl" index="dcat.accessUrl"/>
-	  <field name="format" index="dcat.format" />
-	  <field name="license" index="dcat.license" />
-	  <field name="spatial" index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" />
-	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" />
+	  <field name="title" index="title" type="string" required="true"/>  
+	  <field name="description" index="abstract" type="string" required="true"/>
+	  <field name="keyword" index="keywords" type="array" required="true"/>
+	  <field name="modified" index="dcat.modified" type="date" dateFormat="yyyy-MM-dd" delimiter="/" required="true"/>
+	  <field name="publisher" index="dcat.publisher" type="string" required="true"/>
+	  <field name="contactPoint" index="dcat.person" type="string" required="true"/>
+	  <field name="mbox" index="dcat.mbox" type="string" required="true"/>
+	  <field name="identifier" type="string" required="true"/>  
+	  <field name="accessLevel" index="accessLevel" type="string" required="true"/>
+	  <field name="accessLevelComment" index="dcat.accessLevelComment" maxChars="255" type="string" required="true"/>
+	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
+	  <field name="programCode" index="programCode" type="array" required="true"/>
+	  <field name="dataDictionary" index="dcat.dataDictionary" type="string"/>
+	  <field name="webService" index="resource.url" type="string" required="true"/>
+	  <field name="accessURL" index="dcat.accessUrl" type="string" required="true"/>
+	  <field name="format" index="dcat.format" type="string" required="true"/>
+	  <field name="license" index="dcat.license" type="string" required="true"/>
+	  <field name="spatial" index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" type="string" required="true"/>
+	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" type="date" dateFormat="yyyy-MM-dd" delimiter="/" required="true" />
 	</fields>
-	<fields schema="iso-19115,iso-19119,iso19115-2"> 
-	  <field name="title" index="title"  />  
-	  <field name="abstract" index="abstract" />
-	  <field name="keyword" index="keywords" />
-	  <field name="modified" index="apiso.RevisionDate" isDate="true" />
-	  <field name="publisher" index="dcat.publisher" />
-	  <field name="person" index="dcat.person" />
-	  <field name="mbox" index="dcat.mbox" />
-	  <field name="identifier" index="fileIdentifier" /> 
-	  <field name="accessLevel" index="apiso.AccessConstraints" />
-	  <field name="dataDictionary" index="dcat.dataDictionary" />
-	  <field name="webService" index="resource.url" />
-	  <field name="accessUrl" index="dcat.accessUrl"/>
-	  <field name="format" index="apiso.Format" />
-	  <field name="license" index="dcat.license" />
-	  <field name="spatial" index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" />
-	  <field name="temporal" index="apiso.TempExtent_begin,apiso.TempExtent_end"  isDate="true" />
+	<fields schema="iso-19115,iso-19119,iso19115-2,gemini-iso-19115,gemini-iso-19119,inspire-iso-19115,inspire-iso-19119"> 
+	  <field name="title" index="title" type="string" required="true"/>  
+	  <field name="description" index="abstract" type="string" required="true"/>
+	  <field name="keyword" index="keywords" type="array" required="true"/>
+	  <field name="modified" index="apiso.RevisionDate" type="date" required="true"/>
+	  <field name="publisher" index="dcat.publisher" type="string" required="true"/>
+	  <field name="contactPoint" index="dcat.person" type="string" required="true"/>
+	  <field name="mbox" index="dcat.mbox" type="string" required="true"/>
+	  <field name="identifier" index="fileIdentifier" type="string" required="true"/> 
+	  <field name="accessLevel" index="accessLevel" type="string" required="true"/>
+	  <field name="accessLevelComment" index="apiso.AccessConstraints" type="string" maxChars="255" required="true"/>
+	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
+	  <field name="programCode" index="programCode" type="array" required="true"/>
+	  <field name="dataDictionary" index="dcat.dataDictionary" type="string" />
+	  <field name="webService" index="resource.url" type="string" required="true"/>
+	  <field name="accessURL" index="dcat.accessUrl" type="string" required="true"/>
+	  <field name="format" index="apiso.Format" type="string" required="true"/>
+	  <field name="license" index="dcat.license"  type="string" required="true"/>
+	  <field name="spatial" index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" type="string" required="true"/>
+	  <field name="temporal" index="apiso.TempExtent_begin,apiso.TempExtent_end" type="date" dateFormat="yyyy-MM-dd" delimiter="/" required="true" />
+	</fields>
+	<fields schema="others">
+	  <field name="title" index="title" type="string" required="true"/>  
+	  <field name="description" index="abstract" type="string" required="true"/>
+	  <field name="keyword" index="keywords,dataTheme,apisoTopicCategory" type="array" required="true"/>
+	  <field name="modified" index="dateModified" type="date" dateFormat="yyyy-MM-dd" delimiter="/" required="true"/>
+	  <field name="publisher" index="apiso.OrganizationName,publisher" type="string" required="true"/>
+	  <field name="contactPoint" index="dcat.person" type="string" required="true" />
+	  <field name="mbox" index="dcat.mbox" type="string" required="true"/>
+	  <field name="identifier" type="string" required="true"/>  
+	  <field name="accessLevel" index="accessLevel" type="string" required="true"/>
+	  <field name="accessLevelComment" index="dcat.accessLevelComment" maxChars="255" type="string" required="true"/>
+	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
+	  <field name="programCode" index="programCode" type="array" required="true"/>
+	  <field name="dataDictionary" index="dcat.dataDictionary" type="string" />
+	  <field name="webService" index="resource.url" type="string" required="true"/>
+	  <field name="format" index="dcat.format" type="string" required="true"/>
+	  <field name="license" index="dcat.license" type="string" required="true"/>
+	  <field name="accessURL" index="dcat.accessUrl" type="string" required="true"/>
+	  <field name="spatial" index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" type="string" required="true"/>
+	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" type="date" dateFormat="yyyy-MM-dd" delimiter="/" required="true" />
 	</fields>
 </dcat>

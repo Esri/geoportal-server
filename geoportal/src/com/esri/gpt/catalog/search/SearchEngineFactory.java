@@ -207,7 +207,7 @@ private static void intializeEngine (
   
   sEngine.setMessageBroker(messageBroker);
   sEngine.setResourceLinkBuilder(
-      ResourceLinkBuilder.newBuilder(context, hReq, messageBroker));
+       ResourceLinkBuilder.newBuilder(context, hReq, messageBroker));
   
   if(username != null && "".equals(username.trim())) {
     UsernamePasswordCredentials cred = new UsernamePasswordCredentials();
