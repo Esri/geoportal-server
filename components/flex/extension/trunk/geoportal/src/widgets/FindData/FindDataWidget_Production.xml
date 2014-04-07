@@ -35,12 +35,9 @@ limitations under the License.
   @useNameAsPrefix if url points to repositories list then the attribute
      specifies whether the @name should be used as the prefix  
   -->
-  <gptEndpoint url="rest/find/document" 
-    name="Default Site"/> 
-  <gptEndpoint url="rest/find/document?rid=ArcGIS.com" 
-    name="ArcGIS.com"/>  
-  <gptEndpoint url="rest/repositories?f=xml" 
-    name="Default Site: " useNameAsPrefix="true"/>   
+  <gptEndpoint url="rest/repositories?protocol=all&f=xml" 
+    name="Default Site"/>  
+ 
     
   <!-- GP Service needs to be set up for this to work. Feature coming next 
   release after GPT version 10 -->
