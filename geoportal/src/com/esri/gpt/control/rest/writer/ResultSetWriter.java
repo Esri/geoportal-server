@@ -175,6 +175,7 @@ public abstract class ResultSetWriter extends ResponseWriter {
         repLocal = lre;
       } else if(Val.chkStr(repositoryId).equals("arcgis.com")) {
         repAgs = lre;
+        mapIds.put(repositoryName, lre);
       } else if(repositoryName != null) {
         mapIds.put(repositoryName, lre);
       }
