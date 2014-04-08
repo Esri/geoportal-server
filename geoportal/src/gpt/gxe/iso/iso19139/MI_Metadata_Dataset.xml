@@ -13,7 +13,7 @@
     <g:namespace g:prefix="gmd" g:uri="http://www.isotc211.org/2005/gmd"/>
     <g:namespace g:prefix="gco" g:uri="http://www.isotc211.org/2005/gco"/>
     <g:namespace g:prefix="srv" g:uri="http://www.isotc211.org/2005/srv"/>
-    <g:namespace g:prefix="gml" g:uri="http://www.opengis.net/gml"/>
+    <g:namespace g:prefix="gml" g:uri="http://www.opengis.net/gml/3.2"/>
     <g:namespace g:prefix="xlink" g:uri="http://www.w3.org/1999/xlink"/>
     <g:namespace g:prefix="gts" g:uri="http://www.isotc211.org/2005/gts"/> 
   	<g:namespace g:prefix="gmi" g:uri="http://www.isotc211.org/2005/gmi"/>
