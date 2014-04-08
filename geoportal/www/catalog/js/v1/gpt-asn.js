@@ -568,7 +568,7 @@ dojo.declare("gpt.AsnComments", gpt.AsnAssertionSet, {
       elAdd.id = "asn-comments-add";
       elAdd.className = "asn-subSection asn-comments-add";
       elAdd.style.display = "none";
-      elAdd.appendChild(this.main.makeLabel(commentResources.addComment,"sectionCaption", "inner-editor"));
+      elAdd.appendChild(this.main.makeLabel(commentResources.addComment,"sectionCaption", "asn-comments-add-textarea"));
       var elEdit = this.makeEditArea("asn-comments-add-editarea","asn-comments-add-textarea",null);
       elAdd.appendChild(elEdit);
       elComments.appendChild(elAdd);

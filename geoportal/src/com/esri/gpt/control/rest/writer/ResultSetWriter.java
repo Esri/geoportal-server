@@ -191,8 +191,8 @@ public abstract class ResultSetWriter extends ResponseWriter {
     }
       
     if(repAgs != null) {
-      mapIds.remove("arcgis.com");
-      writeResultSetRecord(repAgs, depth);
+      //mapIds.remove("arcgis.com");
+      //writeResultSetRecord(repAgs, depth);
     }
     
         

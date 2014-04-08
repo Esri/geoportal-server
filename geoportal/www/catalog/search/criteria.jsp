@@ -1251,9 +1251,9 @@
     dojo.query("#djtContentDateAnytime").addContent(_csTitleContentDateAnytime);
     dojo.query("#djtContentDateIntersecting").addContent(_csTitleContentDateIntersecting);
     dojo.query("#djtContentDateWithin").addContent(_csTitleContentDateWithin);
-    dojo.query("#djtContentDateStartDate").addContent(_csTitleContentDateStartDate);
+    dojo.query("#djtContentDateStartDate").addContent('<label for="sdate">' + _csTitleContentDateStartDate + '</label>');
     dojo.query("#djtContentDateStartDatePattern").addContent(_csTitleContentDatePattern);
-    dojo.query("#djtContentDateEndDate").addContent(_csTitleContentDateEndDate);
+    dojo.query("#djtContentDateEndDate").addContent('<label for="edate">' + _csTitleContentDateEndDate + '</label>');
     dojo.query("#djtContentDateEndDatePattern").addContent(_csTitleContentDatePattern);
     dojo.query(".contentDateType[value$='intersecting']").attr("checked",true);
     scShowContentDateSearch(true);
@@ -1710,12 +1710,12 @@
             <tbody>
               <tr>
                 <td id="djtContentDateStartDate"></td>
-                <td><input type="text" name="sdate"/></td>
+                <td><input type="text" name="sdate" id="sdate" /></td>
                 <td id="djtContentDateStartDatePattern"></td>
               </tr>
               <tr>
                 <td id="djtContentDateEndDate"></td>
-                <td><input type="text" name="edate"/></td>
+                <td><input type="text" name="edate" id="edate"/></td>
                 <td id="djtContentDateEndDatePattern"></td>
               </tr>
             </tbody>

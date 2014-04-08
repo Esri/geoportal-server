@@ -435,7 +435,7 @@ public Map<String, Object> createInstances(StringSet rids) throws SearchExceptio
     if(repositoryRecord.containsKey(rid)) {
       continue;
     }
-   ASearchEngine engine = SearchEngineFactory.createSearchEngine(
+    ASearchEngine engine = SearchEngineFactory.createSearchEngine(
        new SearchCriteria(), 
        new SearchResult(),
        this.getRequestContext(), rid, this.getMessageBroker());
