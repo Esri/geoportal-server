@@ -45,5 +45,5 @@ gptConfig = {
 	b. Set "ItemMetadata.useGxeProxyUrl" to true
 	c. Set "ItemMetadata.gxeProxyUrl" to http://portalforarcgisservername/arcgis/sharing/gxe-proxy.jsp
 
-7. Save the item.html file
+7. Save the item.html file.
 
