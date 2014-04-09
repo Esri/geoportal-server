@@ -14,7 +14,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gmi="http://www.isotc211.org/2005/gmi" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gmi="http://www.isotc211.org/2005/gmi" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv">
   <xsl:output indent="yes" method="html" omit-xml-declaration="yes"/>
   <xsl:template match="/gmd:MD_Metadata|/gmi:MI_Metadata">
     <style>
@@ -448,6 +448,10 @@
   
   <!-- gmd:CI_Citation -->
   <xsl:template match="*[self::gmd:citation or self::gmd:specification or self::gmi:citation]/gmd:CI_Citation">
+    <em>
+      <xsl:call-template name="get_property">
+        <xsl:with-param name="key">catalog.iso19139.CI_ResponsibleParty.contactInfo</xsl:with-param>
+      </xsl:call-template>: </em>
     <dl>
       <xsl:for-each select="gmd:title">
         <dt>
@@ -1156,23 +1160,129 @@
           <em>
             <xsl:call-template name="get_property">
               <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.acquisition</xsl:with-param>
-            </xsl:call-template>: </em>
+            </xsl:call-template> (<xsl:value-of select="position()"/>): </em>
         </dt>
         <dl>
         <dt>
           <!-- gmi:acquisitionRequirement -->
+          <em><xsl:call-template name="get_property">
+            <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.section.acuisition.requirement</xsl:with-param>
+          </xsl:call-template></em>
+          <dl>            
           <xsl:for-each select="gmi:acquisitionRequirement/gmi:MI_Requirement">
             <dt>
               <em>
                 <xsl:call-template name="get_property">
                   <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.section.acuisition.requirement</xsl:with-param>
-                </xsl:call-template>: </em>
-              <xsl:apply-templates select="."/>
+                </xsl:call-template> (<xsl:value-of select="position()"/>): </em>
+              <dl>
+                <dt>
+                  <xsl:apply-templates select="."/>
+                </dt>
+              </dl>
             </dt>
           </xsl:for-each>
+          </dl>
+
           <!-- gmi:objective -->
+          <em><xsl:call-template name="get_property">
+            <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.section.acuisition.objective</xsl:with-param>
+          </xsl:call-template></em>
+          <dl>            
+          <xsl:for-each select="gmi:objective/gmi:MI_Objective">
+            <dt>
+              <em>
+                <xsl:call-template name="get_property">
+                  <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.section.acuisition.objective</xsl:with-param>
+                </xsl:call-template> (<xsl:value-of select="position()"/>): </em>
+              <dl>
+                <dt>
+                  <xsl:apply-templates select="."/>
+                </dt>
+              </dl>
+            </dt>
+          </xsl:for-each>
+          </dl>
+
           <!-- gmi:instrument -->
-          <xsl:apply-templates select="."/>
+          <em><xsl:call-template name="get_property">
+            <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.section.acuisition.instrument</xsl:with-param>
+          </xsl:call-template></em>
+          <dl>            
+          <xsl:for-each select="gmi:objective/gmi:MI_Objective">
+            <dt>
+              <em>
+                <xsl:call-template name="get_property">
+                  <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.section.acuisition.instrument</xsl:with-param>
+                </xsl:call-template> (<xsl:value-of select="position()"/>): </em>
+              <dl>
+                <dt>
+                  <xsl:apply-templates select="."/>
+                </dt>
+              </dl>
+            </dt>
+          </xsl:for-each>
+          </dl>
+
+          <!-- gmi:acquisitionPlan -->
+          <em><xsl:call-template name="get_property">
+            <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.section.acuisition.plan</xsl:with-param>
+          </xsl:call-template></em>
+          <dl>            
+          <xsl:for-each select="gmi:acquisitionPlan/gmi:MI_Plan">
+            <dt>
+              <em>
+                <xsl:call-template name="get_property">
+                  <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.section.acuisition.plan</xsl:with-param>
+                </xsl:call-template> (<xsl:value-of select="position()"/>): </em>
+              <dl>
+                <dt>
+                  <xsl:apply-templates select="."/>
+                </dt>
+              </dl>
+            </dt>
+          </xsl:for-each>
+          </dl>
+
+          <!-- gmi:operation -->
+          <em><xsl:call-template name="get_property">
+            <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.section.acuisition.operation</xsl:with-param>
+          </xsl:call-template></em>
+          <dl>            
+          <xsl:for-each select="gmi:operation/gmi:MI_Operation">
+            <dt>
+              <em>
+                <xsl:call-template name="get_property">
+                  <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.section.acuisition.operation</xsl:with-param>
+                </xsl:call-template> (<xsl:value-of select="position()"/>): </em>
+              <dl>
+                <dt>
+                  <xsl:apply-templates select="."/>
+                </dt>
+              </dl>
+            </dt>
+          </xsl:for-each>
+          </dl>
+
+          <!-- gmi:platform -->
+          <em><xsl:call-template name="get_property">
+            <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.section.acuisition.platform</xsl:with-param>
+          </xsl:call-template></em>
+          <dl>            
+          <xsl:for-each select="gmi:platform/gmi:MI_Platform">
+            <dt>
+              <em>
+                <xsl:call-template name="get_property">
+                  <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.section.acuisition.platform</xsl:with-param>
+                </xsl:call-template> (<xsl:value-of select="position()"/>): </em>
+              <dl>
+                <dt>
+                  <xsl:apply-templates select="."/>
+                </dt>
+              </dl>
+            </dt>
+          </xsl:for-each>
+          </dl>
         </dt>
       </dl>
 
@@ -1181,14 +1291,34 @@
   </xsl:template>
   
  
-  <xsl:template match="gmi:identifier">
+  <xsl:template match="gmd:RS_Identifier | gmi:identifier/gmd:MD_Identifier">
       <dt>
         <em>
           <xsl:call-template name="get_property">
-            <xsl:with-param name="key">catalog.iso19139.CI_Citation.<xsl:value-of select="local-name()"/>
-            </xsl:with-param>
+            <xsl:with-param name="key">catalog.iso19139.XTN_Identification.citation.RS_Identifier</xsl:with-param>
           </xsl:call-template>: </em>
-        <xsl:apply-templates select="gmd:MD_Identifier/gmd:code/gco:CharacterString"/>
+        <xsl:apply-templates select="gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
+
+        <dl>
+        <xsl:if test="gmd:code/gco:CharacterString">
+          <dt>
+            <em>
+              <xsl:call-template name="get_property">
+                <xsl:with-param name="key">catalog.iso19139.RS_Identifier.code</xsl:with-param>
+              </xsl:call-template>: </em>
+              <xsl:value-of select="gmd:code/gco:CharacterString"/>
+          </dt>
+        </xsl:if>
+        <xsl:if test="gmd:codeSpace/gco:CharacterString">
+          <dt>
+            <em>
+              <xsl:call-template name="get_property">
+                <xsl:with-param name="key">catalog.iso19139.RS_Identifier.codeSpace</xsl:with-param>
+              </xsl:call-template>: </em>
+              <xsl:value-of select="gmd:codeSpace/gco:CharacterString"/>
+          </dt>
+        </xsl:if>
+        </dl>
       </dt>
   </xsl:template>
 
@@ -1272,7 +1402,120 @@
       </dt>
   </xsl:template> 
   
+  <!--  Objective Type Code -->
+  <xsl:template match="gmi:type">
+    <xsl:if test="gmi:ObjectiveTypeCode ">
+      <dt>
+        <em>
+          <xsl:call-template name="get_property">
+            <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.acquisition.objective.type</xsl:with-param>
+          </xsl:call-template>: </em>
+        <xsl:call-template name="get_property">
+          <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.acquisition.objective<xsl:value-of select="gmi:ObjectiveTypeCode/@codeListValue"/>
+          </xsl:with-param>
+        </xsl:call-template>
+      </dt>
+    </xsl:if>
+  </xsl:template>
  
+  <xsl:template match="gmi:MI_Operation/gmi:description | gmi:MI_Platform/gmi:description">
+      <dt>
+        <em>
+          <xsl:call-template name="get_property">
+            <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.acuisition.operation.description</xsl:with-param>
+          </xsl:call-template>: </em>
+          
+          <xsl:value-of select="gco:CharacterString"/>
+      </dt>
+  </xsl:template>
+ 
+  <xsl:template match="gmi:MI_Instrument/gmi:description">
+      <dt>
+        <em>
+          <xsl:call-template name="get_property">
+            <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.acuisition.instrument.description</xsl:with-param>
+          </xsl:call-template>: </em>
+          
+          <xsl:value-of select="gco:CharacterString"/>
+      </dt>
+  </xsl:template>
+
+
+  <xsl:template match="gmi:trigger">
+    <xsl:if test="gmi:MI_TriggerCode">
+      <dt>
+        <em>
+          <xsl:call-template name="get_property">
+            <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.acquisition.event.trigger</xsl:with-param>
+          </xsl:call-template>: </em>
+        <xsl:call-template name="get_property">
+          <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.acquisition.event.triggerCode.<xsl:value-of select="gmi:MI_TriggerCode/@codeListValue"/>
+          </xsl:with-param>
+        </xsl:call-template>
+      </dt>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="gmi:context">
+    <xsl:if test="gmi:MI_ContextCode">
+      <dt>
+        <em>
+          <xsl:call-template name="get_property">
+            <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.acquisition.event.context</xsl:with-param>
+          </xsl:call-template>: </em>
+        <xsl:call-template name="get_property">
+          <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.acquisition.event.contextCode.<xsl:value-of select="gmi:MI_ContextCode/@codeListValue"/>
+          </xsl:with-param>
+        </xsl:call-template>
+      </dt>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="gmi:sequence">
+    <xsl:if test="gmi:MI_SequenceCode">
+      <dt>
+        <em>
+          <xsl:call-template name="get_property">
+            <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.acquisition.event.sequence</xsl:with-param>
+          </xsl:call-template>: </em>
+        <xsl:call-template name="get_property">
+          <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.acquisition.event.sequenceCode.<xsl:value-of select="gmi:MI_SequenceCode/@codeListValue"/>
+          </xsl:with-param>
+        </xsl:call-template>
+      </dt>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="gmi:function">
+    <dt>
+      <em>
+        <xsl:call-template name="get_property">
+          <xsl:with-param name="key">catalog.iso19139-2.MI_Metadata.acquisition.objective.function</xsl:with-param>
+        </xsl:call-template>: </em>
+        
+        <xsl:value-of select="gco:CharacterString"/>
+    </dt>
+  </xsl:template>
+
+  <xsl:template match="gmi:status">
+    <xsl:if test="gmd:MD_ProgressCode">
+
+    <dt>
+      <em>
+        <xsl:call-template name="get_property">
+          <xsl:with-param name="key">catalog.iso19139.MD_ProgressCode</xsl:with-param>
+        </xsl:call-template>: </em>
+      <xsl:call-template name="get_property">
+        <xsl:with-param name="key">catalog.iso19139.MD_ProgressCode.<xsl:value-of select="gmd:MD_ProgressCode/@codeListValue"/>
+        </xsl:with-param>
+      </xsl:call-template>
+    </dt>
+    <!-- this is here to get the contact info to properly show up after the status info. not sure why this is needed -->
+    <dt></dt>
+    </xsl:if>
+  </xsl:template>
+
+  
   <!--                     -->
   <!--   Properties        -->
   <!--                     -->
