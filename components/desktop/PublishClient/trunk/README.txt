@@ -26,16 +26,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 =====================================================
-
 This project is used to publish metadata to ESRI Geoportal Server.
 
+=====================================================
+If you just need to deploy and use the binary distribution, you can 
+install and use the application by following instruction at:
+https://github.com/Esri/geoportal-server/wiki/Geoportal-Publish-Client
+
+=====================================================
 Required tools for project compilation and testing:
 
 1. Dotnet platform:
    - version 3.5 or above
 
 2. ArcGIS Desktop and ArcGIS Desktop Dotnet SDK:
-   - version 10.0	
+   - version 10.2	
 
 3. IDE (developed on):
    - Microsoft Visual Studio 2010

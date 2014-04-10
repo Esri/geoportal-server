@@ -528,7 +528,7 @@
 		<SupportSpatialBoundary>True</SupportSpatialBoundary>
 	</Profile>
 
-	<!-- Data.gov Profile of pyCSW -->
+	<!-- Data.gov Profile of pycsw -->
   <Profile>
 		<ID>urn:ogc:CSW:2.0.2:HTTP:APISO:PYCSW</ID>
 		<Name>pycsw</Name>

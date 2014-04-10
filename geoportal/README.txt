@@ -3,12 +3,14 @@ ESRI Geoportal Server
 Copyright ©2010 Esri. 
 
 =====================================================
-
 This is the primary Java Web Application for the ESRI Geoportal Server.
 
+Please refer to https://github.com/Esri/geoportal-server/wiki for more information.
+
+=====================================================
 Required tools for project compilation and testing:
 
-1. Java SDK 6 (tested against):
+1. Java SDK 6 or 7 (tested against):
    - version 1.6.22 or later
    
 2. Java Server Faces 2.0 (tested against):

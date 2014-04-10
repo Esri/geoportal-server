@@ -26,16 +26,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 =====================================================
-
 This project is used to open and view WMC files in ArcMap.
 
+=====================================================
+If you just need to deploy and use the binary distribution, you can 
+install and use the application by following instruction at:
+https://github.com/Esri/geoportal-server/wiki/WMC-Client
+=====================================================
 Required tools for project compilation and testing:
 
 1. Dotnet platform:
    - version 3.5 or above
 
 2. ArcGIS Desktop and ArcGIS Desktop Dotnet SDK:
-   - version 10.0	
+   - version 10.2	
 
 3. IDE (developed on):
    - Microsoft Visual Studio 2010

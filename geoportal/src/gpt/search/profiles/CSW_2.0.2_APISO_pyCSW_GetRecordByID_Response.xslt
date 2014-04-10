@@ -16,7 +16,7 @@
         <xsl:apply-templates select="/csw:GetRecordByIdResponse/gmd:MD_Metadata"/>
       </xsl:otherwise>
     </xsl:choose>
-  </xsl:template>
+  </xsl:template> 
   <xsl:template match="/csw:GetRecordByIdResponse/gmd:MD_Metadata">
     <xsl:copy-of select="/csw:GetRecordByIdResponse/gmd:MD_Metadata"/>
   </xsl:template>

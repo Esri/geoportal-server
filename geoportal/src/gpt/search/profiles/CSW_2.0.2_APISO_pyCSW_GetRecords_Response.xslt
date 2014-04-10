@@ -7,7 +7,7 @@ xmlns:ows="http://www.opengis.net/ows"
 xmlns:dc="http://purl.org/dc/elements/1.1/" 
 xmlns:gmd="http://www.isotc211.org/2005/gmd" 
 xmlns:gco="http://www.isotc211.org/2005/gco" 
-xmlns:srv="http://www.isotc211.org/2005/srv" 
+xmlns:srv="http://www.isotc211.org/2005/srv"  
 xmlns:gmi="http://www.isotc211.org/2005/gmi" >
 	<xsl:output method="xml" indent="yes" encoding="UTF-8" omit-xml-declaration="no"/>
 	<xsl:template match="/">
