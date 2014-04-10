@@ -26,9 +26,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 =====================================================
-
 This is the core CswClient project for searching ESRI Geoportal Server using CSW protocol.
 
+=====================================================
+If you just need to deploy and use the binary distribution, you can 
+install and use the application by following instruction at:
+https://github.com/Esri/geoportal-server/wiki/Geoportal-CSW-Clients
+
+=====================================================
 Required tools for project compilation and testing:
 
 1. Dotnet platform:
