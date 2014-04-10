@@ -365,14 +365,28 @@ public boolean appendDetailComponents(Schema schema,
   headerTable.setSummary(msgBroker.retrieveMessage("catalog.general.designOnly"));
   headerTable.setOnclick(sbOnclick.toString());
   
+  
+  HtmlPanelGroup pGroup = new HtmlPanelGroup();
+  
   HtmlSelectBooleanCheckbox checkBox = new HtmlSelectBooleanCheckbox();
   checkBox.setId(sCheckboxId); 
   checkBox.setSelected(getOpen());
-  checkBox.setStyle("display:none;");
-  headerTable.getChildren().add(checkBox);
+  checkBox.setStyle("display:none;visibility:hidden;");
+  checkBox.setLabel(msgBroker.retrieveMessage("catalog.search.resource.details.togglesection"));
+  
+  HtmlOutputLabel lbl = new HtmlOutputLabel();
+  lbl.setFor(sCheckboxId);
+  lbl.setValue(msgBroker.retrieveMessage("catalog.search.resource.details.togglesection"));
+  lbl.setTitle(msgBroker.retrieveMessage("catalog.search.resource.details.togglesection"));
+  lbl.setStyle("display:none;visibility:hidden;");
+  
+  pGroup.getChildren().add(lbl);
+  pGroup.getChildren().add(checkBox);
+  headerTable.getChildren().add(pGroup);
   
   HtmlGraphicImage img = new HtmlGraphicImage();
   img.setId(sImgId); 
+  img.setAlt(msgBroker.retrieveMessage("catalog.search.resource.details.togglesection"));
   setGraphicUrl(img);
   headerTable.getChildren().add(img);
   

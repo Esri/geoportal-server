@@ -313,6 +313,8 @@
 	    if(typeof(gptMapConfig) != 'undefined' && typeof(gptMapConfig.locatorURL) != 'undefined' 
 	    		&& (gptMapConfig.locatorURL == null || dojo.trim(gptMapConfig.locatorURL).length == 0)){	    
 	  		dojo.byId("frmSearchCriteria:mapToolbar").style.display = "none";
+	    } else {
+	    	dojo.byId("frmSearchCriteria:mapToolbar").style.display = "block";
 	    }
     }
     dojo.addOnLoad(scInitComponents);

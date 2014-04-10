@@ -171,8 +171,11 @@
 		<xsl:variable name="newlist" select="concat(normalize-space($list), ' ')" />
 		<xsl:variable name="first" select="substring-before($newlist, ' ')" />
 		<xsl:variable name="remaining" select="substring-after($newlist, ' ')" />
-		<xsl:if test="not(contains($first,'from:') or contains($first,'to:'))"><xsl:value-of select="$first" /></xsl:if>
-		<xsl:if test="$remaining">
+		<xsl:if test="not(contains($first,'from:') or contains($first,'to:'))">
+          <xsl:value-of select="$first" />
+          <xsl:text>+</xsl:text>
+        </xsl:if>		
+        <xsl:if test="$remaining">
 			<xsl:call-template name="output-keywords">
 				<xsl:with-param name="list" select="$remaining" />
 			</xsl:call-template>
