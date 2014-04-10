@@ -1114,6 +1114,7 @@
         <dt>
           <img>
             <xsl:attribute name="src"><xsl:value-of select="gmd:fileName/gco:CharacterString"/></xsl:attribute>
+            <xsl:attribute name="alt"><xsl:value-of select="gmd:fileName/gco:CharacterString"/></xsl:attribute>
           </img>
         </dt>
         <dt>
