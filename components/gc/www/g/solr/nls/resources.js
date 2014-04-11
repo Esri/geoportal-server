@@ -96,7 +96,15 @@ define({
       "contact.organizations_ss": "Organizations (contact)",
       "contact.people_ss": "People (contact)",
       "sys.src.collections_txt": "Collections",
-      "sys.src.collections_ss": "Collections (values)"
+      "sys.src.collections_ss": "Collections (values)",
+      "dataAccessType_ss": "Service Type",
+      "url.mapserver_ss": "ArcGIS MapServer",
+      "url.wms_ss": "WMS",
+      "url.wfs_ss": "WFS",
+      "url.kml_ss": "KML/KMZ",
+      "url.json_ss": "JSON",
+      "url.sos_ss": "SOS",
+      "url.thredds_ss": "THREDDS"
     }
     
   }

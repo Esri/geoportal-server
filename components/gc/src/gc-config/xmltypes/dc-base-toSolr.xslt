@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:dcmiBox="http://dublincore.org/documents/2000/07/11/dcmi-box/" xmlns:ows="http://www.opengis.net/ows">
-  <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
-  <xsl:strip-space elements="*"/>
-
-  <xsl:template name="writeBaseInfo">
-    <xsl:call-template name="writeGeneralInfo"/>
-    <xsl:call-template name="writeSpatialInfo"/>
-    <xsl:call-template name="writeTemporalInfo"/>
-  </xsl:template>
-  
-  <xsl:template name="writeGeometry">
-<!--
+	<xsl:output method="xml" indent="yes" encoding="UTF-8"/>
+	<xsl:strip-space elements="*"/>
+	<xsl:template name="writeBaseInfo">
+		<xsl:call-template name="writeGeneralInfo"/>
+		<xsl:call-template name="writeSpatialInfo"/>
+		<xsl:call-template name="writeTemporalInfo"/>
+		<xsl:call-template name="writeServiceInfo"/>
+	</xsl:template>
+	<xsl:template name="writeGeometry">
+		<!--
 	minx	<xsl:value-of select="substring-after(substring-before(./extent/text(),','),'[[')"/>
 	miny	<xsl:value-of select="substring-before(substring-after(./extent/text(),','),']')"/>
 	maxx	<xsl:value-of select="substring-before(substring-after(substring-after(substring-after(./extent/text(),'['),'['),'['),',')"/>
@@ -90,5 +89,50 @@
       <xsl:value-of select="/rdf:RDF/rdf:Description/dc:date"/>
     </field>
   </xsl:template>
-
+	<xsl:template name="writeServiceInfo">
+		<xsl:for-each select="/rdf:RDF/rdf:Description/dct:references[contains(translate(.,'MAPSERV', 'mapserv'),'mapserver')]">
+			<field name="dataAccessType_ss">ArcGIS MapServer</field>
+			<field name="url.mapserver_ss">
+				<xsl:value-of select="/rdf:RDF/rdf:Description/dct:references[contains(translate(.,'MAPSERV', 'mapserv'),'mapserver')]"/>
+			</field>
+		</xsl:for-each>
+		<xsl:for-each select="/rdf:RDF/rdf:Description/dct:references[contains(translate(.,'WMS', 'wms'),'wms')]">
+			<field name="dataAccessType_ss">WMS</field>
+			<field name="url.wms_ss">
+				<xsl:value-of select="/rdf:RDF/rdf:Description/dct:references[contains(translate(.,'WMS', 'wms'),'wms')]"/>
+			</field>
+		</xsl:for-each>
+		<xsl:for-each select="/rdf:RDF/rdf:Description/dct:references[contains(translate(.,'WFS', 'wfs'),'wfs')]">
+			<field name="dataAccessType_ss">WFS</field>
+			<field name="url.wfs_ss">
+				<xsl:value-of select="/rdf:RDF/rdf:Description/dct:references[contains(translate(.,'WFS', 'wfs'),'wfs')]"/>
+			</field>
+		</xsl:for-each>
+		
+		<xsl:for-each select="/rdf:RDF/rdf:Description/dct:references[contains(translate(.,'KML', 'kml'),'kml')] | /rdf:RDF/rdf:Description/dct:references[contains(translate(.,'KMZ', 'kmz'),'kmz')]">
+			<field name="dataAccessType_ss">KML</field>
+			<field name="url.kml_ss">
+				<xsl:value-of select="/rdf:RDF/rdf:Description/dct:references[contains(translate(.,'KML', 'kml'),'kml')] | /rdf:RDF/rdf:Description/dct:references[contains(translate(.,'KMZ', 'kmz'),'kmz')]"/>
+			</field>
+		</xsl:for-each>
+		
+		<xsl:for-each select="/rdf:RDF/rdf:Description/dct:references[contains(translate(.,'JSON', 'json'),'json')]">
+			<field name="dataAccessType_ss">JSON</field>
+			<field name="url.json_ss">
+				<xsl:value-of select="/rdf:RDF/rdf:Description/dct:references[contains(translate(.,'JSON', 'json'),'json')]"/>
+			</field>
+		</xsl:for-each>
+		<xsl:for-each select="/rdf:RDF/rdf:Description/dct:references[contains(translate(.,'SO', 'so'),'sos')]">
+			<field name="dataAccessType_ss">SOS</field>
+			<field name="url.sos_ss">
+				<xsl:value-of select="/rdf:RDF/rdf:Description/dct:references[contains(translate(.,'SO', 'so'),'sos')]"/>
+			</field>
+		</xsl:for-each>
+		<xsl:for-each select="/rdf:RDF/rdf:Description/dct:references[contains(translate(.,'THREDS', 'threds'),'thredds')]">
+			<field name="dataAccessType_ss">THREDDS</field>
+			<field name="url.thredds_ss">
+				<xsl:value-of select="/rdf:RDF/rdf:Description/dct:references[contains(translate(.,'THREDS', 'threds'),'thredds')]"/>
+			</field>
+		</xsl:for-each>
+	</xsl:template>
 </xsl:stylesheet>
