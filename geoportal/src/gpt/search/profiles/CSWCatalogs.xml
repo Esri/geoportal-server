@@ -29,7 +29,7 @@
   <CSWCatalog>
     <URL>http://catalog.data.gov/csw-all?request=GetCapabilities&amp;service=CSW&amp;version=2.0.2</URL>
     <Name>Data.gov (all)</Name>
-    <CSWProfile>urn:ogc:CSW:2.0.2:HTTP:APISO:pycsw</CSWProfile>
+    <CSWProfile>urn:ogc:CSW:2.0.2:HTTP:APISO:PYCSW</CSWProfile>
     <Credentials>
       <Username/>
       <Password/>
