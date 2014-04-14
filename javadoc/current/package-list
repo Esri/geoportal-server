@@ -1,3 +1,4 @@
+com.esri.gpt.agp.ags
 com.esri.gpt.agp.client
 com.esri.gpt.agp.multipart2
 com.esri.gpt.agp.sync
@@ -31,6 +32,7 @@ com.esri.gpt.control.cart
 com.esri.gpt.control.download
 com.esri.gpt.control.filter
 com.esri.gpt.control.georss
+com.esri.gpt.control.georss.dcatcache
 com.esri.gpt.control.harvest
 com.esri.gpt.control.identity
 com.esri.gpt.control.livedata
@@ -51,6 +53,7 @@ com.esri.gpt.control.webharvest.client.arcgis
 com.esri.gpt.control.webharvest.client.arcims
 com.esri.gpt.control.webharvest.client.atom
 com.esri.gpt.control.webharvest.client.csw
+com.esri.gpt.control.webharvest.client.dcat
 com.esri.gpt.control.webharvest.client.oai
 com.esri.gpt.control.webharvest.client.res
 com.esri.gpt.control.webharvest.client.thredds
@@ -59,9 +62,17 @@ com.esri.gpt.control.webharvest.common
 com.esri.gpt.control.webharvest.engine
 com.esri.gpt.control.webharvest.protocol
 com.esri.gpt.control.webharvest.protocol.factories
+com.esri.gpt.control.webharvest.validator
 com.esri.gpt.framework.ArcGIS
+com.esri.gpt.framework.adhoc
+com.esri.gpt.framework.adhoc.events
+com.esri.gpt.framework.adhoc.factories
 com.esri.gpt.framework.collection
 com.esri.gpt.framework.context
+com.esri.gpt.framework.dcat
+com.esri.gpt.framework.dcat.adaptors
+com.esri.gpt.framework.dcat.dcat
+com.esri.gpt.framework.dcat.json
 com.esri.gpt.framework.geometry
 com.esri.gpt.framework.http
 com.esri.gpt.framework.http.multipart
