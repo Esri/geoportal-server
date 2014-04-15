@@ -72,7 +72,7 @@ public class DocBuilder {
 		setField(doc,FieldConstants.Src_Item_Uri,info.Src_Item_Uri);
 		setField(doc,FieldConstants.Src_Item_Url,info.Src_Item_Url);
 		setField(doc,FieldConstants.Src_Site_Id,info.Src_Site_Id);
-	  //setField(doc,FieldConstants.Src_Site_Name,info.Src_Site_Name);
+	    setField(doc,FieldConstants.Src_Site_Name,info.Src_Site_Name);
 		setField(doc,FieldConstants.Src_Site_Protocol,info.Src_Site_Protocol);
 		setField(doc,FieldConstants.Src_Site_Url,info.Src_Site_Url);
 		

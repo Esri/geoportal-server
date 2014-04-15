@@ -105,6 +105,7 @@ define({
       "url.json_ss": "JSON",
       "url.sos_ss": "SOS",
       "url.thredds_ss": "THREDDS"
+      "sys.src.site.name_s": "Site"
     }
     
   }

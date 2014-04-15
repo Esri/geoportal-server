@@ -278,7 +278,7 @@ public class Gptdb2SolrTask extends Task implements SqlRowHandler {
 		info.Src_Item_Url = sItemUrl;
 		if (parentSite != null) {
 		  info.Src_Site_Id = resource.siteuuid;
-		  //info.Src_Site_Name = parentSite.title;
+		  info.Src_Site_Name = parentSite.title;
 		  info.Src_Site_Protocol = parentSite.protocol_type;
 		  info.Src_Site_Url = parentSite.host_url;
 		}
