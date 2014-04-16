@@ -142,6 +142,10 @@
         <servlet-name>OpenSearchDescription</servlet-name>
         <servlet-class>com.esri.gpt.control.rest.OpenSearchDescriptionServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CswProfilesServlet</servlet-name>
+        <servlet-class>com.esri.gpt.server.apps.CswProfilesServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.page</url-pattern>
@@ -358,14 +362,14 @@
         <url-pattern>/rest/identity/groups/*</url-pattern>
         <url-pattern>/rest/identity/users/*</url-pattern>
     </servlet-mapping>
-  <servlet>
-    <servlet-name>GeoportalUsageServlet</servlet-name>
-    <servlet-class>com.esri.gpt.server.usage.GeoportalUsageServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>GeoportalUsageServlet</servlet-name>
-    <url-pattern>/rest/usage/harvester/*</url-pattern>
-  </servlet-mapping>
+    <servlet>
+        <servlet-name>GeoportalUsageServlet</servlet-name>
+        <servlet-class>com.esri.gpt.server.usage.GeoportalUsageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GeoportalUsageServlet</servlet-name>
+        <url-pattern>/rest/usage/harvester/*</url-pattern>
+    </servlet-mapping>
     <servlet>
         <description/>
         <display-name>savedSearch</display-name>
@@ -394,34 +398,36 @@
         <url-pattern>/Eros</url-pattern>
     </servlet-mapping>
     <servlet>
-      <servlet-name>CartServlet</servlet-name>
-      <servlet-class>com.esri.gpt.control.cart.CartServlet</servlet-class>
+        <servlet-name>CartServlet</servlet-name>
+        <servlet-class>com.esri.gpt.control.cart.CartServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-      <servlet-name>CartServlet</servlet-name>
-      <url-pattern>/cart/*</url-pattern>
+        <servlet-name>CartServlet</servlet-name>
+        <url-pattern>/cart/*</url-pattern>
     </servlet-mapping>
-    
     <servlet>
-      <servlet-name>DcatCacheServlet</servlet-name>
-      <servlet-class>com.esri.gpt.control.georss.DcatCacheServlet</servlet-class>
+        <servlet-name>DcatCacheServlet</servlet-name>
+        <servlet-class>com.esri.gpt.control.georss.DcatCacheServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-      <servlet-name>DcatCacheServlet</servlet-name>
-      <url-pattern>/dcat.json</url-pattern>
+        <servlet-name>DcatCacheServlet</servlet-name>
+        <url-pattern>/dcat.json</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>CswProfilesServlet</servlet-name>
+        <url-pattern>/csw/profiles</url-pattern>
+    </servlet-mapping>
     <session-config>
-      <session-timeout>30</session-timeout>
+        <session-timeout>30</session-timeout>
     </session-config>
     <resource-ref>
-      <description>GPT Connection Pool</description>
-      <res-ref-name>jdbc/gpt</res-ref-name>
-      <res-type>javax.sql.DataSource</res-type>
-      <res-auth>Container</res-auth>
+        <description>GPT Connection Pool</description>
+        <res-ref-name>jdbc/gpt</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
     </resource-ref>
     <welcome-file-list>
-      <welcome-file>catalog/main/home.page</welcome-file>
+        <welcome-file>catalog/main/home.page</welcome-file>
     </welcome-file-list>
     <!--
       Note. 'Eros' and geoportal usage endpoint should be protected through HTTPS.
