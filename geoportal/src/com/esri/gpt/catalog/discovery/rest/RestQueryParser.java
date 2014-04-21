@@ -537,6 +537,25 @@ public class RestQueryParser {
   }
   
   /**
+   * Parses and sets CSW endpoint URL.
+   * <br/>See: {@link RestQuery#setCswUrl(String)}
+   * @param restKey the URL key for the parameter
+   */
+  public void parseCswUrl(String restKey) {
+    getQuery().setCswUrl(getRequestParameter(restKey));
+  }
+  
+  
+  /**
+   * Parses and sets CSW endpoint profile.
+   * <br/>See: {@link RestQuery#setCswProfile(String)}
+   * @param restKey the profile key for the parameter
+   */
+  public void parseCswProfile(String restKey) {
+    getQuery().setCswProfile(getRequestParameter(restKey));
+  }
+  
+  /**
    * Parses and sets the response format for the query.
    * <br/>See: {@link RestQuery#setResponseFormat(String)}
    * @param restKey the URL key for the parameter

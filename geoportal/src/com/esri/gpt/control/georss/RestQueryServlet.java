@@ -234,6 +234,7 @@ public class RestQueryServlet extends BaseServlet {
     SearchCriteria criteria = this.toSearchCriteria(request, context, query);
     SearchResult result = new SearchResult();
     String rid = Val.chkStr(query.getRepositoryId());
+    CswContext cswContext = CswContext.create(query.getCswUrl(), query.getCswProfile());
     RestQueryServlet.ResponseFormat format = getResponseFormat(request, query);
 
     boolean isJavascriptEnabled =
@@ -262,7 +263,7 @@ public class RestQueryServlet extends BaseServlet {
 
 
     // handle a request against the local repository
-    if ((rid.length() == 0) || rid.equalsIgnoreCase("local")) {
+    if ((rid.length() == 0 || rid.equalsIgnoreCase("local")) && cswContext==null ) {
 
       // generate the CSW request string
       String cswRequest = "";
@@ -284,7 +285,11 @@ public class RestQueryServlet extends BaseServlet {
 
       // create the criteria, execute the query
       int iSearchTime = Val.chkInt(request.getParameter("maxSearchTimeMilliSec"), -1);
-      engine = SearchEngineFactory.createSearchEngine(criteria, result, context, rid, messageBroker);
+      if (cswContext!=null) {
+        engine = SearchEngineFactory.createSearchEngine(criteria, result, context, cswContext, messageBroker);
+      } else {
+        engine = SearchEngineFactory.createSearchEngine(criteria, result, context, rid, messageBroker);
+      }
       engine.setResourceLinkBuilder(rBuild);
       if (iSearchTime > 0) {
         engine.setConnectionTimeoutMs(iSearchTime);
@@ -579,6 +584,8 @@ public class RestQueryServlet extends BaseServlet {
     }
 
     parser.parseRepositoryId("rid");
+    parser.parseCswUrl("cswUrl");
+    parser.parseCswProfile("cswProfile");
     parser.parseResponseFormat("f");
     parser.parseResponseGeometry("geometryType");
     parser.parseResponseStyle("style");

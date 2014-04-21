@@ -15,19 +15,9 @@
 package com.esri.gpt.catalog.search;
 
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.xml.transform.TransformerException;
-
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolCsw;
 import com.esri.gpt.catalog.harvest.repository.HrRecord;
+import com.esri.gpt.control.georss.CswContext;
 import com.esri.gpt.control.rest.repositories.CswRepository;
 import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.framework.collection.StringSet;
@@ -41,6 +31,15 @@ import com.esri.gpt.server.csw.client.CswRecords;
 import com.esri.gpt.server.csw.client.CswSearchRequest;
 import com.esri.gpt.server.csw.client.InvalidOperationException;
 import com.esri.gpt.server.csw.client.NullReferenceException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.transform.TransformerException;
 
 /**
  *  
@@ -250,6 +249,60 @@ protected CswRecord getMetadata(String uuid) throws SearchException {
 public void init() throws SearchException {
   init(true);
 }
+
+public void quickInit(CswContext cswContext, String uuid) throws SearchException {
+  
+  this.setProfileId(cswContext.getCswProfileId());
+  
+  RequestContext reqContext = this.getRequestContext();
+  String sessionKeyPrfx = this.getClass().getCanonicalName() + ":uuid:"
+      + uuid;
+  String sessionGetMetadataKey = sessionKeyPrfx + ":GetMetadataRecord:url";
+  String sessionGetRecordsKey = sessionKeyPrfx + ":GetRecords:url";
+  String sessionProfileId = sessionKeyPrfx + ":profileId";
+  String sessionCapabUrl = sessionKeyPrfx + ":capabilities:url";
+  String sessionCapObject = sessionKeyPrfx + ":capabilities:object";
+
+  Object objCapObject = reqContext.extractFromSession(sessionCapObject);
+  if(objCapObject instanceof CswCatalogCapabilities) {
+    this.setCapabilities((CswCatalogCapabilities)objCapObject);
+  }
+  Object objGetMetadataUrl = reqContext.extractFromSession(
+      sessionGetMetadataKey);
+  Object objGetRecordsUrl = reqContext.extractFromSession(
+      sessionGetRecordsKey);
+  Object objProfileId = reqContext.extractFromSession(
+      sessionProfileId);
+  Object objGetCapabUrl = reqContext.extractFromSession(
+      sessionCapabUrl); 
+
+  if (objGetMetadataUrl == null 
+      || "".equals(objGetMetadataUrl.toString().trim())
+      || objGetRecordsUrl == null
+      || "".equals(objGetRecordsUrl.toString().trim())
+      || objProfileId == null
+      || "".equals(objProfileId.toString().trim())
+      || objGetCapabUrl == null
+      || "".equals(objGetCapabUrl.toString().trim())) {
+  } else {
+    this.setGetRecordsUrl(objGetRecordsUrl.toString());
+    this.setGetMetadataRecordUrl(objGetMetadataUrl.toString());
+    this.setProfileId(objProfileId.toString());
+    this.setGetCapabiltiesUrl(objGetCapabUrl.toString());
+  }
+  
+  this.setGetCapabiltiesUrl(cswContext.getCswUrl());
+  
+  reqContext.addToSession(sessionGetMetadataKey, 
+      this.getGetMetadataRecordUrl());
+  reqContext.addToSession(sessionGetRecordsKey, this.getGetRecordsUrl());
+  reqContext.addToSession(sessionCapabUrl, this.getGetCapabiltiesUrl());
+  reqContext.addToSession(sessionProfileId, this.getProfileId());
+  reqContext.addToSession(sessionCapObject, this.getCapabilities());
+
+  super.init();
+}
+
 /**
  * Looks for the id in the repository then fills in 
  * other information e.g. profile, capabilities url, post url

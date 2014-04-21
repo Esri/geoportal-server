@@ -14,6 +14,14 @@
  */
 package com.esri.gpt.catalog.search;
 
+import com.esri.gpt.catalog.harvest.repository.HrRecord;
+import com.esri.gpt.control.georss.CswContext;
+import com.esri.gpt.framework.collection.StringSet;
+import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.jsf.MessageBroker;
+import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
+import com.esri.gpt.framework.util.UuidUtil;
+import com.esri.gpt.framework.util.Val;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,15 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.servlet.http.HttpServletRequest;
-
-import com.esri.gpt.catalog.harvest.repository.HrRecord;
-import com.esri.gpt.framework.context.RequestContext;
-import com.esri.gpt.framework.jsf.MessageBroker;
-import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
-import com.esri.gpt.framework.util.Val;
-import com.esri.gpt.framework.collection.StringSet;
 
 
 /**
@@ -121,6 +121,23 @@ public static ASearchEngine createSearchEngine(
       null);
 }
 
+public static ASearchEngine createSearchEngine(
+    final SearchCriteria criteria, 
+    final SearchResult result,
+    final RequestContext context,
+    final CswContext cswContext,
+    MessageBroker messageBroker
+ ) throws SearchException {
+  return createSearchEngine(
+      criteria, 
+      result,
+      context,
+      cswContext,
+      messageBroker,
+      null,
+      null);
+}
+
 /**
  * Creates a new Search 
  * 
@@ -179,6 +196,52 @@ public static ASearchEngine createSearchEngine(
   
   intializeEngine(sEngine,criteria, result, context, sKey, messageBroker, 
       username, password);
+  return sEngine;
+}
+
+public static ASearchEngine createSearchEngine(
+    final SearchCriteria criteria, 
+    final SearchResult result,
+    final RequestContext context,
+    final CswContext cswContext,
+    final MessageBroker messageBroker,
+    final String username,
+    final String password) throws SearchException {
+  if(result == null) {
+    throw new SearchException
+      ("Result variable give in Search Engine Factory is null");
+  }
+  if(criteria == null) {
+    throw new SearchException
+      ("Criteria variable give in Search Engine Factory is null");
+  }
+  if(context == null) {
+    throw new SearchException
+      ("Context variable give in Search Engine Factory is null");
+  }
+  if(cswContext == null) {
+    throw new SearchException
+      ("cswContext variable give in Search Engine Factory is null");
+  }
+  
+  SearchEngineExternalCsw sEngine = null;
+
+  //sEngine = identifyEngine(cswUrl, cswProfile, context);
+  sEngine = new SearchEngineExternalCsw();
+  SearchRequestDefinition sDef = new SearchRequestDefinition(criteria, result);
+  sEngine.setRequestDefinition(sDef);
+  sEngine.setRequestContext(context);
+  Map<String, String> attribs = new HashMap<>();
+  attribs.put("url", cswContext.getCswUrl());
+  attribs.put("profileid", cswContext.getCswProfileId());
+  sEngine.setFactoryAttributes(attribs);
+  sEngine.quickInit(cswContext, UuidUtil.makeUuid());
+  
+  /*
+  intializeEngine(sEngine,criteria, result, context, cswUrl, cswProfile, messageBroker, 
+      username, password);
+  */
+  
   return sEngine;
 }
 

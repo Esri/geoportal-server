@@ -207,6 +207,12 @@ public class ExtJsonFeedWriter implements FeedWriter {
       if (!query.getRepositoryId().isEmpty()) {
         printArg("repositoryId", query.getRepositoryId(), true);
       }
+      if (!query.getCswUrl().isEmpty()) {
+        printArg("cswUrl", query.getCswUrl(), true);
+      }
+      if (!query.getCswProfile().isEmpty()) {
+        printArg("cswProfile", query.getCswProfile(), true);
+      }
     }
     OpenSearchProperties osProps = records.getOpenSearchProperties();
     if (osProps != null) {
