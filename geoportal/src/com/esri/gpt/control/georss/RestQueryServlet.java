@@ -18,6 +18,7 @@ import com.esri.gpt.catalog.discovery.SpatialClause;
 import com.esri.gpt.catalog.discovery.rest.RestQuery;
 import com.esri.gpt.catalog.discovery.rest.RestQueryParser;
 import com.esri.gpt.catalog.search.ASearchEngine;
+import com.esri.gpt.catalog.search.CswResourceLinkBuilder;
 import com.esri.gpt.catalog.search.GetRecordsGenerator;
 import com.esri.gpt.catalog.search.ISearchFilterSpatialObj;
 import com.esri.gpt.catalog.search.OpenSearchProperties;
@@ -257,8 +258,10 @@ public class RestQueryServlet extends BaseServlet {
     } else {
       context.setViewerExecutesJavascript(false);
     }
-    ResourceLinkBuilder rBuild = ResourceLinkBuilder.newBuilder(context,
-            request, messageBroker);
+    
+    ResourceLinkBuilder rBuild = cswContext==null?
+      ResourceLinkBuilder.newBuilder(context,request, messageBroker):
+      CswResourceLinkBuilder.newBuilder(context,cswContext,request, messageBroker);
 
 
 
