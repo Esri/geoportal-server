@@ -96,6 +96,7 @@ public class CswResourceLinkBuilder extends ResourceLinkBuilder {
     String resourceUrl = Val.chkStr(record.getResourceUrl());
     String serviceType = Val.chkStr(record.getServiceType()).toLowerCase();
 
+    Arrays.sort(allowedServices);
     if (Arrays.binarySearch(allowedServices, serviceType) < 0) {
       return;
     }
