@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           xmlns:ngmp="urn:int:nato:geometoc:geo:metadata:ngmp:0.1" 
+           g:targetName="gmd:LanguageCode" 
+           g:i18nBase="catalog.iso19139.ngmp.LanguageCode" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/CodeListValue_Type.xml">
+  <g:body>
+   
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeSpace.xml" 
+      g:value="http://www.dgiwg.org/ngmp"/>
+       
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeList.xml"
+      g:value="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#LanguageCode"/>
+     
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeListValue.xml">
+      <g:body>
+        <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+          <g:options>
+            <g:option g:label="" g:value="" />
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_alb" g:value="alb"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_bul" g:value="bul"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_cze" g:value="cze"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_dan" g:value="dan"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_dut" g:value="dut"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_eng" g:value="eng" g:selected="true"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_est" g:value="est"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_fre" g:value="fre"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_ger" g:value="ger"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_gre" g:value="gre"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_hrv" g:value="hrv"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_hun" g:value="hun"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_ice" g:value="ice"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_ita" g:value="ita"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_lav" g:value="lav"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_lit" g:value="lit"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_ltz" g:value="ltz"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_nor" g:value="nor"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_pol" g:value="pol"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_por" g:value="por"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_rum" g:value="rum"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_slo" g:value="slo"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_slv" g:value="slv"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_spa" g:value="spa"/>
+			<g:option g:label="$i18n.catalog.iso19139.ngmp.LanguageCode.LanguageCode_tur" g:value="tur"/>
+          </g:options>
+        </g:input>
+      </g:body>          
+    </g:attribute>     
+     
+  </g:body> 
+</g:element>

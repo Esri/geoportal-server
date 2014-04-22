@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:extends="$base/schema/gco/xtn/Wrapped_CodePropertyType.xml">       
+  <g:body>
+<!-- 
+$base = location of the editor defintion xml
+
+if it doesn't find the reference there, it goes into the ISO (which this editor extends)
+ -->
+    <g:element g:minOccurs="0" g:extends="$base/xtn/gmd/citation/NGMP_CustodianCode.xml"/>
+  </g:body>
+</g:element>

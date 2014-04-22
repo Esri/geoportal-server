@@ -1,0 +1,2029 @@
+﻿<?xml version="1.0" encoding="Windows-1252"?>
+<gmx:CT_CodelistCatalogue xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.isotc211.org/2005/gmx http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmx/gmx.xsd http://www.isotc211.org/2005/gco http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco/gco.xsd http://www.isotc211.org/2005/gmd http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmd/gmd.xsd http://www.opengis.net/gml/3.2 http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19136_Schemas/gml.xsd http://www.w3.org/1999/xlink http://schemas.opengis.net/xlink/1.0.0/xlinks.xsd" id="root">
+	<gmx:name>
+		<gco:CharacterString>NGMP codelist catalogue</gco:CharacterString>
+	</gmx:name>
+	<gmx:scope>
+		<gco:CharacterString>Implementation of Annex B of AGeoP-08</gco:CharacterString>
+	</gmx:scope>
+	<gmx:fieldOfApplication>
+		<gco:CharacterString>STANAG 2586, Edition 1</gco:CharacterString>
+	</gmx:fieldOfApplication>
+	<gmx:versionNumber>
+		<gco:CharacterString>0.1</gco:CharacterString>
+	</gmx:versionNumber>
+	<gmx:versionDate>
+		<gco:Date>2011-09-13</gco:Date>
+	</gmx:versionDate>
+	<gmx:language>
+		<gmd:LanguageCode codeList="#LanguageCode" codeListValue="eng">eng</gmd:LanguageCode>
+	</gmx:language>
+	<gmx:characterSet>
+		<gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">utf8</gmd:MD_CharacterSetCode>
+	</gmx:characterSet>
+	<!--============================================================================-->
+	<!--============================================================================-->
+	<!--================================ Codelists ====================================-->
+	<!--===LanguageCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="LanguageCode">
+			<gml:description>Bibliographic form of ISO 639-2 3-character codes</gml:description>
+			<gml:identifier codeSpace="ISO/TS 19139:2007">LanguageCode</gml:identifier>
+			<gml:name>Language code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_alb">
+					<gml:description>The dominant and official language of Albania.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">alb</gml:identifier>
+					<gml:name>Albanian</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_bul">
+					<gml:description>Bulgarian is the official language of Bulgaria.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">bul</gml:identifier>
+					<gml:name>Bulgarian</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_cze">
+					<gml:description>Czech is an official language in Czech Republic.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">cze</gml:identifier>
+					<gml:name>Czech</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_dan">
+					<gml:description>Danish is the official language of Denmark</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">dan</gml:identifier>
+					<gml:name>Danish</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_dut">
+					<gml:description>Dutch is the official language of Netherlands. It is also an official language in Belgium.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">dut</gml:identifier>
+					<gml:name>Dutch (Flemish)</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_eng">
+					<gml:description>English is the de facto official language in United Kingdom. It is also an official language in Canada and NATO. It is the official language of at least 28 states in United States where it is the de facto language of American government and the sole language spoken at home by 80% of the Americans age five and older.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">eng</gml:identifier>
+					<gml:name>English</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_est">
+					<gml:description>Estonian is the official language in Estonia.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">est</gml:identifier>
+					<gml:name>Estonian</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_fre">
+					<gml:description>French is the official Language in France. It is also an official language in Canada, Belgium, Luxembourg and NATO.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">fre</gml:identifier>
+					<gml:name>French</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_ger">
+					<gml:description>German is the official language of Germany. It is also an official language in Belgium and Luxembourg.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">ger</gml:identifier>
+					<gml:name>German</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_gre">
+					<gml:description>Greek is the official language in Greece.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">gre</gml:identifier>
+					<gml:name>Greek, Modern (1453-)</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_hrv">
+					<gml:description>Croatian is the official language in Croatia.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">hrv</gml:identifier>
+					<gml:name>Croatian</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_hun">
+					<gml:description>Hungarian is the official language in Hungary.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">hun</gml:identifier>
+					<gml:name>Hungarian</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_ice">
+					<gml:description>Icelandic is the de facto official language in Iceland.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">ice</gml:identifier>
+					<gml:name>Icelandic</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_ita">
+					<gml:description>Italian is the de facto official language in Italy.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">ita</gml:identifier>
+					<gml:name>Italian</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_lav">
+					<gml:description>Latvian is the official language in Latvia.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">lav</gml:identifier>
+					<gml:name>Latvian</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_lit">
+					<gml:description>Lithuanian is the official language in Lithuania.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">lit</gml:identifier>
+					<gml:name>Lithuanian</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_ltz">
+					<gml:description>Luxembourgish is the de jure official language in Luxembourg.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">ltz</gml:identifier>
+					<gml:name>Luxembourgish (Letzeburgesch)</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_nor">
+					<gml:description>Norwegian is the official language in Norway.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">nor</gml:identifier>
+					<gml:name>Norwegian</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_pol">
+					<gml:description>Polish is the official language in Poland.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">pol</gml:identifier>
+					<gml:name>Polish</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_por">
+					<gml:description>Portuguese is the official language in Portugal.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">por</gml:identifier>
+					<gml:name>Portuguese</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_rum">
+					<gml:description>Romanian is the official language at the national level (other official languages, such as Hungarian or German are official at a local level) in Romania.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">rum</gml:identifier>
+					<gml:name>Romanian (Moldavian/Moldovan)</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_slo">
+					<gml:description>Slovak is the official language in Slovakia. It is also an official language in Czech Republic.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">slo</gml:identifier>
+					<gml:name>Slovak</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_slv">
+					<gml:description>Slovenian is the official language in Slovenia (Italian and Hungarian are also official languages in the residential areas of the Italian and Hungarian national community).</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">slv</gml:identifier>
+					<gml:name>Slovenian</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_spa">
+					<gml:description>Spanish is the national official language in Spain (other official languages exist at local level.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">spa</gml:identifier>
+					<gml:name>Spanish (Castillan)</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="LanguageCode_tur">
+					<gml:description>Turkish is the national official language in Turkey.</gml:description>
+					<gml:identifier codeSpace="ISO 639-2, Bibliographic form">tur</gml:identifier>
+					<gml:name>Turkish</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===MD_CharacterSetCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="MD_CharacterSetCode">
+			<gml:description>Name of the character coding standard used for the resource</gml:description>
+			<gml:identifier codeSpace="ISO 19115:2003">MD_CharacterSetCode</gml:identifier>
+			<gml:name>Character set code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_ucs2">
+					<gml:description>16-bit fixed size Universal Character Set, based on ISO/IEC 10646</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">ucs2</gml:identifier>
+					<gml:name>2 byte fixed UCS</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_ucs4">
+					<gml:description>32-bit fixed size Universal Character Set, based on ISO/IEC 10646</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">ucs4</gml:identifier>
+					<gml:name>4 byte fixed UCS</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_utf7">
+					<gml:description>7-bit variable size UCS Transfer Format, based on ISO/IEC 10646</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">utf7</gml:identifier>
+					<gml:name>UCS Transformation Format – 7 bits</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_utf8">
+					<gml:description>Character Set defined by IETF RFC 3629</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">utf8</gml:identifier>
+					<gml:name>UCS Transformation Format – 8 bits</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_utf16">
+					<gml:description>16-bit variable size UCS Transfer Format, based on ISO/IEC 10646</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">utf16</gml:identifier>
+					<gml:name>UCS Transformation Format – 16 bits</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_8859part1">
+					<gml:description>Information technology – 8-bit single-byte coded graphic character sets – Part 1: Latin alphabet No. 1</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">8859part1</gml:identifier>
+					<gml:name>ISO/IEC 8859-1</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_8859part2">
+					<gml:description>Information technology – 8-bit single-byte coded graphic character sets – Part 2: Latin alphabet No. 2</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">8859part2</gml:identifier>
+					<gml:name>ISO/IEC 8859-2</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_8859part3">
+					<gml:description>Information technology – 8-bit single-byte coded graphic character sets – Part 3: Latin alphabet No. 3</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">8859part3</gml:identifier>
+					<gml:name>ISO/IEC 8859-3</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_8859part4">
+					<gml:description>Information technology – 8-bit single-byte coded graphic character sets – Part 4: Latin alphabet No. 4</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">8859part4</gml:identifier>
+					<gml:name>ISO/IEC 8859-4</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_8859part5">
+					<gml:description>Information technology – 8-bit single-byte coded graphic character sets – Part 5: Latin/Cyrillic alphabet</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">8859part5</gml:identifier>
+					<gml:name>ISO/IEC 8859-5</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_8859part6">
+					<gml:description>Information technology – 8-bit single-byte coded graphic character sets – Part 6: Latin/Arabic alphabet</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">8859part6</gml:identifier>
+					<gml:name>ISO/IEC 8859-6</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_8859part7">
+					<gml:description>Information technology – 8-bit single-byte coded graphic character sets – Part 7: Latin/Greek alphabet</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">8859part7</gml:identifier>
+					<gml:name>ISO/IEC 8859-7</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_8859part8">
+					<gml:description>Information technology – 8-bit single-byte coded graphic character sets – Part 8: Latin/Hebrew alphabet</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">8859part8</gml:identifier>
+					<gml:name>ISO/IEC 8859-8</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_8859part9">
+					<gml:description>Information technology – 8-bit single-byte coded graphic character sets – Part 9: Latin alphabet No. 5</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">8859part9</gml:identifier>
+					<gml:name>ISO/IEC 8859-9</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_8859part10">
+					<gml:description>Information technology – 8-bit single-byte coded graphic character sets – Part 10: Latin alphabet No. 6</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">8859part10</gml:identifier>
+					<gml:name>ISO/IEC 8859-10</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_8859part11">
+					<gml:description>Information technology – 8-bit single-byte coded graphic character sets – Part 11: Latin/Thai alphabet</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">8859part11</gml:identifier>
+					<gml:name>ISO/IEC 8859-11</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_8859part13">
+					<gml:description>Information technology – 8-bit single-byte coded graphic character sets – Part 13: Latin alphabet No. 7</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">8859part13</gml:identifier>
+					<gml:name>ISO/IEC 8859-13</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_8859part14">
+					<gml:description>Information technology – 8-bit single-byte coded graphic character sets – Part 14: Latin alphabet No. 8 (Celtic)</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">8859part14</gml:identifier>
+					<gml:name>ISO/IEC 8859-14</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_8859part15">
+					<gml:description>Information technology – 8-bit single-byte coded graphic character sets – Part 15: Latin alphabet No. 9</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">8859part15</gml:identifier>
+					<gml:name>ISO/IEC 8859-15</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_8859part16">
+					<gml:description>Information technology – 8-bit single-byte coded graphic character sets – Part 15: Part 16: Latin alphabet No. 10</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">8859part16</gml:identifier>
+					<gml:name>ISO/IEC 8859-16</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_jis">
+					<gml:description>Japanese code set used for electronic transmission</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">jis</gml:identifier>
+					<gml:name>JIS</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_shiftJIS">
+					<gml:description>Japanese code set used on MS-DOS based machines</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">shiftJIS</gml:identifier>
+					<gml:name>Shift JIS</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_eucJP">
+					<gml:description>Japanese code set used on UNIX based machines</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">eucJP</gml:identifier>
+					<gml:name>EUC JAPAN</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_usAscii">
+					<gml:description>United states ASCII code set (ISO 646 US)</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">usAscii</gml:identifier>
+					<gml:name>US ASCII</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_ebcdic">
+					<gml:description>Ibm mainframe code set</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">ebcdic</gml:identifier>
+					<gml:name>EBCDIC</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_eucKR">
+					<gml:description>Korean code set</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">eucKR</gml:identifier>
+					<gml:name>EUC KOREA</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_big5">
+					<gml:description>Traditional Chinese code set used in Taiwan, Hong Kong of China and other areas</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">big5</gml:identifier>
+					<gml:name>BIG5</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_CharacterSetCode_GB2312">
+					<gml:description>Simplified Chinese code set</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_CharacterSetCode">GB2312</gml:identifier>
+					<gml:name>GB2312</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===NGMP_DataLevelCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="NGMP_DataLevelCode">
+			<gml:description>Categorisation of resolution bands of digital geospatial information (including imagery) by equivalence to paper map scales.</gml:description>
+			<gml:identifier codeSpace="http://www.dgiwg.org/ngmp">NGMP_DataLevelCode</gml:identifier>
+			<gml:name>Data Level Code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_DataLevelCode_L0">
+					<gml:description>Level 0 of Geospatial Information as defined in MC 0296/2</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_DataLevelCode">L0</gml:identifier>
+					<gml:name>Data Level 0</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_DataLevelCode_L1">
+					<gml:description>Level 1 of Geospatial Information as defined in MC 0296/2</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_DataLevelCode">L1</gml:identifier>
+					<gml:name>Data Level 1</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_DataLevelCode_L2">
+					<gml:description>Level 2 of Geospatial Information as defined in MC 0296/2</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_DataLevelCode">L2</gml:identifier>
+					<gml:name>Data Level 2</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_DataLevelCode_L3">
+					<gml:description>Level 3 of Geospatial Information as defined in MC 0296/2</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_DataLevelCode">L3</gml:identifier>
+					<gml:name>Data Level 3</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_DataLevelCode_L4">
+					<gml:description>Level 4 of Geospatial Information as defined in MC 0296/2</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_DataLevelCode">L4</gml:identifier>
+					<gml:name>Data Level 4</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_DataLevelCode_L5">
+					<gml:description>Level 5 of Geospatial Information as defined in MC 0296/2</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_DataLevelCode">L5</gml:identifier>
+					<gml:name>Data Level 5</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===NGMP_GeoreferencingLevelCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="NGMP_GeoreferencingLevelCode">
+			<gml:description>Level of georeferencing of digital geographic information</gml:description>
+			<gml:identifier codeSpace="http://www.dgiwg.org/ngmp">NGMP_GeoreferencingLevelCode</gml:identifier>
+			<gml:name>Georeferencing Level Code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_GeoreferencingLevelCode_ungeoreferenced">
+					<gml:description>No geographic location information is supplied. Examples: sketch</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_GeoreferencingLevelCode">ungeoreferenced</gml:identifier>
+					<gml:name>Ungeoreferenced</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_GeoreferencingLevelCode_georeferenceable">
+					<gml:description>Available with external geographic location information. Examples: raw image with auxiliary data like control points  and/or sensor parameters</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_GeoreferencingLevelCode">georeferenceable</gml:identifier>
+					<gml:name>Georeferenceable</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_GeoreferencingLevelCode_georeferenced">
+					<gml:description>Processed to include geographic location information. Examples: GeoTIFF image, terrain elevation model, vector database in WGS84</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_GeoreferencingLevelCode">georeferenced</gml:identifier>
+					<gml:name>Georeferenced</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_GeoreferencingLevelCode_orthorectified">
+					<gml:description>Georeferenced and corrected for positional displacement with respect to the surface of the earth. Examples: orthophoto</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_GeoreferencingLevelCode">orthorectified</gml:identifier>
+					<gml:name>Orthorectified</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_GeoreferencingLevelCode_trueOrthorectified">
+					<gml:description>Orthorectified and corrected for positional displacement with respect to the geometric properties of the features. Examples: an ortho image where pixels corresponding to bridges or buildings have been corrected to take into account the difference of elevation with the ground</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_GeoreferencingLevelCode">trueOrthorectified</gml:identifier>
+					<gml:name>True orthorectified</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===NGMP_GeospatialInformationTypeCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="NGMP_GeospatialInformationTypeCode">
+			<gml:description>Categorisation of geospatial information</gml:description>
+			<gml:identifier codeSpace="http://www.dgiwg.org/ngmp">NGMP_GeospatialInformationTypeCode</gml:identifier>
+			<gml:name>Geospatial Information Type Code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_GeospatialInformationTypeCode_mapSheet">
+					<gml:description>Interpreted graphical abstraction of the geometric and semantic situation for a particular often rectangular part of the Earth’s surface using a symbolic signature defined in a legend with marginalia being part of the grap. Examples: scanned topographic map, rendered feature data as a topographic or thematic map</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_GeospatialInformationTypeCode">mapSheet</gml:identifier>
+					<gml:name>Map Sheet</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_GeospatialInformationTypeCode_mapCoverage">
+					<gml:description>Interpreted graphical abstraction of the geometric and semantic situation for a particular often rectangular part of the Earth’s surface using a symbolic signature defined in a legend where marginalia have been cropped from the map to build a seamless mosaic of map sheets without the marginalia. Examples: scanned and Georeferenced topographic maps building a mosaic of more than one sheet</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_GeospatialInformationTypeCode">mapCoverage</gml:identifier>
+					<gml:name>Map Coverage</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_GeospatialInformationTypeCode_elevationModel">
+					<gml:description>Mathematical representation of heights of the terrain above a reference surface. Examples: DTED or LIDAR measurements</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_GeospatialInformationTypeCode">elevationModel</gml:identifier>
+					<gml:name>Elevation Model</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_GeospatialInformationTypeCode_imageMap">
+					<gml:description>Overlay of annotations and rendered features in a specific transparent symbology to Orthorectified imagery</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_GeospatialInformationTypeCode">imageMap</gml:identifier>
+					<gml:name>Image Map</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_GeospatialInformationTypeCode_gazetteer">
+					<gml:description>geographical directory of information about places and place names</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_GeospatialInformationTypeCode">gazetteer</gml:identifier>
+					<gml:name>Gazetteer</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_GeospatialInformationTypeCode_rawImage">
+					<gml:description>Matrix of pixel values as they are delivered as raw data from a sensor</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_GeospatialInformationTypeCode">rawImage</gml:identifier>
+					<gml:name>Raw Image</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_GeospatialInformationTypeCode_imageCoverage">
+					<gml:description>Georectified image files seamlessly covering an area of interest</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_GeospatialInformationTypeCode">imageCoverage</gml:identifier>
+					<gml:name>Image Coverage</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_GeospatialInformationTypeCode_vector2D">
+					<gml:description>Structured data representing geospatial features. The geometrical aspect of the features is represented using point, line, or area geometric primitives which don’t provide a full 3D representation of the real world (e.g., buildings may be represented by an area geometric primitive, possibly with vertices having 2 or 3 spatial coordinates, corresponding to the border of their roof).</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_GeospatialInformationTypeCode">vector2D</gml:identifier>
+					<gml:name>Vector 2D</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_GeospatialInformationTypeCode_vector3D">
+					<gml:description>Structured data representing geospatial features. The geometrical aspect of the features is represented using point, line, area and solid geometric primitives providing a 3D representation of the real world (e.g., buildings may be represented by set of primitives and typically solids, describing their shape in more or less details).</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_GeospatialInformationTypeCode">vector3D</gml:identifier>
+					<gml:name>Vector 3D</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===NGMP_RepresentationFormCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="NGMP_RepresentationFormCode">
+			<gml:description>Codes defining whether the geospatial information is analogue or digital</gml:description>
+			<gml:identifier codeSpace="http://www.dgiwg.org/ngmp">NGMP_RepresentationFormCode</gml:identifier>
+			<gml:name>Representation Form Code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_RepresentationFormCode_analogue">
+					<gml:description>Data represented as continuous values. The focus is hardcopy, i.e., permanent reproduction, or copy, in the form of a physical object, of any media suitable for direct use by a person (in particular paper), of displayed or transmitted data. Magnetic tapes and diskettes are not hard copies and may contain either analogue or digital data. Examples: analogue photography, paper map..</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_RepresentationFormCode">analogue</gml:identifier>
+					<gml:name>Analogue</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_RepresentationFormCode_digital">
+					<gml:description>Data represented as discrete (discontinuous) values. Examples: files in a designated geospatial format stored on a electro-magnetic or electro-optical device or transmitted through a computer network</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_RepresentationFormCode">digital</gml:identifier>
+					<gml:name>Digital</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===MD_ScopeCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="MD_ScopeCode">
+			<gml:description>Class of information to which the referencing entity applies</gml:description>
+			<gml:identifier codeSpace="ISO 19115:2003">MD_ScopeCode</gml:identifier>
+			<gml:name>Resource Type</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_ScopeCode_dataset">
+					<gml:description>Identifiable collection of data.</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_ScopeCode">dataset</gml:identifier>
+					<gml:name>Dataset</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_ScopeCode_series">
+					<gml:description>A dataset series is a collection of spatial data that shares similar characteristics of theme, source date, resolution, and methodology. The exact definition of what constitutes a series entry will be determined by the data provider.</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_ScopeCode">series</gml:identifier>
+					<gml:name>Dataset series</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===CI_OnLineFunctionCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="CI_OnLineFunctionCode">
+			<gml:description>Function performed by the resource</gml:description>
+			<gml:identifier codeSpace="ISO 19115:2003">CI_OnLineFunctionCode</gml:identifier>
+			<gml:name>Online Function </gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="CI_OnLineFunctionCode_download">
+					<gml:description>Online instructions for transferring data from one storage device or system to another.</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/CI_OnLineFunctionCode">download</gml:identifier>
+					<gml:name>Download</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="CI_OnLineFunctionCode_information">
+					<gml:description>Online information about the resource</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/CI_OnLineFunctionCode">information</gml:identifier>
+					<gml:name>Information</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="CI_OnLineFunctionCode_offlineAccess">
+					<gml:description>Online instructions for requesting the resource from the provider</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/CI_OnLineFunctionCode">offlineAccess</gml:identifier>
+					<gml:name>Offline Access</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="CI_OnLineFunctionCode_order">
+					<gml:description>Online order process for obtaining the resource</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/CI_OnLineFunctionCode">order</gml:identifier>
+					<gml:name>Order</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="CI_OnLineFunctionCode_search">
+					<gml:description>Online search interface for seeking out information about the resource</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/CI_OnLineFunctionCode">search</gml:identifier>
+					<gml:name>Search</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===MD_SpatialRepresentationTypeCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="MD_SpatialRepresentationTypeCode">
+			<gml:description>Method used to represent geographic information in the dataset</gml:description>
+			<gml:identifier codeSpace="ISO 19115:2003">MD_SpatialRepresentationTypeCode</gml:identifier>
+			<gml:name>Spatial Representation Type Code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_SpatialRepresentationTypeCode_vector">
+					<gml:description>Vector data is used to represent geographic data</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_SpatialRepresentationTypeCode">vector</gml:identifier>
+					<gml:name>Vector</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_SpatialRepresentationTypeCode_grid">
+					<gml:description>Grid data is used to represent geographic data</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_SpatialRepresentationTypeCode">grid</gml:identifier>
+					<gml:name>Grid</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_SpatialRepresentationTypeCode_textTable">
+					<gml:description>Textual or tabular data is used to represent geographic data</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_SpatialRepresentationTypeCode">textTable</gml:identifier>
+					<gml:name>Text table</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_SpatialRepresentationTypeCode_tin">
+					<gml:description>Triangulated irregular network</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_SpatialRepresentationTypeCode">tin</gml:identifier>
+					<gml:name>TIN</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_SpatialRepresentationTypeCode_stereoModel">
+					<gml:description>Three-dimensional view formed by the intersecting homologous rays of an overlapping pair of images</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_SpatialRepresentationTypeCode">stereoModel</gml:identifier>
+					<gml:name>Stereo model</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_SpatialRepresentationTypeCode_video">
+					<gml:description>Scene from a video recording</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_SpatialRepresentationTypeCode">video</gml:identifier>
+					<gml:name>Video</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===NGMP_ThematicCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="NGMP_ThematicCode">
+			<gml:description>Thematic codes from baseline 2010-2 of DFDD</gml:description>
+			<gml:identifier codeSpace="http://www.dgiwg.org/ngmp">NGMP_ThematicCode</gml:identifier>
+			<gml:name>Thematic Code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Extraction">
+					<gml:description>This Subgroup consists of Concepts which relate to the extraction of raw materials and the excavation of soil.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Extraction</gml:identifier>
+					<gml:name>Extraction</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_FabricationProcessing">
+					<gml:description>This Subgroup consists of Concepts which relate to the production and/or processing of materials.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">FabricationProcessing</gml:identifier>
+					<gml:name>Fabrication and/or Processing</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Agriculture">
+					<gml:description>This Subgroup consists of Concepts which are associated with agriculture.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Agriculture</gml:identifier>
+					<gml:name>Agriculture</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_PowerSupplies">
+					<gml:description>This Subgroup consists of Concepts which relate to the production, transportation and distribution of energy, whereas energy is mostly electricity.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">PowerSupplies</gml:identifier>
+					<gml:name>Power Supplies</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Communication">
+					<gml:description>This Subgroup consists of Concepts which relate to any kind of communication.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Communication</gml:identifier>
+					<gml:name>Communication</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_AssociatedSupportStruct">
+					<gml:description>This Subgroup consists of Concepts which support Concepts stored in the other industrial and services Group (01).</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">AssociatedSupportStruct</gml:identifier>
+					<gml:name>Associated Support Structures</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_StorageProvision">
+					<gml:description>This Subgroup consists of Concepts which are used to store, provide and to protect any kind of goods.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">StorageProvision</gml:identifier>
+					<gml:name>Storage and/or Provision</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_WasteManagement">
+					<gml:description>This Subgroup consists of Concepts which relate to the collection, storage, processing or recycling of waste.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">WasteManagement</gml:identifier>
+					<gml:name>Waste Management</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Habitats">
+					<gml:description>This Subgroup consists of Concepts which relate to settlements and buildings.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Habitats</gml:identifier>
+					<gml:name>Habitats</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_SettlementsAssociated">
+					<gml:description>This Subgroup consists of Concepts which are associated with settlements or related to an urban area.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">SettlementsAssociated</gml:identifier>
+					<gml:name>Settlements-associated</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_EconomicCommercial">
+					<gml:description>This Subgroup consists of Concepts which relate to trade and/or economy.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">EconomicCommercial</gml:identifier>
+					<gml:name>Economic and/or Commercial</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Leisure">
+					<gml:description>This Subgroup consists of Concepts which relate to recreational activities of people.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Leisure</gml:identifier>
+					<gml:name>Leisure</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_PoliticsAdministration">
+					<gml:description>This Subgroup consists of Concepts which relate to politics and/or which describe administrative issues.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">PoliticsAdministration</gml:identifier>
+					<gml:name>Politics and/or Administration</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_SciencesEducation">
+					<gml:description>This Subgroup consists of Concepts which describe scientific issues and/or Concepts which relate to education.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">SciencesEducation</gml:identifier>
+					<gml:name>Sciences and/or Education</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_CulturalContext">
+					<gml:description>This Subgroup consists of Concepts which relate to cultures, population and its characteristics.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">CulturalContext</gml:identifier>
+					<gml:name>Cultural Context</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Railways">
+					<gml:description>This Subgroup consists of Concepts which relate to land transportation based on rails.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Railways</gml:identifier>
+					<gml:name>Railways</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_RoadsTracks">
+					<gml:description>This Subgroup consists of Concepts which are related to road-like Concepts, mainly which can be used by wheeled vehicles.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">RoadsTracks</gml:identifier>
+					<gml:name>Roads and/or Tracks</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_GuidedTransportation">
+					<gml:description>This Subgroup consists of Concepts which relate to a guided transportation like a cableway or a teleferic.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">GuidedTransportation</gml:identifier>
+					<gml:name>Guided Transportation</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_WaterBorneTransportation">
+					<gml:description>This Subgroup consists of Concepts which relate to any transportation on water.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">WaterBorneTransportation</gml:identifier>
+					<gml:name>Water-borne Transportation</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_AirTransportation">
+					<gml:description>This Subgroup consists of Concepts which relate to transportation in the air.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">AirTransportation</gml:identifier>
+					<gml:name>Air Transportation</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Restrictions">
+					<gml:description>This Subgroup consists of Concepts which relate to a restriction.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Restrictions</gml:identifier>
+					<gml:name>Restrictions</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_CrossingsLinks">
+					<gml:description>This Subgroup consists of Concepts which relate to any kind of land transportation route crossing.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">CrossingsLinks</gml:identifier>
+					<gml:name>Crossings and/or Links</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_TransportationAssociated">
+					<gml:description>This Subgroup consists of Concepts which support Concepts stored in the other land transportation Group (03).</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">TransportationAssociated</gml:identifier>
+					<gml:name>Transportation-associated</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_SpaceTransportation">
+					<gml:description>This Subgroup consists of Concepts which relate to and are essential to servicing spacecraft, enabling spacecraft to launch or re-enter, or transferring passengers or space cargo to or from spacecraft, including launch control centres and rocket assembly facilities.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">SpaceTransportation</gml:identifier>
+					<gml:name>Space Transportation</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_DistributionNetworks">
+					<gml:description>This Subgroup consists of Concepts which relate to the transport in networks, such as pipelines or channels, above or below surface.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">DistributionNetworks</gml:identifier>
+					<gml:name>Distribution Networks</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_CoastalLittoralZones">
+					<gml:description>This Subgroup consists of Concepts which describe the coast and/or the littoral zones like beaches.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">CoastalLittoralZones</gml:identifier>
+					<gml:name>Coastal and/or Littoral Zones</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_PortsHarbours">
+					<gml:description>This Subgroup consists of Concepts which relate to ports, harbours and/or places where vessels can be moored.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">PortsHarbours</gml:identifier>
+					<gml:name>Ports and/or Harbours</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Depths">
+					<gml:description>This Subgroup consists of Concepts which are used to describe the depths of waterbodies.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Depths</gml:identifier>
+					<gml:name>Depths</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_NatureSeabed">
+					<gml:description>This Subgroup consists of Concepts which describe the bottom of a waterbody.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">NatureSeabed</gml:identifier>
+					<gml:name>Nature of Seabed</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_OffshoreConstructInstall">
+					<gml:description>This Subgroup consists of Concepts which relate to constructions and production installations which are placed in the offshore area.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">OffshoreConstructInstall</gml:identifier>
+					<gml:name>Offshore Constructions and/or Installations</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_TidesCurrents">
+					<gml:description>This Subgroup consists of Concepts which relate to tidal issues and/or to the currents of water.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">TidesCurrents</gml:identifier>
+					<gml:name>Tides and/or Currents</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_RoutesNavigation">
+					<gml:description>This Subgroup consists of Concepts which relate to the navigation on sea.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">RoutesNavigation</gml:identifier>
+					<gml:name>Routes and/or Navigation</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_HazardsObstructions">
+					<gml:description>This Subgroup consists of Concepts which relate to a hazard and/or an obstruction for navigation on sea.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">HazardsObstructions</gml:identifier>
+					<gml:name>Hazards and/or Obstructions</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_SeaIce">
+					<gml:description>This Subgroup consists of Concepts which relate to sea ice.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">SeaIce</gml:identifier>
+					<gml:name>Sea Ice</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_RegulatedRestrictedZones">
+					<gml:description>This Subgroup consists of Concepts which are used to describe water zones where special actions and/or behaviours are restricted, regulated or permitted.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">RegulatedRestrictedZones</gml:identifier>
+					<gml:name>Regulated and/or Restricted Zones</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_InlandWaters">
+					<gml:description>This Subgroup consists of Concepts which relate to waterbodies without tides.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">InlandWaters</gml:identifier>
+					<gml:name>Inland Waters</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_PhysicsWater">
+					<gml:description>This Subgroup consists of Concepts which describe the physical conditions of water, for example temperature or density.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">PhysicsWater</gml:identifier>
+					<gml:name>Physics of Water</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Hypsography">
+					<gml:description>This Subgroup consists of Concepts which describe the form (positions and heights) of the terrain surface.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Hypsography</gml:identifier>
+					<gml:name>Hypsography</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Geomorphology">
+					<gml:description>This Subgroup consists of Concepts which describe the earth’s surface and Concepts which relate to the shaping of land forms.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Geomorphology</gml:identifier>
+					<gml:name>Geomorphology</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Rocks">
+					<gml:description>This Subgroup consists of Concepts which relate to rocks and rocks on and beneath the surface.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Rocks</gml:identifier>
+					<gml:name>Rocks</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Soils">
+					<gml:description>This Subgroup consists of Concepts which relate to the soil, which means to the upper layer of the surface.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Soils</gml:identifier>
+					<gml:name>Soils</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_NaturalResources">
+					<gml:description>This Subgroup consists of Concepts which relate to raw materials and their deposits.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">NaturalResources</gml:identifier>
+					<gml:name>Natural Resources</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_SeismologyVolcanology">
+					<gml:description>This Subgroup consists of Concepts which relate to volcanoes, earthquakes and/or other seismic occurrences on and beneath the surface.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">SeismologyVolcanology</gml:identifier>
+					<gml:name>Seismology and/or Volcanology</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Glaciers">
+					<gml:description>This Subgroup consists of Concepts which relate to glaciers and glacial phenomena.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Glaciers</gml:identifier>
+					<gml:name>Glaciers</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Anomalies">
+					<gml:description>This Subgroup consists of Concepts which describe anomalies in the gravity or magnetic field of earth or the fields themselves.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Anomalies</gml:identifier>
+					<gml:name>Anomalies</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_GlobalEarthCover">
+					<gml:description>This Subgroup consists of Concepts which describe the coverage of earth’s surface in a global perspective.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">GlobalEarthCover</gml:identifier>
+					<gml:name>Global Earth Cover</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_CultivatedLand">
+					<gml:description>This Subgroup consists of Concepts which describe the land use for agriculture.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">CultivatedLand</gml:identifier>
+					<gml:name>Cultivated Land</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Rangeland">
+					<gml:description>This Subgroup consists of Concepts which relate to areas that are uncultivated and that are usually covered with low growing grass-like vegetation.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Rangeland</gml:identifier>
+					<gml:name>Rangeland</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Woodland">
+					<gml:description>This Subgroup consists of Concepts which relate to a tree or wood covered area.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Woodland</gml:identifier>
+					<gml:name>Woodland</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Wetland">
+					<gml:description>This Subgroup consists of Concepts which relate to areas that are permanently or temporarily moist or covered by water.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Wetland</gml:identifier>
+					<gml:name>Wetland</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_AridAreas">
+					<gml:description>This Subgroup consists of Concepts which describe very dry regions.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">AridAreas</gml:identifier>
+					<gml:name>Arid Areas</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_RegionsRestrictedAreas">
+					<gml:description>This Subgroup consists of Concepts which relate to areas that are designated as special and/or restricted regions based on their natural characteristics.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">RegionsRestrictedAreas</gml:identifier>
+					<gml:name>Regions and/or Restricted Areas</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Fauna">
+					<gml:description>This Subgroup consists of Concepts which relate to animal organisms.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Fauna</gml:identifier>
+					<gml:name>Fauna</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_Flora">
+					<gml:description>This Subgroup consists of Concepts which relate to members of the Plant Kingdom.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">Flora</gml:identifier>
+					<gml:name>Flora</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_BoundariesLimits">
+					<gml:description>This Subgroup consists of Concepts which relate to the official, legal or recognised boundary and/or designation of parts of earth’s surface.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">BoundariesLimits</gml:identifier>
+					<gml:name>Boundaries and/or Limits</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_LandSurveyRealEstate">
+					<gml:description>This Subgroup consists of Concepts which are used to designate official or legal properties abd/or which are used for surveying purposes.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">LandSurveyRealEstate</gml:identifier>
+					<gml:name>Land-survey and/or Real Estate</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_AerodromesMoveSurfLighting">
+					<gml:description>This Subgroup consists of Concepts which define areas on land or water (including buildings, installations and equipment) and which are intended to be used either wholly or in part for the arrival, departure and surface movement of aircrafts/helicopters.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">AerodromesMoveSurfLighting</gml:identifier>
+					<gml:name>Aerodromes, Movement Surfaces and/or Lighting</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_AirspaceRoutes">
+					<gml:description>This Subgroup consists of Concepts which contain information about defined regions in the air used for navigation under a specific authority.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">AirspaceRoutes</gml:identifier>
+					<gml:name>Airspace and/or Routes</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_NavaidsLandAidsPointsObst">
+					<gml:description>This Subgroup consists of Concepts which describe a collection of technical or other types of aids for the navigation and/or landing of aircrafts and specify geographical locations, that are either used for navigation or pose a danger to it.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">NavaidsLandAidsPointsObst</gml:identifier>
+					<gml:name>NAVAIDS, Landing Aids, Points and/or Obstacles</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_ServicesOrgsTimetables">
+					<gml:description>This Subgroup consists of Concepts which are used for services furnished to personnel and/or institutions concerned with flight operations, various Organisations and Authorities.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">ServicesOrgsTimetables</gml:identifier>
+					<gml:name>Services, Organisations and/or Timetables</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_TerminalProcedures">
+					<gml:description>This Subgroup consists of Concepts which describe series of predetermined manoeuvres for an aircraft, in order to perform a save landing or take-off.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">TerminalProcedures</gml:identifier>
+					<gml:name>Terminal Procedures</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_DefensiveOperationalStruct">
+					<gml:description>This Subgroup consists of Concepts which relate to military installations and facilities and/or to operational structures.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">DefensiveOperationalStruct</gml:identifier>
+					<gml:name>Defensive and/or Operational Structures</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_RestrictedAreasBoundaries">
+					<gml:description>This Subgroup consists of Concepts which define borders or zones of military used areas in which special restrictions are applied and/or which are of special interest for military purposes.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">RestrictedAreasBoundaries</gml:identifier>
+					<gml:name>Restricted Areas and/or Boundaries</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_OperationsEvents">
+					<gml:description>This Subgroup consists of Concepts which relate to certain operations or special eventsfor military or security purposes.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">OperationsEvents</gml:identifier>
+					<gml:name>Operations and/or Events</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_WeatherPhenomena">
+					<gml:description>This Subgroup consists of Concepts describing relatively stable weather phenomenas like wind conditions.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">WeatherPhenomena</gml:identifier>
+					<gml:name>Weather Phenomena</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_ClimateConditions">
+					<gml:description>This Subgroup consists of Concepts describing climate conditions like temperature or precipitation.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">ClimateConditions</gml:identifier>
+					<gml:name>Climate Conditions</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ThematicCode_ClimateZonesRegions">
+					<gml:description>This Subgroup consists of Concepts describing climate zones and/or regions with special climate conditions.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ThematicCode">ClimateZonesRegions</gml:identifier>
+					<gml:name>Climate Zones and/or Regions</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===NGMP_BaselineLevelCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="NGMP_BaselineLevelCode">
+			<gml:description>Reference Digital Geospatial Information Baseline (RDB) term was created by NATO Core GIS to define consistent Digital Geospatial Information Baselines from the perspective of data management responsibilities and level of exploitation.</gml:description>
+			<gml:identifier codeSpace="http://www.dgiwg.org/ngmp">NGMP_BaselineLevelCode</gml:identifier>
+			<gml:name>Baseline Level Code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_BaselineLevelCode_sdb">
+					<gml:description>Strategic Digital Geospatial Information Baseline</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_BaselineLevelCode">sdb</gml:identifier>
+					<gml:name>SDB</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_BaselineLevelCode_odb">
+					<gml:description>Operational Digital Geospatial Information Baseline. NOTE : exercice data is treated as odb according to NATO Core GIS SOP.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_BaselineLevelCode">odb</gml:identifier>
+					<gml:name>ODB</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_BaselineLevelCode_ldb">
+					<gml:description>Local Digital Geospatial Information Baseline</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_BaselineLevelCode">ldb</gml:identifier>
+					<gml:name>LDB</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===NGMP_DesignationTypeCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="NGMP_DesignationTypeCode">
+			<gml:description>Designated Geospatial Information (Designated GI) refers to the group of standard series GI that has been authorized for use as a reference source in NATO operations.</gml:description>
+			<gml:identifier codeSpace="http://www.dgiwg.org/ngmp">NGMP_DesignationTypeCode</gml:identifier>
+			<gml:name>Designation Type Code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_DesignationTypeCode_designatedGI">
+					<gml:description>group of standard series GI that has been authorised for use as a reference source in NATO operations</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_DesignationTypeCode">designatedGI</gml:identifier>
+					<gml:name>Designated GI</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_DesignationTypeCode_supplementedGI">
+					<gml:description>theatre specific geospatial resources released for use in theatre and usually generated in theatre</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_DesignationTypeCode">supplementedGI</gml:identifier>
+					<gml:name>Supplemented GI</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_DesignationTypeCode_otherGI">
+					<gml:description>geospatial resources that are neither designated nor declared supplemented GI</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_DesignationTypeCode">otherGI</gml:identifier>
+					<gml:name>Other GI</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_DesignationTypeCode_exerciseDesignatedGI">
+					<gml:description>For exercise only. Group of standard series GI that has been authorised for use as a reference source in NATO operations.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_DesignationTypeCode">exerciseDesignatedGI</gml:identifier>
+					<gml:name>Exercise Designated GI</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_DesignationTypeCode_exerciseSupplementedGI">
+					<gml:description>For exercise only. Theatre specific geospatial resources released for use in theatre and usually generated in theatre</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_DesignationTypeCode">exerciseSupplementedGI</gml:identifier>
+					<gml:name>Exercise Supplemented GI</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_DesignationTypeCode_exerciseOtherGI">
+					<gml:description>For exercise only. Geospatial resources that have are neither designated nor declared supplemented GI</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_DesignationTypeCode">exerciseOtherGI</gml:identifier>
+					<gml:name>Exercise Other GI</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===MD_ProgressCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="MD_ProgressCode">
+			<gml:description>status of the dataset or progress of a review</gml:description>
+			<gml:identifier codeSpace="ISO 19115:2003">MD_ProgressCode</gml:identifier>
+			<gml:name>Progress Code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_ProgressCode_completed">
+					<gml:description>Production of the data has been completed. NOTE: Data produced, existing but not currently in NATO holdings</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_ProgressCode">completed</gml:identifier>
+					<gml:name>Completed</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_ProgressCode_historicalArchive">
+					<gml:description>Data has been stored in an offline storage facility</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_ProgressCode">historicalArchive</gml:identifier>
+					<gml:name>Historical Archive</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_ProgressCode_obsolete">
+					<gml:description>Data is no longer relevant</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_ProgressCode">obsolete</gml:identifier>
+					<gml:name>Obsolete</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_ProgressCode_onGoing">
+					<gml:description>Data is continually being updated</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_ProgressCode">onGoing</gml:identifier>
+					<gml:name>On going</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_ProgressCode_planned">
+					<gml:description>Fixed date has been established upon or by which the data will be created or updated. NOTE: Production is planned (e.g., MGCP)</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_ProgressCode">planned</gml:identifier>
+					<gml:name>Planned</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_ProgressCode_required">
+					<gml:description>Data needs to be generated or updated</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_ProgressCode">required</gml:identifier>
+					<gml:name>Required</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_ProgressCode_underDevelopment">
+					<gml:description>Data is currently in the process of being created. NOTE: data is not produced/completed</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_ProgressCode">underDevelopment</gml:identifier>
+					<gml:name>Under development</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_ProgressCode_latestAvailable">
+					<gml:description>The latest version/edition of the data is available</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_ProgressCode">latestAvailable</gml:identifier>
+					<gml:name>Latest available</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_ProgressCode_olderAvailable">
+					<gml:description>An older version/edition of the data is available. NOTE: Data has been updated, but the latest version/edition is not available yet</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_ProgressCode">olderAvailable</gml:identifier>
+					<gml:name>Older available</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_ProgressCode_notReleasable">
+					<gml:description>Data produced, but not releasable</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_ProgressCode">notReleasable</gml:identifier>
+					<gml:name>Not releasable</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===MD_MaintenanceFrequencyCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="MD_MaintenanceFrequencyCode">
+			<gml:description>Frequency with which modifications and deletions are made to the data after it is first produced</gml:description>
+			<gml:identifier codeSpace="ISO 19115:2003">MD_MaintenanceFrequencyCode</gml:identifier>
+			<gml:name>Maintenance Frequency Code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_MaintenanceFrequencyCode_continual">
+					<gml:description>Data is repeatedly and frequently updated</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_MaintenanceFrequencyCode">continual</gml:identifier>
+					<gml:name>Continual</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_MaintenanceFrequencyCode_daily">
+					<gml:description>Data is updated each day</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_MaintenanceFrequencyCode">daily</gml:identifier>
+					<gml:name>Daily</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_MaintenanceFrequencyCode_weekly">
+					<gml:description>Data is updated on a weekly basis</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_MaintenanceFrequencyCode">weekly</gml:identifier>
+					<gml:name>Weekly</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_MaintenanceFrequencyCode_fortnightly">
+					<gml:description>Data is updated every two weeks</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_MaintenanceFrequencyCode">fortnightly</gml:identifier>
+					<gml:name>Fortnightly</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_MaintenanceFrequencyCode_monthly">
+					<gml:description>Data is updated each month</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_MaintenanceFrequencyCode">monthly</gml:identifier>
+					<gml:name>Monthly</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_MaintenanceFrequencyCode_quarterly">
+					<gml:description>Data is updated every three months</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_MaintenanceFrequencyCode">quarterly</gml:identifier>
+					<gml:name>Quarterly</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_MaintenanceFrequencyCode_biannually">
+					<gml:description>Data is updated twice each year</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_MaintenanceFrequencyCode">biannually</gml:identifier>
+					<gml:name>Biannually</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_MaintenanceFrequencyCode_annually">
+					<gml:description>Data is updated every year</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_MaintenanceFrequencyCode">annually</gml:identifier>
+					<gml:name>Annually</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_MaintenanceFrequencyCode_asNeeded">
+					<gml:description>Data is updated as deemed necessary</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_MaintenanceFrequencyCode">asNeeded</gml:identifier>
+					<gml:name>As needed</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_MaintenanceFrequencyCode_irregular">
+					<gml:description>Data is updated in intervals that are uneven in duration</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_MaintenanceFrequencyCode">irregular</gml:identifier>
+					<gml:name>Irregular</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_MaintenanceFrequencyCode_notPlanned">
+					<gml:description>There are no plans to update the data</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_MaintenanceFrequencyCode">notPlanned</gml:identifier>
+					<gml:name>Not planned</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_MaintenanceFrequencyCode_unknown">
+					<gml:description>Frequency of maintenance for the data is not known</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_MaintenanceFrequencyCode">unknown</gml:identifier>
+					<gml:name>Unknown</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===MD_ClassificationCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="MD_ClassificationCode">
+			<gml:description>Name of the handling restrictions</gml:description>
+			<gml:identifier codeSpace="ISO 19115:2003">MD_ClassificationCode</gml:identifier>
+			<gml:name>Classification Code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_ClassificationCode_unclassified">
+					<gml:description>Available for general disclosure</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_ClassificationCode">unclassified</gml:identifier>
+					<gml:name>Unclassified</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_ClassificationCode_restricted">
+					<gml:description>Not for general disclosure</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_ClassificationCode">restricted</gml:identifier>
+					<gml:name>Restricted</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_ClassificationCode_confidential">
+					<gml:description>Available for someone who can be entrusted with information</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_ClassificationCode">confidential</gml:identifier>
+					<gml:name>Confidential</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_ClassificationCode_secret">
+					<gml:description>Kept or meant to be kept private, unknown, or hidden from all but a select group of people</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_ClassificationCode">secret</gml:identifier>
+					<gml:name>Secret</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_ClassificationCode_topSecret">
+					<gml:description>Of the highest secrecy</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_ClassificationCode">topSecret</gml:identifier>
+					<gml:name>TopSecret</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===NGMP_NatoBodyCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="NGMP_NatoBodyCode">
+			<gml:description>Nato body codes also include 3-character country codes specified in STANAG 1059</gml:description>
+			<gml:identifier codeSpace="http://www.dgiwg.org/ngmp">NGMP_NatoBodyCode</gml:identifier>
+			<gml:name>NATO Body Code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_NatoBodyCode_nato">
+					<gml:description>North Atlantic Treaty Organization - alliance of countries from Europe and North America for defence and security</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_NatoBodyCode">nato</gml:identifier>
+					<gml:name>NATO</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_NatoBodyCode_eu">
+					<gml:description>European Union</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_NatoBodyCode">eu</gml:identifier>
+					<gml:name>Eu </gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_NatoBodyCode_eufor">
+					<gml:description>European Union Force</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_NatoBodyCode">eufor</gml:identifier>
+					<gml:name>Eufor </gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_NatoBodyCode_isaf">
+					<gml:description>International Security Assistance Force</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_NatoBodyCode">isaf</gml:identifier>
+					<gml:name>Isaf </gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_NatoBodyCode_kfor">
+					<gml:description>Kosovo Force</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_NatoBodyCode">kfor</gml:identifier>
+					<gml:name>Kfor </gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_NatoBodyCode_pfp">
+					<gml:description>Partnership for Peace - programme of practical bilateral cooperation between individual Partner countries and NATO</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_NatoBodyCode">pfp</gml:identifier>
+					<gml:name>Pfp </gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_NatoBodyCode_md">
+					<gml:description>Mediterranean Dialogue - cooperation between NATO and Mediterranean Dialogue countries to build confidence through cooperation in security-related issues</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_NatoBodyCode">md</gml:identifier>
+					<gml:name>Md </gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_NatoBodyCode_ici">
+					<gml:description>Istanbul Cooperation Initiative - bilateral security cooperation of countries of the broader Middle East region with NATO</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_NatoBodyCode">ici</gml:identifier>
+					<gml:name>Ici</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===NGMP_ReleasibilityCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="NGMP_ReleasibilityCode">
+			<gml:description>Releasibility codes also include Nato Body Codes and 3-character country codes specified in STANAG 1059</gml:description>
+			<gml:identifier codeSpace="http://www.dgiwg.org/ngmp">NGMP_ReleasibilityCode</gml:identifier>
+			<gml:name>Releasibility Code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ReleasibilityCode_public">
+					<gml:description>Releasable to the public</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ReleasibilityCode">public</gml:identifier>
+					<gml:name>Public</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ReleasibilityCode_exer">
+					<gml:description>Exercice</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ReleasibilityCode">exer</gml:identifier>
+					<gml:name>Exercice</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ReleasibilityCode_oae">
+					<gml:description>Operation Active Endeavour</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ReleasibilityCode">oae</gml:identifier>
+					<gml:name>OAE</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ReleasibilityCode_gctf">
+					<gml:description>Global Counter Terrorism Force</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ReleasibilityCode">gctf</gml:identifier>
+					<gml:name>GCTF</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ReleasibilityCode_pse">
+					<gml:description>Partnership for Peace - Staff Element</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ReleasibilityCode">pse</gml:identifier>
+					<gml:name>PSE</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ReleasibilityCode_giroa">
+					<gml:description>Government of the Islamic Republic Of Afghanistan</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ReleasibilityCode">giroa</gml:identifier>
+					<gml:name>GIROA</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ReleasibilityCode_oup">
+					<gml:description>Operation Unified Protector</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ReleasibilityCode">oup</gml:identifier>
+					<gml:name>OUP</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_ReleasibilityCode_ncc">
+					<gml:description>NATO Contact Countries</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_ReleasibilityCode">ncc</gml:identifier>
+					<gml:name>NCC</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===NGMP_AccessibilityLevelCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="NGMP_AccessibilityLevelCode">
+			<gml:description>Codes determining the nations or organizations which may or should have direct access to the resource presumably via GeoWeb services</gml:description>
+			<gml:identifier codeSpace="http://www.dgiwg.org/ngmp">NGMP_AccessibilityLevelCode</gml:identifier>
+			<gml:name>Accessibility Level Code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_AccessibilityLevelCode_natoPlanning">
+					<gml:description>Corresponds to value A of NGC Point Paper 8.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_AccessibilityLevelCode">natoPlanning</gml:identifier>
+					<gml:name>NATO planning</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_AccessibilityLevelCode_natoLedOps">
+					<gml:description>Corresponds to value B of NGC Point Paper 8.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_AccessibilityLevelCode">natoLedOps</gml:identifier>
+					<gml:name>NATO led operations</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_AccessibilityLevelCode_support">
+					<gml:description>Corresponds to value C of NGC Point Paper 8, involving an agreement on political level</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_AccessibilityLevelCode">support</gml:identifier>
+					<gml:name>Support to NATO efforts</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_AccessibilityLevelCode_trusted">
+					<gml:description>Corresponds to value D of NGC Point Paper 8.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_AccessibilityLevelCode">trusted</gml:identifier>
+					<gml:name>Trusted IO/NGO</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_AccessibilityLevelCode_public">
+					<gml:description>Corresponds to value E of NGC Point Paper 8.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_AccessibilityLevelCode">public</gml:identifier>
+					<gml:name>Public Release</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_AccessibilityLevelCode_notReleased">
+					<gml:description>Corresponds to value Z of NGC Point Paper 8.</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_AccessibilityLevelCode">notReleased</gml:identifier>
+					<gml:name>Produced but not released</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===MD_RestrictionCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="MD_RestrictionCode">
+			<gml:description>limitation(s) placed upon the access or use of the data</gml:description>
+			<gml:identifier codeSpace="ISO 19115:2003">MD_RestrictionCode</gml:identifier>
+			<gml:name>Restriction Code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_RestrictionCode_copyright">
+					<gml:description>Exclusive right to the publication, production, or sale of the rights to a literary, dramatic, musical, or artistic work, or to the use of a commercial print or label, granted by law for a specified period of time to an author, composer, artist, distributor</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_RestrictionCode">copyright</gml:identifier>
+					<gml:name>Copyright</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_RestrictionCode_patent">
+					<gml:description>Government has granted exclusive right to make, sell, use or license an invention or discovery</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_RestrictionCode">patent</gml:identifier>
+					<gml:name>Patent</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_RestrictionCode_patentPending">
+					<gml:description>Produced or sold information awaiting a patent</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_RestrictionCode">patentPending</gml:identifier>
+					<gml:name>Patent Pending</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_RestrictionCode_trademark">
+					<gml:description>A name, symbol, or other device identifying a product, officially registered and legally restricted to the use of the owner or manufacturer</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_RestrictionCode">trademark</gml:identifier>
+					<gml:name>Trademark</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_RestrictionCode_license">
+					<gml:description>Formal permission to do something</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_RestrictionCode">license</gml:identifier>
+					<gml:name>License</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_RestrictionCode_intellectualPropertyRights">
+					<gml:description>Rights to financial benefit from and control of distribution of non-tangible property that is a result of creativity</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_RestrictionCode">intellectualPropertyRights</gml:identifier>
+					<gml:name>Intellectual Property Rights</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="MD_RestrictionCode_restricted">
+					<gml:description>Withheld from general circulation or disclosure</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/MD_RestrictionCode">restricted</gml:identifier>
+					<gml:name>Restricted</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===CI_RoleCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="CI_RoleCode">
+			<gml:description>function performed by the responsible party</gml:description>
+			<gml:identifier codeSpace="ISO 19115:2003">CI_RoleCode</gml:identifier>
+			<gml:name>Role Code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="CI_RoleCode_resourceProvider">
+					<gml:description>party that supplies the resource</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/CI_RoleCode">resourceProvider</gml:identifier>
+					<gml:name>Resource Provider</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="CI_RoleCode_custodian">
+					<gml:description>party that accepts accountability and responsibility for the data and ensures appropriate care and maintenance of the resource</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/CI_RoleCode">custodian</gml:identifier>
+					<gml:name>Custodian</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="CI_RoleCode_owner">
+					<gml:description>party who owns the resource</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/CI_RoleCode">owner</gml:identifier>
+					<gml:name>Owner</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="CI_RoleCode_user">
+					<gml:description>party who uses the resource</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/CI_RoleCode">user</gml:identifier>
+					<gml:name>User</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="CI_RoleCode_distributor">
+					<gml:description>party who distributes the resource</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/CI_RoleCode">distributor</gml:identifier>
+					<gml:name>Distributor</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="CI_RoleCode_originator">
+					<gml:description>party who created the resource</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/CI_RoleCode">originator</gml:identifier>
+					<gml:name>Originator</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="CI_RoleCode_pointOfContact">
+					<gml:description>party who can be contacted for acquiring knowledge about or acquisition of the resource</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/CI_RoleCode">pointOfContact</gml:identifier>
+					<gml:name>Point Of Contact</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="CI_RoleCode_principalInvestigator">
+					<gml:description>key party responsible for gathering information and conducting research</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/CI_RoleCode">principalInvestigator</gml:identifier>
+					<gml:name>Principal Investigator</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="CI_RoleCode_processor">
+					<gml:description>party who has processed the data in a manner such that the resource has been modified</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/CI_RoleCode">processor</gml:identifier>
+					<gml:name>Processor</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="CI_RoleCode_publisher">
+					<gml:description>party who published the resource</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/CI_RoleCode">publisher</gml:identifier>
+					<gml:name>Publisher</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="CI_RoleCode_author">
+					<gml:description>party who authored the resource</gml:description>
+					<gml:identifier codeSpace="ISO 19115:2003/CI_RoleCode">author</gml:identifier>
+					<gml:name>Author</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+	<!--===NGMP_CustodianCode===-->
+	<gmx:codelistItem>
+		<gmx:CodeListDictionary gml:id="NGMP_CustodianCode">
+			<gml:description>Code of the bodies responsible for the maintenance</gml:description>
+			<gml:identifier codeSpace="http://www.dgiwg.org/ngmp">NGMP_CustodianCode</gml:identifier>
+			<gml:name>Custodian Code</gml:name>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_act">
+					<gml:description>NATO Allied Command Transformation at Norfolk, Virginia, USA</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">act</gml:identifier>
+					<gml:name>ACT</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_acoShape">
+					<gml:description>NATO Supreme Headquarters Allied Powers Europe at Mons, Belgium</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">acoShape</gml:identifier>
+					<gml:name>ACO SHAPE</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_caoc1">
+					<gml:description>Combined Air Operations Centre-1 at Uedem, Germany</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">caoc1</gml:identifier>
+					<gml:name>CAOC 1</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_caoc2">
+					<gml:description>Combined Air Operations Centre-2 at Finderup, Denmark</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">caoc2</gml:identifier>
+					<gml:name>CAOC 2</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_caoc3">
+					<gml:description>Combined Air Operations Centre-3 at Poggio Renatico, Italy</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">caoc3</gml:identifier>
+					<gml:name>CAOC 3</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_caoc4">
+					<gml:description>Combined Air Operations Centre-4 at Larissa, Greece</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">caoc4</gml:identifier>
+					<gml:name>CAOC 4</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_ccAirIzmir">
+					<gml:description>NATO Allied Air Component Command Headquarters at Izmir, Turkey</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">ccAirIzmir</gml:identifier>
+					<gml:name>CC Air Izmir</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_ccAirRamstein">
+					<gml:description>NATO Allied Air Component Command Headquarters at Ramstein </gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">ccAirRamstein</gml:identifier>
+					<gml:name>CC Air Ramstein</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_ccLandHeidelberg">
+					<gml:description>NATO Allied Land Component Command Headquarters at Heidelberg </gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">ccLandHeidelberg</gml:identifier>
+					<gml:name>CC Land Heidelberg</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_ccLandMadrid">
+					<gml:description>NATO Allied Land Component Command Headquarters at Madrid, Spain</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">ccLandMadrid</gml:identifier>
+					<gml:name>CC Land Madrid</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_ccMarNaples">
+					<gml:description>NATO Allied Maritime Command Headquarters at Naples, Italy</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">ccMarNaples</gml:identifier>
+					<gml:name>CC Mar Naples</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_ccMarNorthwood">
+					<gml:description>NATO Allied Maritime Command Headquarters at Northwood</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">ccMarNorthwood</gml:identifier>
+					<gml:name>CC Mar Northwood</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_dcaocNorth">
+					<gml:description>Deployable Combined Air Operations Centre North</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">dcaocNorth</gml:identifier>
+					<gml:name>DCAOC North</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_dcaocSouth">
+					<gml:description>Deployable Combined Air Operations Centre South</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">dcaocSouth</gml:identifier>
+					<gml:name>DCAOC South</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_jcLisbon">
+					<gml:description>NATO Joint Command at Lisbon, Portugal</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">jcLisbon</gml:identifier>
+					<gml:name>JC Lisbon</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_jfcBrunssum">
+					<gml:description>NATO Allied Joint Force Command Headquarters at Brunssum</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">jfcBrunssum</gml:identifier>
+					<gml:name>JFC Brunssum</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_jfcNaples">
+					<gml:description>NATO Allied Joint Force Command Headquarters at Naples</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">jfcNaples</gml:identifier>
+					<gml:name>JFC Naples</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_jallc">
+					<gml:description>NATO Joint Analysis and Lessons Learned Centre</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">jallc</gml:identifier>
+					<gml:name>JALLC</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_Jftc">
+					<gml:description>NATO Joint Force Training Centre</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">Jftc</gml:identifier>
+					<gml:name>JFTC</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_jwc">
+					<gml:description>NATO Joint Warfare Centre at Stavanger, Norway</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">jwc</gml:identifier>
+					<gml:name>JWC</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_nurc">
+					<gml:description>NATO Undersea Research Centre</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">nurc</gml:identifier>
+					<gml:name>NURC</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_eufor">
+					<gml:description>European Union Force</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">eufor</gml:identifier>
+					<gml:name>EUFOR</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_kfor">
+					<gml:description>Kosovo Force</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">kfor</gml:identifier>
+					<gml:name>KFOR</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_isafHQ">
+					<gml:description>International Security Assistance Force Headquarters</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">isafHQ</gml:identifier>
+					<gml:name>ISAF HQ</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_Ijc">
+					<gml:description>International Security Assistance Force Joint Command</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">Ijc</gml:identifier>
+					<gml:name>IJC</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_isafRcC">
+					<gml:description>International Security Assistance Force Regional Command Capital</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">isafRcC</gml:identifier>
+					<gml:name>ISAF RC(C)</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_isafRcN">
+					<gml:description>International Security Assistance Force Regional Command North</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">isafRcN</gml:identifier>
+					<gml:name>ISAF RC(N)</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_isafRcE">
+					<gml:description>International Security Assistance Force Regional Command East</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">isafRcE</gml:identifier>
+					<gml:name>ISAF RC(E)</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_isafRcW">
+					<gml:description>International Security Assistance Force Regional Command West</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">isafRcW</gml:identifier>
+					<gml:name>ISAF RC(W)</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_isafRcS">
+					<gml:description>International Security Assistance Force Regional Command South</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">isafRcS</gml:identifier>
+					<gml:name>ISAF RC(S)</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+			<gmx:codeEntry>
+				<gmx:CodeDefinition gml:id="NGMP_CustodianCode_isafRcSW">
+					<gml:description>International Security Assistance Force Regional Command SouthWest</gml:description>
+					<gml:identifier codeSpace="http://www.dgiwg.org/ngmp/NGMP_CustodianCode">isafRcSW</gml:identifier>
+					<gml:name>ISAF RC(SW)</gml:name>
+				</gmx:CodeDefinition>
+			</gmx:codeEntry>
+		</gmx:CodeListDictionary>
+	</gmx:codelistItem>
+</gmx:CT_CodelistCatalogue>

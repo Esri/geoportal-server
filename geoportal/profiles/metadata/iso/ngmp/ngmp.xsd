@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:ngmp="urn:int:nato:geometoc:geo:metadata:ngmp:0.1" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:int:nato:geometoc:geo:metadata:ngmp:0.1" elementFormDefault="qualified" version="0.1">
+	<!-- ================================= Annotation ================================ -->
+	<xs:annotation>
+		<xs:documentation>XML Schema of the extensions of ISO 19115 defined in STANAG 2586 Edition 1</xs:documentation>
+	</xs:annotation>
+	<!-- ================================== Imports ================================== -->
+	<!-- ########################################################################### -->
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco/gco.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmd/gmd.xsd"/>
+	<!-- ########################################################################### -->
+	<!-- ================================== Classes ================================= -->
+	<!-- =========================================================================== -->
+	<xs:complexType name="NGMP_SecurityConstraints_Type">
+		<xs:annotation>
+			<xs:documentation>Military extension of MD_SecurityConstraints</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gmd:MD_SecurityConstraints_Type">
+				<xs:sequence>
+					<xs:element name="classificationEvent" type="ngmp:NGMP_Releasibility_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="declassificationCondition" type="ngmp:NGMP_Declassification_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="NGMP_SecurityConstraints" type="ngmp:NGMP_SecurityConstraints_Type" substitutionGroup="gmd:MD_SecurityConstraints"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="NGMP_SecurityConstraints_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="ngmp:NGMP_SecurityConstraints"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!--
+			===========================================================================
+	-->
+	<xs:complexType name="NGMP_Releasibility_Type">
+		<xs:annotation>
+			<xs:documentation>Releasibility statement and list of regarded country or organisation </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="addressee" type="gmd:CI_ResponsibleParty_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="statement" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="NGMP_Releasibility" type="ngmp:NGMP_Releasibility_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="NGMP_Releasibility_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="ngmp:NGMP_Releasibility"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!--
+			===========================================================================
+	-->
+	<xs:complexType name="NGMP_ClassificationEvent_Type">
+		<xs:annotation>
+			<xs:documentation>Information on a past classification modification : reason, responsible organisation and original classification level</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="date" type="gco:Date_PropertyType"/>
+					<xs:element name="originalClassification" type="gmd:MD_SecurityConstraints_PropertyType"/>
+					<xs:element name="processor" type="gmd:CI_ResponsibleParty_PropertyType" maxOccurs="unbounded"/>
+					<xs:element name="rationale" type="gco:CharacterString_PropertyType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="NGMP_ClassificationEvent" type="ngmp:NGMP_ClassificationEvent_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="NGMP_ClassificationEvent_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="ngmp:NGMP_ClassificationEvent"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!--
+			===========================================================================
+	-->
+	<xs:complexType name="NGMP_Declassification_Type">
+		<xs:annotation>
+			<xs:documentation>Information on the conditions of  future declassification or declassification exemption</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="classification" type="gmd:MD_ClassificationCode_PropertyType"/>
+					<xs:element name="date" type="gco:Date_PropertyType" minOccurs="0"/>
+					<xs:element name="event" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="explanation" type="gco:CharacterString_PropertyType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="NGMP_Declassification" type="ngmp:NGMP_Declassification_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="NGMP_Declassification_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="ngmp:NGMP_Declassification"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!--
+		=========================================================================== 
+	-->
+	<xs:complexType name="NGMP_Constraints_Type">
+		<xs:annotation>
+			<xs:documentation>Military extension of MD_Constraints</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gmd:MD_Constraints_Type">
+				<xs:sequence>
+					<xs:element name="releasibility" type="ngmp:NGMP_Releasibility_PropertyType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="NGMP_Constraints" type="ngmp:NGMP_Constraints_Type" substitutionGroup="gmd:MD_Constraints"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="NGMP_Constraints_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="ngmp:NGMP_Constraints"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!--
+			===========================================================================
+	-->
+	<!-- ........................................................................ -->
+	<xs:element name="NGMP_DataLevelCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="NGMP_DataLevelCode_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="ngmp:NGMP_DataLevelCode"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="NGMP_GeoreferencingLevelCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="NGMP_GeoreferencingLevelCode_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="ngmp:NGMP_GeoreferencingLevelCode"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="NGMP_GeospatialInformationTypeCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="NGMP_GeospatialInformationTypeCode_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="ngmp:NGMP_GeospatialInformationTypeCode"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="NGMP_RepresentationFormCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="NGMP_RepresentationFormCode_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="ngmp:NGMP_RepresentationFormCode"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="NGMP_ThematicCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="NGMP_ThematicCode_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="ngmp:NGMP_ThematicCode"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="NGMP_BaselineLevelCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="NGMP_BaselineLevelCode_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="ngmp:NGMP_BaselineLevelCode"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="NGMP_DesignationTypeCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="NGMP_DesignationTypeCode_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="ngmp:NGMP_DesignationTypeCode"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="NGMP_NatoBodyCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="NGMP_NatoBodyCode_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="ngmp:NGMP_NatoBodyCode"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="NGMP_ReleasibilityCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="NGMP_ReleasibilityCode_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="ngmp:NGMP_ReleasibilityCode"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="NGMP_AccessibilityLevelCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="NGMP_AccessibilityLevelCode_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="ngmp:NGMP_AccessibilityLevelCode"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="NGMP_CustodianCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="NGMP_CustodianCode_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="ngmp:NGMP_CustodianCode"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+</xs:schema>

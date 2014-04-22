@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           xmlns:ngmp="urn:int:nato:geometoc:geo:metadata:ngmp:0.1" 
+           g:targetName="ngmp:NGMP_CustodianCode" 
+           g:i18nBase="catalog.iso19139.ngmp.NGMP_CustodianCode" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/CodeListValue_Type.xml">
+  <g:body>
+   
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeSpace.xml" 
+      g:value="http://www.dgiwg.org/ngmp"/>
+       
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeList.xml"
+      g:value="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_CustodianCode"/>
+     
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeListValue.xml">
+      <g:body>
+        <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+          <g:options>
+            <g:option g:label="" g:value="" />
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_act" g:value="NGMP_CustodianCode_act" />
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_acoShape" g:value="NGMP_CustodianCode_acoShape"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_caoc1" g:value="NGMP_CustodianCode_caoc1"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_caoc2" g:value="NGMP_CustodianCode_caoc2"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_caoc3" g:value="NGMP_CustodianCode_caoc3"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_caoc4" g:value="NGMP_CustodianCode_caoc4"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_ccAirIzmir" g:value="NGMP_CustodianCode_ccAirIzmir"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_ccAirRamstein" g:value="NGMP_CustodianCode_ccAirRamstein"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_ccLandHeidelberg" g:value="NGMP_CustodianCode_ccLandHeidelberg"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_ccLandMadrid" g:value="NGMP_CustodianCode_ccLandMadrid"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_ccMarNaples" g:value="NGMP_CustodianCode_ccMarNaples"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_ccMarNorthwood" g:value="NGMP_CustodianCode_ccMarNorthwood"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_dcaocNorth" g:value="NGMP_CustodianCode_dcaocNorth"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_dcaocSouth" g:value="NGMP_CustodianCode_dcaocSouth"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_jcLisbon" g:value="NGMP_CustodianCode_jcLisbon"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_jfcBrunssum" g:value="NGMP_CustodianCode_jfcBrunssum"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_jfcNaples" g:value="NGMP_CustodianCode_jfcNaples"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_jallc" g:value="NGMP_CustodianCode_jallc"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_Jftc" g:value="NGMP_CustodianCode_Jftc"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_jwc" g:value="NGMP_CustodianCode_jwc"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_nurc" g:value="NGMP_CustodianCode_nurc"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_eufor" g:value="NGMP_CustodianCode_eufor"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_kfor" g:value="NGMP_CustodianCode_kfor"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_isafHQ" g:value="NGMP_CustodianCode_isafHQ"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_Ijc" g:value="NGMP_CustodianCode_Ijc"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_isafRcC" g:value="NGMP_CustodianCode_isafRcC"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_isafRcN" g:value="NGMP_CustodianCode_isafRcN"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_isafRcE" g:value="NGMP_CustodianCode_isafRcE"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_isafRcW" g:value="NGMP_CustodianCode_isafRcW"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_isafRcS" g:value="NGMP_CustodianCode_isafRcS"/>
+            <g:option g:label="$i18nBase.NGMP_CustodianCode_isafRcSW" g:value="NGMP_CustodianCode_isafRcSW"/>
+          </g:options>
+        </g:input>
+      </g:body>          
+    </g:attribute>     
+     
+  </g:body> 
+</g:element>

@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gmd:MD_Metadata xmlns:ngmp="http://www.dgiwg.org/ngmp" xmlns:gmd="http://www.isotc211.org/2005/gmd" 
+xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:gco="http://www.isotc211.org/2005/gco" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmd/gmd.xsd http://www.opengis.net/gml/3.2 http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19136_Schemas/gml.xsd  http://www.isotc211.org/2005/gco http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco/gco.xsd 
+http://www.dgiwg.org/ngmp http://nmrr.nc3a.nato.int/ngmp.xsd">
+	<!-- MDSID [1] -->
+	<gmd:fileIdentifier>
+		<gco:CharacterString>{40e3f381-d965-12e0-9582-0800201c9a66}</gco:CharacterString>
+	</gmd:fileIdentifier>
+	<!-- MDLANG [1] -->
+	<gmd:language>
+		<gmd:LanguageCode codeListValue="eng" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#LanguageCode">eng</gmd:LanguageCode>
+	</gmd:language>
+	<!-- MDCSET [1] -->
+	<gmd:characterSet>
+		<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#MD_CharacterSetCode">utf8</gmd:MD_CharacterSetCode>
+	</gmd:characterSet>
+	<!-- RSTYPE [1]: Only the first instance is in the scope of NGMP -->
+	<gmd:hierarchyLevel>
+		<gmd:MD_ScopeCode codeListValue="dataset" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#MD_ScopeCode">dataset</gmd:MD_ScopeCode>
+	</gmd:hierarchyLevel>
+	<!-- MDPOC [1..*] -->
+	<gmd:contact>
+		<gmd:CI_ResponsibleParty>
+			<!-- MDPOC.PtOrgName -->
+			<gmd:organisationName>
+				<gco:CharacterString>NC3A GeoMetOc Group</gco:CharacterString>
+			</gmd:organisationName>
+			<gmd:role>
+				<gmd:CI_RoleCode codeListValue="pointOfContact" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#CI_RoleCode">pointOfContact</gmd:CI_RoleCode>
+			</gmd:role>
+		</gmd:CI_ResponsibleParty>
+	</gmd:contact>
+	<!-- MDDATE [1] -->
+	<gmd:dateStamp>
+		<gco:Date>2011-09-07</gco:Date>
+	</gmd:dateStamp>
+	<!-- MDSTD [1]: There shall be an instance of gmd:metadataStandardName having the 'STANAG 2586' value and an instance of  having the value "Edition 1" -->
+	<!-- MDSTD.CiTitle [1] -->
+	<gmd:metadataStandardName>
+		<gco:CharacterString>STANAG 2586</gco:CharacterString>
+	</gmd:metadataStandardName>
+	<!-- MDSTD.CiEdition [1] -->
+	<gmd:metadataStandardVersion>
+		<gco:CharacterString>Edition 1</gco:CharacterString>
+	</gmd:metadataStandardVersion>
+	<!-- RSRSYS [1..*] -->
+	<gmd:referenceSystemInfo>
+		<gmd:MD_ReferenceSystem>
+			<gmd:referenceSystemIdentifier>
+				<gmd:RS_Identifier>
+					<gmd:code>
+						<gco:CharacterString>EPSG::4326</gco:CharacterString>
+					</gmd:code>
+				</gmd:RS_Identifier>
+			</gmd:referenceSystemIdentifier>
+		</gmd:MD_ReferenceSystem>
+	</gmd:referenceSystemInfo>
+	<gmd:identificationInfo>
+		<gmd:MD_DataIdentification>
+			<gmd:citation>
+				<gmd:CI_Citation>
+					<!-- RSTITLE [1] -->
+					<gmd:title>
+						<gco:CharacterString>Germany and Netherlands political boundaries</gco:CharacterString>
+					</gmd:title>
+					<!-- RSALT [0..1] -->
+					<gmd:alternateTitle>
+						<gco:CharacterString>DEU NLD politics</gco:CharacterString>
+					</gmd:alternateTitle>
+					<!-- RSCDAT [1] -->
+					<gmd:date>
+						<gmd:CI_Date>
+							<gmd:date>
+								<gco:Date>2011-02-09</gco:Date>
+							</gmd:date>
+							<gmd:dateType>
+								<gmd:CI_DateTypeCode codeListValue="creation" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#CI_DateTypeCode">creation</gmd:CI_DateTypeCode>
+							</gmd:dateType>
+						</gmd:CI_Date>
+					</gmd:date>
+					<!-- RSPDAT [0..*]: For each RSPDAT -->
+					<gmd:date>
+						<gmd:CI_Date>
+							<gmd:date>
+								<gco:Date>2008-12-07</gco:Date>
+							</gmd:date>
+							<gmd:dateType>
+								<gmd:CI_DateTypeCode codeListValue="publication" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#CI_DateTypeCode">publication</gmd:CI_DateTypeCode>
+							</gmd:dateType>
+						</gmd:CI_Date>
+					</gmd:date>
+					<!-- RSED [0..1] -->
+					<gmd:edition>
+						<gco:CharacterString>001B</gco:CharacterString>
+					</gmd:edition>
+					<!-- RSEDDAT [0..1] -->
+					<gmd:editionDate>
+						<gco:Date>2011-02-09</gco:Date>
+					</gmd:editionDate>
+					<!-- RSSHNA [0..1] -->
+					<gmd:identifier>
+						<gmd:RS_Identifier>
+							<gmd:code>
+								<gco:CharacterString>Germany and Netherlands political boundaries</gco:CharacterString>
+							</gmd:code>
+							<gmd:codeSpace>
+								<gco:CharacterString>AOR MISC 020</gco:CharacterString>
+							</gmd:codeSpace>
+						</gmd:RS_Identifier>
+					</gmd:identifier>
+					<!-- If RSNRN is set -->
+					<gmd:identifier>
+						<gmd:RS_Identifier>
+							<!-- RSNRN [0..1] -->
+							<gmd:code>
+								<gco:CharacterString>987654321</gco:CharacterString>
+							</gmd:code>
+							<!-- RSNRNN [0..1]: Mandated if RSNRN is set. The value of RSNRNN is a 3-character country code following "NRN:" (e.g. FRA) -->
+							<gmd:codeSpace>
+								<gco:CharacterString>NRN:DEU</gco:CharacterString>
+							</gmd:codeSpace>
+						</gmd:RS_Identifier>
+					</gmd:identifier>
+					<!-- If RSNSN is set -->
+					<gmd:identifier>
+						<gmd:RS_Identifier>
+							<!-- RSNSN [0..1] -->
+							<gmd:code>
+								<gco:CharacterString>1234567890</gco:CharacterString>
+							</gmd:code>
+							<!-- RSNSNN [0..1]: Mandated if RSNSN is set. The value of RSNSNN is a 3-character country code following "NSN:" (e.g. FRA) -->
+							<gmd:codeSpace>
+								<gco:CharacterString>NSN:DEU</gco:CharacterString>
+							</gmd:codeSpace>
+						</gmd:RS_Identifier>
+					</gmd:identifier>
+					<!-- If RSID is set -->
+					<gmd:identifier>
+						<gmd:MD_Identifier>
+							<!-- RSID [0..1] -->
+							<gmd:code>
+								<gco:CharacterString>{fd37cf40-d927-11e0-9572-0800200c9a66}</gco:CharacterString>
+							</gmd:code>
+						</gmd:MD_Identifier>
+					</gmd:identifier>
+					<!-- RSSERI [0..1]: Mandated if  RSSHNA is set -->
+					<gmd:series>
+						<gmd:CI_Series>
+							<gmd:name>
+								<gco:CharacterString>AOR MISC 020</gco:CharacterString>
+							</gmd:name>
+						</gmd:CI_Series>
+					</gmd:series>
+				</gmd:CI_Citation>
+			</gmd:citation>
+			<!-- RSABSTR [1] -->
+			<gmd:abstract>
+				<gco:CharacterString>This political overview map covers the area of Germany and Netherlands. The map is primarily produced for planning and exercise purposes.</gco:CharacterString>
+			</gmd:abstract>
+			<!-- RSSTAT [0..1] -->
+			<gmd:status>
+				<gmd:MD_ProgressCode codeListValue="latestAvailable" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#MD_ProgressCode">latestAvailable</gmd:MD_ProgressCode>
+			</gmd:status>
+			<!-- If RSOORG[0..1] and/or RSONAT[0..1] -->
+			<gmd:pointOfContact>
+				<gmd:CI_ResponsibleParty>
+					<!-- RSOORG if set, else RSONAT -->
+					<gmd:organisationName>
+						<gco:CharacterString>NLD</gco:CharacterString>
+					</gmd:organisationName>
+					<!-- if RSONAT is set -->
+					<gmd:contactInfo>
+						<gmd:CI_Contact>
+							<gmd:address>
+								<gmd:CI_Address>
+									<gmd:country>
+										<gco:CharacterString>NLD</gco:CharacterString>
+									</gmd:country>
+								</gmd:CI_Address>
+							</gmd:address>
+						</gmd:CI_Contact>
+					</gmd:contactInfo>
+					<gmd:role>
+						<gmd:CI_RoleCode codeListValue="originator" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#CI_RoleCode">originator</gmd:CI_RoleCode>
+					</gmd:role>
+				</gmd:CI_ResponsibleParty>
+			</gmd:pointOfContact>
+			<!-- For each RSCUST [0..*] -->
+			<gmd:pointOfContact>
+				<gmd:CI_ResponsibleParty>
+					<!-- RSCUST -->
+					<gmd:organisationName>
+						<ngmp:NGMP_CustodianCode codeListValue="acoShape" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_CustodianCode">acoShape</ngmp:NGMP_CustodianCode>
+					</gmd:organisationName>
+					<gmd:role>
+						<gmd:CI_RoleCode codeListValue="custodian" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#CI_RoleCode">custodian</gmd:CI_RoleCode>
+					</gmd:role>
+				</gmd:CI_ResponsibleParty>
+			</gmd:pointOfContact>
+			<gmd:resourceMaintenance>
+				<gmd:MD_MaintenanceInformation>
+					<!-- RSMFRQ [1] -->
+					<gmd:maintenanceAndUpdateFrequency>
+						<gmd:MD_MaintenanceFrequencyCode codeListValue="unknown" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#MD_MaintenanceFrequencyCode">unknown</gmd:MD_MaintenanceFrequencyCode>
+					</gmd:maintenanceAndUpdateFrequency>
+				</gmd:MD_MaintenanceInformation>
+			</gmd:resourceMaintenance>
+			<!-- THUMB [0..1] -->
+			<gmd:graphicOverview>
+				<gmd:MD_BrowseGraphic>
+					<gmd:fileName>
+						<gco:CharacterString>.\thumbs\DEU_NLD_politics.gif</gco:CharacterString>
+					</gmd:fileName>
+					<gmd:fileDescription>
+						<gco:CharacterString>thumbnail</gco:CharacterString>
+					</gmd:fileDescription>
+				</gmd:MD_BrowseGraphic>
+			</gmd:graphicOverview>
+			<!-- DGITYP [0..1] -->
+			<gmd:descriptiveKeywords>
+				<gmd:MD_Keywords>
+					<gmd:keyword>
+						<ngmp:NGMP_GeospatialInformationTypeCode codeListValue="vector2D" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_GeospatialInformationTypeCode">vector2D</ngmp:NGMP_GeospatialInformationTypeCode>
+					</gmd:keyword>
+					<gmd:thesaurusName>
+						<gmd:CI_Citation>
+							<gmd:title>
+								<gco:CharacterString>NGMP_GeospatialInformationTypeCode</gco:CharacterString>
+							</gmd:title>
+							<gmd:date>
+								<gmd:CI_Date>
+									<gmd:date>
+										<gco:Date>2011-09-16</gco:Date>
+									</gmd:date>
+									<gmd:dateType>
+										<gmd:CI_DateTypeCode codeListValue="creation" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#CI_DateTypeCode">creation</gmd:CI_DateTypeCode>
+									</gmd:dateType>
+								</gmd:CI_Date>
+							</gmd:date>
+						</gmd:CI_Citation>
+					</gmd:thesaurusName>
+				</gmd:MD_Keywords>
+			</gmd:descriptiveKeywords>
+			<!-- RSGFLV [0..1] -->
+			<gmd:descriptiveKeywords>
+				<gmd:MD_Keywords>
+					<gmd:keyword>
+						<ngmp:NGMP_GeoreferencingLevelCode codeListValue="georeferenced" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_GeoreferencingLevelCode">georeferenced</ngmp:NGMP_GeoreferencingLevelCode>
+					</gmd:keyword>
+					<gmd:thesaurusName>
+						<gmd:CI_Citation>
+							<gmd:title>
+								<gco:CharacterString>NGMP_GeoreferencingLevelCode</gco:CharacterString>
+							</gmd:title>
+							<gmd:date>
+								<gmd:CI_Date>
+									<gmd:date>
+										<gco:Date>2011-09-16</gco:Date>
+									</gmd:date>
+									<gmd:dateType>
+										<gmd:CI_DateTypeCode codeListValue="creation" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#CI_DateTypeCode">creation</gmd:CI_DateTypeCode>
+									</gmd:dateType>
+								</gmd:CI_Date>
+							</gmd:date>
+						</gmd:CI_Citation>
+					</gmd:thesaurusName>
+				</gmd:MD_Keywords>
+			</gmd:descriptiveKeywords>
+			<!-- RSPREF [0..1] -->
+			<gmd:descriptiveKeywords>
+				<gmd:MD_Keywords>
+					<gmd:keyword>
+						<ngmp:NGMP_RepresentationFormCode codeListValue="digital" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_RepresentationFormCode">digital</ngmp:NGMP_RepresentationFormCode>
+					</gmd:keyword>
+					<gmd:thesaurusName>
+						<gmd:CI_Citation>
+							<gmd:title>
+								<gco:CharacterString>NGMP_RepresentationFormCode</gco:CharacterString>
+							</gmd:title>
+							<gmd:date>
+								<gmd:CI_Date>
+									<gmd:date>
+										<gco:Date>2011-09-16</gco:Date>
+									</gmd:date>
+									<gmd:dateType>
+										<gmd:CI_DateTypeCode codeListValue="creation" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#CI_DateTypeCode">creation</gmd:CI_DateTypeCode>
+									</gmd:dateType>
+								</gmd:CI_Date>
+							</gmd:date>
+						</gmd:CI_Citation>
+					</gmd:thesaurusName>
+				</gmd:MD_Keywords>
+			</gmd:descriptiveKeywords>
+			<!-- RSDTLVL [0..1] -->
+			<gmd:descriptiveKeywords>
+				<gmd:MD_Keywords>
+					<gmd:keyword>
+						<ngmp:NGMP_DataLevelCode codeListValue="L1" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_DataLevelCode">L1</ngmp:NGMP_DataLevelCode>
+					</gmd:keyword>
+					<gmd:thesaurusName>
+						<gmd:CI_Citation>
+							<gmd:title>
+								<gco:CharacterString>NGMP_DataLevelCode</gco:CharacterString>
+							</gmd:title>
+							<gmd:date>
+								<gmd:CI_Date>
+									<gmd:date>
+										<gco:Date>2011-09-16</gco:Date>
+									</gmd:date>
+									<gmd:dateType>
+										<gmd:CI_DateTypeCode codeListValue="creation" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#CI_DateTypeCode">creation</gmd:CI_DateTypeCode>
+									</gmd:dateType>
+								</gmd:CI_Date>
+							</gmd:date>
+						</gmd:CI_Citation>
+					</gmd:thesaurusName>
+				</gmd:MD_Keywords>
+			</gmd:descriptiveKeywords>
+			<!-- RSBASLVL [0..1] -->
+			<gmd:descriptiveKeywords>
+				<gmd:MD_Keywords>
+					<gmd:keyword>
+						<ngmp:NGMP_BaselineLevelCode codeListValue="sdb" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_DataLevelCode">sdb</ngmp:NGMP_BaselineLevelCode>
+					</gmd:keyword>
+					<gmd:thesaurusName>
+						<gmd:CI_Citation>
+							<gmd:title>
+								<gco:CharacterString>NGMP_BaselineLevelCode</gco:CharacterString>
+							</gmd:title>
+							<gmd:date>
+								<gmd:CI_Date>
+									<gmd:date>
+										<gco:Date>2011-09-16</gco:Date>
+									</gmd:date>
+									<gmd:dateType>
+										<gmd:CI_DateTypeCode codeListValue="creation" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#CI_DateTypeCode">creation</gmd:CI_DateTypeCode>
+									</gmd:dateType>
+								</gmd:CI_Date>
+							</gmd:date>
+						</gmd:CI_Citation>
+					</gmd:thesaurusName>
+				</gmd:MD_Keywords>
+			</gmd:descriptiveKeywords>
+			<!-- RSDESTP [1] -->
+			<gmd:descriptiveKeywords>
+				<gmd:MD_Keywords>
+					<gmd:keyword>
+						<ngmp:NGMP_DesignationTypeCode codeListValue="designatedGI" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_DataLevelCode">designatedGI</ngmp:NGMP_DesignationTypeCode>
+					</gmd:keyword>
+					<gmd:thesaurusName>
+						<gmd:CI_Citation>
+							<gmd:title>
+								<gco:CharacterString>NGMP_DesignationTypeCode</gco:CharacterString>
+							</gmd:title>
+							<gmd:date>
+								<gmd:CI_Date>
+									<gmd:date>
+										<gco:Date>2011-09-16</gco:Date>
+									</gmd:date>
+									<gmd:dateType>
+										<gmd:CI_DateTypeCode codeListValue="creation" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#CI_DateTypeCode">creation</gmd:CI_DateTypeCode>
+									</gmd:dateType>
+								</gmd:CI_Date>
+							</gmd:date>
+						</gmd:CI_Citation>
+					</gmd:thesaurusName>
+				</gmd:MD_Keywords>
+			</gmd:descriptiveKeywords>
+			<gmd:resourceConstraints>
+				<gmd:MD_SecurityConstraints>
+					<!-- RSCLVL [0..1]: Shall be set if RSCSYS is set -->
+					<gmd:classification>
+						<gmd:MD_ClassificationCode codeListValue="unclassified" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#MD_ClassificationCode">unclassified</gmd:MD_ClassificationCode>
+					</gmd:classification>
+					<!-- RSCSYS [0..1]: Shall be set if RSCLVL is set. -->
+					<gmd:classificationSystem>
+						<!-- To be implemented either as a NGMP_NatoBodyCode or as as CharacterString containing a 3-character country code from STANAG 1059
+				
+<ngmp:NGMP_NatoBodyCode codeListValue="nato" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_NatoBodyCode">nato</ngmp:NGMP_NatoBodyCode>
+				-->
+						<gco:CharacterString>NLD</gco:CharacterString>
+					</gmd:classificationSystem>
+				</gmd:MD_SecurityConstraints>
+			</gmd:resourceConstraints>
+			<gmd:resourceConstraints>
+				<ngmp:NGMP_Constraints>
+					<ngmp:releasibility>
+						<ngmp:NGMP_Releasibility>
+							<!-- For each RSREL [0..*] -->
+							<ngmp:addressee>
+								<gmd:CI_ResponsibleParty>
+									<gmd:organisationName>
+										<!-- To be implemented either as a NGMP_NatoBodyCode, NGMP_NGMP_ReleasibilityCode or as a CharacterString containing a 3-character country code from STANAG 1059
+											<gmd:CharacterString>FRA</gmd:CharacterString>
+											<ngmp:NGMP_NatoBodyCode codeListValue="nato" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_NatoBodyCode">nato</ngmp:NGMP_NatoBodyCode>
+											<ngmp:NGMP_ReleasibilityCode codeListValue="public" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_ReleasibilityCode">public</ngmp:NGMP_ReleasibilityCode>
+										-->
+										<ngmp:NGMP_NatoBodyCode codeListValue="nato" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_NatoBodyCode">nato</ngmp:NGMP_NatoBodyCode>
+									</gmd:organisationName>
+									<gmd:role>
+										<gmd:CI_RoleCode codeListValue="user" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#CI_RoleCode">user</gmd:CI_RoleCode>
+									</gmd:role>
+								</gmd:CI_ResponsibleParty>
+							</ngmp:addressee>
+							<ngmp:addressee>
+								<gmd:CI_ResponsibleParty>
+									<gmd:organisationName>
+										<ngmp:NGMP_NatoBodyCode codeListValue="pfp" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_NatoBodyCode">pfp</ngmp:NGMP_NatoBodyCode>
+									</gmd:organisationName>
+									<gmd:role>
+										<gmd:CI_RoleCode codeListValue="user" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#CI_RoleCode">user</gmd:CI_RoleCode>
+									</gmd:role>
+								</gmd:CI_ResponsibleParty>
+							</ngmp:addressee>
+							<ngmp:addressee>
+								<gmd:CI_ResponsibleParty>
+									<gmd:organisationName>
+										<ngmp:NGMP_NatoBodyCode codeListValue="md" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_NatoBodyCode">md</ngmp:NGMP_NatoBodyCode>
+									</gmd:organisationName>
+									<gmd:role>
+										<gmd:CI_RoleCode codeListValue="user" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#CI_RoleCode">user</gmd:CI_RoleCode>
+									</gmd:role>
+								</gmd:CI_ResponsibleParty>
+							</ngmp:addressee>
+							<!-- RSACLV [1] -->
+							<ngmp:statement>
+								<ngmp:NGMP_AccessibilityLevelCode codeListValue="public" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_AccessibilityLevelCode">public</ngmp:NGMP_AccessibilityLevelCode>
+							</ngmp:statement>
+						</ngmp:NGMP_Releasibility>
+					</ngmp:releasibility>
+				</ngmp:NGMP_Constraints>
+			</gmd:resourceConstraints>
+			<!-- RSUSE [0..*] : Any resourceConstraints/MD_Constraints/useLimitation applies -->
+			<gmd:resourceConstraints>
+				<gmd:MD_Constraints>
+					<gmd:useLimitation>
+						<gco:CharacterString>NOT FOR TARGETING</gco:CharacterString>
+					</gmd:useLimitation>
+				</gmd:MD_Constraints>
+			</gmd:resourceConstraints>
+			<!-- RSLCST [0..*] : Any resourceConstraints/* where * is MD_LegalConstraints or one of its subtypes -->
+			<gmd:resourceConstraints>
+				<gmd:MD_LegalConstraints>
+					<!-- RSLCST.LcStatement [0..*] -->
+					<gmd:useLimitation>
+						<gco:CharacterString>Copyright</gco:CharacterString>
+					</gmd:useLimitation>
+				</gmd:MD_LegalConstraints>
+			</gmd:resourceConstraints>
+			<!-- RSRPTP [0..1] -->
+			<gmd:spatialRepresentationType>
+				<gmd:MD_SpatialRepresentationTypeCode codeListValue="grid" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#MD_SpatialRepresentationTypeCode">grid
+</gmd:MD_SpatialRepresentationTypeCode>
+			</gmd:spatialRepresentationType>
+			<!-- RSSCALE [0..*]: Mandated because RSGSD is not set -->
+			<gmd:spatialResolution>
+				<gmd:MD_Resolution>
+					<gmd:equivalentScale>
+						<gmd:MD_RepresentativeFraction>
+							<gmd:denominator>
+								<gco:Integer>250000</gco:Integer>
+							</gmd:denominator>
+						</gmd:MD_RepresentativeFraction>
+					</gmd:equivalentScale>
+				</gmd:MD_Resolution>
+			</gmd:spatialResolution>
+			<!-- RSLANG [1] -->
+			<gmd:language>
+				<gmd:LanguageCode codeListValue="ger" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#LanguageCode">ger</gmd:LanguageCode>
+			</gmd:language>
+			<!-- RSCSET [1..*] -->
+			<gmd:characterSet>
+				<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#MD_CharacterSetCode">utf8</gmd:MD_CharacterSetCode>
+			</gmd:characterSet>
+			<!-- RSTOPIC [1..*] -->
+			<gmd:topicCategory>
+				<gmd:MD_TopicCategoryCode>imageryBaseMapsEarthCover</gmd:MD_TopicCategoryCode>
+			</gmd:topicCategory>
+			<!-- RSBBOX [1..*] -->
+			<gmd:extent>
+				<gmd:EX_Extent>
+					<gmd:geographicElement>
+						<gmd:EX_GeographicBoundingBox>
+							<!-- RSBBOX.West -->
+							<gmd:westBoundLongitude>
+								<gco:Decimal>3.578</gco:Decimal>
+							</gmd:westBoundLongitude>
+							<!-- RSBBOX.East -->
+							<gmd:eastBoundLongitude>
+								<gco:Decimal>15.123</gco:Decimal>
+							</gmd:eastBoundLongitude>
+							<!-- RSBBOX.South -->
+							<gmd:southBoundLatitude>
+								<gco:Decimal>46.405</gco:Decimal>
+							</gmd:southBoundLatitude>
+							<!-- RSBBOX.North -->
+							<gmd:northBoundLatitude>
+								<gco:Decimal>54.542</gco:Decimal>
+							</gmd:northBoundLatitude>
+						</gmd:EX_GeographicBoundingBox>
+					</gmd:geographicElement>
+				</gmd:EX_Extent>
+			</gmd:extent>
+		</gmd:MD_DataIdentification>
+	</gmd:identificationInfo>
+	<gmd:distributionInfo>
+		<gmd:MD_Distribution>
+			<!-- RSDFMT [1..*] -->
+			<gmd:distributionFormat>
+				<gmd:MD_Format>
+					<!-- RSDFMT.CiTitle -->
+					<gmd:name>
+						<gco:CharacterString>GML</gco:CharacterString>
+					</gmd:name>
+					<!-- RSDFMT.CiEdition -->
+					<gmd:version>
+						<gco:CharacterString>3.1</gco:CharacterString>
+					</gmd:version>
+				</gmd:MD_Format>
+			</gmd:distributionFormat>
+			<gmd:distributionFormat>
+				<gmd:MD_Format>
+					<!-- RSDFMT.CiTitle -->
+					<gmd:name>
+						<gco:CharacterString>shapefile</gco:CharacterString>
+					</gmd:name>
+						<!-- RSDFMT.CiEdition -->
+					<gmd:version>
+						<gco:CharacterString>unknown</gco:CharacterString>
+					</gmd:version>
+			</gmd:MD_Format>
+			</gmd:distributionFormat>
+		</gmd:MD_Distribution>
+	</gmd:distributionInfo>
+	<gmd:dataQualityInfo>
+		<gmd:DQ_DataQuality>
+			<gmd:scope>
+				<gmd:DQ_Scope>
+					<gmd:level>
+						<gmd:MD_ScopeCode codeListValue="dataset" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#MD_ScopeCode">dataset</gmd:MD_ScopeCode>
+					</gmd:level>
+				</gmd:DQ_Scope>
+			</gmd:scope>
+			<gmd:lineage>
+				<gmd:LI_Lineage>
+					<!-- RSLING [0..1] -->
+					<gmd:statement>
+						<gco:CharacterString>Data was captured by fusing administrative features from the official national datasets ATKIS and TOP25</gco:CharacterString>
+					</gmd:statement>
+					<!-- If RSDESTD and RSDESTA -->
+					<gmd:processStep>
+						<gmd:LI_ProcessStep>
+							<gmd:description>
+								<gco:CharacterString>Resource Designation</gco:CharacterString>
+							</gmd:description>
+							<!-- RSDESTD [0..1] -->
+							<gmd:dateTime>
+								<gco:DateTime>2010-10-01T00:00:00</gco:DateTime>
+							</gmd:dateTime>
+							<gmd:processor>
+								<gmd:CI_ResponsibleParty>
+									<!-- RSDESTA [0..1] -->
+									<gmd:organisationName>
+										<ngmp:NGMP_CustodianCode codeListValue="jfcBrunssum" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_CustodianCode">jfcBrunssum</ngmp:NGMP_CustodianCode>
+									</gmd:organisationName>
+									<gmd:role>
+										<gmd:CI_RoleCode codeListValue="processor" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#CI_RoleCode">processor</gmd:CI_RoleCode>
+									</gmd:role>
+								</gmd:CI_ResponsibleParty>
+							</gmd:processor>
+						</gmd:LI_ProcessStep>
+					</gmd:processStep>
+					<!-- RSSRC [0..*] -->
+					<gmd:source>
+						<gmd:LI_Source>
+							<gmd:description>
+								<gco:CharacterString>{cea81280-d9ee-11e0-9572-0800200c9a66}</gco:CharacterString>
+							</gmd:description>
+						</gmd:LI_Source>
+					</gmd:source>
+					<gmd:source>
+						<gmd:LI_Source>
+							<gmd:description>
+								<gco:CharacterString>{8437ccb0-d9f1-11e0-9572-0800200c9a66}</gco:CharacterString>
+							</gmd:description>
+						</gmd:LI_Source>
+					</gmd:source>
+				</gmd:LI_Lineage>
+			</gmd:lineage>
+		</gmd:DQ_DataQuality>
+	</gmd:dataQualityInfo>
+	<!-- If MDCLVL and MDCSYS are set -->
+	<gmd:metadataConstraints>
+		<gmd:MD_SecurityConstraints>
+			<!-- MDCLVL [0..1]: Shall be set if MDCSYS is set -->
+			<gmd:classification>
+				<gmd:MD_ClassificationCode codeListValue="unclassified" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#MD_ClassificationCode">unclassified</gmd:MD_ClassificationCode>
+			</gmd:classification>
+			<!-- MDCSYS [0..1]: Shall be set if MDCLVL is set. -->
+			<gmd:classificationSystem>
+				<!-- To be implemented either as a NGMP_NatoBodyCode or as as CharacterString containing a 3-character country code from STANAG 1059
+				<gmd:CharacterString>FRA</gmd:CharacterString>
+				-->
+				<ngmp:NGMP_NatoBodyCode codeListValue="nato" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_NatoBodyCode">nato</ngmp:NGMP_NatoBodyCode>
+			</gmd:classificationSystem>
+		</gmd:MD_SecurityConstraints>
+	</gmd:metadataConstraints>
+	<!-- If MDREL is set -->
+	<gmd:metadataConstraints>
+		<ngmp:NGMP_Constraints>
+			<ngmp:releasibility>
+				<ngmp:NGMP_Releasibility>
+					<!-- For each MDREL [0..*] -->
+					<ngmp:addressee>
+						<gmd:CI_ResponsibleParty>
+							<gmd:organisationName>
+								<!-- To be implemented either as a NGMP_NatoBodyCode, NGMP_NGMP_ReleasibilityCode or as a CharacterString containing a 3-character country code from STANAG 1059
+							<gmd:CharacterString>FRA</gmd:CharacterString>
+							
+<ngmp:NGMP_NatoBodyCode codeListValue="nato" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_NatoBodyCode">nato</ngmp:NGMP_NatoBodyCode>
+							-->
+								<ngmp:NGMP_ReleasibilityCode codeListValue="public" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#NGMP_ReleasibilityCode">public</ngmp:NGMP_ReleasibilityCode>
+							</gmd:organisationName>
+							<gmd:role>
+								<gmd:CI_RoleCode codeListValue="user" codeList="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#CI_RoleCode">user</gmd:CI_RoleCode>
+							</gmd:role>
+						</gmd:CI_ResponsibleParty>
+					</ngmp:addressee>
+				</ngmp:NGMP_Releasibility>
+			</ngmp:releasibility>
+		</ngmp:NGMP_Constraints>
+	</gmd:metadataConstraints>
+</gmd:MD_Metadata>

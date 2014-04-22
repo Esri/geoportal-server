@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           xmlns:ngmp="urn:int:nato:geometoc:geo:metadata:ngmp:0.1" 
+           g:targetName="gmd:CharacterCode" 
+           g:i18nBase="catalog.iso19139.ngmp.CharacterSetCode" g:label="$i18nBase"
+           g:extends="$base/schema/gco/gcoBase/CodeListValue_Type.xml">
+  <g:body>
+   
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeSpace.xml" 
+      g:value="http://www.dgiwg.org/ngmp"/>
+       
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeList.xml"
+      g:value="http://eden.ign.fr/xsd/ngmp/20110916/resources/codelist/ngmpCodelists.xml#MD_CharacterSetCode"/>
+     
+    <g:attribute g:extends="$base/schema/gco/gcoBase/codeListValue.xml">
+      <g:body>
+        <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+          <g:options>
+            <g:option g:label="" g:value="" />
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.ucs2" g:value="ucs2"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.ucs4" g:value="ucs4"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.utf7" g:value="utf7"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.utf8" g:value="utf8" g:selected="true"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.utf16" g:value="utf16"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.8859part1" g:value="8859part1"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.8859part2" g:value="8859part2"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.8859part3" g:value="8859part3"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.8859part4" g:value="8859part4"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.8859part5" g:value="8859part5"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.8859part6" g:value="8859part6"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.8859part7" g:value="8859part7"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.8859part8" g:value="8859part8"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.8859part9" g:value="8859part9"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.8859part10" g:value="8859part10"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.8859part11" g:value="8859part11"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.8859part13" g:value="8859part13"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.8859part14" g:value="8859part14"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.8859part15" g:value="8859part15"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.8859part16" g:value="8859part16"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.jis" g:value="jis"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.shiftJIS" g:value="shiftJIS"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.eucJP" g:value="eucJP"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.usAscii" g:value="usAscii"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.ebcdic" g:value="ebcdic"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.eucKR" g:value="eucKR"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.big5" g:value="big5"/>
+			<g:option g:label="$i18nBase.catalog.iso19139.ngmp.MD_CharacterSetCode.GB2312" g:value="GB2312"/>
+          </g:options>
+        </g:input>
+      </g:body>          
+    </g:attribute>     
+     
+  </g:body> 
+</g:element>
