@@ -59,7 +59,7 @@ private static final Logger LOG = Logger.getLogger(
 
 /** instance variables ====================================================== */
 private String                    baseContextPath      = "";
-private final String              externalMetadataPath = "/catalog/search/dsFullMetadata.page";
+protected final String              externalMetadataPath = "/catalog/search/dsFullMetadata.page";
 private final String              imagePath            = "/catalog/images";
 private String                    mapViewerUrl         = "";
 private final String              metadataPath         = "/rest/document";

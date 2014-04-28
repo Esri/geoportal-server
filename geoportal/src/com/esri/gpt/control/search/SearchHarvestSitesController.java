@@ -14,14 +14,6 @@
  */
 package com.esri.gpt.control.search;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.faces.application.FacesMessage;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ActionEvent;
-import javax.servlet.http.HttpServletRequest;
-
 import com.esri.gpt.catalog.search.ASearchEngine;
 import com.esri.gpt.catalog.search.RestUrlBuilder;
 import com.esri.gpt.catalog.search.SearchConfig;
@@ -31,10 +23,17 @@ import com.esri.gpt.catalog.search.SearchEngineLocal;
 import com.esri.gpt.catalog.search.SearchException;
 import com.esri.gpt.catalog.search.SearchFilterHarvestSites;
 import com.esri.gpt.catalog.search.SearchResult;
+import com.esri.gpt.control.georss.CswContext;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.faces.application.FacesMessage;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
+import javax.servlet.http.HttpServletRequest;
 /**
  * 
  * The Class SearchHarvestSitesController.  9.3.1 new search controller.  
@@ -175,13 +174,22 @@ public void processFullMetadataUrl() {
     HttpServletRequest request = this.getContextBroker()
         .extractHttpServletRequest();
     String uuid = Val.chkStr(request.getParameter("uuid"));
+    String cswUrl = Val.chkStr(request.getParameter("cswUrl"));
+    String cswProfileId = Val.chkStr(request.getParameter("cswProfileId"));
+    CswContext cswContext = CswContext.create(cswUrl, cswProfileId);
     String harvestID = Val.chkStr(request.getParameter("id"));
     if("".equals(harvestID)) {
       harvestID = Val.chkStr(request.getParameter("rid"));
     }
     
     ASearchEngine engine = null;
-    if("".equals(harvestID)) {
+    
+    if (cswContext!=null) {
+      engine = SearchEngineFactory.createSearchEngine(
+          new SearchCriteria(), new SearchResult(), 
+          this.extractRequestContext(), cswContext, 
+          this.getContextBroker().extractMessageBroker());
+    } else if("".equals(harvestID)) {
       engine = super.getSearchDao();
     } else {
     

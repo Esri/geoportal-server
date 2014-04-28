@@ -31,6 +31,8 @@ public class RestQuery extends DiscoveryQuery {
   private String rssProviderUrl = "";
   private String rssSourceUrl = "";
   private String rssMoreUrl = "";
+  private String cswUrl = "";
+  private String cswProfile = "";
   
   /** constructors ============================================================ */
   
@@ -56,6 +58,38 @@ public class RestQuery extends DiscoveryQuery {
    */
   public void setRepositoryId(String repositoryId) {
     this.repositoryId = Val.chkStr(repositoryId);
+  }
+
+  /**
+   * Gets CSW endpoint URL.
+   * @return CSW endpoint URL
+   */
+  public String getCswUrl() {
+    return cswUrl;
+  }
+
+  /**
+   * Sets CSW endpoint URL.
+   * @param rssCswUrl CSW endpoint URL
+   */
+  public void setCswUrl(String rssCswUrl) {
+    this.cswUrl = Val.chkStr(rssCswUrl);
+  }
+
+  /**
+   * Gets CSW endpoint profile.
+   * @return CSW endpoint profile
+   */
+  public String getCswProfile() {
+    return cswProfile;
+  }
+
+  /**
+   * Sets CSW endpoint profile.
+   * @param rssCswProfile CSW endpoint profile
+   */
+  public void setCswProfile(String rssCswProfile) {
+    this.cswProfile = Val.chkStr(rssCswProfile);
   }
   
   /**
