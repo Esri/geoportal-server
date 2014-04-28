@@ -72,7 +72,7 @@ public class CswResourceLinkBuilder extends ResourceLinkBuilder {
 
 //    // build the content type and thumbnail links
 //    this.buildContentTypeLink(xRecord, record);
-//    this.buildThumbnailLink(xRecord, record);
+    this.buildThumbnailLink(xRecord, record);
 //
 //    // build remaining links
 //    this.buildOpenLink(xRecord, record);
