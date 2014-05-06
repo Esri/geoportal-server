@@ -91,6 +91,7 @@ public class EncodingFilter implements Filter {
         				 (requestURI.indexOf("/resource/")  == -1) &&
                          (requestURI.indexOf("download.page") == -1) &&
                          (requestURI.indexOf("viewMetadataDetails.page") == -1) &&
+                         !(requestURI.indexOf("dsFullMetadata.page")>=0 && httpRequest.getQueryString()!=null && httpRequest.getQueryString().indexOf("cswUrl=")>=0 && httpRequest.getQueryString().indexOf("cswProfileId=")>=0) &&
                          !(requestURI.indexOf("report.page")>=0 && httpRequest.getQueryString()!=null && httpRequest.getQueryString().indexOf("uuid=")>=0) &&
                          (requestURI.indexOf("preview.page") == -1) &&
                          (requestURI.indexOf("liveDataProxy.page") == -1) &&
