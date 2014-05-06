@@ -11,7 +11,7 @@ Deployment instructions:
 
 One option is to install Tomcat and configure isapi redirect per http://ashrafhossain.wordpress.com/2010/09/20/how-to-configure-iis-7-and-tomcat-redirection-on-windows-server-2008-64-bit/ 
 
-2. Deploy the 'metadata.war' web application file (available at https://github.com/Esri/geoportal-server/wiki/Geoportal-Server-Downloads) into the web app container discussed in Step 1. 
+2. Deploy the 'metadata.war' web application file (available within Geoportal 1.2.5 Binary Distribution package or from Geoportal Server metadata.war download at https://github.com/Esri/geoportal-server/wiki/Geoportal-Server-Downloads) into the web app container discussed in Step 1. 
    
 3. Locate 'item.html' file from 'home' application. Typical location is:
 
@@ -19,7 +19,7 @@ One option is to install Tomcat and configure isapi redirect per http://ashrafho
 
     or
 
-    C:\portal\portal\webapps\home\item.html (Windows)
+    C:\Program Files\ArcGIS\Portal\webapps\arcgis#home\item.html (Windows)
 
 4.  Look for the line including script 'arcgisonline.js'; right after that line paste the following snippet:
 
