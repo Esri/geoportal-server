@@ -115,7 +115,7 @@ public class CswResourceLinkBuilder extends ResourceLinkBuilder {
     }
 
     // build the link
-    String url = "http://geodesign.maps.arcgis.com/home/webmap/viewer.html?url=" + encodeUrlParam(resourceUrl);
+    String url = "http://www.arcgis.com/home/webmap/viewer.html?url=" + encodeUrlParam(resourceUrl);
     String resourceKey = "catalog.rest.preview";
     ResourceLink link = this.makeLink(url, ResourceLink.TAG_PREVIEW, resourceKey);
     if (serviceType.length() > 0) {
