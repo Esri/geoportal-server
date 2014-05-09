@@ -231,7 +231,7 @@ public static ASearchEngine createSearchEngine(
   SearchRequestDefinition sDef = new SearchRequestDefinition(criteria, result);
   sEngine.setRequestDefinition(sDef);
   sEngine.setRequestContext(context);
-  Map<String, String> attribs = new HashMap<>();
+  Map<String, String> attribs = new HashMap<String, String>();
   attribs.put("url", cswContext.getCswUrl());
   attribs.put("profileid", cswContext.getCswProfileId());
   sEngine.setFactoryAttributes(attribs);
