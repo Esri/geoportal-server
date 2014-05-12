@@ -15,17 +15,16 @@
  */
 package com.esri.gpt.catalog.search;
 
+import com.esri.gpt.catalog.context.CatalogConfiguration;
 import static com.esri.gpt.catalog.search.ResourceLinkBuilder.RESOURCE_TYPE;
 import com.esri.gpt.control.georss.CswContext;
 import com.esri.gpt.framework.collection.StringAttribute;
-import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.search.SearchXslRecord;
 import com.esri.gpt.framework.util.Val;
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -34,6 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 public class CswResourceLinkBuilder extends ResourceLinkBuilder {
 
   private final CswContext cswContext;
+  private static final String MAP_VIEWER_URL_PATTERN = "http://www.arcgis.com/home/webmap/viewer.html?url=${url}";
+  private String mapViewerUrlPattern = MAP_VIEWER_URL_PATTERN;
 
   public static ResourceLinkBuilder newBuilder(RequestContext context, CswContext cswContext,
     HttpServletRequest servletRequest, MessageBroker messageBroker) {
@@ -48,14 +49,31 @@ public class CswResourceLinkBuilder extends ResourceLinkBuilder {
       messageBroker.setBundleBaseName("gpt.resources.gpt");
     }
 
-    ResourceLinkBuilder linkBuilder = new CswResourceLinkBuilder(cswContext);
+    CatalogConfiguration catCfg = context.getCatalogConfiguration();
+    String cswResourceLinkBuilderClassName = Val.chkStr(catCfg.getParameters().getValue("cswResourceLinkBuilder"));
+    String cswMapViewerUrlPattern = Val.chkStr(catCfg.getParameters().getValue("cswMapViewerUrlPattern"), MAP_VIEWER_URL_PATTERN);
+    
+    ResourceLinkBuilder linkBuilder = null;
+    if (cswResourceLinkBuilderClassName.length() == 0) {
+      linkBuilder = new CswResourceLinkBuilder(cswContext, cswMapViewerUrlPattern);
+    } else {
+      try {
+        Class<?> cls = Class.forName(cswResourceLinkBuilderClassName);
+        Constructor<?> constructor = cls.getConstructor(CswContext.class,String.class);
+        linkBuilder = (ResourceLinkBuilder) constructor.newInstance(cswContext,cswMapViewerUrlPattern);
+      } catch (Exception ex) {
+        linkBuilder = new CswResourceLinkBuilder(cswContext, cswMapViewerUrlPattern);
+      }
+    }
+    
     linkBuilder.initialize(servletRequest, context, messageBroker);
 
     return linkBuilder;
   }
 
-  private CswResourceLinkBuilder(CswContext cswContext) {
+  private CswResourceLinkBuilder(CswContext cswContext, String mapViewerUrlPattern) {
     this.cswContext = cswContext;
+    this.mapViewerUrlPattern = mapViewerUrlPattern;
   }
 
   /**
@@ -115,7 +133,7 @@ public class CswResourceLinkBuilder extends ResourceLinkBuilder {
     }
 
     // build the link
-    String url = "http://www.arcgis.com/home/webmap/viewer.html?url=" + encodeUrlParam(resourceUrl);
+    String url = mapViewerUrlPattern.replaceAll("\\$\\{url\\}",encodeUrlParam(resourceUrl));
     String resourceKey = "catalog.rest.preview";
     ResourceLink link = this.makeLink(url, ResourceLink.TAG_PREVIEW, resourceKey);
     if (serviceType.length() > 0) {
