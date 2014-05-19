@@ -97,7 +97,8 @@ public class CswResourceLinkBuilder extends ResourceLinkBuilder {
 //    this.buildPreviewLink(xRecord, record);
 //    this.buildAGSLinks(xRecord, record);
     this.buildMetadataLink(xRecord, record);
-    this.buildAddToMapLink(xRecord, record);
+//    this.buildAddToMapLink(xRecord, record);
+    this.buildResourceLink(xRecord, record);
 //    this.buildWebsiteLink(xRecord, record);
 //    this.buildDetailsLink(xRecord, record);
 //    this.buildCustomLinks(xRecord, record);
@@ -145,6 +146,46 @@ public class CswResourceLinkBuilder extends ResourceLinkBuilder {
     record.getResourceLinks().add(link);
   }
 
+  protected void buildResourceLink(SearchXslRecord xRecord, SearchResultRecord record) {
+    String[] allowedServices = {"ags", "wms", "kml"};
+
+    if (!xRecord.getLinks().readShowLink(ResourceLink.TAG_RESOURCE)) {
+      return;
+    }
+
+    String resourceUrl = Val.chkStr(record.getResourceUrl());
+    String serviceType = Val.chkStr(record.getServiceType()).toLowerCase();
+
+    Arrays.sort(allowedServices);
+    if (Arrays.binarySearch(allowedServices, serviceType) < 0) {
+      return;
+    }
+
+    if (resourceUrl.indexOf("q=") >= 0 && resourceUrl.indexOf("user=") >= 0 && resourceUrl.indexOf("max=") >= 0 && resourceUrl.indexOf("dest=") >= 0 && resourceUrl.indexOf("destuser=") >= 0) {
+      // look like this is AGP-2-AGP registration; don'e generate preview link
+      return;
+    }
+
+    // return if we cannot preview
+    String tmp = resourceUrl.toLowerCase();
+    if ((resourceUrl.length() == 0)) {
+      return;
+    } else if (tmp.indexOf("?getxml=") != -1) {
+      return;
+    }
+
+    // build the link
+    String resourceKey = "catalog.rest.resource";
+    ResourceLink link = this.makeLink(encodeUrlParam(resourceUrl), ResourceLink.TAG_RESOURCE, resourceKey);
+    if (serviceType.length() > 0) {
+      link.getParameters().add(new StringAttribute(RESOURCE_TYPE, serviceType));
+    }
+    if (record.isExternal()) {
+      link.setForExtenalRecord(true);
+    }
+    record.getResourceLinks().add(link);
+  }
+  
   @Override
   protected void buildMetadataLink(SearchXslRecord xRecord, SearchResultRecord record) {
     if (!xRecord.getLinks().readShowLink(ResourceLink.TAG_METADATA)) {
