@@ -21,6 +21,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import static com.esri.gpt.framework.context.ApplicationContextListener.isAlive;
 
 /**
  * Handles the loading of a Geoportal XML editor definition.
@@ -176,8 +177,10 @@ public class GxeLoader {
                                  GxeFile file, 
                                  Node domNode, 
                                  XmlElement gxeElement) throws Exception {
+    if (!isAlive()) return;
     NodeList nl = domNode.getChildNodes(); 
     for (int i=0; i<nl.getLength(); i++) {
+      if (!isAlive()) return;
       Node nd = nl.item(i);
       if (nd.getNodeType() == Node.ELEMENT_NODE) { 
         String ns = Val.chkStr(nd.getNamespaceURI());
