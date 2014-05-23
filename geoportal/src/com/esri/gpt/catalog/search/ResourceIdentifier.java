@@ -227,6 +227,8 @@ public class ResourceIdentifier {
       imsContentType = "liveData";
     } else if (url.endsWith(".lyr") || (url.indexOf("f=lyr") != -1)) {
       imsContentType = "liveData";
+    } else if (url.endsWith(".pdf")) {
+      imsContentType = "document";
     } else if (url.endsWith(".zip")) {
       imsContentType = "downloadableData";
     } else if (url.endsWith(".lpk") || url.endsWith(".pkinfo") || url.endsWith(".e00")) {
