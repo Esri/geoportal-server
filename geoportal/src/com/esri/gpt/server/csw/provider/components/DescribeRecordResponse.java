@@ -20,9 +20,11 @@ import com.esri.gpt.framework.xml.XmlIoUtil;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
+
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -65,11 +67,46 @@ public class DescribeRecordResponse implements IResponseGenerator {
     XPath xpath = XPathFactory.newInstance().newXPath();
     xpath.setNamespaceContext(ns.makeNamespaceContext());
     
-    // if specific type names were requested, then remove those that were not requested
     StringSet typeNames = drOptions.getTypeNames();
+    
+    // if specific type names were requested, validate them
     if ((typeNames != null) && (typeNames.size() > 0)) {
       String expr = "/csw:DescribeRecordResponse/csw:SchemaComponent/xsd:schema";
       NodeList nlSchemas = (NodeList)xpath.evaluate(expr,dom,XPathConstants.NODESET);
+      String[] aTypeNames = typeNames.toArray(new String[0]);
+      String invalidTypeName = null;
+      if ((nlSchemas != null) && (nlSchemas.getLength() > 0)) {
+      	for (int itn=0; itn<aTypeNames.length; itn++) {
+      		boolean bFound = false;
+      		String stn = aTypeNames[itn];
+          for (int i=0; i<nlSchemas.getLength(); i++) {
+            Node ndSchema = nlSchemas.item(i);
+            String typeName = Val.chkStr(xpath.evaluate("@id",ndSchema));
+            if ((typeName.length() > 0) && (typeName.equals(stn))) {
+            	 bFound = true;
+            	 break;
+            }
+          }
+          if (!bFound) {
+           invalidTypeName = stn;
+         	 break;
+          }
+      	}
+      } else {
+      	invalidTypeName = aTypeNames[0];
+      }
+      if (invalidTypeName != null) {
+        String msg = "This parameter value is not supported: "+invalidTypeName;
+        String locator = "csw:TypeName";
+        throw new OwsException(OwsException.OWSCODE_InvalidParameterValue,locator,msg);
+      }
+    }
+    
+    // if specific type names were requested, then remove those that were not requested
+    if ((typeNames != null) && (typeNames.size() > 0)) {
+      String expr = "/csw:DescribeRecordResponse/csw:SchemaComponent/xsd:schema";
+      NodeList nlSchemas = (NodeList)xpath.evaluate(expr,dom,XPathConstants.NODESET);
+      
       if ((nlSchemas != null) && (nlSchemas.getLength() > 0)) {
         ArrayList<Node> remove = new ArrayList<Node>();
         ArrayList<Node> removeParent = new ArrayList<Node>();
@@ -113,6 +150,7 @@ public class DescribeRecordResponse implements IResponseGenerator {
           }
         }
       }
+      
     }
              
     // set the response string
