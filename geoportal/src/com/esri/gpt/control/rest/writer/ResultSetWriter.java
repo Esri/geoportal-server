@@ -207,6 +207,10 @@ public abstract class ResultSetWriter extends ResponseWriter {
     this.endRows(depth);
   }
   
+  protected void writeResultSetElement(RecordElement re, int depth) throws IOException {
+    this.writeCell(re.name,re.object,depth);
+  }
+  
   private void writeResultSetRecord(LinkedList<RecordElement> lre, int depth) 
       throws IOException {
     
@@ -214,20 +218,33 @@ public abstract class ResultSetWriter extends ResponseWriter {
     Iterator<RecordElement> iter = lre.iterator();
     while(iter.hasNext()) {
       RecordElement re = iter.next();
-      this.writeCell(re.name,re.object,depth+2);
+      writeResultSetElement(re,depth+2);
     }
     this.endRow(depth+1);
     
   }
   
-  private class RecordElement {
+  protected class RecordElement {
     private String name;
     private Object object;
     private int depth;
-    private RecordElement(String name, Object obj, int depth) {
+    
+    public RecordElement(String name, Object obj, int depth) {
       this.name = name;
       this.object = obj;
       this.depth = depth;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public Object getObject() {
+      return object;
+    }
+
+    public int getDepth() {
+      return depth;
     }
   }
 

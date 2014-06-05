@@ -22,13 +22,18 @@ import com.esri.gpt.framework.sql.BaseDao;
 import com.esri.gpt.framework.sql.HttpExpressionBinder;
 import com.esri.gpt.framework.sql.ManagedConnection;
 import com.esri.gpt.framework.util.Val;
+import com.esri.gpt.framework.xml.DomUtil;
+import java.io.IOException;
 import java.io.PrintWriter;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+import org.w3c.dom.Document;
 
 /**
  * Provides a Rest API for repositories registered within the GPT harvesting tables.
@@ -59,6 +64,59 @@ public class RepositoriesServlet extends BaseServlet {
   }
   
   /**
+   * Extracts profile id from the data object.
+   * @param object data object
+   * @return profile id or <code>null</code> if no profile found
+   */
+  private String extractProfile(Object object) {
+    if (object!=null) {
+      String xml = object.toString();
+      try {
+        Document doc = DomUtil.makeDomFromString(xml, false);
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        return (String)xPath.evaluate("/protocol/profile", doc, XPathConstants.STRING);
+      } catch (Exception ex) {
+        // DO NOTHING
+      }
+    }
+    return null;
+  }
+  
+  private ResultSetWriter createXmlResultSetWriter(PrintWriter responseWriter) {
+    return new XmlResultSetWriter(responseWriter) {
+      @Override
+      protected void writeResultSetElement(ResultSetWriter.RecordElement re, int depth) throws IOException {
+        if (!"definition".equals(re.getName())) {
+          super.writeResultSetElement(re, depth);
+        } else if (re.getObject()!=null) {
+          String profile = extractProfile(re.getObject());
+          if (profile!=null) {
+            re = new RecordElement("profile", profile, depth);
+            super.writeResultSetElement(re, depth);
+          }
+        }
+      }
+    };
+  }
+  
+  private ResultSetWriter createJsonResultSetWriter(PrintWriter responseWriter) {
+    return new JsonResultSetWriter(responseWriter) {
+      @Override
+      protected void writeResultSetElement(ResultSetWriter.RecordElement re, int depth) throws IOException {
+        if (!"definition".equals(re.getName())) {
+          super.writeResultSetElement(re, depth);
+        } else if (re.getObject()!=null) {
+          String profile = extractProfile(re.getObject());
+          if (profile!=null) {
+            re = new ResultSetWriter.RecordElement("profile", profile, depth);
+            super.writeResultSetElement(re, depth);
+          }
+        }
+      }
+    };
+  }
+  
+  /**
    * Handles a rest based query against registered repository sites. 
    * @param request the HTTP request
    * @param response HTTP response
@@ -79,10 +137,10 @@ public class RepositoriesServlet extends BaseServlet {
     PrintWriter responseWriter = response.getWriter();
     if (format.equalsIgnoreCase("xml")) {
       response.setContentType("text/xml; charset=UTF-8");
-      writer = new XmlResultSetWriter(responseWriter);
+      writer = createXmlResultSetWriter(responseWriter);
     } else {
       response.setContentType("text/plain; charset=UTF-8");
-      writer = new JsonResultSetWriter(responseWriter);
+      writer = createJsonResultSetWriter(responseWriter);
     }
     if (!callback.isEmpty()) {
       responseWriter.print(callback+"({");
@@ -99,8 +157,8 @@ public class RepositoriesServlet extends BaseServlet {
       String table = context.getCatalogConfiguration().getResourceTableName();
       StringBuffer sql = new StringBuffer(); 
       
-      String[] columnTags = {"id","uuid","protocol","name","url"};
-      sql.append("SELECT ID,DOCUUID,PROTOCOL_TYPE,TITLE,HOST_URL FROM "+table);
+      String[] columnTags = {"id","uuid","protocol","name","url","definition"};
+      sql.append("SELECT ID,DOCUUID,PROTOCOL_TYPE,TITLE,HOST_URL,PROTOCOL FROM "+table);
       
       // build the bound query expression based upon HTTP parameter input
       HttpExpressionBinder binder = new HttpExpressionBinder(request);
