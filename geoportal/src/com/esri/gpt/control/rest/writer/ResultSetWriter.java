@@ -109,7 +109,8 @@ public abstract class ResultSetWriter extends ResponseWriter {
         if (columnTags != null) {
           name = columnTags[i-1];
         }
-        this.writeCell(name,rs.getObject(i),depth+2);
+        RecordElement re = new RecordElement(name, rs.getObject(i), depth+2);
+        writeResultSetElement(re,depth+2);
       }
       this.endRow(depth+1); 
     }
