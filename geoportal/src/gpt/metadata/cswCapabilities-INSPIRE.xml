@@ -286,12 +286,12 @@
       <inspire_common:ResourceType>service</inspire_common:ResourceType>
       <inspire_common:TemporalReference>
         <!-- one temporal reference is mandatory -->
-        <inspire_common:DateOfPublication>YYYY-MM-DD</inspire_common:DateOfPublication>
+
+        <inspire_common:DateOfCreation>YYYY-MM-DD</inspire_common:DateOfCreation>        
         <inspire_common:DateOfLastRevision>YYYY-MM-DD</inspire_common:DateOfLastRevision>
-        <inspire_common:DateOfCreation>YYYY-MM-DD</inspire_common:DateOfCreation>
+        <inspire_common:DateOfPublication>YYYY-MM-DD</inspire_common:DateOfPublication>
         <inspire_common:TemporalExtent>
           <inspire_common:IntervalOfDates>
-            <inspire_common:StartingDate>YYYY-MM-DD</inspire_common:StartingDate>
             <inspire_common:StartingDate>YYYY-MM-DD</inspire_common:StartingDate>
             <inspire_common:EndDate>YYYY-MM-DD</inspire_common:EndDate>
           </inspire_common:IntervalOfDates>
