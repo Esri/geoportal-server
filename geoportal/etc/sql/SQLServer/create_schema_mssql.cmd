@@ -13,14 +13,14 @@ rem See the License for the specific language governing permissions and
 rem limitations under the License.
 
 @ECHO OFF
-IF "%1"=="" Goto Usage
+IF "%~1"=="" Goto Usage
 IF "%2"=="" Goto Usage
 IF "%3"=="" Goto Usage
 IF "%4"=="" Goto Usage
 
 
 
-SET DBSERVER=%1
+SET DBSERVER=%~1
 SET DATABASE=%2
 SET GEOPORTALUSERLOGIN=%3
 SET GEOPORTALUSERPWD=%4
