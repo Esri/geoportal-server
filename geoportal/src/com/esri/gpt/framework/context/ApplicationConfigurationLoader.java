@@ -68,6 +68,7 @@ import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
 import com.esri.gpt.framework.security.identity.IdentityConfiguration;
 import com.esri.gpt.framework.security.identity.IdentitySupport;
 import com.esri.gpt.framework.security.identity.SingleSignOnMechanism;
+import com.esri.gpt.framework.security.identity.agp.PortalIdentityAdapter;
 import com.esri.gpt.framework.security.identity.ldap.LdapConfiguration;
 import com.esri.gpt.framework.security.identity.ldap.LdapConnectionProperties;
 import com.esri.gpt.framework.security.identity.ldap.LdapGroupProperties;
@@ -577,10 +578,15 @@ private void loadIdentity(ApplicationConfiguration appConfig, Document dom,
 
   // determine the adapter
   Node ndSimple = (Node) xpath.evaluate("simpleAdapter", ndIdentity, XPathConstants.NODE);
+  Node ndPortal = (Node) xpath.evaluate("arcgisPortalAdapter", ndIdentity, XPathConstants.NODE);
   Node ndLdap = (Node) xpath.evaluate("ldapAdapter", ndIdentity, XPathConstants.NODE);
   if (ndSimple != null) {
     ndLdap = null;
+    ndPortal = null;
     sAdapterClass = "com.esri.gpt.framework.security.identity.local.SimpleIdentityAdapter";
+  } else if (ndPortal != null) {
+    ndLdap = null;
+    sAdapterClass = "com.esri.gpt.framework.security.identity.agp.PortalIdentityAdapter";
   }
   idConfig.setAdapterClassName(sAdapterClass);
 
@@ -626,6 +632,37 @@ private void loadIdentity(ApplicationConfiguration appConfig, Document dom,
       }
     }
 
+  }
+  
+  // ArcGIS Portal adapter configuration
+  if (ndPortal != null) {
+  	String appId = Val.chkStr(xpath.evaluate("@appId",ndPortal));
+  	String authorizeUrl = Val.chkStr(xpath.evaluate("@authorizeUrl",ndPortal));
+  	String adminGroupId = Val.chkStr(xpath.evaluate("@gptAdministratorsGroupId",ndPortal));
+  	String pubGroupId = Val.chkStr(xpath.evaluate("@gptPublishersGroupId",ndPortal));
+  	if (appId.length() > 0) PortalIdentityAdapter.AppId = appId;
+  	if (authorizeUrl.length() > 0) PortalIdentityAdapter.AuthorizeUrl = authorizeUrl;
+  	if (adminGroupId.length() > 0) PortalIdentityAdapter.GptAdministratorsGroupId = adminGroupId;
+  	if (pubGroupId.length() > 0) PortalIdentityAdapter.GptPublishersGroupId = pubGroupId;
+  	PortalIdentityAdapter.ExpirationMinutes =  Val.chkInt(xpath.evaluate("@expirationMinutes",ndPortal),120);
+  	PortalIdentityAdapter.AllUsersCanPublish = Val.chkBool(xpath.evaluate("@allUsersCanPublish",ndPortal),false);
+  	
+  	Roles roles = idConfig.getConfiguredRoles();
+  	Role role = new Role("gptRegisteredUser");
+  	role.setDistinguishedName(role.getKey());
+  	role.setManage(false);
+  	roles.add(role);
+  	role = new Role("gptPublisher");
+  	role.setInherits("gptRegisteredUser");
+  	role.setDistinguishedName(role.getKey());
+  	role.setManage(false);
+  	roles.add(role);
+  	role = new Role("gptAdministrator");
+  	role.setInherits("gptPublisher");
+  	role.setDistinguishedName(role.getKey());
+  	role.setManage(false);
+  	roles.add(role);
+    for (Role role2 : roles.values()) role2.buildFullRoleSet(roles);
   }
 
   // LDAP adapter configuration

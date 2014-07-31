@@ -493,6 +493,26 @@
             </roles>
         </simpleAdapter>
         -->
+        
+				<!-- 
+					Identity adapter when using ArcGIS Online or Portal as the identity store.
+					appId: application id (Geoportal app registered at ArcGIS Online or Portal)
+					authorizeUrl: OAuth2 authorize url (e.g. https://myorg.maps.arcgis.com/sharing/oauth2/authorize)
+					expirationMinutes: token expiration minutes 
+					gptAdministratorsGroupId: group id for Geoportal administrators (optional)
+					gptPublishersGroupId: group id for Geoportal publishers (optional)
+					allUsersCanPublish: true or false, if true all authenticated users can publish items to Geoportal
+				-->
+				<!-- 
+        <arcgisPortalAdapter
+        	appId=""
+        	authorizeUrl=""
+        	expirationMinutes="120"
+        	gptAdministratorsGroupId=""
+        	gptPublishersGroupId=""
+          allUsersCanPublish="true"
+        />
+        -->
       
         <ldapAdapter>
             <ldapConnectionProperties

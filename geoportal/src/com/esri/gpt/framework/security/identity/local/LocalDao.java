@@ -16,6 +16,7 @@ package com.esri.gpt.framework.security.identity.local;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.security.identity.IdentityException;
 import com.esri.gpt.framework.security.principal.User;
+import com.esri.gpt.framework.security.principal.Users;
 import com.esri.gpt.framework.sql.BaseDao;
 import com.esri.gpt.framework.sql.ManagedConnection;
 import com.esri.gpt.framework.util.UuidUtil;
@@ -165,6 +166,37 @@ private void insertUser(Connection con, String dn, String username)
 }
 
 /**
+ * Reads all referenced users.
+ * @return the users
+ * @throws SQLException if a database exception occurs
+ */
+public Users readAllUsers() throws SQLException {
+	Users users = new Users();
+  ManagedConnection mc = returnConnection();
+  Connection con = mc.getJdbcConnection();
+  PreparedStatement st = null;
+  try {    
+    String sql = "SELECT USERID,DN,USERNAME FROM "+getUserTableName();
+    st = con.prepareStatement(sql);
+    st.setMaxRows(10000);
+    ResultSet rs = st.executeQuery();
+    while (rs.next()) {
+      User user = new User();
+      user.setLocalID(rs.getInt(1));
+      user.setDistinguishedName(rs.getString(2));
+      user.setName(rs.getString(3));
+      //user.setKey(""+user.getLocalID());
+      user.setKey(user.getDistinguishedName());
+      //System.err.println(user);
+      users.add(user);
+    } 
+  } finally {
+    closeStatement(st);
+  }
+	return users;
+}
+
+/**
  * Reads the distinguished name associated with a user id.
  * @param userId the subject user id
  * @return the associated distinguished name (empty if none)
@@ -229,6 +261,37 @@ private int readUserByDN(Connection con, User user)
     user.setName(sUsername);
   }
   return nUserId;
+}
+
+/**
+ * Reads the user id associated with a distinguished name.
+ * @param dn the distinguished name
+ * @return userId the associated user id (-1 if none)
+ * @throws SQLException if a database exception occurs
+ */
+public int readUserIdByDN(String dn) throws SQLException {
+  int userId = -1;
+  ManagedConnection mc = returnConnection();
+  Connection con = mc.getJdbcConnection();
+  PreparedStatement st = null;
+  try {
+    String sSql = null;
+    if (getIsDbCaseSensitive(this.getRequestContext())) {
+      sSql = "SELECT USERID FROM "+getUserTableName()+" WHERE UPPER(DN)=?";
+    } else {
+      sSql = "SELECT USERID FROM "+getUserTableName()+" WHERE DN=?";
+    }
+    logExpression(sSql);
+    st = con.prepareStatement(sSql);
+    st.setString(1,dn.toUpperCase());
+    ResultSet rs = st.executeQuery();
+    if (rs.next()) {
+    	userId = rs.getInt(1);
+    }
+  } finally {
+    closeStatement(st);
+  }
+  return userId;
 }
 
 /**
