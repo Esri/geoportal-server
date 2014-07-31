@@ -136,7 +136,7 @@ public class PortalIdentityAdapter extends IdentityAdapter {
 	  		try {
 	  			String referer = getThisReferer();
 	  			String token = executeGetToken(username,password,referer);
-	  			executeGetUser(user,token,username);
+	  			executeGetUser(user,token,username,referer);
 				} catch (Exception e) {
 			    user.getAuthenticationStatus().reset();
 			    e.printStackTrace();
@@ -290,7 +290,8 @@ public class PortalIdentityAdapter extends IdentityAdapter {
     User user = this.getRequestContext().getUser();
     user.reset();
 		try {
-			executeGetUser(user,token,username);
+			String referer = null;
+			executeGetUser(user,token,username,referer);
 		} catch (Throwable t) {
 			t.printStackTrace();
 			LOGGER.log(Level.SEVERE,"Error validating OAuth response",t);
@@ -308,6 +309,7 @@ public class PortalIdentityAdapter extends IdentityAdapter {
     content.append("&password=").append(URLEncoder.encode(password,"UTF-8"));
     content.append("&expiration=").append(URLEncoder.encode(""+getExpirationMinutes(),"UTF-8"));
     content.append("&referer=").append(URLEncoder.encode(referer,"UTF-8"));
+    content.append("&client=").append(URLEncoder.encode("referer","UTF-8"));
     StringProvider provider = new StringProvider(content.toString(),"application/x-www-form-urlencoded");
 		StringHandler handler = new StringHandler();
 		HttpClientRequest http = new HttpClientRequest();
@@ -331,7 +333,7 @@ public class PortalIdentityAdapter extends IdentityAdapter {
     return token;
 	}
 	
-	private void executeGetUser(User user, String token, String username) throws Exception {
+	private void executeGetUser(User user, String token, String username, String referer) throws Exception {
 		String adminGroupId = GptAdministratorsGroupId;
 		String pubGroupId = GptPublishersGroupId;
 		boolean allUsersCanPublish = AllUsersCanPublish;
@@ -351,6 +353,10 @@ public class PortalIdentityAdapter extends IdentityAdapter {
 		http.setRetries(-1);
 		http.setUrl(url);
 		http.setContentHandler(handler);
+		if (referer != null) {
+			//System.err.println("Referer="+referer);
+			http.setRequestHeader("Referer",referer);
+		};
 		http.execute();
 		//System.err.println(handler.getContent());
     
