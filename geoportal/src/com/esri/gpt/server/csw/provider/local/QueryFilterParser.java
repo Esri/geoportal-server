@@ -86,9 +86,17 @@ public class QueryFilterParser extends DiscoveryAdapter implements IFilterParser
       filter.setMaxRecords(qOptions.getMaxRecords());
     }
         
+    if (filterNode != null) {
+    	NodeList nl = (NodeList)xpath.evaluate("ogc:Function",filterNode,XPathConstants.NODESET);
+    	if (nl.getLength() > 0) {
+        String msg = "ogc:Function is not supported.";
+        throw new OwsException(OwsException.OWSCODE_InvalidParameterValue,"ogc:Function/@name",msg);
+    	}
+    }
+    
     // parse the ogc:Filter
     if (filterNode != null) {
-      LOGGER.finer("Parsing ogc:Filter....");
+      LOGGER.finer("Parsing ogc:Filter...");
       filter.setRootClause(new LogicalAnd());
       LogicalClause rootClause = filter.getRootClause();
       this.parseLogicalClause(filterNode,xpath,rootClause);

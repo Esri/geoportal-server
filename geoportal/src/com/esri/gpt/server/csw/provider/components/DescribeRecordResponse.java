@@ -88,12 +88,19 @@ public class DescribeRecordResponse implements IResponseGenerator {
             }
           }
           if (!bFound) {
-           invalidTypeName = stn;
-         	 break;
+	          if (stn.indexOf(":") == -1) {
+	            invalidTypeName = stn;
+	          	break;
+	          }
+            //invalidTypeName = stn;
+         	  //break;
           }
       	}
       } else {
-      	invalidTypeName = aTypeNames[0];
+        if (aTypeNames[0].indexOf(":") == -1) {
+          invalidTypeName = aTypeNames[0];
+        }
+      	//invalidTypeName = aTypeNames[0];
       }
       if (invalidTypeName != null) {
         String msg = "This parameter value is not supported: "+invalidTypeName;
