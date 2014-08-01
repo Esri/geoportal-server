@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
  See the NOTICE file distributed with
  this work for additional information regarding copyright ownership.
@@ -127,7 +127,7 @@
       </ows:Parameter>
       <ows:Parameter name="schemaLanguage">
         <ows:Value>XMLSCHEMA</ows:Value>
-        <ows:Value>http://www.w3.org/TR/xmlschema-1/</ows:Value>
+        <ows:Value>http://www.w3.org/XML/Schema</ows:Value>
       </ows:Parameter>
     </ows:Operation>
     <ows:Operation name="GetRecords">

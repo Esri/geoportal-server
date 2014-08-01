@@ -87,7 +87,7 @@ public class QueryFilterParser extends DiscoveryAdapter implements IFilterParser
     }
         
     if (filterNode != null) {
-    	NodeList nl = (NodeList)xpath.evaluate("ogc:Function",filterNode,XPathConstants.NODESET);
+    	NodeList nl = (NodeList)xpath.evaluate("//ogc:Function",filterNode,XPathConstants.NODESET);
     	if (nl.getLength() > 0) {
         String msg = "ogc:Function is not supported.";
         throw new OwsException(OwsException.OWSCODE_InvalidParameterValue,"ogc:Function/@name",msg);
