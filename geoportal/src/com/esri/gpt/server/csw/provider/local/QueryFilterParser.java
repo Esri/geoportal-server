@@ -325,6 +325,7 @@ public class QueryFilterParser extends DiscoveryAdapter implements IFilterParser
         like.setEscapeChar(xpath.evaluate("@escapeChar", parent));
         like.setSingleChar(xpath.evaluate("@singleChar", parent));
         like.setWildCard(xpath.evaluate("@wildCard", parent));
+        like.adjustLiteral();
       }
       
       // initialize the language code, (INSPIRE requirement but generally applicable)

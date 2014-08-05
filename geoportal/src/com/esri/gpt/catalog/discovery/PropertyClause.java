@@ -14,6 +14,11 @@
  */
 package com.esri.gpt.catalog.discovery;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * A clause that compares a stored property to a supplied literal.
  */
@@ -182,6 +187,84 @@ public class PropertyClause extends DiscoveryClause {
     public void setWildCard(String wildCard) {
       this.wildCard = wildCard;
       if (this.wildCard.length() > 1) this.wildCard = "";
+    }
+    
+    /** Adjusts literal according to wildcard information */
+    public void adjustLiteral() {
+      String literal = getLiteral();
+      StringBuilder literalBuff = new StringBuilder(literal);
+      
+      List<Integer> wildCards = findWildCandidates(literal, getWildCard(), getEscapeChar());
+      List<Integer> singleChars = findWildCandidates(literal, getSingleChar(), getEscapeChar());
+      List<Integer> escaped = findEscaped(literal, new String[]{getWildCard(), getSingleChar()}, getEscapeChar());
+      
+      for (Integer index : wildCards) {
+        literalBuff.replace(index, index+1, "*");
+      }
+      
+      for (Integer index : singleChars) {
+        literalBuff.replace(index, index+1, "?");
+      }
+
+      for (Integer index : escaped) {
+        literalBuff.replace(index, index+1, "");
+      }
+      
+      setLiteral(literalBuff.toString());
+    }
+    
+    /**
+     * Looks for the wild character candidates ommiting escaped characters.
+     * @param literal literal to search within
+     * @param wild wild character to search for
+     * @param escape escape character
+     * @return reversed list of indexes of the locations of the candidates within the literal
+     */
+    private List<Integer> findWildCandidates(String literal, String wild, String escape) {
+      ArrayList<Integer> candidates = new ArrayList<Integer>();
+      int currentIndex = 0;
+      if (!wild.isEmpty()) {
+        while (currentIndex<literal.length()) {
+          int candidate = literal.indexOf(wild, currentIndex);
+          if (candidate>=0) {
+            if (candidate>0 && !escape.isEmpty() && new String(new char[]{literal.charAt(candidate-1)}).equals(escape) ) {
+              currentIndex = candidate+1;
+              continue;
+            }
+            candidates.add(candidate);
+            currentIndex = candidate+1;
+          } else {
+            break;
+          }
+        }
+      }
+      Collections.reverse(candidates);
+      return candidates;
+    }
+    
+    /**
+     * Looks for all escaped wild characters.
+     * @param literal literal to search within
+     * @param wild array of all possible wild characters
+     * @param escape escape character
+     * @return reversed list of indexes of the locations of the escaped wild characters within the literal
+     */
+    private List<Integer> findEscaped(String literal, String wild[], String escape) {
+      ArrayList<Integer> candidates = new ArrayList<Integer>();
+      int currentIndex = 0;
+      if (!escape.isEmpty()) {
+        while (currentIndex<literal.length()) {
+          int candidate = literal.indexOf(escape, currentIndex);
+          if (candidate>=0 && (candidate+1==literal.length() || (candidate+1<literal.length() && Arrays.binarySearch(wild, new String(new char[]{literal.charAt(candidate+1)}))>=0 ))) {
+            candidates.add(candidate);
+            currentIndex = candidate+1;
+          } else {
+            break;
+          }
+        }
+      }
+      Collections.reverse(candidates);
+      return candidates;
     }
   }
   
