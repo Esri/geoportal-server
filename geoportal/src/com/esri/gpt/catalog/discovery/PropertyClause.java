@@ -196,7 +196,7 @@ public class PropertyClause extends DiscoveryClause {
       
       List<Integer> wildCards = findWildCandidates(literal, getWildCard(), getEscapeChar());
       List<Integer> singleChars = findWildCandidates(literal, getSingleChar(), getEscapeChar());
-      List<Integer> escaped = findEscaped(literal, new String[]{getWildCard(), getSingleChar()}, getEscapeChar());
+      List<Integer> escaped = findEscaped(literal, new String[]{getWildCard(), getSingleChar(), getEscapeChar()}, getEscapeChar());
       
       for (Integer index : wildCards) {
         literalBuff.replace(index, index+1, "*");
@@ -257,7 +257,7 @@ public class PropertyClause extends DiscoveryClause {
           int candidate = literal.indexOf(escape, currentIndex);
           if (candidate>=0 && (candidate+1==literal.length() || (candidate+1<literal.length() && Arrays.binarySearch(wild, new String(new char[]{literal.charAt(candidate+1)}))>=0 ))) {
             candidates.add(candidate);
-            currentIndex = candidate+1;
+            currentIndex = candidate+2;
           } else {
             break;
           }
