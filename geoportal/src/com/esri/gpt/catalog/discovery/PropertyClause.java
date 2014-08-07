@@ -217,12 +217,21 @@ public class PropertyClause extends DiscoveryClause {
      * Gets special characters.
      * @return array of special characters
      */
-    private String [] getSpecialChars() {
-      return new String[]{
+    private Character [] getSpecialChars() {
+      String [] spc = new String[]{
         getWildCard(), 
         getSingleChar(), 
         getEscapeChar()
       };
+      
+      ArrayList<Character> spchars = new ArrayList<Character>();
+      for (String sc: spc) {
+        if (!sc.isEmpty()) {
+          spchars.add(sc.charAt(0));
+        }
+      }
+      
+      return spchars.toArray(new Character[spchars.size()]);
     }
     
     /**
@@ -239,7 +248,7 @@ public class PropertyClause extends DiscoveryClause {
         while (currentIndex<literal.length()) {
           int candidate = literal.indexOf(wild, currentIndex);
           if (candidate>=0) {
-            if (candidate>0 && !escape.isEmpty() && new String(new char[]{literal.charAt(candidate-1)}).equals(escape) ) {
+            if (candidate>0 && !escape.isEmpty() && escape.charAt(0)==literal.charAt(candidate-1) ) {
               currentIndex = candidate+1;
               continue;
             }
@@ -261,13 +270,13 @@ public class PropertyClause extends DiscoveryClause {
      * @param escape escape character
      * @return reversed list of indexes of the locations of the escaped wild characters within the literal
      */
-    private List<Integer> findEscaped(String literal, String wild[], String escape) {
+    private List<Integer> findEscaped(String literal, Character wild[], String escape) {
       ArrayList<Integer> candidates = new ArrayList<Integer>();
       int currentIndex = 0;
       if (!escape.isEmpty()) {
         while (currentIndex<literal.length()) {
           int candidate = literal.indexOf(escape, currentIndex);
-          if (candidate>=0 && (candidate+1==literal.length() || (candidate+1<literal.length() && Arrays.binarySearch(wild, new String(new char[]{literal.charAt(candidate+1)}))>=0 ))) {
+          if (candidate>=0 && (candidate+1==literal.length() || (candidate+1<literal.length() && Arrays.binarySearch(wild, literal.charAt(candidate+1))>=0 ))) {
             candidates.add(candidate);
             currentIndex = candidate+2;
           } else {
