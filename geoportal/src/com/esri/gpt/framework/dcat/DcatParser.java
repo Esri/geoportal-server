@@ -214,6 +214,10 @@ public class DcatParser {
             jsonReader.skipValue();
           }
           return;
+        case NULL:
+          jsonReader.nextNull();
+          record.put(attrName, new JsonAttribute());
+          return;
         default:
           throw new DcatParseException("Unexpected token in the data: " + token);
       }
