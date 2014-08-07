@@ -49,6 +49,11 @@ public class JsonAttribute {
     this.getter = new FromBooleanGetter(value);
   }
   
+  public JsonAttribute() {
+    this.type = TYPE.NULL;
+    this.getter = new FromNullGetter();
+  }
+  
   /**
    * Gets value as number.
    * @return number
@@ -179,6 +184,25 @@ public class JsonAttribute {
     
   }
   
+  private class FromNullGetter implements getter {
+
+    @Override
+    public String getStringValue() {
+      return "";
+    }
+
+    @Override
+    public Double getNumericValue() {
+      return 0.0;
+    }
+
+    @Override
+    public Boolean getBooleanValue() {
+      return Boolean.FALSE;
+    }
+    
+  }
+  
   @Override
   public String toString() {
     return getter.toString();
@@ -193,6 +217,8 @@ public class JsonAttribute {
     /** number */
     NUMBER,
     /** boolean */
-    BOOLEAN
+    BOOLEAN,
+    /** null */
+    NULL
   }
 }
