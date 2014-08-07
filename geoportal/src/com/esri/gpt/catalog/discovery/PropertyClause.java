@@ -196,7 +196,7 @@ public class PropertyClause extends DiscoveryClause {
       
       List<Integer> wildCards = findWildCandidates(literal, getWildCard(), getEscapeChar());
       List<Integer> singleChars = findWildCandidates(literal, getSingleChar(), getEscapeChar());
-      List<Integer> escaped = findEscaped(literal, new String[]{getWildCard(), getSingleChar(), getEscapeChar()}, getEscapeChar());
+      List<Integer> escaped = findEscaped(literal, getSpecialChars(), getEscapeChar());
       
       for (Integer index : wildCards) {
         literalBuff.replace(index, index+1, "*");
@@ -211,6 +211,18 @@ public class PropertyClause extends DiscoveryClause {
       }
       
       setLiteral(literalBuff.toString());
+    }
+    
+    /**
+     * Gets special characters.
+     * @return array of special characters
+     */
+    private String [] getSpecialChars() {
+      return new String[]{
+        getWildCard(), 
+        getSingleChar(), 
+        getEscapeChar()
+      };
     }
     
     /**
