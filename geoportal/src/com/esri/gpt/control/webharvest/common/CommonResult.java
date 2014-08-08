@@ -23,13 +23,14 @@ import java.util.Arrays;
  */
 public class CommonResult implements Result {
 /** resources */
-private Iterable<Resource> resources;
+private Iterable<? extends Resource> resources;
+
 
 /**
  * Creates instance of the result.
  * @param resources collection of resources
  */
-public CommonResult(Iterable<Resource> resources) {
+public CommonResult(Iterable<? extends Resource> resources) {
   this.resources = resources;
 }
 
@@ -42,7 +43,7 @@ public CommonResult(Resource resource) {
 }
 
 @Override
-public Iterable<Resource> getResources() {
+public Iterable<? extends Resource> getResources() {
   return resources;
 }
 

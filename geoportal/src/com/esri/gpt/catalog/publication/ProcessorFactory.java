@@ -78,6 +78,7 @@ public class ProcessorFactory {
     boolean isFile = false;
     boolean isDirectory = false;
     boolean wasMalformed = false;
+    boolean isWMS = false;
     URL url = null;
     File file = null;
     try {
@@ -86,6 +87,7 @@ public class ProcessorFactory {
       isHttpProtocol = protocol.equals("http") || protocol.equals("https");
       isFtpProtocol = protocol.equals("ftp") || protocol.equals("ftps");
       isFileProtocol = protocol.equals("file");
+      isWMS = url.getQuery().toLowerCase().contains("service=wms") || url.getQuery().toLowerCase().contains("service=wmts");
     } catch (MalformedURLException e) {
       wasMalformed = true;
     }
@@ -110,6 +112,9 @@ public class ProcessorFactory {
     
     if (isDirectory) {
       // no applicable processor
+    } else if (isWMS) {
+      WMSProcessor wmsp = new WMSProcessor(context, resourceUrl);
+      return wmsp;
     } else if (isFile) {
       SingleXmlProcessor xp = new SingleXmlProcessor(context,file);
       return xp;

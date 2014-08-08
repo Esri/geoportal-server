@@ -26,7 +26,7 @@ public interface Result {
  * Retrieved resources are a top-level resources.
  * @return resources
  */
-Iterable<Resource> getResources();
+Iterable<? extends Resource> getResources();
 /**
  * Destroys result.
  */
