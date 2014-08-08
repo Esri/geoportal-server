@@ -23,7 +23,6 @@ import com.esri.gpt.framework.http.StringHandler;
 import com.esri.gpt.framework.http.XmlHandler;
 import com.esri.gpt.framework.resource.api.Native;
 import com.esri.gpt.framework.resource.api.Publishable;
-import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.api.SourceUri;
 import com.esri.gpt.framework.resource.common.CommonPublishable;
 import com.esri.gpt.framework.resource.common.StringUri;
@@ -53,11 +52,17 @@ import org.xml.sax.SAXException;
  * Processor capable of drilling down WMS or WMTS service and create matedata for each operational layer.
  */
 public class WMSProcessor extends ResourceProcessor {
-  private final String resourceUrl;
+  private static final Logger LOG = Logger.getLogger(WMSProcessor.class.getName());
+  private final String getCapabilitiesUrl;
   
-  public WMSProcessor(ProcessingContext context, String resourceUrl) {
+  /**
+   * Creates instance of the processor.
+   * @param context processing context
+   * @param getCapabilitiesUrl GetCapabilities request url
+   */
+  public WMSProcessor(ProcessingContext context, String getCapabilitiesUrl) {
     super(context);
-    this.resourceUrl = Val.chkStr(resourceUrl);
+    this.getCapabilitiesUrl = Val.chkStr(getCapabilitiesUrl);
   }
   
   /**
@@ -87,6 +92,12 @@ public class WMSProcessor extends ResourceProcessor {
     return new NativeImpl();
   }
   
+  /**
+   * Makes Dublin Core content of the layer.
+   * @param layer layer
+   * @return string representing Dublin Core content 
+   * @throws XPathExpressionException if invoking XPath fails
+   */
   public String getContent(LayerAdaptor layer) throws XPathExpressionException {
     return "<?xml version='1.0' encoding='UTF-8'?>"
       + "<rdf:RDF xmlns:dct='http://purl.org/dc/terms/' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:fo='http://www.w3.org/1999/XSL/Format' xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#' xmlns:exslt='http://exslt.org/common' xmlns:rim='urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0' xmlns:dcmiBox='http://dublincore.org/documents/2000/07/11/dcmi-box/' xmlns:ows='http://www.opengis.net/ows'>"
@@ -100,105 +111,19 @@ public class WMSProcessor extends ResourceProcessor {
          "<ows:UpperCorner>" +layer.getSpatial()[2]+" "+layer.getSpatial()[3]+ "</ows:UpperCorner>" +
          "</ows:WGS84BoundingBox>"
       )
-      + "<dct:references>" + Val.escapeXml(resourceUrl) + "</dct:references>"
+      + "<dct:references>" + Val.escapeXml(getCapabilitiesUrl) + "</dct:references>"
       + "</rdf:Description>"
       + "</rdf:RDF>";
 
   }
   
-  private class LayerAdaptor {
-    private final XPath newXPath;
-    private final Node ndLayer;
-    private final Double [] spatial;
-
-    public LayerAdaptor(XPath newXPath, Node ndLayer) {
-      this.newXPath = newXPath;
-      this.ndLayer = ndLayer;
-      
-      ArrayList<Double> sp = new ArrayList<Double>();
-      try {
-        Node LatLonBoundingBox = (Node)newXPath.evaluate("LatLonBoundingBox", ndLayer, XPathConstants.NODE);
-        if (LatLonBoundingBox!=null) {
-          Double minx = (Double)newXPath.evaluate("@minx", LatLonBoundingBox, XPathConstants.NUMBER);
-          if (minx!=null) sp.add(minx);
-          Double miny = (Double)newXPath.evaluate("@miny", LatLonBoundingBox, XPathConstants.NUMBER);
-          if (miny!=null) sp.add(miny);
-          Double maxx = (Double)newXPath.evaluate("@maxx", LatLonBoundingBox, XPathConstants.NUMBER);
-          if (maxx!=null) sp.add(maxx);
-          Double maxy = (Double)newXPath.evaluate("@maxy", LatLonBoundingBox, XPathConstants.NUMBER);
-          if (maxy!=null) sp.add(maxy);
-        } else {
-          Node BoundingBox = (Node)newXPath.evaluate("BoundingBox[@CRS='CRS:84']", ndLayer, XPathConstants.NODE);
-          if (BoundingBox!=null) {
-            Double minx = (Double)newXPath.evaluate("@minx", BoundingBox, XPathConstants.NUMBER);
-            if (minx!=null) sp.add(minx);
-            Double miny = (Double)newXPath.evaluate("@miny", BoundingBox, XPathConstants.NUMBER);
-            if (miny!=null) sp.add(miny);
-            Double maxx = (Double)newXPath.evaluate("@maxx", BoundingBox, XPathConstants.NUMBER);
-            if (maxx!=null) sp.add(maxx);
-            Double maxy = (Double)newXPath.evaluate("@maxy", BoundingBox, XPathConstants.NUMBER);
-            if (maxy!=null) sp.add(maxy);
-          } else {
-            BoundingBox = (Node)newXPath.evaluate("BoundingBox[@CRS='EPSG:4326']", ndLayer, XPathConstants.NODE);
-            if (BoundingBox!=null) {
-              Double minx = (Double)newXPath.evaluate("@miny", BoundingBox, XPathConstants.NUMBER);
-              if (minx!=null) sp.add(minx);
-              Double miny = (Double)newXPath.evaluate("@minx", BoundingBox, XPathConstants.NUMBER);
-              if (miny!=null) sp.add(miny);
-              Double maxx = (Double)newXPath.evaluate("@maxy", BoundingBox, XPathConstants.NUMBER);
-              if (maxx!=null) sp.add(maxx);
-              Double maxy = (Double)newXPath.evaluate("@maxx", BoundingBox, XPathConstants.NUMBER);
-              if (maxy!=null) sp.add(maxy);
-            } else {
-              Node EX_GeographicBoundingBox = (Node)newXPath.evaluate("EX_GeographicBoundingBox", ndLayer, XPathConstants.NODE);
-              if (EX_GeographicBoundingBox!=null) {
-                Double minx = (Double)newXPath.evaluate("westBoundLongitude", EX_GeographicBoundingBox, XPathConstants.NUMBER);
-                if (minx!=null) sp.add(minx);
-                Double miny = (Double)newXPath.evaluate("southBoundLatitude", EX_GeographicBoundingBox, XPathConstants.NUMBER);
-                if (miny!=null) sp.add(miny);
-                Double maxx = (Double)newXPath.evaluate("eastBoundLongitude", EX_GeographicBoundingBox, XPathConstants.NUMBER);
-                if (maxx!=null) sp.add(maxx);
-                Double maxy = (Double)newXPath.evaluate("northBoundLatitude", EX_GeographicBoundingBox, XPathConstants.NUMBER);
-                if (maxy!=null) sp.add(maxy);
-              }
-            }
-          }
-        }
-      } catch (XPathExpressionException ex) {}
-      this.spatial = sp.toArray(new Double[sp.size()]);
-    }
-    
-    public String getName() {
-      try {
-        return Val.chkStr((String) newXPath.evaluate("Name", ndLayer, XPathConstants.STRING));
-      } catch (XPathExpressionException ex) {
-        return "";
-      }
-    }
-    
-    public String getTitle() {
-      try {
-        return Val.chkStr((String) newXPath.evaluate("Title", ndLayer, XPathConstants.STRING));
-      } catch (XPathExpressionException ex) {
-        return "";
-      }
-    }
-
-    
-    public String getAbstract() {
-      try {
-        return Val.chkStr((String) newXPath.evaluate("Abstract", ndLayer, XPathConstants.STRING));
-      } catch (XPathExpressionException ex) {
-        return "";
-      }
-    }
-    
-    public Double[] getSpatial() {
-      return spatial;
-    }
-    
-  }
-  
+  /**
+   * Makes publishable for the layer.
+   * @param newXPath XPath
+   * @param ndLayer layer node
+   * @return publishable or <code>null</code> if the layer has no name
+   * @throws XPathExpressionException if invoking XPath fails
+   */
   private Publishable makeLayerPublishable(XPath newXPath, Node ndLayer) throws XPathExpressionException {
     Publishable publishable = null;
     
@@ -211,7 +136,7 @@ public class WMSProcessor extends ResourceProcessor {
 
         @Override
         public SourceUri getSourceUri() {
-          return new StringUri(resourceUrl+"&layer="+name);
+          return new StringUri(getCapabilitiesUrl+"&layer="+name);
         }
 
         @Override
@@ -224,6 +149,13 @@ public class WMSProcessor extends ResourceProcessor {
     return publishable;
   }
   
+  /**
+   * Processes recursivelly a layer node
+   * @param newXPath XPath
+   * @param ndLayer layer node
+   * @return list of publishables
+   * @throws XPathExpressionException if invoking XPath fails
+   */
   private List<Publishable> processLayerNode(XPath newXPath, Node ndLayer) throws XPathExpressionException {
     List<Publishable> publishables = new ArrayList<Publishable>();
     
@@ -240,6 +172,11 @@ public class WMSProcessor extends ResourceProcessor {
     return publishables;
   }
   
+  /**
+   * Extracts publishables.
+   * @param nat native implementation of the service
+   * @return list of all publishables
+   */
   private List<Publishable> extractPublishables(NativeImpl nat) {
     List<Publishable> publishables = new ArrayList<Publishable>();
     
@@ -262,17 +199,22 @@ public class WMSProcessor extends ResourceProcessor {
       }
       
     } catch (XPathExpressionException ex) {
-      Logger.getLogger(WMSProcessor.class.getName()).log(Level.SEVERE, null, ex);
+      LOG.log(Level.SEVERE, null, ex);
     } catch (IOException ex) {
-      Logger.getLogger(WMSProcessor.class.getName()).log(Level.SEVERE, null, ex);
+      LOG.log(Level.SEVERE, null, ex);
     }
     
     return publishables;
   }
 
+  /**
+   * Reads XML string.
+   * @return XML string
+   * @throws IOException if reading fails
+   */
   private String readXml() throws IOException {
     HttpClientRequest cr = new HttpClientRequest();
-    cr.setUrl(resourceUrl);
+    cr.setUrl(getCapabilitiesUrl);
     StringHandler sh = new StringHandler();
     cr.setContentHandler(sh);
     cr.execute();
@@ -280,9 +222,14 @@ public class WMSProcessor extends ResourceProcessor {
     return xml;
   }
 
+  /**
+   * Reads document.
+   * @return document
+   * @throws IOException if reading document fails
+   */
   private Document readDoc() throws IOException {
     HttpClientRequest cr = new HttpClientRequest();
-    cr.setUrl(resourceUrl);
+    cr.setUrl(getCapabilitiesUrl);
     XmlHandler sh = new XmlHandler(false);
     cr.setContentHandler(sh);
     cr.execute();
@@ -290,8 +237,11 @@ public class WMSProcessor extends ResourceProcessor {
     return doc;
   }
 
+  /**
+   * Native publishable representing WMS service.
+   */
   private class NativeImpl extends CommonPublishable implements Native {
-    private final UrlUri uri = new UrlUri(resourceUrl);
+    private final UrlUri uri = new UrlUri(getCapabilitiesUrl);
 
     @Override
     public SourceUri getSourceUri() {
@@ -308,4 +258,133 @@ public class WMSProcessor extends ResourceProcessor {
     }
 
   };
+  
+  /**
+   * Layer adaptor.
+   */
+  private class LayerAdaptor {
+    private final XPath newXPath;
+    private final Node ndLayer;
+    private final Double [] spatial;
+
+    /**
+     * Creates instance of the adaptor.
+     * @param newXPath XPath
+     * @param ndLayer layer node
+     */
+    public LayerAdaptor(XPath newXPath, Node ndLayer) {
+      this.newXPath = newXPath;
+      this.ndLayer = ndLayer;
+      
+      // create spatial information; consider several scenarion
+      ArrayList<Double> sp = new ArrayList<Double>();
+      try {
+        Node LatLonBoundingBox = (Node)newXPath.evaluate("LatLonBoundingBox", ndLayer, XPathConstants.NODE);
+        if (LatLonBoundingBox!=null) {
+          
+          Double minx = (Double)newXPath.evaluate("@minx", LatLonBoundingBox, XPathConstants.NUMBER);
+          if (minx!=null) sp.add(minx);
+          Double miny = (Double)newXPath.evaluate("@miny", LatLonBoundingBox, XPathConstants.NUMBER);
+          if (miny!=null) sp.add(miny);
+          Double maxx = (Double)newXPath.evaluate("@maxx", LatLonBoundingBox, XPathConstants.NUMBER);
+          if (maxx!=null) sp.add(maxx);
+          Double maxy = (Double)newXPath.evaluate("@maxy", LatLonBoundingBox, XPathConstants.NUMBER);
+          if (maxy!=null) sp.add(maxy);
+          
+        } else {
+          
+          Node BoundingBox = (Node)newXPath.evaluate("BoundingBox[@CRS='CRS:84']", ndLayer, XPathConstants.NODE);
+          if (BoundingBox!=null) {
+            
+            Double minx = (Double)newXPath.evaluate("@minx", BoundingBox, XPathConstants.NUMBER);
+            if (minx!=null) sp.add(minx);
+            Double miny = (Double)newXPath.evaluate("@miny", BoundingBox, XPathConstants.NUMBER);
+            if (miny!=null) sp.add(miny);
+            Double maxx = (Double)newXPath.evaluate("@maxx", BoundingBox, XPathConstants.NUMBER);
+            if (maxx!=null) sp.add(maxx);
+            Double maxy = (Double)newXPath.evaluate("@maxy", BoundingBox, XPathConstants.NUMBER);
+            if (maxy!=null) sp.add(maxy);
+            
+          } else {
+            
+            BoundingBox = (Node)newXPath.evaluate("BoundingBox[@CRS='EPSG:4326']", ndLayer, XPathConstants.NODE);
+            if (BoundingBox!=null) {
+              
+              Double minx = (Double)newXPath.evaluate("@miny", BoundingBox, XPathConstants.NUMBER);
+              if (minx!=null) sp.add(minx);
+              Double miny = (Double)newXPath.evaluate("@minx", BoundingBox, XPathConstants.NUMBER);
+              if (miny!=null) sp.add(miny);
+              Double maxx = (Double)newXPath.evaluate("@maxy", BoundingBox, XPathConstants.NUMBER);
+              if (maxx!=null) sp.add(maxx);
+              Double maxy = (Double)newXPath.evaluate("@maxx", BoundingBox, XPathConstants.NUMBER);
+              if (maxy!=null) sp.add(maxy);
+              
+            } else {
+              
+              Node EX_GeographicBoundingBox = (Node)newXPath.evaluate("EX_GeographicBoundingBox", ndLayer, XPathConstants.NODE);
+              if (EX_GeographicBoundingBox!=null) {
+                
+                Double minx = (Double)newXPath.evaluate("westBoundLongitude", EX_GeographicBoundingBox, XPathConstants.NUMBER);
+                if (minx!=null) sp.add(minx);
+                Double miny = (Double)newXPath.evaluate("southBoundLatitude", EX_GeographicBoundingBox, XPathConstants.NUMBER);
+                if (miny!=null) sp.add(miny);
+                Double maxx = (Double)newXPath.evaluate("eastBoundLongitude", EX_GeographicBoundingBox, XPathConstants.NUMBER);
+                if (maxx!=null) sp.add(maxx);
+                Double maxy = (Double)newXPath.evaluate("northBoundLatitude", EX_GeographicBoundingBox, XPathConstants.NUMBER);
+                if (maxy!=null) sp.add(maxy);
+                
+              }
+              
+            }
+          }
+        }
+      } catch (XPathExpressionException ex) {}
+      this.spatial = sp.toArray(new Double[sp.size()]);
+    }
+    
+    /**
+     * Gets layer name.
+     * @return layer name
+     */
+    public String getName() {
+      try {
+        return Val.chkStr((String) newXPath.evaluate("Name", ndLayer, XPathConstants.STRING));
+      } catch (XPathExpressionException ex) {
+        return "";
+      }
+    }
+    
+    /**
+     * Gets layer title.
+     * @return layer title
+     */
+    public String getTitle() {
+      try {
+        return Val.chkStr((String) newXPath.evaluate("Title", ndLayer, XPathConstants.STRING));
+      } catch (XPathExpressionException ex) {
+        return "";
+      }
+    }
+
+    /**
+     * Gets layer abstract.
+     * @return layer abstract
+     */
+    public String getAbstract() {
+      try {
+        return Val.chkStr((String) newXPath.evaluate("Abstract", ndLayer, XPathConstants.STRING));
+      } catch (XPathExpressionException ex) {
+        return "";
+      }
+    }
+    
+    /**
+     * Gets spatial information
+     * @return array of four coordinates or empty array if no spatial info available
+     */
+    public Double[] getSpatial() {
+      return spatial;
+    }
+    
+  }
 }
