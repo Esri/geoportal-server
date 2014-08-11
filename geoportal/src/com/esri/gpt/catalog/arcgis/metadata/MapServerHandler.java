@@ -13,8 +13,7 @@
  * limitations under the License.
  */
 package com.esri.gpt.catalog.arcgis.metadata;
-import com.esri.gpt.framework.util.Val;
-
+import com.esri.arcgisws.Envelope;
 import com.esri.arcgisws.MapLayerInfo;
 import com.esri.arcgisws.MapServerBindingStub;
 import com.esri.arcgisws.MapServerInfo;
@@ -22,10 +21,23 @@ import com.esri.arcgisws.PropertySet;
 import com.esri.arcgisws.PropertySetProperty;
 import com.esri.arcgisws.ServiceDescription;
 import com.esri.arcgisws.runtime.exception.ArcGISWebServiceException;
+import com.esri.gpt.catalog.arcgis.metadata.ServiceInfo.LayerInfo;
+import com.esri.gpt.framework.context.ApplicationConfiguration;
+import com.esri.gpt.framework.context.ApplicationContext;
+import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.api.Resource;
+import com.esri.gpt.framework.resource.api.SourceUri;
+import com.esri.gpt.framework.resource.common.UrlUri;
+import com.esri.gpt.framework.util.Val;
+import com.esri.gpt.server.csw.client.NullReferenceException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.transform.TransformerException;
+import org.xml.sax.SAXException;
 
 
 /**
@@ -151,32 +163,74 @@ public class MapServerHandler extends ServiceHandler {
   /*
   @Override
   public void appendRecord(Collection<Resource> records, ServiceHandlerFactory factory, ServiceInfo serviceInfo, boolean isNative) throws Exception {
-    try {
-      MapServerBindingStub stub =
-        getCredentials()==null || getCredentials().getUsername().length()==0 || getCredentials().getPassword().length()==0?
-        new MapServerBindingStub(serviceInfo.getSoapUrl()):
-        new MapServerBindingStub(serviceInfo.getSoapUrl(), getCredentials().getUsername(), getCredentials().getPassword());
-      MapServerInfo mapInfo = stub.getServerInfo(stub.getDefaultMapName());
-      serviceInfo.setEnvelope(mapInfo.getFullExtent());
-      
-      MapLayerInfo[] mapLayerInfos = mapInfo.getMapLayerInfos();
-      for (MapLayerInfo li: mapLayerInfos) {
-        if (!li.isIsFeatureLayer()) continue;
-        String name = Integer.toString(li.getLayerID());
-        String title = li.getName();
-        serviceInfo.getLayersInfo().add(new ServiceInfo.LayerInfo(name, title));
-      }
-      
-      String copyrightText = mapInfo.getCopyrightText();
-      serviceInfo.setCopyright(copyrightText);
-      
-    } catch (ArcGISWebServiceException ex) {
-      LOGGER.log(Level.FINE, "Error getting MapServerInfo.", ex);
-    }
-    super.appendRecord(records, factory, serviceInfo, isNative);
+  try {
+  MapServerBindingStub stub =
+  getCredentials()==null || getCredentials().getUsername().length()==0 || getCredentials().getPassword().length()==0?
+  new MapServerBindingStub(serviceInfo.getSoapUrl()):
+  new MapServerBindingStub(serviceInfo.getSoapUrl(), getCredentials().getUsername(), getCredentials().getPassword());
+  MapServerInfo mapInfo = stub.getServerInfo(stub.getDefaultMapName());
+  serviceInfo.setEnvelope(mapInfo.getFullExtent());
+  MapLayerInfo[] mapLayerInfos = mapInfo.getMapLayerInfos();
+  for (MapLayerInfo li: mapLayerInfos) {
+  if (!li.isIsFeatureLayer()) continue;
+  String name = Integer.toString(li.getLayerID());
+  String title = li.getName();
+  serviceInfo.getLayersInfo().add(new ServiceInfo.LayerInfo(name, title));
   }
-  */
+  String copyrightText = mapInfo.getCopyrightText();
+  serviceInfo.setCopyright(copyrightText);
+  } catch (ArcGISWebServiceException ex) {
+  LOGGER.log(Level.FINE, "Error getting MapServerInfo.", ex);
+  }
+  super.appendRecord(records, factory, serviceInfo, isNative);
+  }
+   */
+  
+  @Override
+  public void appendRecord(Collection<Resource> records, ServiceHandlerFactory factory, ServiceInfo serviceInfo, boolean isNative) throws Exception {
+    super.appendRecord(records, factory, serviceInfo, isNative);
+    for (LayerInfo li: serviceInfo.getLayersInfo()) {
+      records.add(new LayerInfoRecord(serviceInfo, li));
+    }
+  }
+  
+  private class LayerInfoRecord extends ServiceInfoProvider implements Publishable {
+    private final LayerInfo layerInfo;
+    
+    public LayerInfoRecord(ServiceInfo info, LayerInfo layerInfo) {
+      super(info);
+      this.layerInfo = layerInfo;
+    }
 
+    @Override
+    public Iterable<Resource> getNodes() {
+      return new ArrayList<Resource>();
+    }
+
+    @Override
+    public SourceUri getSourceUri() {
+      return new UrlUri(layerInfo.getResourceUrl());
+    }
+
+    @Override
+    public String getContent() throws IOException, TransformerException, SAXException, NullReferenceException {
+      ApplicationContext appCtx = ApplicationContext.getInstance();
+      ApplicationConfiguration cfg = appCtx.getConfiguration();
+      LOGGER.finer("Collecting metadata for: " + this.getSourceUri());
+      try {
+        return layerInfo.asDublinCore(cfg, http);
+      } catch (Exception ex) {
+        throw new IOException("Error collecting metadata. Cause: "+ex.getMessage());
+      }
+    }
+
+    @Override
+    public Date getUpdateDate() {
+      return null;
+    }
+  }
+
+  
   @Override
   public ServiceInfo createServiceInfo(ServiceInfo parentInfo, ServiceDescription desc, String currentRestUrl, String currentSoapUrl) {
     ServiceInfo serviceInfo = super.createServiceInfo(parentInfo, desc, currentRestUrl, currentSoapUrl);
@@ -193,7 +247,8 @@ public class MapServerHandler extends ServiceHandler {
         if (!li.isIsFeatureLayer()) continue;
         String name = Integer.toString(li.getLayerID());
         String title = li.getName();
-        serviceInfo.getLayersInfo().add(new ServiceInfo.LayerInfo(name, title));
+        Envelope extent = li.getExtent();
+        serviceInfo.getLayersInfo().add(new ServiceInfo.LayerInfo(currentRestUrl, name, title, extent));
       }
       
       String copyrightText = mapInfo.getCopyrightText();
