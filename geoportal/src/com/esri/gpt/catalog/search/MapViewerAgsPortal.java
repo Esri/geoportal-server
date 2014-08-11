@@ -49,7 +49,7 @@ public boolean canHandleResource() {
   if (hintServiceType.equalsIgnoreCase(ResourceLinkBuilder.ServiceType.AGS
       .name())) {
     String tmp = this.getResourceUri().toLowerCase();
-    if (tmp.contains("mapserver") || tmp.contains("imageserver")
+    if (tmp.endsWith("mapserver") || tmp.contains("imageserver")
         || tmp.contains("featureserver")) {
       return true;
     }

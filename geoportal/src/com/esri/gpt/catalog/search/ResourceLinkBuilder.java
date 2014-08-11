@@ -342,8 +342,9 @@ protected void buildAGSLinks(SearchXslRecord xRecord, SearchResultRecord record)
   String url;
   String resourceKey;
   ResourceLink link;
+  Pattern maplayer = Pattern.compile("/\\d+$");
 
-  if ((restUrl.length() > 0) && serviceType.equals("ags")) {
+  if ((restUrl.length() > 0) && serviceType.equals("ags") && !maplayer.matcher(resourceUrl).find() ) {
 
     // kml
     if (xRecord.getLinks().readShowLink(ResourceLink.TAG_AGSKML)
