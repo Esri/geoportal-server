@@ -665,6 +665,9 @@ public class ServiceInfo {
     }
   }
 
+  /**
+   * Layer info.
+   */
   public static final class LayerInfo {
 
     private final String restUrl;
@@ -672,6 +675,13 @@ public class ServiceInfo {
     private final String title;
     private final Envelope extent;
 
+    /**
+     * Creates instance of the layer info.
+     * @param restUrl REST URL of the parent map service
+     * @param name layer name (or ID)
+     * @param title layer title
+     * @param extent layer extent
+     */
     public LayerInfo(String restUrl, String name, String title, Envelope extent) {
       this.restUrl = restUrl;
       this.name = name;
@@ -679,26 +689,53 @@ public class ServiceInfo {
       this.extent = extent;
     }
 
-    public String getRestUrl() {
-      return restUrl;
-    }
-
+    /**
+     * Gets name.
+     * @return name
+     */
     public String getName() {
       return name;
     }
 
+    /**
+     * Gets title.
+     * @return title
+     */
     public String getTitle() {
       return title;
     }
 
+    /**
+     * Gets extent.
+     * @return extent
+     */
     public Envelope getExtent() {
       return extent;
     }
 
+    /**
+     * Gets resource URL.
+     * @return resource URL
+     */
     public String getResourceUrl() {
       return this.getRestUrl() + "/" + this.getName();
     }
 
+    /**
+     * Gets parent map service REST URL.
+     * @return parent map service REST URL
+     */
+    private String getRestUrl() {
+      return restUrl;
+    }
+
+    /**
+     * Makes Dublin Core metadata
+     * @param cfg application configuration
+     * @param http HTTP client request object
+     * @return metadata text
+     * @throws Exception if generating metadata fails.
+     */
     public String asDublinCore(ApplicationConfiguration cfg, HttpClientRequest http) throws Exception {
 
       String url = this.getResourceUrl();

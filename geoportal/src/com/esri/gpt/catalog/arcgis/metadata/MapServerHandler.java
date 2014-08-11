@@ -194,43 +194,6 @@ public class MapServerHandler extends ServiceHandler {
     }
   }
   
-  private class LayerInfoRecord extends ServiceInfoProvider implements Publishable {
-    private final LayerInfo layerInfo;
-    
-    public LayerInfoRecord(ServiceInfo info, LayerInfo layerInfo) {
-      super(info);
-      this.layerInfo = layerInfo;
-    }
-
-    @Override
-    public Iterable<Resource> getNodes() {
-      return new ArrayList<Resource>();
-    }
-
-    @Override
-    public SourceUri getSourceUri() {
-      return new UrlUri(layerInfo.getResourceUrl());
-    }
-
-    @Override
-    public String getContent() throws IOException, TransformerException, SAXException, NullReferenceException {
-      ApplicationContext appCtx = ApplicationContext.getInstance();
-      ApplicationConfiguration cfg = appCtx.getConfiguration();
-      LOGGER.finer("Collecting metadata for: " + this.getSourceUri());
-      try {
-        return layerInfo.asDublinCore(cfg, http);
-      } catch (Exception ex) {
-        throw new IOException("Error collecting metadata. Cause: "+ex.getMessage());
-      }
-    }
-
-    @Override
-    public Date getUpdateDate() {
-      return null;
-    }
-  }
-
-  
   @Override
   public ServiceInfo createServiceInfo(ServiceInfo parentInfo, ServiceDescription desc, String currentRestUrl, String currentSoapUrl) {
     ServiceInfo serviceInfo = super.createServiceInfo(parentInfo, desc, currentRestUrl, currentSoapUrl);
@@ -258,6 +221,45 @@ public class MapServerHandler extends ServiceHandler {
       LOGGER.log(Level.FINE, "Error getting MapServerInfo.", ex);
     }
     return serviceInfo;
+  }
+  
+  /**
+   * Publishable layer record.
+   */
+  private class LayerInfoRecord extends ServiceInfoProvider implements Publishable {
+    private final LayerInfo layerInfo;
+    
+    public LayerInfoRecord(ServiceInfo info, LayerInfo layerInfo) {
+      super(info);
+      this.layerInfo = layerInfo;
+    }
+
+    @Override
+    public Iterable<Resource> getNodes() {
+      return new ArrayList<Resource>();
+    }
+
+    @Override
+    public SourceUri getSourceUri() {
+      return new UrlUri(layerInfo.getResourceUrl());
+    }
+
+    @Override
+    public String getContent() throws IOException {
+      ApplicationContext appCtx = ApplicationContext.getInstance();
+      ApplicationConfiguration cfg = appCtx.getConfiguration();
+      LOGGER.finer("Collecting metadata for: " + this.getSourceUri());
+      try {
+        return layerInfo.asDublinCore(cfg, http);
+      } catch (Exception ex) {
+        throw new IOException("Error collecting metadata. Cause: "+ex.getMessage());
+      }
+    }
+
+    @Override
+    public Date getUpdateDate() {
+      return null;
+    }
   }
   
 }
