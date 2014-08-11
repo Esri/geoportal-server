@@ -22,6 +22,8 @@ package com.esri.gpt.control.livedata;
   protected abstract String getUrl();
 
   protected abstract boolean isImageService();
+  
+  protected abstract String getLayerId();
 
   @Override
   protected String newLayerDeclaration() {
@@ -32,6 +34,16 @@ package com.esri.gpt.control.livedata;
     }
   }
 
+
+  @Override
+  protected String finalizeNewLayer() {
+    if (getLayerId()!=null) {
+      return "node.liveDataLayer.setVisibleLayers([" +getLayerId()+ "]);";
+    } else {
+      return "";
+    }
+  };
+  
   @Override
   protected boolean generateBaseMap() {
     return false;

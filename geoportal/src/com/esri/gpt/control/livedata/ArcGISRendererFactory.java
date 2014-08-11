@@ -53,8 +53,19 @@ import org.w3c.dom.Document;
   }
 
   @Override
-  public void register(IRegistry reg, final ISetter setter, final String url) {
+  public void register(IRegistry reg, final ISetter setter, String url) {
     try {
+      Pattern maplayer = Pattern.compile("/\\d+$");
+      Matcher matcher = maplayer.matcher(url);
+      
+      String layerId = null;
+      
+      if (matcher.find()) {
+        int start = matcher.start();
+        layerId = url.substring(start+1);
+        url = url.substring(0, start);
+      }
+      
       URL urlObj = new URL(url);
       // get just protocola name, host name and port number
       String fullHost = urlObj.getProtocol() + "://" + urlObj.getHost() + (urlObj.getPort() >= 0 && urlObj.getPort() != urlObj.getDefaultPort() ? ":" + urlObj.getPort() : "");
@@ -77,6 +88,7 @@ import org.w3c.dom.Document;
       }
       // create rest URL
       final String restUrl = fullHost + ctx + restServices + path + "?f=json";
+      final String finalLayerId = layerId;
       reg.register(new HttpRequestDefinition(restUrl), new IHttpResponseListener() {
 
         public void onResponse(ResponseInfo info, String strContent, Document docContent) {
@@ -120,6 +132,11 @@ import org.w3c.dom.Document;
               @Override
               protected int getMapHeightAdjustment() {
                 return getProperties().getMapHeightAdjustment();
+              }
+              
+              @Override
+              protected String getLayerId() {
+                return finalLayerId;
               }
             });
           }
