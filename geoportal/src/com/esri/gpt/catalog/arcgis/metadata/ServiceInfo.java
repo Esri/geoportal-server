@@ -673,6 +673,7 @@ public class ServiceInfo {
     private final String restUrl;
     private final String name;
     private final String title;
+    private final String description;
     private final Envelope extent;
 
     /**
@@ -680,12 +681,14 @@ public class ServiceInfo {
      * @param restUrl REST URL of the parent map service
      * @param name layer name (or ID)
      * @param title layer title
+     * @param description description
      * @param extent layer extent
      */
-    public LayerInfo(String restUrl, String name, String title, Envelope extent) {
+    public LayerInfo(String restUrl, String name, String title, String description, Envelope extent) {
       this.restUrl = restUrl;
       this.name = name;
       this.title = title;
+      this.description = description;
       this.extent = extent;
     }
 
@@ -703,6 +706,14 @@ public class ServiceInfo {
      */
     public String getTitle() {
       return title;
+    }
+
+    /**
+     * Gets description.
+     * @return description
+     */
+    public String getDescription() {
+      return description;
     }
 
     /**
@@ -762,14 +773,18 @@ public class ServiceInfo {
         sb.append("\r<dc:identifier>").append(Val.escapeXml(url)).append("</dc:identifier>");
       }
 
-      // title, description, creator
+      // title, description
       tmp = Val.chkStr(this.getTitle());
       if (tmp.length() > 0) {
         sb.append("\r<dc:title>").append(Val.escapeXml(tmp)).append("</dc:title>");
       }
+      
+      tmp = Val.chkStr(this.getDescription());
+      if (tmp.length() > 0) {
+        sb.append("\r<dc:description>").append(Val.escapeXml(tmp)).append("</dc:description>");
+      }
 
       if (url.length() > 0) {
-        //scheme = "urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Server";
         String scheme = "urn:x-esri:specification:ServiceType:ArcGIS";
         tmp = "MapService"; // parent type
         if (tmp.length() > 0) {

@@ -210,8 +210,9 @@ public class MapServerHandler extends ServiceHandler {
         if (!li.isIsFeatureLayer()) continue;
         String name = Integer.toString(li.getLayerID());
         String title = li.getName();
+        String description = li.getDescription();
         Envelope extent = li.getExtent();
-        serviceInfo.getLayersInfo().add(new ServiceInfo.LayerInfo(currentRestUrl, name, title, extent));
+        serviceInfo.getLayersInfo().add(new ServiceInfo.LayerInfo(currentRestUrl, name, title, description, extent));
       }
       
       String copyrightText = mapInfo.getCopyrightText();
