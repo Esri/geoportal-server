@@ -158,7 +158,7 @@ import java.io.Writer;
                     + "      initialExtent = null;\r\n"
                     + "    }\r\n"
                     + "  }\r\n"
-                    + "  if (initialExtent!=null) {\r\n"
+                    + "  if (initialExtent!=null && "+(generateBaseMap()? "true": "false")+") {\r\n"
                     + "    gpt.LiveData.setExtent(node.liveDataMap,initialExtent,node.geometryService);\r\n"
                     + "  } else if (extentDef!=null) {\r\n"
                     + "    gpt.LiveData.setExtent(node.liveDataMap,extentDef,node.geometryService);\r\n"
