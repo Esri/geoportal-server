@@ -17,8 +17,10 @@
 <%@ taglib prefix="f" uri="http://java.sun.com/jsf/core" %>
 <%@ taglib prefix="h" uri="http://java.sun.com/jsf/html" %>
 <%@ taglib prefix="gpt" uri="http://www.esri.com/tags-gpt"%>
+<%@taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt"%>
 
 <f:verbatim>
+<fmt:setBundle basename="gpt.resources.gpt"/>  
 <script type="text/javascript">
 
 // Global variables
@@ -182,7 +184,7 @@ function loadSavedSearches(args) {
       dojo.style(elActions, "cursor", "pointer");
       elDeleteLink = dojo.create("a", {
           href: "#",
-          innerHTML: "delete"
+          innerHTML: "<fmt:message key='catalog.search.search.btnDelete'/>"
         }, elActions );
       dojo.connect(elDeleteLink,"onclick", 
         dojo.hitch(this, deleteSavedSearch, obj.id));   
