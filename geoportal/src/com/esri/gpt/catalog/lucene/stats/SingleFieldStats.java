@@ -13,14 +13,28 @@
  * limitations under the License.
  */
 package com.esri.gpt.catalog.lucene.stats;
+import com.esri.gpt.catalog.discovery.AliasedDiscoverables;
+import com.esri.gpt.catalog.discovery.Discoverable;
+import com.esri.gpt.catalog.discovery.PropertyMeaning;
+import com.esri.gpt.catalog.schema.Schema;
+import com.esri.gpt.catalog.schema.Schemas;
+import com.esri.gpt.catalog.schema.indexable.IndexableProperty;
+import com.esri.gpt.catalog.schema.indexable.Indexables;
+import com.esri.gpt.framework.context.ApplicationConfiguration;
+import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.security.metadata.MetadataAcl;
 import com.esri.gpt.framework.util.Val;
-
+import com.sun.faces.util.CollectionsUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.function.BiConsumer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermDocs;
@@ -50,6 +64,7 @@ public class SingleFieldStats extends Collectable {
   private int                  minFrequency = 1;
   private long                 numberOfDocsWithField = 0;
   private FrequencyAccumulator termAccumulator = new FrequencyAccumulator(); 
+  private Details              details;
   
   /** constructors ============================================================ */
   
@@ -122,11 +137,113 @@ public class SingleFieldStats extends Collectable {
   /** methods ================================================================= */
   
   /**
+   * Gets configured schemas.
+   * @return schemas
+   */
+  private Schemas getConfiguredSchemas() {
+    ApplicationContext appCtx = ApplicationContext.getInstance();
+    ApplicationConfiguration appCfg = appCtx.getConfiguration();
+    return appCfg.getCatalogConfiguration().getConfiguredSchemas();
+  }
+  
+  /**
+   * Collects details from the indexables.
+   * @param xpaths xpaths collector.
+   * @param meaning meaning
+   * @param indexables indexables
+   */
+  private void collectDetails(XPaths xpaths, final Set<String> meaning, Indexables indexables) {
+    List<IndexableProperty> properties = indexables.getProperties();
+    if (properties!=null) {
+      for (IndexableProperty p: properties) {
+        collectDetails(xpaths, meaning, p);
+      }
+    }
+    
+    List<Indexables> siblings = indexables.getSiblings();
+    if (siblings!=null) {
+      for (Indexables i: siblings) {
+        collectDetails(xpaths, meaning, i);
+      }
+    }
+  }
+  
+  /**
+   * Collects details from the property.
+   * @param xpaths xpaths collector
+   * @param meaning meaning
+   * @param property property
+   */
+  private void collectDetails(XPaths xpaths, final Set<String> meaning, IndexableProperty property) {
+    if (meaning.contains(property.getMeaningName())) {
+      String expression = property.getXPathExpression();
+      String [] exprParts = expression.split("\\s+\\|\\s+");
+      for (String expr: exprParts) {
+        expr = Val.chkStr(expr).trim();
+        if (!expr.isEmpty()) {
+          xpaths.add(expr);
+        }
+      }
+    }
+    
+    if (property.getChildren()!=null) {
+      for (IndexableProperty p: property.getChildren()) {
+        collectDetails(xpaths, meaning, p);
+      }
+    }
+  }
+  
+  /**
+   * Gets detail for the meaning.
+   * @param meaning meaning
+   * @return details
+   */
+  private Details getDetailsFor(final String meaning) {
+    final Details det = new Details();
+    
+    Schemas schemas = getConfiguredSchemas();
+
+    final TreeSet<String> allMeanings = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+    allMeanings.add(meaning);
+
+    AliasedDiscoverables aliased = schemas.getPropertyMeanings().getAllAliased();
+    aliased.forEach(new BiConsumer<String, Discoverable>(){
+      @Override
+      public void accept(String t, Discoverable u) {
+        PropertyMeaning m = u.getMeaning();
+        if (m.getName().equals(meaning)) {
+          allMeanings.add(t);
+        }
+      }
+    });
+
+    schemas.forEach(new BiConsumer<String, Schema>(){
+      @Override
+      public void accept(String t, Schema u) {
+        final Detail detail = new Detail(u.getKey());
+        det.add(detail);
+
+        if (u.getIndexables()!=null) {
+          collectDetails(detail.getXPaths(), allMeanings, u.getIndexables());
+          if (u.getIndexables().getProperties()!=null) {
+            for (IndexableProperty p: u.getIndexables().getProperties()) {
+              collectDetails(detail.getXPaths(), allMeanings, p);
+            }
+          }
+        }
+      }
+    });
+    
+    return det;
+  }
+  
+  /**
    * Executes the collection of statistics.
    * @param request the active statistics request
    * @param reader the index reader
    * @throws IOException if an error occurs while communicating with the index
    */
+  @Override
   public void collectStats(StatsRequest request, IndexReader reader) throws IOException {
     long t1 = System.currentTimeMillis();
     TermEnum termEnum = null;
@@ -145,6 +262,10 @@ public class SingleFieldStats extends Collectable {
         return;
       } else if (!request.isFieldCollectable(this.fieldName)){
         return;
+      }
+
+      if (fieldName!=null && !fieldName.isEmpty()) {
+        this.details = getDetailsFor(fieldName);
       }
       
       boolean checkTermDocs = true;
@@ -257,6 +378,11 @@ public class SingleFieldStats extends Collectable {
       writer.println("  \"numberOfTermsListed\": "+numToReturn+","); 
       writer.println("  \"minFrequencyConsidered\": "+this.minFrequency+",");
       writer.println("  \"maxFrequencyConsidered\": "+this.maxFrequency+",");
+      
+      if (details!=null) {
+        writer.print("  \"details\": ");
+        details.writeInto(writer);
+      }
      
       writer.println("  \"terms\": [");
       List<NamedFrequency> frequencies = this.getTermFrequencies();
@@ -338,6 +464,107 @@ public class SingleFieldStats extends Collectable {
       writer.println("</table>");
       writer.flush();
     }
+  }
+
+  /**
+   * XPaths of the detail.
+   */
+  private static class XPaths extends HashSet<String> {
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder();
+      for (String xpath: this) {
+        if (sb.length()>0) {
+          sb.append(",");
+        }
+        sb.append("\"").append(xpath).append("\"");
+      }
+      return "["+sb.toString()+"]";
+    }
+
+    public void writeInto(PrintWriter writer) {
+      writer.println("[");
+      boolean first = true;
+      for (String xpath: this) {
+        if (!first)
+          writer.println(",");
+        first = false;
+        writer.print("         \"" +Val.escapeStrForJson(xpath)+ "\"");
+      }
+      if (!first)
+        writer.println();
+      writer.println("       ]");
+    }
+  }
+  
+  /**
+   * Single detail.
+   */
+  private static class Detail {
+    private final String key;
+    private XPaths xpaths = new XPaths();
+    
+    public Detail(String key) {
+      this.key = key;
+    }
+
+    public String getKey() {
+      return key;
+    }
+    
+    public XPaths getXPaths() {
+      return xpaths;
+    }
+    
+    @Override
+    public String toString() {
+      return "{ key: \"" + getKey() + "\", xpaths: " + getXPaths().toString()+"}";
+    }
+
+    public void writeInto(PrintWriter writer) {
+      writer.println("    {");
+      writer.println("       \"key\": \"" +Val.escapeStrForJson(getKey())+ "\",");
+      writer.print  ("       \"xpaths\": ");
+      getXPaths().writeInto(writer);
+      writer.print  ("    }");
+    }
+  }
+  
+  /**
+   * Details structure.
+   */
+  private static class Details extends ArrayList<Detail> {
+    private final HashMap<String,Detail> map = new CollectionsUtils.ConstMap<String, Detail>();
+    
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder();
+      for (Detail detail: this) {
+        if (sb.length()>0) {
+          sb.append(",");
+        }
+        sb.append("\"").append(detail.toString()).append("\"");
+      }
+      return "["+sb.toString()+"]";
+    }
+
+    public void writeInto(PrintWriter writer) {
+      writer.println("[");
+      
+      boolean first = true;
+      for (Detail detail: this) {
+        if (!first)
+          writer.println(",");
+        first = false;
+        detail.writeInto(writer);
+      }
+      
+      if (!first)
+        writer.println();
+      
+      writer.println("  ],");
+    }
+    
   }
   
 }
