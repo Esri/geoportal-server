@@ -17,7 +17,7 @@ With the Geoportal Server you can:
 
 Want to learn more? Try our [sandbox site](http://gptogc.esri.com)!
 
-Want to get started right away? Download the [compiled distribution and installation files] (http://esri.github.io/geoportal-server/distribution/1.2.4/geoportal-1.2.4.zip).
+Want to get started right away? Download the [compiled distribution and installation files] (http://esri.github.io/geoportal-server/distribution/1.2.5/geoportal-1.2.5.zip).
 
 ## Features
 
@@ -25,7 +25,7 @@ Please click [here](http://www.esri.com/software/arcgis/geoportal/key-features) 
 
 ## Requirements
 
-Please refer to [here](https://github.com/Esri/geoportal-server/wiki/Preinstallation-1.2.4) for system requirements.
+Please refer to [here](https://github.com/Esri/geoportal-server/wiki/Preinstallation-1.2.5) for system requirements.
 
 ## Resources
 
