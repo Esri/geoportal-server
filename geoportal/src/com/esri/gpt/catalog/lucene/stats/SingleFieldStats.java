@@ -32,9 +32,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.BiConsumer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermDocs;
@@ -207,32 +207,31 @@ public class SingleFieldStats extends Collectable {
     allMeanings.add(meaning);
 
     AliasedDiscoverables aliased = schemas.getPropertyMeanings().getAllAliased();
-    aliased.forEach(new BiConsumer<String, Discoverable>(){
-      @Override
-      public void accept(String t, Discoverable u) {
-        PropertyMeaning m = u.getMeaning();
-        if (m.getName().equals(meaning)) {
-          allMeanings.add(t);
-        }
+    for ( Map.Entry<String,Discoverable> e: aliased.entrySet()) {
+      String t = e.getKey();
+      Discoverable u = e.getValue();
+      PropertyMeaning m = u.getMeaning();
+      if (m.getName().equals(meaning)) {
+        allMeanings.add(t);
       }
-    });
+    }
 
-    schemas.forEach(new BiConsumer<String, Schema>(){
-      @Override
-      public void accept(String t, Schema u) {
-        final Detail detail = new Detail(u.getKey());
-        det.add(detail);
+    for (Map.Entry<String, Schema> e: schemas.entrySet()) {
+      String t = e.getKey();
+      Schema u = e.getValue();
+      
+      final Detail detail = new Detail(u.getKey());
+      det.add(detail);
 
-        if (u.getIndexables()!=null) {
-          collectDetails(detail.getXPaths(), allMeanings, u.getIndexables());
-          if (u.getIndexables().getProperties()!=null) {
-            for (IndexableProperty p: u.getIndexables().getProperties()) {
-              collectDetails(detail.getXPaths(), allMeanings, p);
-            }
+      if (u.getIndexables()!=null) {
+        collectDetails(detail.getXPaths(), allMeanings, u.getIndexables());
+        if (u.getIndexables().getProperties()!=null) {
+          for (IndexableProperty p: u.getIndexables().getProperties()) {
+            collectDetails(detail.getXPaths(), allMeanings, p);
           }
         }
       }
-    });
+    }
     
     return det;
   }
