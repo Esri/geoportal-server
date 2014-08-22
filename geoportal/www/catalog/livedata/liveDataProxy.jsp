@@ -54,7 +54,8 @@
 
       response.setCharacterEncoding("UTF-8");
       response.setContentType("text/javascript");
-      writer = response.getWriter();
+      
+      writer = new PrintWriter(response.getOutputStream());
       renderer.render(writer);
 		  
 		} catch (Exception e) {
