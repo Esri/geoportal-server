@@ -18,6 +18,7 @@ import com.esri.gpt.catalog.discovery.rest.RestQuery;
 import com.esri.gpt.catalog.search.*;
 import com.esri.gpt.control.georss.IFeedRecords.FieldMeta;
 import com.esri.gpt.control.georss.RestQueryServlet.ResponseFormat;
+import com.esri.gpt.framework.ArcGISOnline.Type;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
@@ -402,6 +403,8 @@ public class ExtJsonFeedWriter implements FeedWriter {
     levelUp();
 
     printArg("type", "Feature", true);
+    Type arcgisOnlineServiceType = r.getArcgisOnlineServiceType();
+    printArg("arcgisOnlineServiceType", arcgisOnlineServiceType!=null? arcgisOnlineServiceType.getTypeName(): "", true);
     printAttributes("properties", r, true);
     printAttributes("attributes", r, true);
     

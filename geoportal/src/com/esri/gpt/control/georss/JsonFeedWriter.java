@@ -16,6 +16,7 @@ package com.esri.gpt.control.georss;
 
 import com.esri.gpt.catalog.discovery.rest.RestQuery;
 import com.esri.gpt.catalog.search.*;
+import com.esri.gpt.framework.ArcGISOnline.Type;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.isodate.IsoDateFormat;
 import com.esri.gpt.framework.jsf.MessageBroker;
@@ -173,6 +174,8 @@ private void printRecord(IFeedRecord r, boolean more) {
     printArg("updated", DF.format(r.getModfiedDate()), true);
   }
   printArg("summary", r.getAbstract(), true);
+  Type arcgisOnlineServiceType = r.getArcgisOnlineServiceType();
+  printArg("arcgisOnlineServiceType", arcgisOnlineServiceType!=null? arcgisOnlineServiceType.getTypeName(): "", true);
   println("\"bbox\""+sp()+":"+sp()+bbox(r.getEnvelope())+",");
 
   printGeometry(r.getEnvelope(), true);

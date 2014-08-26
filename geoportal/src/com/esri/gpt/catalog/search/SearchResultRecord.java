@@ -13,14 +13,14 @@
  * limitations under the License.
  */
 package com.esri.gpt.catalog.search;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.esri.gpt.control.georss.IFeedRecord;
+import com.esri.gpt.framework.ArcGISOnline.Type;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.request.Record;
 import com.esri.gpt.framework.util.Val;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Class SearchResultRecord. Contains attributes describing a metadata
@@ -50,6 +50,7 @@ public class SearchResultRecord extends Record {
   private String        _resourceUrl = "";
   private String        _service = "";
   private String        _serviceType = "";
+  private Type          _arcgisOnlineServiceType = null;
   private String        _title = "";
   private String        _uuid = "";
   private boolean       _supportsViewMetadata = true;
@@ -341,6 +342,14 @@ public SearchResultRecord() {
    */
   public void setServiceType(String serviceType) {
     _serviceType = Val.chkStr(serviceType);
+  }
+
+  public Type getArcgisOnlineServiceType() {
+    return _arcgisOnlineServiceType;
+  }
+
+  public void setArcgisOnlineServiceType(Type arcgisOnlineServiceType) {
+    this._arcgisOnlineServiceType = arcgisOnlineServiceType;
   }
   
   /** 

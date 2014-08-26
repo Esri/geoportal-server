@@ -21,11 +21,14 @@ import com.esri.gpt.catalog.discovery.Returnable;
 import com.esri.gpt.catalog.schema.Meaning;
 import com.esri.gpt.catalog.search.ResourceIdentifier;
 import com.esri.gpt.catalog.search.ResourceLinks;
+import com.esri.gpt.framework.ArcGISOnline.Type;
+import com.esri.gpt.framework.ArcGISOnline.Types;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.util.Val;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
@@ -111,6 +114,19 @@ public class DiscoveredRecordAdapter implements IFeedRecord {
   @Override
   public String getContentType() {
     return select(Meaning.MEANINGTYPE_CONTENTTYPE,"\\p{Alpha}+");
+  }
+
+  @Override
+  public Type getArcgisOnlineServiceType() {
+    String resourceUrl = getResourceUrl();
+    if (!resourceUrl.isEmpty()) {
+      Types arcgisOnlineServiceTypes = Types.getInstance();
+      List<Type> matchingTypes = arcgisOnlineServiceTypes.interrogate(resourceUrl);
+      if (!matchingTypes.isEmpty()) {
+        return matchingTypes.get(0);
+      }
+    }
+    return null;
   }
 
   @Override

@@ -28,7 +28,7 @@ public final class Types extends ArrayList<Type> {
   private static Types instance = null;
   
   public static Types getInstance() {
-    if (instance!=null) {
+    if (instance==null) {
       instance = new Types();
     }
     return instance;
@@ -48,7 +48,7 @@ public final class Types extends ArrayList<Type> {
     add(new ServiceType("Map Service",DataType.JSON));
     add(new ServiceType("Image Service",DataType.JSON));
     add(new Type("KML",DataType.FILE,KMZ));
-    add(new Type("WMS",DataType.UNSPECIFED));
+    add(new Type("WMS",DataType.UNSPECIFED, new WMSServiceTypePredicate()));
     add(new Type("Feature Collection",DataType.JSON));
     add(new Type("Feature Collection Template",DataType.JSON));
     add(new ServiceType("Geodata Service",DataType.UNSPECIFED));
@@ -56,7 +56,7 @@ public final class Types extends ArrayList<Type> {
     
     add(new ServiceType("Geometry Service",DataType.UNSPECIFED));
     add(new ServiceType("Geocoding Service",DataType.UNSPECIFED));
-    add(new ServiceType("Network Analysis Service",DataType.UNSPECIFED,"NAService"));
+    add(new ServiceType("Network Analysis Service",DataType.UNSPECIFED,"NAServer"));
     add(new ServiceType("Geoprocessing Service",DataType.UNSPECIFED));
     add(new Type("Workflow Manager Service",DataType.UNSPECIFED));
     

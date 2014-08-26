@@ -14,22 +14,12 @@
  */
 package com.esri.gpt.catalog.search;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-
 import com.esri.gpt.catalog.context.CatalogConfiguration;
 import com.esri.gpt.catalog.search.SearchEngineCSW.Scheme;
 import com.esri.gpt.control.georss.RestQueryServlet;
 import com.esri.gpt.control.georss.SearchResultRecordAdapter;
+import com.esri.gpt.framework.ArcGISOnline.Type;
+import com.esri.gpt.framework.ArcGISOnline.Types;
 import com.esri.gpt.framework.collection.StringAttribute;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.ConfigurationException;
@@ -39,8 +29,18 @@ import com.esri.gpt.framework.search.DcList;
 import com.esri.gpt.framework.search.SearchXslRecord;
 import com.esri.gpt.framework.util.LogUtil;
 import com.esri.gpt.framework.util.Val;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Builds the collection of bind-able links associated with a document or resource. 
@@ -885,6 +885,13 @@ protected void determineResourceUrl(SearchXslRecord xRecord,
     record.setResourceUrl(resourceUrl);
     record.setService(serviceName);
     record.setServiceType(serviceType);
+    
+    Types arcgisOnlineServiceTypes = Types.getInstance();
+    List<Type> matchingTypes = arcgisOnlineServiceTypes.interrogate(resourceUrl);
+    if (!matchingTypes.isEmpty()) {
+      record.setArcgisOnlineServiceType(matchingTypes.get(0));
+    }
+    
   }
 
 }

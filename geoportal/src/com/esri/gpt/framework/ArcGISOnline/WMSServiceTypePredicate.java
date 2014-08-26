@@ -17,24 +17,14 @@
 package com.esri.gpt.framework.ArcGISOnline;
 
 /**
- * AGS service type predicate.
+ * WMS service type predicate.
  */
-public abstract class AgsServiceTypePredicate implements ITypePredicate {
-  private String typeName;
-  protected abstract String getTypeName();
-  
-  public AgsServiceTypePredicate() {
-    
-  }
-  
-  public AgsServiceTypePredicate(String typeName) {
-    this.typeName = typeName;
-  }
+public class WMSServiceTypePredicate implements ITypePredicate {
 
   @Override
   public boolean matches(String url) {
-    String tn = typeName!=null? typeName: getTypeName().replace("Service", "Server").replaceAll("\\s+", "");
-    return url.toLowerCase().endsWith(tn.toLowerCase());
+    url = url.toLowerCase();
+    return url.contains("wmsserver") || url.contains("service=wms");
   }
   
 }

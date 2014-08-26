@@ -16,6 +16,7 @@
 package com.esri.gpt.control.georss;
 
 import com.esri.gpt.catalog.search.ResourceLinks;
+import com.esri.gpt.framework.ArcGISOnline.Type;
 import com.esri.gpt.framework.geometry.Envelope;
 import java.util.Date;
 import java.util.Map;
@@ -82,6 +83,11 @@ public interface IFeedRecord {
    * @return service type
    */
   String getServiceType();
+  /**
+   * Gets arcgis online service type.
+   * @return type
+   */
+  Type getArcgisOnlineServiceType();
   /**
    * Gets service.
    * @return service

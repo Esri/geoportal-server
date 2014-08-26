@@ -17,6 +17,7 @@ package com.esri.gpt.control.georss;
 
 import com.esri.gpt.catalog.search.ResourceLinks;
 import com.esri.gpt.catalog.search.SearchResultRecord;
+import com.esri.gpt.framework.ArcGISOnline.Type;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.util.UuidUtil;
 import java.util.Date;
@@ -73,6 +74,11 @@ public class SearchResultRecordAdapter implements IFeedRecord {
   @Override
   public String getContentType() {
     return record.getContentType();
+  }
+
+  @Override
+  public Type getArcgisOnlineServiceType() {
+    return record.getArcgisOnlineServiceType();
   }
 
   @Override
