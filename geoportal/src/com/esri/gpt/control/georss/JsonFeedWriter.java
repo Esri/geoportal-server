@@ -176,6 +176,7 @@ private void printRecord(IFeedRecord r, boolean more) {
   printArg("summary", r.getAbstract(), true);
   Type arcgisOnlineServiceType = r.getArcgisOnlineServiceType();
   printArg("arcgisOnlineServiceType", arcgisOnlineServiceType!=null? arcgisOnlineServiceType.getTypeName(): "", true);
+  printArg("contentType", r.getContentType(), true);
   println("\"bbox\""+sp()+":"+sp()+bbox(r.getEnvelope())+",");
 
   printGeometry(r.getEnvelope(), true);

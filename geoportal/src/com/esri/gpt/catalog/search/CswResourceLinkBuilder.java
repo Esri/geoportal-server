@@ -100,10 +100,11 @@ public class CswResourceLinkBuilder extends ResourceLinkBuilder {
 //    this.buildAddToMapLink(xRecord, record);
     this.buildResourceLink(xRecord, record);
 //    this.buildWebsiteLink(xRecord, record);
-//    this.buildDetailsLink(xRecord, record);
+    this.buildDetailsLink(xRecord, record);
 //    this.buildCustomLinks(xRecord, record);
   }
 
+  /*
   @Override
   protected void buildAddToMapLink(SearchXslRecord xRecord, SearchResultRecord record) {
     String[] allowedServices = {"ags", "wms", "kml"};
@@ -145,6 +146,7 @@ public class CswResourceLinkBuilder extends ResourceLinkBuilder {
     }
     record.getResourceLinks().add(link);
   }
+  */
 
   protected void buildResourceLink(SearchXslRecord xRecord, SearchResultRecord record) {
     String[] allowedServices = {"ags", "wms", "kml"};
