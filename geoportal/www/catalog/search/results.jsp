@@ -589,10 +589,14 @@ function rsGetQualityOfService() {
 				
 					<% // Abstract and thumbnail %>
 					<h:panelGroup>
+						<%// Thumbnail can be clicked and will show at original size >
+						<h:outputLink title="" target="_blank" value="#{record.thumbnailLink.url}"
+								styleClass="reviewResult">
 					  <h:graphicImage id="_imgRecordThumbnail" 
 					    alt="#{gptMsg['catalog.rest.thumbNail']}"
 					    rendered="#{not empty record.thumbnailLink.url}"
                         value="#{record.thumbnailLink.url}" width="64" height="64" styleClass="resultsThumbnail" />
+                        			</h:outputLink>
             <h:outputText id="_txtAbstract" styleClass="resultsContent" value="#{record['abstract']}" />
 				  </h:panelGroup>
 				  
