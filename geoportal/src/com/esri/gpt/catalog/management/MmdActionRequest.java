@@ -118,6 +118,8 @@ public void execute() throws Exception {
     nRows = adminDao.updateApprovalStatus(getPublisher(),uuids,MmdEnums.ApprovalStatus.disapproved);
   } else if (sAction.equalsIgnoreCase("setReviewed")) {
     nRows = adminDao.updateApprovalStatus(getPublisher(),uuids,MmdEnums.ApprovalStatus.reviewed);
+  } else if (sAction.equalsIgnoreCase("Duplicate")) {
+		nRows = adminDao.duplicateRecord(getPublisher(),uuids);
   }
   getActionResult().setNumberOfRecordsModified(nRows);
   this.hadUnalteredDraftDocuments = adminDao.hadUnalteredDraftDocuments();
