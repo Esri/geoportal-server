@@ -187,7 +187,38 @@ public class CswResourceLinkBuilder extends ResourceLinkBuilder {
     }
     record.getResourceLinks().add(link);
   }
-  
+
+  /**
+   * Builds the link associated with the metadata details page.
+   * <br/>Records from an extenal repositories do not have a details link.
+   * @param xRecord the underlying CSW record
+   * @param record the search result record
+   */
+  @Override
+  protected void buildDetailsLink(SearchXslRecord xRecord, SearchResultRecord record) {
+    if(!xRecord.getLinks().readShowLink(ResourceLink.TAG_DETAILS)) {
+      return;
+    }
+    String uuid = Val.chkStr(record.getUuid());
+    String resourceUrl = "";
+    if (uuid.length() > 0) {
+      resourceUrl = this.getBaseContextPath() + this.resourceDetailsPath + "?uuid="
+        + encodeUrlParam(uuid) + "&cswUrl="
+        + encodeUrlParam(this.cswContext.getCswUrl())
+        + "&cswProfileId="
+        + encodeUrlParam(this.cswContext.getCswProfileId());     
+    }
+    if (resourceUrl.length() > 0) {
+      String resourceKey = "catalog.rest.viewDetails";
+
+      ResourceLink resourcePageLink = this.makeLink(resourceUrl, ResourceLink.TAG_DETAILS,
+              resourceKey);
+
+      // record.getResourceLinks().add(link);
+      record.getResourceLinks().add(resourcePageLink);
+    }
+  }
+
   @Override
   protected void buildMetadataLink(SearchXslRecord xRecord, SearchResultRecord record) {
     if (!xRecord.getLinks().readShowLink(ResourceLink.TAG_METADATA)) {

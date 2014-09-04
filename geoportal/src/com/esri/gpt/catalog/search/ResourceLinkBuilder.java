@@ -59,12 +59,12 @@ private static final Logger LOG = Logger.getLogger(
 
 /** instance variables ====================================================== */
 private String                    baseContextPath      = "";
-protected final String              externalMetadataPath = "/catalog/search/dsFullMetadata.page";
+protected final String            externalMetadataPath = "/catalog/search/dsFullMetadata.page";
 private final String              imagePath            = "/catalog/images";
 private String                    mapViewerUrl         = "";
 private final String              metadataPath         = "/rest/document";
 private final String              previewPath          = "/catalog/livedata/preview.page";
-private final String              resourceDetailsPath  = "/catalog/search/resource/details.page";
+protected final String            resourceDetailsPath  = "/catalog/search/resource/details.page";
 private final String              resourcePreviewPath          = "/catalog/search/resource/livedata-preview.page";
 
 private final Map<String, String> labels               = new HashMap<String, String>();
