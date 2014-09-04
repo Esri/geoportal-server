@@ -34,7 +34,6 @@ public class CswResourceLinkBuilder extends ResourceLinkBuilder {
 
   private final CswContext cswContext;
   private static final String MAP_VIEWER_URL_PATTERN = "http://www.arcgis.com/home/webmap/viewer.html?url=${url}";
-  private String mapViewerUrlPattern = MAP_VIEWER_URL_PATTERN;
 
   public static ResourceLinkBuilder newBuilder(RequestContext context, CswContext cswContext,
     HttpServletRequest servletRequest, MessageBroker messageBroker) {
@@ -51,18 +50,17 @@ public class CswResourceLinkBuilder extends ResourceLinkBuilder {
 
     CatalogConfiguration catCfg = context.getCatalogConfiguration();
     String cswResourceLinkBuilderClassName = Val.chkStr(catCfg.getParameters().getValue("cswResourceLinkBuilder"));
-    String cswMapViewerUrlPattern = Val.chkStr(catCfg.getParameters().getValue("cswMapViewerUrlPattern"), MAP_VIEWER_URL_PATTERN);
     
     ResourceLinkBuilder linkBuilder = null;
     if (cswResourceLinkBuilderClassName.length() == 0) {
-      linkBuilder = new CswResourceLinkBuilder(cswContext, cswMapViewerUrlPattern);
+      linkBuilder = new CswResourceLinkBuilder(cswContext);
     } else {
       try {
         Class<?> cls = Class.forName(cswResourceLinkBuilderClassName);
         Constructor<?> constructor = cls.getConstructor(CswContext.class,String.class);
-        linkBuilder = (ResourceLinkBuilder) constructor.newInstance(cswContext,cswMapViewerUrlPattern);
+        linkBuilder = (ResourceLinkBuilder) constructor.newInstance(cswContext);
       } catch (Exception ex) {
-        linkBuilder = new CswResourceLinkBuilder(cswContext, cswMapViewerUrlPattern);
+        linkBuilder = new CswResourceLinkBuilder(cswContext);
       }
     }
     
@@ -71,9 +69,8 @@ public class CswResourceLinkBuilder extends ResourceLinkBuilder {
     return linkBuilder;
   }
 
-  private CswResourceLinkBuilder(CswContext cswContext, String mapViewerUrlPattern) {
+  private CswResourceLinkBuilder(CswContext cswContext) {
     this.cswContext = cswContext;
-    this.mapViewerUrlPattern = mapViewerUrlPattern;
   }
 
   /**
@@ -85,68 +82,13 @@ public class CswResourceLinkBuilder extends ResourceLinkBuilder {
    */
   public void build(SearchXslRecord xRecord, SearchResultRecord record) {
 
-    // determine the primary resource URL
     this.determineResourceUrl(xRecord, record);
 
-//    // build the content type and thumbnail links
-//    this.buildContentTypeLink(xRecord, record);
     this.buildThumbnailLink(xRecord, record);
-//
-//    // build remaining links
-//    this.buildOpenLink(xRecord, record);
-//    this.buildPreviewLink(xRecord, record);
-//    this.buildAGSLinks(xRecord, record);
-    this.buildMetadataLink(xRecord, record);
-//    this.buildAddToMapLink(xRecord, record);
     this.buildResourceLink(xRecord, record);
-//    this.buildWebsiteLink(xRecord, record);
+    this.buildMetadataLink(xRecord, record);
     this.buildDetailsLink(xRecord, record);
-//    this.buildCustomLinks(xRecord, record);
   }
-
-  /*
-  @Override
-  protected void buildAddToMapLink(SearchXslRecord xRecord, SearchResultRecord record) {
-    String[] allowedServices = {"ags", "wms", "kml"};
-
-    if (!xRecord.getLinks().readShowLink(ResourceLink.TAG_ADDTOMAP)) {
-      return;
-    }
-
-    String resourceUrl = Val.chkStr(record.getResourceUrl());
-    String serviceType = Val.chkStr(record.getServiceType()).toLowerCase();
-
-    Arrays.sort(allowedServices);
-    if (Arrays.binarySearch(allowedServices, serviceType) < 0) {
-      return;
-    }
-
-    if (resourceUrl.indexOf("q=") >= 0 && resourceUrl.indexOf("user=") >= 0 && resourceUrl.indexOf("max=") >= 0 && resourceUrl.indexOf("dest=") >= 0 && resourceUrl.indexOf("destuser=") >= 0) {
-      // look like this is AGP-2-AGP registration; don'e generate preview link
-      return;
-    }
-
-    // return if we cannot preview
-    String tmp = resourceUrl.toLowerCase();
-    if ((resourceUrl.length() == 0)) {
-      return;
-    } else if (tmp.indexOf("?getxml=") != -1) {
-      return;
-    }
-
-    // build the link
-    String url = mapViewerUrlPattern.replaceAll("\\$\\{url\\}",encodeUrlParam(resourceUrl));
-    String resourceKey = "catalog.rest.preview";
-    ResourceLink link = this.makeLink(url, ResourceLink.TAG_PREVIEW, resourceKey);
-    if (serviceType.length() > 0) {
-      link.getParameters().add(new StringAttribute(RESOURCE_TYPE, serviceType));
-    }
-    if (record.isExternal()) {
-      link.setForExtenalRecord(true);
-    }
-    record.getResourceLinks().add(link);
-  }
-  */
 
   protected void buildResourceLink(SearchXslRecord xRecord, SearchResultRecord record) {
     String[] allowedServices = {"ags", "wms", "kml"};
