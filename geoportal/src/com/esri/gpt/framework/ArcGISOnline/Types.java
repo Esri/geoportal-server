@@ -54,7 +54,7 @@ public final class Types extends ArrayList<Type> {
     add(new ServiceType("Geometry Service",DataType.UNSPECIFED,DataCategory.TOOLS));
     add(new ServiceType("Geocoding Service",DataType.UNSPECIFED,DataCategory.TOOLS));
     add(new ServiceType("Network Analysis Service",DataType.UNSPECIFED,DataCategory.TOOLS,"NAServer"));
-    add(new ServiceType("Geoprocessing Service",DataType.UNSPECIFED,DataCategory.TOOLS));
+    add(new ServiceType("Geoprocessing Service",DataType.UNSPECIFED,DataCategory.TOOLS,"GPServer"));
     add(new Type("Workflow Manager Service",DataType.UNSPECIFED,DataCategory.TOOLS));
     
     add(new Type("Web Mapping Application",DataType.JSON,DataCategory.APPLICATIONS));
