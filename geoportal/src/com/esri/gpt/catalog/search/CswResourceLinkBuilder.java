@@ -18,6 +18,8 @@ package com.esri.gpt.catalog.search;
 import com.esri.gpt.catalog.context.CatalogConfiguration;
 import static com.esri.gpt.catalog.search.ResourceLinkBuilder.RESOURCE_TYPE;
 import com.esri.gpt.control.georss.CswContext;
+import com.esri.gpt.framework.ArcGISOnline.DataType;
+import com.esri.gpt.framework.ArcGISOnline.Type;
 import com.esri.gpt.framework.collection.StringAttribute;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.MessageBroker;
@@ -85,6 +87,7 @@ public class CswResourceLinkBuilder extends ResourceLinkBuilder {
 
     this.buildThumbnailLink(xRecord, record);
     this.buildResourceLink(xRecord, record);
+    this.buildDownloadLink(xRecord, record);
     this.buildMetadataLink(xRecord, record);
     this.buildDetailsLink(xRecord, record);
   }
@@ -129,6 +132,17 @@ public class CswResourceLinkBuilder extends ResourceLinkBuilder {
     record.getResourceLinks().add(link);
   }
 
+  protected void buildDownloadLink(SearchXslRecord xRecord, SearchResultRecord record) {
+    String resourceUrl = Val.chkStr(record.getResourceUrl());
+    Type arcgisOnlineServiceType = record.getArcgisOnlineServiceType();
+    
+    if (!resourceUrl.isEmpty() && arcgisOnlineServiceType!=null && arcgisOnlineServiceType.getDataType()==DataType.FILE) {
+      String resourceKey = "catalog.rest.file";
+      ResourceLink link = this.makeLink(encodeUrlParam(resourceUrl), ResourceLink.TAG_FILE, resourceKey);
+      record.getResourceLinks().add(link);
+    }
+  }
+  
   /**
    * Builds the link associated with the metadata details page.
    * <br/>Records from an extenal repositories do not have a details link.

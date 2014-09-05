@@ -25,12 +25,9 @@ import java.util.List;
  * Types.
  */
 public final class Types extends ArrayList<Type> {
-  private static Types instance = null;
+  private static Types instance = new Types();
   
   public static Types getInstance() {
-    if (instance==null) {
-      instance = new Types();
-    }
     return instance;
   }
   

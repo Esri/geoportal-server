@@ -22,19 +22,22 @@ package com.esri.gpt.framework.ArcGISOnline;
 public class Type {
   protected final String typeName;
   protected final DataType dataType;
+  protected final DataCategory dataCategory;
   protected ITypePredicate predicate;
   protected final FileType[] fileTypes;
   
-  public Type(String typeName, DataType dataType, ITypePredicate predicate, FileType...fileTypes) {
+  public Type(String typeName, DataType dataType, DataCategory dataCategory, ITypePredicate predicate, FileType...fileTypes) {
     this.typeName = typeName;
     this.dataType = dataType;
+    this.dataCategory = dataCategory;
     this.predicate = predicate;
     this.fileTypes = fileTypes;
   }
   
-  public Type(String typeName, DataType dataType, FileType...fileTypes) {
+  public Type(String typeName, DataType dataType, DataCategory dataCategory, FileType...fileTypes) {
     this.typeName = typeName;
     this.dataType = dataType;
+    this.dataCategory = dataCategory;
     this.predicate = dataType==DataType.FILE? new FileTypePredicateImpl(): null;
     this.fileTypes = fileTypes;
   }
@@ -46,6 +49,14 @@ public class Type {
 
   public String getTypeName() {
     return typeName;
+  }
+
+  public DataType getDataType() {
+    return dataType;
+  }
+  
+  public DataCategory getDataCategory() {
+    return dataCategory;
   }
   
   public boolean matches(String url) {
@@ -61,13 +72,13 @@ public class Type {
   
   public static class ServiceType extends Type {
     
-    public ServiceType(String typeName, DataType dataType) {
-      super(typeName,dataType);
+    public ServiceType(String typeName, DataType dataType, DataCategory dataCategory) {
+      super(typeName,dataType,dataCategory);
       this.predicate = new AgsServiceTypePredicateImpl();
     }
     
-    public ServiceType(String typeName, DataType dataType, String serviceName) {
-      super(typeName,dataType);
+    public ServiceType(String typeName, DataType dataType, DataCategory dataCategory, String serviceName) {
+      super(typeName,dataType,dataCategory);
       this.predicate = new AgsServiceTypePredicateImpl(serviceName);
     }
   }
