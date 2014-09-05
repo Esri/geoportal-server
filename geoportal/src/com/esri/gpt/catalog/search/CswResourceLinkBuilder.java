@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 public class CswResourceLinkBuilder extends ResourceLinkBuilder {
 
   private final CswContext cswContext;
-  private static final String MAP_VIEWER_URL_PATTERN = "http://www.arcgis.com/home/webmap/viewer.html?url=${url}";
 
   public static ResourceLinkBuilder newBuilder(RequestContext context, CswContext cswContext,
     HttpServletRequest servletRequest, MessageBroker messageBroker) {
