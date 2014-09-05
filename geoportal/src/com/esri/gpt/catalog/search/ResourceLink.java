@@ -68,6 +68,9 @@ public class ResourceLink {
   /** View metadata tag = "metadata" */
   public static final String TAG_RESOURCE = "resource";
   
+  /** View metadata tag = "file" */
+  public static final String TAG_FILE = "file";
+  
   /** instance variables ====================================================== */
   private String  label = "";
   private String  labelResourceKey = "";
