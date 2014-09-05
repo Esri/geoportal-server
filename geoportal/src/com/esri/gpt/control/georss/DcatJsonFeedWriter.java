@@ -198,6 +198,8 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
       if ((++counter)%1000==0) {
         LOGGER.info("Processed "+counter+"/" +numberOfHits+ " DCAT records ("+(100*counter)/numberOfHits+"%)");
       }
+      
+      Thread.yield();
     }
   }
 
