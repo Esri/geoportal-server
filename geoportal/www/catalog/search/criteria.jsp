@@ -1766,6 +1766,16 @@
   <% // map %>
   <h:panelGrid id="pnlMap">
     <h:panelGroup id="mapToolbar" styleClass="mapToolbar" style="display:none">
+      <% // List of predefined extents %>
+      <h:selectOneMenu id="scSel"
+                     value="#{SearchController.searchCriteria.searchFilterSpatial.extent}"
+                     onchange="javascript: setMapExtent();"
+                     >
+	  <f:selectItem itemValue="" itemLabel="#{gptMsg['catalog.search.filterSpatial.extents']}"/>
+	  <f:selectItem itemValue="default" itemLabel="#{gptMsg['catalog.search.filterSpatial.extents.default']}"/>
+          <f:selectItems value="#{SearchController.searchCriteria.searchFilterSpatial.predefinedExtents}"/>
+      </h:selectOneMenu>
+      <h:outputText id="brksc" escape="false" value="<br/>"/>
       <h:outputLabel for="mapInput-locate" value="#{gptMsg['catalog.search.search.lblLocator']}"/>
       <h:inputText id="mapInput-locate" styleClass="locatorInput"
                    maxlength="1024" onkeypress="return scMap.onLocatorKeyPress(event);"/>
