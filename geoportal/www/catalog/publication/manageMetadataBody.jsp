@@ -649,6 +649,10 @@ function mmdClearAclSelection(){
     <f:selectItem
       itemValue="transfer"
       itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.transfer']}"/>
+    <%// SetEditable commands%>
+    <f:selectItem
+      itemValue="setEditable"
+      itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.setEditable']}"/>
     <f:selectItem
       itemValue="delete"
       itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.delete']}"/>
