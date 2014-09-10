@@ -403,8 +403,7 @@ public class ExtJsonFeedWriter implements FeedWriter {
     levelUp();
 
     printArg("type", "Feature", true);
-    Type arcgisOnlineServiceType = r.getArcgisOnlineServiceType();
-    printArg("arcgisOnlineServiceType", arcgisOnlineServiceType!=null? arcgisOnlineServiceType.getTypeName(): "", true);
+    printArg("arcgisOnlineServiceType", r.getArcgisOnlineServiceType(), true);
     printAttributes("properties", r, true);
     printAttributes("attributes", r, true);
     
@@ -420,6 +419,10 @@ public class ExtJsonFeedWriter implements FeedWriter {
 
     levelDown();
     println("}" + (more ? "," : ""));
+  }
+
+  private void printArg(String argName, Type arcgisOnlineServiceType, boolean more) {
+    printArg(argName, arcgisOnlineServiceType!=null? arcgisOnlineServiceType.getTypeName(): "", more);
   }
 
   /**

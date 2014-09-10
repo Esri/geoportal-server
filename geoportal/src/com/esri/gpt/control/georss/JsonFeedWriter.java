@@ -174,8 +174,7 @@ private void printRecord(IFeedRecord r, boolean more) {
     printArg("updated", DF.format(r.getModfiedDate()), true);
   }
   printArg("summary", r.getAbstract(), true);
-  Type arcgisOnlineServiceType = r.getArcgisOnlineServiceType();
-  printArg("arcgisOnlineServiceType", arcgisOnlineServiceType!=null? arcgisOnlineServiceType.getTypeName(): "", true);
+  printArg("arcgisOnlineServiceType", r.getArcgisOnlineServiceType(), true);
   printArg("contentType", r.getContentType(), true);
   println("\"bbox\""+sp()+":"+sp()+bbox(r.getEnvelope())+",");
 
@@ -184,6 +183,10 @@ private void printRecord(IFeedRecord r, boolean more) {
 
   levelDown();
   println("}"+(more? ",": ""));
+}
+
+private void printArg(String argName, Type arcgisOnlineServiceType, boolean more) {
+  printArg(argName, arcgisOnlineServiceType!=null? arcgisOnlineServiceType.getTypeName(): "", more);
 }
 
 /**
