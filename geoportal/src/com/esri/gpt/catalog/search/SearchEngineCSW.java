@@ -710,9 +710,11 @@ protected SearchResultRecord marshallRecord(
   // marshall id
   searchResultRecord.setUuid(cswRecord.getId());
     try {
-    searchResultRecord.setModifiedDate(
-          cswRecord.getModifiedDateAsDateObject("yyyy-MM-dd'T'HH:mm:ssZ")
-        );
+    Date date = cswRecord.getModifiedDateAsDateObject("yyyy-MM-dd'T'HH:mm:ssZ");
+    if (date==null) {
+      date = cswRecord.getModifiedDateAsDateObject("yyyy-MM-dd");
+    }
+    searchResultRecord.setModifiedDate(date);
   } catch (Exception e) {
     LOG.log(Level.INFO, "Could not set modfied time on record {0}", searchResultRecord.getUuid());
   }
