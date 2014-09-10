@@ -226,7 +226,7 @@ namespace com.esri.gpt.csw { /// <summary>
 
                     if (isWCSService(capabilitiesxml))
                     {
-                        capabilities.GetRecordByID_GetURL = xmlDoc.SelectSingleNode("/wcs:WCS_Capabilities/wcs:Capability/wcs:Request/wcs:GetCoverage/wcs:DCPType/wcs:HTTP/wcs:Get/wcs:OnlineResource", xmlnsManager).Attributes["xlink:href"].Value;
+                        capabilities.GetRecordByID_GetURL = xmlDoc.SelectSingleNode("/wcs:WCS_Capabilities/wcs:Capability/wcs:Request/wcs:GetCoverage/wcs:DCPType/wcs:HTTP/wcs:Get/wcs:OnlineResource/@xlink:href", xmlnsManager).Value;
 
                         if (capabilities.GetRecordByID_GetURL == null || capabilities.GetRecordByID_GetURL.Trim().Length == 0)
                         {
@@ -237,50 +237,12 @@ namespace com.esri.gpt.csw { /// <summary>
                     else
                     {
 
-                     //   XmlNodeList parentNodeList = xmlDoc.SelectNodes("//ows:OperationsMetadata/ows:Operation[@name='GetRecords']/ows:DCP/ows:HTTP/ows:Post", xmlnsManager);
-
-                        capabilities.GetRecords_PostURL = xmlDoc.SelectSingleNode("//ows:OperationsMetadata/ows:Operation[@name='GetRecords']/ows:DCP/ows:HTTP/ows:Post", xmlnsManager).Attributes["xlink:href"].Value;
-
-                      /*  if (parentNodeList.Count > 1)
+                        if (this.profile.Name == "INSPIRE CSW 2.0.2 AP ISO")
                         {
-                            XmlNodeList nodeList = xmlDoc.SelectNodes("//ows:OperationsMetadata/ows:Operation[@name='GetRecords']/ows:DCP/ows:HTTP/ows:Post/ows:Constraint/ows:Value", xmlnsManager);
-                            if (nodeList != null && nodeList.Count >0 && (nodeList.Item(0).InnerText.Equals("SOAP") || nodeList.Item(0).InnerText.Equals("soap")))
-                            {
-                                capabilities.GetRecords_IsSoapEndPoint = true;
-                            }
-                            else if(capabilities.GetRecords_PostURL.ToLower().Contains("soap"))
-                            {
-                                capabilities.GetRecords_IsSoapEndPoint = true;
-                            }
-                            //  capabilities.GetRecords_PostURL = xmlDoc.SelectSingleNode("//ows:OperationsMetadata/ows:Operation[@name='GetRecords']/ows:DCP/ows:HTTP/ows:Post", xmlnsManager).Attributes["xlink:href"].Value;
-                        }*/
-                        
-                       
-                      
-                       XmlNodeList nodeList = xmlDoc.SelectNodes("//ows:OperationsMetadata/ows:Operation[@name='GetRecords']/ows:DCP/ows:HTTP/ows:Post/ows:Constraint/ows:Value", xmlnsManager);
-
-                       for (int iter = 0; iter < nodeList.Count; iter++)
-                        {
-                            capabilities.GetRecords_PostURL = nodeList.Item(iter).ParentNode.ParentNode.Attributes["xlink:href"].Value;
-
-                            if (this.profile.Name == "INSPIRE CSW 2.0.2 AP ISO")
-                            {
-                                if (nodeList.Item(iter).InnerText.Equals("SOAP") || nodeList.Item(iter).InnerText.Equals("soap") || capabilities.GetRecords_PostURL.ToLower().Contains("soap"))
-                                {                                
-                                    capabilities.GetRecords_IsSoapEndPoint = true;
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                if (nodeList.Item(iter).InnerText.Equals("XML") || nodeList.Item(iter).InnerText.Equals("xml"))
-                                {
-                                     break;
-                                }
-                            }
-                        }
-                        
-
+                            capabilities.GetRecords_PostURL = xmlDoc.SelectSingleNode("//ows:OperationsMetadata/ows:Operation[@name='GetRecords']/ows:DCP/ows:HTTP/ows:Post[translate(ows:Constraint/ows:Value, 'SOAP', 'soap')='soap']/@xlink:href", xmlnsManager).Value;
+                            capabilities.GetRecords_IsSoapEndPoint = true;
+                        } else
+                            capabilities.GetRecords_PostURL = xmlDoc.SelectSingleNode("//ows:OperationsMetadata/ows:Operation[@name='GetRecords']/ows:DCP/ows:HTTP/ows:Post[translate(ows:Constraint/ows:Value, 'XML', 'xml')='xml']/@xlink:href", xmlnsManager).Value;
 
                         if (capabilities.GetRecords_PostURL == null || capabilities.GetRecords_PostURL.Trim().Length == 0)
                         {
@@ -288,9 +250,7 @@ namespace com.esri.gpt.csw { /// <summary>
                             throw new Exception(Resources.NoValidPostUrl);
                         }
 
-                        //   capabilities.GetRecords_PostURL = xmlDoc.SelectSingleNode("//ows:OperationsMetadata/ows:Operation[@name='GetRecords']/ows:DCP/ows:HTTP/ows:Post", xmlnsManager).Attributes["xlink:href"].Value;
-
-                        capabilities.GetRecordByID_GetURL = xmlDoc.SelectSingleNode("//ows:OperationsMetadata/ows:Operation[@name='GetRecordById']/ows:DCP/ows:HTTP/ows:Get", xmlnsManager).Attributes["xlink:href"].Value;
+                        capabilities.GetRecordByID_GetURL = xmlDoc.SelectSingleNode("//ows:OperationsMetadata/ows:Operation[@name='GetRecordById']/ows:DCP/ows:HTTP/ows:Get/@xlink:href", xmlnsManager).Value;
                     }
 
                     return true;
