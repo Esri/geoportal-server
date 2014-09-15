@@ -24,7 +24,8 @@
      com.esri.gpt.framework.context.RequestContext.extract(request).getApplicationConfiguration().getInteractiveMap();
   String vmdUuid = request.getParameter("uuid");
   String sRestUrl = request.getContextPath()+"/rest/document?f=html&id="+java.net.URLEncoder.encode(vmdUuid,"UTF-8");
-  
+  com.esri.gpt.control.georss.CswContext cswContext = com.esri.gpt.control.georss.CswContext.create(request.getParameter("cswUrl"), request.getParameter("cswProfileId"));
+  boolean isCswContext = cswContext!=null;
 %>
 
 <script type="text/javascript">
@@ -36,6 +37,30 @@
   gptMapConfig.locatorSingleFieldParameter = "<%=imConfig.getLocatorSingleFieldParameter()%>";
   gptMapConfig.locatorGraphicURL = "<%=request.getContextPath()%>/catalog/images/pushpin_red.gif";
   gptMapConfig.mapVisibleLayers = "<%=imConfig.getMapVisibleLayers()%>";
+</script>
+<script type="text/javascript">
+  if ("<%=isCswContext%>") {
+    dojo.addOnLoad(function(){
+      dojo.query("iframe.section").forEach(function(node,index){
+        dojo.style(node,"display","none");
+      });
+      dojo.query("span.note").forEach(function(node,index){
+        dojo.style(node,"display","none");
+      });
+      dojo.query("div#gptBanner").forEach(function(node,index){
+        dojo.style(node,"display","none");
+      });
+      dojo.query("div#gptPrimaryNavigation").forEach(function(node,index){
+        dojo.style(node,"display","none");
+      });
+      dojo.query("div#gptSecondaryNavigation").forEach(function(node,index){
+        dojo.style(node,"display","none");
+      });
+      dojo.query("div#gptFooter").forEach(function(node,index){
+        dojo.style(node,"display","none");
+      });
+    });
+  }
 </script>
 
 <h:form id="mdDetails" styleClass="mdDetails">
