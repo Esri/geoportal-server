@@ -1,0 +1,1 @@
+CALL "C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" /p:Confuration=Release "C:\Builds\GeoportalServer\10.2_CSWClients\Sources\CswClient\trunk\InstallSupport\CSWClientsHelp.shfbproj" 
