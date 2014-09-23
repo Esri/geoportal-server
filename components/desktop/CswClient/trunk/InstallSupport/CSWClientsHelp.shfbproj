@@ -15,21 +15,20 @@
     <RootNamespace>Documentation</RootNamespace>
     <Name>Documentation</Name>
     <!-- SHFB properties -->
-    <OutputPath>C:\Builds\GeoportalServer\10.2_CSWClients\Binaries\</OutputPath>
+    <OutputPath>C:\Builds\GeoportalServer\10.3_CSWClients\Binaries\</OutputPath>
     <HtmlHelpName>CSWClients</HtmlHelpName>
     <WorkingPath>C:\Temp\SandCastleWorkingFolder\</WorkingPath>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\CswClient.dll" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\CswClient.xml" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\CswSearch.dll" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\CswSearch.xml" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\CSWSearchDockWindow.dll" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\CSWSearchDockWindow.xml" />
       <DocumentationSource sourceFile="..\..\..\..\Binaries\AppLogger.dll" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\AppLogger.xml" />
-    </DocumentationSources>
+<DocumentationSource sourceFile="..\..\..\..\Binaries\AppLogger.xml" />
+<DocumentationSource sourceFile="..\..\..\..\Binaries\CswClient.dll" />
+<DocumentationSource sourceFile="..\..\..\..\Binaries\CswClient.xml" />
+<DocumentationSource sourceFile="..\..\..\..\Binaries\CswSearch.dll" />
+<DocumentationSource sourceFile="..\..\..\..\Binaries\CswSearch.xml" />
+<DocumentationSource sourceFile="..\..\..\..\Binaries\CSWSearchDockWindow.dll" />
+<DocumentationSource sourceFile="..\..\..\..\Binaries\CSWSearchDockWindow.xml" /></DocumentationSources>
     <HelpTitle>A CSW Clients Documented Class Library</HelpTitle>
-    <CopyrightText>Copyright &amp;#169%3b ESRI 2013</CopyrightText>
+    <CopyrightText>Copyright &amp;#169%3b ESRI 2014</CopyrightText>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
     <BuildLogFile>
     </BuildLogFile>
@@ -48,7 +47,7 @@
     <SyntaxFilters>Standard</SyntaxFilters>
     <SdkLinkTarget>Blank</SdkLinkTarget>
     <RootNamespaceContainer>False</RootNamespaceContainer>
-    <PresentationStyle>vs2005</PresentationStyle>
+    <PresentationStyle>vs2010</PresentationStyle>
     <Preliminary>False</Preliminary>
     <NamingMethod>Guid</NamingMethod>
     <Language>en-US</Language>
@@ -73,15 +72,15 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Win32' ">
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup>    
     <Reference Include="ESRI.ArcGIS.Desktop.AddIns">
-      <HintPath>..\..\..\..\..\..\..\ArcGIS\DeveloperKit10.0\DotNet\ESRI.ArcGIS.Desktop.AddIns.dll</HintPath>
-    </Reference>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\ArcGIS\DeveloperKit10.3\DotNet\ESRI.ArcGIS.Desktop.AddIns.dll</HintPath>
+    </Reference>    
     <Reference Include="ESRI.ArcGISExplorer">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Explorer\bin\ESRI.ArcGISExplorer.dll</HintPath>
-    </Reference>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Explorer\bin\ESRI.ArcGISExplorer.dll</HintPath>
+    </Reference>    
     <Reference Include="ESRI.ArcGISExplorer.Application">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Explorer\bin\ESRI.ArcGISExplorer.Application.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Explorer\bin\ESRI.ArcGISExplorer.Application.dll</HintPath>
     </Reference>
   </ItemGroup>
   <!-- Import the SHFB build targets -->
