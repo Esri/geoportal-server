@@ -230,7 +230,7 @@
   <PropertyGroup>
     <ZipFileExtension>esriAddIn</ZipFileExtension>
     <AddInTargetProduct>Desktop</AddInTargetProduct>
-    <AddInTargetVersion>10.0</AddInTargetVersion>
+    <AddInTargetVersion>10.3</AddInTargetVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
