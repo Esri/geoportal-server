@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WMCOpener", "WMCOpener.csproj", "{FD5FC0B9-DCB2-4FEE-88EF-3FF6017EA854}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppLogger", "..\..\..\AppLogger\trunk\src\AppLogger.csproj", "{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://pstfsarr:8080/tfs/consultingservices
+		SccProjectUniqueName0 = WMCOpener.csproj
+		SccProjectName0 = .
+		SccAuxPath0 = http://pstfsarr:8080/tfs/consultingservices
+		SccLocalPath0 = .
+		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName1 = ..\\..\\..\\AppLogger\\trunk\\src\\AppLogger.csproj
+		SccProjectName1 = ../../../AppLogger/trunk/src
+		SccAuxPath1 = http://pstfsarr:8080/tfs/consultingservices
+		SccLocalPath1 = ..\\..\\..\\AppLogger\\trunk\\src
+		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FD5FC0B9-DCB2-4FEE-88EF-3FF6017EA854}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD5FC0B9-DCB2-4FEE-88EF-3FF6017EA854}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD5FC0B9-DCB2-4FEE-88EF-3FF6017EA854}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD5FC0B9-DCB2-4FEE-88EF-3FF6017EA854}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
