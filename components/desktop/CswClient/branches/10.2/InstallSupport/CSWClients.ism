@@ -2658,8 +2658,8 @@
 		<row><td>PATH_TO_ADDINS_FILES</td><td>C:\Documents and Settings\pscmbldusr\Application Data\ESRI\ArcGIS Explorer\AddIns</td><td/><td>2</td></row>
 		<row><td>PATH_TO_ADDINS_FILES1</td><td>C:\ESRI\ArcGIS Explorer\AddIns</td><td/><td>2</td></row>
 		<row><td>PATH_TO_BINARIES_FILES</td><td>C:\Builds\GeoportalServer\10.2_CSWClients\Binaries</td><td/><td>2</td></row>
-		<row><td>PATH_TO_COMMON_FILES</td><td>C:\Builds\GeoportalServer\10.2_CSWClients\Sources\CswClient\trunk\common</td><td/><td>2</td></row>
-		<row><td>PATH_TO_IMAGES_FILES1</td><td>C:\Builds\GeoportalServer\10.2_CSWClients\Sources\CswClient\trunk\explorer\Images</td><td/><td>2</td></row>
+		<row><td>PATH_TO_COMMON_FILES</td><td>C:\Builds\GeoportalServer\10.2_CSWClients\Sources\CswClient\branches\10.2\common</td><td/><td>2</td></row>
+		<row><td>PATH_TO_IMAGES_FILES1</td><td>C:\Builds\GeoportalServer\10.2_CSWClients\Sources\CswClient\branches\10.2\explorer\Images</td><td/><td>2</td></row>
 		<row><td>PATH_TO_PROFILES_FILES</td><td>C:\Builds\GeoportalServer\10.2_CSWClients\Sources\Geoportal\trunk\src\gpt\search\profiles</td><td/><td>2</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
