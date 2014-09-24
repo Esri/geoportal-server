@@ -972,21 +972,21 @@
 		<row><td>CustomSetup</td><td>ChangeFolder</td><td>SelectionBrowse</td><td>InstallChangeFolder</td><td>1</td><td>0</td></row>
 		<row><td>CustomSetup</td><td>Details</td><td>SelectionBrowse</td><td>DiskSpaceRequirements</td><td>1</td><td>1</td></row>
 		<row><td>CustomSetup</td><td>Help</td><td>SpawnDialog</td><td>CustomSetupTips</td><td>1</td><td>1</td></row>
-		<row><td>CustomSetup</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.2" And &amp;CSWArcMap = 3</td><td>2</td></row>
+		<row><td>CustomSetup</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.3" And &amp;CSWArcMap = 3</td><td>2</td></row>
 		<row><td>CustomSetup</td><td>Next</td><td>NewDialog</td><td>DestinationFolder</td><td>OutOfNoRbDiskSpace &lt;&gt; 1</td><td>5</td></row>
 		<row><td>CustomSetup</td><td>Next</td><td>NewDialog</td><td>OutOfSpace</td><td>OutOfNoRbDiskSpace = 1</td><td>4</td></row>
-		<row><td>CustomSetup</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.2" And &amp;CSWArcMap = 3</td><td>3</td></row>
+		<row><td>CustomSetup</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.3" And &amp;CSWArcMap = 3</td><td>3</td></row>
 		<row><td>CustomSetup</td><td>Next</td><td>[_IsSetupTypeMin]</td><td>Custom</td><td>1</td><td>1</td></row>
 		<row><td>CustomSetupTips</td><td>OK</td><td>EndDialog</td><td>Return</td><td>1</td><td>1</td></row>
 		<row><td>CustomerInformation</td><td>Back</td><td>NewDialog</td><td>LicenseAgreement</td><td>1</td><td>1</td></row>
 		<row><td>CustomerInformation</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
-		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.2" And &amp;CSWArcMap = 3</td><td>7</td></row>
+		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.3" And &amp;CSWArcMap = 3</td><td>7</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>SetAllUsersDefaultLogLoc</td><td>ApplicationUsers = "AllUsers"</td><td>5</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>SetCurrentUserDefaultLogLoc</td><td>ApplicationUsers = "OnlyCurrentUser"</td><td>4</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>SetLogDirWithEndingBackslash</td><td>ApplicationUsers = "AllUsers"</td><td>6</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>EndDialog</td><td>Exit</td><td>(SERIALNUMVALRETRYLIMIT) And (SERIALNUMVALRETRYLIMIT&lt;0) And (SERIALNUMVALRETURN&lt;&gt;SERIALNUMVALSUCCESSRETVAL)</td><td>3</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>NewDialog</td><td>SetupType</td><td>1</td><td>9</td></row>
-		<row><td>CustomerInformation</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.2" And &amp;CSWArcMap = 3</td><td>8</td></row>
+		<row><td>CustomerInformation</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.3" And &amp;CSWArcMap = 3</td><td>8</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>[ALLUSERS]</td><td>1</td><td>ApplicationUsers = "AllUsers" And Privileged</td><td>1</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>[ALLUSERS]</td><td>{}</td><td>ApplicationUsers = "OnlyCurrentUser" And Privileged</td><td>2</td></row>
 		<row><td>DatabaseFolder</td><td>Back</td><td>NewDialog</td><td>CustomerInformation</td><td>1</td><td>1</td></row>
@@ -1061,7 +1061,7 @@
 		<row><td>ReadyToInstall</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
 		<row><td>ReadyToInstall</td><td>InstallNow</td><td>EndDialog</td><td>Return</td><td>OutOfNoRbDiskSpace &lt;&gt; 1</td><td>1</td></row>
 		<row><td>ReadyToInstall</td><td>InstallNow</td><td>NewDialog</td><td>OutOfSpace</td><td>OutOfNoRbDiskSpace = 1</td><td>2</td></row>
-		<row><td>ReadyToInstall</td><td>InstallNow</td><td>Remove</td><td>CSWArcMap</td><td>Not ARCGISVERSION&lt;&lt;"10"</td><td>6</td></row>
+		<row><td>ReadyToInstall</td><td>InstallNow</td><td>Remove</td><td>CSWArcMap</td><td>Not ARCGISVERSION&lt;&lt;"10.3"</td><td>6</td></row>
 		<row><td>ReadyToInstall</td><td>InstallNow</td><td>[ProgressType1]</td><td>Installing</td><td>1</td><td>3</td></row>
 		<row><td>ReadyToInstall</td><td>InstallNow</td><td>[ProgressType2]</td><td>installed</td><td>1</td><td>4</td></row>
 		<row><td>ReadyToInstall</td><td>InstallNow</td><td>[ProgressType3]</td><td>installs</td><td>1</td><td>5</td></row>
@@ -1117,12 +1117,12 @@
 		<row><td>SetupResume</td><td>Next</td><td>NewDialog</td><td>OutOfSpace</td><td>OutOfNoRbDiskSpace = 1</td><td>0</td></row>
 		<row><td>SetupType</td><td>Back</td><td>NewDialog</td><td>CustomerInformation</td><td>1</td><td>1</td></row>
 		<row><td>SetupType</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
-		<row><td>SetupType</td><td>Next</td><td>AddLocal</td><td>ALL</td><td>_IsSetupTypeMin = "Typical" And ARCGISVERSION &lt;&lt; "10.2"</td><td>1</td></row>
-		<row><td>SetupType</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.2" And _IsSetupTypeMin &lt;&gt; "Custom" And &amp;CSWArcMap = 3</td><td>2</td></row>
+		<row><td>SetupType</td><td>Next</td><td>AddLocal</td><td>ALL</td><td>_IsSetupTypeMin = "Typical" And ARCGISVERSION &lt;&lt; "10.3"</td><td>1</td></row>
+		<row><td>SetupType</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.3" And _IsSetupTypeMin &lt;&gt; "Custom" And &amp;CSWArcMap = 3</td><td>2</td></row>
 		<row><td>SetupType</td><td>Next</td><td>NewDialog</td><td>CustomSetup</td><td>_IsSetupTypeMin = "Custom"</td><td>4</td></row>
 		<row><td>SetupType</td><td>Next</td><td>NewDialog</td><td>DestinationFolder</td><td>_IsSetupTypeMin &lt;&gt; "Custom"</td><td>6</td></row>
 		<row><td>SetupType</td><td>Next</td><td>NewDialog</td><td>OutOfSpace</td><td>OutOfNoRbDiskSpace = 1</td><td>5</td></row>
-		<row><td>SetupType</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.2" And _IsSetupTypeMin &lt;&gt; "Custom" And &amp;CSWArcMap = 3</td><td>3</td></row>
+		<row><td>SetupType</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.3" And _IsSetupTypeMin &lt;&gt; "Custom" And &amp;CSWArcMap = 3</td><td>3</td></row>
 		<row><td>SplashBitmap</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
 		<row><td>SplashBitmap</td><td>Next</td><td>NewDialog</td><td>InstallWelcome</td><td>1</td><td>0</td></row>
 	</table>
