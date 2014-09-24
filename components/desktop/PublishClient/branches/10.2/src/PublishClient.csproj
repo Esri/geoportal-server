@@ -12,10 +12,14 @@
     <AssemblyName>PublishClient</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -195,7 +199,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\AppLogger\trunk\src\AppLogger.csproj">
+    <ProjectReference Include="..\..\..\..\AppLogger\branches\10.2\src\AppLogger.csproj">
       <Project>{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}</Project>
       <Name>AppLogger</Name>
     </ProjectReference>

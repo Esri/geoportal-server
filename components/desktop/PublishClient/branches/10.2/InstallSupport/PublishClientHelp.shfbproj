@@ -19,13 +19,12 @@
     <HtmlHelpName>PublishClient</HtmlHelpName>
     <WorkingPath>C:\Temp\SandCastleWorkingFolder\</WorkingPath>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\AppLogger.dll" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\AppLogger.xml" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\PublishClient.dll" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\PublishClient.xml" />
-    </DocumentationSources>
+      <DocumentationSource sourceFile="..\..\..\..\..\Binaries\AppLogger.dll" />
+<DocumentationSource sourceFile="..\..\..\..\..\Binaries\AppLogger.xml" />
+<DocumentationSource sourceFile="..\..\..\..\..\Binaries\PublishClient.dll" />
+<DocumentationSource sourceFile="..\..\..\..\..\Binaries\PublishClient.xml" /></DocumentationSources>
     <HelpTitle>A Publish Client Documented Class Library</HelpTitle>
-    <CopyrightText>Copyright &amp;#169%3b ESRI 2010</CopyrightText>
+    <CopyrightText>Copyright &amp;#169%3b ESRI 2014</CopyrightText>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
     <FrameworkVersion>.NET 4.0.30319</FrameworkVersion>
   </PropertyGroup>
@@ -50,7 +49,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ESRI.ArcGIS.Desktop.AddIns">
-      <HintPath>..\..\..\..\..\..\ArcGIS\DeveloperKit10.0\DotNet\ESRI.ArcGIS.Desktop.AddIns.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\ArcGIS\DeveloperKit10.2\DotNet\ESRI.ArcGIS.Desktop.AddIns.dll</HintPath>
     </Reference>
   </ItemGroup>
   <!-- Import the SHFB build targets -->

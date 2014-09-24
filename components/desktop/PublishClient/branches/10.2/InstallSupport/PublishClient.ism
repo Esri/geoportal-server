@@ -2573,7 +2573,7 @@
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectFolder</td><td/><td/><td>1</td></row>
 		<row><td>PATH_TO_BIN_FILES</td><td>C:\Builds\GeoportalServer\10.2_PublishClient\Binaries</td><td/><td>2</td></row>
-		<row><td>PATH_TO_PUBLISHCLIENT_FILE</td><td>C:\Builds\GeoportalServer\10.2_PublishClient\Sources\PublishClient\trunk\src</td><td/><td>2</td></row>
+		<row><td>PATH_TO_PUBLISHCLIENT_FILE</td><td>C:\Builds\GeoportalServer\10.2_PublishClient\Sources\PublishClient\branches\10.2\src</td><td/><td>2</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
 		<row><td>WindowsFolder</td><td/><td/><td>1</td></row>
