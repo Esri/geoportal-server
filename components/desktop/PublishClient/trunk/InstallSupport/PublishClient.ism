@@ -3988,7 +3988,7 @@
 		<row><td>ID_STRING15</td><td>1033</td><td>PUBLIS~1|Publish Client Developer Help</td><td>0</td><td/><td>1109306383</td></row>
 		<row><td>ID_STRING16</td><td>1033</td><td>PUBLIS~1|Publish Client</td><td>0</td><td/><td>975058256</td></row>
 		<row><td>ID_STRING2</td><td>1033</td><td>AllUsers</td><td>0</td><td/><td>-1575156306</td></row>
-		<row><td>ID_STRING3</td><td>1033</td><td>ArcGIS 10.2 for Desktop was not found. Please install ArcGIS 10.2 for Desktop and then restart this installation.</td><td>0</td><td/><td>983641612</td></row>
+		<row><td>ID_STRING3</td><td>1033</td><td>ArcGIS 10.3 for Desktop was not found. Please install ArcGIS 10.3 for Desktop and then restart this installation.</td><td>0</td><td/><td>-995968339</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>CurrentUser</td><td>0</td><td/><td>-1575150162</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>&amp;Next &gt;</td><td>0</td><td/><td>-1575130835</td></row>
 		<row><td>ID_STRING6</td><td>1033</td><td>&lt; &amp;Back</td><td>0</td><td/><td>-1575130835</td></row>
@@ -4308,7 +4308,7 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 	<table name="LaunchCondition">
 		<col key="yes" def="s255">Condition</col>
 		<col def="l255">Description</col>
-		<row><td>ARCGISVERSION&lt;&lt;"10.2"</td><td>##ID_STRING3##</td></row>
+		<row><td>ARCGISVERSION&lt;&lt;"10.3"</td><td>##ID_STRING3##</td></row>
 	</table>
 
 	<table name="ListBox">
