@@ -8,7 +8,7 @@
   <Company>ESRI</Company>
   <Date>1/22/2010</Date>
   <Targets>
-    <Target name="Desktop" version="10.1" />
+    <Target name="Desktop" version="10.2" />
   </Targets>
   <AddIn language="CLR" library="WMCOpener.dll" namespace="WMCOpener">
     <ArcMap>

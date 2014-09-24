@@ -19,15 +19,15 @@
     <HtmlHelpName>WMC</HtmlHelpName>
     <WorkingPath>..\..\..\..\..\..\..\Temp\SandCastleWorkingFolder\</WorkingPath>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\AppLogger.dll" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\AppLogger.xml" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\WMCOpener.dll" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\WMCOpener.xml" />
-    </DocumentationSources>
+      <DocumentationSource sourceFile="..\..\..\..\..\Binaries\AppLogger.dll" />
+<DocumentationSource sourceFile="..\..\..\..\..\Binaries\AppLogger.xml" />
+<DocumentationSource sourceFile="..\..\..\..\..\Binaries\WMCOpener.dll" />
+<DocumentationSource sourceFile="..\..\..\..\..\Binaries\WMCOpener.xml" /></DocumentationSources>
     <HelpTitle>A WMC Documented Class Library</HelpTitle>
-    <CopyrightText>Copyright &amp;#169%3b ESRI 2010</CopyrightText>
+    <CopyrightText>Copyright &amp;#169%3b ESRI 2014</CopyrightText>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
     <FrameworkVersion>.NET 4.0.30319</FrameworkVersion>
+    <PresentationStyle>vs2010</PresentationStyle>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
        order for Visual Studio to perform the build.  The others are optional
@@ -50,7 +50,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ESRI.ArcGIS.Desktop.AddIns">
-      <HintPath>..\..\..\..\..\..\..\ArcGIS\DeveloperKit10.0\DotNet\ESRI.ArcGIS.Desktop.AddIns.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\ArcGIS\DeveloperKit10.2\DotNet\ESRI.ArcGIS.Desktop.AddIns.dll</HintPath>
     </Reference>
   </ItemGroup>
   <!-- Import the SHFB build targets -->

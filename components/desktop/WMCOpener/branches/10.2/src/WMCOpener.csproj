@@ -181,15 +181,15 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\AppLogger\trunk\src\AppLogger.csproj">
-      <Project>{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}</Project>
+    <ProjectReference Include="..\..\..\..\AppLogger\branches\10.2\src\AppLogger.csproj">
+      <Project>{2ffdea64-1bc3-4fbf-bfeb-44c09499036c}</Project>
       <Name>AppLogger</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <ZipFileExtension>esriAddIn</ZipFileExtension>
     <AddInTargetProduct>Desktop</AddInTargetProduct>
-    <AddInTargetVersion>9.4</AddInTargetVersion>
+    <AddInTargetVersion>10.2</AddInTargetVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\ESRI\ESRI.ArcGIS.AddIns.targets" />
