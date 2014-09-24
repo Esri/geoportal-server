@@ -6,9 +6,9 @@
   <Image>Images\WMCOpener.png</Image>
   <Author>prat5814</Author>
   <Company>ESRI</Company>
-  <Date>1/22/2010</Date>
+  <Date>9/22/2014</Date>
   <Targets>
-    <Target name="Desktop" version="10.1" />
+    <Target name="Desktop" version="10.3" />
   </Targets>
   <AddIn language="CLR" library="WMCOpener.dll" namespace="WMCOpener">
     <ArcMap>

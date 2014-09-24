@@ -15,7 +15,7 @@
     <RootNamespace>Documentation</RootNamespace>
     <Name>Documentation</Name>
     <!-- SHFB properties -->
-    <OutputPath>C:\Builds\GeoportalServer\10.2_WMCOpener\Binaries\</OutputPath>
+    <OutputPath>C:\Builds\GeoportalServer\10.3_WMCOpener\Binaries\</OutputPath>
     <HtmlHelpName>WMC</HtmlHelpName>
     <WorkingPath>..\..\..\..\..\..\..\Temp\SandCastleWorkingFolder\</WorkingPath>
     <DocumentationSources>
@@ -25,7 +25,7 @@
       <DocumentationSource sourceFile="..\..\..\..\Binaries\WMCOpener.xml" />
     </DocumentationSources>
     <HelpTitle>A WMC Documented Class Library</HelpTitle>
-    <CopyrightText>Copyright &amp;#169%3b ESRI 2010</CopyrightText>
+    <CopyrightText>Copyright &amp;#169%3b ESRI 2014</CopyrightText>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
     <FrameworkVersion>.NET 4.0.30319</FrameworkVersion>
   </PropertyGroup>
@@ -50,7 +50,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ESRI.ArcGIS.Desktop.AddIns">
-      <HintPath>..\..\..\..\..\..\..\ArcGIS\DeveloperKit10.0\DotNet\ESRI.ArcGIS.Desktop.AddIns.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\ArcGIS\DeveloperKit10.3\DotNet\ESRI.ArcGIS.Desktop.AddIns.dll</HintPath>
     </Reference>
   </ItemGroup>
   <!-- Import the SHFB build targets -->
