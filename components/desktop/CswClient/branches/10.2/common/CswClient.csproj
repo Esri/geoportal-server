@@ -10,10 +10,14 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>com.esri.gpt.csw</RootNamespace>
     <AssemblyName>CswClient</AssemblyName>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -153,14 +157,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\AppLogger\trunk\src\AppLogger.csproj">
+    <ProjectReference Include="..\..\..\..\AppLogger\branches\10.2\src\AppLogger.csproj">
       <Project>{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}</Project>
       <Name>AppLogger</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\ClientCert\trunk\src\ClientCert.csproj">
+    <ProjectReference Include="..\..\..\..\ClientCert\branches\10.2\src\ClientCert.csproj">
       <Project>{d101ed10-5252-4bb3-a278-f13b94af6d4f}</Project>
       <Name>ClientCert</Name>
-      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -12,10 +12,14 @@
     <AssemblyName>CSWSearchDockWindow</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <PublishUrl>http://localhost/CSWSearchDockWindow/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -150,10 +154,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\AppLogger\trunk\src\AppLogger.csproj">
-      <Project>{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}</Project>
-      <Name>AppLogger</Name>
-    </ProjectReference>
     <ProjectReference Include="..\common\CswClient.csproj">
       <Project>{F3D05B12-5F2F-489B-A634-3B3BD44F85A2}</Project>
       <Name>CswClient</Name>
