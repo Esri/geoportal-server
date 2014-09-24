@@ -2572,8 +2572,8 @@
 		<row><td>ISProductFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectFolder</td><td/><td/><td>1</td></row>
-		<row><td>PATH_TO_BIN_FILES</td><td>C:\Builds\GeoportalServer\10.2_PublishClient\Binaries</td><td/><td>2</td></row>
-		<row><td>PATH_TO_PUBLISHCLIENT_FILE</td><td>C:\Builds\GeoportalServer\10.2_PublishClient\Sources\PublishClient\trunk\src</td><td/><td>2</td></row>
+		<row><td>PATH_TO_BIN_FILES</td><td>C:\Builds\GeoportalServer\10.3_PublishClient\Binaries</td><td/><td>2</td></row>
+		<row><td>PATH_TO_PUBLISHCLIENT_FILE</td><td>C:\Builds\GeoportalServer\10.3_PublishClient\Sources\PublishClient\trunk\src</td><td/><td>2</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
 		<row><td>WindowsFolder</td><td/><td/><td>1</td></row>
@@ -4685,8 +4685,8 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<col def="s255">Key</col>
 		<col def="S255">Name</col>
 		<col def="I2">Type</col>
-		<row><td>NewSignature12</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.2</td><td>RealVersion</td><td>2</td></row>
-		<row><td>NewSignature13</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.2</td><td>InstallDir</td><td>2</td></row>
+		<row><td>NewSignature12</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.3</td><td>RealVersion</td><td>2</td></row>
+		<row><td>NewSignature13</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.3</td><td>InstallDir</td><td>2</td></row>
 	</table>
 
 	<table name="Registry">
