@@ -39,6 +39,7 @@
   gptMapConfig.mapVisibleLayers = "<%=imConfig.getMapVisibleLayers()%>";
 </script>
 <script type="text/javascript">
+  /*
   if ("<%=isCswContext%>") {
     dojo.addOnLoad(function(){
       dojo.query("iframe.section").forEach(function(node,index){
@@ -61,6 +62,7 @@
       });
     });
   }
+  */
 </script>
 
 <h:form id="mdDetails" styleClass="mdDetails">
@@ -197,16 +199,3 @@ function mddOnSectionClicked(sSectionId) {
 <h:panelGroup binding="#{SearchController.detailsPanelGroup}"/>
 
 </h:form>
-
-<% // button section %>
-<f:verbatim>
-  <iframe class="section" src="<%=sRestUrl%>" width="100%" scrolling="no" frameborder="0"></iframe>
-  <span class="note"><%=sRestUrl%></span>
-</f:verbatim>
-
-
-
-
-
-
-

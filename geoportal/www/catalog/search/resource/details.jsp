@@ -19,7 +19,6 @@
 
 <% // initialize the page %>
 <gpt:page id="catalog.search.resource.details" prepareView="#{SearchController.processRequestParams}"/>
-<tiles:insert definition=".gptLayout" flush="false" >
-  <tiles:put name="secondaryNavigation" value="/catalog/skins/tiles/resourceNavigation.jsp"/>
+<tiles:insert definition=".gptLayoutBare" flush="false" >
   <tiles:put name="body" value="/catalog/search/viewMetadataDetailsBody.jsp"/>
 </tiles:insert>

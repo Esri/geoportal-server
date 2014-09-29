@@ -44,6 +44,12 @@
 		<put name="footer" value="/catalog/skins/tiles/footer.jsp"/>
 	</definition>
 
+
+  <!-- minimal layouts definitions -->
+	<definition name=".gptLayoutBare" path="/catalog/skins/centeredLayoutBare.jsp">
+		<put name="body" value="/catalog/main/home.jsp"/>
+	</definition>
+
   <!-- preview layout definition -->
 	<definition name=".gptPreview" path="/catalog/skins/previewLayout.jsp">
 		<put name="head" value="/catalog/skins/tiles/head.jsp"/>
