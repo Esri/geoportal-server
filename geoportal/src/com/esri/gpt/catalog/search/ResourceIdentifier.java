@@ -278,7 +278,7 @@ public class ResourceIdentifier {
    * @param url the url
    * @return the service type
    */
-  public static String guessServiceTypeFromUrl(String url) {
+  public String guessServiceTypeFromUrl(String url) {
     ServiceInfo si = guessServiceFromUrl(url);
     return si!=null? si.getServiceType(): "";
   }
@@ -288,7 +288,7 @@ public class ResourceIdentifier {
    * @param url the url
    * @return URN of service type
    */
-  public static String guessServiceUrnFromUrl(String url) {
+  public String guessServiceUrnFromUrl(String url) {
     ServiceInfo si = guessServiceFromUrl(url);
     return si!=null? si.getServiceUrn(): "";
   }
@@ -298,7 +298,7 @@ public class ResourceIdentifier {
    * @param url the url
    * @return service info
    */
-  private static ServiceInfo guessServiceFromUrl(String url) {
+  private ServiceInfo guessServiceFromUrl(String url) {
     url = Val.chkStr(url).toLowerCase();
     if (url.contains("service=wms") || url.contains("wmsserver")
         || url.contains("com.esri.wms.esrimap")) {
@@ -330,7 +330,7 @@ public class ResourceIdentifier {
     return null;
   }
   
-  private static ServiceInfo createServiceInfoFor(String name) {
+  private ServiceInfo createServiceInfoFor(String name) {
     UrnMap urnMap = UrnMap.getInstance();
     String urn = urnMap.getUrn("", name);
     return new ServiceInfo(name, urn);

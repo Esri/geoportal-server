@@ -467,7 +467,9 @@ public boolean appendDetailComponents(Schema schema,
   
   if (getKey().equalsIgnoreCase("identification") && !schema.getMeaning().getResourceUrl().isEmpty()) {
     String resourceUrl = schema.getMeaning().getResourceUrl();
-    String serviceType = ResourceIdentifier.guessServiceTypeFromUrl(resourceUrl);
+    
+    ResourceIdentifier ri = ResourceIdentifier.newIdentifier(null);
+    String serviceType = ri.guessServiceTypeFromUrl(resourceUrl);
     
     IMapViewer createDefaultMapViewer = MapViewerFactory.createDefaultMapViewer();
     createDefaultMapViewer.setResourceUri(resourceUrl, serviceType);
