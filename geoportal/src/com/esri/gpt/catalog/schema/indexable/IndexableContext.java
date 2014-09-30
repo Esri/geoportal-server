@@ -190,6 +190,11 @@ public class IndexableContext {
       schema.getMeaning().setThumbnailUrl(sThumbUrl);
     }
     
+    String sResourceUrl = Val.chkStr(this.getFirstStoreableString(Meaning.MEANINGTYPE_RESOURCE_URL));
+    if (!sResourceUrl.isEmpty()) {
+      schema.getMeaning().setResourceUrl(sResourceUrl);
+    }
+    
     // ESRI tags: published doc id
     if (esriTags != null) {
       String esriDocID = schema.getMeaning().getEsriDocID();
@@ -231,7 +236,7 @@ public class IndexableContext {
     
     // ESRI tags: resource URL
     if (esriTags != null) {
-      String sResourceUrl = Val.chkStr(this.getFirstStoreableString(Meaning.MEANINGTYPE_RESOURCE_URL));
+      sResourceUrl = Val.chkStr(this.getFirstStoreableString(Meaning.MEANINGTYPE_RESOURCE_URL));
       if ((sResourceUrl == null) || (sResourceUrl.length() == 0)) {
         ResourceIdentifier ri = ensureResourceIdentifier();
         sResourceUrl = esriTags.makeResourceUrl(ri);
@@ -248,7 +253,7 @@ public class IndexableContext {
     }
     
     // try to determine the resource url
-    String sResourceUrl = Val.chkStr(this.getFirstStoreableString(Meaning.MEANINGTYPE_RESOURCE_URL));
+    sResourceUrl = Val.chkStr(this.getFirstStoreableString(Meaning.MEANINGTYPE_RESOURCE_URL));
     if ((sResourceUrl == null) || (sResourceUrl.length() == 0)) {
       IStoreable storeable = this.getStoreables().get("resource.check.urls");
       if (storeable != null) {

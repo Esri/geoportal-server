@@ -13,6 +13,9 @@
  * limitations under the License.
  */
 package com.esri.gpt.catalog.schema;
+import com.esri.gpt.catalog.search.IMapViewer;
+import com.esri.gpt.catalog.search.MapViewerFactory;
+import com.esri.gpt.catalog.search.ResourceIdentifier;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -25,9 +28,12 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIGraphic;
 import javax.faces.component.UISelectBoolean;
 import javax.faces.component.UISelectItems;
+import javax.faces.component.html.HtmlCommandButton;
 import javax.faces.component.html.HtmlGraphicImage;
 import javax.faces.component.html.HtmlInputHidden;
+import javax.faces.component.html.HtmlOutcomeTargetButton;
 import javax.faces.component.html.HtmlOutputLabel;
+import javax.faces.component.html.HtmlOutputLink;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.component.html.HtmlPanelGroup;
@@ -459,11 +465,35 @@ public boolean appendDetailComponents(Schema schema,
     sectionBody.getChildren().add(parametersTable);
   }
   
+  if (getKey().equalsIgnoreCase("identification") && !schema.getMeaning().getResourceUrl().isEmpty()) {
+    String resourceUrl = schema.getMeaning().getResourceUrl();
+    String serviceType = ResourceIdentifier.guessServiceTypeFromUrl(resourceUrl);
+    
+    IMapViewer createDefaultMapViewer = MapViewerFactory.createDefaultMapViewer();
+    createDefaultMapViewer.setResourceUri(resourceUrl, serviceType);
+    boolean canHandleResource = createDefaultMapViewer.canHandleResource();
+    if (canHandleResource) {
+      String addToMapUrl = createDefaultMapViewer.readAddToMapUrl();
+
+      HtmlOutputLink htmlOutputLink = new HtmlOutputLink();
+      htmlOutputLink.setTarget("_blank");
+      htmlOutputLink.setValue(addToMapUrl);
+      htmlOutputLink.setStyleClass("parameterOpenLink");
+
+      HtmlOutputText htmlOutputText = new HtmlOutputText();
+      htmlOutputText.setValue(msgBroker.retrieveMessage("catalog.search.searchResult.openResource"));
+      htmlOutputLink.getChildren().add(htmlOutputText);
+
+      sectionBody.getChildren().add(htmlOutputLink);
+    }
+  }
+  
   // append all sub-sections
   for (Section section: getSections().values()) {
     boolean bHadSubParams = section.appendDetailComponents(schema,context,sectionBody);
     if (bHadSubParams) bHadParameters = true;
   }
+  
   if (!bHadParameters) panel.setRendered(false);
   if ((panel != null) && (panel.getChildCount() > 0) && panel.isRendered()) {
     parentComponent.getChildren().add(panel);

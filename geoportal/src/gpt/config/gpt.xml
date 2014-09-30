@@ -136,6 +136,7 @@
 			NOTE: The MapViewerFlex must be in the same domain and port in order for layering of resources to work 
     -->
     <!-- The Geoportal Flex widget configuration for ArcGIS View for Flex 2.2 -->
+    <!--
     <mapViewer>
         <instance 
             url="{contextPath}/viewer/index.jsp" 
@@ -145,8 +146,9 @@
         <parameter key="regexCanConsumeUrl" value=""/>
         </instance>
     </mapViewer>
+    -->
       
-    <!-- The map viewer configuration for Portal for ArcGIS  
+    <!-- The map viewer configuration for Portal for ArcGIS  -->
     <mapViewer>
         <instance 
             url="[agsportal]/home/webmap/viewer.html" 
@@ -154,7 +156,6 @@
             <parameter key="wmsBaseMapUrl" value="http://server.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer"/>
         </instance>
     </mapViewer>
-    -->
             
     <!-- Search settings.
 		- searchTimeoutMillisecs: length of time allotted to a search attempt before a timeout error occurs

@@ -254,12 +254,22 @@ public class Meaning {
   public String getThumbnailUrl() {
     return getFirstStoreableValue(Meaning.MEANINGTYPE_THUMBNAIL_URL);
   }
+  
   /**
    * Sets the thumbnail URL.
    * @param url the thumbnail URL
    */
   public void setThumbnailUrl(String url) {
     IStoreable storeable = this._storables.get(Meaning.MEANINGTYPE_THUMBNAIL_URL);
+    if (storeable != null) storeable.setValue(url);
+  }
+  
+  /**
+   * Sets the resource URL.
+   * @param url the resource URL
+   */
+  public void setResourceUrl(String url) {
+    IStoreable storeable = this._storables.get(Meaning.MEANINGTYPE_RESOURCE_URL);
     if (storeable != null) storeable.setValue(url);
   }
   

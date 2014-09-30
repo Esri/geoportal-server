@@ -823,6 +823,16 @@ ul#navigation li.selectedNav a {
 	vertical-align: top;
 }
 .parameterInput {text-align: left;}
+a.parameterOpenLink {
+  border: solid 1px grey;
+  padding: 2px;
+  color: #21759b;
+  margin-left: 3px;
+  background-color: lightgray;
+}
+a.parameterOpenLink:hover {
+  text-decoration: underline;
+}
 
 
 
