@@ -13,12 +13,27 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 --%>
+<%@page import="com.esri.gpt.control.georss.CswContext"%>
+<%@page import="com.esri.gpt.framework.util.Val"%>
 <% // viewMetadataSummary.jsp - View Metadata Details page(tiles definition) %>
 <%@taglib prefix="tiles" uri="http://struts.apache.org/tags-tiles"%>
 <%@taglib prefix="gpt" uri="http://www.esri.com/tags-gpt"%>
 
+<%
+  String cswUrl = Val.chkStr(request.getParameter("cswUrl"));
+  String cswProfileId = Val.chkStr(request.getParameter("cswProfileId"));
+  CswContext cswContext = CswContext.create(cswUrl, cswProfileId);
+  boolean isCswContext = cswContext!=null;
+%>
 <% // initialize the page %>
 <gpt:page id="catalog.search.resource.details" prepareView="#{SearchController.processRequestParams}"/>
+<%if (isCswContext) { %>
 <tiles:insert definition=".gptLayoutBare" flush="false" >
   <tiles:put name="body" value="/catalog/search/viewMetadataDetailsBody.jsp"/>
 </tiles:insert>
+<% } else { %>
+<tiles:insert definition=".gptLayout" flush="false" >
+  <tiles:put name="secondaryNavigation" value="/catalog/skins/tiles/resourceNavigation.jsp"/>
+  <tiles:put name="body" value="/catalog/search/viewMetadataDetailsBody.jsp"/>
+</tiles:insert>
+<% } %>
