@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.esri.gpt.framework.util.Val;
+import java.util.regex.Pattern;
 
 /**
  * The Class MapViewerAgsPortal.
@@ -16,6 +17,7 @@ public class MapViewerAgsPortal extends IAMapViewer {
 /** The LOG. */
 private static Logger LOG = Logger.getLogger(MapViewerAgsPortal.class
                               .getCanonicalName());
+private static Pattern layerPattern = Pattern.compile("/mapserver/\\p{Digit}+$", Pattern.CASE_INSENSITIVE);
 
 // methods =====================================================================
 /**
@@ -53,6 +55,9 @@ public boolean canHandleResource() {
         || tmp.contains("featureserver")) {
       return true;
     }
+    if (layerPattern.matcher(tmp).find()) {
+      return true;
+    }
     LOG.finer("Could handle resrouceuri " + this.getResourceUri());
   }
   LOG.finer("Class cannot handle resourceuri = " + this.getResourceUri()
@@ -88,7 +93,7 @@ public String readAddToMapUrl() {
     } else if (this.getHintServiceType().equalsIgnoreCase(
         ResourceLinkBuilder.ServiceType.AGS.name())) {
       viewerUrl += "&url=" + URLEncoder.encode(this.getResourceUri(), "UTF-8");
-    }
+    } 
   } catch (UnsupportedEncodingException uE) {
     LOG.log(Level.SEVERE, "", uE);
   }
