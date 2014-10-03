@@ -16,25 +16,49 @@
 
 package com.esri.gpt.framework.ArcGISOnline;
 
+import java.util.Comparator;
+
 /**
  * AGS service type predicate.
  */
 public abstract class AgsServiceTypePredicate implements ITypePredicate {
+  private Comparator<String> comparator;
   private String typeName;
   protected abstract String getTypeName();
   
   public AgsServiceTypePredicate() {
-    
+    this.comparator = new EndStringComparator();
   }
   
   public AgsServiceTypePredicate(String typeName) {
+    this.comparator = new EndStringComparator();
+    this.typeName = typeName;
+  }
+  
+  public AgsServiceTypePredicate(Comparator<String> comparator) {
+    this.comparator = comparator!=null? comparator: new EndStringComparator();
+  }
+  
+  public AgsServiceTypePredicate(Comparator<String> comparator, String typeName) {
+    this.comparator = comparator!=null? comparator: new EndStringComparator();
     this.typeName = typeName;
   }
 
   @Override
   public boolean matches(String url) {
-    String tn = typeName!=null? typeName: getTypeName().replace("Service", "Server").replaceAll("\\s+", "");
-    return url.toLowerCase().endsWith(tn.toLowerCase());
+    return this.comparator.compare(url,getRealTypeName())==0;
   }
   
+  protected String getRealTypeName() {
+    return typeName!=null? typeName: getTypeName().replace("Service", "Server").replaceAll("\\s+", "");
+  }
+
+  public static class EndStringComparator implements Comparator<String> {
+
+    @Override
+    public int compare(String o1, String o2) {
+      return o1.toLowerCase().endsWith(o2.toLowerCase())? 0: 1;
+    }
+    
+  }
 }

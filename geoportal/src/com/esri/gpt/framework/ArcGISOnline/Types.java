@@ -19,7 +19,9 @@ package com.esri.gpt.framework.ArcGISOnline;
 import static com.esri.gpt.framework.ArcGISOnline.FileType.*;
 import com.esri.gpt.framework.ArcGISOnline.Type.ServiceType;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Types.
@@ -42,7 +44,13 @@ public final class Types extends ArrayList<Type> {
     add(new Type("Pro Map",DataType.FILE,DataCategory.MAPS));
     
     add(new ServiceType("Feature Service",DataType.JSON,DataCategory.LAYERS));
-    add(new ServiceType("Map Service",DataType.JSON,DataCategory.LAYERS));
+    add(new ServiceType("Map Service",DataType.JSON,DataCategory.LAYERS, new Comparator<String>() {
+      @Override
+      public int compare(String o1, String o2) {
+        Pattern pattern = Pattern.compile(o2+"/\\p{Digit}+$", Pattern.CASE_INSENSITIVE);
+        return (o1.toLowerCase().endsWith(o2.toLowerCase()) || pattern.matcher(o1).find())? 0: 1;
+      }
+    }));
     add(new ServiceType("Image Service",DataType.JSON,DataCategory.LAYERS));
     add(new Type("KML",DataType.FILE,DataCategory.LAYERS,KMZ));
     add(new Type("WMS",DataType.UNSPECIFED,DataCategory.LAYERS, new WMSServiceTypePredicate()));

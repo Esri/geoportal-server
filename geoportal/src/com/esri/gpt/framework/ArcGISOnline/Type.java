@@ -16,6 +16,9 @@
 
 package com.esri.gpt.framework.ArcGISOnline;
 
+import java.util.Comparator;
+import java.util.regex.Pattern;
+
 /**
  * ArcGIS Online resource type.
  */
@@ -81,9 +84,19 @@ public class Type {
       super(typeName,dataType,dataCategory);
       this.predicate = new AgsServiceTypePredicateImpl(serviceName);
     }
+    
+    public ServiceType(String typeName, DataType dataType, DataCategory dataCategory, Comparator<String> comparator) {
+      super(typeName,dataType,dataCategory);
+      this.predicate = new AgsServiceTypePredicateImpl(comparator);
+    }
+    
+    public ServiceType(String typeName, DataType dataType, DataCategory dataCategory, String serviceName, Comparator<String> comparator) {
+      super(typeName,dataType,dataCategory);
+      this.predicate = new AgsServiceTypePredicateImpl(comparator, serviceName);
+    }
   }
   
-  public final class AgsServiceTypePredicateImpl extends AgsServiceTypePredicate {
+  public class AgsServiceTypePredicateImpl extends AgsServiceTypePredicate {
     public AgsServiceTypePredicateImpl() {
       super();
     }
@@ -91,11 +104,17 @@ public class Type {
     public AgsServiceTypePredicateImpl(String typeName) {
       super(typeName);
     }
+    public AgsServiceTypePredicateImpl(Comparator<String> comparator) {
+      super(comparator);
+    }
+    
+    public AgsServiceTypePredicateImpl(Comparator<String> comparator, String typeName) {
+      super(comparator, typeName);
+    }
 
     @Override
     protected String getTypeName() {
       return typeName;
     }
-    
   }
 }
