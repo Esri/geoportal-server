@@ -90,6 +90,9 @@ public class CswResourceLinkBuilder extends ResourceLinkBuilder {
     this.buildDownloadLink(xRecord, record);
     this.buildMetadataLink(xRecord, record);
     this.buildDetailsLink(xRecord, record);
+    
+    this.buildWebsiteLink(xRecord, record);
+    this.buildCustomLinks(xRecord, record);
   }
 
   protected void buildResourceLink(SearchXslRecord xRecord, SearchResultRecord record) {
