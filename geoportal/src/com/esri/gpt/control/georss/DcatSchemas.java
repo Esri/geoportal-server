@@ -14,6 +14,8 @@
  */
 package com.esri.gpt.control.georss;
 
+import com.esri.gpt.framework.util.Val;
+import static com.esri.gpt.framework.util.Val.chkStr;
 import java.util.HashMap;
 
 /**
@@ -21,9 +23,22 @@ import java.util.HashMap;
  */
 public class DcatSchemas extends HashMap<String, DcatFields> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+  @Override
+  public DcatFields put(String keys, DcatFields value) {
+    String [] keysArr = keys.split(",");
+    for (String key: keysArr) {
+      key = chkStr(key);
+      if (!key.isEmpty()) {
+        super.put(key, value);
+      }
+    }
+    return value;
+  }
+  
+    
+    
+    public DcatFields getDefaultFields() {
+      return get("others");
+    }
 
 }

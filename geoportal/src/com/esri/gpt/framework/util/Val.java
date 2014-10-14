@@ -403,6 +403,14 @@ public static String[] tokenize(String tokens, String delimiter) {
   return al.toArray(new String[0]);
 }
 
+public static String join(String [] valArr, String delimiter) {
+  StringBuilder sb = new StringBuilder();
+  for (int i=0; i<valArr.length; i++) {
+    sb.append(i>0? delimiter: "").append(valArr[i]);
+  }
+  return sb.toString();
+}
+
 
 }
 

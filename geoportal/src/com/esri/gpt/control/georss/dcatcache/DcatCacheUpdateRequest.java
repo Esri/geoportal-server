@@ -17,6 +17,7 @@ package com.esri.gpt.control.georss.dcatcache;
 
 import com.esri.gpt.catalog.discovery.rest.RestQuery;
 import com.esri.gpt.control.georss.DcatJsonFeedWriter;
+import com.esri.gpt.control.georss.DcatJsonFeedWriterFactory;
 import com.esri.gpt.control.georss.DcatJsonSearchEngine;
 import com.esri.gpt.control.georss.FeedLinkBuilder;
 import com.esri.gpt.framework.collection.StringAttributeMap;
@@ -112,7 +113,8 @@ public class DcatCacheUpdateRequest {
       cacheStream = cache.createOutputCacheStream();
       writer = new PrintWriter(new OutputStreamWriter(cacheStream, "UTF-8"));
       
-      DcatJsonFeedWriter feedWriter = new DcatJsonFeedWriter(context, writer, query);
+      DcatJsonFeedWriterFactory factory = DcatJsonFeedWriterFactory.getInstance();
+      DcatJsonFeedWriter feedWriter = factory.create(context, writer, query);
       feedWriter.setMessageBroker(msgBroker);
       
       query.setReturnables(new CoreQueryables(context).getFull());

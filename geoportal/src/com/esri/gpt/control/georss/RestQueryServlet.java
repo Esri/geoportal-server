@@ -389,7 +389,7 @@ public class RestQueryServlet extends BaseServlet {
         break;
       case dcat:
         response.setContentType("application/json;charset=UTF-8");
-        response.setHeader("Content-disposition", "attachment; filename=\"dcat.json\"");
+        //response.setHeader("Content-disposition", "attachment; filename=\"dcat.json\"");
         break;
       case json:
         response.setContentType("application/json;charset=UTF-8");
@@ -508,7 +508,8 @@ public class RestQueryServlet extends BaseServlet {
       
       // Normalized DCAT JSON writer
     } else if (format.equals(RestQueryServlet.ResponseFormat.dcat)) {
-      DcatJsonFeedWriter jsonWriter = new DcatJsonFeedWriter(request, context, printWriter, query, true);
+      DcatJsonFeedWriterFactory factory = DcatJsonFeedWriterFactory.getInstance();
+      DcatJsonFeedWriter jsonWriter = factory.create(request, context, printWriter, query);
       jsonWriter.setMessageBroker(messageBroker);
       return jsonWriter;
       
