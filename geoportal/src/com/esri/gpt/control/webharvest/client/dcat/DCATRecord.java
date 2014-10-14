@@ -20,6 +20,8 @@ import com.esri.gpt.framework.dcat.dcat.DcatRecord;
 import com.esri.gpt.framework.resource.api.SourceUri;
 import com.esri.gpt.framework.resource.common.CommonPublishable;
 import com.esri.gpt.framework.resource.common.StringUri;
+import com.esri.gpt.framework.util.Val;
+import static com.esri.gpt.framework.util.Val.escapeXml;
 import com.esri.gpt.server.csw.client.NullReferenceException;
 import java.io.IOException;
 import javax.xml.transform.TransformerException;
@@ -46,16 +48,16 @@ public class DCATRecord extends CommonPublishable {
     return "<?xml version='1.0' encoding='UTF-8'?>"
       + "<rdf:RDF xmlns:dct='http://purl.org/dc/terms/' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:fo='http://www.w3.org/1999/XSL/Format' xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#' xmlns:exslt='http://exslt.org/common' xmlns:rim='urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0' xmlns:dcmiBox='http://dublincore.org/documents/2000/07/11/dcmi-box/' xmlns:ows='http://www.opengis.net/ows'>"
       + "<rdf:Description rdf:about='rdf_about'>"
-      + "<dc:title>" + baseRecord.getTitle() + "</dc:title>"
-      + "<dc:description>" + baseRecord.getDescription()+ "</dc:description>"
-      + "<dct:abstract>" + baseRecord.getAbstract() + "</dct:abstract>"
-      + "<dc:format>" + baseRecord.getFormat() + "</dc:format>"
-      + "<dct:publisher>" + baseRecord.getPublisher() + "</dct:publisher>"
-      + "<dc:identifier>" + baseRecord.getIdentifier() + "</dc:identifier>"
+      + "<dc:title>" + escapeXml(baseRecord.getTitle()) + "</dc:title>"
+      + "<dc:description>" + escapeXml(baseRecord.getDescription())+ "</dc:description>"
+      + "<dct:abstract>" + escapeXml(baseRecord.getAbstract()) + "</dct:abstract>"
+      + "<dc:format>" + escapeXml(baseRecord.getFormat()) + "</dc:format>"
+      + "<dct:publisher>" + escapeXml(baseRecord.getPublisher()) + "</dct:publisher>"
+      + "<dc:identifier>" + escapeXml(baseRecord.getIdentifier()) + "</dc:identifier>"
       + getSubjects() +
-      "<dct:modified>" + baseRecord.getModified() + "</dct:modified>"
+      "<dct:modified>" + escapeXml(baseRecord.getModified()) + "</dct:modified>"
       + getReferences() +
-      "<ows:WGS84BoundingBox>" + baseRecord.getSpatial() + "</ows:WGS84BoundingBox>"
+      "<ows:WGS84BoundingBox>" + escapeXml(baseRecord.getSpatial()) + "</ows:WGS84BoundingBox>"
       + "</rdf:Description>"
       + "</rdf:RDF>";
 
@@ -64,7 +66,7 @@ public class DCATRecord extends CommonPublishable {
   private String getSubjects() {
     StringBuilder sb = new StringBuilder();
     for (String keyword: baseRecord.getKeywords()) {
-      sb.append("<dc:subject>").append(keyword).append("</dc:subject>");
+      sb.append("<dc:subject>").append(escapeXml(keyword)).append("</dc:subject>");
     }
     return sb.toString();
   }
@@ -73,7 +75,7 @@ public class DCATRecord extends CommonPublishable {
     StringBuilder sb = new StringBuilder();
     for (DcatDistribution distribution: baseRecord.getDistribution()) {
       String accessURL = distribution.getAccessURL();
-      sb.append("<dct:references>").append(accessURL).append("</dct:references>");
+      sb.append("<dct:references>").append(escapeXml(accessURL)).append("</dct:references>");
     }
     return sb.toString();
   }
