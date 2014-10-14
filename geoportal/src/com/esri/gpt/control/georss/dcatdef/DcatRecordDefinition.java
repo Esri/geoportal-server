@@ -35,9 +35,9 @@ public class DcatRecordDefinition {
     fieldDefinitions.add(new StringField("description",DcatFieldDefinition.OBLIGATORY));
     fieldDefinitions.add(new ArrayField ("keyword",DcatFieldDefinition.OBLIGATORY));
     fieldDefinitions.add(new DateField  ("modified",DcatFieldDefinition.OBLIGATORY));
-    fieldDefinitions.add(new PublisherField());
-    fieldDefinitions.add(new ContactPointField());
-    fieldDefinitions.add(new StringField("identifier",DcatFieldDefinition.OBLIGATORY));
+    fieldDefinitions.add(new PublisherField("publisher"));
+    fieldDefinitions.add(new ContactPointField("contactPoint"));
+    fieldDefinitions.add(new IdentifierField("identifier",DcatFieldDefinition.OBLIGATORY));
     fieldDefinitions.add(new StringField ("accessLevel",DcatFieldDefinition.OBLIGATORY){
       @Override
       protected String getDefaultValue(Properties properties) {
@@ -64,6 +64,15 @@ public class DcatRecordDefinition {
         return list;
       }
     });
+    fieldDefinitions.add(new StringField ("license",DcatFieldDefinition.OBLIGATORY){
+      @Override
+      protected String getDefaultValue(Properties properties) {
+        return chkStr(properties.getProperty(fldName));
+      }
+    });
+    fieldDefinitions.add(new SpatialField("spatial"));
+    fieldDefinitions.add(new TemporalField("temporal"));
+    fieldDefinitions.add(new DcatDistribution("distribution"));
   }
   public void print(DcatPrinter printer, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
     printer.startObject();

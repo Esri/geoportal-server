@@ -16,39 +16,47 @@
 package com.esri.gpt.control.georss.dcatdef;
 
 import com.esri.gpt.control.georss.DcatSchemas;
+import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedRecord;
+import static com.esri.gpt.control.georss.dcatdef.DcatFieldDefinition.OBLIGATORY;
+import com.esri.gpt.framework.geometry.Envelope;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Properties;
 
 /**
  *
  * @author Esri, Inc.
  */
-public class PublisherField implements DcatFieldDefinition {
-  private static final ArrayList<DcatFieldDefinition> fieldDefinitions = new ArrayList<DcatFieldDefinition>();
-  static {
-    fieldDefinitions.add(new StringField("publisher",DcatFieldDefinition.OBLIGATORY){
-      @Override
-      protected String getOutFieldName() {
-        return "name";
-      }
-    });
+public class SpatialField extends BaseDcatField {
+
+  public SpatialField(String fldName) {
+    super(fldName);
+  }
+
+  public SpatialField(String fldName, long flags) {
+    super(fldName, flags);
   }
   
-  private final String name;
-
-  public PublisherField(String name) {
-    this.name = name;
+  protected String getDefaultValue(Properties properties) {
+    return "";
   }
 
   @Override
   public void print(DcatPrinter printer, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
-    printer.startObject(name);
-    for (DcatFieldDefinition dfd: fieldDefinitions) {
-      dfd.print(printer, properties, dcatSchemas, r);
+    
+    String value;
+    Envelope envelope = r.getEnvelope();
+    if (envelope==null) {
+      if ((flags & OBLIGATORY)!=0) {
+        value = getDefaultValue(properties);
+      } else {
+        return;
+      }
+    } else {
+      value = ""+envelope.getMinX()+","+envelope.getMinY()+","+envelope.getMaxX()+","+envelope.getMaxY();
     }
-    printer.endObject();
+    
+    printer.printAttribute(getOutFieldName(),value);
   }
   
 }

@@ -42,9 +42,15 @@ public class ContactPointField implements DcatFieldDefinition {
     });
   }
 
+  private final String name;
+
+  public ContactPointField(String name) {
+    this.name = name;
+  }
+  
   @Override
   public void print(DcatPrinter printer, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
-    printer.startObject("contactPoint");
+    printer.startObject(name);
     for (DcatFieldDefinition dfd: fieldDefinitions) {
       dfd.print(printer, properties, dcatSchemas, r);
     }
