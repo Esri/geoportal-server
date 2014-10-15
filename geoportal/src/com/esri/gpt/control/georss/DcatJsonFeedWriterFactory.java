@@ -16,7 +16,9 @@
 package com.esri.gpt.control.georss;
 
 import com.esri.gpt.catalog.discovery.rest.RestQuery;
+import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
+import static com.esri.gpt.framework.util.Val.chkStr;
 import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,9 +27,22 @@ import javax.servlet.http.HttpServletRequest;
  * @author Esri, Inc.
  */
 public class DcatJsonFeedWriterFactory {
-  private static DcatJsonFeedWriterFactory instance = new DcatJsonFeedWriterFactory();
+  private static DcatJsonFeedWriterFactory instance;
   
   public static DcatJsonFeedWriterFactory getInstance() {
+    if (instance==null) {
+      String factoryClassName = chkStr(ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getParameters().getValue("com.esri.gpt.control.georss.DcatJsonFeedWriterFactory"));
+      if (!factoryClassName.isEmpty()) {
+        try {
+          Class factoryClass = Class.forName(factoryClassName);
+          instance = (DcatJsonFeedWriterFactory)factoryClass.newInstance();
+        } catch (Exception ex) {
+          instance = new DcatJsonFeedWriterFactory();
+        }
+      } else {
+        instance = new DcatJsonFeedWriterFactory();
+      }
+    }
     return instance;
   }
   
