@@ -37,16 +37,15 @@ public class ArrayField extends BaseDcatField {
   public ArrayField(String fldName, long flags) {
     super(fldName, flags);
   }
-  
+
   protected ArrayList<String> readValue(IFeedAttribute attr) {
     ArrayList<String> value = new ArrayList<String>();
     if (attr.getValue() instanceof List) {
-      for (Object o: (List)attr.getValue()) {
-        try {
-          value.add(((IFeedAttribute)o).simplify().getValue().toString());
-        } catch (ClassCastException ex) {
-          value.add(o.toString());
+      try {
+        for (IFeedAttribute o : (List<IFeedAttribute>) attr.getValue()) {
+          value.add(o.simplify().getValue().toString());
         }
+      } catch (ClassCastException ex) {
       }
     } else {
       value.add(attr.simplify().getValue().toString());
@@ -57,14 +56,14 @@ public class ArrayField extends BaseDcatField {
   protected List<String> getDefaultValue(Properties properties) {
     return new ArrayList<String>();
   }
-  
+
   @Override
   public void print(DcatPrinter printer, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
     IFeedAttribute attr = getFeedAttribute(dcatSchemas, r);
-    
+
     ArrayList<String> value = new ArrayList<String>();
-    if (attr==null) {
-      if ((flags & OBLIGATORY)!=0) {
+    if (attr == null) {
+      if ((flags & OBLIGATORY) != 0) {
         value.addAll(getDefaultValue(properties));
       } else {
         return;
@@ -72,7 +71,7 @@ public class ArrayField extends BaseDcatField {
     } else {
       value = readValue(attr);
     }
-    
-    printer.printAttribute(getOutFieldName(),value);
+
+    printer.printAttribute(getOutFieldName(), value);
   }
 }
