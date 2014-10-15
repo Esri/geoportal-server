@@ -42,7 +42,11 @@ public class ArrayField extends BaseDcatField {
     ArrayList<String> value = new ArrayList<String>();
     if (attr.getValue() instanceof List) {
       for (Object o: (List)attr.getValue()) {
-        value.add(o.toString());
+        try {
+          value.add(((IFeedAttribute)o).simplify().getValue().toString());
+        } catch (ClassCastException ex) {
+          value.add(o.toString());
+        }
       }
     } else {
       value.add(attr.simplify().getValue().toString());
