@@ -28,7 +28,7 @@ String VER123 = "v1.2.3";
 String VER124 = "v1.2.4";
 %>
 
-<link rel="stylesheet" type="text/css" href="//serverapi.arcgisonline.com/jsapi/arcgis/2.5/js/dojo/dijit/themes/tundra/tundra.css" />
+<link rel="stylesheet" type="text/css" href="//js.arcgis.com/3.11/esri/css/esri.css" />
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/catalog/skins/themes/red/main.css"  />
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/catalog/skins/themes/red/preview.css"  />
 <link rel="icon" type="image/x-icon"   href="<%=request.getContextPath()%>/catalog/images/favicon.ico" />

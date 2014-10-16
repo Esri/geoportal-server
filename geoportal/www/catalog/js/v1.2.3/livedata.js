@@ -17,22 +17,23 @@
  * Copyright (c) 2009, ESRI.
  */
 
-dojo.require("dijit._Widget");
-dojo.require("dijit.form.Button");
-dojo.require("dijit.Toolbar");
-dojo.require("dijit.Tooltip");
-dojo.require("dijit.Dialog");
-dojo.require("dojox.encoding.base64");
 
-dojo.require("esri.map");
-dojo.require("esri.geometry");
-dojo.require("esri.tasks.geometry");
-dojo.require("esri.toolbars.navigation");
-dojo.require("esri.layers.osm");
-dojo.require("esri.layers.wms");
-if (esri.version>=2.5) {
-  dojo.require("esri.layers.wmts");
-}
+require([
+  "dijit/_Widget",
+  "esri/layers/DynamicMapServiceLayer",
+  "dijit/form/Button",
+  "dijit/Toolbar",
+  "dijit/Tooltip",
+  "dijit/Dialog",
+  "dojox/encoding/base64",
+  "esri/map",
+  "esri/geometry",
+  "esri/tasks/geometry",
+  "esri/toolbars/navigation",
+  "esri/layers/osm",
+  "esri/layers/wms",
+  "esri/layers/wmts"
+],function(){
 
 /*
  *==============================================================================
@@ -1629,5 +1630,7 @@ dojo.declare("esri.gpt.layers.SOSLayer", esri.layers.GraphicsLayer, {
       this._addPoint(point, markerSymbol, description!=null && description.length>0? description: name, content);
     }
   }
+
+});
 
 });
