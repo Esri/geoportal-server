@@ -54,9 +54,9 @@ public class DcatPrinter {
     }
   }
   
-  private void printTab() {writer.print(" ");
+  private void printTab() {
     for (int i=0; i<TAB_SIZE; i++) {
-      
+      writer.print(" ");
     }
   }
   
