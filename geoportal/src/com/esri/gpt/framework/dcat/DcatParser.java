@@ -31,7 +31,10 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,6 +46,7 @@ public class DcatParser {
   private static final Logger LOGGER = Logger.getLogger(DcatParser.class.getCanonicalName());
 
   private JsonReader jsonReader;
+  private DcatVersion version = DcatVersion.DV10;
 
   /**
    * Creates instance of the parser.
@@ -136,19 +140,63 @@ public class DcatParser {
       }
 
       JsonToken token = jsonReader.peek();
-      if (token != JsonToken.BEGIN_ARRAY) {
-        throw new DcatParseException("No array found.");
+      switch (token) {
+        case BEGIN_OBJECT:
+          version = DcatVersion.DV11;
+          jsonReader.beginObject();
+          parseContent(listener);
+          break;
+        case BEGIN_ARRAY:
+          jsonReader.beginArray();
+          parseRecords(listener);
+          break;
+        default:
+          throw new DcatParseException("Neither array nor object is found.");
       }
-      jsonReader.beginArray();
-
-      parseRecords(listener);
   }
-
+  
+  /**
+   * Parses entire content of DCAT11.
+   * 
+   * @param listener internal listener
+   * @throws DcatParseException if parsing DCAT fails
+   * @throws IOException if reading DCAT fails
+   */
+  void parseContent(ListenerInternal listener) throws DcatParseException, IOException {
+    while (jsonReader.hasNext()) {
+      JsonToken token = jsonReader.peek();
+      switch (token) {
+        case NAME:
+          String attrName = jsonReader.nextName();
+          if (!"dataset".equals(attrName)) {
+            if (!jsonReader.hasNext()) {
+              throw new DcatParseException("No more data available.");
+            }
+            jsonReader.skipValue();
+          } else {
+            JsonToken subToken = jsonReader.peek();
+            if (subToken!=JsonToken.BEGIN_ARRAY) {
+              throw new DcatParseException("Unexpected token in the data: " + subToken);
+            }
+            jsonReader.beginArray();
+            parseRecords(listener);
+            jsonReader.endArray();
+          }
+          break;
+        default:
+          throw new DcatParseException("Unexpected token in the data: " + token);
+      }
+    }
+    
+    jsonReader.endObject();
+  }
+  
   /**
    * Parses DCAT records using internal listener.
    *
    * @param listener internal listener
    * @throws DcatParseException if parsing DCAT fails
+   * @throws IOException if reading DCAT fails
    */
   void parseRecords(ListenerInternal listener) throws DcatParseException, IOException {
 
@@ -207,10 +255,31 @@ public class DcatParser {
             jsonReader.endArray();
           } else if ("keyword".equals(attrName)) {
             jsonReader.beginArray();
-            parseKeywords(record.getKeywords());
+            parsePrimitiveArray(record.getKeywords());
+            jsonReader.endArray();
+          } else if ("bureauCode".equals(attrName)) {
+            jsonReader.beginArray();
+            parsePrimitiveArray(record.getBureauCodes());
+            jsonReader.endArray();
+          } else if ("programCode".equals(attrName)) {
+            jsonReader.beginArray();
+            parsePrimitiveArray(record.getProgramCodes());
             jsonReader.endArray();
           } else {
             // skip
+            jsonReader.skipValue();
+          }
+          return;
+        case BEGIN_OBJECT:
+          if ("publisher".endsWith(attrName)) {
+            jsonReader.beginObject();
+            parsePublisher(record);
+            jsonReader.endObject();
+          } else if ("contactPoint".endsWith(attrName)) {
+            jsonReader.beginObject();
+            parseContactPoint(record);
+            jsonReader.endObject();
+          } else {
             jsonReader.skipValue();
           }
           return;
@@ -224,7 +293,49 @@ public class DcatParser {
     }
   }
   
-  private void parseKeywords(List<JsonAttribute> keywords) throws DcatParseException, IOException {
+  private void parsePublisher(JsonRecord record) throws DcatParseException, IOException {
+    while (jsonReader.hasNext()) {
+      JsonToken token = jsonReader.peek();
+      switch (token) {
+        case NAME:
+          String attrName = jsonReader.nextName();
+          if ("name".equals(attrName)) {
+            storeAttribute("publisher", record);
+          } else {
+            jsonReader.skipValue();
+          }
+          break;
+        case END_OBJECT:
+          return;
+        default:
+          throw new DcatParseException("Unexpected token in the data: " + token);
+      }
+    }
+  }
+  
+  private void parseContactPoint(JsonRecord record) throws DcatParseException, IOException {
+    while (jsonReader.hasNext()) {
+      JsonToken token = jsonReader.peek();
+      switch (token) {
+        case NAME:
+          String attrName = jsonReader.nextName();
+          if ("fn".equals(attrName)) {
+            storeAttribute("contactPoint", record);
+          } else if ("hasEmail".equals(attrName)) {
+            storeAttribute("mbox", record);
+          } else {
+            jsonReader.skipValue();
+          }
+          break;
+        case END_OBJECT:
+          return;
+        default:
+          throw new DcatParseException("Unexpected token in the data: " + token);
+      }
+    }
+  }
+  
+  private void parsePrimitiveArray(List<JsonAttribute> attributes) throws DcatParseException, IOException {
 
     while (jsonReader.hasNext()) {
       JsonToken token = jsonReader.peek();
@@ -233,13 +344,13 @@ public class DcatParser {
           jsonReader.endArray();
           break;
         case STRING:
-          keywords.add(new JsonAttribute(jsonReader.nextString()));
+          attributes.add(new JsonAttribute(jsonReader.nextString()));
           break;
         case NUMBER:
-          keywords.add(new JsonAttribute(jsonReader.nextDouble()));
+          attributes.add(new JsonAttribute(jsonReader.nextDouble()));
           break;
         case BOOLEAN:
-          keywords.add(new JsonAttribute(jsonReader.nextBoolean()));
+          attributes.add(new JsonAttribute(jsonReader.nextBoolean()));
           break;
         default:
           throw new DcatParseException("Unexpected token in the data: " + token);
@@ -264,13 +375,20 @@ public class DcatParser {
 
   }
 
+  private static final Map<String,String> compatibilityRenameMap = new HashMap<String, String>();
+  static {
+    compatibilityRenameMap.put("format", "mediaType");
+  }
+  
   private void parseDistribution(JsonArray<JsonAttributes> distributions) throws DcatParseException, IOException {
     JsonAttributes attributes = new JsonAttributes();
+    Map<String,String> renameMap = version.compareTo(DcatVersion.DV11)>=0?
+      Collections.EMPTY_MAP:compatibilityRenameMap;
     while (jsonReader.hasNext()) {
       JsonToken token = jsonReader.peek();
       switch (token) {
         case NAME:
-          parseAttribute(attributes);
+          parseAttribute(attributes,renameMap);
           break;
         default:
           throw new DcatParseException("Unexpected token in the data: " + token);
@@ -280,9 +398,17 @@ public class DcatParser {
     distributions.add(attributes);
   }
 
-  private void parseAttribute(JsonAttributes attributes) throws DcatParseException, IOException {
+  private void parseAttribute(JsonAttributes attributes,Map<String,String> renameMap) throws DcatParseException, IOException {
     String attrName = jsonReader.nextName();
-    while (jsonReader.hasNext()) {
+    attrName = renameMap.get(attrName)!=null? renameMap.get(attrName): attrName;
+    if (jsonReader.hasNext()) {
+      storeAttribute(attrName, attributes);
+    } else {
+      throw new DcatParseException("Invalid attribute: " + attrName);
+    }
+  }
+  
+  private void storeAttribute(String attrName, JsonAttributes attributes) throws IOException, DcatParseException {
       JsonToken token = jsonReader.peek();
       switch (token) {
         case STRING:
@@ -294,12 +420,13 @@ public class DcatParser {
         case BOOLEAN:
           attributes.put(attrName, new JsonAttribute(jsonReader.nextBoolean()));
           return;
+        case NULL:
+          return;
         default:
           throw new DcatParseException("Unexpected token in the data: " + token);
       }
-    }
   }
-
+  
   /**
    * Record listener.
    */

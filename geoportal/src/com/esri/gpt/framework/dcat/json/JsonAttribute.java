@@ -78,6 +78,11 @@ public class JsonAttribute {
     return getter.getBooleanValue();
   }
   
+  @Override
+  public String toString() {
+    return getter.getStringValue();
+  }
+  
   /**
    * Gets original value type.
    * @return type
@@ -201,11 +206,6 @@ public class JsonAttribute {
       return Boolean.FALSE;
     }
     
-  }
-  
-  @Override
-  public String toString() {
-    return getter.toString();
   }
   
   /**

@@ -24,6 +24,8 @@ import java.util.List;
 public class JsonRecord extends JsonAttributes {
   private final JsonArray<JsonAttributes> distribution = new JsonArray<JsonAttributes>();
   private final List<JsonAttribute> keywords = new ArrayList<JsonAttribute>();
+  private final List<JsonAttribute> bureauCodes = new ArrayList<JsonAttribute>();
+  private final List<JsonAttribute> programCodes = new ArrayList<JsonAttribute>();
 
   public JsonArray<JsonAttributes> getDistribution() {
     return distribution;
@@ -31,6 +33,14 @@ public class JsonRecord extends JsonAttributes {
   
   public List<JsonAttribute> getKeywords() {
     return keywords;
+  }
+
+  public List<JsonAttribute> getBureauCodes() {
+    return bureauCodes;
+  }
+
+  public List<JsonAttribute> getProgramCodes() {
+    return programCodes;
   }
   
   @Override

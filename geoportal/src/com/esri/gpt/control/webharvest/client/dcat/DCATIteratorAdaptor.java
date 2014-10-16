@@ -121,21 +121,6 @@ class DCATIteratorAdaptor implements Iterable<Publishable> {
       return dcatRecord;
     }
     
-    /**
-     * Selects access URL.
-     * @param r DCAT record
-     * @return access URL or empty string if no access URL present
-     */
-    private String selectAccessUrl(DcatRecord r) {
-      DcatDistributionList distList = r.getDistribution();
-      for (DcatDistribution d : distList) {
-        if (!d.getAccessURL().isEmpty() && formatPattern.matcher(Val.chkStr(d.getMediaType(), d.getFormat())).matches()) {
-          return d.getAccessURL();
-        }
-      }
-      return "";
-    }
-    
   }
   
 }
