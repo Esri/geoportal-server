@@ -79,7 +79,6 @@ public class DcatPrinter {
     if (getAnythingPrinted()) {
       writer.println(",");
     }
-    levels.push(new Level());
     printTabs();
     writer.println("\""+name+"\": {");
     levelUp();
@@ -134,8 +133,6 @@ public class DcatPrinter {
           writer.println(",");
         }
         printTabs();
-        printTab();
-        printTab();
         printTab();
         writer.print("\"");
         writer.print(escapeStrForJson(value.get(i)));
