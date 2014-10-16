@@ -17,6 +17,7 @@ package com.esri.gpt.control.georss.dcatdef;
 
 import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedRecord;
+import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -27,5 +28,5 @@ import java.util.Properties;
 public interface DcatFieldDefinition {
   long OBLIGATORY = 0x01;
   
-  void print(DcatPrinter printer, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException ;
+  void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException ;
 }

@@ -17,6 +17,7 @@ package com.esri.gpt.control.georss.dcatdef;
 
 import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedRecord;
+import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -43,12 +44,12 @@ public class PublisherField implements DcatFieldDefinition {
   }
 
   @Override
-  public void print(DcatPrinter printer, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
-    printer.startObject(name);
+  public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
+    jsonWriter.name(name).beginObject();
     for (DcatFieldDefinition dfd: fieldDefinitions) {
-      dfd.print(printer, properties, dcatSchemas, r);
+      dfd.print(jsonWriter, properties, dcatSchemas, r);
     }
-    printer.endObject();
+    jsonWriter.endObject();
   }
   
 }

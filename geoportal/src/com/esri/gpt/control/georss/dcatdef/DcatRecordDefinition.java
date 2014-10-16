@@ -18,6 +18,7 @@ package com.esri.gpt.control.georss.dcatdef;
 import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedRecord;
 import static com.esri.gpt.framework.util.Val.chkStr;
+import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,11 +75,11 @@ public class DcatRecordDefinition {
     fieldDefinitions.add(new TemporalField("temporal"));
     fieldDefinitions.add(new DcatDistribution("distribution"));
   }
-  public void print(DcatPrinter printer, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
-    printer.startObject();
+  public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
+    jsonWriter.beginObject();
     for (DcatFieldDefinition fd: fieldDefinitions) {
-      fd.print(printer, properties, dcatSchemas, r);
+      fd.print(jsonWriter, properties, dcatSchemas, r);
     }
-    printer.endObject();
+    jsonWriter.endObject();
   }
 }

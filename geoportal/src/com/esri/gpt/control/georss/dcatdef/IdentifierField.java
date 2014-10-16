@@ -20,6 +20,7 @@ import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedRecord;
 import static com.esri.gpt.control.georss.dcatdef.DcatFieldDefinition.OBLIGATORY;
 import static com.esri.gpt.framework.util.Val.chkStr;
+import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -42,7 +43,7 @@ public class IdentifierField extends BaseDcatField {
   }
 
   @Override
-  public void print(DcatPrinter printer, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
+  public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
     IFeedAttribute attr = getFeedAttribute(dcatSchemas, r);
     
     String value;
@@ -56,7 +57,7 @@ public class IdentifierField extends BaseDcatField {
       value = chkStr(readValue(attr),chkStr(r.getFileIdentifier(), r.getUuid()));
     }
     
-    printer.printAttribute(getOutFieldName(),value);
+    jsonWriter.name(getOutFieldName()).value(value);
   }
   
 }

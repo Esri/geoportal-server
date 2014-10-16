@@ -18,6 +18,7 @@ package com.esri.gpt.control.georss.dcatdef;
 import com.esri.gpt.catalog.search.ResourceLink;
 import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedRecord;
+import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -34,15 +35,15 @@ public class DcatDistribution implements DcatFieldDefinition {
   }
   
   @Override
-  public void print(DcatPrinter printer, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
-    printer.startArray(name);
+  public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
+    jsonWriter.name(name).beginArray();
     for ( ResourceLink l: r.getResourceLinks()) {
-      printLink(printer, properties, dcatSchemas, l);
+      printLink(jsonWriter, properties, dcatSchemas, l);
     }
-    printer.endArray();
+    jsonWriter.endArray();
   }
   
-  protected void printLink(DcatPrinter printer, Properties properties, DcatSchemas dcatSchemas, ResourceLink link) throws IOException {
+  protected void printLink(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, ResourceLink link) throws IOException {
     boolean printLink = false;
     String mediaType = null;
     String format = null;
@@ -57,11 +58,11 @@ public class DcatDistribution implements DcatFieldDefinition {
       format = "HTML";
     }
     if (printLink) {
-      printer.startObject();
-      printer.printAttribute("accessURL", link.getUrl());
-      printer.printAttribute("mediaType", mediaType);
-      printer.printAttribute("format", format);
-      printer.endObject();
+      jsonWriter.beginObject();
+      jsonWriter.name("accessURL").value(link.getUrl());
+      jsonWriter.name("mediaType").value(mediaType);
+      jsonWriter.name("format").value(format);
+      jsonWriter.endObject();
     }
   }
   

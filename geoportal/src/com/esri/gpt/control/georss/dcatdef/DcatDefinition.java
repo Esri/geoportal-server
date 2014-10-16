@@ -17,6 +17,7 @@ package com.esri.gpt.control.georss.dcatdef;
 
 import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedRecord;
+import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -28,14 +29,15 @@ public class DcatDefinition {
   private final DcatHeaderDefinition headerDef = new DcatHeaderDefinition();
   private final DcatRecordDefinition recordDef = new DcatRecordDefinition();
   
-  public void print(DcatPrinter printer, Properties properties, DcatSchemas dcatSchemas, Iterable<IFeedRecord> records) throws IOException {
-    printer.startObject();
-    headerDef.print(printer, properties);
-    printer.startArray("dataset");
+  public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, Iterable<IFeedRecord> records) throws IOException {
+    jsonWriter.beginObject();
+    headerDef.print(jsonWriter, properties);
+    jsonWriter.name("dataset");
+    jsonWriter.beginArray();
     for (IFeedRecord r: records) {
-      recordDef.print(printer, properties, dcatSchemas, r);
+      recordDef.print(jsonWriter, properties, dcatSchemas, r);
     }
-    printer.endArray();
-    printer.endObject();
+    jsonWriter.endArray();
+    jsonWriter.endObject();
   }
 }

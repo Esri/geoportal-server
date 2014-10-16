@@ -24,6 +24,7 @@ import com.esri.gpt.control.georss.IFeedRecord;
 import static com.esri.gpt.control.georss.dcatdef.DcatFieldDefinition.OBLIGATORY;
 import com.esri.gpt.framework.isodate.IsoDateFormat;
 import com.esri.gpt.framework.util.Val;
+import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -87,7 +88,7 @@ public class TemporalField extends BaseDcatField {
   }
 
   @Override
-  public void print(DcatPrinter printer, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
+  public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
     Map<String, IFeedAttribute> index = getIndex(r);
     if (index == null) {
       return;
@@ -125,7 +126,7 @@ public class TemporalField extends BaseDcatField {
     
     String temporal = Val.join(strDates.toArray(new String[strDates.size()]), field.getDelimiter());
     
-    printer.printAttribute(getOutFieldName(),temporal);
+    jsonWriter.name(getOutFieldName()).value(temporal);
   }
   
 }

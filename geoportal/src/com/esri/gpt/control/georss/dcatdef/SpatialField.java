@@ -19,6 +19,7 @@ import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedRecord;
 import static com.esri.gpt.control.georss.dcatdef.DcatFieldDefinition.OBLIGATORY;
 import com.esri.gpt.framework.geometry.Envelope;
+import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -41,7 +42,7 @@ public class SpatialField extends BaseDcatField {
   }
 
   @Override
-  public void print(DcatPrinter printer, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
+  public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
     
     String value;
     Envelope envelope = r.getEnvelope();
@@ -55,7 +56,7 @@ public class SpatialField extends BaseDcatField {
       value = ""+envelope.getMinX()+","+envelope.getMinY()+","+envelope.getMaxX()+","+envelope.getMaxY();
     }
     
-    printer.printAttribute(getOutFieldName(),value);
+    jsonWriter.name(getOutFieldName()).value(value);
   }
   
 }

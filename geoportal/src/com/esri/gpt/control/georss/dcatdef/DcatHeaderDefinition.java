@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.control.georss.dcatdef;
 
+import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -23,8 +24,8 @@ import java.util.Properties;
  * @author Esri, Inc.
  */
 public class DcatHeaderDefinition {
-  public void print(DcatPrinter printer, Properties properties) throws IOException {
-    printer.printAttribute("conformsTo", "https://project-open-data.cio.gov/v1.1/schema");
-    printer.printAttribute("describedBy", "https://project-open-data.cio.gov/v1.1/schema/catalog.json");
+  public void print(JsonWriter jsonWriter, Properties properties) throws IOException {
+    jsonWriter.name("conformsTo").value("https://project-open-data.cio.gov/v1.1/schema");
+    jsonWriter.name("describedBy").value("https://project-open-data.cio.gov/v1.1/schema/catalog.json");
   }
 }
