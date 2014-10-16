@@ -16,7 +16,6 @@
 package com.esri.gpt.control.georss.dcatdef;
 
 import com.esri.gpt.control.georss.DcatSchemas;
-import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedRecord;
 import static com.esri.gpt.control.georss.dcatdef.DcatFieldDefinition.OBLIGATORY;
 import com.esri.gpt.framework.geometry.Envelope;

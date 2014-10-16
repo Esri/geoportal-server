@@ -15,7 +15,6 @@
  */
 package com.esri.gpt.control.georss.dcatdef;
 
-import com.esri.gpt.framework.util.Val;
 import static com.esri.gpt.framework.util.Val.escapeStrForJson;
 import java.io.PrintWriter;
 import java.util.ArrayDeque;
