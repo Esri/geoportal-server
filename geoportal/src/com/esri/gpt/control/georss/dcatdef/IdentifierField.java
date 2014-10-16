@@ -22,6 +22,7 @@ import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedRecord;
 import static com.esri.gpt.control.georss.dcatdef.DcatFieldDefinition.OBLIGATORY;
 import com.esri.gpt.framework.util.Val;
+import static com.esri.gpt.framework.util.Val.chkStr;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -42,19 +43,6 @@ public class IdentifierField extends BaseDcatField {
   protected String readValue(IFeedAttribute attr) {
     return attr.simplify().getValue().toString();
   }
-  
-  protected String readLink(ResourceLinks links) {
-    for (ResourceLink l: links) {
-      if (l.getTag().equals(ResourceLink.TAG_METADATA)) {
-        return l.getUrl();
-      }
-    }
-    return "";
-  }
-  
-  protected String getDefaultValue(Properties properties) {
-    return "";
-  }
 
   @Override
   public void print(DcatPrinter printer, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
@@ -63,12 +51,12 @@ public class IdentifierField extends BaseDcatField {
     String value;
     if (attr==null) {
       if ((flags & OBLIGATORY)!=0) {
-        value = getDefaultValue(properties);
+        value = chkStr(r.getFileIdentifier(), r.getUuid());
       } else {
         return;
       }
     } else {
-      value = Val.chkStr(readLink(r.getResourceLinks()), readValue(attr));
+      value = chkStr(readValue(attr),chkStr(r.getFileIdentifier(), r.getUuid()));
     }
     
     printer.printAttribute(getOutFieldName(),value);
