@@ -179,15 +179,24 @@ public class DcatParser {
               throw new DcatParseException("Unexpected token in the data: " + subToken);
             }
             jsonReader.beginArray();
-            parseRecords(listener);
-            jsonReader.endArray();
+            if (!parseRecords(listener)) {
+              return;
+            }
           }
           break;
+        case BEGIN_OBJECT:
+          if (!parseRecords(listener) ) {
+            return;
+          }
+          break;
+        case END_DOCUMENT:
+          return;
         default:
           throw new DcatParseException("Unexpected token in the data: " + token);
       }
     }
     
+    jsonReader.endArray();
     jsonReader.endObject();
   }
   
@@ -198,7 +207,7 @@ public class DcatParser {
    * @throws DcatParseException if parsing DCAT fails
    * @throws IOException if reading DCAT fails
    */
-  void parseRecords(ListenerInternal listener) throws DcatParseException, IOException {
+  boolean parseRecords(ListenerInternal listener) throws DcatParseException, IOException {
 
       while (jsonReader.hasNext()) {
         JsonToken token = jsonReader.peek();
@@ -206,15 +215,18 @@ public class DcatParser {
           case BEGIN_OBJECT:
             jsonReader.beginObject();
             if (!parseRecord(listener)) {
-              return;
+              return false;
             }
             break;
+          case END_DOCUMENT:
+            return false;
           default:
             throw new DcatParseException("Unexpected token in the data: " + token);
         }
       }
 
       jsonReader.endArray();
+      return true;
   }
 
   private boolean parseRecord(ListenerInternal listener) throws DcatParseException, IOException {
