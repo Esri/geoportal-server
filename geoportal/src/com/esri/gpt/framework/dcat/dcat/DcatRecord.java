@@ -52,6 +52,11 @@ public interface DcatRecord {
    */
   String getAccessLevel();
   /**
+   * Gets access level comment.
+   * @return access level comment
+   */
+  String getAccessLevelComment();
+  /**
    * Gets data dictionary.
    * @return data dictionary
    */
@@ -66,6 +71,11 @@ public interface DcatRecord {
    * @return access URL
    */
   String getAccessURL();
+  /**
+   * Gets download URL.
+   * @return download URL
+   */
+  String getDownloadURL();
   /**
    * Gets format.
    * @return format

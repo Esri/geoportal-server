@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,15 +44,26 @@ public class DcatParser {
 
   private static final Logger LOGGER = Logger.getLogger(DcatParser.class.getCanonicalName());
 
-  private JsonReader jsonReader;
+  private static final Map<String,String> recordRenameMap = new HashMap<String, String>();
+  static {
+    recordRenameMap.put("rights", "accessLevelComment");
+  }
+
+  private static final Map<String,String> distributionRenameMap = new HashMap<String, String>();
+  static {
+    distributionRenameMap.put("format", "mediaType");
+  }
+
+  private final JsonReader jsonReader;
   private DcatVersion version = DcatVersion.DV10;
 
   /**
    * Creates instance of the parser.
    *
    * @param input input stream to parse
+   * @throws java.io.IOException if error reading stream
    */
-  public DcatParser(InputStream input) throws UnsupportedEncodingException {
+  public DcatParser(InputStream input) throws IOException {
     this.jsonReader = new JsonReader(new InputStreamReader(input, "UTF-8"));
   }
 
@@ -68,6 +78,7 @@ public class DcatParser {
 
   /**
    * Closes parser.
+   * @throws java.io.IOException if error closing reader
    */
   public void close() throws IOException {
     jsonReader.close();
@@ -78,6 +89,7 @@ public class DcatParser {
    *
    * @param listener event listener
    * @throws DcatParseException if parsing fails
+   * @throws java.io.IOException if error reading stream
    */
   public void parse(final Listener listener) throws DcatParseException, IOException {
     ListenerInternal localListener = new ListenerInternal() {
@@ -97,6 +109,7 @@ public class DcatParser {
    * @param policy limit policy
    * @return list of records.
    * @throws DcatParseException if parsing fails
+   * @throws java.io.IOException if error reading stream
    */
   public DcatRecordList parse(final LimitPolicy policy) throws DcatParseException, IOException {
     final DcatRecordListImpl list = new DcatRecordListImpl();
@@ -231,11 +244,13 @@ public class DcatParser {
 
   private boolean parseRecord(ListenerInternal listener) throws DcatParseException, IOException {
     JsonRecord record = new JsonRecord();
+    Map<String,String> renameMap = version.compareTo(DcatVersion.DV11)>=0?
+      Collections.EMPTY_MAP:recordRenameMap;
     while (jsonReader.hasNext()) {
       JsonToken token = jsonReader.peek();
       switch (token) {
         case NAME:
-          parseAttribute(record);
+          parseAttribute(record,renameMap);
           break;
         default:
           throw new DcatParseException("Unexpected token in the data: " + token);
@@ -246,8 +261,9 @@ public class DcatParser {
     return listener.onRecord(new DcatRecordAdaptor(record));
   }
 
-  private void parseAttribute(JsonRecord record) throws DcatParseException, IOException {
+  private void parseAttribute(JsonRecord record,Map<String,String> renameMap) throws DcatParseException, IOException {
     String attrName = jsonReader.nextName();
+    attrName = renameMap.get(attrName)!=null? renameMap.get(attrName): attrName;
     while (jsonReader.hasNext()) {
       JsonToken token = jsonReader.peek();
       switch (token) {
@@ -386,16 +402,11 @@ public class DcatParser {
     }
 
   }
-
-  private static final Map<String,String> compatibilityRenameMap = new HashMap<String, String>();
-  static {
-    compatibilityRenameMap.put("format", "mediaType");
-  }
   
   private void parseDistribution(JsonArray<JsonAttributes> distributions) throws DcatParseException, IOException {
     JsonAttributes attributes = new JsonAttributes();
     Map<String,String> renameMap = version.compareTo(DcatVersion.DV11)>=0?
-      Collections.EMPTY_MAP:compatibilityRenameMap;
+      Collections.EMPTY_MAP:distributionRenameMap;
     while (jsonReader.hasNext()) {
       JsonToken token = jsonReader.peek();
       switch (token) {

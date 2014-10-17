@@ -27,7 +27,7 @@ import java.util.List;
  * DCAT record adaptor.
  */
 public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
-  private JsonRecord record;
+  private final JsonRecord record;
 
   /**
    * Creates instance of the adaptor.
@@ -73,6 +73,11 @@ public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
   }
 
   @Override
+  public String getAccessLevelComment() {
+    return getString("accessLevelComment");
+  }
+
+  @Override
   public String getDataDictionary() {
     return getString("dataDictionary");
   }
@@ -85,6 +90,11 @@ public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
   @Override
   public String getAccessURL() {
     return getString("accessURL");
+  }
+
+  @Override
+  public String getDownloadURL() {
+    return getString("downloadURL");
   }
 
   @Override

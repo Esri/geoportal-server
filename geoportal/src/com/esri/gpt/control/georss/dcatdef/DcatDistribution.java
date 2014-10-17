@@ -44,22 +44,23 @@ public class DcatDistribution implements DcatFieldDefinition {
   }
   
   protected void printLink(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, ResourceLink link) throws IOException {
-    boolean printLink = false;
+    boolean downloadLink = false;
+    boolean accessLink = false;
     String mediaType = null;
     String format = null;
     if (link.getTag().equals(ResourceLink.TAG_METADATA)) {
-      printLink = true;
+      downloadLink = true;
       mediaType = "text/xml";
       format = "XML";
     }
     if (link.getTag().equals(ResourceLink.TAG_DETAILS)) {
-      printLink = true;
+      accessLink = true;
       mediaType = "text/html";
       format = "HTML";
     }
-    if (printLink) {
+    if (downloadLink || accessLink) {
       jsonWriter.beginObject();
-      jsonWriter.name("accessURL").value(link.getUrl());
+      jsonWriter.name(downloadLink? "downloadURL": "accessURL").value(link.getUrl());
       jsonWriter.name("mediaType").value(mediaType);
       jsonWriter.name("format").value(format);
       jsonWriter.endObject();
