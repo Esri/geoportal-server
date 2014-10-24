@@ -54,7 +54,7 @@ public class DcatCacheServlet extends BaseServlet {
       char[] buffer = new char[1024];
       int length = -1;
 
-      while ((length = reader.read(buffer)) > 0) {
+      while ((length = reader.read(buffer)) != -1) {
         writer.write(buffer, 0, length);
       }
 
@@ -75,5 +75,7 @@ public class DcatCacheServlet extends BaseServlet {
     if (callback != null) {
       writer.print(")");
     }
+    
+    writer.flush();
   }
 }
