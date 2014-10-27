@@ -13,6 +13,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 --%>
+<%@page import="com.esri.gpt.framework.util.Val"%>
 <% // viewMetadataDetails.jsp - view metadata details(JSF body) %>
 <%@ taglib prefix="f" uri="http://java.sun.com/jsf/core" %>
 <%@ taglib prefix="h" uri="http://java.sun.com/jsf/html" %>
@@ -22,7 +23,7 @@
 <%
   com.esri.gpt.framework.ArcGIS.InteractiveMap imConfig = 
      com.esri.gpt.framework.context.RequestContext.extract(request).getApplicationConfiguration().getInteractiveMap();
-  String vmdUuid = request.getParameter("uuid");
+  String vmdUuid = Val.chkStr(request.getParameter("uuid"));
   String sRestUrl = request.getContextPath()+"/rest/document?f=html&id="+java.net.URLEncoder.encode(vmdUuid,"UTF-8");
   
 %>
