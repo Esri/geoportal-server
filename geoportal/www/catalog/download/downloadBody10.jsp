@@ -62,6 +62,7 @@
     dojo.require("esri.map");
     dojo.require("esri.tasks.gp");
     dojo.require("esri.toolbars.draw");
+    dojo.require("esri.tasks.FeatureSet");
 
     function MdeMap() {
       var _gptMap = null;
@@ -70,7 +71,7 @@
       var _gptTask = null;
       var _gptDraw = null;
       var _layersCount = 0;
-      var _featureSet = new esri.tasks.FeatureSet();
+      var _featureSet = null;
   
       this.initialize = function initialize() {
         esriConfig.defaults.io.proxyUrl = "proxy.jsp";
@@ -80,6 +81,8 @@
         config.mapToolbarId = "mapToolbar";
         config.locatorInputId = "mapInput-locate";
         config.locatorCandidatesId = "locatorCandidates";
+        
+        _featureSet = new esri.tasks.FeatureSet();
       
         var gptTaskUrl = document.getElementById("extractDataTaskUrl").value;
       

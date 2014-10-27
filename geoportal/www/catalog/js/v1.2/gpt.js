@@ -24,6 +24,8 @@ dojo.require("esri.layers.wms");
 if (esri.version>=2.5) {
   dojo.require("esri.layers.wmts");
 }
+dojo.require("esri.tasks.locator");
+dojo.require("esri.toolbars.draw");
 
 function GptUtil() {}
 
