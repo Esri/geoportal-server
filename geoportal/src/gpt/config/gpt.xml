@@ -55,11 +55,11 @@
     
     <interactiveMap
         jsapiUrl="http://js.arcgis.com/3.11/"
-        mapServiceUrl="http://server.arcgisonline.com/ArcGIS/rest/services/ESRI_Imagery_World_2D/MapServer"
+        mapServiceUrl="http://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer"
         mapServiceType="dynamic" 
-        geometryServiceUrl="http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer"
-        locatorUrl=""
-        locatorSingleFieldParameter = "city"/>
+        geometryServiceUrl="http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer"
+        locatorUrl="http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"
+        locatorSingleFieldParameter = "Address"/>
   
     <catalog gptTablePrefix="GPT_">       
     <!-- Lucene configuration.
