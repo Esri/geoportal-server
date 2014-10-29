@@ -114,6 +114,7 @@ dojo.declare("GptMap", null, {
         service = new esri.layers.ArcGISDynamicMapServiceLayer(config.mapServiceURL);
         // changed to JPG, because IE can not handle PNG24 properly (problems with paning)
         service.setImageFormat("jpg");
+        service.setMinScale(1000000000);
       } else if (config.mapServiceType == "tiled") {
         service = new esri.layers.ArcGISTiledMapServiceLayer(config.mapServiceURL);
       } else if (config.mapServiceType == "wms") {

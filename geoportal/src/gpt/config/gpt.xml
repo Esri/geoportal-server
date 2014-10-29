@@ -55,7 +55,6 @@
     
     <interactiveMap
         jsapiUrl="http://js.arcgis.com/3.11/"
-        mapInitialExtent="xmin:-126,ymin:24,xmax:-66,ymax:49.2,spatialReference:{wkid:4326}"
         mapServiceUrl="http://services.arcgisonline.com/arcgis/rest/services/ESRI_StreetMap_World_2D/MapServer"
         mapServiceType="dynamic" 
         geometryServiceUrl="http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer"

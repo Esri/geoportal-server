@@ -1777,7 +1777,7 @@
       <div id="locatorCandidates" class="locatorCandidates"></div>
          <div id="interactiveMap" 
              dojotype="dijit.layout.ContentPane"
-             style="width:360px; height:220px; cursor:pointer; border: 1px solid #000000;">
+             style="width:400px; height:260px; cursor:pointer; border: 1px solid #000000;">
         </div>
     </f:verbatim>
 
