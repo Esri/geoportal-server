@@ -13,6 +13,55 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 --%>
+<% RendererFactories factories = new RendererFactories(
+  request.getContextPath(),
+  "/catalog/download/proxy.jsp",
+  "/catalog/livedata/kmzBridge.jsp");
+String url = request.getParameter("url");
+CredentialProvider cp = extractCredentialProvider(request);
+if (cp != null) {
+  CredentialsMap cm = CredentialsMap.extract(request);
+  cm.put(url, cp);
+}
+IRenderer renderer = factories.select(url, cp);
+
+if (renderer == null) {
+  response.setStatus(HttpURLConnection.HTTP_NOT_FOUND);
+  return;
+}
+
+ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
+PrintWriter printWriter = new PrintWriter(byteArrayOut);
+renderer.render(printWriter);
+printWriter.close();
+
+String content = byteArrayOut.toString("UTF-8");
+
+out.print(content);
+%> 
+
+<%!
+  private CredentialProvider extractCredentialProvider(HttpServletRequest request) {
+    String cpParam = request.getHeader("GPT-livedata");
+    if (cpParam != null) {
+      try {
+        cpParam = Base64.decode(cpParam, "UTF-8");
+        cpParam = URLDecoder.decode(cpParam, "UTF-8");
+        String[] cp = cpParam.split(",");
+        if (cp.length == 3) {
+          if (Val.chkInt(cp[2], 0) >= 3) {
+            return null;
+          }
+          return new CredentialProvider(cp[0], cp[1]);
+        }
+      } catch (IOException ex) {
+      }
+    }
+    return null;
+  }
+
+%>
+
 <%@page import="com.esri.gpt.framework.context.CredentialsMap"%>
 <% // proxy.jsp - Serves as a proxy for the ArcGIS Server Javascript API %>
 <%@page session="false"%>
@@ -21,73 +70,4 @@
 <%@page import="com.esri.gpt.framework.security.codec.Base64" %>
 <%@page import="com.esri.gpt.framework.util.Val" %>
 <%@page import="java.net.URLDecoder" %>
-
-<% execute(request,response); %> 
-
-<%!
-
-	/**
-	 * Execute the proxy request.
-	 * @param request the HTTP request
-	 * @param response the HTTP response
-	 */
-	private void execute(HttpServletRequest request, HttpServletResponse response) {
-    PrintWriter writer = null;
-		try {
-
-      RendererFactories factories = new RendererFactories(
-        request.getContextPath(),
-        "/catalog/download/proxy.jsp",
-        "/catalog/livedata/kmzBridge.jsp");
-      String url = request.getParameter("url");
-      CredentialProvider cp = extractCredentialProvider(request);
-      if (cp!=null) {
-        CredentialsMap cm = CredentialsMap.extract(request);
-        cm.put(url, cp);
-      }
-      IRenderer renderer = factories.select(url, cp);
-
-      if (renderer==null) {
-        response.setStatus(HttpURLConnection.HTTP_NOT_FOUND);
-        return;
-      }
-
-      response.setCharacterEncoding("UTF-8");
-      response.setContentType("text/javascript");
-      
-      writer = new PrintWriter(response.getOutputStream());
-      renderer.render(writer);
-		  
-		} catch (Exception e) {
-      e.printStackTrace();
-		  response.setStatus(HttpURLConnection.HTTP_INTERNAL_ERROR);
-		} finally {
-      try {
-        if (writer != null) {
-          writer.flush();
-          writer.close();
-        }
-      } catch (Exception ef) {
-        System.err.println("liveDataProxy.jsp: Error closing PrintWriter: "+ef.toString());
-      }
-    }
-}
-
-private CredentialProvider extractCredentialProvider(HttpServletRequest request) {
-  String cpParam = request.getHeader("GPT-livedata");
-  if (cpParam != null) {
-    try {
-      cpParam = Base64.decode(cpParam, "UTF-8");
-      cpParam = URLDecoder.decode(cpParam, "UTF-8");
-      String[] cp = cpParam.split(",");
-      if (cp.length == 3) {
-        if (Val.chkInt(cp[2],0)>=3) return null;
-        return new CredentialProvider(cp[0], cp[1]);
-      }
-    } catch (IOException ex) {
-    }
-  }
-  return null;
-}
-
-%>
+<%@page pageEncoding="UTF8" contentType="text/javascript" %>

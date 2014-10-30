@@ -2089,6 +2089,10 @@ dojo.declare("gxe.xml.XmlAttribute",gxe.xml.XmlNode,{
     var bSerializeIfEmpty = (this.getSerializeIfEmpty() || !bValidating);
 
     var sNodeValue = this.nodeInfo.nodeValue;
+    if (sNodeValue=="${auto}") {
+      sNodeValue = xmlGenerator.context.generateUniqueId();
+    }
+    
     var inputControl = this.getInputControl();
     if (inputControl != null) {
       this.nodeInfo.nodeValue = inputControl.getInputValue();
