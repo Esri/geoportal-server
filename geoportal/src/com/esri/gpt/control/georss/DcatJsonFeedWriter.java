@@ -37,6 +37,7 @@ import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.isodate.IsoDateFormat;
 import com.esri.gpt.framework.util.Val;
+import java.util.Properties;
 
 import java.util.logging.Logger;
 
@@ -46,8 +47,8 @@ import java.util.logging.Logger;
 public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
   private static final Logger LOGGER = Logger.getLogger(DcatJsonFeedWriter.class.getCanonicalName());
 
-  private HashMap<String, String> defaultValues = new HashMap<String, String>();
-  private DcatSchemas dcatSchemas; 
+  private Properties defaultValues = new Properties();
+  protected DcatSchemas dcatSchemas; 
 
   protected DcatJsonFeedWriter(HttpServletRequest request,
           RequestContext context, PrintWriter writer, RestQuery query,
@@ -66,8 +67,8 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     this.parameterMap.put("p", new String[]{"dcat"});
   }
 
-  @Override
-  public void write(IFeedRecords records) {
+  protected Properties makeDefaultValues() {
+    Properties properties = new Properties();
 
     String sTitle = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.title"));
     String sDescription = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.description"));
@@ -88,66 +89,76 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     String sLicense = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.license"));
     String sSpatial = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.spatial"));
     String sTemporal = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.temporal"));
-    
-    defaultValues.put("title", sTitle);
-    defaultValues.put("description", sDescription);
-    
-    defaultValues.put("keyword", sKeyword);
-    defaultValues.put("modified", sModified);
-    
-    defaultValues.put("publisher", sPublisher);
-    defaultValues.put("contactPoint", sPerson);
-    defaultValues.put("mbox", sMbox);
-    defaultValues.put("identifier", "");
-    defaultValues.put("accessLevel", sAccessLevel);
-    defaultValues.put("accessLevelComment", sAccessLevelComment);
 
-    defaultValues.put("bureauCode", sBureauCode);
-    defaultValues.put("programCode", sProgramCode);
     
-    defaultValues.put("dataDictionary", sDataDictionary);
-    defaultValues.put("accessURL", sAccessUrl);
-    defaultValues.put("webService", sWebService);
-    defaultValues.put("format", sFormat);
-    defaultValues.put("spatial", sSpatial);
-    defaultValues.put("temporal", "");
+    properties.setProperty("title", sTitle);
+    properties.setProperty("description", sDescription);
+    
+    properties.setProperty("keyword", sKeyword);
+    properties.setProperty("modified", sModified);
+    
+    properties.setProperty("publisher", sPublisher);
+    properties.setProperty("contactPoint", sPerson);
+    properties.setProperty("mbox", sMbox);
+    properties.setProperty("identifier", sIdentifier);
+    properties.setProperty("accessLevel", sAccessLevel);
+    properties.setProperty("accessLevelComment", sAccessLevelComment);
 
+    properties.setProperty("bureauCode", sBureauCode);
+    properties.setProperty("programCode", sProgramCode);
+    
+    properties.setProperty("dataDictionary", sDataDictionary);
+    properties.setProperty("accessURL", sAccessUrl);
+    properties.setProperty("webService", sWebService);
+    properties.setProperty("format", sFormat);
+    properties.setProperty("license", sLicense);
+    properties.setProperty("spatial", sSpatial);
+    properties.setProperty("temporal", sTemporal);
+    
+    return properties;
+  }
+  
+  @Override
+  public void write(IFeedRecords records) {
+
+    defaultValues = makeDefaultValues();
+    
     println("[");
     levelUp();
 
     println("{");
     levelUp();
 
-    printArg("title", sTitle, true);
-    printArg("description", sDescription, true);
-    printArg2("keyword", sKeyword, true);
-    if(sModified.length() > 0 ){
-    	printArg("modified", sModified, true);
+    printArg("title", defaultValues.getProperty("title"), true);
+    printArg("description", defaultValues.getProperty("description"), true);
+    printArg2("keyword", defaultValues.getProperty("keyword"), true);
+    if(defaultValues.getProperty("modified").length() > 0 ){
+    	printArg("modified", defaultValues.getProperty("modified"), true);
     }else {
     	printArg("modified", DF.format(new Date()), true);
     }
-    printArg("publisher", sPublisher, true);
-    printArg("contactPoint", sPerson, true);
-    printArg("mbox", sMbox, true);
-    printArg("identifier", sIdentifier, true);
-    printArg("accessLevel", sAccessLevel, true);
-    printArg("accessLevelComment", sAccessLevelComment, true);
-    printArg2("bureauCode", sBureauCode, true);
-    printArg2("programCode", sProgramCode, true);
-    if(sDataDictionary.length() > 0){
-    	printArg("dataDictionary", sDataDictionary, true);
+    printArg("publisher", defaultValues.getProperty("publisher"), true);
+    printArg("contactPoint", defaultValues.getProperty("contactPoint"), true);
+    printArg("mbox", defaultValues.getProperty("mbox"), true);
+    printArg("identifier", defaultValues.getProperty("identifier"), true);
+    printArg("accessLevel", defaultValues.getProperty("accessLevel"), true);
+    printArg("accessLevelComment", defaultValues.getProperty("accessLevelComment"), true);
+    printArg2("bureauCode", defaultValues.getProperty("bureauCode"), true);
+    printArg2("programCode", defaultValues.getProperty("programCode"), true);
+    if(defaultValues.getProperty("dataDictionary").length() > 0){
+    	printArg("dataDictionary", defaultValues.getProperty("dataDictionary"), true);
     }
 
-    if (sAccessUrl.length() > 0) {
-      printLinkArg("accessURL", sAccessUrl, true);
+    if (defaultValues.getProperty("accessURL").length() > 0) {
+      printLinkArg("accessURL", defaultValues.getProperty("accessURL"), true);
     } else if (query != null) {
       printLinkArg("accessURL", query.getRssProviderUrl(), true);
     } else {
       printLinkArg("accessURL", "", true);
     }
 
-    if (sWebService.length() > 0) {
-      printLinkArg("webService", sWebService, true);
+    if (defaultValues.getProperty("webService").length() > 0) {
+      printLinkArg("webService", defaultValues.getProperty("webService"), true);
     } else if (query != null) {
       printLinkArg("webService", query.getRssSourceUrl(), true);
     } else {
@@ -155,9 +166,9 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     }
 
     printArg("format", "application/json", true);
-    printArg("license", sLicense, true);
-    printArg("spatial", sSpatial, true);
-    printArg("temporal", sTemporal, false);
+    printArg("license", defaultValues.getProperty("license"), true);
+    printArg("spatial", defaultValues.getProperty("spatial"), true);
+    printArg("temporal", defaultValues.getProperty("temporal"), false);
 
     levelDown();
     println(records!=null && records.size() > 0 ? "}," : "}");
@@ -461,22 +472,27 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	    	if(firstIdx > -1){
 	    		value = value.substring(0,firstIdx);
 	    	}
-	    	value = parseDateTime(value);
-	    	if(dateFormat.length() > 0){
-	    		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-	    		Date dt = null;
-				try {
-                    dt = new IsoDateFormat().parseObject(value);
-                    if (dt!=null) {
-                      value = sdf.format(dt);
-                    } else {
-                      value = "";
-                    }
-                    
-				} catch (ParseException e) {
-                    value = "";
-                }
-	    	}
+            String [] valArr = value.split("/");
+            for (int i=0; i<valArr.length; i++) {
+              String val = valArr[i];
+              val = parseDateTime(val);
+              if(dateFormat.length() > 0){
+                  SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+                  Date dt = null;
+                  try {
+                      dt = new IsoDateFormat().parseObject(value);
+                      if (dt!=null) {
+                        val = sdf.format(dt);
+                      } else {
+                        val = "";
+                      }
+
+                  } catch (ParseException e) {
+                      val = "";
+                  }
+              }
+            }
+            value = Val.join(valArr, "/");
 	    }else if(type.equalsIgnoreCase("array")) {
 	    	value = value.replace("\"", "").replace("\"", "");
 	    	String[] parts = value.split(",");
@@ -565,7 +581,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     			      }
     			  }
     		  }else{
-    			  val =  defaultValues.get(dcatFieldName);
+    			  val =  defaultValues.getProperty(dcatFieldName);
     		  }
     	  }else{
     		  continue;
@@ -573,7 +589,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
       }else{
     	  val = "" + indexValue.simplify();
     	  if(dcatFieldName.equalsIgnoreCase("format") && val.equalsIgnoreCase("[\"unknown\"]")){
-    		  val =  defaultValues.get(dcatFieldName);
+    		  val =  defaultValues.getProperty(dcatFieldName);
     	  }
       }
       String cleanedVal = cleanValue(val,fieldType,dcatFieldName,dcatField);
@@ -585,7 +601,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     	  if (fldValues.length() > 0) {
     		  StringBuilder sb = new StringBuilder();
     		  if(fieldType.equalsIgnoreCase("array")){
-    			  if(!cleanedVal.equalsIgnoreCase(defaultValues.get(dcatFieldName))){
+    			  if(!cleanedVal.equalsIgnoreCase(defaultValues.getProperty(dcatFieldName))){
 	    			  if(fldValues.startsWith("[") && fldValues.endsWith("]")){
 	    				  fldValues = fldValues.replace("[", "").replace("]", "");
 	    			  }
@@ -611,7 +627,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
       }
     }
     if (fldValues.length() == 0) {
-      fldValues = defaultValues.get(dcatFieldName);
+      fldValues = defaultValues.getProperty(dcatFieldName);
       if (fldValues == null) {
         fldValues = "";
       }

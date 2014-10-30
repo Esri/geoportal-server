@@ -81,7 +81,7 @@ public class ExtJsonFeedWriter implements FeedWriter {
   /**
    * print writer
    */
-  private PrintWriter writer;
+  protected PrintWriter writer;
   /**
    * original query
    */

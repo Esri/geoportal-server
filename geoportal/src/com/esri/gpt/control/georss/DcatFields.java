@@ -15,15 +15,21 @@
 package com.esri.gpt.control.georss;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Collection of dcat fields
  */
 public class DcatFields extends ArrayList<DcatField> {
+  private final HashMap<String,DcatField> map = new HashMap<String,DcatField>();
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
+  @Override
+  public boolean add(DcatField e) {
+    map.put(e.getName(), e);
+    return super.add(e);
+  }
+  
+  public DcatField getField(String name) {
+    return map.get(name);
+  }
 }
