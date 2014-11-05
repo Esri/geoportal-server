@@ -23,6 +23,7 @@
 
   <!--GeoPortal Search REST endpoint-->
   <gptEndpoint url="https://geodiscover.alberta.ca/geoportal/rest/find/document?orderBy=title&amp;max=2000" name="Geodiscover Alberta"/>
+  <gptEndpoint url="http://gptogc.esri.com/geoportal/rest/find/document?orderBy=title&amp;max=2000" name="ESRI Geoportal Demo server"/>
 
   <!--GeoRSS hyperlink name conversion-->
   <georsslinks>
