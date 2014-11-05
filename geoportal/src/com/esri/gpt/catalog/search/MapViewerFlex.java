@@ -288,7 +288,7 @@ public String readAddToMapUrl() {
       url = url.replace("{height}", getWindowHeight());
       url = url.replace("{windowTitle}", getWindowTitle());
 
-      url = url.replace("{title}", title);
+      url = url.replace("{title}", URLEncoder.encode(title, "UTF-8"));
       /*
        * url = "javascript:GptUtils.popUp('" + url + "'," +
        * "GptMapViewer.TITLE," + "GptMapViewer.dimensions.WIDTH," +
