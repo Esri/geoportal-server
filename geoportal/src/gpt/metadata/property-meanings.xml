@@ -228,6 +228,9 @@
   <property-meaning name="apiso.OrganizationName" valueType="String" comparisonType="terms">
     <apiso name="apiso:OrganizationName"/>
   </property-meaning> 
+  <property-meaning name="apiso.OrganisationName" valueType="String" comparisonType="terms">
+    <apiso name="apiso:OrganisationName"/>
+  </property-meaning> 
   <property-meaning name="apiso.HasSecurityConstraints" valueType="String" comparisonType="terms">
     <apiso name="apiso:HasSecurityConstraints"/>
   </property-meaning> 

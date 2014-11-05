@@ -78,6 +78,7 @@
         </ows:Address>
         <ows:OnlineResource xlink:href=""/>
       </ows:ContactInfo>
+	  <ows:Role codeSpace="ISOTC211/19115">pointOfContact</ows:Role>
     </ows:ServiceContact>
   </ows:ServiceProvider>
   <ows:OperationsMetadata>
@@ -195,7 +196,7 @@
         <ows:Value>apiso:AlternateTitle</ows:Value>
         <ows:Value>apiso:CreationDate</ows:Value>
         <ows:Value>apiso:PublicationDate</ows:Value>
-        <ows:Value>apiso:OrganizationName</ows:Value>
+        <ows:Value>apiso:OrganisationName</ows:Value>
         <ows:Value>apiso:HasSecurityConstraints</ows:Value>
         <ows:Value>apiso:Language</ows:Value>
         <ows:Value>apiso:ResourceIdentifier</ows:Value>

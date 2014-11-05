@@ -92,7 +92,12 @@
     xpath="/gmi:MI_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString">
   </property>
 
-<!-- stores true or false depending on constraints availability -->
+  <property meaning="apiso:OrganisationName"  
+    xpath="/gmi:MI_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString">
+  </property>
+
+
+  <!-- stores true or false depending on constraints availability -->
  <property meaning="apiso:HasSecurityConstraints" xpathType="BOOLEAN"
     xpath="count(/gmi:MI_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints | /gmi:MI_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints)>0"/>
 
