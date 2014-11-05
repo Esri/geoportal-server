@@ -89,9 +89,9 @@ public class DcatVersion implements Comparable<DcatVersion>{
   @Override
   public int compareTo(DcatVersion o) {
     if (this.major!=o.major) {
-      return Integer.compare(this.major, o.major);
+      return new Integer(this.major).compareTo(o.major);
     } else {
-      return Integer.compare(this.minor, o.minor);
+      return new Integer(this.minor).compareTo(o.minor);
     }
   }
   
