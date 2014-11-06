@@ -155,30 +155,49 @@ public void setStartPosition(int position) {
 }
 
 /**
- * @return
+ * Checks if envelope intersects.
+ * @return <code>true</code> if envelope intersets
  */
-
-
 public boolean isEnvelopeIntersects() {
 	return envelopeIntersects;
 }
 
+/**
+ * Set to intersect envelope.
+ * @param envelopeIntersects <code>true</code> to intersect envelope
+ */
 public void setEnvelopeIntersects(boolean envelopeIntersects) {
 	this.envelopeIntersects = envelopeIntersects;
 }
 
+/**
+ * Checks if envelope contains.
+ * @return <code>true</code> if envelope contains
+ */
 public boolean isEnvelopeContains() {
 	return envelopeContains;
 }
 
+/**
+ * Set to contain envelope.
+ * @param envelopeContains <code>true</code> to contain envelope
+ */
 public void setEnvelopeContains(boolean envelopeContains) {
 	this.envelopeContains = envelopeContains;
 }
 
+/**
+ * Check if use geographic extent.
+ * @return <code>true</code> if use geographic extent
+ */
 public boolean isUseGeographicExtent() {
 	return useGeographicExtent;
 }
 
+/**
+ * Set to use geographic extent.
+ * @param useGeographicExtent <code>true</code> to use geographic extent
+ */
 public void setUseGeographicExtent(boolean useGeographicExtent) {
 	this.useGeographicExtent = useGeographicExtent;
 }

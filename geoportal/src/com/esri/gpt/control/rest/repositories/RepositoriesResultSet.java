@@ -30,47 +30,29 @@ import java.util.Map;
 public class RepositoriesResultSet implements ResultSet {
 
 
-/**
- * Added for java 1.7
- * 
- * @param columnIndex
- * @param type
- * @return
- * @throws SQLException
- */
+@Override
 public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
   return null;
 }
 
-/*
- * Added for java 1.7
- */
+@Override
 public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
   return null;
 }
 
 
-/* (non-Javadoc)
- * @see java.sql.Wrapper#unwrap(java.lang.Class)
- */
 @Override
 public <T> T unwrap(Class<T> iface) throws SQLException {
   // TODO Auto-generated method stub
   return null;
 }
 
-/* (non-Javadoc)
- * @see java.sql.Wrapper#isWrapperFor(java.lang.Class)
- */
 @Override
 public boolean isWrapperFor(Class<?> iface) throws SQLException {
   // TODO Auto-generated method stub
   return false;
 }
 
-/* (non-Javadoc)
- * @see java.sql.ResultSet#next()
- */
 @Override
 public boolean next() throws SQLException {
   // TODO Auto-generated method stub

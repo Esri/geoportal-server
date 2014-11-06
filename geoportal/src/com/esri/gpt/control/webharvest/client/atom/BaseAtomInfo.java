@@ -21,13 +21,14 @@ import java.text.SimpleDateFormat;
 import com.esri.gpt.control.webharvest.common.CommonInfo;
 import com.esri.gpt.framework.http.CredentialProvider;
 import com.esri.gpt.framework.util.Val;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Atom feed info.
  */
 public class BaseAtomInfo extends CommonInfo {
-/** Date format. */
-private static final SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
+private static final Logger LOG = Logger.getLogger(BaseAtomInfo.class.getCanonicalName());
 /** url */
 private String url;
 /** user name */
@@ -46,11 +47,8 @@ private String entryProcessorClassName = "";
 /**
  * Creates instance of the service info.
  * @param url url
- * @param prefix prefix
- * @param set set
  * @param userName user name
  * @param password password
- * @throws Exception 
  */
 public void initialize(String url, String userName, String password) {
   try {
@@ -166,9 +164,8 @@ public String newReadMetadataUrl(String sourceUri) {
 
 /**
  * Creates new URL to list ids.
- * @param resumptionToken resumption token
- * @param fromDate from date
- * @param toDate to date
+ * @param start start position
+ * @param max number of records
  * @return URL to list ids
  */
 public String newUrl(int start,int max) {
@@ -179,7 +176,7 @@ public String newUrl(int start,int max) {
     url = url.replaceFirst(URLEncoder.encode("{count?}","UTF-8"),  String.valueOf(max));
   } catch (UnsupportedEncodingException e) {
 		// TODO Auto-generated catch block
-		e.printStackTrace();
+		LOG.log(Level.FINE, "Error creating new URL.", e);
 	}
   sb.append(url);  
   return sb.toString();
