@@ -65,7 +65,7 @@ public class AGPEntryProcessor2 extends AGPEntryProcessor{
 					if(mdText.length() ==0){
 					 Document mdDoc = DomUtil.newDocument();
 					 mdDoc.appendChild(mdDoc.importNode(entry, true));   
-                     asureNamespaces(mdDoc);                     
+                     injectNamespaces(mdDoc);                     
 					 mdText =  XmlIoUtil.domToString(mdDoc);
 					 String id = "";
 					    try {

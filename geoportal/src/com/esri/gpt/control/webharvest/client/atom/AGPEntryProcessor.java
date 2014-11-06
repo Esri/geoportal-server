@@ -51,7 +51,11 @@ public class AGPEntryProcessor implements IEntryProcessor {
     namespaces.put("xmlns:georss", "http://www.georss.org/georss");
   }
 
-  protected void asureNamespaces(Document mdDoc) {
+  /**
+   * Injects namespaces into the XML document.
+   * @param mdDoc XML document
+   */
+  protected void injectNamespaces(Document mdDoc) {
     Element element = mdDoc.getDocumentElement();
     for (Map.Entry<String, String> entry : namespaces.entrySet()) {
       element.setAttribute(entry.getKey(), entry.getValue());
@@ -72,7 +76,7 @@ public class AGPEntryProcessor implements IEntryProcessor {
       Document mdDoc = DomUtil.newDocument();
 
       mdDoc.appendChild(mdDoc.importNode(entry, true));
-      asureNamespaces(mdDoc);
+      injectNamespaces(mdDoc);
 
       mdText = XmlIoUtil.domToString(mdDoc);
       String id = "";
