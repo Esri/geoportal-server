@@ -20,21 +20,12 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.XmlHandler;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
-import com.esri.gpt.framework.xml.NodeListAdapter;
 import com.esri.gpt.framework.xml.XmlIoUtil;
 
 /**
@@ -73,7 +64,8 @@ public class AGPEntryProcessor2 extends AGPEntryProcessor{
 					}
 					if(mdText.length() ==0){
 					 Document mdDoc = DomUtil.newDocument();
-					 mdDoc.appendChild(mdDoc.importNode(entry, true));     	
+					 mdDoc.appendChild(mdDoc.importNode(entry, true));   
+                     asureNamespaces(mdDoc);                     
 					 mdText =  XmlIoUtil.domToString(mdDoc);
 					 String id = "";
 					    try {

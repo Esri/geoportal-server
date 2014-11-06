@@ -25,7 +25,7 @@ import com.esri.gpt.framework.util.Val;
 /**
  * Atom feed info.
  */
-class BaseAtomInfo extends CommonInfo {
+public class BaseAtomInfo extends CommonInfo {
 /** Date format. */
 private static final SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
 /** url */

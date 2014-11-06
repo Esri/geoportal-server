@@ -45,7 +45,7 @@ public class AGPHitCountCollector implements IHitCountCollector {
 				  if(parts != null && parts.length >= 2){			  
 					  String fParam = Val.chkStr(parts[1]);
 					  int idx = fParam.indexOf("&");
-					  fParam = fParam.substring(0, idx);
+					  fParam = idx>=0? fParam.substring(0, idx): fParam;
 					  String oldFParam = "f="+fParam;
 					  String jsonFParam = "f=json";
 					  url = url.replace(oldFParam, jsonFParam);
