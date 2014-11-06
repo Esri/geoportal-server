@@ -116,7 +116,7 @@ public class AGPEntryProcessor implements IEntryProcessor {
    */
   protected String readBbox(BaseAtomInfo info, String id) throws IOException, JSONException {
     String url = info.getUrl();
-    String georssBox = "<georss:box>";
+    String georssBox = "";
     if (url.length() > 0) {
       url = url.substring(0, url.indexOf("?"));
       String params = "?q=id:" + id + "&f=json";
@@ -150,7 +150,7 @@ public class AGPEntryProcessor implements IEntryProcessor {
                 maxx = Val.chkDbl(upperCorner[0], maxx);
                 maxy = Val.chkDbl(upperCorner[1], maxy);
               }
-              georssBox += miny + " " + minx + " " + maxy + " " + maxx + "</georss:box>";
+              georssBox = "<georss:box>" + miny + " " + minx + " " + maxy + " " + maxx + "</georss:box>";
             }
 
           }
