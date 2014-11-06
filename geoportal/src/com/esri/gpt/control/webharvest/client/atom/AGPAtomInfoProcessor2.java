@@ -1,5 +1,8 @@
 package com.esri.gpt.control.webharvest.client.atom;
 
+import static com.esri.gpt.control.webharvest.client.atom.AGPEntryProcessor.LOG;
+import java.util.logging.Level;
+
 /**
  * This is class is used to perform harvesting Portal for ArcGIS.
  * It harvests standard metadata xml if available.
@@ -22,7 +25,7 @@ public class AGPAtomInfoProcessor2 extends BaseAtomInfoProcessor {
 		try {
 			atomInfo.setTotalResults(atomInfo.getHitCountCollector().collectHitCount(atomInfo.getUrl()));
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.log(Level.FINE, "Error post-creating metadata", e);
 		}
 		// add more logic if needed
 	}

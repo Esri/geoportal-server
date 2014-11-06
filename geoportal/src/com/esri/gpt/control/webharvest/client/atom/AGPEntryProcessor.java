@@ -31,6 +31,8 @@ import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.XmlIoUtil;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.w3c.dom.Element;
 
 /**
@@ -38,6 +40,7 @@ import org.w3c.dom.Element;
  * extract metadata xml.
  */
 public class AGPEntryProcessor implements IEntryProcessor {
+  protected final static Logger LOG = Logger.getLogger(AGPEntryProcessor.class.getCanonicalName());
 
   protected static final Map<String, String> namespaces = new HashMap<String, String>();
 
@@ -76,15 +79,13 @@ public class AGPEntryProcessor implements IEntryProcessor {
       try {
         id = parseId(mdDoc);
       } catch (XPathExpressionException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        LOG.log(Level.FINE, "Error parsing metadata id", e);
       }
 
       String georssBox = readBbox(info, id);
       mdText = mdText.replace("</entry>", georssBox + "</entry>");
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      LOG.log(Level.FINE, "Error extracting metadata", e);
     }
     return mdText;
   }
