@@ -287,7 +287,7 @@ dojo.declare("gpt.LiveData", dijit._Widget, {
 
       try {
         // parse response
-        var responseObj = eval("(" + response + ")");
+        var responseObj = eval("(" + response.replace(/[^ -~]+/gi,"") + ")");
         // execute proxy response to let write itself onto the body section
         responseObj.init(this);
       } catch (e) {
