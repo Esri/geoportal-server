@@ -54,11 +54,11 @@
     -->
     
     <interactiveMap
-        jsapiUrl="http://js.arcgis.com/3.11/"
-        mapServiceUrl="http://services.arcgisonline.com/arcgis/rest/services/ESRI_StreetMap_World_2D/MapServer"
+        jsapiUrl="//js.arcgis.com/3.11/"
+        mapServiceUrl="//services.arcgisonline.com/arcgis/rest/services/ESRI_StreetMap_World_2D/MapServer"
         mapServiceType="dynamic" 
-        geometryServiceUrl="http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer"
-        locatorUrl="http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"
+        geometryServiceUrl="//tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer"
+        locatorUrl="//geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"
         locatorSingleFieldParameter = "Address"/>
   
     <catalog gptTablePrefix="GPT_">       
