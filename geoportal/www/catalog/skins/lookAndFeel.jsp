@@ -28,6 +28,7 @@ String VER123 = "v1.2.3";
 String VER124 = "v1.2.4";
 %>
 
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="//js.arcgis.com/3.11/dijit/themes/tundra/tundra.css">
 <link rel="stylesheet" type="text/css" href="//js.arcgis.com/3.11/esri/css/esri.css" />
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/catalog/skins/themes/red/main.css"  />
