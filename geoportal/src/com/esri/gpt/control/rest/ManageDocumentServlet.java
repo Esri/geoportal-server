@@ -78,6 +78,7 @@ import javax.servlet.http.HttpServletResponse;
  *       <li>the XML must be supplied within the body of the HTTP request.</li>
  *       <li>URL parameter publicationMethod is accepted, values are upload,editor,other</li>
  *       <li>URL parameter asDraft=true is accepted</li>
+ *       <li>URL parameter approve=true is accepted</li>
  *       <li>if no document provided, that means this is resource registration request.</li>
  *       <li>returns HTTP 200 when a document is replaced</li>
  *       <li>returns HTTP 201 when a document is created</li>
