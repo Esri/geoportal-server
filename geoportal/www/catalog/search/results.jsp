@@ -534,13 +534,6 @@ function rsGetQualityOfService() {
 
   <div>
     <span>
-      <h:selectBooleanCheckbox id="srExpandResults"
-        value="#{SearchController.searchCriteria.expandResultContent}"
-        style="#{SearchController.expandResultCheckboxStyle}"
-        onclick="rsExpandAllRecords(this);"/>
-      <h:outputLabel for="srExpandResults" 
-        value="#{gptMsg['catalog.search.searchResult.lblExpand']}"
-        style="vertical-align: top; #{SearchController.expandResultCheckboxStyle}"/>
       <h:selectBooleanCheckbox id="srToggle"
         rendered="#{not empty PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'] and PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'].value == 'true'}"
         onclick="void(this);"/>
@@ -548,6 +541,13 @@ function rsGetQualityOfService() {
         rendered="#{not empty PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'] and PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'].value == 'true'}"
         value="#{gptMsg['catalog.search.searchResult.lblToggle']}"
         style="vertical-align: top;"/>
+      <h:selectBooleanCheckbox id="srExpandResults"
+        value="#{SearchController.searchCriteria.expandResultContent}"
+        style="#{SearchController.expandResultCheckboxStyle}"
+        onclick="rsExpandAllRecords(this);"/>
+      <h:outputLabel for="srExpandResults" 
+        value="#{gptMsg['catalog.search.searchResult.lblExpand']}"
+        style="vertical-align: top; #{SearchController.expandResultCheckboxStyle}"/>
     </span>
     <span style="float: right; margin-right: 4px;">
       <h:outputLink id="srLnkZoomToThese" value="javascript:void(0)" 
