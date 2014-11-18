@@ -532,25 +532,37 @@ function rsGetQualityOfService() {
 <% // expand/zoom to results %>
 <h:panelGroup>
 
-	<h:selectBooleanCheckbox id="srExpandResults"
-	  value="#{SearchController.searchCriteria.expandResultContent}"
-	  style="#{SearchController.expandResultCheckboxStyle}"
-	  onclick="rsExpandAllRecords(this);"/>
-	<h:outputLabel for="srExpandResults" 
-	  value="#{gptMsg['catalog.search.searchResult.lblExpand']}"
-	  style="#{SearchController.expandResultCheckboxStyle}"/>
-	<h:outputText escape="false" value="&nbsp;&nbsp;&nbsp;"/>
-	<h:outputLink id="srLnkZoomToThese" value="javascript:void(0)" 
-	  onclick="javascript:return srZoomToThese();"
-	  style="#{SearchController.expandResultCheckboxStyle}">
-	  <h:outputText id="srTxtZoomToThese" value="#{gptMsg['catalog.search.searchResult.zoomToThese']}" />
-	</h:outputLink>
-  <h:outputText escape="false" value="&nbsp;&nbsp;&nbsp;"/>
-  <h:outputLink id="srLnkZoomToAOI" value="javascript:void(0)" 
-    onclick="javascript:return srZoomToAOI();"
-    style="#{SearchController.expandResultCheckboxStyle}">
-    <h:outputText id="srTxtZoomToAOI" value="#{gptMsg['catalog.search.searchResult.zoomToAOI']}" />
-  </h:outputLink>
+  <div>
+    <span>
+      <h:selectBooleanCheckbox id="srExpandResults"
+        value="#{SearchController.searchCriteria.expandResultContent}"
+        style="#{SearchController.expandResultCheckboxStyle}"
+        onclick="rsExpandAllRecords(this);"/>
+      <h:outputLabel for="srExpandResults" 
+        value="#{gptMsg['catalog.search.searchResult.lblExpand']}"
+        style="vertical-align: top; #{SearchController.expandResultCheckboxStyle}"/>
+      <h:selectBooleanCheckbox id="srToggle"
+        rendered="#{not empty PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'] and PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'].value == 'true'}"
+        onclick="void(this);"/>
+      <h:outputLabel for="srToggle" id="srToggle_label"
+        rendered="#{not empty PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'] and PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'].value == 'true'}"
+        value="#{gptMsg['catalog.search.searchResult.lblToggle']}"
+        style="vertical-align: top;"/>
+    </span>
+    <span style="float: right; margin-right: 4px;">
+      <h:outputLink id="srLnkZoomToThese" value="javascript:void(0)" 
+        onclick="javascript:return srZoomToThese();"
+        style="#{SearchController.expandResultCheckboxStyle}">
+        <h:outputText id="srTxtZoomToThese" value="#{gptMsg['catalog.search.searchResult.zoomToThese']}" />
+      </h:outputLink>
+      <h:outputText escape="false" value="&nbsp;&nbsp;&nbsp;"/>
+      <h:outputLink id="srLnkZoomToAOI" value="javascript:void(0)" 
+        onclick="javascript:return srZoomToAOI();"
+        style="#{SearchController.expandResultCheckboxStyle}">
+        <h:outputText id="srTxtZoomToAOI" value="#{gptMsg['catalog.search.searchResult.zoomToAOI']}" />
+      </h:outputLink>
+    </span>
+  </div>
 </h:panelGroup>
    
 <% // results %>

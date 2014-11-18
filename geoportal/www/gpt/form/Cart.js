@@ -146,6 +146,28 @@ dojo.declare("gpt.form.Cart",null,{
       this.parentDialog.hide();
     }
   },
+
+    
+  toggleAddAllCheck: function(addAll){
+    var addAllToCart = dojo.byId("frmSearchCriteria\:srToggle");
+    if (addAllToCart) {
+      addAllToCart.checked = addAll;
+    }
+  },
+
+  toggleCheckAll: function(){
+    var mdRecordsId = "frmSearchCriteria:mdRecords";
+    var mdRecords = dojo.byId(mdRecordsId);
+    if (mdRecords) {
+      var anyUnchecked = false;
+      dojo.query("input.gptCartCheckBox",mdRecords).forEach(dojo.hitch(this,function(checkBox){
+        if (checkBox.checked===false) {
+          anyUnchecked = true;
+        }
+      }));
+      this.toggleAddAllCheck(!anyUnchecked);
+    }
+  },
   
   /**
    * Connects the cart to the search results page using check-boxes.
@@ -161,6 +183,8 @@ dojo.declare("gpt.form.Cart",null,{
         return;
       }
     }
+    
+    var addAllToCart = dojo.byId("frmSearchCriteria\:srToggle");
     
     var connectItems = dojo.hitch(this,function(oKeys){
       if ((typeof(oKeys) == "undefined") || (oKeys == null)) {
@@ -181,6 +205,29 @@ dojo.declare("gpt.form.Cart",null,{
           }
         }
       } 
+      
+      this.toggleCheckAll();
+      
+      if (this.addAllToCartHandler) {
+        console.log("Removing addAllToCartHandler");
+        this.addAllToCartHandler.remove();
+        delete this.addAllToCartHandler;
+      }
+      
+      if (addAllToCart) {
+        this.addAllToCartHandler = dojo.connect(addAllToCart,"onclick",dojo.hitch(this,function(evt){
+          var checked = evt.target.checked;
+          var mdRecordsId = "frmSearchCriteria:mdRecords";
+          var mdRecords = dojo.byId(mdRecordsId);
+          if (mdRecords) {
+            dojo.query("input.gptCartCheckBox",mdRecords).forEach(dojo.hitch(this,function(checkBox){
+              if (checkBox.checked!=checked) {
+                checkBox.click();
+              }
+            }));
+          }
+        }));
+      }
     });
     
     if ((typeof(jsMetadata) != "undefined") && (jsMetadata != null) &&
@@ -366,6 +413,7 @@ dojo.declare("gpt.form.Cart",null,{
           console.log(responseObject);
         }),
         load: dojo.hitch(this,function(responseObject,ioArgs) {
+          this.toggleCheckAll();
           this._setCount(responseObject);
         })
       });
@@ -731,6 +779,7 @@ dojo.declare("gpt.form.Cart",null,{
     dojo.connect(this.parentDialog,"onHide",dojo.hitch(this,function() {
       setTimeout(dojo.hitch(this,function(){
         this.parentDialog.destroyRecursive();
+        this.toggleCheckAll();
       }),300);
     }));
         
