@@ -536,11 +536,12 @@ function rsGetQualityOfService() {
     <span>
       <h:selectBooleanCheckbox id="srToggle"
         rendered="#{not empty PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'] and PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'].value == 'true'}"
+        style="#{SearchController.expandResultCheckboxStyle}"
         onclick="void(this);"/>
       <h:outputLabel for="srToggle" id="srToggle_label"
         rendered="#{not empty PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'] and PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'].value == 'true'}"
         value="#{gptMsg['catalog.search.searchResult.lblToggle']}"
-        style="vertical-align: top;"/>
+        style="vertical-align: top; #{SearchController.expandResultCheckboxStyle}"/>
       <h:selectBooleanCheckbox id="srExpandResults"
         value="#{SearchController.searchCriteria.expandResultContent}"
         style="#{SearchController.expandResultCheckboxStyle}"
