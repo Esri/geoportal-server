@@ -534,12 +534,13 @@ public class ManageDocumentServlet extends BaseServlet {
         
         String asDraft = Val.chkStr(request.getParameter("asDraft"));
         String approve = Val.chkStr(request.getParameter("approve"));
+        LOGGER.fine("Approving of uploaded documents through the REST with 'approve' flag: "+approve);
         if (asDraft.equals("true")) {
           pubRecord.setApprovalStatus(MmdEnums.ApprovalStatus.draft.toString());
         } else if (approve.equals("true")) {
           pubRecord.setApprovalStatus(MmdEnums.ApprovalStatus.approved.toString());
-          if (publisher.getIsAdministrator()) {
-            LOGGER.fine("Approving of uploaded documents throu the REST without being administrator.");
+          if (!publisher.getIsAdministrator()) {
+            LOGGER.fine("Approving of uploaded documents through the REST without being administrator.");
           }
         }
         
