@@ -551,16 +551,20 @@ function rsGetQualityOfService() {
         style="vertical-align: top; #{SearchController.expandResultCheckboxStyle}"/>
     </span>
     <span style="float: right; margin-right: 4px;">
-      <h:outputLink id="srLnkZoomToThese" value="javascript:void(0)" 
+      <h:outputLink id="srLnkZoomToThese2" value="javascript:void(0)" 
+        rendered="#{empty PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'] or not PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'].value == 'true'}"
         onclick="javascript:return srZoomToThese();"
         style="#{SearchController.expandResultCheckboxStyle}">
-        <h:outputText id="srTxtZoomToThese" value="#{gptMsg['catalog.search.searchResult.zoomToThese']}" />
+        <h:outputText id="srTxtZoomToThese2" value="#{gptMsg['catalog.search.searchResult.zoomToThese']}" />
       </h:outputLink>
-      <h:outputText escape="false" value="&nbsp;&nbsp;&nbsp;"/>
-      <h:outputLink id="srLnkZoomToAOI" value="javascript:void(0)" 
+      <h:outputText escape="false" value="&nbsp;&nbsp;&nbsp;" 
+         rendered="#{empty PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'] or not PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'].value == 'true'}"
+                    />
+      <h:outputLink id="srLnkZoomToAOI2" value="javascript:void(0)" 
+        rendered="#{empty PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'] or not PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'].value == 'true'}"
         onclick="javascript:return srZoomToAOI();"
         style="#{SearchController.expandResultCheckboxStyle}">
-        <h:outputText id="srTxtZoomToAOI" value="#{gptMsg['catalog.search.searchResult.zoomToAOI']}" />
+        <h:outputText id="srTxtZoomToAOI2" value="#{gptMsg['catalog.search.searchResult.zoomToAOI']}" />
       </h:outputLink>
     </span>
   </div>

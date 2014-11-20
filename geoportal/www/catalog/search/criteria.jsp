@@ -317,6 +317,8 @@
 	    	dojo.byId("frmSearchCriteria:mapToolbar").style.display = "block";
 	    }
         
+        dojo.query("#frmSearchCriteria\\:zoomGroup").style("display",jsMetadata.records.length>0? "block": "none");
+        
         if (scMap) {
           scMap.reposition();
         }
@@ -1059,9 +1061,11 @@
         aoiMaxY = parseInt(tmpAoiMaxY);
         aoiWkid = parseInt(tmpAoiWkid);
        
+        dojo.query("#frmSearchCriteria\\:zoomGroup").style("display",jsMetadata.records.length>0? "block": "none");
       }),
       preventCache: true,
       error: function(args) {
+        dojo.query("#frmSearchCriteria\\:zoomGroup").style("display","none");
         scInitTextFields();
         scReconfigureCriteria();
         var elLoadingGif = dojo.byId("frmSearchCriteria:loadingGif");
@@ -1784,6 +1788,19 @@
              style="width:400px; height:260px; cursor:pointer; border: 1px solid #000000;">
         </div>
     </f:verbatim>
+    <h:panelGroup id="zoomGroup" style="display: none;" rendered="#{not empty PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'] and PageContext.applicationConfiguration.catalogConfiguration.parameters['catalog.cart.enabled'].value == 'true'}">
+        <span style="float: right; margin-right: 4px;">
+          <h:outputLink id="srLnkZoomToThese" value="javascript:void(0)" 
+            onclick="javascript:return srZoomToThese();">
+            <h:outputText id="srTxtZoomToThese" value="#{gptMsg['catalog.search.searchResult.zoomToThese']}" />
+          </h:outputLink>
+          <h:outputText escape="false" value="&nbsp;&nbsp;&nbsp;"/>
+          <h:outputLink id="srLnkZoomToAOI" value="javascript:void(0)" 
+            onclick="javascript:return srZoomToAOI();">
+            <h:outputText id="srTxtZoomToAOI" value="#{gptMsg['catalog.search.searchResult.zoomToAOI']}" />
+          </h:outputLink>
+        </span>
+    </h:panelGroup>
 
     <h:inputHidden id="sfsMinX" 
                    value="#{SearchController.searchCriteria.searchFilterSpatial.envelope.minX}" />
