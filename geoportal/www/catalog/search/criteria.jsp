@@ -316,6 +316,10 @@
 	    } else {
 	    	dojo.byId("frmSearchCriteria:mapToolbar").style.display = "block";
 	    }
+        
+        if (scMap) {
+          scMap.reposition();
+        }
     }
     dojo.addOnLoad(scInitComponents);
     
