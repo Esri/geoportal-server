@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Windows.Forms;  // MessageBox
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Win32;  // Registry
+using ESRI.ArcGIS;
 
 namespace com.esri.gpt.publish
 {
@@ -22,24 +23,25 @@ namespace com.esri.gpt.publish
             {
                 string keyValue = "";
                 string errMessage = "";
+                string arcgisVersion = "10.3";
+                bool succeeded = ESRI.ArcGIS.RuntimeManager.Bind(ProductCode.Desktop);
+                if (succeeded)
+                {
+                    RuntimeInfo activeRunTimeInfo = RuntimeManager.ActiveRuntime;
+                    arcgisVersion = "SOFTWARE\\ESRI\\Desktop" +  activeRunTimeInfo.Version;
+                }
 
-                RegistryKey esriKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\ESRI\\Desktop10.2");
-
-                if (esriKey == null)
-                    esriKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\ESRI\\Desktop10.1");
-
-                if (esriKey == null)
-                    esriKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\ESRI\\Desktop10.0");
-
+                RegistryKey esriKey = Registry.LocalMachine.OpenSubKey(arcgisVersion);
+                
                 // If the registry key can found, obtain the key's value
                 if (esriKey == null)
-                    errMessage = "\\HKEY_LOCAL_MACHINE\\SOFTWARE\\ESRI\\Desktop10.0 or \\HKEY_LOCAL_MACHINE\\SOFTWARE\\ESRI\\Desktop10.1 or \\HKEY_LOCAL_MACHINE\\SOFTWARE\\ESRI\\Desktop10.2 registry key cannot be found.";
+                    errMessage = arcgisVersion + " registry key cannot be found.";
                 else
                     keyValue = esriKey.GetValue("InstallDir").ToString();
 
                 // If the registry key value is an existing directory, return the key's value
                 if (System.IO.Directory.Exists(keyValue) == false)
-                    errMessage = "\\HKEY_LOCAL_MACHINE\\SOFTWARE\\ESRI\\Desktop10.0 or \\HKEY_LOCAL_MACHINE\\SOFTWARE\\ESRI\\Desktop10.1 or \\HKEY_LOCAL_MACHINE\\SOFTWARE\\ESRI\\Desktop10.2 registry key value is invalid.";
+                    errMessage = arcgisVersion + " registry key 'InstallDir' value is invalid.";
                 else
                     return keyValue;
 
@@ -78,15 +80,17 @@ namespace com.esri.gpt.publish
             {
                 string keyValue = "";
                 string errMessage = "";
+                
+                string arcgisVersion = "10.3";
+                bool succeeded = ESRI.ArcGIS.RuntimeManager.Bind(ProductCode.Desktop);
+                if (succeeded)
+                {
+                    RuntimeInfo activeRunTimeInfo = RuntimeManager.ActiveRuntime;
+                    arcgisVersion = activeRunTimeInfo.Version;
+                }
 
-                RegistryKey esriKey = Registry.CurrentUser.OpenSubKey("Software\\ESRI\\Desktop10.2\\Metadata\\Config");
-
-                if (esriKey == null)
-                    esriKey = Registry.CurrentUser.OpenSubKey("Software\\ESRI\\Desktop10.1\\Metadata\\Config");
-
-                if (esriKey == null)
-                    esriKey = Registry.CurrentUser.OpenSubKey("Software\\ESRI\\Desktop10.0\\Metadata\\Config");
-
+                RegistryKey esriKey = Registry.CurrentUser.OpenSubKey("Software\\ESRI\\Desktop" + arcgisVersion + "\\Metadata\\Config");
+                
                 // If the registry key can found, obtain the key's value
                 if (esriKey == null)
                 {
@@ -104,13 +108,6 @@ namespace com.esri.gpt.publish
                         errMessage = StringMessages.MetadataConfigNotFound;
                     }
                 }
-
-                // If the registry key value is an existing directory, return the key's value
-               /* if (System.IO.Directory.Exists(keyValue) == false)
-                    errMessage = "\\HKEY_CURRENT_USER\\Software\\ESRI\\Desktop10.0\\Metadata\\Config registry key value is invalid.";
-                else*/
-
-                   
 
                 // Message box only displayes if an error was encountered
                 MessageBox.Show(StringMessages.MetadataConfigDirectoryNotFound + "\n\n"
