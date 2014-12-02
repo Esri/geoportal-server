@@ -210,7 +210,7 @@ dojo.declare("gpt.form.Cart",null,{
       
       if (this.addAllToCartHandler) {
         console.log("Removing addAllToCartHandler");
-        this.addAllToCartHandler.remove();
+        dojo.disconnect(this.addAllToCartHandler);
         delete this.addAllToCartHandler;
       }
       
