@@ -1,4 +1,4 @@
-<a href="https://scan.coverity.com/projects/3614">
+[![Coverage Status](https://img.shields.io/coveralls/Esri/geoportal-server.svg)](https://coveralls.io/r/Esri/geoportal-server) <a href="https://scan.coverity.com/projects/3614">
   <img alt="Coverity Scan Build Status"
        src="https://scan.coverity.com/projects/3614/badge.svg"/>
 </a>
