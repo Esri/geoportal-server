@@ -490,7 +490,7 @@ public class AGSProcessor extends ResourceProcessor {
 
   @Override
   public IServiceInfoProvider next() {
-    final ResourceRecordsFamily family = new ResourceRecordsFamily(context, factory, handler, info, !matchAll);
+    final ResourceRecordsFamily family = new ResourceRecordsFamily(context, factory, handler, info, !matchAll && !checkFolder);
     reset();
     return new ServiceInfoProvider(info) {
       @Override
