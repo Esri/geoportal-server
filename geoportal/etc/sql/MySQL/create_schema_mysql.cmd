@@ -53,12 +53,12 @@ rem ------------------------------------------
 rem Basic Explanation on what this does ...
 rem ------------------------------------------
 ECHO.
-ECHO Usage : create_schema_mysql.cmd [host] [port] [Geoportal database] [geoportal10 user] [geoportal10 password]
+ECHO Usage : create_schema_mysql.cmd [host] [port] [Geoportal database] [geoportal user] [geoportal password]
 ECHO Where [host] is the machine name hosting MySQL
 ECHO       [port] is the port number of MySQL
 ECHO       [Geoportal database] is the database that contains the Geoportal Schema
-ECHO       [geoportal user] is the geoportal10 user.
-ECHO       [geoportal password] is the geoportal10 password.
+ECHO       [geoportal user] is the geoportal user.
+ECHO       [geoportal password] is the geoportal password.
 ECHO e.g. create_schema_mysql localhost 3306 geoportal geoportal geoportalpwd
 goto END
 
