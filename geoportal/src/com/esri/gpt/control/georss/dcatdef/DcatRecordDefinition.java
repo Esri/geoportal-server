@@ -20,10 +20,14 @@ import com.esri.gpt.control.georss.IFeedRecord;
 import static com.esri.gpt.framework.util.Val.chkStr;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -32,10 +36,41 @@ import java.util.Properties;
 public class DcatRecordDefinition {
   private static final ArrayList<DcatFieldDefinition> fieldDefinitions = new ArrayList<DcatFieldDefinition>();
   static {
-    fieldDefinitions.add(new StringField("title",DcatFieldDefinition.OBLIGATORY));
-    fieldDefinitions.add(new StringField("description",DcatFieldDefinition.OBLIGATORY));
-    fieldDefinitions.add(new ArrayField ("keyword",DcatFieldDefinition.OBLIGATORY));
-    fieldDefinitions.add(new DateField  ("modified",DcatFieldDefinition.OBLIGATORY));
+    fieldDefinitions.add(new StringField("title",DcatFieldDefinition.OBLIGATORY){
+      @Override
+      protected String getDefaultValue(Properties properties) {
+        return chkStr(properties.getProperty(fldName),"?");
+      }
+    });
+    fieldDefinitions.add(new StringField("description",DcatFieldDefinition.OBLIGATORY){
+      @Override
+      protected String getDefaultValue(Properties properties) {
+        return chkStr(properties.getProperty(fldName),"?");
+      }
+    });
+    fieldDefinitions.add(new ArrayField ("keyword",DcatFieldDefinition.OBLIGATORY){
+      @Override
+      protected List<String> getDefaultValue(Properties properties) {
+        List<String> list = Arrays.asList(chkStr(properties.getProperty(fldName)).replaceAll("^\\p{Space}*\\[|\\]\\p{Space}*$", "").split(","));
+        for (int i=0; i<list.size(); i++) {
+          list.set(i, list.get(i).replaceAll("^\\p{Space}*\\\"|\\\"\\p{Space}*$", ""));
+        }
+        return list;
+      }
+    });
+    fieldDefinitions.add(new DateField  ("modified",DcatFieldDefinition.OBLIGATORY){
+
+      @Override
+      protected Date getDefaultValue(Properties properties) {
+        String sDate = properties.getProperty(fldName);
+        try {
+          return ISODF.parseObject(sDate);
+        } catch (ParseException ex) {
+          return new Date();
+        }
+      }
+      
+    });
     fieldDefinitions.add(new PublisherField("publisher"));
     fieldDefinitions.add(new ContactPointField("contactPoint"));
     fieldDefinitions.add(new IdentifierField("identifier",DcatFieldDefinition.OBLIGATORY));

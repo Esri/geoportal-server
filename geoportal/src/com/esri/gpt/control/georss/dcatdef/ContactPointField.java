@@ -17,6 +17,7 @@ package com.esri.gpt.control.georss.dcatdef;
 
 import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedRecord;
+import static com.esri.gpt.framework.util.Val.chkStr;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,11 +35,25 @@ public class ContactPointField implements DcatFieldDefinition {
       protected String getOutFieldName() {
         return "fn";
       }
+
+      @Override
+      protected String getDefaultValue(Properties properties) {
+        return chkStr(properties.getProperty(fldName),"?");
+      }
     });
-    fieldDefinitions.add(new StringField("mbox"){
+    fieldDefinitions.add(new StringField("mbox",DcatFieldDefinition.OBLIGATORY){
       @Override
       protected String getOutFieldName() {
         return "hasEmail";
+      }
+
+      @Override
+      protected String getDefaultValue(Properties properties) {
+        String mbox = chkStr(properties.getProperty(fldName),"mailto:contactperson@example.org");
+        if (!mbox.startsWith("mailto:")) {
+          mbox = "mailto:"+mbox;
+        }
+        return mbox;
       }
     });
   }

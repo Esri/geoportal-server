@@ -17,6 +17,7 @@ package com.esri.gpt.control.georss.dcatdef;
 
 import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedRecord;
+import static com.esri.gpt.framework.util.Val.chkStr;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,6 +34,11 @@ public class PublisherField implements DcatFieldDefinition {
       @Override
       protected String getOutFieldName() {
         return "name";
+      }
+
+      @Override
+      protected String getDefaultValue(Properties properties) {
+        return chkStr(properties.getProperty(fldName),"?");
       }
     });
   }
