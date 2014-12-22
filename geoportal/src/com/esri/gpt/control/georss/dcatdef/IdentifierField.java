@@ -25,19 +25,32 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- *
- * @author Esri, Inc.
+ * Identifier field.
  */
 public class IdentifierField extends BaseDcatField {
 
+  /**
+   * Creates instance of the class.
+   * @param fldName field name
+   */
   public IdentifierField(String fldName) {
     super(fldName);
   }
 
+  /**
+   * Creates instance of the class.
+   * @param fldName field name
+   * @param flags flags
+   */
   public IdentifierField(String fldName, long flags) {
     super(fldName, flags);
   }
   
+  /**
+   * Reads value as string.
+   * @param attr attribute
+   * @return value
+   */
   protected String readValue(IFeedAttribute attr) {
     return attr.simplify().getValue().toString();
   }

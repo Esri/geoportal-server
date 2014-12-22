@@ -26,12 +26,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- *
- * @author Esri, Inc.
+ * Record definition.
  */
 public class DcatRecordDefinition {
   private static final ArrayList<DcatFieldDefinition> fieldDefinitions = new ArrayList<DcatFieldDefinition>();
@@ -110,6 +107,15 @@ public class DcatRecordDefinition {
     fieldDefinitions.add(new TemporalField("temporal"));
     fieldDefinitions.add(new DcatDistribution("distribution"));
   }
+  
+  /**
+   * Print record according to the definition.
+   * @param jsonWriter underlying json writer
+   * @param properties proeprties
+   * @param dcatSchemas dcat schemas
+   * @param r record to print
+   * @throws IOException if printing fails
+   */
   public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
     jsonWriter.beginObject();
     for (DcatFieldDefinition fd: fieldDefinitions) {

@@ -24,8 +24,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 /**
- *
- * @author Esri, Inc.
+ * Contact point field.
  */
 public class ContactPointField implements DcatFieldDefinition {
   private static final ArrayList<DcatFieldDefinition> fieldDefinitions = new ArrayList<DcatFieldDefinition>();
@@ -60,6 +59,10 @@ public class ContactPointField implements DcatFieldDefinition {
 
   private final String name;
 
+  /**
+   * Creates instance of the class.
+   * @param name field name
+   */
   public ContactPointField(String name) {
     this.name = name;
   }

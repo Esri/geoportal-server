@@ -22,13 +22,20 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- *
- * @author Esri, Inc.
+ * Dcat definition.
  */
 public class DcatDefinition {
   private final DcatHeaderDefinition headerDef = new DcatHeaderDefinition();
   private final DcatRecordDefinition recordDef = new DcatRecordDefinition();
   
+  /**
+   * Prints dcat according to the definition.
+   * @param jsonWriter underlying json writer
+   * @param properties properties
+   * @param dcatSchemas dcat schemas
+   * @param records records to print
+   * @throws IOException if printing fails
+   */
   public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, Iterable<IFeedRecord> records) throws IOException {
     jsonWriter.beginObject();
     headerDef.print(jsonWriter, properties);

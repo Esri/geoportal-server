@@ -24,19 +24,32 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- *
- * @author Esri, Inc.
+ * Spatial field.
  */
 public class SpatialField extends BaseDcatField {
 
+  /**
+   * Creates instance of the class.
+   * @param fldName field name
+   */
   public SpatialField(String fldName) {
     super(fldName);
   }
 
+  /**
+   * Creates instance of the class.
+   * @param fldName field name
+   * @param flags flags
+   */
   public SpatialField(String fldName, long flags) {
     super(fldName, flags);
   }
   
+  /**
+   * Gets default value.
+   * @param properties properties
+   * @return default value
+   */
   protected String getDefaultValue(Properties properties) {
     return "";
   }

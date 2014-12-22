@@ -24,24 +24,41 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- *
- * @author Esri, Inc.
+ * String field.
  */
 public class StringField extends BaseDcatField {
 
+  /**
+   * Creates instance of the class.
+   * @param fldName field name
+   */
   public StringField(String fldName) {
     super(fldName);
   }
 
+  /**
+   * Creates instance of the class.
+   * @param fldName field name
+   * @param flags flags
+   */
   public StringField(String fldName, long flags) {
     super(fldName, flags);
   }
   
-  
+  /**
+   * Reads value.
+   * @param attr attribute
+   * @return value
+   */
   protected String readValue(IFeedAttribute attr) {
     return attr.simplify().getValue().toString();
   }
   
+  /**
+   * Gets default value.
+   * @param properties properties
+   * @return default value
+   */
   protected String getDefaultValue(Properties properties) {
     return "";
   }

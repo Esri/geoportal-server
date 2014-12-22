@@ -23,13 +23,16 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- *
- * @author Esri, Inc.
+ * Dcat distribution definition.
  */
 public class DcatDistribution implements DcatFieldDefinition {
 
   private final String name;
 
+  /**
+   * Creates instance of the class.
+   * @param name field name
+   */
   public DcatDistribution(String name) {
     this.name = name;
   }
@@ -43,6 +46,14 @@ public class DcatDistribution implements DcatFieldDefinition {
     jsonWriter.endArray();
   }
   
+  /**
+   * Prints a link.
+   * @param jsonWriter underlying json writer
+   * @param properties proeprties
+   * @param dcatSchemas dcat schemas
+   * @param link link to print
+   * @throws IOException if printing fails
+   */
   protected void printLink(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, ResourceLink link) throws IOException {
     boolean downloadLink = false;
     boolean accessLink = false;

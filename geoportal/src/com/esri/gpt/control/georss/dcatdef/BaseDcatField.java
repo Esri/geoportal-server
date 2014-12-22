@@ -23,17 +23,25 @@ import com.esri.gpt.control.georss.IFeedRecord;
 import java.util.Map;
 
 /**
- *
- * @author Esri, Inc.
+ * Base dcat field.
  */
 public abstract class BaseDcatField implements DcatFieldDefinition {
   protected final String fldName;
   protected long flags;
 
+  /**
+   * Creates instance of the class.
+   * @param fldName field name
+   */
   public BaseDcatField(String fldName) {
     this.fldName = fldName;
   }
 
+  /**
+   * Creates instance of the class.
+   * @param fldName field name
+   * @param flags flags
+   */
   public BaseDcatField(String fldName, long flags) {
     this.fldName = fldName;
     this.flags = flags;
@@ -43,11 +51,21 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
     return fldName;
   }
 
+  /**
+   * Gets index.
+   * @param r feed record
+   * @return map of attributes
+   */
   protected Map<String, IFeedAttribute> getIndex(IFeedRecord r) {
     Map<String, IFeedAttribute> index = r.getData(IFeedRecord.STD_COLLECTION_INDEX);
     return index;
   }
 
+  /**
+   * Gets schema key.
+   * @param index map of attributes
+   * @return schema key
+   */
   protected String getSchemaKey(Map<String, IFeedAttribute> index) {
     IFeedAttribute schemaKeyAttr = index.get("sys.schema.key");
     String schemaKey = null;
@@ -57,6 +75,12 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
     return schemaKey;
   }
 
+  /**
+   * Gets dcat fields
+   * @param dcatSchemas dcat schemas
+   * @param schemaKey schema key
+   * @return dcat fields
+   */
   protected DcatFields getDcatFields(DcatSchemas dcatSchemas, String schemaKey) {
     DcatFields dcatFields = dcatSchemas.get(schemaKey);
     if (dcatFields == null) {
@@ -65,6 +89,11 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
     return dcatFields;
   }
 
+  /**
+   * Gets dcat field.
+   * @param dcatFields dcat fields
+   * @return dcat field
+   */
   protected DcatField getDcatField(DcatFields dcatFields) {
     DcatField field = dcatFields.getField(fldName);
     return field;
@@ -75,6 +104,12 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
     return attr;
   }
 
+  /**
+   * Gets feed attribute.
+   * @param dcatSchemas dcat schemas
+   * @param r feed record
+   * @return feed attribute
+   */
   protected IFeedAttribute getFeedAttribute(DcatSchemas dcatSchemas, IFeedRecord r) {
     Map<String, IFeedAttribute> index = getIndex(r);
     if (index == null) {

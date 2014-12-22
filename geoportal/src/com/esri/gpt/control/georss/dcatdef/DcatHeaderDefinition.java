@@ -20,10 +20,15 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- *
- * @author Esri, Inc.
+ * Header defintion.
  */
 public class DcatHeaderDefinition {
+  /**
+   * Prints header.
+   * @param jsonWriter underlying json writer
+   * @param properties properties
+   * @throws IOException if printing fails
+   */
   public void print(JsonWriter jsonWriter, Properties properties) throws IOException {
     jsonWriter.name("conformsTo").value("https://project-open-data.cio.gov/v1.1/schema");
     jsonWriter.name("describedBy").value("https://project-open-data.cio.gov/v1.1/schema/catalog.json");

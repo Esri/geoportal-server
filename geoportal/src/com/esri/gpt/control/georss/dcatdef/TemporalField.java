@@ -34,16 +34,24 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- *
- * @author Esri, Inc.
+ * Temporal field.
  */
 public class TemporalField extends BaseDcatField {
   protected static final IsoDateFormat ISODF = new IsoDateFormat();
 
+  /**
+   * Creates instance of the class.
+   * @param fldName field name
+   */
   public TemporalField(String fldName) {
     super(fldName);
   }
 
+  /**
+   * Creates instance of the class.
+   * @param fldName field name
+   * @param flags flags
+   */
   public TemporalField(String fldName, long flags) {
     super(fldName, flags);
   }
@@ -63,6 +71,12 @@ public class TemporalField extends BaseDcatField {
     return list.size()==2? new FeedList(list): null;
   }
   
+  /**
+   * Reads value.
+   * @param attr attribute
+   * @param field field
+   * @return value
+   */
   protected List<Date> readValue(IFeedAttribute attr,DcatField field) {
     ArrayList<Date> dates = new ArrayList<Date>();
     List valueList = (List)attr.getValue();
@@ -79,6 +93,11 @@ public class TemporalField extends BaseDcatField {
     return dates.size()==2? dates: null;
   }
   
+  /**
+   * Reads default value.
+   * @param properties properties
+   * @return default value
+   */
   protected List<Date> getDefaultValue(Properties properties) {
     ArrayList<Date> dates = new ArrayList<Date>();
     Date date = Calendar.getInstance().getTime();

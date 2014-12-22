@@ -27,16 +27,24 @@ import java.util.Date;
 import java.util.Properties;
 
 /**
- *
- * @author Esri, Inc.
+ * Dcat field.
  */
 public class DateField extends BaseDcatField {
   protected static final IsoDateFormat ISODF = new IsoDateFormat();
 
+  /**
+   * Creates instance of the class.
+   * @param fldName field name
+   */
   public DateField(String fldName) {
     super(fldName);
   }
 
+  /**
+   * Creates instance of the class.
+   * @param fldName field name
+   * @param flags flags
+   */
   public DateField(String fldName, long flags) {
     super(fldName, flags);
   }
@@ -45,6 +53,11 @@ public class DateField extends BaseDcatField {
     return Calendar.getInstance().getTime();
   }
   
+  /**
+   * Reads date.
+   * @param attr attribute
+   * @return date
+   */
   protected Date readValue(IFeedAttribute attr) {
     try {
       String value = attr.simplify().getValue().toString();

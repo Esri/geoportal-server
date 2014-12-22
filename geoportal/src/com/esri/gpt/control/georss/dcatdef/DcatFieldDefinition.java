@@ -22,11 +22,18 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- *
- * @author Esri, Inc.
+ * Dcat field definition.
  */
 public interface DcatFieldDefinition {
   long OBLIGATORY = 0x01;
   
+  /**
+   * Print field according to the definition.
+   * @param jsonWriter underlying json writer
+   * @param properties properties
+   * @param dcatSchemas dcat schemas
+   * @param r record to print
+   * @throws IOException if printing fails
+   */
   void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException ;
 }

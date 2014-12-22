@@ -28,16 +28,29 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *
- * @author Esri, Inc.
+ * Writes Dcat 1.1 json response of search results using dcat mappings.
  */
 public class Dcat11JsonFeedWriter extends DcatJsonFeedWriter {
 
+  /**
+   * Creates instance of the writer.
+   * @param request HTTP servlet request
+   * @param context request context
+   * @param writer underlying writer
+   * @param query REST query
+   * @param pretty <code>true</code> to make output formatted
+   */
   public Dcat11JsonFeedWriter(HttpServletRequest request, RequestContext context, PrintWriter writer, RestQuery query, Boolean pretty) {
     super(request, context, writer, query, pretty);
     dcatSchemas = ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getDcatSchemas();
   }
 
+  /**
+   * Creates instance of the writer.
+   * @param context request context
+   * @param writer underlying writer
+   * @param query REST query
+   */
   public Dcat11JsonFeedWriter(RequestContext context, PrintWriter writer, RestQuery query) {
     super(context, writer, query);
     dcatSchemas = ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getDcatSchemas();

@@ -26,15 +26,23 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- *
- * @author Esri, Inc.
+ * Array Field.
  */
 public class ArrayField extends BaseDcatField {
 
+  /**
+   * Creates instance of the class.
+   * @param fldName field name
+   */
   public ArrayField(String fldName) {
     super(fldName);
   }
 
+  /**
+   * Creates instance of the class.
+   * @param fldName field name
+   * @param flags flags
+   */
   public ArrayField(String fldName, long flags) {
     super(fldName, flags);
   }

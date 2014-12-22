@@ -24,8 +24,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 /**
- *
- * @author Esri, Inc.
+ * Publisher field.
  */
 public class PublisherField implements DcatFieldDefinition {
   private static final ArrayList<DcatFieldDefinition> fieldDefinitions = new ArrayList<DcatFieldDefinition>();
@@ -45,6 +44,10 @@ public class PublisherField implements DcatFieldDefinition {
   
   private final String name;
 
+  /**
+   * Creates instance of the class.
+   * @param name field name
+   */
   public PublisherField(String name) {
     this.name = name;
   }
