@@ -35,7 +35,7 @@ abstract class IsoDateTimeFormater {
       sb.append(pad(Integer.toString(cal.get(Calendar.YEAR)),4));
       if (cal.isSet(Calendar.MONTH)) {
         appendDash(sb);
-        sb.append(pad(Integer.toString(cal.get(Calendar.MONTH)),2));
+        sb.append(pad(Integer.toString(cal.get(Calendar.MONTH)+1),2));
         if (cal.isSet(Calendar.DAY_OF_MONTH)) {
           appendDash(sb);
           sb.append(pad(Integer.toString(cal.get(Calendar.DAY_OF_MONTH)),2));
