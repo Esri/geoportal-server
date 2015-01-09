@@ -84,8 +84,11 @@ public class TemporalField extends BaseDcatField {
     try {
       for (Object v: valueList) {
         String value = ((IFeedAttribute)v).simplify().getValue().toString();
-        Date date = new Date(Long.parseLong(value));
-        dates.add(date);
+        long lValue = Long.parseLong(value);
+        if (lValue>=0) {
+          Date date = new Date(lValue);
+          dates.add(date);
+        }
       }
     } catch (NumberFormatException ex) {
       
