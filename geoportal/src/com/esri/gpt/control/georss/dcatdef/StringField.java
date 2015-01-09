@@ -19,6 +19,7 @@ import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedRecord;
 import static com.esri.gpt.control.georss.dcatdef.DcatFieldDefinition.OBLIGATORY;
+import com.esri.gpt.framework.util.Val;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.Properties;
@@ -67,15 +68,13 @@ public class StringField extends BaseDcatField {
   public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
     IFeedAttribute attr = getFeedAttribute(dcatSchemas, r);
     
-    String value;
-    if (attr==null) {
+    String value = Val.chkStr(attr!=null? readValue(attr): "");
+    if (value.isEmpty()) {
       if ((flags & OBLIGATORY)!=0) {
         value = getDefaultValue(properties);
       } else {
         return;
       }
-    } else {
-      value = readValue(attr);
     }
     
     jsonWriter.name(getOutFieldName()).value(value);
