@@ -220,10 +220,16 @@ dojo.declare("gpt.form.Cart",null,{
           var mdRecordsId = "frmSearchCriteria:mdRecords";
           var mdRecords = dojo.byId(mdRecordsId);
           if (mdRecords) {
+            var checkBoxes = [];
             dojo.query("input.gptCartCheckBox",mdRecords).forEach(dojo.hitch(this,function(checkBox){
               if (checkBox.checked!=checked) {
-                checkBox.click();
+                if (!checked || this.approximateSize+checkBoxes.length<this.maxItems) {
+                  checkBoxes.push(checkBox);
+                }
               }
+            }));
+            dojo.forEach(checkBoxes,dojo.hitch(this,function(checkBox){
+              checkBox.click();
             }));
           }
         }));
