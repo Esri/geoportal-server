@@ -20,7 +20,11 @@ import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedRecord;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Dcat distribution definition.
@@ -55,26 +59,38 @@ public class DcatDistributionField implements DcatFieldDefinition {
    * @throws IOException if printing fails
    */
   protected void printLink(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, ResourceLink link) throws IOException {
-    boolean downloadLink = false;
-    boolean accessLink = false;
+    String linkName = null;
     String mediaType = null;
     String format = null;
+    
     if (link.getTag().equals(ResourceLink.TAG_METADATA)) {
-      downloadLink = true;
+      linkName = "downloadURL";
       mediaType = "text/xml";
       format = "XML";
     }
+    
     if (link.getTag().equals(ResourceLink.TAG_DETAILS)) {
-      accessLink = true;
+      linkName = "accessURL";
       mediaType = "text/html";
       format = "HTML";
     }
-    if (downloadLink || accessLink) {
+    
+    String sUrl = checkUrl(link.getUrl());
+    if (linkName!=null && !sUrl.isEmpty()) {
       jsonWriter.beginObject();
-      jsonWriter.name(downloadLink? "downloadURL": "accessURL").value(link.getUrl());
+      jsonWriter.name(linkName).value(sUrl);
       jsonWriter.name("mediaType").value(mediaType);
       jsonWriter.name("format").value(format);
       jsonWriter.endObject();
+    }
+  }
+  
+  private String checkUrl(String url) {
+    try {
+      new URL(url);
+      return url;
+    } catch (Exception ex) {
+      return "";
     }
   }
   
