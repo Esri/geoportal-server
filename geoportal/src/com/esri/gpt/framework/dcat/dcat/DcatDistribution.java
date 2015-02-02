@@ -20,10 +20,40 @@ package com.esri.gpt.framework.dcat.dcat;
  */
 public interface DcatDistribution {
   /**
+   * Gets type.
+   * @return type
+   */
+  String getType();
+  /**
    * Gets access URL.
    * @return access URL
    */
   String getAccessURL();
+  /**
+   * Gets conforms to.
+   * @return conforms to
+   */
+  String getConformsTo();
+  /**
+   * Gets described by.
+   * @return described by
+   */
+  String getDescribedBy();
+  /**
+   * Gets described by type.
+   * @return described by type
+   */
+  String getDescribedByType();
+  /**
+   * Gets description.
+   * @return description
+   */
+  String getDescription();
+  /**
+   * Gets download URL.
+   * @return download URL
+   */
+  String getDownloadURL();
   /**
    * Gets data format.
    * @return data format
@@ -34,4 +64,9 @@ public interface DcatDistribution {
    * @return media type
    */
   String getMediaType();
+  /**
+   * Gets title.
+   * @return title
+   */
+  String getTitle();
 }

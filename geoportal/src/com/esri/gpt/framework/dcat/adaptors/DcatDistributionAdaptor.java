@@ -42,6 +42,41 @@ class DcatDistributionAdaptor extends DcatAdaptor implements DcatDistribution {
   public String getMediaType() {
     return getString("mediaType");
   }
+
+  @Override
+  public String getType() {
+    return getString("@type");
+  }
+
+  @Override
+  public String getConformsTo() {
+    return getString("conformsTo");
+  }
+
+  @Override
+  public String getDescribedBy() {
+    return getString("describedBy");
+  }
+
+  @Override
+  public String getDescribedByType() {
+    return getString("describedByType");
+  }
+
+  @Override
+  public String getDescription() {
+    return getString("description");
+  }
+
+  @Override
+  public String getDownloadURL() {
+    return getString("downloadURL");
+  }
+
+  @Override
+  public String getTitle() {
+    return getString("title");
+  }
   
   @Override
   public String toString() {

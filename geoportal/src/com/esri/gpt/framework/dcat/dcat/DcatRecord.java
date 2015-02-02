@@ -22,15 +22,15 @@ import java.util.List;
  */
 public interface DcatRecord {
   /**
+   * Gets type.
+   * @return type
+   */
+  String getType();
+  /**
    * Gets title.
    * @return title
    */
   String getTitle();
-  /**
-   * Gets abstract.
-   * @return abstract
-   */
-  String getAbstract();
   /**
    * Gets description.
    * @return description
@@ -42,57 +42,6 @@ public interface DcatRecord {
    */
   List<String> getKeywords();
   /**
-   * Gets identifier.
-   * @return identifier
-   */
-  String getIdentifier();
-  /**
-   * Gets access level.
-   * @return access level
-   */
-  String getAccessLevel();
-  /**
-   * Gets access level comment.
-   * @return access level comment
-   */
-  String getAccessLevelComment();
-  /**
-   * Gets data dictionary.
-   * @return data dictionary
-   */
-  String getDataDictionary();
-  /**
-   * Gets web service URL.
-   * @return web service URL
-   */
-  String getWebService();
-  /**
-   * Gets access URL.
-   * @return access URL
-   */
-  String getAccessURL();
-  /**
-   * Gets download URL.
-   * @return download URL
-   */
-  String getDownloadURL();
-  /**
-   * Gets format.
-   * @return format
-   */
-  String getFormat();
-  /**
-   * Gets spatial information.
-   * @return spatial information
-   */
-  String getSpatial();
-  /**
-   * Gets temporal information.
-   * @return temporal information
-   */
-  String getTemporal();
-  
-  /**
    * Gets modified date.
    * @return modified date
    */
@@ -103,24 +52,184 @@ public interface DcatRecord {
    */
   String getPublisher();
   /**
-   * Gets person.
-   * @return person
+   * Gets contact point.
+   * @return contact point
    */
-  String getPerson();
+  DcatContactPoint getContactPoint();
   /**
-   * Gets mbox.
-   * @return mbox
+   * Gets identifier.
+   * @return identifier
    */
-  String getMbox();
+  String getIdentifier();
+  /**
+   * Gets access level.
+   * @return access level
+   */
+  String getAccessLevel();
+  /**
+   * Gets bureau code.
+   * @return bureau code
+   */
+  String getBureauCode();
+  /**
+   * Gets program code.
+   * @return program code
+   */
+  String getProgramCode();
   /**
    * Gets license.
    * @return license
    */
   String getLicense();
-  
+  /**
+   * Gets rights.
+   * @return rights
+   */
+  String getRights();
+  /**
+   * Gets spatial information.
+   * @return spatial information
+   */
+  String getSpatial();
+  /**
+   * Gets temporal information.
+   * @return temporal information
+   */
+  String getTemporal();
   /**
    * Gets distribution.
    * @return distribution info
    */
   DcatDistributionList getDistribution();
+  /**
+   * Gets accrual periodicity.
+   * @return accrual periodicity
+   */
+  String getAccrualPeriodicity();
+  /**
+   * Gets conforms to.
+   * @return conforms to
+   */
+  String getConformsTo();
+  /**
+   * Gets data quality.
+   * @return data quality
+   */
+  String getDataQuality();
+  /**
+   * Gets described by.
+   * @return described by
+   */
+  String getDescribedBy();
+  /**
+   * Gets described by type.
+   * @return described by type
+   */
+  String getdescribedByType();
+  /**
+   * Gets collection of which record is a subset.
+   * @return collection of which record is a subset
+   */
+  String isPartOf();
+  /**
+   * Gets issued date.
+   * @return issued date
+   */
+  String getIssued();
+  /**
+   * Gets language.
+   * @return language
+   */
+  String getLanguage();
+  /**
+   * Gets landing page.
+   * @return landing page
+   */
+  String getLandingPage();
+  /**
+   * Gets primary IT investment UII (identifier).
+   * @return primary IT investment UII
+   */
+  String getPrimaryITInvestmentUII();
+  /**
+   * Gets references.
+   * @return references
+   */
+  List<String> getReferences();
+  /**
+   * Gets system records.
+   * @return system records
+   */
+  List<String> getSystemRecords();
+  /**
+   * Gets theme.
+   * @return theme
+   */
+  String getTheme();
+ 
+
+  /**
+   * Gets abstract.
+   * @return abstract
+   * @deprecated not in use
+   */
+  @Deprecated
+  String getAbstract();
+  /**
+   * Gets access level comment.
+   * @return access level comment
+   * @deprecated not in use
+   */
+  @Deprecated
+  String getAccessLevelComment();
+  /**
+   * Gets data dictionary.
+   * @return data dictionary
+   * @deprecated not in use
+   */
+  @Deprecated
+  String getDataDictionary();
+  /**
+   * Gets web service URL.
+   * @return web service URL
+   * @deprecated not in use
+   */
+  @Deprecated
+  String getWebService();
+  /**
+   * Gets access URL.
+   * @return access URL
+   * @deprecated not in use
+   */
+  @Deprecated
+  String getAccessURL();
+  /**
+   * Gets download URL.
+   * @return download URL
+   * @deprecated not in use
+   */
+  @Deprecated
+  String getDownloadURL();
+  /**
+   * Gets format.
+   * @return format
+   * @deprecated not in use
+   */
+  @Deprecated
+  String getFormat();
+  /**
+   * Gets person.
+   * @return person
+   * @deprecated not in use
+   */
+  @Deprecated
+  String getPerson();
+  /**
+   * Gets mbox.
+   * @return mbox
+   * @deprecated not in use
+   */
+  @Deprecated
+  String getMbox();
+
 }

@@ -105,7 +105,7 @@ public class DcatRecordDefinition {
     });
     fieldDefinitions.add(new SpatialField("spatial"));
     fieldDefinitions.add(new TemporalField("temporal"));
-    fieldDefinitions.add(new DcatDistribution("distribution"));
+    fieldDefinitions.add(new DcatDistributionField("distribution"));
   }
   
   /**

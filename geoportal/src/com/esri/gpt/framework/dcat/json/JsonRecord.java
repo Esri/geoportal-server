@@ -26,6 +26,8 @@ public class JsonRecord extends JsonAttributes {
   private final List<JsonAttribute> keywords = new ArrayList<JsonAttribute>();
   private final List<JsonAttribute> bureauCodes = new ArrayList<JsonAttribute>();
   private final List<JsonAttribute> programCodes = new ArrayList<JsonAttribute>();
+  private final List<JsonAttribute> references = new ArrayList<JsonAttribute>();
+  private final List<JsonAttribute> systemRecords = new ArrayList<JsonAttribute>();
 
   public JsonArray<JsonAttributes> getDistribution() {
     return distribution;
@@ -41,6 +43,14 @@ public class JsonRecord extends JsonAttributes {
 
   public List<JsonAttribute> getProgramCodes() {
     return programCodes;
+  }
+
+  public List<JsonAttribute> getReferences() {
+    return references;
+  }
+
+  public List<JsonAttribute> getSystemRecords() {
+    return systemRecords;
   }
   
   @Override

@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.framework.dcat.adaptors;
 
+import com.esri.gpt.framework.dcat.dcat.DcatContactPoint;
 import com.esri.gpt.framework.dcat.dcat.DcatDistributionList;
 import com.esri.gpt.framework.dcat.dcat.DcatRecord;
 import com.esri.gpt.framework.dcat.json.JsonAttribute;
@@ -44,13 +45,13 @@ public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
   }
 
   @Override
-  public String getAbstract() {
-    return Val.chkStr(getString("abstract"),getString("description"));
+  public String getDescription() {
+    return Val.chkStr(getString("description"),getAbstract());
   }
 
   @Override
-  public String getDescription() {
-    return Val.chkStr(getString("description"),getString("abstract"));
+  public String getAbstract() {
+    return Val.chkStr(getString("abstract"));
   }
 
   @Override
@@ -146,4 +147,104 @@ public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
   public String toString() {
     return record.toString();
   }
+
+  @Override
+  public String getType() {
+    return getString("@type");
+  }
+
+  @Override
+  public DcatContactPoint getContactPoint() {
+    return new DcatContactPointAdaptor(record);
+  }
+
+  @Override
+  public String getBureauCode() {
+    return getString("bureauCode");
+  }
+
+  @Override
+  public String getProgramCode() {
+    return getString("programCode");
+  }
+
+  @Override
+  public String getRights() {
+    return getString("rights");
+  }
+
+  @Override
+  public String getConformsTo() {
+    return getString("conformsTo");
+  }
+
+  @Override
+  public String getDataQuality() {
+    return getString("dataQuality");
+  }
+
+  @Override
+  public String getDescribedBy() {
+    return getString("describedBy");
+  }
+
+  @Override
+  public String getdescribedByType() {
+    return getString("describedByType");
+  }
+
+  @Override
+  public String isPartOf() {
+    return getString("isPartOf");
+  }
+
+  @Override
+  public String getIssued() {
+    return getString("issued");
+  }
+
+  @Override
+  public String getLanguage() {
+    return getString("language");
+  }
+
+  @Override
+  public String getLandingPage() {
+    return getString("landingPage");
+  }
+
+  @Override
+  public String getPrimaryITInvestmentUII() {
+    return getString("primaryITInvestmentUII");
+  }
+
+  @Override
+  public List<String> getReferences() {
+    ArrayList<String> references = new ArrayList<String>();
+    for (JsonAttribute reference: record.getReferences()) {
+      references.add(reference.getString());
+    }
+    return references;
+  }
+
+  @Override
+  public List<String> getSystemRecords() {
+    ArrayList<String> systemrecords = new ArrayList<String>();
+    for (JsonAttribute systemrecord: record.getSystemRecords()) {
+      systemrecords.add(systemrecord.getString());
+    }
+    return systemrecords;
+  }
+
+  @Override
+  public String getAccrualPeriodicity() {
+    return getString("accrualPeriodicity");
+  }
+
+  @Override
+  public String getTheme() {
+    return getString("theme");
+  }
+  
+  
 }

@@ -25,7 +25,7 @@ import java.util.AbstractList;
  * DCAT distribution list adaptor.
  */
 class DcatDistributionListAdaptor extends AbstractList<DcatDistribution> implements DcatDistributionList  {
-  private JsonArray<JsonAttributes> attrsList;
+  private final JsonArray<JsonAttributes> attrsList;
 
   public DcatDistributionListAdaptor(JsonArray<JsonAttributes> attrsList) {
     this.attrsList = attrsList;

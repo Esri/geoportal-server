@@ -25,7 +25,7 @@ import java.util.Properties;
 /**
  * Dcat distribution definition.
  */
-public class DcatDistribution implements DcatFieldDefinition {
+public class DcatDistributionField implements DcatFieldDefinition {
 
   private final String name;
 
@@ -33,7 +33,7 @@ public class DcatDistribution implements DcatFieldDefinition {
    * Creates instance of the class.
    * @param name field name
    */
-  public DcatDistribution(String name) {
+  public DcatDistributionField(String name) {
     this.name = name;
   }
   
