@@ -87,7 +87,8 @@ public class DcatDistributionField implements DcatFieldDefinition {
   
   private String checkUrl(String url) {
     try {
-      new URL(url);
+      URL u = new URL(url);
+      u.toURI();
       return url;
     } catch (Exception ex) {
       return "";
