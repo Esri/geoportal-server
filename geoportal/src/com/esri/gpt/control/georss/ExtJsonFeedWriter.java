@@ -79,6 +79,10 @@ public class ExtJsonFeedWriter implements FeedWriter {
    */
   protected Map<String,String[]> parameterMap;
   /**
+   * request context
+   */
+  protected final RequestContext context;
+  /**
    * print writer
    */
   protected PrintWriter writer;
@@ -285,6 +289,7 @@ public class ExtJsonFeedWriter implements FeedWriter {
    */
   public ExtJsonFeedWriter(Map<String,String[]> parameterMap, RequestContext context, PrintWriter writer, RestQuery query, Boolean pretty) {
     this.parameterMap = parameterMap;
+    this.context = context;
     this.writer = writer;
     this.query = query;
     this.pretty = pretty;

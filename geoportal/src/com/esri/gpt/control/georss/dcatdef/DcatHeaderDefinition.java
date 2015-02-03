@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.control.georss.dcatdef;
 
+import static com.esri.gpt.framework.util.Val.chkStr;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.Properties;
@@ -30,6 +31,11 @@ public class DcatHeaderDefinition {
    * @throws IOException if printing fails
    */
   public void print(JsonWriter jsonWriter, Properties properties) throws IOException {
+    String context = chkStr(properties.getProperty("@context"));
+    if (!context.isEmpty()) {
+      jsonWriter.name("@context").value(properties.getProperty("@context"));
+    }
+    jsonWriter.name("@type").value("dcat:Catalog");
     jsonWriter.name("conformsTo").value("https://project-open-data.cio.gov/v1.1/schema");
     jsonWriter.name("describedBy").value("https://project-open-data.cio.gov/v1.1/schema/catalog.json");
   }

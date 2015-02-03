@@ -20,11 +20,8 @@ import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedRecord;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Dcat distribution definition.
@@ -78,6 +75,7 @@ public class DcatDistributionField implements DcatFieldDefinition {
     String sUrl = checkUrl(link.getUrl());
     if (linkName!=null && !sUrl.isEmpty()) {
       jsonWriter.beginObject();
+      jsonWriter.name("@type").value("dcat:Distribution");
       jsonWriter.name(linkName).value(sUrl);
       jsonWriter.name("mediaType").value(mediaType);
       jsonWriter.name("format").value(format);

@@ -55,6 +55,7 @@ public class PublisherField implements DcatFieldDefinition {
   @Override
   public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
     jsonWriter.name(name).beginObject();
+    jsonWriter.name("@type").value("org:Organization");
     for (DcatFieldDefinition dfd: fieldDefinitions) {
       dfd.print(jsonWriter, properties, dcatSchemas, r);
     }

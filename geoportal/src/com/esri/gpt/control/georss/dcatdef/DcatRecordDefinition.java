@@ -118,6 +118,7 @@ public class DcatRecordDefinition {
    */
   public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
     jsonWriter.beginObject();
+    jsonWriter.name("@type").value("dcat:Dataset");
     for (DcatFieldDefinition fd: fieldDefinitions) {
       fd.print(jsonWriter, properties, dcatSchemas, r);
     }

@@ -115,6 +115,19 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     properties.setProperty("spatial", sSpatial);
     properties.setProperty("temporal", sTemporal);
     
+    String contextParam = RequestContext.resolveBaseContextPath((HttpServletRequest) context.getServletRequest());
+    String requestURI = ((HttpServletRequest)context.getServletRequest()).getRequestURI();
+    String contextPath = ((HttpServletRequest)context.getServletRequest()).getContextPath();
+    String queryString = Val.chkStr(((HttpServletRequest)context.getServletRequest()).getQueryString());
+    if (requestURI.startsWith(contextPath)) {
+      requestURI = requestURI.substring(contextPath.length());
+      contextParam += requestURI;
+      if (!queryString.isEmpty()) {
+        contextParam += "?" + queryString;
+      }
+    }
+    properties.setProperty("@context", contextParam);
+    
     return properties;
   }
   
