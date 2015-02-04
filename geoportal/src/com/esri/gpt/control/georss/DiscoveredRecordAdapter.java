@@ -166,19 +166,6 @@ public class DiscoveredRecordAdapter implements IFeedRecord {
     return "";
   }
   
-  private String select(String meaning, Pattern pattern) {
-    Object [] oArr = values.get(meaning);
-    if (oArr!=null) {
-      for (Object obj : oArr) {
-        String str = obj.toString();
-        if (pattern==null || pattern.matcher(meaning).matches()) {
-          return str;
-        }
-      }
-    }
-    return "";
-  }
-  
   private String select(String meaning) {
     return select(meaning,"");
   }

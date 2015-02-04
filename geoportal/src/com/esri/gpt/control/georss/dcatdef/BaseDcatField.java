@@ -99,6 +99,12 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
     return field;
   }
 
+  /**
+   * Gets feed attribute.
+   * @param index index
+   * @param field field
+   * @return attribute or <code>null</code> if not available
+   */
   protected IFeedAttribute getFeedAttribute(Map<String, IFeedAttribute> index, DcatField field) {
     IFeedAttribute attr = index.get(field.getIndex());
     return attr;

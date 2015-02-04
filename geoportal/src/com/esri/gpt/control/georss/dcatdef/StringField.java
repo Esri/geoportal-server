@@ -55,6 +55,10 @@ public class StringField extends BaseDcatField {
     return attr.simplify().getValue().toString();
   }
   
+  protected boolean checkValue(String value) {
+    return !Val.chkStr(value).isEmpty();
+  }
+  
   /**
    * Gets default value.
    * @param properties properties
@@ -69,7 +73,7 @@ public class StringField extends BaseDcatField {
     IFeedAttribute attr = getFeedAttribute(dcatSchemas, r);
     
     String value = Val.chkStr(attr!=null? readValue(attr): "");
-    if (value.isEmpty()) {
+    if (value.isEmpty() || !checkValue(value)) {
       if ((flags & OBLIGATORY)!=0) {
         value = getDefaultValue(properties);
       } else {

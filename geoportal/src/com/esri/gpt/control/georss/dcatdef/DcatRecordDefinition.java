@@ -20,6 +20,7 @@ import com.esri.gpt.control.georss.IFeedRecord;
 import static com.esri.gpt.framework.util.Val.chkStr;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -101,6 +102,19 @@ public class DcatRecordDefinition {
       @Override
       protected String getDefaultValue(Properties properties) {
         return chkStr(properties.getProperty(fldName));
+      }
+    });
+    fieldDefinitions.add(new StringField("language"));
+    fieldDefinitions.add(new StringField("landingPage") {
+      @Override
+      protected boolean checkValue(String value) {
+        try {
+          URL u = new URL(value);
+          u.toURI();
+          return true;
+        } catch (Exception ex) {
+          return false;
+        }
       }
     });
     fieldDefinitions.add(new SpatialField("spatial"));
