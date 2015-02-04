@@ -42,7 +42,7 @@ public class DcatDistributionField implements DcatFieldDefinition {
   public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
     jsonWriter.name(name).beginArray();
     for ( ResourceLink l: r.getResourceLinks()) {
-      printLink(jsonWriter, properties, dcatSchemas, l);
+      printLink(jsonWriter, properties, dcatSchemas, r, l);
     }
     jsonWriter.endArray();
   }
@@ -52,10 +52,11 @@ public class DcatDistributionField implements DcatFieldDefinition {
    * @param jsonWriter underlying json writer
    * @param properties proeprties
    * @param dcatSchemas dcat schemas
+   * @param r record
    * @param link link to print
    * @throws IOException if printing fails
    */
-  protected void printLink(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, ResourceLink link) throws IOException {
+  protected void printLink(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r, ResourceLink link) throws IOException {
     String linkName = null;
     String mediaType = null;
     String format = null;
