@@ -424,6 +424,8 @@
 		<parameter key="dcat.mappings" value="gpt/metadata/dcat-mappings.xml"/>
         <!-- DCAT cache directory -->
         <parameter key="dcat.cache.path" value=""/>
+        <!-- DCAT landing page default to metadata details -->
+        <parameter key="dcat.landingPage.default.details" value="false"/>
     </catalog>
     
     <!-- Download data configuration.

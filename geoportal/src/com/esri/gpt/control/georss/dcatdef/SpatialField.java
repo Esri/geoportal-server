@@ -60,7 +60,7 @@ public class SpatialField extends BaseDcatField {
     String value;
     Envelope envelope = r.getEnvelope();
     if (envelope==null) {
-      if ((flags & OBLIGATORY)!=0) {
+      if ((flags.provide(r, null, properties) & OBLIGATORY)!=0) {
         value = getDefaultValue(properties);
       } else {
         return;

@@ -61,7 +61,7 @@ public class IdentifierField extends BaseDcatField {
     
     String value;
     if (attr==null) {
-      if ((flags & OBLIGATORY)!=0) {
+      if ((flags.provide(r, attr, properties) & OBLIGATORY)!=0) {
         value = chkStr(r.getFileIdentifier(), r.getUuid());
       } else {
         return;

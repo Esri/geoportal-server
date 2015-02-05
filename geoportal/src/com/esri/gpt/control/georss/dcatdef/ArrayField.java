@@ -72,7 +72,7 @@ public class ArrayField extends BaseDcatField {
 
     ArrayList<String> value = new ArrayList<String>();
     if (attr == null) {
-      if ((flags & OBLIGATORY) != 0) {
+      if ((flags.provide(r, attr, properties) & OBLIGATORY) != 0) {
         value.addAll(getDefaultValue(properties));
       } else {
         return;

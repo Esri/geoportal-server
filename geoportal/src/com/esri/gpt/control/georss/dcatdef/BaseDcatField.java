@@ -21,13 +21,14 @@ import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedRecord;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Base dcat field.
  */
 public abstract class BaseDcatField implements DcatFieldDefinition {
   protected final String fldName;
-  protected long flags;
+  protected FlagsProvider flags;
 
   /**
    * Creates instance of the class.
@@ -35,6 +36,7 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
    */
   public BaseDcatField(String fldName) {
     this.fldName = fldName;
+    this.flags = new DefaultFlagsProvider();
   }
 
   /**
@@ -44,7 +46,17 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
    */
   public BaseDcatField(String fldName, long flags) {
     this.fldName = fldName;
-    this.flags = flags;
+    this.flags = new DefaultFlagsProvider(flags);
+  }
+
+  /**
+   * Creates instance of the class.
+   * @param fldName field name
+   * @param flags flags provider
+   */
+  public BaseDcatField(String fldName, FlagsProvider flags) {
+    this.fldName = fldName;
+    this.flags = flags!=null? flags: new DefaultFlagsProvider(); 
   }
 
   /**
@@ -139,6 +151,29 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
     }
     IFeedAttribute attr = getFeedAttribute(index, field);
     return attr;
+  }
+  
+  public static interface FlagsProvider {
+    long provide(IFeedRecord r, IFeedAttribute attr, Properties properties);
+  }
+  
+  private static class DefaultFlagsProvider implements FlagsProvider {
+    private final long flags;
+
+    public DefaultFlagsProvider(long flags) {
+      this.flags = flags;
+    }
+
+    public DefaultFlagsProvider() {
+      this.flags = 0;
+    }
+
+    @Override
+    public long provide(IFeedRecord r, IFeedAttribute attr, Properties properties) {
+      return flags;
+    }
+    
+    
   }
   
 }

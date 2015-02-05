@@ -36,7 +36,7 @@ public class PublisherField implements DcatFieldDefinition {
       }
 
       @Override
-      protected String getDefaultValue(Properties properties) {
+      protected String getDefaultValue(IFeedRecord r, Properties properties) {
         return chkStr(properties.getProperty(fldName),"?");
       }
     });

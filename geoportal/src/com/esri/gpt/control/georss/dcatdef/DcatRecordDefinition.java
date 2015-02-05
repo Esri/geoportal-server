@@ -16,11 +16,17 @@
 package com.esri.gpt.control.georss.dcatdef;
 
 import com.esri.gpt.control.georss.DcatSchemas;
+import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedRecord;
+import com.esri.gpt.framework.context.ApplicationConfiguration;
+import com.esri.gpt.framework.context.ApplicationContext;
+import com.esri.gpt.framework.util.Val;
 import static com.esri.gpt.framework.util.Val.chkStr;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,13 +42,13 @@ public class DcatRecordDefinition {
   static {
     fieldDefinitions.add(new StringField("title",DcatFieldDefinition.OBLIGATORY){
       @Override
-      protected String getDefaultValue(Properties properties) {
+      protected String getDefaultValue(IFeedRecord r, Properties properties) {
         return chkStr(properties.getProperty(fldName),"?");
       }
     });
     fieldDefinitions.add(new StringField("description",DcatFieldDefinition.OBLIGATORY){
       @Override
-      protected String getDefaultValue(Properties properties) {
+      protected String getDefaultValue(IFeedRecord r, Properties properties) {
         return chkStr(properties.getProperty(fldName),"?");
       }
     });
@@ -74,7 +80,7 @@ public class DcatRecordDefinition {
     fieldDefinitions.add(new IdentifierField("identifier",DcatFieldDefinition.OBLIGATORY));
     fieldDefinitions.add(new StringField ("accessLevel",DcatFieldDefinition.OBLIGATORY){
       @Override
-      protected String getDefaultValue(Properties properties) {
+      protected String getDefaultValue(IFeedRecord r, Properties properties) {
         return chkStr(properties.getProperty(fldName),"public");
       }
     });
@@ -100,12 +106,36 @@ public class DcatRecordDefinition {
     });
     fieldDefinitions.add(new StringField ("license",DcatFieldDefinition.OBLIGATORY){
       @Override
-      protected String getDefaultValue(Properties properties) {
+      protected String getDefaultValue(IFeedRecord r, Properties properties) {
         return chkStr(properties.getProperty(fldName));
       }
     });
     fieldDefinitions.add(new StringField("language"));
-    fieldDefinitions.add(new StringField("landingPage") {
+    fieldDefinitions.add(new StringField("landingPage", new BaseDcatField.FlagsProvider() {
+      @Override
+      public long provide(IFeedRecord r, IFeedAttribute attr, Properties properties) {
+        ApplicationContext appCtx = ApplicationContext.getInstance();
+        ApplicationConfiguration appCfg = appCtx.getConfiguration();
+        boolean detailsAsDefaultLandingPage = Val.chkBool(appCfg.getCatalogConfiguration().getParameters().getValue("dcat.landingPage.default.details"),false);
+        return detailsAsDefaultLandingPage? DcatFieldDefinition.OBLIGATORY: 0;
+      }
+    }) {
+      
+      @Override
+      protected String getDefaultValue(IFeedRecord r, Properties properties) {
+        String root = properties.getProperty("@root");
+        String uuid = r.getUuid();
+        return root + "/catalog/search/resource/details.page?uuid=" + encode(uuid);
+      }
+
+      private String encode(String str) {
+        try {
+          return URLEncoder.encode(str, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+          return str;
+        }
+      }
+      
       @Override
       protected boolean validateValue(String value) {
         try {

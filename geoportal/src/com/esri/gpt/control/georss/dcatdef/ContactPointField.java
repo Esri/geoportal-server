@@ -37,7 +37,7 @@ public class ContactPointField implements DcatFieldDefinition {
       }
 
       @Override
-      protected String getDefaultValue(Properties properties) {
+      protected String getDefaultValue(IFeedRecord r, Properties properties) {
         return chkStr(properties.getProperty(fldName),"?");
       }
     });
@@ -56,7 +56,7 @@ public class ContactPointField implements DcatFieldDefinition {
       }
 
       @Override
-      protected String getDefaultValue(Properties properties) {
+      protected String getDefaultValue(IFeedRecord r, Properties properties) {
         String mbox = chkStr(properties.getProperty(fldName),"mailto:contactperson@example.org");
         mbox = validateEmail(mbox);
         return mbox;

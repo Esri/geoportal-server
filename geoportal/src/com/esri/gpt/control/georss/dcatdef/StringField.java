@@ -45,6 +45,15 @@ public class StringField extends BaseDcatField {
   public StringField(String fldName, long flags) {
     super(fldName, flags);
   }
+
+  /**
+   * Creates instance of the class.
+   * @param fldName field name
+   * @param flags flags provider
+   */
+  public StringField(String fldName, FlagsProvider flags) {
+    super(fldName, flags);
+  }
   
   /**
    * Reads value.
@@ -66,10 +75,11 @@ public class StringField extends BaseDcatField {
   
   /**
    * Gets default value.
+   * @param r record
    * @param properties properties
    * @return default value
    */
-  protected String getDefaultValue(Properties properties) {
+  protected String getDefaultValue(IFeedRecord r, Properties properties) {
     return "";
   }
 
@@ -79,8 +89,8 @@ public class StringField extends BaseDcatField {
     
     String value = Val.chkStr(attr!=null? readValue(attr): "");
     if (value.isEmpty() || !validateValue(value)) {
-      if ((flags & OBLIGATORY)!=0) {
-        value = getDefaultValue(properties);
+      if ((flags.provide(r, attr, properties) & OBLIGATORY)!=0) {
+        value = getDefaultValue(r, properties);
       } else {
         return;
       }

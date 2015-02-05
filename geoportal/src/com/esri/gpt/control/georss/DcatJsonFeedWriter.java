@@ -115,7 +115,8 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     properties.setProperty("spatial", sSpatial);
     properties.setProperty("temporal", sTemporal);
     
-    String contextParam = RequestContext.resolveBaseContextPath((HttpServletRequest) context.getServletRequest());
+    String root = RequestContext.resolveBaseContextPath((HttpServletRequest) context.getServletRequest());
+    String contextParam = root;
     String requestURI = ((HttpServletRequest)context.getServletRequest()).getRequestURI();
     String contextPath = ((HttpServletRequest)context.getServletRequest()).getContextPath();
     String queryString = Val.chkStr(((HttpServletRequest)context.getServletRequest()).getQueryString());
@@ -126,6 +127,8 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
         contextParam += "?" + queryString;
       }
     }
+    
+    properties.setProperty("@root", root);
     properties.setProperty("@context", contextParam);
     
     return properties;
