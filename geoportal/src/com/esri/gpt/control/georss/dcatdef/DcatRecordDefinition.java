@@ -107,7 +107,7 @@ public class DcatRecordDefinition {
     fieldDefinitions.add(new StringField("language"));
     fieldDefinitions.add(new StringField("landingPage") {
       @Override
-      protected boolean checkValue(String value) {
+      protected boolean validateValue(String value) {
         try {
           URL u = new URL(value);
           u.toURI();

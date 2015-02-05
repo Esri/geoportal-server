@@ -47,6 +47,10 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
     this.flags = flags;
   }
 
+  /**
+   * Gets output field name.
+   * @return field name
+   */
   protected String getOutFieldName() {
     return fldName;
   }

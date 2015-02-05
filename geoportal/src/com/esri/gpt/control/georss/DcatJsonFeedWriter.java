@@ -337,8 +337,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    */
   private String getIdentifierUrl(ResourceLinks links) {
     String identifierUrl = "";
-    for (int j = 0; j < links.size(); j++) {
-      ResourceLink link = links.get(j);
+    for (ResourceLink link : links) {
       if (link.getTag().equals(ResourceLink.TAG_METADATA)) {
         identifierUrl = link.getUrl();
         return identifierUrl;
@@ -351,6 +350,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    * Prints all links.
    *
    * @param links collection of resource links
+   * @param more <code>true</code> if more elements are coming
    * @param before flag to indicate if there will be more arguments
    */
   protected void printLinks(ResourceLinks links, boolean more, boolean before) {
@@ -361,12 +361,11 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     println("\"distribution\"" + sp() + ":" + sp() + "[");
     levelUp();
     boolean moreLinks = false;
-    for (int j = 0; j < links.size(); j++) {
+    for (ResourceLink link : links) {
       boolean bPrintLink = false;
       String format = "";
-      ResourceLink link = links.get(j);
       /*if (link.getTag().equals(ResourceLink.TAG_OPEN)) {
-        defaultValues.put("webService", link.getUrl());
+      defaultValues.put("webService", link.getUrl());
       }*/
       if (link.getTag().equals(ResourceLink.TAG_METADATA)) {
         bPrintLink = true;
@@ -399,6 +398,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    *
    * @param link resource link
    * @param more flag to indicate if there will be more arguments
+   * @param format format
    */
   protected void printLink(ResourceLink link, boolean more, String format) {
     if (!link.getTag().isEmpty() && !link.getUrl().isEmpty()) {
@@ -486,23 +486,21 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	    		value = value.substring(0,firstIdx);
 	    	}
             String [] valArr = value.split("/");
-            for (int i=0; i<valArr.length; i++) {
-              String val = valArr[i];
+            for (String val : valArr) {
               val = parseDateTime(val);
               if(dateFormat.length() > 0){
-                  SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-                  Date dt = null;
-                  try {
-                      dt = new IsoDateFormat().parseObject(value);
-                      if (dt!=null) {
-                        val = sdf.format(dt);
-                      } else {
-                        val = "";
-                      }
-
-                  } catch (ParseException e) {
-                      val = "";
+                SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+                try {
+                  Date dt = new IsoDateFormat().parseObject(value);
+                  if (dt!=null) {
+                    val = sdf.format(dt);
+                  } else {
+                    val = "";
                   }
+
+                } catch (ParseException e) {
+                  val = "";
+                }
               }
             }
             value = Val.join(valArr, "/");
@@ -586,13 +584,12 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     	  if(dcatField.isRequired()){
     		  if(dcatFieldName.equalsIgnoreCase("accessURL")){
     			  ResourceLinks links = r.getResourceLinks();
-    			  for (int j = 0; j < links.size(); j++) {
-    			      ResourceLink link = links.get(j);
-    			      if (link.getTag().equals(ResourceLink.TAG_METADATA)) { 			       
-    			    	  val = link.getUrl();
-    			    	  break;
-    			      }
-    			  }
+                  for (ResourceLink link : links) {
+                    if (link.getTag().equals(ResourceLink.TAG_METADATA)) {
+                      val = link.getUrl();
+                      break;
+                    }
+                  }
     		  }else{
     			  val =  defaultValues.getProperty(dcatFieldName);
     		  }
@@ -718,6 +715,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    * @param attrName attribute name
    * @return <code>true</code> if attribute can be printed
    */
+  @Override
   protected boolean checkAttr(String attrName) {
     Set<String> outFieldsSet = buildOutFieldsSet();
 

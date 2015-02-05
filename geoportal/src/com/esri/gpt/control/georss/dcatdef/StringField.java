@@ -55,7 +55,12 @@ public class StringField extends BaseDcatField {
     return attr.simplify().getValue().toString();
   }
   
-  protected boolean checkValue(String value) {
+  /**
+   * Validates value.
+   * @param value value to validate
+   * @return <code>true</code> if value is valid
+   */
+  protected boolean validateValue(String value) {
     return !Val.chkStr(value).isEmpty();
   }
   
@@ -73,7 +78,7 @@ public class StringField extends BaseDcatField {
     IFeedAttribute attr = getFeedAttribute(dcatSchemas, r);
     
     String value = Val.chkStr(attr!=null? readValue(attr): "");
-    if (value.isEmpty() || !checkValue(value)) {
+    if (value.isEmpty() || !validateValue(value)) {
       if ((flags & OBLIGATORY)!=0) {
         value = getDefaultValue(properties);
       } else {

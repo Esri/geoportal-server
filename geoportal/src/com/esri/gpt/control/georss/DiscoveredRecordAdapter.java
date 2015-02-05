@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.regex.Pattern;
 import org.apache.lucene.document.DateTools;
 
 /**
@@ -36,10 +35,10 @@ import org.apache.lucene.document.DateTools;
  */
 public class DiscoveredRecordAdapter implements IFeedRecord {
 
-  private Map<String,Map<String,IFeedAttribute>> collection = new HashMap<String, Map<String, IFeedAttribute>>();
-  private HashMap<String,Object[]> values = new HashMap<String, Object[]>();
-  private ResourceLinks resourceLinks = new ResourceLinks();
-  private ResourceIdentifier resourceIdentifier;
+  private final Map<String,Map<String,IFeedAttribute>> collection = new HashMap<String, Map<String, IFeedAttribute>>();
+  private final HashMap<String,Object[]> values = new HashMap<String, Object[]>();
+  private final ResourceLinks resourceLinks = new ResourceLinks();
+  private final ResourceIdentifier resourceIdentifier;
   
   public DiscoveredRecordAdapter(ResourceIdentifier resourceIdentifier, DiscoveredRecord record) {
     this.resourceIdentifier = resourceIdentifier;
