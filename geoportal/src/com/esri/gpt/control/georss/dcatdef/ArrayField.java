@@ -66,8 +66,7 @@ public class ArrayField extends BaseDcatField {
     return new ArrayList<String>();
   }
 
-  @Override
-  public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
+  public List<String> eval(Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) {
     IFeedAttribute attr = getFeedAttribute(dcatSchemas, r);
 
     ArrayList<String> value = new ArrayList<String>();
@@ -75,16 +74,24 @@ public class ArrayField extends BaseDcatField {
       if ((flags.provide(r, attr, properties) & OBLIGATORY) != 0) {
         value.addAll(getDefaultValue(properties));
       } else {
-        return;
+        return null;
       }
     } else {
       value = readValue(attr);
     }
-
-    jsonWriter.name(getOutFieldName()).beginArray();
-    for (String val: value) {
-      jsonWriter.value(val);
+    
+    return value;
+  }
+  
+  @Override
+  public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
+    List<String> value = eval(properties, dcatSchemas, r);
+    if (value!=null) {
+      jsonWriter.name(getOutFieldName()).beginArray();
+      for (String val: value) {
+        jsonWriter.value(val);
+      }
+      jsonWriter.endArray();
     }
-    jsonWriter.endArray();
   }
 }

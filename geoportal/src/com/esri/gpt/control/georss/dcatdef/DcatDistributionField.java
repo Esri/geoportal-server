@@ -21,12 +21,15 @@ import com.esri.gpt.control.georss.IFeedRecord;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Properties;
 
 /**
  * Dcat distribution definition.
  */
 public class DcatDistributionField implements DcatFieldDefinition {
+  private final ArrayField accessURLField = new ArrayField("accessURL");
+  private final ArrayField downloadURLField = new ArrayField("downloadURL");
 
   private final String name;
 
@@ -40,11 +43,40 @@ public class DcatDistributionField implements DcatFieldDefinition {
   
   @Override
   public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
+    List<String> accessURLValue = accessURLField.eval(properties, dcatSchemas, r);
+    List<String> downloadURLValue = downloadURLField.eval(properties, dcatSchemas, r);
+    
+    if ((accessURLValue!=null && !accessURLValue.isEmpty()) || (downloadURLValue!=null && !downloadURLValue.isEmpty())) {
+      jsonWriter.name(name).beginArray();
+      
+      if (accessURLValue!=null) {
+        for (String value: accessURLValue) {
+          jsonWriter.beginObject();
+          jsonWriter.name("@type").value("dcat:Distribution");
+          jsonWriter.name("accessURL").value(value);
+          jsonWriter.endObject();
+        }
+      }
+      
+      if (downloadURLValue!=null) {
+        for (String value: downloadURLValue) {
+          jsonWriter.beginObject();
+          jsonWriter.name("@type").value("dcat:Distribution");
+          jsonWriter.name("downloadURL").value(value);
+          jsonWriter.endObject();
+        }
+      }
+      
+      jsonWriter.endArray();
+    }
+    
+    /*
     jsonWriter.name(name).beginArray();
     for ( ResourceLink l: r.getResourceLinks()) {
       printLink(jsonWriter, properties, dcatSchemas, r, l);
     }
     jsonWriter.endArray();
+    */
   }
   
   /**

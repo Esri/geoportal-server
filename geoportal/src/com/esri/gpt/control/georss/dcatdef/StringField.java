@@ -82,9 +82,15 @@ public class StringField extends BaseDcatField {
   protected String getDefaultValue(IFeedRecord r, Properties properties) {
     return "";
   }
-
-  @Override
-  public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
+  
+  /**
+   * Evaluate.
+   * @param properties properties
+   * @param dcatSchemas schemas
+   * @param r record
+   * @return 
+   */
+  public String eval(Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) {
     IFeedAttribute attr = getFeedAttribute(dcatSchemas, r);
     
     String value = Val.chkStr(attr!=null? readValue(attr): "");
@@ -92,11 +98,19 @@ public class StringField extends BaseDcatField {
       if ((flags.provide(r, attr, properties) & OBLIGATORY)!=0) {
         value = getDefaultValue(r, properties);
       } else {
-        return;
+        return null;
       }
     }
     
-    jsonWriter.name(getOutFieldName()).value(value);
+    return value;
+  }
+
+  @Override
+  public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
+    String value = eval(properties, dcatSchemas, r);
+    if (value!=null) {
+      jsonWriter.name(getOutFieldName()).value(value);
+    }
   }
   
 }

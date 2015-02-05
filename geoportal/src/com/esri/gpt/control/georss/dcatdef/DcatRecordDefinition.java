@@ -79,6 +79,19 @@ public class DcatRecordDefinition {
     fieldDefinitions.add(new ContactPointField("contactPoint"));
     fieldDefinitions.add(new IdentifierField("identifier",DcatFieldDefinition.OBLIGATORY));
     fieldDefinitions.add(new StringField ("accessLevel",DcatFieldDefinition.OBLIGATORY){
+
+      @Override
+      protected String readValue(IFeedAttribute attr) {
+        String value = super.readValue(attr);
+        if (value.toLowerCase().contains("restricted")) {
+          return "restricted public";
+        }
+        if (value.toLowerCase().contains("private") || value.toLowerCase().contains("secret")) {
+          return "non-public";
+        }
+        return "public";
+      }
+      
       @Override
       protected String getDefaultValue(IFeedRecord r, Properties properties) {
         return chkStr(properties.getProperty(fldName),"public");
@@ -110,7 +123,7 @@ public class DcatRecordDefinition {
         return chkStr(properties.getProperty(fldName));
       }
     });
-    fieldDefinitions.add(new StringField("language"));
+    fieldDefinitions.add(new ArrayField("language"));
     fieldDefinitions.add(new StringField("landingPage", new BaseDcatField.FlagsProvider() {
       @Override
       public long provide(IFeedRecord r, IFeedAttribute attr, Properties properties) {
