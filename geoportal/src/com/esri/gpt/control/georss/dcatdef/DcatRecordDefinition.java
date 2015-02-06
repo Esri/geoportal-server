@@ -85,7 +85,7 @@ public class DcatRecordDefinition {
         if (value.toLowerCase().contains("restricted")) {
           return "restricted public";
         }
-        if (value.toLowerCase().contains("private") || value.toLowerCase().contains("secret")) {
+        if (value.toLowerCase().contains("private") || value.toLowerCase().contains("confidential") || value.toLowerCase().contains("secret")) {
           return "non-public";
         }
         return "public";

@@ -64,7 +64,7 @@ public class DcatDistributionField implements DcatFieldDefinition {
           jsonWriter.beginObject();
           jsonWriter.name("@type").value("dcat:Distribution");
           jsonWriter.name("accessURL").value(value);
-          jsonWriter.name("mediaType").value("application/example");
+          jsonWriter.name("mediaType").value("application/octet-stream");
           jsonWriter.endObject();
         }
       }
@@ -74,7 +74,7 @@ public class DcatDistributionField implements DcatFieldDefinition {
           jsonWriter.beginObject();
           jsonWriter.name("@type").value("dcat:Distribution");
           jsonWriter.name("downloadURL").value(value);
-          jsonWriter.name("mediaType").value("application/example");
+          jsonWriter.name("mediaType").value("application/octet-stream");
           jsonWriter.endObject();
         }
       }
