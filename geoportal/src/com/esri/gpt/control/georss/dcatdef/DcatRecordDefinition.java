@@ -25,7 +25,6 @@ import static com.esri.gpt.framework.util.Val.chkStr;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -151,13 +150,7 @@ public class DcatRecordDefinition {
       
       @Override
       protected boolean validateValue(String value) {
-        try {
-          URL u = new URL(value);
-          u.toURI();
-          return true;
-        } catch (Exception ex) {
-          return false;
-        }
+        return !Val.chkUrl(value).isEmpty();
       }
     });
     fieldDefinitions.add(new SpatialField("spatial"));

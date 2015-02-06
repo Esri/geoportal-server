@@ -18,9 +18,9 @@ package com.esri.gpt.control.georss.dcatdef;
 import com.esri.gpt.catalog.search.ResourceLink;
 import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedRecord;
+import com.esri.gpt.framework.util.Val;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 
@@ -28,8 +28,18 @@ import java.util.Properties;
  * Dcat distribution definition.
  */
 public class DcatDistributionField implements DcatFieldDefinition {
-  private final ArrayField accessURLField = new ArrayField("accessURL");
-  private final ArrayField downloadURLField = new ArrayField("downloadURL");
+  private final ArrayField accessURLField = new ArrayField("accessURL") {
+    @Override
+    protected boolean validateValue(String value) {
+      return !Val.chkUrl(value).isEmpty();
+    }
+  };
+  private final ArrayField downloadURLField = new ArrayField("downloadURL") {
+    @Override
+    protected boolean validateValue(String value) {
+      return !Val.chkUrl(value).isEmpty();
+    }
+  };
 
   private final String name;
 
@@ -54,6 +64,7 @@ public class DcatDistributionField implements DcatFieldDefinition {
           jsonWriter.beginObject();
           jsonWriter.name("@type").value("dcat:Distribution");
           jsonWriter.name("accessURL").value(value);
+          jsonWriter.name("mediaType").value("application/example");
           jsonWriter.endObject();
         }
       }
@@ -63,20 +74,13 @@ public class DcatDistributionField implements DcatFieldDefinition {
           jsonWriter.beginObject();
           jsonWriter.name("@type").value("dcat:Distribution");
           jsonWriter.name("downloadURL").value(value);
+          jsonWriter.name("mediaType").value("application/example");
           jsonWriter.endObject();
         }
       }
       
       jsonWriter.endArray();
     }
-    
-    /*
-    jsonWriter.name(name).beginArray();
-    for ( ResourceLink l: r.getResourceLinks()) {
-      printLink(jsonWriter, properties, dcatSchemas, r, l);
-    }
-    jsonWriter.endArray();
-    */
   }
   
   /**
@@ -105,7 +109,7 @@ public class DcatDistributionField implements DcatFieldDefinition {
       format = "HTML";
     }
     
-    String sUrl = checkUrl(link.getUrl());
+    String sUrl = Val.chkUrl(link.getUrl());
     if (linkName!=null && !sUrl.isEmpty()) {
       jsonWriter.beginObject();
       jsonWriter.name("@type").value("dcat:Distribution");
@@ -113,16 +117,6 @@ public class DcatDistributionField implements DcatFieldDefinition {
       jsonWriter.name("mediaType").value(mediaType);
       jsonWriter.name("format").value(format);
       jsonWriter.endObject();
-    }
-  }
-  
-  private String checkUrl(String url) {
-    try {
-      URL u = new URL(url);
-      u.toURI();
-      return url;
-    } catch (Exception ex) {
-      return "";
     }
   }
   

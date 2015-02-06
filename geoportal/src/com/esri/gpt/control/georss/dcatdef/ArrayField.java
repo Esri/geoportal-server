@@ -19,6 +19,7 @@ import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedRecord;
 import static com.esri.gpt.control.georss.dcatdef.DcatFieldDefinition.OBLIGATORY;
+import com.esri.gpt.framework.util.Val;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,19 +66,41 @@ public class ArrayField extends BaseDcatField {
   protected List<String> getDefaultValue(Properties properties) {
     return new ArrayList<String>();
   }
+  
+  /**
+   * Validates value.
+   * @param value value to validate
+   * @return <code>true</code> if value is valid
+   */
+  protected boolean validateValue(String value) {
+    return !Val.chkStr(value).isEmpty();
+  }
 
+  /**
+   * Evaluate array string
+   * @param properties properties
+   * @param dcatSchemas schemas
+   * @param r record
+   * @return 
+   */
   public List<String> eval(Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) {
     IFeedAttribute attr = getFeedAttribute(dcatSchemas, r);
 
     ArrayList<String> value = new ArrayList<String>();
-    if (attr == null) {
+    if (attr!=null) {
+      for (String val: readValue(attr)) {
+        if (validateValue(val)) {
+          value.add(val);
+        }
+      }
+    }
+    
+    if (value.isEmpty()) {
       if ((flags.provide(r, attr, properties) & OBLIGATORY) != 0) {
         value.addAll(getDefaultValue(properties));
       } else {
         return null;
       }
-    } else {
-      value = readValue(attr);
     }
     
     return value;
