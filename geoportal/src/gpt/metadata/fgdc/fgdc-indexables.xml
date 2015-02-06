@@ -36,7 +36,9 @@
      xpath="/metadata/Esri/primaryOnlink"/>
   <property meaning="resource.check.urls" xpathType="NODESET"
      xpath="/metadata/distinfo/stdorder/digform/digtopt/onlinopt/computer/networka/networkr"/>
-       
+  <property meaning="resource.url" xpath="/metadata/idinfo/citation/citeinfo/onlink[1]"/>
+  <property meaning="website.url" xpath="/metadata/idinfo/citation/citeinfo/onlink[2]"/>
+  
   <property meaning="thumbnail.url" xpath="/metadata/idinfo/browse/browsen"/>
     
   <property meaning="contentType" xpath="/metadata/distinfo/resdesc"/>
@@ -61,13 +63,26 @@
   
   <property meaning="body" xpathType="STRING" xpath="/*"/>
 
-    <!-- dcat-specific -->
-  <property meaning="dcat.accessLevelComment" xpath="/metadata/idinfo/accconst | /metadata/idinfo/useconst | /metadata/distinfo/distliab"/>
-  <property meaning="dcat.mbox" xpath="/metadata/idinfo/ptcontac/cntinfo/cntemail"/>
-  <property meaning="dcat.person" xpath="/metadata/idinfo/ptcontac/cntinfo/cntorgp/cntper" />
+  <!-- dcat-specific -->
+  <property meaning="dcat.accessLevel" xpath="/metadata/idinfo/secinfo/secclass"/>
+  <property meaning="dcat.accessLevelComment" xpath="/metadata/idinfo/accconst"/> <!-- | /metadata/idinfo/useconst | /metadata/distinfo/distliab"/>-->
+  <property meaning="dcat.mbox" xpath="/metadata/distinfo/distrib/cntinfo/cntemail"/>
+  <property meaning="dcat.person" xpath="/metadata/distinfo/distrib/cntinfo/cntperp/cntper | /metadata/distinfo/distrib/cntinfo/cntorgp/cntper" />
   <property meaning="dcat.dataDictionary" xpath="/metadata/idinfo/keywords/theme/themekt | /metadata/eainfo/overview/eadetcit" />
   <property meaning="dcat.modified" xpath="/metadata/idinfo/citation/citeinfo/pubdate"/>
-  <property meaning="dcat.publisher" xpath="/metadata/idinfo/citation/citeinfo/pubinfo/publish | /metadata/distinfo/distrib/cntinfo/cntperp/cntper | /metadata/distinfo/distrib/cntinfo/cntorgp/cntorg"/>
+  <property meaning="dcat.publisher" xpath="/metadata/distinfo/distrib/cntinfo/cntperp/cntorg | /metadata/distinfo/distrib/cntinfo/cntorgp/cntorg"/>
   <property meaning="dcat.format" xpath="/metadata/distinfo/storder/digform/digtinfo/fname"/>
-  <property meaning="dcat.accessUrl" xpath="/metadata/distinfo/stdorder/digform/digtopt/onlinopt/computer/networka/networkr"/>
+  <property meaning="dcat.accrualPeriodicity" xpath="/metadata/idinfo/status/update"/>
+  <!-- EPA URL Convention -->
+  <property meaning="dcat.accessUrl" xpath="/metadata/idinfo/citation/citeinfo/onlink[1]"/>
+  <property meaning="dcat.downloadUrl" xpath="/metadata/idinfo/citation/citeinfo/onlink[1]"/>
+  <property meaning="dcat.webService" xpath="/metadata/idinfo/citation/citeinfo/onlink[2]"/>
+  <property meaning="dcat.references" xpath="/metadata/idinfo/citation/citeinfo/onlink[3]"/>
+  <property meaning="dcat.landingPage" xpath="/metadata/idinfo/citation/citeinfo/onlink[4]"/>  
+ 
+  <!-- Full-text search -->
+  <property meaning="body" xpathType="STRING" xpath="//*"/>
+  <property meaning="metadataFormat" xpathType="STRING" xpath="'fgdc'"/>
+
 </indexables>
+

@@ -45,7 +45,7 @@
   </property-meaning> 
  
   <property-meaning name="anytext" meaningType="anytext" valueType="String" comparisonType="terms" allowLeadingWildcard="true">
-    <consider>title,abstract,keywords,body,contentType,dataTheme,title.org</consider>
+    <consider>title,abstract,keywords,body,contentType,dataTheme,title.org,dcat.person,dcat.publisher,publisher</consider>
     <dc name="AnyText" aliases="csw:AnyText,any,csw:Any"/>
   </property-meaning> 
   
@@ -75,7 +75,7 @@
   
   <property-meaning name="resource.check.urls" valueType="String" comparisonType="terms">
   </property-meaning> 
-  
+ 
   <property-meaning name="thumbnail.url" meaningType="thumbnailurl" valueType="String" comparisonType="value">
     <dc name="dct:references" scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Thumbnail"/>
   </property-meaning>
@@ -96,8 +96,8 @@
   
   <property-meaning name="relation" valueType="String" comparisonType="keyword">
     <dc name="dc:relation" aliases="relation"/>
-  </property-meaning> 
-  
+  </property-meaning>
+
   <property-meaning name="publisher" valueType="String" comparisonType="terms">
     <dc name="dc:publisher" />
   </property-meaning>
@@ -121,7 +121,7 @@
   <property-meaning name="accessRights" valueType="String" comparisonType="keyword">
     <dc name="dct:accessRights" aliases="accessRights"/>
   </property-meaning>
-
+  
   <!-- time period of the content (timeperiod.l.[n], timeperiod.u.[n] -->
   <property-meaning name="timeperiod" valueType="timeperiod" comparisonType="value">
     <gpt name="timeperiod"/>
@@ -145,8 +145,24 @@
   </property-meaning>
   <property-meaning name="timeperiod.num" valueType="Long" comparisonType="value">
     <gpt name="timeperiod.num"/>
+
+  </property-meaning>
+   <property-meaning name="sys.owner" valueType="String" comparisonType="value">
+    <dc name="dc:owner" aliases="owner"/>
   </property-meaning>
 
+    <property-meaning name="sys.childlist" valueType="String" comparisonType="keyword">
+        <dc name="dc:childlist" aliases="childlist"/>
+    </property-meaning>
+    
+    <property-meaning name="sys.parentlist" valueType="String" comparisonType="keyword">
+        <dc name="dc:parentlist" aliases="parentlist"/>
+    </property-meaning>
+    
+    <property-meaning name="sys.collection" valueType="String" comparisonType="keyword">
+        <dc name="dc:collection" aliases="collection"/>
+    </property-meaning>
+    
   <!-- ================================================================================= -->
       
   <!--  Dublin Core response property sets (brief, summary, full) -->
@@ -159,7 +175,7 @@
      <summary>
       <dc>
         <meaning-names>fileIdentifier,uuid,title</meaning-names>
-        <meaning-names>contentType,dataTheme</meaning-names>
+                <meaning-names>contentType,dataTheme,sys.childlist,sys.parentlist</meaning-names>
         <meaning-names>dateModified,abstract</meaning-names>
         <meaning-names>resource.url,website.url,thumbnail.url,xml.url</meaning-names>
         <meaning-names>geometry,date,relation</meaning-names>
@@ -168,7 +184,7 @@
     <full>
       <dc>
         <meaning-names>fileIdentifier,uuid,title</meaning-names>
-        <meaning-names>contentType,dataTheme</meaning-names>
+        <meaning-names>contentType,dataTheme,sys.childlist,sys.parentlist</meaning-names>
         <meaning-names>dateModified,abstract</meaning-names>
         <meaning-names>resource.url,website.url,thumbnail.url,xml.url</meaning-names>
         <meaning-names>geometry,date,relation</meaning-names>
@@ -227,9 +243,6 @@
   </property-meaning> 
   <property-meaning name="apiso.OrganizationName" valueType="String" comparisonType="terms">
     <apiso name="apiso:OrganizationName"/>
-  </property-meaning> 
-  <property-meaning name="apiso.OrganisationName" valueType="String" comparisonType="terms">
-    <apiso name="apiso:OrganisationName"/>
   </property-meaning> 
   <property-meaning name="apiso.HasSecurityConstraints" valueType="String" comparisonType="terms">
     <apiso name="apiso:HasSecurityConstraints"/>
@@ -338,7 +351,7 @@
 
  <property-meaning name="apiso.ConditionApplyingToAccessAndUse" valueType="String" comparisonType="keyword">
     <apiso name="apiso:ConditionApplyingToAccessAndUse"/>
-  </property-meaning>  
+  </property-meaning>    
   
   <property-meaning name="apiso.inspireSpatialDataThemes" valueType="String" comparisonType="keyword">
     <apiso name="apiso:inspireSpatialDataThemes"/>
@@ -357,7 +370,10 @@
   
   <property-meaning name="fgdc.multidate" valueType="Timestamp" comparisonType="value">
   </property-meaning>
-  
+  <property-meaning name="dcat.programCode" valueType="String" comparisonType="value">
+  </property-meaning>  
+  <property-meaning name="dcat.accessLevel" valueType="String" comparisonType="value">
+  </property-meaning>  
   <property-meaning name="dcat.accessLevelComment" valueType="String" comparisonType="value">
   </property-meaning>
   <property-meaning name="dcat.mbox" valueType="String" comparisonType="value">
@@ -372,9 +388,29 @@
   </property-meaning>
   <property-meaning name="dcat.publisher" valueType="String" comparisonType="value">
   </property-meaning>  
- <property-meaning name="dcat.accessUrl" valueType="String" comparisonType="value">
+  <property-meaning name="dcat.accessUrl" valueType="String" comparisonType="value">
   </property-meaning>  
+  <property-meaning name="dcat.downloadUrl" valueType="String" comparisonType="value">
+  </property-meaning>  
+  <property-meaning name="dcat.webService" valueType="String" comparisonType="value">
+  </property-meaning> 
    <property-meaning name="dcat.format" valueType="String" comparisonType="value">
   </property-meaning>  
-        
+<!--Added by Torrin Hultgren 2/21/13 to include "Optional" dcat components-->
+   <property-meaning name="dcat.issued" valueType="Timestamp" comparisonType="value">
+  </property-meaning> 
+   <property-meaning name="dcat.accrualPeriodicity" valueType="String" comparisonType="value">
+  </property-meaning> 
+     <property-meaning name="dcat.language" valueType="String" comparisonType="value">
+  </property-meaning> 
+     <property-meaning name="dcat.dataQuality" valueType="String" comparisonType="value">
+  </property-meaning> 
+     <property-meaning name="dcat.references" valueType="String" comparisonType="value">
+  </property-meaning> 
+     <property-meaning name="dcat.size" valueType="String" comparisonType="value">
+  </property-meaning> 
+     <property-meaning name="dcat.landingPage" valueType="String" comparisonType="value">
+  </property-meaning> 
+    <property-meaning name="metadataFormat" valueType="String" comparisonType="value">
+  </property-meaning>   
 </property-meanings>
