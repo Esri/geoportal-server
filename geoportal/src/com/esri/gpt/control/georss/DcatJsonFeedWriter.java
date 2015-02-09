@@ -115,17 +115,23 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     properties.setProperty("spatial", sSpatial);
     properties.setProperty("temporal", sTemporal);
     
-    String root = RequestContext.resolveBaseContextPath((HttpServletRequest) context.getServletRequest());
+    HttpServletRequest httpServletRequest = (HttpServletRequest) context.getServletRequest();
+    String root = httpServletRequest!=null? RequestContext.resolveBaseContextPath(httpServletRequest):
+      Val.chkStr(ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getParameters().getValue("reverseProxy.baseContextPath"));
     String contextParam = root;
-    String requestURI = ((HttpServletRequest)context.getServletRequest()).getRequestURI();
-    String contextPath = ((HttpServletRequest)context.getServletRequest()).getContextPath();
-    String queryString = Val.chkStr(((HttpServletRequest)context.getServletRequest()).getQueryString());
-    if (requestURI.startsWith(contextPath)) {
-      requestURI = requestURI.substring(contextPath.length());
-      contextParam += requestURI;
-      if (!queryString.isEmpty()) {
-        contextParam += "?" + queryString;
+    if (httpServletRequest!=null) {
+      String requestURI = httpServletRequest.getRequestURI();
+      String contextPath = httpServletRequest.getContextPath();
+      String queryString = Val.chkStr(((HttpServletRequest)context.getServletRequest()).getQueryString());
+      if (requestURI.startsWith(contextPath)) {
+        requestURI = requestURI.substring(contextPath.length());
+        contextParam += requestURI;
+        if (!queryString.isEmpty()) {
+          contextParam += "?" + queryString;
+        }
       }
+    } else {
+      contextParam = root + "/dcat.json";
     }
     
     properties.setProperty("@root", root);
