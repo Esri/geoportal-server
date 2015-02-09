@@ -16,6 +16,7 @@
 package com.esri.gpt.control.georss.dcatdef;
 
 import com.esri.gpt.control.georss.DcatSchemas;
+import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedRecord;
 import static com.esri.gpt.framework.util.Val.chkStr;
 import com.google.gson.stream.JsonWriter;
@@ -30,6 +31,18 @@ public class PublisherField implements DcatFieldDefinition {
   private static final ArrayList<DcatFieldDefinition> fieldDefinitions = new ArrayList<DcatFieldDefinition>();
   static {
     fieldDefinitions.add(new StringField("publisher",DcatFieldDefinition.OBLIGATORY){
+
+      @Override
+      protected String readValue(IFeedAttribute attr) {
+        StringBuilder sb = new StringBuilder();
+        for (String s: attr.asList()) {
+            if (!s.isEmpty()) {
+              sb.append(sb.length()>0? ", ": "").append(s);
+            }
+        }
+        return sb.toString();
+      }
+      
       @Override
       protected String getOutFieldName() {
         return "name";
