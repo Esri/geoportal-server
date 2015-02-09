@@ -31,6 +31,18 @@ public class ContactPointField implements DcatFieldDefinition {
   private static final ArrayList<DcatFieldDefinition> fieldDefinitions = new ArrayList<DcatFieldDefinition>();
   static {
     fieldDefinitions.add(new StringField("contactPoint",DcatFieldDefinition.OBLIGATORY){
+
+      @Override
+      protected String readValue(IFeedAttribute attr) {
+        StringBuilder sb = new StringBuilder();
+        for (String s: attr.asList()) {
+            if (!s.isEmpty()) {
+              sb.append(sb.length()>0? ", ": "").append(s);
+            }
+        }
+        return sb.toString();
+      }
+      
       @Override
       protected String getOutFieldName() {
         return "fn";

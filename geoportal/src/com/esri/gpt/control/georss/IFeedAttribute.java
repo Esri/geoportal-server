@@ -17,6 +17,8 @@ package com.esri.gpt.control.georss;
 
 import com.esri.gpt.framework.isodate.IsoDateFormat;
 import com.esri.gpt.framework.util.Val;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +47,11 @@ public interface IFeedAttribute {
    * @return attribute
    */
   IFeedAttribute simplify();
+  /**
+   * As list.
+   * @return list of values
+   */
+  List<String> asList();
   
   /**
    * Feed attribute factory.
@@ -132,6 +139,13 @@ public interface IFeedAttribute {
     public IFeedAttribute simplify() {
       return this;
     }
+
+    @Override
+    public List<String> asList() {
+      return Arrays.asList(new String[]{});
+    }
+    
+    
   }
   
   /**
@@ -174,6 +188,11 @@ public interface IFeedAttribute {
     public IFeedAttribute simplify() {
       return this;
     }
+
+    @Override
+    public List<String> asList() {
+      return Arrays.asList(new String[]{value});
+    }
   }
   
   /**
@@ -210,6 +229,11 @@ public interface IFeedAttribute {
     @Override
     public IFeedAttribute simplify() {
       return this;
+    }
+
+    @Override
+    public List<String> asList() {
+      return Arrays.asList(new String[]{number.toString()});
     }
   }
   
@@ -248,6 +272,11 @@ public interface IFeedAttribute {
     public IFeedAttribute simplify() {
       return this;
     }
+
+    @Override
+    public List<String> asList() {
+      return Arrays.asList(new String[]{DF.format(date)});
+    }
   }
   
   /**
@@ -284,6 +313,11 @@ public interface IFeedAttribute {
     @Override
     public IFeedAttribute simplify() {
       return this;
+    }
+
+    @Override
+    public List<String> asList() {
+      return Arrays.asList(new String[]{Val.escapeStrForJson(obj.toString())});
     }
   }
   
@@ -337,5 +371,15 @@ public interface IFeedAttribute {
           return this;
       }
     }
+
+    @Override
+    public List<String> asList() {
+      ArrayList<String> lst = new ArrayList<String>();
+      for (IFeedAttribute attr: list) {
+        lst.addAll(attr.asList());
+      }
+      return lst;
+    }
+    
  }
 }
