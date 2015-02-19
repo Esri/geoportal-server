@@ -135,7 +135,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     }
     
     properties.setProperty("@root", root);
-    properties.setProperty("@context", contextParam);
+    properties.setProperty("@id", contextParam);
     
     return properties;
   }
