@@ -32,6 +32,7 @@ public class DcatHeaderDefinition {
    */
   public void print(JsonWriter jsonWriter, Properties properties) throws IOException {
     String context = chkStr(properties.getProperty("@id"));
+    jsonWriter.name("@context").value("https://project-open-data.cio.gov/v1.1/schema/catalog.jsonld");
     if (!context.isEmpty()) {
       jsonWriter.name("@id").value(properties.getProperty("@id"));
     }
