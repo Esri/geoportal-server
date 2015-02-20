@@ -109,9 +109,10 @@ public static boolean chkEmail(String s) {
 public static String chkUrl(String url) {
   url = chkStr(url);
   try {
-    new URL(url);
+    URL u = new URL(url);
+    u.toURI();
     return url;
-  } catch (MalformedURLException ex) {
+  } catch (Exception ex) {
     return "";
   }
 }
