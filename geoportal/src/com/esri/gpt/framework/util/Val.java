@@ -111,7 +111,7 @@ public static String chkUrl(String url) {
   try {
     URL u = new URL(url);
     u.toURI();
-    return url;
+    return u.toExternalForm();
   } catch (Exception ex) {
     return "";
   }

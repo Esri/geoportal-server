@@ -72,8 +72,8 @@ public class ArrayField extends BaseDcatField {
    * @param value value to validate
    * @return <code>true</code> if value is valid
    */
-  protected boolean validateValue(String value) {
-    return !Val.chkStr(value).isEmpty();
+  protected String validateValue(String value) {
+    return Val.chkStr(value);
   }
 
   /**
@@ -89,7 +89,8 @@ public class ArrayField extends BaseDcatField {
     ArrayList<String> value = new ArrayList<String>();
     if (attr!=null) {
       for (String val: readValue(attr)) {
-        if (validateValue(val)) {
+        val = validateValue(val);
+        if (!val.isEmpty()){
           value.add(val);
         }
       }

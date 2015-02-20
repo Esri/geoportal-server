@@ -30,14 +30,14 @@ import java.util.Properties;
 public class DcatDistributionField implements DcatFieldDefinition {
   private final ArrayField accessURLField = new ArrayField("accessURL") {
     @Override
-    protected boolean validateValue(String value) {
-      return !Val.chkUrl(value).isEmpty();
+    protected String validateValue(String value) {
+      return Val.chkUrl(value);
     }
   };
   private final ArrayField downloadURLField = new ArrayField("downloadURL") {
     @Override
-    protected boolean validateValue(String value) {
-      return !Val.chkUrl(value).isEmpty();
+    protected String validateValue(String value) {
+      return Val.chkUrl(value);
     }
   };
 
