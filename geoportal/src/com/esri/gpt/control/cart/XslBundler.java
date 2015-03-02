@@ -13,9 +13,11 @@
  * limitations under the License.
  */
 package com.esri.gpt.control.cart;
+import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.XsltTemplate;
+import javax.servlet.ServletException;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -51,6 +53,9 @@ public class XslBundler extends KeysetProcessor {
     String sMimeType = Val.chkStr(request.getParameter("mimeType"));
     String sContentDisposition = Val.chkStr(request.getParameter("contentDisposition"));
     if ((keys.length > 0) && (sXsltPath.length() > 0)) {
+      if (!assertWhiteList(context, "catalog.cart.xslt.whitelist", sXsltPath)) {
+        throw new ServletException("Invalid xslt parameter");
+      }
       XsltTemplate template = this.getCompiledTemplate(sXsltPath);
       ServletOutputStream out = response.getOutputStream(); 
             
@@ -77,6 +82,21 @@ public class XslBundler extends KeysetProcessor {
         out.close();
       }
     }
+  }
+  
+  private static boolean assertWhiteList(RequestContext context, String whileListName, String value) {
+    StringAttributeMap cfgParams = context.getCatalogConfiguration().getParameters(); 
+    String whiteListValue = cfgParams.getValue(whileListName);
+    
+    if (whiteListValue!=null) {
+      for (String whiteListElement: whiteListValue.split(",")) {
+        if (whiteListElement.trim().equals(value)) {
+          return true;
+        }
+      }
+    }
+    
+    return false;
   }
 
 }

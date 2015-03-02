@@ -22,6 +22,7 @@ import com.esri.gpt.server.csw.provider.components.OperationContext;
 import com.esri.gpt.server.csw.provider.local.OriginalXmlProvider;
 
 import java.io.IOException;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.TransformerException;
@@ -89,6 +90,9 @@ public abstract class KeysetProcessor {
       sClassName = Val.chkStr(cfg.getValue("catalog.cart.processor"));
     }
     if (sClassName.length() > 0) {
+      if (!assertWhiteList(context, "catalog.cart.processor.whitelist", sClassName)) {
+        throw new ServletException("Invalid xslt parameter");
+      }
       Class<?> cls = Class.forName(sClassName);
       Object obj = cls.newInstance();
       if (obj instanceof KeysetProcessor) {
@@ -140,4 +144,19 @@ public abstract class KeysetProcessor {
     return xmlProvider.provideOriginalXml(opContext,id);
   }
 
+  private static boolean assertWhiteList(RequestContext context, String whileListName, String value) {
+    StringAttributeMap cfgParams = context.getCatalogConfiguration().getParameters(); 
+    String whiteListValue = cfgParams.getValue(whileListName);
+    
+    if (whiteListValue!=null) {
+      for (String whiteListElement: whiteListValue.split(",")) {
+        if (whiteListElement.trim().equals(value)) {
+          return true;
+        }
+      }
+    }
+    
+    return false;
+  }
+  
 }

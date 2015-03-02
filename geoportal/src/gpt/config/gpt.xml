@@ -415,10 +415,14 @@
             - catalog.cart.enabled: enables or disables the cart. Default: false
             - catalog.cart.maxItems: maximum number of items in the cart. Default: 10
             - catalog.cart.processor: the Java class used to process items Default: none
+            - catalog.cart.processor.whitelist: comma-separated list of processors allowed to pass as an argument
+            - catalog.cart.xslt.whitelist: comma-separated list of xslt allowed to apss as an argument
         -->
         <parameter key="catalog.cart.enabled" value="false"/>
         <parameter key="catalog.cart.maxItems" value="100"/>
         <parameter key="catalog.cart.processor" value="com.esri.gpt.control.cart.ZipXmls"/>
+        <parameter key="catalog.cart.processor.whitelist" value="com.esri.gpt.control.cart.ZipXmls"/>
+        <parameter key="catalog.cart.xslt.whitelist" value=""/>
 
 		<!-- Mapping file to map dcat fields to lucene index fields -->
 		<parameter key="dcat.mappings" value="gpt/metadata/dcat-mappings.xml"/>
