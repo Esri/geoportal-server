@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 package com.esri.gpt.control.cart;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -24,7 +25,7 @@ import java.util.Set;
 public class Cart {
   
   /** instance variables ====================================================== */
-  private Map<String,String> items = new ConcurrentHashMap<String,String>();
+  private Map<String,Map<String,Object>> items = new ConcurrentHashMap<String,Map<String,Object>>();
   
   /** constructors ============================================================ */
   
@@ -38,7 +39,7 @@ public class Cart {
    * @param key the key
    */
   public void add(String key) {
-    this.items.put(key,key);
+    this.items.put(key,new HashMap<String,Object>());
   }
   
   /**
@@ -51,6 +52,7 @@ public class Cart {
   /**
    * Adds a key to the collection.
    * @param key the key
+   * @return <code>true</code> if key found in the collection
    */
   public boolean containsKey(String key) {
     return this.items.containsKey(key);
@@ -80,4 +82,12 @@ public class Cart {
     return this.items.size();
   }
 
+  /**
+   * Returns attribute map for the specific key.
+   * @param key key
+   * @return attribute map or <code>null</code> if the key is not present
+   */
+  public Map<String,Object> attrMap(String key) {
+    return this.items.get(key);
+  }
 }

@@ -186,25 +186,7 @@ dojo.declare("gpt.form.Cart",null,{
     
     var addAllToCart = dojo.byId("frmSearchCriteria\:srToggle");
     
-    var connectItems = dojo.hitch(this,function(oKeys){
-      if ((typeof(oKeys) == "undefined") || (oKeys == null)) {
-        oKeys = new Array();
-      }
-      for (var i=0;i<jsMetadata.records.length;i++) {
-        var oRec = jsMetadata.records[i];
-        if ((typeof(oRec) != "undefined") && (oRec != null) &&
-            (typeof(oRec.uuid) != "undefined") && (oRec.uuid != null) && (oRec.uuid != "")) {
-          var sUuid = oRec.uuid;
-          var sId = "frmSearchCriteria:mdRecords:"+i+":smallImgContentType";
-          var elImg = dojo.byId(sId);
-          if (elImg != null) {
-            var elChkCtl = this.makeCheckControl(elImg.parentNode,oKeys,sUuid);
-            if (elChkCtl != null) {
-              elImg.parentNode.insertBefore(elChkCtl,elImg);
-            }
-          }
-        }
-      } 
+    var connectAddAllToCart = dojo.hitch(this,function(){
       
       this.toggleCheckAll();
       
@@ -234,6 +216,29 @@ dojo.declare("gpt.form.Cart",null,{
           }
         }));
       }
+    });
+    
+    var connectItems = dojo.hitch(this,function(oKeys){
+      if ((typeof(oKeys) == "undefined") || (oKeys == null)) {
+        oKeys = new Array();
+      }
+      for (var i=0;i<jsMetadata.records.length;i++) {
+        var oRec = jsMetadata.records[i];
+        if ((typeof(oRec) != "undefined") && (oRec != null) &&
+            (typeof(oRec.uuid) != "undefined") && (oRec.uuid != null) && (oRec.uuid != "")) {
+          var sUuid = oRec.uuid;
+          var sId = "frmSearchCriteria:mdRecords:"+i+":smallImgContentType";
+          var elImg = dojo.byId(sId);
+          if (elImg != null) {
+            var elChkCtl = this.makeCheckControl(elImg.parentNode,oKeys,sUuid);
+            if (elChkCtl != null) {
+              elImg.parentNode.insertBefore(elChkCtl,elImg);
+            }
+          }
+        }
+      } 
+      connectAddAllToCart();
+      this.executeTryKeysAll();
     });
     
     if ((typeof(jsMetadata) != "undefined") && (jsMetadata != null) &&
@@ -377,6 +382,69 @@ dojo.declare("gpt.form.Cart",null,{
     }));
   },
   
+  callTryKeys: function(keys,callback,error) {
+    var sUrl = this.getCartUrl();
+    sUrl += "/try";
+    dojo.xhrGet({
+      handleAs: "json",
+      url: sUrl,
+      content: { keys: keys.join(",")},
+      preventCache: true,
+      load: callback,
+      error: error
+    });
+  },
+  
+  callTryKeysAll: function(callback,error) {
+    var keys = [];
+    dojo.forEach(jsMetadata.records,dojo.hitch(this,function(record){
+      keys.push(record.uuid);
+    }));
+    this.callTryKeys(keys,callback,error);
+  },
+  
+  listUncheckedBoxes: function() {
+    var boxes = [];
+    
+    var mdRecordsId = "frmSearchCriteria:mdRecords";
+    var mdRecords = dojo.byId(mdRecordsId);
+    
+    if (mdRecords) {
+      dojo.query("input.gptCartCheckBox",mdRecords).forEach(dojo.hitch(this,function(checkBox){
+        if (!checkBox.checked) {
+          boxes.push(checkBox);
+        }
+      }));
+    }
+      
+    return boxes;
+  },
+  
+  listUncheckedKeys: function() {
+    var keys = [];
+    dojo.forEach(this.listUncheckedBoxes(),dojo.hitch(this,function(checkBox){
+      keys.push(checkBox.sKey);
+    }));
+    return keys;
+  },
+  
+  executeTryKeysAll: function() {
+    var callback = dojo.hitch(this,function(response){
+      console.log("executeTryKeysAll response", response);
+      dojo.forEach(this.listUncheckedBoxes(),dojo.hitch(this,function(checkBox){
+          if (response.accepted!=null && response.accepted.indexOf(checkBox.sKey)>=0) {
+            checkBox.style.visibility = "visible";
+          } else if (response.rejected!=null && response.rejected.indexOf(checkBox.sKey)>=0) {
+            checkBox.style.visibility = "hidden";
+          }
+      }));
+    });
+    var error = dojo.hitch(this,function(error){
+      console.log("executeTryKeysAll error", error);
+    });
+    this.callTryKeys(this.listUncheckedKeys(),callback,error);
+  },
+  
   /**
    * Makes a check control for use on the search or browse pages.
    * @function 
@@ -421,6 +489,7 @@ dojo.declare("gpt.form.Cart",null,{
         load: dojo.hitch(this,function(responseObject,ioArgs) {
           this.toggleCheckAll();
           this._setCount(responseObject);
+          this.executeTryKeysAll();
         })
       });
     });  
@@ -446,6 +515,7 @@ dojo.declare("gpt.form.Cart",null,{
     });
     
     var elChk = document.createElement("input");
+    elChk.sKey = sKey;
     elChk.className = "gptCartCheckBox";
     if (dojo.isIE <= 8) {
       if (bChecked) {

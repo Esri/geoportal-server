@@ -18,6 +18,10 @@ import com.esri.gpt.framework.context.BaseServlet;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
+import com.google.gson.internal.bind.JsonTreeWriter;
+import com.google.gson.stream.JsonWriter;
+import java.io.PrintWriter;
+import java.util.Arrays;
 
 import java.util.Set;
 import java.util.logging.Level;
@@ -85,7 +89,46 @@ public class CartServlet extends BaseServlet {
       }
       
       // add a key
-      if (sLcUri.endsWith("/add")) {
+      if (sLcUri.endsWith("/try")) {
+        bGenerateInfo = false;
+        
+        String [] sKeys = Val.chkStr(request.getParameter("keys")).split(",");
+        ITryHandler tryHandler = TryHandlerBuilder.newHandlerInstance();
+        TryResponse tryResponse = tryHandler.tryKeys(request, response, context, cart, Arrays.asList(sKeys));
+        
+        PrintWriter writer = response.getWriter();
+        
+        if (!sCallback.isEmpty()) {
+          writer.print(sCallback+"(");
+          writer.flush();
+        }
+        
+        JsonWriter jsonWriter = new JsonWriter(writer);
+        
+        jsonWriter.beginObject();
+        jsonWriter.name("accepted");
+        jsonWriter.beginArray();
+        for (String key: tryResponse.getAccepted()) {
+          jsonWriter.value(key);
+        }
+        jsonWriter.endArray();
+        jsonWriter.name("rejected");
+        jsonWriter.beginArray();
+        for (String key: tryResponse.getRejected()) {
+          jsonWriter.value(key);
+        }
+        jsonWriter.endArray();
+        jsonWriter.endObject();
+        
+        jsonWriter.flush();
+        
+        if (!sCallback.isEmpty()) {
+          writer.print(")");
+          writer.flush();
+        }
+        
+        writer.flush();
+      } else if (sLcUri.endsWith("/add")) {
         String sKey = Val.chkStr(request.getParameter("key"));
         if ((sKey.length() > 0) && !cart.containsKey(sKey)) {
           if (cart.size() < maxItems) {
