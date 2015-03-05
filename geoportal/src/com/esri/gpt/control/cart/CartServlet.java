@@ -18,7 +18,6 @@ import com.esri.gpt.framework.context.BaseServlet;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
-import com.google.gson.internal.bind.JsonTreeWriter;
 import com.google.gson.stream.JsonWriter;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -40,7 +39,7 @@ public class CartServlet extends BaseServlet {
   /** class variables ========================================================= */
   
   /** The Logger. */
-  private static Logger LOGGER = Logger.getLogger(CartServlet.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(CartServlet.class.getName());
 
   /** methods ================================================================= */
 

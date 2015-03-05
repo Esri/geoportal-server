@@ -146,28 +146,6 @@ dojo.declare("gpt.form.Cart",null,{
       this.parentDialog.hide();
     }
   },
-
-    
-  toggleAddAllCheck: function(addAll){
-    var addAllToCart = dojo.byId("frmSearchCriteria\:srToggle");
-    if (addAllToCart) {
-      addAllToCart.checked = addAll;
-    }
-  },
-
-  toggleCheckAll: function(){
-    var mdRecordsId = "frmSearchCriteria:mdRecords";
-    var mdRecords = dojo.byId(mdRecordsId);
-    if (mdRecords) {
-      var anyUnchecked = false;
-      dojo.query("input.gptCartCheckBox",mdRecords).forEach(dojo.hitch(this,function(checkBox){
-        if (checkBox.checked===false) {
-          anyUnchecked = true;
-        }
-      }));
-      this.toggleAddAllCheck(!anyUnchecked);
-    }
-  },
   
   /**
    * Connects the cart to the search results page using check-boxes.
@@ -198,11 +176,12 @@ dojo.declare("gpt.form.Cart",null,{
       
       if (addAllToCart) {
         this.addAllToCartHandler = dojo.connect(addAllToCart,"onclick",dojo.hitch(this,function(evt){
+          var checkBoxes = [];
+          
           var checked = evt.target.checked;
           var mdRecordsId = "frmSearchCriteria:mdRecords";
           var mdRecords = dojo.byId(mdRecordsId);
           if (mdRecords) {
-            var checkBoxes = [];
             dojo.query("input.gptCartCheckBox",mdRecords).forEach(dojo.hitch(this,function(checkBox){
               if (checkBox.checked!=checked) {
                 if (!checked || this.approximateSize+checkBoxes.length<this.maxItems) {
@@ -210,10 +189,23 @@ dojo.declare("gpt.form.Cart",null,{
                 }
               }
             }));
-            dojo.forEach(checkBoxes,dojo.hitch(this,function(checkBox){
-              checkBox.click();
-            }));
           }
+          
+          var handleFirst = dojo.hitch(this,function(){
+            if (checkBoxes && checkBoxes.length>0) {
+              var checkBox = checkBoxes[0];
+              if (checkBox.style.visibility === "visible") {
+                checkBox.checked = !checkBox.checked;
+                this.executeCheck(checkBox,true);
+              }
+              checkBoxes = checkBoxes.slice(1);
+              this.executeTryKeysAll(handleFirst);
+            } else {
+              this.toggleCheckAll();
+            }
+          });
+          
+          handleFirst();
         }));
       }
     });
@@ -238,7 +230,7 @@ dojo.declare("gpt.form.Cart",null,{
         }
       } 
       connectAddAllToCart();
-      this.executeTryKeysAll();
+      this.executeTryKeysAll(dojo.hitch(this,this.toggleCheckAll),dojo.hitch(this,this.toggleCheckAll));
     });
     
     if ((typeof(jsMetadata) != "undefined") && (jsMetadata != null) &&
@@ -381,6 +373,27 @@ dojo.declare("gpt.form.Cart",null,{
       });
     }));
   },
+    
+  toggleAddAllCheck: function(addAll){
+    var addAllToCart = dojo.byId("frmSearchCriteria\:srToggle");
+    if (addAllToCart) {
+      addAllToCart.checked = addAll;
+    }
+  },
+
+  toggleCheckAll: function(){
+    var mdRecordsId = "frmSearchCriteria:mdRecords";
+    var mdRecords = dojo.byId(mdRecordsId);
+    if (mdRecords) {
+      var anyUnchecked = false;
+      dojo.query("input.gptCartCheckBox",mdRecords).forEach(dojo.hitch(this,function(checkBox){
+        if (checkBox.checked===false && checkBox.style.visibility === "visible") {
+          anyUnchecked = true;
+        }
+      }));
+      this.toggleAddAllCheck(!anyUnchecked);
+    }
+  },
   
   callTryKeys: function(keys,callback,error) {
     var sUrl = this.getCartUrl();
@@ -393,14 +406,6 @@ dojo.declare("gpt.form.Cart",null,{
       load: callback,
       error: error
     });
-  },
-  
-  callTryKeysAll: function(callback,error) {
-    var keys = [];
-    dojo.forEach(jsMetadata.records,dojo.hitch(this,function(record){
-      keys.push(record.uuid);
-    }));
-    this.callTryKeys(keys,callback,error);
   },
   
   listUncheckedBoxes: function() {
@@ -428,9 +433,8 @@ dojo.declare("gpt.form.Cart",null,{
     return keys;
   },
   
-  executeTryKeysAll: function() {
+  executeTryKeysAll: function(_callback,_error) {
     var callback = dojo.hitch(this,function(response){
-      console.log("executeTryKeysAll response", response);
       dojo.forEach(this.listUncheckedBoxes(),dojo.hitch(this,function(checkBox){
           if (response.accepted!=null && response.accepted.indexOf(checkBox.sKey)>=0) {
             checkBox.style.visibility = "visible";
@@ -438,11 +442,35 @@ dojo.declare("gpt.form.Cart",null,{
             checkBox.style.visibility = "hidden";
           }
       }));
+      if (_callback) _callback(response);
     });
     var error = dojo.hitch(this,function(error){
-      console.log("executeTryKeysAll error", error);
+      if (_error) _error(error);
     });
     this.callTryKeys(this.listUncheckedKeys(),callback,error);
+  },
+    
+  executeCheck: function(elChk,disableToggle){
+    var sUrl = this.getCartUrl();
+    if (elChk.checked) sUrl += "/add";
+    else sUrl += "/remove";
+    sUrl += "?key="+encodeURIComponent(elChk.sKey);
+    dojo.xhrGet({
+      handleAs: "json",
+      url: sUrl,
+      preventCache: true,
+      error: dojo.hitch(this,function(responseObject,ioArgs) {
+        console.log(responseObject);
+      }),
+      load: dojo.hitch(this,function(responseObject,ioArgs) {
+        this._setCount(responseObject);
+        if (!disableToggle) {
+          this.executeTryKeysAll(dojo.hitch(this,this.toggleCheckAll),dojo.hitch(this,this.toggleCheckAll));
+        } else {
+          this.executeTryKeysAll();
+        }
+      })
+    });
   },
   
   /**
@@ -474,29 +502,9 @@ dojo.declare("gpt.form.Cart",null,{
       }
     }
     
-    var executeCheck = dojo.hitch(this,function(elChk){
-      var sUrl = this.getCartUrl();
-      if (elChk.checked) sUrl += "/add";
-      else sUrl += "/remove";
-      sUrl += "?key="+encodeURIComponent(sKey);
-      dojo.xhrGet({
-        handleAs: "json",
-        url: sUrl,
-        preventCache: true,
-        error: dojo.hitch(this,function(responseObject,ioArgs) {
-          console.log(responseObject);
-        }),
-        load: dojo.hitch(this,function(responseObject,ioArgs) {
-          this.toggleCheckAll();
-          this._setCount(responseObject);
-          this.executeTryKeysAll();
-        })
-      });
-    });  
-    
     var connectCheck = dojo.hitch(this,function(elChk){
       dojo.connect(elChk,"onclick",this,dojo.hitch(this,function(e) {
-        executeCheck(elChk);
+        this.executeCheck(elChk);
       }));
       dojo.connect(this,"onRemove",this,dojo.hitch(this,function(sRemKey) {
         if (sKey == sRemKey) {

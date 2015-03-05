@@ -25,5 +25,14 @@ import javax.servlet.http.HttpServletResponse;
  * @author Esri, Inc.
  */
 public interface ITryHandler {
+  /**
+   * Tries keys.
+   * @param request HTTP request
+   * @param response HTTP response
+   * @param context request context
+   * @param cart cart
+   * @param keys keys to try
+   * @return response
+   */
   TryResponse tryKeys(HttpServletRequest request,HttpServletResponse response, RequestContext context,Cart cart,List<String> keys);
 }

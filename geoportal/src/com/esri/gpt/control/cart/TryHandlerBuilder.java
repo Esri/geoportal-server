@@ -25,11 +25,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
+ * Tru handler builder.
  * @author Esri, Inc.
  */
 public final class TryHandlerBuilder {
   
+  /**
+   * Default handler accepting any key.
+   */
   private static final ITryHandler DEFAULT = new ITryHandler() {
     @Override
     public TryResponse tryKeys(HttpServletRequest request, HttpServletResponse response, RequestContext context, Cart cart, List<String> keys) {
@@ -43,6 +46,13 @@ public final class TryHandlerBuilder {
     }
   };
   
+  /**
+   * Creates new instance of the handler.
+   * <p>
+   * Using "catalog.cart.tryhandler.class" from gpt.xml
+   * </p>
+   * @return instance of the handler or default instance of unable to create a configured one.
+   */
   public static ITryHandler newHandlerInstance() {
     ApplicationContext appCtx = ApplicationContext.getInstance();
     ApplicationConfiguration appCfg = appCtx.getConfiguration();

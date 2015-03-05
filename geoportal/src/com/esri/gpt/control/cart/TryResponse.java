@@ -27,24 +27,45 @@ public class TryResponse {
   private final Set<String> accepted = new HashSet<String>();
   private final Set<String> rejected = new HashSet<String>();
 
+  /**
+   * Gets collection of accepted keys.
+   * @return collection of accepted keys (read only)
+   */
   public Set<String> getAccepted() {
     return Collections.unmodifiableSet(accepted);
   }
 
+  /**
+   * Gets collection of rejected keys.
+   * @return collection of rejected keys (read only)
+   */
   public Set<String> getRejected() {
     return Collections.unmodifiableSet(rejected);
   }
   
+  /**
+   * Accepts a key.
+   * @param key key
+   */
   public void accept(String key) {
     rejected.remove(key);
     accepted.add(key);
   }
   
+  /**
+   * Rejects a key.
+   * @param key key
+   */
   public void reject(String key) {
     accepted.remove(key);
     rejected.add(key);
   }
   
+  /**
+   * Addes a key.
+   * @param key key
+   * @param accept <code>true</code> to accept, <code>false</code> to reject
+   */
   public void add(String key, boolean accept) {
     if (accept)
       accept(key);
