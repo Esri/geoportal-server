@@ -425,6 +425,12 @@
         <parameter key="catalog.cart.processor.whitelist" value="com.esri.gpt.control.cart.ZipXmls"/>
         <parameter key="catalog.cart.xslt.whitelist" value=""/>
         <parameter key="catalog.cart.tryhandler.class" value=""/>
+        
+        <!-- example
+        <parameter key="catalog.cart.tryhandler.class" value="com.esri.gpt.control.cart.VolumeTryHandler"/>
+        <parameter key="catalog.cart.volumetryhandler.field" value="volume"/>
+        <parameter key="catalog.cart.volumetryhandler.max" value="100000"/>
+        -->
 
 		<!-- Mapping file to map dcat fields to lucene index fields -->
 		<parameter key="dcat.mappings" value="gpt/metadata/dcat-mappings.xml"/>

@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Esri, Inc.
  */
 public final class TryHandlerBuilder {
+  private static final String TRY_HANDLER_CONFIG_PARAM = "catalog.cart.tryhandler.class";
   
   /**
    * Default handler accepting any key.
@@ -57,7 +58,7 @@ public final class TryHandlerBuilder {
     ApplicationContext appCtx = ApplicationContext.getInstance();
     ApplicationConfiguration appCfg = appCtx.getConfiguration();
     StringAttributeMap parameters = appCfg.getCatalogConfiguration().getParameters();
-    String tryHandlerClass = Val.chkStr(parameters.getValue("catalog.cart.tryhandler.class"));
+    String tryHandlerClass = Val.chkStr(parameters.getValue(TRY_HANDLER_CONFIG_PARAM));
     
     if (tryHandlerClass.isEmpty()) {
       return DEFAULT;
