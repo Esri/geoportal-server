@@ -87,7 +87,7 @@ public class ProcessorFactory {
       isHttpProtocol = protocol.equals("http") || protocol.equals("https");
       isFtpProtocol = protocol.equals("ftp") || protocol.equals("ftps");
       isFileProtocol = protocol.equals("file");
-      isWMS = url.getQuery().toLowerCase().contains("service=wms") || url.getQuery().toLowerCase().contains("service=wmts");
+      isWMS = url.getQuery()!=null? url.getQuery().toLowerCase().contains("service=wms") || url.getQuery().toLowerCase().contains("service=wmts"): false;
     } catch (MalformedURLException e) {
       wasMalformed = true;
     }
