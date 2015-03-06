@@ -52,7 +52,7 @@ public class VolumeTryHandler implements ITryHandler {
     TryResponse tryResponse = new TryResponse();
 
     String fieldName = readFieldName(context);
-    long max = readMax(context);
+    double max = readMax(context);
 
     if (keys != null && !fieldName.isEmpty() && max > 0) {
 
@@ -68,10 +68,10 @@ public class VolumeTryHandler implements ITryHandler {
         MapFieldSelector selector = new MapFieldSelector(new String[]{fieldName});
         
         VolumeReader volumeReader = new VolumeReader(reader, termDocs, selector, fieldName);
-        long already = volumeReader.sumWeights(cart.keySet());
+        double already = volumeReader.sumWeights(cart.keySet());
 
         for (String uuid : keys) {
-          long after = already + volumeReader.readWeight(uuid);
+          double after = already + volumeReader.readWeight(uuid);
           tryResponse.add(uuid, after<=max);
         }
 
@@ -95,9 +95,9 @@ public class VolumeTryHandler implements ITryHandler {
     return Val.chkStr(parameters.getValue(TRY_VOLUMEHANDLER_FIELD_PARAM));
   }
 
-  private long readMax(RequestContext context) {
+  private double readMax(RequestContext context) {
     StringAttributeMap parameters = context.getApplicationConfiguration().getCatalogConfiguration().getParameters();
-    return Val.chkLong(parameters.getValue(TRY_VOLUMEHANDLER_MAX_PARAM), 0);
+    return Val.chkDbl(parameters.getValue(TRY_VOLUMEHANDLER_MAX_PARAM), 0);
   }
 
   private class VolumeReader {
@@ -114,16 +114,17 @@ public class VolumeTryHandler implements ITryHandler {
       this.fieldName = fieldName;
     }
 
-    public long readWeight(String uuid) throws IOException {
+    public double readWeight(String uuid) throws IOException {
       termDocs.seek(new Term(Storeables.FIELD_UUID, uuid));
-      long weight = 0;
+      double weight = 0;
       if (termDocs.next()) {
         Document document = reader.document(termDocs.doc(), selector);
         Field[] fields = document.getFields(fieldName);
-        for (Field fld : fields) {
+        if (fields!=null && fields.length>0) {
+          Field fld = fields[0];
           String value = fld.stringValue();
           try {
-            long lVal = Math.max(Long.parseLong(value), 0);
+            double lVal = Math.max(Double.parseDouble(value), 0);
             weight += lVal;
           } catch (Exception ex) {
 
@@ -133,8 +134,8 @@ public class VolumeTryHandler implements ITryHandler {
       return weight;
     }
     
-    public long sumWeights(Collection<String> uuids) throws IOException {
-      long sum = 0;
+    public double sumWeights(Collection<String> uuids) throws IOException {
+      double sum = 0;
       for (String uuid: uuids) {
         sum += readWeight(uuid);
       }

@@ -169,7 +169,6 @@ dojo.declare("gpt.form.Cart",null,{
       this.toggleCheckAll();
       
       if (this.addAllToCartHandler) {
-        console.log("Removing addAllToCartHandler");
         dojo.disconnect(this.addAllToCartHandler);
         delete this.addAllToCartHandler;
       }
@@ -196,7 +195,7 @@ dojo.declare("gpt.form.Cart",null,{
               var checkBox = checkBoxes[0];
               if (checkBox.style.visibility === "visible") {
                 checkBox.checked = !checkBox.checked;
-                this.executeCheck(checkBox,true);
+                this.executeCheck(checkBox);
               }
               checkBoxes = checkBoxes.slice(1);
               this.executeTryKeysAll(handleFirst);
@@ -385,12 +384,9 @@ dojo.declare("gpt.form.Cart",null,{
     var mdRecordsId = "frmSearchCriteria:mdRecords";
     var mdRecords = dojo.byId(mdRecordsId);
     if (mdRecords) {
-      var anyUnchecked = false;
-      dojo.query("input.gptCartCheckBox",mdRecords).forEach(dojo.hitch(this,function(checkBox){
-        if (checkBox.checked===false && checkBox.style.visibility === "visible") {
-          anyUnchecked = true;
-        }
-      }));
+      var anyUnchecked = dojo.query("input.gptCartCheckBox",mdRecords).some(function(checkBox){ 
+        return (checkBox.checked===false && checkBox.style.visibility === "visible"); 
+      });
       this.toggleAddAllCheck(!anyUnchecked);
     }
   },
@@ -450,7 +446,14 @@ dojo.declare("gpt.form.Cart",null,{
     this.callTryKeys(this.listUncheckedKeys(),callback,error);
   },
     
-  executeCheck: function(elChk,disableToggle){
+  executeCheck: function(elChk,_callback,_error){
+    var error = dojo.hitch(this,function(response){
+      if (_error) _error(response);
+    });
+    var callback = dojo.hitch(this,function(response){
+      if (_callback) _callback(response);
+    });
+    
     var sUrl = this.getCartUrl();
     if (elChk.checked) sUrl += "/add";
     else sUrl += "/remove";
@@ -459,17 +462,8 @@ dojo.declare("gpt.form.Cart",null,{
       handleAs: "json",
       url: sUrl,
       preventCache: true,
-      error: dojo.hitch(this,function(responseObject,ioArgs) {
-        console.log(responseObject);
-      }),
-      load: dojo.hitch(this,function(responseObject,ioArgs) {
-        this._setCount(responseObject);
-        if (!disableToggle) {
-          this.executeTryKeysAll(dojo.hitch(this,this.toggleCheckAll),dojo.hitch(this,this.toggleCheckAll));
-        } else {
-          this.executeTryKeysAll();
-        }
-      })
+      load: callback,
+      error: error
     });
   },
   
@@ -504,7 +498,21 @@ dojo.declare("gpt.form.Cart",null,{
     
     var connectCheck = dojo.hitch(this,function(elChk){
       dojo.connect(elChk,"onclick",this,dojo.hitch(this,function(e) {
-        this.executeCheck(elChk);
+        var error = dojo.hitch(this,function(responseObject,ioArgs) {
+          console.log(responseObject);
+          var callback = dojo.hitch(this,function(tryResponse){
+            this.toggleCheckAll();
+          });
+          this.executeTryKeysAll(callback,callback);
+        });
+        var load = dojo.hitch(this,function(responseObject,ioArgs) {
+          var callback = dojo.hitch(this,function(tryResponse){
+            this._setCount(responseObject,tryResponse.rejected);
+            this.toggleCheckAll();
+          });
+          this.executeTryKeysAll(callback,callback);
+        });
+        this.executeCheck(elChk,load,error);
       }));
       dojo.connect(this,"onRemove",this,dojo.hitch(this,function(sRemKey) {
         if (sKey == sRemKey) {
@@ -947,7 +955,7 @@ dojo.declare("gpt.form.Cart",null,{
    * @memberOf gpt.form.Cart#
    * @param {Object} responseObject the XHR responseObject
    */
-  _setCount: function(responseObject) {
+  _setCount: function(responseObject,ignoreList) {
     if ((typeof(responseObject) != "undefined") && (responseObject != null)) {
       var oCart = responseObject.cart;
       if ((typeof(oCart) != "undefined") && (oCart != null)) {
@@ -958,17 +966,19 @@ dojo.declare("gpt.form.Cart",null,{
         sFullTip = sFullTip.replace("{0}",""+this.maxItems);
         dojo.query(".gptCartCheckControl").forEach(function(item) {
           dojo.query(".gptCartCheckBox",item).forEach(function(item2) {
-            if (bFull) {
-              if (item2.checked) {
+            if (!ignoreList || ignoreList.indexOf(item2.sKey)<0) {
+              if (bFull) {
+                if (item2.checked) {
+                  item.title = sTip;
+                  item2.style.visibility = "visible";
+                } else {
+                  item.title = sFullTip;
+                  item2.style.visibility = "hidden";
+                }
+              } else {
                 item.title = sTip;
                 item2.style.visibility = "visible";
-              } else {
-                item.title = sFullTip;
-                item2.style.visibility = "hidden";
               }
-            } else {
-              item.title = sTip;
-              item2.style.visibility = "visible";
             }
           });
           
