@@ -20,7 +20,10 @@ import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
 import com.google.gson.stream.JsonWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import java.util.Set;
 import java.util.logging.Level;
@@ -92,8 +95,15 @@ public class CartServlet extends BaseServlet {
         bGenerateInfo = false;
         
         String [] sKeys = Val.chkStr(request.getParameter("keys")).split(",");
+        ArrayList<String> nonEmptyKeyList = new ArrayList<String>();
+        for (String key: Arrays.asList(sKeys)) {
+          if (!key.isEmpty()) {
+            nonEmptyKeyList.add(key);
+          }
+        }
+        
         ITryHandler tryHandler = TryHandlerBuilder.newHandlerInstance();
-        TryResponse tryResponse = tryHandler.tryKeys(request, response, context, cart, Arrays.asList(sKeys));
+        TryResponse tryResponse = tryHandler.tryKeys(request, response, context, cart, nonEmptyKeyList);
         
         PrintWriter writer = response.getWriter();
         
