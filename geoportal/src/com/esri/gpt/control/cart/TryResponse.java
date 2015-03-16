@@ -15,8 +15,9 @@
  */
 package com.esri.gpt.control.cart;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,23 +25,23 @@ import java.util.Set;
  * @author Esri, Inc.
  */
 public class TryResponse {
-  private final Set<String> accepted = new HashSet<String>();
-  private final Set<String> rejected = new HashSet<String>();
+  private final ArrayList<String> accepted = new ArrayList<String>();
+  private final ArrayList<String> rejected = new ArrayList<String>();
 
   /**
    * Gets collection of accepted keys.
    * @return collection of accepted keys (read only)
    */
-  public Set<String> getAccepted() {
-    return Collections.unmodifiableSet(accepted);
+  public List<String> getAccepted() {
+    return Collections.unmodifiableList(accepted);
   }
 
   /**
    * Gets collection of rejected keys.
    * @return collection of rejected keys (read only)
    */
-  public Set<String> getRejected() {
-    return Collections.unmodifiableSet(rejected);
+  public List<String> getRejected() {
+    return Collections.unmodifiableList(rejected);
   }
   
   /**
