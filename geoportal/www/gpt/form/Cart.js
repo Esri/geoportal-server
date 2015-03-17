@@ -871,7 +871,7 @@ dojo.declare("gpt.form.Cart",null,{
     dojo.connect(this.parentDialog,"onHide",dojo.hitch(this,function() {
       setTimeout(dojo.hitch(this,function(){
         this.parentDialog.destroyRecursive();
-        this.toggleCheckAll();
+        this.executeTryKeysAll(dojo.hitch(this,this.toggleCheckAll),dojo.hitch(this,this.toggleCheckAll));
       }),300);
     }));
         
