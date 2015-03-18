@@ -42,7 +42,7 @@ import org.apache.lucene.search.IndexSearcher;
  */
 public class VolumeTryHandler implements ITryHandler {
 
-  private static final String TRY_VOLUMEHANDLER_FIELD_PARAM = "catalog.cart.volumetryhandler.field";
+  private static final String TRY_VOLUMEHANDLER_FIELD_PARAM = "catalog.cart.volumetryhandler.commaSeparatedFields";
   private static final String TRY_VOLUMEHANDLER_MAX_PARAM = "catalog.cart.volumetryhandler.max";
 
   private static final Logger LOGGER = Logger.getLogger(VolumeTryHandler.class.getCanonicalName());
@@ -51,10 +51,10 @@ public class VolumeTryHandler implements ITryHandler {
   public TryResponse tryKeys(HttpServletRequest request, HttpServletResponse response, RequestContext context, Cart cart, List<String> keys) {
     TryResponse tryResponse = new TryResponse();
 
-    String fieldName = readFieldName(context);
+    String [] fieldNames = readFieldNames(context);
     double max = readMax(context);
 
-    if (keys != null && !fieldName.isEmpty() && max > 0) {
+    if (keys != null && fieldNames!=null && fieldNames.length>0 && max > 0) {
 
       LuceneIndexAdapter adapter = null;
       IndexSearcher searcher = null;
@@ -65,9 +65,9 @@ public class VolumeTryHandler implements ITryHandler {
         
         IndexReader reader = searcher.getIndexReader();
         TermDocs termDocs = reader.termDocs();
-        MapFieldSelector selector = new MapFieldSelector(new String[]{fieldName});
+        MapFieldSelector selector = new MapFieldSelector(fieldNames);
         
-        VolumeReader volumeReader = new VolumeReader(reader, termDocs, selector, fieldName);
+        VolumeReader volumeReader = new VolumeReader(reader, termDocs, selector, fieldNames);
         double already = volumeReader.sumWeights(cart.keySet());
 
         for (String uuid : keys) {
@@ -90,9 +90,14 @@ public class VolumeTryHandler implements ITryHandler {
     return tryResponse;
   }
 
-  private String readFieldName(RequestContext context) {
+  private String [] readFieldNames(RequestContext context) {
     StringAttributeMap parameters = context.getApplicationConfiguration().getCatalogConfiguration().getParameters();
-    return Val.chkStr(parameters.getValue(TRY_VOLUMEHANDLER_FIELD_PARAM));
+    String fieldNames = Val.chkStr(parameters.getValue(TRY_VOLUMEHANDLER_FIELD_PARAM));
+    String [] fieldsArray = fieldNames.split(",");
+    for (int i=0; i<fieldsArray.length; i++) {
+      fieldsArray[i] = Val.chkStr(fieldsArray[i]);
+    }
+    return fieldsArray;
   }
 
   private double readMax(RequestContext context) {
@@ -105,13 +110,13 @@ public class VolumeTryHandler implements ITryHandler {
     private final IndexReader reader;
     private final TermDocs termDocs;
     private final MapFieldSelector selector;
-    private final String fieldName;
+    private final String [] fieldNames;
 
-    public VolumeReader(IndexReader reader, TermDocs termDocs, MapFieldSelector selector, String fieldName) {
+    public VolumeReader(IndexReader reader, TermDocs termDocs, MapFieldSelector selector, String [] fieldNames) {
       this.reader = reader;
       this.termDocs = termDocs;
       this.selector = selector;
-      this.fieldName = fieldName;
+      this.fieldNames = fieldNames;
     }
 
     public double readWeight(String uuid) throws IOException {
@@ -119,19 +124,32 @@ public class VolumeTryHandler implements ITryHandler {
       double weight = 0;
       if (termDocs.next()) {
         Document document = reader.document(termDocs.doc(), selector);
-        Field[] fields = document.getFields(fieldName);
-        if (fields!=null && fields.length>0) {
-          Field fld = fields[0];
-          String value = fld.stringValue();
-          try {
-            double lVal = Math.max(Double.parseDouble(value), 0);
-            weight += lVal;
-          } catch (Exception ex) {
-
-          }
-        }
+        weight += readWeights(document, fieldNames);
       }
       return weight;
+    }
+
+    private double readWeights(Document document, String [] fieldNames) {
+      double allWeights = 0.0;
+      for (String fieldName: fieldNames) {
+        if (fieldName.isEmpty()) continue;
+        allWeights += readWeight(document, fieldName);
+      }
+      return allWeights;
+    }
+    
+    private double readWeight(Document document, String fieldName) {
+      Field[] fields = document.getFields(fieldName);
+      if (fields!=null && fields.length>0) {
+        Field fld = fields[0];
+        String value = fld.stringValue();
+        try {
+          return Math.max(Double.parseDouble(value), 0);
+        } catch (Exception ex) {
+
+        }
+      }
+      return 0.0;
     }
     
     public double sumWeights(Collection<String> uuids) throws IOException {

@@ -428,7 +428,7 @@
         
         <!-- example of custom 'tryhandler'
         <parameter key="catalog.cart.tryhandler.class" value="com.esri.gpt.control.cart.VolumeTryHandler"/>
-        <parameter key="catalog.cart.volumetryhandler.field" value="dcat.size"/>
+        <parameter key="catalog.cart.volumetryhandler.commaSeparatedFields" value="dcat.size"/>
         <parameter key="catalog.cart.volumetryhandler.max" value="100000"/>
         -->
 

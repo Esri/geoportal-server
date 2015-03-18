@@ -39,6 +39,7 @@ dojo.declare("gpt.form.Cart",null,{
   // i18n strings
   i18n: {
     "catalog.cart.check.tip": "Check to add item to cart",
+    "catalog.cart.overflow.tip": "Adding this item would overflow capacity of the cart",
     "catalog.cart.clear": "Clear Items",
     "catalog.cart.close": "Close",
     "catalog.cart.isfull": "The cart is full; maximum items: {0}",
@@ -432,10 +433,16 @@ dojo.declare("gpt.form.Cart",null,{
   executeTryKeysAll: function(_callback,_error) {
     var callback = dojo.hitch(this,function(response){
       dojo.forEach(this.listUncheckedBoxes(),dojo.hitch(this,function(checkBox){
+          var sTip = null;
           if (response.accepted!=null && response.accepted.indexOf(checkBox.sKey)>=0) {
             checkBox.style.visibility = "visible";
+            sTip = this.i18n["catalog.cart.check.tip"];
           } else if (response.rejected!=null && response.rejected.indexOf(checkBox.sKey)>=0) {
             checkBox.style.visibility = "hidden";
+            sTip = this.i18n["catalog.cart.overflow.tip"];
+          }
+          if (sTip) {
+            checkBox.parentElement.title = sTip;
           }
       }));
       if (_callback) _callback(response);
