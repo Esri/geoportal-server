@@ -690,6 +690,9 @@ function rsGetQualityOfService() {
   <h:outputLink id="srRestJSON" target="_blank" value="#{SearchController.restSearchRequestUrlJson}" styleClass="resultsLinkRestApi">
     <h:outputText value="JSON"/>
   </h:outputLink>
+  <h:outputLink id="srRestDCAT" target="_blank" value="#{SearchController.restSearchRequestUrlDcat}" styleClass="resultsLinkRestApi">
+    <h:outputText value="DCAT"/>
+  </h:outputLink>
   <h:outputLink id="srRestCSV" target="_blank" value="javascript:void(0);" onclick="javascript:getCsv('#{SearchController.restSearchRequestUrlJson}'); return false;" styleClass="resultsLinkRestApi">
     <h:outputText value="CSV"/>
   </h:outputLink>

@@ -953,6 +953,13 @@ public String getRestSearchRequestUrlGeorss() {
 public String getRestSearchRequestUrlJson() {
   return getRestSearchRequestUrl("pjson");
 }
+/**
+ * Gets the rest search request url DCAT.
+ * @return the rest search request url DCAT
+ */
+public String getRestSearchRequestUrlDcat() {
+  return getRestSearchRequestUrl("dcat");
+}
 
 /**
  * Gets the rest search request url html.
