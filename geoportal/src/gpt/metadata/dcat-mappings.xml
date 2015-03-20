@@ -24,7 +24,13 @@
 	  <field name="contactPoint" index="dcat.person" required="true"/>
 	  <field name="mbox"	index="dcat.mbox" required="true"/>
 	  <field name="identifier" required="true"/>  
-	  <field name="accessLevel" index="accessLevel" required="true"/>
+	  <field name="accessLevel" index="accessLevel" required="true">
+        <map from=".*restricted.*" to="restricted public"/>
+        <map from="Medium Confidentiality" to="restricted public"/>
+        <map from="No Confidentiality" to="restricted public"/>
+        <map from="private|confidential|secret" to="non-public"/>
+        <map from=".*" to="public"/>
+      </field>
 	  <field name="accessLevelComment" index="dcat.accessLevelComment" maxChars="255" required="false"/>
 	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
 	  <field name="programCode" index="programCode" type="array" required="true"/>
@@ -46,7 +52,13 @@
 	  <field name="contactPoint" index="dcat.person" required="true"/>
 	  <field name="mbox"	index="dcat.mbox" required="true"/>
 	  <field name="identifier" required="true"/>  
-	  <field name="accessLevel" index="dcat.accessLevel" required="true"/>
+	  <field name="accessLevel" index="dcat.accessLevel" required="true">
+        <map from=".*restricted.*" to="restricted public"/>
+        <map from="Medium Confidentiality" to="restricted public"/>
+        <map from="No Confidentiality" to="restricted public"/>
+        <map from="private|confidential|secret" to="non-public"/>
+        <map from=".*" to="public"/>
+      </field>
 	  <field name="accessLevelComment" index="dcat.accessLevelComment" maxChars="255" required="false"/>
 	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
 	  <field name="programCode" index="programCode" type="array" required="true"/>
@@ -68,7 +80,13 @@
 	  <field name="contactPoint" index="dcat.person" required="true"/>
 	  <field name="mbox" index="dcat.mbox" required="true"/>
 	  <field name="identifier" required="true"/>  
-	  <field name="accessLevel" index="dcat.accessLevel" required="true"/>
+	  <field name="accessLevel" index="dcat.accessLevel" required="true">
+        <map from=".*restricted.*" to="restricted public"/>
+        <map from="Medium Confidentiality" to="restricted public"/>
+        <map from="No Confidentiality" to="restricted public"/>
+        <map from="private|confidential|secret" to="non-public"/>
+        <map from=".*" to="public"/>
+      </field>
 	  <field name="accessLevelComment" index="dcat.accessLevelComment" maxChars="255" required="false"/>
 	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
 	  <field name="programCode" index="dcat.programCode" type="array" required="true"/>
@@ -97,7 +115,13 @@
 	  <field name="contactPoint" index="dcat.person" required="true"/>
 	  <field name="mbox" index="dcat.mbox" required="true"/>
 	  <field name="identifier" required="true"/> 
-	  <field name="accessLevel" index="dcat.accessLevel" required="true"/>
+	  <field name="accessLevel" index="dcat.accessLevel" required="true">
+        <map from=".*restricted.*" to="restricted public"/>
+        <map from="Medium Confidentiality" to="restricted public"/>
+        <map from="No Confidentiality" to="restricted public"/>
+        <map from="private|confidential|secret" to="non-public"/>
+        <map from=".*" to="public"/>
+      </field>
 	  <field name="accessLevelComment" index="apiso.AccessConstraints" maxChars="255" required="false"/>
 	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
 	  <field name="programCode" index="dcat.programCode" type="array" required="true"/>
