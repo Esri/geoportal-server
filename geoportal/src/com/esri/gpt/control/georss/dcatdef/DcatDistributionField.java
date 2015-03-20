@@ -65,6 +65,7 @@ public class DcatDistributionField implements DcatFieldDefinition {
           jsonWriter.name("@type").value("dcat:Distribution");
           jsonWriter.name("accessURL").value(value);
           jsonWriter.name("mediaType").value("application/octet-stream");
+          jsonWriter.name("format").value("API");
           jsonWriter.endObject();
         }
       }
