@@ -146,6 +146,27 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
     return getFeedAttribute(dcatSchemas, r, fldName);
   }
 
+
+  /**
+   * Gets attribute field.
+   * @param dcatSchemas dcat schemas
+   * @param index index
+   * @param r feed record
+   * @param _fieldName field name
+   * @return field
+   */
+  protected DcatField getAttributeField(DcatSchemas dcatSchemas, Map<String, IFeedAttribute> index, IFeedRecord r, String _fieldName) {
+    String schemaKey = getSchemaKey(index);
+    if (schemaKey == null) {
+      return null;
+    }
+    DcatFields dcatFields = getDcatFields(dcatSchemas, schemaKey);
+    if (dcatFields == null) {
+      return null;
+    }
+    return getDcatField(dcatFields, _fieldName);
+  }
+  
   /**
    * Gets feed attribute.
    * @param dcatSchemas dcat schemas
@@ -158,15 +179,7 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
     if (index == null) {
       return null;
     }
-    String schemaKey = getSchemaKey(index);
-    if (schemaKey == null) {
-      return null;
-    }
-    DcatFields dcatFields = getDcatFields(dcatSchemas, schemaKey);
-    if (dcatFields == null) {
-      return null;
-    }
-    DcatField field = getDcatField(dcatFields, _fieldName);
+    DcatField field = getAttributeField(dcatSchemas, index, r, _fieldName);
     if (field == null) {
       return null;
     }
@@ -176,6 +189,11 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
   
   public static interface FlagsProvider {
     long provide(IFeedRecord r, IFeedAttribute attr, Properties properties);
+  }
+  
+  @Override
+  public String toString() {
+    return getOutFieldName();
   }
   
   private static class DefaultFlagsProvider implements FlagsProvider {

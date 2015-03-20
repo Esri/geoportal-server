@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.control.georss.dcatdef;
 
+import com.esri.gpt.control.georss.DcatField;
 import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedRecord;
@@ -78,19 +79,6 @@ public class DcatRecordDefinition {
     fieldDefinitions.add(new ContactPointField("contactPoint"));
     fieldDefinitions.add(new IdentifierField("identifier",DcatFieldDefinition.OBLIGATORY));
     fieldDefinitions.add(new StringField ("accessLevel",DcatFieldDefinition.OBLIGATORY){
-
-      @Override
-      protected String readValue(DcatSchemas dcatSchemas, IFeedRecord r, IFeedAttribute attr) {
-        String value = super.readValue(dcatSchemas, r, attr);
-        if (value.toLowerCase().contains("restricted")) {
-          return "restricted public";
-        }
-        if (value.toLowerCase().contains("private") || value.toLowerCase().contains("confidential") || value.toLowerCase().contains("secret")) {
-          return "non-public";
-        }
-        return "public";
-      }
-      
       @Override
       protected String getDefaultValue(IFeedRecord r, Properties properties) {
         return chkStr(properties.getProperty(fldName),"public");
@@ -109,7 +97,7 @@ public class DcatRecordDefinition {
       }
 
       @Override
-      protected String readValue(DcatSchemas dcatSchemas, IFeedRecord r, IFeedAttribute attr) {
+      protected String readValue(DcatSchemas dcatSchemas, DcatField dcatField, IFeedRecord r, IFeedAttribute attr) {
         IFeedAttribute accessLevelAttribute = this.getFeedAttribute(dcatSchemas, r, "accessLevel");
         List<String> accessLevelList = accessLevelAttribute!=null? accessLevelAttribute.asList(): new ArrayList<String>();
         

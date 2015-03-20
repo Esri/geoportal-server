@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.control.georss.dcatdef;
 
+import com.esri.gpt.control.georss.DcatField;
 import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedRecord;
@@ -22,6 +23,7 @@ import static com.esri.gpt.control.georss.dcatdef.DcatFieldDefinition.OBLIGATORY
 import com.esri.gpt.framework.util.Val;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -57,11 +59,14 @@ public class StringField extends BaseDcatField {
   
   /**
    * Reads value.
-   * @param attr attribute
+   * @param dcatSchemas DCAT schemas
+   * @param dcatField DCAT field
+   * @param r feed records
+   * @param attr attribute attribute
    * @return value
    */
-  protected String readValue(DcatSchemas dcatSchemas, IFeedRecord r, IFeedAttribute attr) {
-    return attr.simplify().getValue().toString();
+  protected String readValue(DcatSchemas dcatSchemas, DcatField dcatField, IFeedRecord r, IFeedAttribute attr) {
+    return dcatField.translate(attr.simplify().getValue().toString());
   }
   
   /**
@@ -91,9 +96,17 @@ public class StringField extends BaseDcatField {
    * @return 
    */
   public String eval(Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) {
-    IFeedAttribute attr = getFeedAttribute(dcatSchemas, r);
+    Map<String, IFeedAttribute> index = getIndex(r);
+    if (index == null) {
+      return null;
+    }
+    DcatField field = getAttributeField(dcatSchemas, index, r, fldName);
+    if (field == null) {
+      return null;
+    }
+    IFeedAttribute attr = getFeedAttribute(index, field);
     
-    String value = Val.chkStr(attr!=null? readValue(dcatSchemas, r, attr): "");
+    String value = Val.chkStr(attr!=null? readValue(dcatSchemas, field, r, attr): "");
     if (value.isEmpty() || !validateValue(value)) {
       if ((flags.provide(r, attr, properties) & OBLIGATORY)!=0) {
         value = getDefaultValue(r, properties);

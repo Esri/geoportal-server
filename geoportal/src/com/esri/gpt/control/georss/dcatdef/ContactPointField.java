@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.control.georss.dcatdef;
 
+import com.esri.gpt.control.georss.DcatField;
 import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedRecord;
@@ -33,7 +34,7 @@ public class ContactPointField implements DcatFieldDefinition {
     fieldDefinitions.add(new StringField("contactPoint",DcatFieldDefinition.OBLIGATORY){
 
       @Override
-      protected String readValue(DcatSchemas dcatSchemas, IFeedRecord r, IFeedAttribute attr) {
+      protected String readValue(DcatSchemas dcatSchemas, DcatField dcatField, IFeedRecord r, IFeedAttribute attr) {
         StringBuilder sb = new StringBuilder();
         for (String s: attr.asList()) {
             if (!s.isEmpty()) {
@@ -56,8 +57,8 @@ public class ContactPointField implements DcatFieldDefinition {
     fieldDefinitions.add(new StringField("mbox",DcatFieldDefinition.OBLIGATORY){
 
       @Override
-      protected String readValue(DcatSchemas dcatSchemas, IFeedRecord r, IFeedAttribute attr) {
-        String mbox = super.readValue(dcatSchemas, r, attr);
+      protected String readValue(DcatSchemas dcatSchemas, DcatField dcatField, IFeedRecord r, IFeedAttribute attr) {
+        String mbox = super.readValue(dcatSchemas, dcatField, r, attr);
         mbox = validateEmail(mbox);
         return mbox;
       }

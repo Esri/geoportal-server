@@ -24,6 +24,15 @@ public class DcatField {
 	private String delimiter = "";
 	private int maxChars = -1;
 	private boolean required;
+    private DcatDomain domain = new DcatDomain();
+
+    public void addMapping(String from, String value) {
+      domain.addMapping(from, value);
+    }
+
+    public String translate(String value) {
+      return domain.translate(value);
+    }
 	
 	public boolean isRequired() {
 		return required;

@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.control.georss.dcatdef;
 
+import com.esri.gpt.control.georss.DcatField;
 import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedRecord;
@@ -33,11 +34,11 @@ public class PublisherField implements DcatFieldDefinition {
     fieldDefinitions.add(new StringField("publisher",DcatFieldDefinition.OBLIGATORY){
 
       @Override
-      protected String readValue(DcatSchemas dcatSchemas, IFeedRecord r, IFeedAttribute attr) {
+      protected String readValue(DcatSchemas dcatSchemas, DcatField dcatField, IFeedRecord r, IFeedAttribute attr) {
         StringBuilder sb = new StringBuilder();
         for (String s: attr.asList()) {
             if (!s.isEmpty()) {
-              sb.append(sb.length()>0? ", ": "").append(s);
+              sb.append(sb.length()>0? ", ": "").append(dcatField.translate(s));
             }
         }
         return sb.toString();

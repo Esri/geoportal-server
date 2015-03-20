@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.control.georss.dcatdef;
 
+import com.esri.gpt.control.georss.DcatField;
 import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedRecord;
@@ -24,6 +25,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -48,17 +50,17 @@ public class ArrayField extends BaseDcatField {
     super(fldName, flags);
   }
 
-  protected ArrayList<String> readValue(IFeedAttribute attr) {
+  protected ArrayList<String> readValue(DcatSchemas dcatSchemas, DcatField dcatField, IFeedRecord r, IFeedAttribute attr) {
     ArrayList<String> value = new ArrayList<String>();
     if (attr.getValue() instanceof List) {
       try {
         for (IFeedAttribute o : (List<IFeedAttribute>) attr.getValue()) {
-          value.add(o.simplify().getValue().toString());
+          value.add(dcatField.translate(o.simplify().getValue().toString()));
         }
       } catch (ClassCastException ex) {
       }
     } else {
-      value.add(attr.simplify().getValue().toString());
+      value.add(dcatField.translate(attr.simplify().getValue().toString()));
     }
     return value;
   }
@@ -84,11 +86,19 @@ public class ArrayField extends BaseDcatField {
    * @return 
    */
   public List<String> eval(Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) {
-    IFeedAttribute attr = getFeedAttribute(dcatSchemas, r);
+    Map<String, IFeedAttribute> index = getIndex(r);
+    if (index == null) {
+      return null;
+    }
+    DcatField field = getAttributeField(dcatSchemas, index, r, fldName);
+    if (field == null) {
+      return null;
+    }
+    IFeedAttribute attr = getFeedAttribute(index, field);
 
     ArrayList<String> value = new ArrayList<String>();
     if (attr!=null) {
-      for (String val: readValue(attr)) {
+      for (String val: readValue(dcatSchemas, field, r, attr)) {
         val = validateValue(val);
         if (!val.isEmpty()){
           value.add(val);

@@ -469,6 +469,13 @@ private void loadDcatMappings(DcatSchemas dcatSchemas, String dcatMappings) thro
 	  			df.setMaxChars(Integer.parseInt(max));
 	  		}
 	  		df.setDelimiter(xpath.evaluate("@delimiter", field));
+            
+            NodeList fldMapList = (NodeList) xpath.evaluate("map", field, XPathConstants.NODESET);
+            for (Node fldMap: new NodeListAdapter(fldMapList)) {
+              String from = Val.chkStr((String)xpath.evaluate("@from",fldMap,XPathConstants.STRING));
+              String to = Val.chkStr((String)xpath.evaluate("@to",fldMap,XPathConstants.STRING));
+              df.addMapping(from, to);
+            }
 	  		dcatFields.add(df);
 	  	}
 	  	dcatSchemas.put(schema, dcatFields);
