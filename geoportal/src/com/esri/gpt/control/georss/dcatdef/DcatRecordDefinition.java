@@ -113,7 +113,7 @@ public class DcatRecordDefinition {
         IFeedAttribute accessLevelAttribute = this.getFeedAttribute(dcatSchemas, r, "accessLevel");
         List<String> accessLevelList = accessLevelAttribute!=null? accessLevelAttribute.asList(): new ArrayList<String>();
         
-        boolean nonPublic = true;
+        boolean nonPublic = false;
         for (String accessLevel: accessLevelList) {
           if (!"public".equals(accessLevel)) {
             nonPublic = true;
