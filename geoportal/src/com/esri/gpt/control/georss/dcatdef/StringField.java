@@ -60,7 +60,7 @@ public class StringField extends BaseDcatField {
    * @param attr attribute
    * @return value
    */
-  protected String readValue(IFeedAttribute attr) {
+  protected String readValue(DcatSchemas dcatSchemas, IFeedRecord r, IFeedAttribute attr) {
     return attr.simplify().getValue().toString();
   }
   
@@ -93,7 +93,7 @@ public class StringField extends BaseDcatField {
   public String eval(Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) {
     IFeedAttribute attr = getFeedAttribute(dcatSchemas, r);
     
-    String value = Val.chkStr(attr!=null? readValue(attr): "");
+    String value = Val.chkStr(attr!=null? readValue(dcatSchemas, r, attr): "");
     if (value.isEmpty() || !validateValue(value)) {
       if ((flags.provide(r, attr, properties) & OBLIGATORY)!=0) {
         value = getDefaultValue(r, properties);

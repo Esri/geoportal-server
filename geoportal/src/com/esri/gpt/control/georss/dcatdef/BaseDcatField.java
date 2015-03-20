@@ -111,7 +111,17 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
    * @return dcat field
    */
   protected DcatField getDcatField(DcatFields dcatFields) {
-    DcatField field = dcatFields.getField(fldName);
+    return getDcatField(dcatFields, fldName);
+  }
+
+  /**
+   * Gets dcat field.
+   * @param dcatFields dcat fields
+   * @param _fieldName field name
+   * @return dcat field
+   */
+  protected DcatField getDcatField(DcatFields dcatFields, String _fieldName) {
+    DcatField field = dcatFields.getField(_fieldName);
     return field;
   }
 
@@ -133,6 +143,17 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
    * @return feed attribute
    */
   protected IFeedAttribute getFeedAttribute(DcatSchemas dcatSchemas, IFeedRecord r) {
+    return getFeedAttribute(dcatSchemas, r, fldName);
+  }
+
+  /**
+   * Gets feed attribute.
+   * @param dcatSchemas dcat schemas
+   * @param r feed record
+   * @param _fieldName field name
+   * @return feed attribute
+   */
+  protected IFeedAttribute getFeedAttribute(DcatSchemas dcatSchemas, IFeedRecord r, String _fieldName) {
     Map<String, IFeedAttribute> index = getIndex(r);
     if (index == null) {
       return null;
@@ -145,7 +166,7 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
     if (dcatFields == null) {
       return null;
     }
-    DcatField field = getDcatField(dcatFields);
+    DcatField field = getDcatField(dcatFields, _fieldName);
     if (field == null) {
       return null;
     }

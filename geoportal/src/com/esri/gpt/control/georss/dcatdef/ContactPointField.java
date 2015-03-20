@@ -33,7 +33,7 @@ public class ContactPointField implements DcatFieldDefinition {
     fieldDefinitions.add(new StringField("contactPoint",DcatFieldDefinition.OBLIGATORY){
 
       @Override
-      protected String readValue(IFeedAttribute attr) {
+      protected String readValue(DcatSchemas dcatSchemas, IFeedRecord r, IFeedAttribute attr) {
         StringBuilder sb = new StringBuilder();
         for (String s: attr.asList()) {
             if (!s.isEmpty()) {
@@ -56,8 +56,8 @@ public class ContactPointField implements DcatFieldDefinition {
     fieldDefinitions.add(new StringField("mbox",DcatFieldDefinition.OBLIGATORY){
 
       @Override
-      protected String readValue(IFeedAttribute attr) {
-        String mbox = super.readValue(attr);
+      protected String readValue(DcatSchemas dcatSchemas, IFeedRecord r, IFeedAttribute attr) {
+        String mbox = super.readValue(dcatSchemas, r, attr);
         mbox = validateEmail(mbox);
         return mbox;
       }

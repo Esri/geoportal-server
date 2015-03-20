@@ -33,7 +33,7 @@ public class PublisherField implements DcatFieldDefinition {
     fieldDefinitions.add(new StringField("publisher",DcatFieldDefinition.OBLIGATORY){
 
       @Override
-      protected String readValue(IFeedAttribute attr) {
+      protected String readValue(DcatSchemas dcatSchemas, IFeedRecord r, IFeedAttribute attr) {
         StringBuilder sb = new StringBuilder();
         for (String s: attr.asList()) {
             if (!s.isEmpty()) {

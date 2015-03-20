@@ -80,8 +80,8 @@ public class DcatRecordDefinition {
     fieldDefinitions.add(new StringField ("accessLevel",DcatFieldDefinition.OBLIGATORY){
 
       @Override
-      protected String readValue(IFeedAttribute attr) {
-        String value = super.readValue(attr);
+      protected String readValue(DcatSchemas dcatSchemas, IFeedRecord r, IFeedAttribute attr) {
+        String value = super.readValue(dcatSchemas, r, attr);
         if (value.toLowerCase().contains("restricted")) {
           return "restricted public";
         }
@@ -95,6 +95,46 @@ public class DcatRecordDefinition {
       protected String getDefaultValue(IFeedRecord r, Properties properties) {
         return chkStr(properties.getProperty(fldName),"public");
       }
+    });
+    fieldDefinitions.add(new StringField("accessLevelComment"){
+
+      @Override
+      protected String getOutFieldName() {
+        return "rights";
+      }
+
+      @Override
+      protected String getDefaultValue(IFeedRecord r, Properties properties) {
+        return Val.chkStr(properties.getProperty("fldName"), "?");
+      }
+
+      @Override
+      protected String readValue(DcatSchemas dcatSchemas, IFeedRecord r, IFeedAttribute attr) {
+        IFeedAttribute accessLevelAttribute = this.getFeedAttribute(dcatSchemas, r, "accessLevel");
+        List<String> accessLevelList = accessLevelAttribute!=null? accessLevelAttribute.asList(): new ArrayList<String>();
+        
+        boolean nonPublic = true;
+        for (String accessLevel: accessLevelList) {
+          if (!"public".equals(accessLevel)) {
+            nonPublic = true;
+          }
+        }
+        
+        if (nonPublic) {
+          List<String> attrAsList = attr.asList();
+          StringBuilder sb = new StringBuilder();
+          int maxLength = 255;
+          for (String text: attrAsList) {
+            if (sb.length()>0 && sb.length()+text.length()+2>maxLength) break;
+            sb.append(sb.length()>0 && sb.charAt(sb.length()-1)!='.'? ". ": " ").append(Val.chkStr(text));
+          }
+          String value = sb.toString();
+          return value.length()<=maxLength? value: value.substring(0, maxLength-3).trim()+"...";
+        }
+        
+        return "";
+      }
+      
     });
     fieldDefinitions.add(new ArrayField("bureauCode",DcatFieldDefinition.OBLIGATORY){
       @Override
