@@ -91,7 +91,7 @@ public abstract class KeysetProcessor {
     }
     if (sClassName.length() > 0) {
       if (!assertWhiteList(context, "catalog.cart.processor.whitelist", sClassName)) {
-        throw new ServletException("Invalid xslt parameter");
+        throw new ServletException("Invalid processor class name parameter");
       }
       Class<?> cls = Class.forName(sClassName);
       Object obj = cls.newInstance();
