@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<operations>
+  <fileoperations>
+    <operation>
+      <copyfile>
+        <source>C:\Users\pscmbldusr\AppData\Roaming\ESRI\ArcGIS Explorer\AddIns\CSWSearchDockWindow.eaz</source>
+        <destination>C:\Builds\GeoportalServer\10.3_CSWClients\Binaries\CSWSearchDockWindow.eaz</destination>
+      </copyfile>      
+    </operation>
+  </fileoperations>
+</operations>
