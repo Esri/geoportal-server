@@ -1,0 +1,65 @@
+<div>
+  <div data-dojo-attach-point="tabQuery">
+    <div class="query-tab-node" data-dojo-attach-point="queryNode1">
+      <div style="margin:0 0 20px 0;">
+        <label data-dojo-attach-point="labelQueryName">${nls.searchText}</label>
+        <br>
+        <input type="text" style="width:100%;margin-top:10px;" data-dojo-type="dijit/form/TextBox" 
+            data-dojo-attach-point="inputQueryName" data-dojo-props="trim:true" />
+      </div>
+      <div style="margin:0 0 20px 0;">
+        <label data-dojo-attach-point="labelCatalog">${nls.labelCatalog}</label>
+        <br>
+        <div id="inputQueryCatalog" style="width:100%;margin-top:10px;" data-dojo-attach-point="inputQueryCatalog" data-dojo-type="dijit/form/Select"
+          data-dojo-props="labelAttr: 'Name'">
+<!--
+						<select id="catalogs" data-dojo-attach-point="catalogs" >
+							<option value="http://gptogc.esri.com/geoportal/rest/find/document">Geoportal Sandbox</option>
+							<option value="http://portal.gis.ca.gov/geoportal/rest/find/document">California Geoportal</option>
+						</select>
+-->
+				</div>
+      </div>
+      <div style="margin:0 0 20px 0;">        
+        <span  data-dojo-attach-point="inputQueryLiveDataFilter" data-dojo-type="dijit/form/CheckBox"></span>
+        <label data-dojo-attach-point="labelIsLiveData">${nls.liveData}</label>
+      </div>
+      <div style="margin:0 0 20px 0;">                          
+          <span  data-dojo-attach-point="inputExtentAnywhere" data-dojo-type="dijit/form/RadioButton"
+                 data-dojo-props="value:'anywhere'"></span>
+          <label data-dojo-attach-point="labelExtentAnywhere">${nls.anywhere}</label>                   
+          <span  data-dojo-attach-point="inputExtentIntersecting" data-dojo-type="dijit/form/RadioButton"
+                 data-dojo-props="value:'intersecting'"></span>
+          <label data-dojo-attach-point="labelExtentIntersecting">${nls.intersecting}</label>                    
+          <span  data-dojo-attach-point="inputExtentFullyWithin" data-dojo-type="dijit/form/RadioButton"
+                 data-dojo-props="value:'within'"></span>
+          <label data-dojo-attach-point="labelExtentFullyWithin">${nls.within}</label>
+      </div>
+      <div class="jimu-r-row play-section">
+        <div class="col-1-2">
+          <div class="jimu-btn buttonSearch" data-dojo-attach-event="onclick:onSearch">${nls.search}</div>
+        </div>
+        <div class="col-1-2">
+          <!--div class="jimu-btn buttonShowAll" data-dojo-attach-event="onclick:onShowAll">${nls.showAll}</div-->
+        </div>
+      </div>
+    </div>
+    
+    <div class="query-tab-node" data-dojo-attach-point="queryNode2">      
+      <div id="progressBar" data-dojo-type="dijit/ProgressBar" data-dojo-attach-point="progressBar" data-dojo-props='indeterminate: true' style="display:none;margin:0;padding:0;"></div>
+      
+      <div id="divResult" class="result-div" data-dojo-attach-point="divResult">
+        <label id="divResultMessage" data-dojo-attach-point="divResultMessage">${nls.noResults}</label>
+        <a style="float:right; margin-right:10px" href="#" data-dojo-attach-point="btnToggleFootprints" data-dojo-attach-event="click:toggleFootprints">${nls.hide}</a>
+        <a style="float:right; margin-right:10px" href="#" data-dojo-attach-point="btnClear" data-dojo-attach-event="click:clear">${nls.clear}</a>
+      </div>
+      <hr>
+
+      <div id="list" data-dojo-attach-point="list" class="jimu-container" data-dojo-attach-event="click:_selectResultItem" style="position:absolute;width:100%;height:400px;left:0;right:0;top:30px;bottom:0;overflow-x:hidden;overflow-y:auto;"></div>
+
+			<input type="hidden" id="selectedItemId" value=""/>
+	</div>
+
+  	<div data-dojo-type="jimu/dijit/LoadingShelter" data-dojo-attach-point="shelter" data-dojo-props="hidden:true"></div>
+  </div>
+</div>

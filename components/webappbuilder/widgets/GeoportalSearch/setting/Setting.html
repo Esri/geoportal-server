@@ -1,0 +1,108 @@
+<div style="width:100%;height:350px;">
+	<div class="url-section">
+		<div>${nls.settings}</div>
+		<div class="url-div" style="overflow:hidden;margin-top:15px;">
+			<table style="width:100%;">
+				<tbody>
+					<tr>
+						<td style="width:100px;">
+							<span>${nls.layerUrl}</span>
+						</td>
+						<td style="width:auto;">
+							<input type="text" data-dojo-type="jimu/dijit/URLInput" data-dojo-attach-point="layerUrl" style="width:100%;" />
+						</td>
+						<td style="width:100px;">
+							<div data-dojo-attach-point="btnBrowse" class='jimu-btn' style="height:30px;line-height:30px;min-width:0;padding:0 10px;float:right">${nls.browse}</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="query-setting-content" data-dojo-attach-point="content">
+		<div class="input-section" data-dojo-attach-point="inputTabNode">
+			<table class="input-table" cellspacing="0" style="width:100%;">
+				<tbody>
+					<tr>
+						<td class="first">${nls.queryString}</td>
+						<td class="second">
+							<input type="text" data-dojo-type="dijit/form/TextBox" data-dojo-attach-point="expression" 
+							data-dojo-props="style:{width:'100%'}" placeHolder="Such as NAME like '[value]'" />
+						</td>
+					</tr>
+					<tr>
+						<td class="first">${nls.defaultValue}</td>
+						<td class="second">
+							<input type="text" data-dojo-type="dijit/form/TextBox" data-dojo-attach-point="defaultValue"
+							data-dojo-props='style:{width:"100%"}' />
+						</td>
+					</tr>
+					<tr>
+						<td class="first">${nls.searchLabel}</td>
+						<td class="second">
+							<input type="text" data-dojo-type="dijit/form/TextBox" data-dojo-attach-point="searchLabel"
+							data-dojo-props='style:{width:"100%"}' />
+						</td>
+					</tr>
+					<tr>
+						<td class="first">${nls.searchHint}</td>
+						<td class="second">
+							<input type="text" data-dojo-type="dijit/form/TextBox" data-dojo-attach-point="searchHint" 
+							data-dojo-props='style:{width:"100%"}' />
+						</td>
+					</tr>
+					<tr>
+						<td class="first">${nls.linkField}</td>
+						<td class="second">
+							<select data-dojo-type="dijit/form/Select" data-dojo-attach-point="linkFieldSelect" style="width:222px;height:30px;">
+								<option value="nodata">${nls.noneLinkField}</option>
+							</select>
+						</td>
+					</tr>
+					<tr style="display:none;">
+						<td class="first">${nls.refreshRate}</td>
+						<td class="second">
+							<input type="text" data-dojo-attach-point="refreshRate" data-dojo-type="dijit/form/NumberTextBox" 
+							data-dojo-props='style:{width:"150px"},required:false,constraints:{min:0,places:0},invalidMessage:"Invalid value."'  />
+							<span>${nls.seconds}</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="first">${nls.zoomScale}</td>
+						<td class="second">
+							<span>1:</span>
+							<input type="text" data-dojo-attach-point="zoomScale" data-dojo-type="dijit/form/NumberTextBox"
+							data-dojo-props='style:{width:"205px"},required:true,value:10000,constraints:{min:0,places:0},invalidMessage:"Invalid value."' />
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="output-section" data-dojo-attach-point="outputTabNode">
+			<table style="width:100%;margin-top:20px;">
+				<tbody>
+					<tr>
+						<td style="width:171px;vertical-align:top;">
+							<div style="margin-bottom:10px;">${nls.allFields}</div>
+							<div data-dojo-attach-point="allFieldsTable" data-dojo-type="jimu/dijit/LayerFieldChooser" data-dojo-props='maxHeight:"240px"' style="width:100%;"></div>
+						</td>
+						<td style="width:75px;vertical-align:middle;padding-left:10px;padding-right:10px;">
+							<div data-dojo-type="jimu/dijit/IncludeButton" data-dojo-attach-point="includeButton" style="margin:0 auto;"></div>
+						</td>
+						<td style="width:auto;vertical-align:top;">
+							<div style="margin-bottom:10px;">${nls.displayFields}</div>
+							<div style="width:100%;" data-dojo-attach-point="displayFieldsTable" data-dojo-type="jimu/dijit/SimpleTable" data-dojo-props='maxHeight:"240px",selectable:false,fields:[{name:"name",title:"${nls.name}",type:"text",editable:false,unique:true},
+							{name:"alias",title:"${nls.alias}",type:"text",editable:true},
+							{name:"title",title:"${nls.title}",type:"radio"},
+							{name:"actions",title:"${nls.actions}",type:"actions",actions:["up","down","delete"]}]'></div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div style="margin-top:20px;">
+				<input type="checkbox" data-dojo-attach-point="shareCbx" />
+				<span>${nls.operationalLayerTip}</span>
+			</div>
+		</div>
+	</div>
+</div>
