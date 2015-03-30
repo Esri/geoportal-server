@@ -34,6 +34,9 @@
 	  <field name="accessLevelComment" index="dcat.accessLevelComment" maxChars="255" required="false"/>
 	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
 	  <field name="programCode" index="programCode" type="array" required="true"/>
+      <!--
+      webService: deprecated in DCAT1.1; kept for backward compatibility with older version.
+      -->
 	  <field name="dataDictionary" index="dcat.dataDictionary"  />
 	  <field name="webService" index="resource.url" />
 	  <field name="format" index="dcat.format" required="true"/>
@@ -63,6 +66,9 @@
 	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
 	  <field name="programCode" index="programCode" type="array" required="true"/>
 	  <field name="dataDictionary" index="dcat.dataDictionary"  />
+      <!--
+      webService: deprecated in DCAT1.1; kept for backward compatibility with older version.
+      -->
 	  <field name="webService" index="resource.url" required="false"/> 
 	  <field name="format" index="dcat.format" required="false"/>
 	  <field name="license" index="dcat.license" required="false"/>
@@ -91,6 +97,9 @@
 	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
 	  <field name="programCode" index="dcat.programCode" type="array" required="true"/>
 	  <field name="dataDictionary" index="dcat.dataDictionary" />
+      <!--
+      webService: deprecated in DCAT1.1; kept for backward compatibility with older version.
+      -->
 	  <field name="webService" index="dcat.webService" required="false"/> 
       <!--
 	  <field name="accessURL" index="dcat.accessUrl" required="false"/>
@@ -126,6 +135,9 @@
 	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
 	  <field name="programCode" index="dcat.programCode" type="array" required="true"/>
 	  <field name="dataDictionary" index="dcat.dataDictionary" />
+      <!--
+      webService: deprecated in DCAT1.1; kept for backward compatibility with older version.
+      -->
 	  <field name="webService" index="resource.url" required="false"/>
 	  <field name="accessURL" index="dcat.accessUrl" required="false"/>
 	  <field name="downloadURL" index="dcat.downloadUrl" required="false"/>
