@@ -84,6 +84,7 @@ public class DcatRecordDefinition {
         return chkStr(properties.getProperty(fldName),"public");
       }
     });
+    fieldDefinitions.add(new StringField ("accrualPeriodicity"));
     fieldDefinitions.add(new ReferencesField("references","contentType"));
     fieldDefinitions.add(new StringField("accessLevelComment"){
 

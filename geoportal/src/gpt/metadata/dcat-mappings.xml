@@ -113,7 +113,28 @@
       <field name="references" index="dcat.references" type="array" required="false"/>
       <field name="landingPage" index="dcat.landingPage"  required="false"/>
       <field name="theme" index="dataTheme" required="false" />
-      <field name="accrualPeriodicity" index="dcat.accrualPeriodicity"  required="false"/>
+      <field name="accrualPeriodicity" index="dcat.accrualPeriodicity"  required="false">
+        <map from="Decennial" to="R/P10Y"/>
+        <map from="Quadrennial" to="R/P4Y"/>
+        <map from="Annual" to="R/P1Y"/>
+        <map from="Bimonthly" to="R/P2M"/>
+        <map from="Semiweekly" to="R/P3.5D"/>
+        <map from="Daily" to="R/P1D"/>
+        <map from="Biweekly" to="R/P2W"/>
+        <map from="Semiannual" to="R/P6M"/>
+        <map from="Biennial" to="R/P2Y"/>
+        <map from="Triennial" to="R/P3Y"/>
+        <map from="Three times a week" to="R/P0.33W"/>
+        <map from="Three times a month" to="R/P0.33M"/>
+        <map from="Continuously updated" to="R/PT1S"/>
+        <map from="Monthly" to="R/P1M"/>
+        <map from="Quarterly" to="R/P3M"/>
+        <map from="Semimonthly" to="R/P0.5M"/>
+        <map from="Three times a year" to="R/P4M"/>
+        <map from="Weekly" to="R/P1W"/>
+        <map from="^R/P[^DWMYS]*[DWMYS]$" to="*"/>
+        <map from=".*" to="irregular"/>
+      </field>
 	</fields>
 	<fields schema="iso-19115,iso-19119,iso19115-2,gemini-iso-19115,gemini-iso-19119,inspire-iso-19115,inspire-iso-19119"> 
 	  <field name="title" index="title"  required="true"/>  
@@ -129,7 +150,7 @@
         <map from="Medium Confidentiality" to="restricted public"/>
         <map from="No Confidentiality" to="restricted public"/>
         <map from="private|confidential|secret" to="non-public"/>
-        <map from=".*" to="public"/>
+        <map from=".+" to="public"/>
       </field>
 	  <field name="accessLevelComment" index="apiso.AccessConstraints" maxChars="255" required="false"/>
 	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
@@ -146,7 +167,28 @@
 	  <field name="spatial" index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" required="true"/>
 	  <field name="temporal" index="apiso.TempExtent_begin,apiso.TempExtent_end" required="true" isDate="true" type="date" dateFormat="yyyy-MM-dd" delimiter="/"/>
       <field name="issued" index="dcat.issued"  isDate="true" type="date" dateFormat="yyyy-MM-dd" required="false"/>	
-      <field name="accrualPeriodicity" index="dcat.accrualPeriodicity"  required="false"/>
+      <field name="accrualPeriodicity" index="dcat.accrualPeriodicity"  required="false">
+        <map from="Decennial" to="R/P10Y"/>
+        <map from="Quadrennial" to="R/P4Y"/>
+        <map from="Annual" to="R/P1Y"/>
+        <map from="Bimonthly" to="R/P2M"/>
+        <map from="Semiweekly" to="R/P3.5D"/>
+        <map from="Daily" to="R/P1D"/>
+        <map from="Biweekly" to="R/P2W"/>
+        <map from="Semiannual" to="R/P6M"/>
+        <map from="Biennial" to="R/P2Y"/>
+        <map from="Triennial" to="R/P3Y"/>
+        <map from="Three times a week" to="R/P0.33W"/>
+        <map from="Three times a month" to="R/P0.33M"/>
+        <map from="Continuously updated" to="R/PT1S"/>
+        <map from="Monthly" to="R/P1M"/>
+        <map from="Quarterly" to="R/P3M"/>
+        <map from="Semimonthly" to="R/P0.5M"/>
+        <map from="Three times a year" to="R/P4M"/>
+        <map from="Weekly" to="R/P1W"/>
+        <map from="^R/P[^DWMYS]*[DWMYS]$" to="*"/>
+        <map from=".+" to="irregular"/>
+      </field>
       <field name="language" index="dcat.language" type="array" required="false" />
       <field name="dataQuality" index="dcat.dataQuality"  required="false"/>
       <field name="theme" index="apiso:Topiccategory" required="false" />
