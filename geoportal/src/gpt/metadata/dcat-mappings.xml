@@ -170,7 +170,7 @@
         <!-- examples of MIME type matching
         <media url=".+\.pdf$" mime="application/pdf"/>
         <media url=".+\.kmz$" mime="application/vnd.google-earth.kmz"/>
-        <media url=".+\.doc$" mime="pplication/vnd.ms-word.document.macroEnabled.12"/>
+        <media url=".+\.doc$" mime="application/vnd.ms-word.document.macroEnabled.12"/>
         -->
       </field>
 	  <field name="format" index="apiso.Format" required="false"/>
