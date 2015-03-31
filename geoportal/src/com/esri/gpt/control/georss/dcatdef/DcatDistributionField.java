@@ -16,6 +16,7 @@
 package com.esri.gpt.control.georss.dcatdef;
 
 import com.esri.gpt.catalog.search.ResourceLink;
+import com.esri.gpt.control.georss.DcatField;
 import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedRecord;
 import com.esri.gpt.framework.util.Val;
@@ -53,6 +54,9 @@ public class DcatDistributionField implements DcatFieldDefinition {
   
   @Override
   public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
+    DcatField accessURLDcatField = accessURLField.getAttributeField(dcatSchemas, r);
+    DcatField downloadURLDcatField = downloadURLField.getAttributeField(dcatSchemas, r);
+    
     List<String> accessURLValue = accessURLField.eval(properties, dcatSchemas, r);
     List<String> downloadURLValue = downloadURLField.eval(properties, dcatSchemas, r);
     
@@ -64,7 +68,7 @@ public class DcatDistributionField implements DcatFieldDefinition {
           jsonWriter.beginObject();
           jsonWriter.name("@type").value("dcat:Distribution");
           jsonWriter.name("accessURL").value(value);
-          jsonWriter.name("mediaType").value("application/octet-stream");
+          jsonWriter.name("mediaType").value(accessURLDcatField!=null? accessURLDcatField.guessMedia(value): "application/octet-stream");
           jsonWriter.name("format").value("API");
           jsonWriter.endObject();
         }
@@ -75,7 +79,7 @@ public class DcatDistributionField implements DcatFieldDefinition {
           jsonWriter.beginObject();
           jsonWriter.name("@type").value("dcat:Distribution");
           jsonWriter.name("downloadURL").value(value);
-          jsonWriter.name("mediaType").value("application/octet-stream");
+          jsonWriter.name("mediaType").value(downloadURLDcatField!=null? downloadURLDcatField.guessMedia(value): "application/octet-stream");
           jsonWriter.endObject();
         }
       }

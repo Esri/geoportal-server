@@ -25,13 +25,22 @@ public class DcatField {
 	private int maxChars = -1;
 	private boolean required;
     private DcatDomain domain = new DcatDomain();
+    private DcatDomain media = new DcatDomain();
 
     public void addMapping(String from, String value) {
       domain.addMapping(from, value);
     }
+    
+    public void addMedia(String urlPattern, String value) {
+      media.addMapping(urlPattern, value);
+    }
 
     public String translate(String value) {
       return domain.translate(value);
+    }
+    
+    public String guessMedia(String value) {
+      return media.translate(value, "application/octet-stream");
     }
 	
 	public boolean isRequired() {

@@ -150,6 +150,20 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
   /**
    * Gets attribute field.
    * @param dcatSchemas dcat schemas
+   * @param r feed record
+   * @return field
+   */
+  protected DcatField getAttributeField(DcatSchemas dcatSchemas, IFeedRecord r) {
+    Map<String, IFeedAttribute> index = getIndex(r);
+    if (index == null) {
+      return null;
+    }
+    return getAttributeField(dcatSchemas, index, r, fldName);
+  }
+  
+  /**
+   * Gets attribute field.
+   * @param dcatSchemas dcat schemas
    * @param index index
    * @param r feed record
    * @param _fieldName field name
