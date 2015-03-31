@@ -1016,7 +1016,7 @@
         
         for( var i = 0; i < jScripts.length; i++) {
           jScript = jScripts[i];
-          jScript = jScript.replace(/\/\* Comp.*var/gi, "");
+          jScript = jScript.replace(/\/\* Comp.*var/, "");
           eval(jScript);
         }
         

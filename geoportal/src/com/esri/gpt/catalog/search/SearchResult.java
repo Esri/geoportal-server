@@ -284,9 +284,11 @@ public String getRecordsAsJSON() {
     jsRecords.append("}");
     enclosingEnvelope = null;
    
-    if(index < records.size()) {
+    if(index < records.size()-1) {
       jsRecords.append(",");
     }
+    
+    index++;
   }
   jsRecords.append("]}");
   
