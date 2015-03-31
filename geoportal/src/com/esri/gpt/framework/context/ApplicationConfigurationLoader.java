@@ -476,7 +476,6 @@ private void loadDcatMappings(DcatSchemas dcatSchemas, String dcatMappings) thro
               String to = Val.chkStr((String)xpath.evaluate("@to",fldMap,XPathConstants.STRING));
               df.addMapping(from, to);
             }
-	  		dcatFields.add(df);
             
             NodeList fldMediaList = (NodeList) xpath.evaluate("media", field, XPathConstants.NODESET);
             for (Node fldMedia: new NodeListAdapter(fldMediaList)) {
@@ -484,6 +483,7 @@ private void loadDcatMappings(DcatSchemas dcatSchemas, String dcatMappings) thro
               String mime = Val.chkStr((String)xpath.evaluate("@mime",fldMedia,XPathConstants.STRING));
               df.addMedia(url, mime);
             }
+            
 	  		dcatFields.add(df);
 	  	}
 	  	dcatSchemas.put(schema, dcatFields);
