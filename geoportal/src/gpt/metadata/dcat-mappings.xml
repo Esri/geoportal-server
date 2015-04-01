@@ -163,7 +163,7 @@
       <field name="accessURL" index="dcat.accessUrl" required="false">
         <!-- examples of MIME type matching
         <media url=".+(\&|\?)service=.*" mime="application/xml"/>
-        <media url=".+\/rest/service.*" mime="application/json"/>
+        <media url=".+/rest/service.*" mime="application/json"/>
         -->
       </field>
       <field name="downloadURL" index="dcat.downloadUrl" required="false">
