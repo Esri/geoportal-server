@@ -134,7 +134,7 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
   protected IFeedAttribute getFeedAttribute(Map<String, IFeedAttribute> index, DcatField field) {
     for (String indexName: field.getIndex()) {
       IFeedAttribute attr = index.get(indexName);
-      if (attr!=null) return attr;
+      if (attr!=null && !attr.isEmpty()) return attr;
     }
     return null;
   }

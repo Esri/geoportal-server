@@ -52,6 +52,11 @@ public interface IFeedAttribute {
    * @return list of values
    */
   List<String> asList();
+  /**
+   * Checks if attribute is empty.
+   * @return <code>true</code> if value is empty
+   */
+  boolean isEmpty();
   
   /**
    * Feed attribute factory.
@@ -144,6 +149,11 @@ public interface IFeedAttribute {
     public List<String> asList() {
       return Arrays.asList(new String[]{});
     }
+
+    @Override
+    public boolean isEmpty() {
+      return true;
+    }
     
     
   }
@@ -152,8 +162,8 @@ public interface IFeedAttribute {
    * String feed.
    */
   static class FeedString implements IFeedAttribute {
-    private String value;
-    private int length;
+    private final String value;
+    private final int length;
     
     public FeedString(String value, int length) {
       this.value = Val.chkStr(value);
@@ -193,17 +203,24 @@ public interface IFeedAttribute {
     public List<String> asList() {
       return Arrays.asList(new String[]{value});
     }
+
+    @Override
+    public boolean isEmpty() {
+      return value.isEmpty();
+    }
+    
   }
   
   /**
    * Number feed.
    */
   static class FeedNumber implements IFeedAttribute {
-    private Number number;
-    private int length;
+    private final Number number;
+    private final int length;
     
     public FeedNumber(Number number, int length) {
       this.number = number;
+      this.length = length;
     }
     
     @Override
@@ -235,6 +252,12 @@ public interface IFeedAttribute {
     public List<String> asList() {
       return Arrays.asList(new String[]{number.toString()});
     }
+
+    @Override
+    public boolean isEmpty() {
+      return false;
+    }
+    
   }
   
   /**
@@ -242,7 +265,7 @@ public interface IFeedAttribute {
    */
   static class FeedDate implements IFeedAttribute {
     private final static IsoDateFormat DF = new IsoDateFormat();
-    private Date date;
+    private final Date date;
     
     public FeedDate(Date date) {
       this.date = date;
@@ -277,17 +300,23 @@ public interface IFeedAttribute {
     public List<String> asList() {
       return Arrays.asList(new String[]{DF.format(date)});
     }
+
+    @Override
+    public boolean isEmpty() {
+      return false;
+    }
   }
   
   /**
    * Object feed.
    */
   static class FeedObject implements IFeedAttribute {
-    private Object obj;
-    private int length;
+    private final Object obj;
+    private final int length;
     
     public FeedObject(Object obj, int length) {
       this.obj = obj;
+      this.length = length;
     }
     
     @Override
@@ -319,13 +348,19 @@ public interface IFeedAttribute {
     public List<String> asList() {
       return Arrays.asList(new String[]{Val.escapeStrForJson(obj.toString())});
     }
+
+    @Override
+    public boolean isEmpty() {
+      return obj.toString().isEmpty();
+    }
+    
   }
   
   /**
    * List feed.
    */
   static class FeedList implements IFeedAttribute {
-    private List<IFeedAttribute> list;
+    private final List<IFeedAttribute> list;
     
     public FeedList(List<IFeedAttribute> list) {
       this.list = list;
@@ -380,6 +415,16 @@ public interface IFeedAttribute {
       }
       return lst;
     }
+
+    @Override
+    public boolean isEmpty() {
+      for (IFeedAttribute attr: list) {
+        if (!attr.isEmpty()) return false;
+      }
+      return true;
+    }
+    
+    
     
  }
 }
