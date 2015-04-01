@@ -458,7 +458,16 @@ private void loadDcatMappings(DcatSchemas dcatSchemas, String dcatMappings) thro
 	  		String name = xpath.evaluate("@name", field);
 	  		df.setName(name);
 	  		df.setType(xpath.evaluate("@type", field));
-	  		df.setIndex(xpath.evaluate("@index", field));
+            
+            String strIndex = Val.chkStr(xpath.evaluate("@index", field));
+            ArrayList<String> lstIndex = new ArrayList<String>();
+            for (String strItem: strIndex.split(";")) {
+              strItem = Val.chkStr(strItem);
+              if (strItem.isEmpty()) continue;
+              lstIndex.add(strItem);
+            }
+	  		df.setIndex(lstIndex);
+            
 	  		df.setDateFormat(xpath.evaluate("@dateFormat", field));
 	  		String max = Val.chkStr(xpath.evaluate("@maxChars", field));
 	  		String required = Val.chkStr(xpath.evaluate("@required", field));

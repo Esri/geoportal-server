@@ -37,6 +37,7 @@ import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.isodate.IsoDateFormat;
 import com.esri.gpt.framework.util.Val;
+import java.util.List;
 import java.util.Properties;
 
 import java.util.logging.Logger;
@@ -269,13 +270,17 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 	 if(dl.length() > 0){
 		 delimiter = dl;
 	 }
-    String indexKey = dcatField.getIndex();
     Map<String, IFeedAttribute> index = r.getData(IFeedRecord.STD_COLLECTION_INDEX);
-    if (indexKey.length() > 0) {
-      before = writeField(r,index, dcatField, delimiter, before);
-    } else if (dcatField.getName().equalsIgnoreCase("identifier") && indexKey.length() == 0) {
-      ResourceLinks links = r.getResourceLinks();
-      before = writeFieldValue("\"" + getIdentifierUrl(links) + "\"", "identifier", delimiter, before,dcatField);
+    List<String> indexKeys = dcatField.getIndex();
+    for (String indexKey: indexKeys) {
+      if (indexKey.length() > 0) {
+        before = writeField(r,index, dcatField, delimiter, before);
+        break;
+      } else if (dcatField.getName().equalsIgnoreCase("identifier") && indexKey.length() == 0) {
+        ResourceLinks links = r.getResourceLinks();
+        before = writeFieldValue("\"" + getIdentifierUrl(links) + "\"", "identifier", delimiter, before,dcatField);
+        break;
+      }
     }
     return before;
   }
@@ -581,68 +586,71 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    * @return always <code>true</code>
    */
   private boolean writeField(IFeedRecord r,Map<String, IFeedAttribute> index,DcatField dcatField, String delimiter, boolean before) {
-	String indexFieldName = dcatField.getIndex();
+	List<String> indexFieldNames = dcatField.getIndex();
 	String dcatFieldName = dcatField.getName();
 	String fieldType = dcatField.getType();
     String fldValues = "";
-    String[] flds = indexFieldName.split(",");
-    for (String fld : flds) {
-      IFeedAttribute indexValue = index.get(fld);
-      String val = "";
-      if (indexValue == null) {
-    	  if(dcatField.isRequired()){
-    		  if(dcatFieldName.equalsIgnoreCase("accessURL")){
-    			  ResourceLinks links = r.getResourceLinks();
-                  for (ResourceLink link : links) {
-                    if (link.getTag().equals(ResourceLink.TAG_METADATA)) {
-                      val = link.getUrl();
-                      break;
+    
+    for (String indexFieldName: indexFieldNames) {
+      String[] flds = indexFieldName.split(",");
+      for (String fld : flds) {
+        IFeedAttribute indexValue = index.get(fld);
+        String val = "";
+        if (indexValue == null) {
+            if(dcatField.isRequired()){
+                if(dcatFieldName.equalsIgnoreCase("accessURL")){
+                    ResourceLinks links = r.getResourceLinks();
+                    for (ResourceLink link : links) {
+                      if (link.getTag().equals(ResourceLink.TAG_METADATA)) {
+                        val = link.getUrl();
+                        break;
+                      }
                     }
-                  }
-    		  }else{
-    			  val =  defaultValues.getProperty(dcatFieldName);
-    		  }
-    	  }else{
-    		  continue;
-    	  }
-      }else{
-    	  val = "" + indexValue.simplify();
-    	  if(dcatFieldName.equalsIgnoreCase("format") && val.equalsIgnoreCase("[\"unknown\"]")){
-    		  val =  defaultValues.getProperty(dcatFieldName);
-    	  }
-      }
-      String cleanedVal = cleanValue(val,fieldType,dcatFieldName,dcatField);
-      if(dcatFieldName.equalsIgnoreCase("dataDictionary") && !(cleanedVal.startsWith("http://") || cleanedVal.startsWith("https://"))){
-    	  continue;
-      }
-     
-      if(!fldValues.contains(cleanedVal)){     
-    	  if (fldValues.length() > 0) {
-    		  StringBuilder sb = new StringBuilder();
-    		  if(fieldType.equalsIgnoreCase("array")){
-    			  if(!cleanedVal.equalsIgnoreCase(defaultValues.getProperty(dcatFieldName))){
-	    			  if(fldValues.startsWith("[") && fldValues.endsWith("]")){
-	    				  fldValues = fldValues.replace("[", "").replace("]", "");
-	    			  }
-	    			  if(cleanedVal.startsWith("[") && cleanedVal.endsWith("]")){
-	    				  cleanedVal = cleanedVal.replace("[", "").replace("]", "");
-	    			  }    			  
-	    			  sb.append("[").append(fldValues).append(delimiter).append(cleanedVal).append("]");
-	    			  fldValues = sb.toString();
-    			  }
-    		  }else{
-    			  if(fldValues.startsWith("\"") && fldValues.endsWith("\"")){
-    				  fldValues = fldValues.replace("\"", "").replace("\"", "");
-    			  }
-    			  if(cleanedVal.startsWith("\"") && cleanedVal.endsWith("\"")){
-    				  cleanedVal = cleanedVal.replace("\"", "").replace("\"", "");
-    			  }
-    			  sb.append("\"").append(fldValues).append(delimiter).append(cleanedVal).append("\"");
-    			  fldValues = sb.toString();
-    		  }
-	      }else{
-	    	  fldValues += cleanedVal;
-	      }
+                }else{
+                    val =  defaultValues.getProperty(dcatFieldName);
+                }
+            }else{
+                continue;
+            }
+        }else{
+            val = "" + indexValue.simplify();
+            if(dcatFieldName.equalsIgnoreCase("format") && val.equalsIgnoreCase("[\"unknown\"]")){
+                val =  defaultValues.getProperty(dcatFieldName);
+            }
+        }
+        String cleanedVal = cleanValue(val,fieldType,dcatFieldName,dcatField);
+        if(dcatFieldName.equalsIgnoreCase("dataDictionary") && !(cleanedVal.startsWith("http://") || cleanedVal.startsWith("https://"))){
+            continue;
+        }
+
+        if(!fldValues.contains(cleanedVal)){     
+            if (fldValues.length() > 0) {
+                StringBuilder sb = new StringBuilder();
+                if(fieldType.equalsIgnoreCase("array")){
+                    if(!cleanedVal.equalsIgnoreCase(defaultValues.getProperty(dcatFieldName))){
+                        if(fldValues.startsWith("[") && fldValues.endsWith("]")){
+                            fldValues = fldValues.replace("[", "").replace("]", "");
+                        }
+                        if(cleanedVal.startsWith("[") && cleanedVal.endsWith("]")){
+                            cleanedVal = cleanedVal.replace("[", "").replace("]", "");
+                        }    			  
+                        sb.append("[").append(fldValues).append(delimiter).append(cleanedVal).append("]");
+                        fldValues = sb.toString();
+                    }
+                }else{
+                    if(fldValues.startsWith("\"") && fldValues.endsWith("\"")){
+                        fldValues = fldValues.replace("\"", "").replace("\"", "");
+                    }
+                    if(cleanedVal.startsWith("\"") && cleanedVal.endsWith("\"")){
+                        cleanedVal = cleanedVal.replace("\"", "").replace("\"", "");
+                    }
+                    sb.append("\"").append(fldValues).append(delimiter).append(cleanedVal).append("\"");
+                    fldValues = sb.toString();
+                }
+            }else{
+                fldValues += cleanedVal;
+            }
+        }
       }
     }
     if (fldValues.length() == 0) {

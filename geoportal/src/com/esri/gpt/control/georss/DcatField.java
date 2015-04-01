@@ -13,12 +13,16 @@
  * limitations under the License.
  */
 package com.esri.gpt.control.georss;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Dcat field mapped object
  */
 public class DcatField {
 	private String name = "";
-	private String index= "";
+	private List<String> index= new ArrayList<String>();
 	private String type = "string";
 	private String dateFormat = "";
 	private String delimiter = "";
@@ -76,14 +80,14 @@ public class DcatField {
 	/**
 	 * @return the index
 	 */
-	public String getIndex() {
+	public List<String> getIndex() {
 		return index;
 	}
 	/**
 	 * @param index the index to set
 	 */
-	public void setIndex(String index) {
-		this.index = index;
+	public void setIndex(List<String> index) {
+		this.index = index!=null? index: new ArrayList<String>();
 	}
 	public String getDateFormat() {
 		return dateFormat;

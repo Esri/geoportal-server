@@ -58,13 +58,18 @@ public class TemporalField extends BaseDcatField {
 
   @Override
   protected IFeedAttribute getFeedAttribute(Map<String, IFeedAttribute> index, DcatField field) {
-    String[] indexes = field.getIndex().split(",");
-    
     ArrayList<IFeedAttribute> list = new ArrayList<IFeedAttribute>();
-    for (String idx: indexes) {
-      IFeedAttribute attr = index.get(idx);
-      if (attr!=null) {
-        list.add(attr);
+    
+    for (String idxItem: field.getIndex()) {
+      String[] indexes = idxItem.split(",");
+      for (String idx: indexes) {
+        IFeedAttribute attr = index.get(idx);
+        if (attr!=null) {
+          list.add(attr);
+        }
+      }
+      if (list.size()!=2) {
+        list.clear();
       }
     }
     
