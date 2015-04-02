@@ -14,7 +14,6 @@
  */
 package com.esri.gpt.control.georss;
 
-import com.esri.gpt.framework.util.Val;
 import java.util.ArrayList;
 import java.util.List;
 
