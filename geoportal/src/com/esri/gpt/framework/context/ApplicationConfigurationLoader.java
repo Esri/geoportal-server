@@ -499,6 +499,8 @@ private void loadDcatMappings(DcatSchemas dcatSchemas, String dcatMappings) thro
               df.addMedia(url, mime);
             }
             
+            df.setSeparator((String)xpath.evaluate("@separator",field,XPathConstants.STRING));
+            
 	  		dcatFields.add(df);
 	  	}
 	  	dcatSchemas.put(schema, dcatFields);

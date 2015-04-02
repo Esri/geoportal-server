@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.control.georss;
 
+import com.esri.gpt.framework.util.Val;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import java.util.List;
  * Dcat field mapped object
  */
 public class DcatField {
+    private static final String DEFAULT_SEPARATOR = " ";
 	private String name = "";
 	private List<List<String>> index= new ArrayList<List<String>>();
 	private String type = "string";
@@ -30,6 +32,15 @@ public class DcatField {
 	private boolean required;
     private DcatDomain domain = new DcatDomain();
     private DcatDomain media = new DcatDomain();
+    private String separator = DEFAULT_SEPARATOR;
+
+    public String getSeparator() {
+      return separator;
+    }
+
+    public void setSeparator(String separator) {
+      this.separator = Val.chkStr(separator, DEFAULT_SEPARATOR);
+    }
 
     public void addMapping(String from, String value) {
       domain.addMapping(from, value);

@@ -143,7 +143,7 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
         }
       }
       if (lstAttributes.size()==1) return lstAttributes.get(0);
-      if (lstAttributes.size()>1) return IFeedAttribute.Factory.createSum(lstAttributes, ", ");
+      if (lstAttributes.size()>1) return IFeedAttribute.Factory.createSum(lstAttributes, field.getSeparator());
     }
     return null;
   }
