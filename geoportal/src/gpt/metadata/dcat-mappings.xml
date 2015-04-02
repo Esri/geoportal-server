@@ -81,10 +81,10 @@
 	  <field name="title" index="title" required="true"/>  
 	  <field name="description" index="abstract" required="true"/>
 	  <field name="keyword" index="keywords" type="array" required="true"/>
-	  <field name="modified" index="dcat.modified" isDate="true" type="date" dateFormat="yyyy-MM-dd" delimiter="/" required="true"/>
-	  <field name="publisher" index="dcat.publisher" required="true"/>
-	  <field name="contactPoint" index="dcat.person" required="true"/>
-	  <field name="mbox" index="dcat.mbox" required="true"/>
+	  <field name="modified" index="dcat.modified;dcat.metd" isDate="true" type="date" dateFormat="yyyy-MM-dd" delimiter="/" required="true"/>
+	  <field name="publisher" index="dcat.publisher;dcat.org.org&amp;dcat.org.per;dcat.per.org&amp;dcat.per.per;dcat.publisher.origin" required="true" separator=" "/>
+	  <field name="contactPoint" index="dcat.org.org&amp;dcat.org.per;dcat.per.org&amp;dcat.per.per;dcat.metc.org.org&amp;dcat.metc.org.per;dcat.metc.per.org&amp;dcat.metc.per.per" required="true" separator=" "/>
+	  <field name="mbox" index="dcat.mbox;dcat.metc.mbox" required="true"/>
 	  <field name="identifier" required="true"/>  
 	  <field name="accessLevel" index="dcat.accessLevel" required="true">
         <map from=".*restricted.*" to="restricted public"/>

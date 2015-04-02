@@ -413,4 +413,14 @@
   </property-meaning> 
     <property-meaning name="metadataFormat" valueType="String" comparisonType="value">
   </property-meaning>   
+  <property-meaning name="dcat.metc.mbox" valueType="String" comparisonType="value"/>
+  <property-meaning name="dcat.org.org" valueType="String" comparisonType="value"/>
+  <property-meaning name="dcat.org.per" valueType="String" comparisonType="value"/>
+  <property-meaning name="dcat.per.org" valueType="String" comparisonType="value"/>
+  <property-meaning name="dcat.per.per" valueType="String" comparisonType="value"/>
+  <property-meaning name="dcat.metc.org.org" valueType="String" comparisonType="value"/>
+  <property-meaning name="dcat.metc.org.per" valueType="String" comparisonType="value"/>
+  <property-meaning name="dcat.metc.per.org" valueType="String" comparisonType="value"/>
+  <property-meaning name="dcat.metc.per.per" valueType="String" comparisonType="value"/>
+  <property-meaning name="dcat.publisher.origin" valueType="String" comparisonType="value"/>
 </property-meanings>

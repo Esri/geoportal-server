@@ -21,7 +21,7 @@
   <property meaning="abstract" xpath="/metadata/idinfo/descript/abstract"/>
     
   <property meaning="keywords"
-    xpath="/metadata/idinfo/keywords/theme/themekey | /metadata/idinfo/keywords/place/placekey"/>
+    xpath="/metadata/idinfo/keywords/theme/themekey | /metadata/idinfo/keywords/place/placekey | /metadata/idinfo/keywords/stratum/stratkey | /metadata/idinfo/keywords/temporal/tempkey"/>
     
   <property meaning="envelope" xpath="/metadata/idinfo/spdom/bounding">
     <property meaning="envelope.west" xpath="westbc"/>
@@ -67,10 +67,26 @@
   <property meaning="dcat.accessLevel" xpath="/metadata/idinfo/secinfo/secclass"/>
   <property meaning="dcat.accessLevelComment" xpath="/metadata/idinfo/accconst"/> <!-- | /metadata/idinfo/useconst | /metadata/distinfo/distliab"/>-->
   <property meaning="dcat.mbox" xpath="/metadata/distinfo/distrib/cntinfo/cntemail"/>
-  <property meaning="dcat.person" xpath="/metadata/distinfo/distrib/cntinfo/cntperp/cntper | /metadata/distinfo/distrib/cntinfo/cntorgp/cntper" />
+  <property meaning="dcat.metc.mbox" xpath="/metadata/metainfo/metc/cntinfo/cntemail"/>
+  
+  <!--property meaning="dcat.person" xpath="/metadata/distinfo/distrib/cntinfo/cntperp/cntper | /metadata/distinfo/distrib/cntinfo/cntorgp/cntper" /-->
+  
   <property meaning="dcat.dataDictionary" xpath="/metadata/idinfo/keywords/theme/themekt | /metadata/eainfo/overview/eadetcit" />
   <property meaning="dcat.modified" xpath="/metadata/idinfo/citation/citeinfo/pubdate"/>
-  <property meaning="dcat.publisher" xpath="/metadata/distinfo/distrib/cntinfo/cntperp/cntorg | /metadata/distinfo/distrib/cntinfo/cntorgp/cntorg"/>
+  <property meaning="dcat.metd" xpath="/metadata/metainfo/metd"/>
+  
+  <!--property meaning="dcat.publisher" xpath="/metadata/distinfo/distrib/cntinfo/cntperp/cntorg | /metadata/distinfo/distrib/cntinfo/cntorgp/cntorg"/-->
+  <property meaning="dcat.publisher" xpath="/metadata/idinfo/citation/citeinfo/pubinfo/publish"/>
+  <property meaning="dcat.org.org" xpath="/metadata/distinfo/distrib/cntinfo/cntorgp/cntorg"/>
+  <property meaning="dcat.org.per" xpath="/metadata/distinfo/distrib/cntinfo/cntorgp/cntper"/>
+  <property meaning="dcat.per.org" xpath="/metadata/distinfo/distrib/cntinfo/cntperp/cntorg"/>
+  <property meaning="dcat.per.per" xpath="/metadata/distinfo/distrib/cntinfo/cntperp/cntper"/>
+  <property meaning="dcat.metc.org.org" xpath="/metadata/metainfo/metc/cntinfo/cntorgp/cntorg"/>
+  <property meaning="dcat.metc.org.per" xpath="/metadata/metainfo/metc/cntinfo/cntorgp/cntper"/>
+  <property meaning="dcat.metc.per.org" xpath="/metadata/metainfo/metc/cntinfo/cntperp/cntorgr"/>
+  <property meaning="dcat.metc.per.per" xpath="/metadata/metainfo/metc/cntinfo/cntperp/cntpper"/>
+  <property meaning="dcat.publisher.origin" xpath="/metadata/idinfo/citation/citeinfo/origin"/>
+  
   <property meaning="dcat.format" xpath="/metadata/distinfo/storder/digform/digtinfo/fname"/>
   <property meaning="dcat.accrualPeriodicity" xpath="/metadata/idinfo/status/update"/>
   <!-- EPA URL Convention -->
