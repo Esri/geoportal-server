@@ -53,6 +53,12 @@ public interface IFeedAttribute {
    */
   List<String> asList();
   /**
+   * To flat string
+   * @param separator separator
+   * @return flat string
+   */
+  String join(String separator);
+  /**
    * Checks if attribute is empty.
    * @return <code>true</code> if value is empty
    */
@@ -105,14 +111,15 @@ public interface IFeedAttribute {
       if (value instanceof Date) {
         return create((Date)value, length);
       }
-      if (value instanceof Object) {
-        return new FeedObject(value, length);
-      }
       return new FeedNull();
     }
     
     static IFeedAttribute create(List<IFeedAttribute> list) {
       return new FeedList(list);
+    }
+    
+    public static IFeedAttribute createSum(List<IFeedAttribute> list, String separator) {
+      return new SumList(list,separator);
     }
   }
   
@@ -123,6 +130,11 @@ public interface IFeedAttribute {
     @Override
     public String toString() {
       return "\"\"";
+    }
+
+    @Override
+    public String join(String separator) {
+      return "";
     }
 
     @Override
@@ -180,6 +192,11 @@ public interface IFeedAttribute {
     }
 
     @Override
+    public String join(String separator) {
+      return Val.escapeStrForJson(value);
+    }
+
+    @Override
     public Object getValue() {
       return value;
     }
@@ -225,6 +242,11 @@ public interface IFeedAttribute {
     
     @Override
     public String toString() {
+      return number.toString();
+    }
+
+    @Override
+    public String join(String separator) {
       return number.toString();
     }
 
@@ -277,6 +299,11 @@ public interface IFeedAttribute {
     }
 
     @Override
+    public String join(String separator) {
+      return DF.format(date);
+    }
+
+    @Override
     public Object getValue() {
       return date;
     }
@@ -308,55 +335,6 @@ public interface IFeedAttribute {
   }
   
   /**
-   * Object feed.
-   */
-  static class FeedObject implements IFeedAttribute {
-    private final Object obj;
-    private final int length;
-    
-    public FeedObject(Object obj, int length) {
-      this.obj = obj;
-      this.length = length;
-    }
-    
-    @Override
-    public String toString() {
-      return "\"" + Val.escapeStrForJson(obj.toString()) + "\"";
-    }
-
-    @Override
-    public Object getValue() {
-      return obj;
-    }
-
-    @Override
-    public String getEsriType() {
-      return "esriFieldTypeString";
-    }
-    
-    @Override
-    public int getLength() {
-      return length;
-    }
-
-    @Override
-    public IFeedAttribute simplify() {
-      return this;
-    }
-
-    @Override
-    public List<String> asList() {
-      return Arrays.asList(new String[]{Val.escapeStrForJson(obj.toString())});
-    }
-
-    @Override
-    public boolean isEmpty() {
-      return obj.toString().isEmpty();
-    }
-    
-  }
-  
-  /**
    * List feed.
    */
   static class FeedList implements IFeedAttribute {
@@ -380,6 +358,21 @@ public interface IFeedAttribute {
       return sb.toString();
     }
  
+    @Override
+    public String join(String separator) {
+      StringBuilder sb = new StringBuilder();
+       for (int i=0; i<list.size(); i++) {
+        String subValue = list.get(i).join(separator);
+        if (!subValue.isEmpty()) {
+          if (sb.length()>0) {
+            sb.append(separator);
+          }
+          sb.append(subValue);
+        }
+      }
+      return sb.toString();
+    }
+
     @Override
     public Object getValue() {
       return list;
@@ -427,4 +420,27 @@ public interface IFeedAttribute {
     
     
  }
+  
+  
+  static class SumList extends FeedList {
+    private final String separator;
+
+    public SumList(List<IFeedAttribute> list, String separator) {
+      super(list);
+      this.separator = separator!=null? separator: " ";
+    }
+    
+    @Override
+    public String toString() {
+      return join(separator);
+    }
+
+    @Override
+    public IFeedAttribute simplify() {
+      String strValue = join(separator);
+      return new FeedString(strValue, strValue.length());
+    }
+    
+  }
+  
 }

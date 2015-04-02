@@ -20,6 +20,8 @@ import com.esri.gpt.control.georss.DcatFields;
 import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedRecord;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -132,9 +134,16 @@ public abstract class BaseDcatField implements DcatFieldDefinition {
    * @return attribute or <code>null</code> if not available
    */
   protected IFeedAttribute getFeedAttribute(Map<String, IFeedAttribute> index, DcatField field) {
-    for (String indexName: field.getIndex()) {
-      IFeedAttribute attr = index.get(indexName);
-      if (attr!=null && !attr.isEmpty()) return attr;
+    for (List<String> additives: field.getIndex()) {
+      List<IFeedAttribute> lstAttributes = new ArrayList<IFeedAttribute>();
+      for (String indexName: additives) {
+        IFeedAttribute attr = index.get(indexName);
+        if (attr!=null && !attr.isEmpty()) {
+          lstAttributes.add(attr);
+        }
+      }
+      if (lstAttributes.size()==1) return lstAttributes.get(0);
+      if (lstAttributes.size()>1) return IFeedAttribute.Factory.createSum(lstAttributes, ", ");
     }
     return null;
   }

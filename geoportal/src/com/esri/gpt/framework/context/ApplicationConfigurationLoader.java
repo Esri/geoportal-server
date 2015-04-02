@@ -460,11 +460,17 @@ private void loadDcatMappings(DcatSchemas dcatSchemas, String dcatMappings) thro
 	  		df.setType(xpath.evaluate("@type", field));
             
             String strIndex = Val.chkStr(xpath.evaluate("@index", field));
-            ArrayList<String> lstIndex = new ArrayList<String>();
-            for (String strItem: strIndex.split(";")) {
-              strItem = Val.chkStr(strItem);
-              if (strItem.isEmpty()) continue;
-              lstIndex.add(strItem);
+            List<List<String>> lstIndex = new ArrayList<List<String>>();
+            for (String strChain: strIndex.split(";")) {
+              strChain = Val.chkStr(strChain);
+              if (strChain.isEmpty()) continue;
+              List<String> lstChain = new ArrayList<String>();
+              for (String strItem: strChain.split("&")) {
+                strItem = Val.chkStr(strItem);
+                if (strItem.isEmpty()) continue;
+                lstChain.add(strItem);
+              }
+              lstIndex.add(lstChain);
             }
 	  		df.setIndex(lstIndex);
             

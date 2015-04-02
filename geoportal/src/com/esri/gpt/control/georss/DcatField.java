@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class DcatField {
 	private String name = "";
-	private List<String> index= new ArrayList<String>();
+	private List<List<String>> index= new ArrayList<List<String>>();
 	private String type = "string";
 	private String dateFormat = "";
 	private String delimiter = "";
@@ -80,14 +80,14 @@ public class DcatField {
 	/**
 	 * @return the index
 	 */
-	public List<String> getIndex() {
+	public List<List<String>> getIndex() {
 		return index;
 	}
 	/**
 	 * @param index the index to set
 	 */
-	public void setIndex(List<String> index) {
-		this.index = index!=null? index: new ArrayList<String>();
+	public void setIndex(List<List<String>> index) {
+		this.index = index!=null? index: new ArrayList<List<String>>();
 	}
 	public String getDateFormat() {
 		return dateFormat;

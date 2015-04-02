@@ -46,20 +46,21 @@ import java.util.logging.Logger;
  * Writes Dcat json response of search results using dcat mappings.
  */
 public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
+
   private static final Logger LOGGER = Logger.getLogger(DcatJsonFeedWriter.class.getCanonicalName());
 
   private Properties defaultValues = new Properties();
-  protected DcatSchemas dcatSchemas; 
+  protected DcatSchemas dcatSchemas;
 
   protected DcatJsonFeedWriter(HttpServletRequest request,
-          RequestContext context, PrintWriter writer, RestQuery query,
-          Boolean pretty) {
+    RequestContext context, PrintWriter writer, RestQuery query,
+    Boolean pretty) {
     super(request, context, writer, query, pretty);
   }
 
   protected DcatJsonFeedWriter(Map<String, String[]> parameterMap,
-          RequestContext context, PrintWriter writer, RestQuery query,
-          Boolean pretty) {
+    RequestContext context, PrintWriter writer, RestQuery query,
+    Boolean pretty) {
     super(parameterMap, context, writer, query, pretty);
   }
 
@@ -91,13 +92,12 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     String sSpatial = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.spatial"));
     String sTemporal = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.temporal"));
 
-    
     properties.setProperty("title", sTitle);
     properties.setProperty("description", sDescription);
-    
+
     properties.setProperty("keyword", sKeyword);
     properties.setProperty("modified", sModified);
-    
+
     properties.setProperty("publisher", sPublisher);
     properties.setProperty("contactPoint", sPerson);
     properties.setProperty("mbox", sMbox);
@@ -107,7 +107,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 
     properties.setProperty("bureauCode", sBureauCode);
     properties.setProperty("programCode", sProgramCode);
-    
+
     properties.setProperty("dataDictionary", sDataDictionary);
     properties.setProperty("accessURL", sAccessUrl);
     properties.setProperty("webService", sWebService);
@@ -115,15 +115,15 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     properties.setProperty("license", sLicense);
     properties.setProperty("spatial", sSpatial);
     properties.setProperty("temporal", sTemporal);
-    
+
     HttpServletRequest httpServletRequest = (HttpServletRequest) context.getServletRequest();
-    String root = httpServletRequest!=null? RequestContext.resolveBaseContextPath(httpServletRequest):
-      Val.chkStr(ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getParameters().getValue("reverseProxy.baseContextPath"));
+    String root = httpServletRequest != null ? RequestContext.resolveBaseContextPath(httpServletRequest)
+      : Val.chkStr(ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getParameters().getValue("reverseProxy.baseContextPath"));
     String contextParam = root;
-    if (httpServletRequest!=null) {
+    if (httpServletRequest != null) {
       String requestURI = httpServletRequest.getRequestURI();
       String contextPath = httpServletRequest.getContextPath();
-      String queryString = Val.chkStr(((HttpServletRequest)context.getServletRequest()).getQueryString());
+      String queryString = Val.chkStr(((HttpServletRequest) context.getServletRequest()).getQueryString());
       if (requestURI.startsWith(contextPath)) {
         requestURI = requestURI.substring(contextPath.length());
         contextParam += requestURI;
@@ -134,18 +134,18 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     } else {
       contextParam = root + "/dcat.json";
     }
-    
+
     properties.setProperty("@root", root);
     properties.setProperty("@id", contextParam);
-    
+
     return properties;
   }
-  
+
   @Override
   public void write(IFeedRecords records) {
 
     defaultValues = makeDefaultValues();
-    
+
     println("[");
     levelUp();
 
@@ -155,10 +155,10 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     printArg("title", defaultValues.getProperty("title"), true);
     printArg("description", defaultValues.getProperty("description"), true);
     printArg2("keyword", defaultValues.getProperty("keyword"), true);
-    if(defaultValues.getProperty("modified").length() > 0 ){
-    	printArg("modified", defaultValues.getProperty("modified"), true);
-    }else {
-    	printArg("modified", DF.format(new Date()), true);
+    if (defaultValues.getProperty("modified").length() > 0) {
+      printArg("modified", defaultValues.getProperty("modified"), true);
+    } else {
+      printArg("modified", DF.format(new Date()), true);
     }
     printArg("publisher", defaultValues.getProperty("publisher"), true);
     printArg("contactPoint", defaultValues.getProperty("contactPoint"), true);
@@ -168,8 +168,8 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     printArg("accessLevelComment", defaultValues.getProperty("accessLevelComment"), true);
     printArg2("bureauCode", defaultValues.getProperty("bureauCode"), true);
     printArg2("programCode", defaultValues.getProperty("programCode"), true);
-    if(defaultValues.getProperty("dataDictionary").length() > 0){
-    	printArg("dataDictionary", defaultValues.getProperty("dataDictionary"), true);
+    if (defaultValues.getProperty("dataDictionary").length() > 0) {
+      printArg("dataDictionary", defaultValues.getProperty("dataDictionary"), true);
     }
 
     if (defaultValues.getProperty("accessURL").length() > 0) {
@@ -194,8 +194,8 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     printArg("temporal", defaultValues.getProperty("temporal"), false);
 
     levelDown();
-    println(records!=null && records.size() > 0 ? "}," : "}");
-    if (records!=null) {
+    println(records != null && records.size() > 0 ? "}," : "}");
+    if (records != null) {
       printRecords(records, true);
     }
 
@@ -221,18 +221,18 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
   protected void printRecords(IFeedRecords records, boolean more) {
     int numberOfHits = records.getOpenSearchProperties().getNumberOfHits();
     int counter = 0;
-    
+
     this.dcatSchemas = ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getDcatSchemas();
-    LOGGER.info("Beginning processing " +numberOfHits+ " DCAT records...");
+    LOGGER.info("Beginning processing " + numberOfHits + " DCAT records...");
     for (int i = 0; i < records.size(); i++) {
       IFeedRecord record = records.get(i);
       Envelope envelope = record.getEnvelope();
       printRecord(record, envelope, i < records.size() - 1);
-      
-      if ((++counter)%1000==0) {
-        LOGGER.info("Processed "+counter+"/" +numberOfHits+ " DCAT records ("+(100*counter)/numberOfHits+"%)");
+
+      if ((++counter) % 1000 == 0) {
+        LOGGER.info("Processed " + counter + "/" + numberOfHits + " DCAT records (" + (100 * counter) / numberOfHits + "%)");
       }
-      
+
       Thread.yield();
     }
   }
@@ -267,18 +267,18 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
   private boolean lookUpFieldFromDcat(IFeedRecord r, DcatField dcatField, boolean before) {
     String delimiter = ",";
     String dl = dcatField.getDelimiter();
-	 if(dl.length() > 0){
-		 delimiter = dl;
-	 }
+    if (dl.length() > 0) {
+      delimiter = dl;
+    }
     Map<String, IFeedAttribute> index = r.getData(IFeedRecord.STD_COLLECTION_INDEX);
-    List<String> indexKeys = dcatField.getIndex();
-    for (String indexKey: indexKeys) {
-      if (indexKey.length() > 0) {
-        before = writeField(r,index, dcatField, delimiter, before);
+    List<List<String>> indexKeys = dcatField.getIndex();
+    for (List<String> indexKey : indexKeys) {
+      if (indexKey.size() > 0) {
+        before = writeField(r, index, dcatField, delimiter, before);
         break;
-      } else if (dcatField.getName().equalsIgnoreCase("identifier") && indexKey.length() == 0) {
+      } else if (dcatField.getName().equalsIgnoreCase("identifier") && indexKey.size() == 0) {
         ResourceLinks links = r.getResourceLinks();
-        before = writeFieldValue("\"" + getIdentifierUrl(links) + "\"", "identifier", delimiter, before,dcatField);
+        before = writeFieldValue("\"" + getIdentifierUrl(links) + "\"", "identifier", delimiter, before, dcatField);
         break;
       }
     }
@@ -298,19 +298,19 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     Map<String, IFeedAttribute> index = r.getData(IFeedRecord.STD_COLLECTION_INDEX);
     IFeedAttribute schemaKeyAttr = index.get("sys.schema.key");
     if (schemaKeyAttr != null) {
-      schemaKey = cleanValue(schemaKeyAttr + "","","",null);
+      schemaKey = cleanValue(schemaKeyAttr + "", "", "", null);
     }
     DcatFields dcatFields = null;
     Set<String> keys = this.dcatSchemas.keySet();
     schemaKey = schemaKey.replaceAll("\"", "");
     for (String key : keys) {
-	    String[] parts = key.split(",");
-	    for(String part : parts){
-	      if (part.equalsIgnoreCase(schemaKey)) {
-	        dcatFields = this.dcatSchemas.get(schemaKey);
-	        break;
-	      }
-	    }
+      String[] parts = key.split(",");
+      for (String part : parts) {
+        if (part.equalsIgnoreCase(schemaKey)) {
+          dcatFields = this.dcatSchemas.get(schemaKey);
+          break;
+        }
+      }
     }
     if (dcatFields == null) {
       dcatFields = this.dcatSchemas.get("others");
@@ -326,7 +326,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     ResourceLinks links = r.getResourceLinks();
     printLinks(links, false, before);
   }
-  
+
   /**
    * Prints argument.
    *
@@ -334,12 +334,11 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    * @param argVal argument value
    * @param more flag to indicate if there will be more arguments
    */
-  
-  protected  void printArg2(String argName, String argVal, boolean more) {
+  protected void printArg2(String argName, String argVal, boolean more) {
     argName = Val.chkStr(argName);
     argVal = Val.chkStr(argVal);
     if (argName.length() > 0) {
-      println("\"" + Val.escapeStrForJson(argName) + "\"" + sp() + ":" + sp() +   (argVal) +  (more ? "," : ""));
+      println("\"" + Val.escapeStrForJson(argName) + "\"" + sp() + ":" + sp() + (argVal) + (more ? "," : ""));
     }
   }
 
@@ -379,8 +378,8 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
       boolean bPrintLink = false;
       String format = "";
       /*if (link.getTag().equals(ResourceLink.TAG_OPEN)) {
-      defaultValues.put("webService", link.getUrl());
-      }*/
+       defaultValues.put("webService", link.getUrl());
+       }*/
       if (link.getTag().equals(ResourceLink.TAG_METADATA)) {
         bPrintLink = true;
         if (!moreLinks) {
@@ -446,111 +445,113 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    * @param value value to clean
    * @return cleaned value
    */
-  private String cleanValue(String value, String type, String dcatFieldName,DcatField dcatField) {
-	 String delimiter = ", ";
-	 String dateFormat = "";
-	 int maxChars = -1;
-	 if(dcatField != null){		 
-		 String df = dcatField.getDateFormat();
-		 if(df.length() > 0){
-			 dateFormat = df;
-		 }
-		 int mc = dcatField.getMaxChars();
-		 if(mc > -1){
-			 maxChars = mc;
-		 }
-	 }
+  private String cleanValue(String value, String type, String dcatFieldName, DcatField dcatField) {
+    String delimiter = ", ";
+    String dateFormat = "";
+    int maxChars = -1;
+    if (dcatField != null) {
+      String df = dcatField.getDateFormat();
+      if (df.length() > 0) {
+        dateFormat = df;
+      }
+      int mc = dcatField.getMaxChars();
+      if (mc > -1) {
+        maxChars = mc;
+      }
+    }
     if (value == null) {
       return "";
     }
     if ("null".equals(value)) {
       return "";
     }
-    if(type.equalsIgnoreCase("date") || dcatFieldName.equalsIgnoreCase("spatial")) { 
+    if (type.equalsIgnoreCase("date") || dcatFieldName.equalsIgnoreCase("spatial")) {
       value = value.replaceAll("\"", "");
     }
     if (value.startsWith("[")) {
       value = value.replace("[", "");
-      if(type.equalsIgnoreCase("string")){
-        value = value.replaceAll("\",\"", ",");       
+      if (type.equalsIgnoreCase("string")) {
+        value = value.replaceAll("\",\"", ",");
       }
     }
     if (value.endsWith("]")) {
       value = value.replace("]", "");
     }
-        
+
     // only one webService url
-    if(dcatFieldName.equalsIgnoreCase("webService") && value != null && value.length() > 0){
-	    String[] parts = value.split(",http");
-	    if(parts != null && parts.length > 0){
-	    	value = parts[0];
-	    	if(!value.startsWith("\"")){
-	    		value = "\"" + Val.escapeStrForJson(value);
-	    	}
-	    	if(!value.endsWith("\"")){
-	    		value += "\""; 
-	    	}
-	    }
+    if (dcatFieldName.equalsIgnoreCase("webService") && value != null && value.length() > 0) {
+      String[] parts = value.split(",http");
+      if (parts != null && parts.length > 0) {
+        value = parts[0];
+        if (!value.startsWith("\"")) {
+          value = "\"" + Val.escapeStrForJson(value);
+        }
+        if (!value.endsWith("\"")) {
+          value += "\"";
+        }
+      }
     }
-        
-    if (value != null && value.length() > 0){
-	    if(type.equalsIgnoreCase("date")) {
-	    	int firstIdx = value.indexOf(",");
-	    	if(firstIdx > -1){
-	    		value = value.substring(0,firstIdx);
-	    	}
-            String [] valArr = value.split("/");
-            for (String val : valArr) {
-              val = parseDateTime(val);
-              if(dateFormat.length() > 0){
-                SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-                try {
-                  Date dt = new IsoDateFormat().parseObject(value);
-                  if (dt!=null) {
-                    val = sdf.format(dt);
-                  } else {
-                    val = "";
-                  }
 
-                } catch (ParseException e) {
-                  val = "";
-                }
+    if (value != null && value.length() > 0) {
+      if (type.equalsIgnoreCase("date")) {
+        int firstIdx = value.indexOf(",");
+        if (firstIdx > -1) {
+          value = value.substring(0, firstIdx);
+        }
+        String[] valArr = value.split("/");
+        for (String val : valArr) {
+          val = parseDateTime(val);
+          if (dateFormat.length() > 0) {
+            SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+            try {
+              Date dt = new IsoDateFormat().parseObject(value);
+              if (dt != null) {
+                val = sdf.format(dt);
+              } else {
+                val = "";
               }
-            }
-            value = Val.join(valArr, "/");
-	    }else if(type.equalsIgnoreCase("array")) {
-	    	value = value.replace("\"", "").replace("\"", "");
-	    	String[] parts = value.split(",");
-	    	StringBuilder sb = new StringBuilder();
-	    	sb.append("[");
-	    	boolean hasValue = false;
-            HashMap<String, String> repKeyword = new HashMap<String, String>();
-	    	for (String part : parts){
-                part = part.trim();
-                if (part.isEmpty()) continue;
-                String partTrimUpper = part.toUpperCase();
-                if (!part.startsWith("\"") && !part.endsWith("\"")) {
-                    if ((!dcatFieldName.equalsIgnoreCase("keyword")) || (!repKeyword.containsKey(partTrimUpper))) {
-                        repKeyword.put(partTrimUpper, partTrimUpper);
-                        if (hasValue) {
-                          sb.append(delimiter);
-                        }
 
-                        sb.append("\"").append(Val.escapeStrForJson(part)).append("\"");
-                        hasValue = true;
-                    }
-                }
-	    	}	    		    
-	    	sb.append("]");
-	    	value = sb.toString();
-	    }
-	    
-	    if(type.equalsIgnoreCase("string")){
-		    if(maxChars > -1 && value.length() > maxChars){		    	
-              value = Val.escapeStrForJson(value.substring(0,maxChars));
-		    }
-	    }
-    }    
+            } catch (ParseException e) {
+              val = "";
+            }
+          }
+        }
+        value = Val.join(valArr, "/");
+      } else if (type.equalsIgnoreCase("array")) {
+        value = value.replace("\"", "").replace("\"", "");
+        String[] parts = value.split(",");
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        boolean hasValue = false;
+        HashMap<String, String> repKeyword = new HashMap<String, String>();
+        for (String part : parts) {
+          part = part.trim();
+          if (part.isEmpty()) {
+            continue;
+          }
+          String partTrimUpper = part.toUpperCase();
+          if (!part.startsWith("\"") && !part.endsWith("\"")) {
+            if ((!dcatFieldName.equalsIgnoreCase("keyword")) || (!repKeyword.containsKey(partTrimUpper))) {
+              repKeyword.put(partTrimUpper, partTrimUpper);
+              if (hasValue) {
+                sb.append(delimiter);
+              }
+
+              sb.append("\"").append(Val.escapeStrForJson(part)).append("\"");
+              hasValue = true;
+            }
+          }
+        }
+        sb.append("]");
+        value = sb.toString();
+      }
+
+      if (type.equalsIgnoreCase("string")) {
+        if (maxChars > -1 && value.length() > maxChars) {
+          value = Val.escapeStrForJson(value.substring(0, maxChars));
+        }
+      }
+    }
     return value;
   }
 
@@ -563,13 +564,13 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    * @param before the indentation flag
    * @return always <code>true</code>
    */
-  private boolean writeFieldValue(String fieldValue, String jsonKey, String delimiter, boolean before,DcatField dcatField) {
-    String cleanedVal = cleanValue(fieldValue,"",jsonKey,dcatField);
+  private boolean writeFieldValue(String fieldValue, String jsonKey, String delimiter, boolean before, DcatField dcatField) {
+    String cleanedVal = cleanValue(fieldValue, "", jsonKey, dcatField);
     if (before) {
       print(false, ",");
       print(false, "\r\n");
     }
-    print(before, "\"" + jsonKey + "\"" + sp() + ":" + sp() +  cleanedVal);
+    print(before, "\"" + jsonKey + "\"" + sp() + ":" + sp() + cleanedVal);
     before = true;
     return before;
   }
@@ -585,71 +586,75 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
    * @param isDate true if date field
    * @return always <code>true</code>
    */
-  private boolean writeField(IFeedRecord r,Map<String, IFeedAttribute> index,DcatField dcatField, String delimiter, boolean before) {
-	List<String> indexFieldNames = dcatField.getIndex();
-	String dcatFieldName = dcatField.getName();
-	String fieldType = dcatField.getType();
+  private boolean writeField(IFeedRecord r, Map<String, IFeedAttribute> index, DcatField dcatField, String delimiter, boolean before) {
+    List<List<String>> indexFieldNamesAll = dcatField.getIndex();
+    String dcatFieldName = dcatField.getName();
+    String fieldType = dcatField.getType();
     String fldValues = "";
-    
-    for (String indexFieldName: indexFieldNames) {
-      String[] flds = indexFieldName.split(",");
-      for (String fld : flds) {
-        IFeedAttribute indexValue = index.get(fld);
-        String val = "";
-        if (indexValue == null) {
-            if(dcatField.isRequired()){
-                if(dcatFieldName.equalsIgnoreCase("accessURL")){
-                    ResourceLinks links = r.getResourceLinks();
-                    for (ResourceLink link : links) {
-                      if (link.getTag().equals(ResourceLink.TAG_METADATA)) {
-                        val = link.getUrl();
-                        break;
-                      }
-                    }
-                }else{
-                    val =  defaultValues.getProperty(dcatFieldName);
-                }
-            }else{
-                continue;
-            }
-        }else{
-            val = "" + indexValue.simplify();
-            if(dcatFieldName.equalsIgnoreCase("format") && val.equalsIgnoreCase("[\"unknown\"]")){
-                val =  defaultValues.getProperty(dcatFieldName);
-            }
-        }
-        String cleanedVal = cleanValue(val,fieldType,dcatFieldName,dcatField);
-        if(dcatFieldName.equalsIgnoreCase("dataDictionary") && !(cleanedVal.startsWith("http://") || cleanedVal.startsWith("https://"))){
-            continue;
-        }
 
-        if(!fldValues.contains(cleanedVal)){     
-            if (fldValues.length() > 0) {
-                StringBuilder sb = new StringBuilder();
-                if(fieldType.equalsIgnoreCase("array")){
-                    if(!cleanedVal.equalsIgnoreCase(defaultValues.getProperty(dcatFieldName))){
-                        if(fldValues.startsWith("[") && fldValues.endsWith("]")){
-                            fldValues = fldValues.replace("[", "").replace("]", "");
-                        }
-                        if(cleanedVal.startsWith("[") && cleanedVal.endsWith("]")){
-                            cleanedVal = cleanedVal.replace("[", "").replace("]", "");
-                        }    			  
-                        sb.append("[").append(fldValues).append(delimiter).append(cleanedVal).append("]");
-                        fldValues = sb.toString();
-                    }
-                }else{
-                    if(fldValues.startsWith("\"") && fldValues.endsWith("\"")){
-                        fldValues = fldValues.replace("\"", "").replace("\"", "");
-                    }
-                    if(cleanedVal.startsWith("\"") && cleanedVal.endsWith("\"")){
-                        cleanedVal = cleanedVal.replace("\"", "").replace("\"", "");
-                    }
-                    sb.append("\"").append(fldValues).append(delimiter).append(cleanedVal).append("\"");
-                    fldValues = sb.toString();
+    if (!indexFieldNamesAll.isEmpty()) {
+      List<String> indexFieldNames = indexFieldNamesAll.get(0);
+
+      for (String indexFieldName : indexFieldNames) {
+        String[] flds = indexFieldName.split(",");
+        for (String fld : flds) {
+          IFeedAttribute indexValue = index.get(fld);
+          String val = "";
+          if (indexValue == null) {
+            if (dcatField.isRequired()) {
+              if (dcatFieldName.equalsIgnoreCase("accessURL")) {
+                ResourceLinks links = r.getResourceLinks();
+                for (ResourceLink link : links) {
+                  if (link.getTag().equals(ResourceLink.TAG_METADATA)) {
+                    val = link.getUrl();
+                    break;
+                  }
                 }
-            }else{
-                fldValues += cleanedVal;
+              } else {
+                val = defaultValues.getProperty(dcatFieldName);
+              }
+            } else {
+              continue;
             }
+          } else {
+            val = "" + indexValue.simplify();
+            if (dcatFieldName.equalsIgnoreCase("format") && val.equalsIgnoreCase("[\"unknown\"]")) {
+              val = defaultValues.getProperty(dcatFieldName);
+            }
+          }
+          String cleanedVal = cleanValue(val, fieldType, dcatFieldName, dcatField);
+          if (dcatFieldName.equalsIgnoreCase("dataDictionary") && !(cleanedVal.startsWith("http://") || cleanedVal.startsWith("https://"))) {
+            continue;
+          }
+
+          if (!fldValues.contains(cleanedVal)) {
+            if (fldValues.length() > 0) {
+              StringBuilder sb = new StringBuilder();
+              if (fieldType.equalsIgnoreCase("array")) {
+                if (!cleanedVal.equalsIgnoreCase(defaultValues.getProperty(dcatFieldName))) {
+                  if (fldValues.startsWith("[") && fldValues.endsWith("]")) {
+                    fldValues = fldValues.replace("[", "").replace("]", "");
+                  }
+                  if (cleanedVal.startsWith("[") && cleanedVal.endsWith("]")) {
+                    cleanedVal = cleanedVal.replace("[", "").replace("]", "");
+                  }
+                  sb.append("[").append(fldValues).append(delimiter).append(cleanedVal).append("]");
+                  fldValues = sb.toString();
+                }
+              } else {
+                if (fldValues.startsWith("\"") && fldValues.endsWith("\"")) {
+                  fldValues = fldValues.replace("\"", "").replace("\"", "");
+                }
+                if (cleanedVal.startsWith("\"") && cleanedVal.endsWith("\"")) {
+                  cleanedVal = cleanedVal.replace("\"", "").replace("\"", "");
+                }
+                sb.append("\"").append(fldValues).append(delimiter).append(cleanedVal).append("\"");
+                fldValues = sb.toString();
+              }
+            } else {
+              fldValues += cleanedVal;
+            }
+          }
         }
       }
     }
@@ -661,16 +666,16 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     }
     if (fldValues.length() > 0) {
       if (fieldType.equalsIgnoreCase("array")) {
-    	fldValues = fldValues.replaceAll(",", ", ");
+        fldValues = fldValues.replaceAll(",", ", ");
       }
       if (before) {
         print(false, ",");
         print(false, "\r\n");
       }
-      if(!fldValues.startsWith("\"") && !fldValues.startsWith("[") && !fldValues.endsWith("\"") && !fldValues.endsWith("]")){
-    	  fldValues = "\"" + fldValues + "\"";
+      if (!fldValues.startsWith("\"") && !fldValues.startsWith("[") && !fldValues.endsWith("\"") && !fldValues.endsWith("]")) {
+        fldValues = "\"" + fldValues + "\"";
       }
-      print(before, "\"" + dcatFieldName + "\"" + sp() + ":" + sp()  + fldValues);
+      print(before, "\"" + dcatFieldName + "\"" + sp() + ":" + sp() + fldValues);
       before = true;
     }
     return before;
@@ -686,7 +691,9 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
   private String parseDateTime(String dateTime) {
     dateTime = Val.chkStr(dateTime);
     String lc = dateTime.toLowerCase();
-    if(lc.contains(",")) return dateTime;
+    if (lc.contains(",")) {
+      return dateTime;
+    }
     if (lc.equals("*")) {
       return "";
     } else if (lc.equals("now") || lc.equals("present")) {
@@ -754,7 +761,6 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     if (outFieldsSet != null && !outFieldsSet.contains(attrName)) {
       return false;
     }
-
 
     return true;
   }
