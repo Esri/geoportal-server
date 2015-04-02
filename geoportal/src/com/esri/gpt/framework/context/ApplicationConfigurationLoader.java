@@ -499,7 +499,7 @@ private void loadDcatMappings(DcatSchemas dcatSchemas, String dcatMappings) thro
               df.addMedia(url, mime);
             }
             
-            df.setSeparator((String)xpath.evaluate("@separator",field,XPathConstants.STRING));
+            df.setJoinOperator((String)xpath.evaluate("@joinOperator",field,XPathConstants.STRING));
             
 	  		dcatFields.add(df);
 	  	}

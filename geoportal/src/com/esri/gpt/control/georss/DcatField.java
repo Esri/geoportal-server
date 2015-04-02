@@ -22,7 +22,7 @@ import java.util.List;
  * Dcat field mapped object
  */
 public class DcatField {
-    private static final String DEFAULT_SEPARATOR = " ";
+    private static final String DEFAULT_JOINOPERATOR = ", ";
 	private String name = "";
 	private List<List<String>> index= new ArrayList<List<String>>();
 	private String type = "string";
@@ -30,16 +30,16 @@ public class DcatField {
 	private String delimiter = "";
 	private int maxChars = -1;
 	private boolean required;
-    private DcatDomain domain = new DcatDomain();
-    private DcatDomain media = new DcatDomain();
-    private String separator = DEFAULT_SEPARATOR;
+    private final DcatDomain domain = new DcatDomain();
+    private final DcatDomain media = new DcatDomain();
+    private String joinOperator = DEFAULT_JOINOPERATOR;
 
-    public String getSeparator() {
-      return separator;
+    public String getJoinOperator() {
+      return joinOperator;
     }
 
-    public void setSeparator(String separator) {
-      this.separator = Val.chkStr(separator, DEFAULT_SEPARATOR);
+    public void setJoinOperator(String joinOperator) {
+      this.joinOperator = joinOperator!=null? joinOperator: DEFAULT_JOINOPERATOR;
     }
 
     public void addMapping(String from, String value) {

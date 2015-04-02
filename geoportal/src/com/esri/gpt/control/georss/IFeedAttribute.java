@@ -118,8 +118,8 @@ public interface IFeedAttribute {
       return new FeedList(list);
     }
     
-    public static IFeedAttribute createSum(List<IFeedAttribute> list, String separator) {
-      return new SumList(list,separator);
+    public static IFeedAttribute createSum(List<IFeedAttribute> list, String joinOperator) {
+      return new SumList(list,joinOperator);
     }
   }
   
@@ -423,21 +423,21 @@ public interface IFeedAttribute {
   
   
   static class SumList extends FeedList {
-    private final String separator;
+    private final String joinOperator;
 
-    public SumList(List<IFeedAttribute> list, String separator) {
+    public SumList(List<IFeedAttribute> list, String joinOperator) {
       super(list);
-      this.separator = separator!=null? separator: " ";
+      this.joinOperator = joinOperator!=null? joinOperator: " ";
     }
     
     @Override
     public String toString() {
-      return join(separator);
+      return join(joinOperator);
     }
 
     @Override
     public IFeedAttribute simplify() {
-      String strValue = join(separator);
+      String strValue = join(joinOperator);
       return new FeedString(strValue, strValue.length());
     }
     
