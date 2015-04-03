@@ -465,7 +465,7 @@ private void loadDcatMappings(DcatSchemas dcatSchemas, String dcatMappings) thro
               strChain = Val.chkStr(strChain);
               if (strChain.isEmpty()) continue;
               List<String> lstChain = new ArrayList<String>();
-              for (String strItem: strChain.split("+")) {
+              for (String strItem: strChain.split("\\+")) {
                 strItem = Val.chkStr(strItem);
                 if (strItem.isEmpty()) continue;
                 lstChain.add(strItem);
