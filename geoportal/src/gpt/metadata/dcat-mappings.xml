@@ -25,10 +25,9 @@
 	  <field name="mbox"	index="dcat.mbox" required="true"/>
 	  <field name="identifier" required="true"/>  
 	  <field name="accessLevel" index="accessLevel" required="true">
-        <map from=".*restricted.*" to="restricted public"/>
-        <map from="Medium Confidentiality" to="restricted public"/>
-        <map from="No Confidentiality" to="restricted public"/>
-        <map from="private|confidential|secret" to="non-public"/>
+        <map from="High Confidentiality|Non-public" to="non-public"/>
+        <map from="Medium Confidentiality|Restricted" to="restricted public"/>
+        <map from="No Confidentiality|Unclassified" to="public"/>
         <map from=".*" to="public"/>
       </field>
 	  <field name="accessLevelComment" index="dcat.accessLevelComment" maxChars="255" required="false"/>
@@ -56,10 +55,9 @@
 	  <field name="mbox"	index="dcat.mbox" required="true"/>
 	  <field name="identifier" required="true"/>  
 	  <field name="accessLevel" index="dcat.accessLevel" required="true">
-        <map from=".*restricted.*" to="restricted public"/>
-        <map from="Medium Confidentiality" to="restricted public"/>
-        <map from="No Confidentiality" to="restricted public"/>
-        <map from="private|confidential|secret" to="non-public"/>
+        <map from="High Confidentiality|Non-public" to="non-public"/>
+        <map from="Medium Confidentiality|Restricted" to="restricted public"/>
+        <map from="No Confidentiality|Unclassified" to="public"/>
         <map from=".*" to="public"/>
       </field>
 	  <field name="accessLevelComment" index="dcat.accessLevelComment" maxChars="255" required="false"/>
@@ -87,10 +85,9 @@
 	  <field name="mbox" index="dcat.mbox;dcat.metc.mbox" required="true"/>
 	  <field name="identifier" required="true"/>  
 	  <field name="accessLevel" index="dcat.accessLevel" required="true">
-        <map from=".*restricted.*" to="restricted public"/>
-        <map from="Medium Confidentiality" to="restricted public"/>
-        <map from="No Confidentiality" to="restricted public"/>
-        <map from="private|confidential|secret" to="non-public"/>
+        <map from="High Confidentiality|Non-public" to="non-public"/>
+        <map from="Medium Confidentiality|Restricted" to="restricted public"/>
+        <map from="No Confidentiality|Unclassified" to="public"/>
         <map from=".*" to="public"/>
       </field>
 	  <field name="accessLevelComment" index="dcat.accessLevelComment" maxChars="255" required="false"/>
@@ -146,11 +143,10 @@
 	  <field name="mbox" index="dcat.mbox" required="true"/>
 	  <field name="identifier" required="true"/> 
 	  <field name="accessLevel" index="dcat.accessLevel" required="true">
-        <map from=".*restricted.*" to="restricted public"/>
-        <map from="Medium Confidentiality" to="restricted public"/>
-        <map from="No Confidentiality" to="restricted public"/>
-        <map from="private|confidential|secret" to="non-public"/>
-        <map from=".+" to="public"/>
+        <map from="High Confidentiality|Non-public" to="non-public"/>
+        <map from="Medium Confidentiality|Restricted" to="restricted public"/>
+        <map from="No Confidentiality|Unclassified" to="public"/>
+        <map from=".*" to="public"/>
       </field>
 	  <field name="accessLevelComment" index="apiso.AccessConstraints" maxChars="255" required="false"/>
 	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
