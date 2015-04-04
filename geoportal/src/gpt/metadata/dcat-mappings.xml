@@ -113,23 +113,24 @@
       <field name="accrualPeriodicity" index="dcat.accrualPeriodicity"  required="false">
         <map from="Decennial" to="R/P10Y"/>
         <map from="Quadrennial" to="R/P4Y"/>
-        <map from="Annual" to="R/P1Y"/>
+        <map from="Annual|annually" to="R/P1Y"/>
         <map from="Bimonthly" to="R/P2M"/>
         <map from="Semiweekly" to="R/P3.5D"/>
-        <map from="Daily" to="R/P1D"/>
+        <map from="Daily|daily" to="R/P1D"/>
         <map from="Biweekly" to="R/P2W"/>
         <map from="Semiannual" to="R/P6M"/>
-        <map from="Biennial" to="R/P2Y"/>
+        <map from="Biennial|biannually" to="R/P2Y"/>
         <map from="Triennial" to="R/P3Y"/>
         <map from="Three times a week" to="R/P0.33W"/>
         <map from="Three times a month" to="R/P0.33M"/>
-        <map from="Continuously updated" to="R/PT1S"/>
-        <map from="Monthly" to="R/P1M"/>
-        <map from="Quarterly" to="R/P3M"/>
-        <map from="Semimonthly" to="R/P0.5M"/>
+        <map from="Continuously updated|continual|Continually" to="R/PT1S"/>
+        <map from="Monthly|monthly" to="R/P1M"/>
+        <map from="Quarterly|quarterly" to="R/P3M"/>
+        <map from="Semimonthly|fortnightly" to="R/P0.5M"/>
         <map from="Three times a year" to="R/P4M"/>
-        <map from="Weekly" to="R/P1W"/>
+        <map from="Weekly|weekly" to="R/P1W"/>
         <map from="^R/P[^DWMYS]*[DWMYS]$" to="*"/>
+        <map from="asNeeded|notPlanned|unknown" to="irregular"/>
         <map from=".*" to="irregular"/>
       </field>
 	</fields>
@@ -177,24 +178,25 @@
       <field name="accrualPeriodicity" index="dcat.accrualPeriodicity"  required="false">
         <map from="Decennial" to="R/P10Y"/>
         <map from="Quadrennial" to="R/P4Y"/>
-        <map from="Annual" to="R/P1Y"/>
+        <map from="Annual|annually" to="R/P1Y"/>
         <map from="Bimonthly" to="R/P2M"/>
         <map from="Semiweekly" to="R/P3.5D"/>
-        <map from="Daily" to="R/P1D"/>
+        <map from="Daily|daily" to="R/P1D"/>
         <map from="Biweekly" to="R/P2W"/>
         <map from="Semiannual" to="R/P6M"/>
-        <map from="Biennial" to="R/P2Y"/>
+        <map from="Biennial|biannually" to="R/P2Y"/>
         <map from="Triennial" to="R/P3Y"/>
         <map from="Three times a week" to="R/P0.33W"/>
         <map from="Three times a month" to="R/P0.33M"/>
-        <map from="Continuously updated" to="R/PT1S"/>
-        <map from="Monthly" to="R/P1M"/>
-        <map from="Quarterly" to="R/P3M"/>
-        <map from="Semimonthly" to="R/P0.5M"/>
+        <map from="Continuously updated|continual|Continually" to="R/PT1S"/>
+        <map from="Monthly|monthly" to="R/P1M"/>
+        <map from="Quarterly|quarterly" to="R/P3M"/>
+        <map from="Semimonthly|fortnightly" to="R/P0.5M"/>
         <map from="Three times a year" to="R/P4M"/>
-        <map from="Weekly" to="R/P1W"/>
+        <map from="Weekly|weekly" to="R/P1W"/>
         <map from="^R/P[^DWMYS]*[DWMYS]$" to="*"/>
-        <map from=".+" to="irregular"/>
+        <map from="asNeeded|notPlanned|unknown" to="irregular"/>
+        <map from=".*" to="irregular"/>
       </field>
       <field name="language" index="dcat.language" type="array" required="false" />
       <field name="dataQuality" index="dcat.dataQuality"  required="false"/>
