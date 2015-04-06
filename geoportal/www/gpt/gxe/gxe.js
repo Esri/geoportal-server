@@ -551,14 +551,18 @@ dojo.declare("gxe.Client",null,{
       url: u,
       putData: sXml,
       error: dojo.hitch(this,function(errorObject,ioArgs) {
-        dialog.hide();
-        dialog.destroy();
+          var destr = function() {
+            dialog.destroy();
+          };
+          dialog.hide().then(destr,destr);
         this.onError(errorObject,ioArgs);
       }),
       load: dojo.hitch(this,function(responseObject,ioArgs) {
         setTimeout(function(){
-          dialog.hide();
-          dialog.destroy();
+          var destr = function() {
+            dialog.destroy();
+          };
+          dialog.hide().then(destr,destr);
         },2000);
         try {
           if (responseObject!=null) {
@@ -6130,13 +6134,17 @@ dojo.declare("fgdc.control.KeywordSelector",gxe.control.Control,{
             this.xmlNode.getInputControl().fireInputChanged();
             delimitedTextArea.htmlElement.value = sCheckedValues;
             delimitedTextArea.fireInputChanged();
-            dialog.hide();
-            dialog.destroy();
+            var destr = function() {
+              dialog.destroy();
+            };
+            dialog.hide().then(destr,destr);
           }));
           
           dojo.connect(elCancel,"onclick",this,dojo.hitch(this,function(e) {
-            dialog.hide();
-            dialog.destroy();
+            var destr = function() {
+              dialog.destroy();
+            };
+            dialog.hide().then(destr,destr);
           }));
           dialog.show(); 
         }
