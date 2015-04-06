@@ -2572,8 +2572,8 @@
 		<row><td>ISProductFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectFolder</td><td/><td/><td>1</td></row>
-		<row><td>PATH_TO_BIN_FILES</td><td>C:\Builds\GeoportalServer\10.3_PublishClient\Binaries</td><td/><td>2</td></row>
-		<row><td>PATH_TO_PUBLISHCLIENT_FILE</td><td>C:\Builds\GeoportalServer\10.3_PublishClient\Sources\PublishClient\trunk\src</td><td/><td>2</td></row>
+		<row><td>PATH_TO_BIN_FILES</td><td>C:\Builds\GeoportalServer\10.3.1_PublishClient\Binaries</td><td/><td>2</td></row>
+		<row><td>PATH_TO_PUBLISHCLIENT_FILE</td><td>C:\Builds\GeoportalServer\10.3.1_PublishClient\Sources\PublishClient\trunk\src</td><td/><td>2</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
 		<row><td>WindowsFolder</td><td/><td/><td>1</td></row>
@@ -3988,7 +3988,7 @@
 		<row><td>ID_STRING15</td><td>1033</td><td>PUBLIS~1|Publish Client Developer Help</td><td>0</td><td/><td>1109306383</td></row>
 		<row><td>ID_STRING16</td><td>1033</td><td>PUBLIS~1|Publish Client</td><td>0</td><td/><td>975058256</td></row>
 		<row><td>ID_STRING2</td><td>1033</td><td>AllUsers</td><td>0</td><td/><td>-1575156306</td></row>
-		<row><td>ID_STRING3</td><td>1033</td><td>ArcGIS 10.3 for Desktop was not found. Please install ArcGIS 10.3 for Desktop and then restart this installation.</td><td>0</td><td/><td>-995968339</td></row>
+		<row><td>ID_STRING3</td><td>1033</td><td>ArcGIS 10.3 or 10.3.1 for Desktop was not found. Please install ArcGIS 10.3 or 10.3.1 for Desktop and then restart this installation.</td><td>0</td><td/><td>841178735</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>CurrentUser</td><td>0</td><td/><td>-1575150162</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>&amp;Next &gt;</td><td>0</td><td/><td>-1575130835</td></row>
 		<row><td>ID_STRING6</td><td>1033</td><td>&lt; &amp;Back</td><td>0</td><td/><td>-1575130835</td></row>
