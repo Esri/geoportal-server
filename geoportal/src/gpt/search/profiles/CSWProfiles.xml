@@ -536,14 +536,14 @@
 		<Description/>
 		<GetRecords>
 			<XSLTransformations>
-				<Request>CSW_2.0.2_APISO_pyCSW_GetRecords_Request.xslt</Request>
-				<Response>CSW_2.0.2_APISO_pyCSW_GetRecords_Response.xslt</Response>
+				<Request>CSW_2.0.2_APISO_pycsw_GetRecords_Request.xslt</Request>
+				<Response>CSW_2.0.2_APISO_pycsw_GetRecords_Response.xslt</Response>
 			</XSLTransformations>
 		</GetRecords>
 		<GetRecordByID>
 			<RequestKVPs><![CDATA[service=CSW&request=GetRecordById&version=2.0.2&ElementSetName=full&outputschema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd]]></RequestKVPs>
 			<XSLTransformations>
-				<Response>CSW_2.0.2_APISO_pyCSW_GetRecordByID_Response.xslt</Response>
+				<Response>CSW_2.0.2_APISO_pycsw_GetRecordByID_Response.xslt</Response>
 			</XSLTransformations>
 		</GetRecordByID>
 		<SupportSpatialQuery>True</SupportSpatialQuery>
