@@ -15,7 +15,7 @@
     <RootNamespace>Documentation</RootNamespace>
     <Name>Documentation</Name>
     <!-- SHFB properties -->
-    <OutputPath>C:\Builds\GeoportalServer\10.3_CSWClients\Binaries\</OutputPath>
+    <OutputPath>C:\Builds\GeoportalServer\10.3.1_CSWClients\Binaries\</OutputPath>
     <HtmlHelpName>CSWClients</HtmlHelpName>
     <WorkingPath>C:\Temp\SandCastleWorkingFolder\</WorkingPath>
     <DocumentationSources>
