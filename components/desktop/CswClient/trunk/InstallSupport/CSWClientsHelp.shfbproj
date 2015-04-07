@@ -28,7 +28,7 @@
 <DocumentationSource sourceFile="..\..\..\..\Binaries\CSWSearchDockWindow.dll" />
 <DocumentationSource sourceFile="..\..\..\..\Binaries\CSWSearchDockWindow.xml" /></DocumentationSources>
     <HelpTitle>A CSW Clients Documented Class Library</HelpTitle>
-    <CopyrightText>Copyright &amp;#169%3b ESRI 2014</CopyrightText>
+    <CopyrightText>Copyright &amp;#169%3b ESRI 2015</CopyrightText>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
     <BuildLogFile>
     </BuildLogFile>

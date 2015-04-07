@@ -15,7 +15,7 @@
     <RootNamespace>Documentation</RootNamespace>
     <Name>Documentation</Name>
     <!-- SHFB properties -->
-    <OutputPath>C:\Builds\GeoportalServer\10.3_PublishClient\Binaries\</OutputPath>
+    <OutputPath>C:\Builds\GeoportalServer\10.3.1_PublishClient\Binaries\</OutputPath>
     <HtmlHelpName>PublishClient</HtmlHelpName>
     <WorkingPath>C:\Temp\SandCastleWorkingFolder\</WorkingPath>
     <DocumentationSources>
@@ -24,7 +24,7 @@
 <DocumentationSource sourceFile="..\..\..\..\Binaries\PublishClient.dll" />
 <DocumentationSource sourceFile="..\..\..\..\Binaries\PublishClient.xml" /></DocumentationSources>
     <HelpTitle>A Publish Client Documented Class Library</HelpTitle>
-    <CopyrightText>Copyright &amp;#169%3b ESRI 2014</CopyrightText>
+    <CopyrightText>Copyright &amp;#169%3b ESRI 2015</CopyrightText>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
     <FrameworkVersion>.NET 4.0.30319</FrameworkVersion>
     <PresentationStyle>vs2010</PresentationStyle>
