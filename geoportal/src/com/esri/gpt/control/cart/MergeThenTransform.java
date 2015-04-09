@@ -18,7 +18,6 @@ import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.XsltTemplate;
-import javax.servlet.ServletException;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -131,8 +130,10 @@ public class MergeThenTransform extends KeysetProcessor {
     //String sMimeType = Val.chkStr(request.getParameter("mimeType"));
     //String sContentDisposition = Val.chkStr(request.getParameter("contentDisposition"));
     
+    String sCfgPfxDefault = "catalog.cart.processor.mergeThenTransform";
+    String sCfgPfx = Val.chkStr(request.getParameter("mergeThenTransformPrefix"),sCfgPfxDefault);
+    
     StringAttributeMap cfgParams = context.getCatalogConfiguration().getParameters();    
-    String sCfgPfx = "catalog.cart.processor.mergeThenTransform";
     String sXsltPath = Val.chkStr(
         cfgParams.getValue(sCfgPfx+".xslt"));
     String sProperties = Val.chkStr(
@@ -143,9 +144,12 @@ public class MergeThenTransform extends KeysetProcessor {
         cfgParams.getValue(sCfgPfx+".response.contentDisposition"));
     
     if ((keys.length > 0) && (sXsltPath.length() > 0)) {
+      // This is redundand since it is being takes from the gpt.xml
+      /*
       if (!assertWhiteList(context, "catalog.cart.xslt.whitelist", sXsltPath)) {
         throw new ServletException("Invalid xslt parameter");
       }
+      */
       
       XsltTemplate template = this.getCompiledTemplate(sXsltPath);
       ServletOutputStream out = response.getOutputStream(); 
