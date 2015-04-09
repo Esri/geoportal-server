@@ -416,14 +416,12 @@
             - catalog.cart.maxItems: maximum number of items in the cart. Default: 10
             - catalog.cart.processor: the Java class used to process items Default: none
             - catalog.cart.processor.whitelist: comma-separated list of processors allowed to pass as an argument
-            - catalog.cart.xslt.whitelist: comma-separated list of xslt allowed to apss as an argument
             - catalog.cart.tryhandler.class: class name of the "/try" handler
         -->
         <parameter key="catalog.cart.enabled" value="false"/>
         <parameter key="catalog.cart.maxItems" value="100"/>
         <parameter key="catalog.cart.processor" value="com.esri.gpt.control.cart.ZipXmls"/>
         <parameter key="catalog.cart.processor.whitelist" value="com.esri.gpt.control.cart.ZipXmls"/>
-        <parameter key="catalog.cart.xslt.whitelist" value=""/>
         <parameter key="catalog.cart.tryhandler.class" value=""/>
         
         <!-- example of custom 'tryhandler'
