@@ -40,6 +40,7 @@ import com.esri.gpt.server.usage.api.IStatisticsWriter;
 public class HarvesterStatisticsDao extends BaseDao {
 	
 	// class variables =============================================================
+        private static final String UUID_PATTERN = "\\{[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}\\}";
 
 	// instance variables ==========================================================
 	private ResponseWriter writer = null;
@@ -422,12 +423,18 @@ public class HarvesterStatisticsDao extends BaseDao {
 				uuidArr = uuids.split(",");
 				if(uuidArr.length <= 10){										
 					for (int i =0; i< uuidArr.length ; i++){
-						st.setString(parameterIdx, UuidUtil.addCurlies(uuidArr[i]));
-						parameterIdx++;
+                                            String uuid = UuidUtil.addCurlies(uuidArr[i]);
+                                            if (uuid.matches(UUID_PATTERN)) {
+						st.setString(parameterIdx, uuid);
+                                            }
+                			    parameterIdx++;
 					}
 				}
 			}else if(uuids.length() > 0){
-				st.setString(parameterIdx,UuidUtil.addCurlies(uuids));
+                                String uuid = UuidUtil.addCurlies(uuids);
+                                if (uuid.matches(UUID_PATTERN)) {
+                                    st.setString(parameterIdx,uuid);
+                                }
 				parameterIdx++;
 			}
 	      
@@ -512,12 +519,18 @@ public class HarvesterStatisticsDao extends BaseDao {
 				uuidArr = uuids.split(",");
 				if(uuidArr.length <= 10){										
 					for (int i =0; i< uuidArr.length ; i++){
-						st.setString(parameterIdx, UuidUtil.addCurlies(uuidArr[i]));
+                                            String uuid = UuidUtil.addCurlies(uuidArr[i]);
+                                            if (uuid.matches(UUID_PATTERN)) {
+						st.setString(parameterIdx, uuid);
+                                            }
 						parameterIdx++;
 					}
 				}
 			}else if(uuids.length() > 0){
-				st.setString(parameterIdx,UuidUtil.addCurlies(uuids));
+                                String uuid = UuidUtil.addCurlies(uuids);
+                                if (uuid.matches(UUID_PATTERN)) {
+                                    st.setString(parameterIdx,uuid);
+                                }
 				parameterIdx++;
 			}
 	      
@@ -576,13 +589,19 @@ public class HarvesterStatisticsDao extends BaseDao {
 				uuidArr = uuids.split(",");
 				if(uuidArr.length <= 10){										
 					for (int i =0; i< uuidArr.length ; i++){
-						st.setString(parameterIdx, UuidUtil.addCurlies(uuidArr[i]));
-						parameterIdx++;
+                                            String uuid = UuidUtil.addCurlies(uuidArr[i]);
+                                            if (uuid.matches(UUID_PATTERN)) {
+						st.setString(parameterIdx, uuid);
+                                            }
+                                            parameterIdx++;
 					}
 				}
 			}else if(uuids.length() > 0){
-				st.setString(parameterIdx,UuidUtil.addCurlies(uuids));
-				parameterIdx++;
+                            String uuid = UuidUtil.addCurlies(uuids);
+                            if (uuid.matches(UUID_PATTERN)) {
+				st.setString(parameterIdx,uuid);
+                            }
+                            parameterIdx++;
 			}
 	      
 			 if(startDate.length() > 0){
