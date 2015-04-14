@@ -20,6 +20,7 @@ import com.esri.gpt.framework.util.Val;
 import java.net.HttpURLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import java.util.TreeMap;
  * Digest authenticator.
  */
 public class Digest {
+private static final SecureRandom RND = new SecureRandom();
 
 // class variables =============================================================
 /** digest signature */  
@@ -129,7 +131,7 @@ public void injectTo(HttpURLConnection connection,
     if (idx != -1) {
       uri = uri.substring(0, idx);
     }
-    String cnonce = Integer.toHexString(new java.util.Random().nextInt());
+    String cnonce = Integer.toHexString(Math.abs(RND.nextInt()));
 
     // create complementory digest
     Digest digest = new Digest();
