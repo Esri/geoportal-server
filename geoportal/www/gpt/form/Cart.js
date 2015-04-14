@@ -395,7 +395,7 @@ dojo.declare("gpt.form.Cart",null,{
   callTryKeys: function(keys,callback,error) {
     var sUrl = this.getCartUrl();
     sUrl += "/try";
-    dojo.xhrGet({
+    dojo.xhrPost({
       handleAs: "json",
       url: sUrl,
       content: { keys: keys.join(",")},
