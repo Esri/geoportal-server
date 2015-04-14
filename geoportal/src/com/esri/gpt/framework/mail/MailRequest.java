@@ -229,7 +229,7 @@ public void send() throws AddressException, MessagingException {
   Message message = new MimeMessage(session);
   message.setSubject(getSubject());
   message.setContent(getBody(),getMimeType());
-  message.setFrom(makeAddress(getFromAddress()));
+  message.setFrom(makeAddress(getFromAddress().replaceAll("[\r\n]", "")));
   for (String sTo: getRecipients()) {
     message.addRecipient(Message.RecipientType.TO,makeAddress(sTo));
   }

@@ -14,7 +14,6 @@
  */
 package com.esri.gpt.catalog.lucene;
 import com.esri.gpt.catalog.arcims.ImsMetadataAdminDao;
-import com.esri.gpt.catalog.context.CatalogIndexAdapter;
 import com.esri.gpt.catalog.schema.MetadataDocument;
 import com.esri.gpt.catalog.schema.Schema;
 import com.esri.gpt.catalog.schema.SchemaException;
@@ -22,8 +21,8 @@ import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.security.metadata.MetadataAcl;
-import com.esri.gpt.framework.sql.IClobMutator;
 import com.esri.gpt.framework.sql.ManagedConnection;
+import static com.esri.gpt.framework.util.UuidUtil.isUuid;
 import com.esri.gpt.framework.util.Val;
 
 import java.io.BufferedReader;
@@ -34,6 +33,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -215,12 +215,6 @@ public class SingleIndexingServlet extends HttpServlet {
       MetadataAcl acl = new MetadataAcl(context);
       boolean bCheckAcl = !acl.isPolicyUnrestricted();
       
-      StringBuilder sbIds = new StringBuilder();
-      for (String sUuid: ids) {
-        if (sbIds.length() > 0) sbIds.append(",");
-        sbIds.append("'").append(sUuid).append("'");
-      }
-      
       StringBuilder sb = new StringBuilder("SELECT");
       sb.append(" ").append(resourceTable).append(".DOCUUID");
       sb.append(",").append(resourceTable).append(".APPROVALSTATUS");
@@ -229,15 +223,21 @@ public class SingleIndexingServlet extends HttpServlet {
       sb.append(",").append(resourceTable).append(".UPDATEDATE");
       sb.append(",").append(resourceTable).append(".ACL");
       sb.append(" FROM ").append(resourceTable);
-      sb.append(" WHERE DOCUUID IN (").append(sbIds.toString()).append(")");
+      sb.append(" WHERE DOCUUID IN (").append(generateQMarks(ids.length)).append(")");
       String sql = sb.toString();
       LOGGER.finest(sql);
       
       ManagedConnection mc = context.getConnectionBroker().returnConnection("");
       Connection con = mc.getJdbcConnection();
-      IClobMutator mutator = mc.getClobMutator();
       
       st = con.prepareStatement(sql);
+      int argIndex = 0;
+      for (String uuid: ids) {
+        if (!isUuid(uuid)) {
+            throw new SQLException("Invalid UUID.");
+        }
+        st.setString(++argIndex, uuid);
+      }
       ResultSet rs = st.executeQuery();
       if (Thread.interrupted()) return;
       while (rs.next()) {
@@ -365,5 +365,18 @@ public class SingleIndexingServlet extends HttpServlet {
       }
     }
   }
+
+/**
+ * Generates question marks for SQL.
+ * @param size number of question marks
+ * @return question marks string
+ */
+private String generateQMarks(int size) {
+  StringBuilder sb = new StringBuilder();
+  for (int i=0; i<size; i++) {
+    sb.append(sb.length()>0?",":"").append("?");
+  }
+  return sb.toString();
+}
 
 }

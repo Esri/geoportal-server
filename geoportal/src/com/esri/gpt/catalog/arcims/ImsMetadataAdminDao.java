@@ -29,6 +29,7 @@ import com.esri.gpt.framework.sql.BaseDao;
 import com.esri.gpt.framework.sql.IClobMutator;
 import com.esri.gpt.framework.sql.ManagedConnection;
 import com.esri.gpt.framework.util.LogUtil;
+import static com.esri.gpt.framework.util.UuidUtil.isUuid;
 import com.esri.gpt.framework.util.Val;
 
 import java.sql.*;
@@ -817,9 +818,16 @@ private StringSet queryFileIdentifiers(StringSet uuids) throws SQLException {
       Connection con = returnConnection().getJdbcConnection();
       StringBuilder sbSql = new StringBuilder();
       sbSql.append("SELECT FILEIDENTIFIER FROM ").append(getResourceTableName());
-      sbSql.append(" WHERE DOCUUID IN (").append(uuidsToInClause(uuids)).append(")");
+      sbSql.append(" WHERE DOCUUID IN (").append(generateQMarks(uuids.size())).append(")");
       logExpression(sbSql.toString());
       st = con.prepareStatement(sbSql.toString());
+      int argIndex = 0;
+      for (String uuid: uuids) {
+          if (!isUuid(uuid)) {
+              throw new SQLException("Invalid UUID.");
+          }
+          st.setString(++argIndex, uuid);
+      }
       ResultSet rs = st.executeQuery();
       while (rs.next()) {
         String fid = Val.chkStr(rs.getString(1));
@@ -1110,15 +1118,22 @@ public int updateAcl(Publisher publisher, StringSet uuids, String acl)
     StringBuilder sbSql = new StringBuilder();
       sbSql.append("UPDATE ").append(getResourceTableName());
       sbSql.append(" SET ACL=?");
-      sbSql.append(" WHERE DOCUUID IN (").append(sUuids).append(")");
+      sbSql.append(" WHERE DOCUUID IN (").append(generateQMarks(uuids.size())).append(")");
       logExpression(sbSql.toString());
    
     Connection con = returnConnection().getJdbcConnection();
     st = con.prepareStatement(sbSql.toString());
+    int argIndex = 0;
     if(acl != null){
-    	st.setString(1,acl);
+    	st.setString(++argIndex,acl);
     }else{  
-    	st.setNull(1,java.sql.Types.VARCHAR);
+    	st.setNull(++argIndex,java.sql.Types.VARCHAR);
+    }
+    for (String uuid: uuids) {
+        if (!isUuid(uuid)) {
+            throw new SQLException("Invalid UUID.");
+        }
+        st.setString(++argIndex, uuid);
     }
     nRows = st.executeUpdate();
   } finally {
@@ -1173,18 +1188,24 @@ public int updateApprovalStatus(Publisher publisher,
   int nRows = 0;
   this.hadUnalteredDraftDocuments = false;
   try {
-    String sUuids = uuidsToInClause(uuids);
-    if (sUuids.length() > 0) {   
+    if (!uuids.isEmpty()) {   
       
       // determine if the set contains documents in 'draft' mode
       Connection con = returnConnection().getJdbcConnection();
       StringBuffer sbSql = new StringBuffer();
       sbSql.append("SELECT DOCUUID FROM ").append(getResourceTableName());
-      sbSql.append(" WHERE DOCUUID IN (").append(sUuids).append(")");
+      sbSql.append(" WHERE DOCUUID IN (").append(generateQMarks(uuids.size())).append(")");
       sbSql.append(" AND APPROVALSTATUS = ?"); 
       logExpression(sbSql.toString());
       st = con.prepareStatement(sbSql.toString());
-      st.setString(1,MmdEnums.ApprovalStatus.draft.toString());
+      int argIndex = 0;
+      for (String uuid: uuids) {
+        if (!isUuid(uuid)) {
+            throw new SQLException("Invalid UUID.");
+        }
+        st.setString(++argIndex, uuid);
+      }
+      st.setString(++argIndex,MmdEnums.ApprovalStatus.draft.toString());
       ResultSet rs = st.executeQuery();
       if (rs.next()) {
         this.hadUnalteredDraftDocuments = true;
@@ -1195,12 +1216,19 @@ public int updateApprovalStatus(Publisher publisher,
       sbSql = new StringBuffer();     
       sbSql.append("UPDATE ").append(getResourceTableName());
       sbSql.append(" SET APPROVALSTATUS=?");
-      sbSql.append(" WHERE DOCUUID IN (").append(sUuids).append(")");
+      sbSql.append(" WHERE DOCUUID IN (").append(generateQMarks(uuids.size())).append(")");
       sbSql.append(" AND (APPROVALSTATUS IS NULL OR APPROVALSTATUS <> ?)");
       logExpression(sbSql.toString());
       st = con.prepareStatement(sbSql.toString());
-      st.setString(1,approvalStatus.toString());
-      st.setString(2,MmdEnums.ApprovalStatus.draft.toString());
+      argIndex = 0;
+      st.setString(++argIndex,approvalStatus.toString());
+      for (String uuid: uuids) {
+        if (!isUuid(uuid)) {
+            throw new SQLException("Invalid UUID.");
+        }
+        st.setString(++argIndex, uuid);
+      }
+      st.setString(++argIndex,MmdEnums.ApprovalStatus.draft.toString());
       nRows = st.executeUpdate();
       
       // re-build the index uuid set if 'draft' documents were not updated
@@ -1209,11 +1237,18 @@ public int updateApprovalStatus(Publisher publisher,
         uuids.clear();
         sbSql = new StringBuffer();
         sbSql.append("SELECT DOCUUID FROM ").append(getResourceTableName());
-        sbSql.append(" WHERE DOCUUID IN (").append(sUuids).append(")");
+        sbSql.append(" WHERE DOCUUID IN (").append(generateQMarks(uuids.size())).append(")");
         sbSql.append(" AND (APPROVALSTATUS IS NULL OR APPROVALSTATUS <> ?)"); 
         logExpression(sbSql.toString());
         st = con.prepareStatement(sbSql.toString());
-        st.setString(1,MmdEnums.ApprovalStatus.draft.toString());
+        argIndex = 0;
+        for (String uuid: uuids) {
+          if (!isUuid(uuid)) {
+              throw new SQLException("Invalid UUID.");
+          }
+          st.setString(++argIndex, uuid);
+        }
+        st.setString(++argIndex,MmdEnums.ApprovalStatus.draft.toString());
         ResultSet rs2 = st.executeQuery();
         while (rs2.next()) {
           uuids.add(rs2.getString(1));
@@ -1512,6 +1547,19 @@ private String uuidsToInClause(StringSet uuids) {
   for (String sUuid: uuids) {
     if (sb.length() > 0) sb.append(",");
     sb.append("'").append(sUuid).append("'");
+  }
+  return sb.toString();
+}
+
+/**
+ * Generates question marks for SQL.
+ * @param size number of question marks
+ * @return question marks string
+ */
+private String generateQMarks(int size) {
+  StringBuilder sb = new StringBuilder();
+  for (int i=0; i<size; i++) {
+    sb.append(sb.length()>0?",":"").append("?");
   }
   return sb.toString();
 }

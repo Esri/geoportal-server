@@ -30,6 +30,7 @@ import com.esri.gpt.framework.sql.BaseDao;
 import com.esri.gpt.framework.sql.ManagedConnection;
 import com.esri.gpt.framework.util.DateProxy;
 import com.esri.gpt.framework.util.UuidUtil;
+import static com.esri.gpt.framework.util.UuidUtil.isUuid;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.server.usage.api.IStatisticsWriter;
 
@@ -39,7 +40,6 @@ import com.esri.gpt.server.usage.api.IStatisticsWriter;
 public class HarvesterStatisticsDao extends BaseDao {
 
     // class variables =============================================================
-    private static final String UUID_PATTERN = "\\{[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}\\}";
 
     // instance variables ==========================================================
     private ResponseWriter writer = null;
@@ -444,7 +444,7 @@ public class HarvesterStatisticsDao extends BaseDao {
                 if (uuidArr.length <= 10) {
                     for (int i = 0; i < uuidArr.length; i++) {
                         String uuid = UuidUtil.addCurlies(uuidArr[i]);
-                        if (!uuid.matches(UUID_PATTERN)) {
+                        if (!isUuid(uuid)) {
                             throw new IllegalArgumentException("Illegal SQL parameter");
                         }
                         st.setString(parameterIdx, uuid);
@@ -453,7 +453,7 @@ public class HarvesterStatisticsDao extends BaseDao {
                 }
             } else if (uuids.length() > 0) {
                 String uuid = UuidUtil.addCurlies(uuids);
-                if (!uuid.matches(UUID_PATTERN)) {
+                if (!isUuid(uuid)) {
                     throw new IllegalArgumentException("Illegal SQL parameter");
                 }
                 st.setString(parameterIdx, uuid);
@@ -544,7 +544,7 @@ public class HarvesterStatisticsDao extends BaseDao {
                 if (uuidArr.length <= 10) {
                     for (int i = 0; i < uuidArr.length; i++) {
                         String uuid = UuidUtil.addCurlies(uuidArr[i]);
-                        if (!uuid.matches(UUID_PATTERN)) {
+                        if (!isUuid(uuid)) {
                             throw new IllegalArgumentException("Illegal SQL parameter");
                         }
                         st.setString(parameterIdx, uuid);
@@ -553,7 +553,7 @@ public class HarvesterStatisticsDao extends BaseDao {
                 }
             } else if (uuids.length() > 0) {
                 String uuid = UuidUtil.addCurlies(uuids);
-                if (!uuid.matches(UUID_PATTERN)) {
+                if (!isUuid(uuid)) {
                     throw new IllegalArgumentException("Illegal SQL parameter");
                 }
                 st.setString(parameterIdx, uuid);
@@ -616,7 +616,7 @@ public class HarvesterStatisticsDao extends BaseDao {
                 if (uuidArr.length <= 10) {
                     for (int i = 0; i < uuidArr.length; i++) {
                         String uuid = UuidUtil.addCurlies(uuidArr[i]);
-                        if (!uuid.matches(UUID_PATTERN)) {
+                        if (!isUuid(uuid)) {
                             throw new IllegalArgumentException("Illegal SQL parameter");
                         }
                         st.setString(parameterIdx, uuid);
@@ -625,7 +625,7 @@ public class HarvesterStatisticsDao extends BaseDao {
                 }
             } else if (uuids.length() > 0) {
                 String uuid = UuidUtil.addCurlies(uuids);
-                if (!uuid.matches(UUID_PATTERN)) {
+                if (!isUuid(uuid)) {
                     throw new IllegalArgumentException("Illegal SQL parameter");
                 }
                 st.setString(parameterIdx, uuid);

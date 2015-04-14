@@ -20,6 +20,7 @@ import com.esri.gpt.control.webharvest.common.CommonCriteria;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.sql.ManagedConnection;
 import com.esri.gpt.framework.util.UuidUtil;
+import static com.esri.gpt.framework.util.UuidUtil.isUuid;
 import com.esri.gpt.framework.util.Val;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -82,9 +83,7 @@ public void execute() throws SQLException {
     if (getQueryCriteria().getResourceUuids().length>0) {
        StringBuilder sb = new StringBuilder();
        for (String harvestId : getQueryCriteria().getResourceUuids()) {
-        if (sb.length()>0)
-          sb.append(",");
-        sb.append("'"+Val.chkStr(harvestId)+"'");
+           sb.append(sb.length()>0?",":"").append("?");
        }
        sbWhere.append(" WHERE A.HARVEST_ID IN (");
        sbWhere.append(sb);
@@ -95,13 +94,20 @@ public void execute() throws SQLException {
     sbSql.append(sbWhere);
 
     // prepare the statements
-    int n = 0;
     st = con.prepareStatement(sbSql.toString());
+    int argIndex = 0;
+    for (String harvestId : getQueryCriteria().getResourceUuids()) {
+        if (!isUuid(harvestId)) {
+            throw new SQLException("Invalid harvest id.");
+        }
+        st.setString(++argIndex, harvestId);
+    }
 
     // execute the query
     logExpression(sbSql.toString());
     ResultSet rs = st.executeQuery();
 
+    int n = 0;
     while (rs.next()) {
       String harvestUuid = Val.chkStr(rs.getString(2));
       if (UuidUtil.isUuid(harvestUuid)) {
