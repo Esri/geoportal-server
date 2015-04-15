@@ -24,6 +24,7 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
 /**
  * A simple client for sending SMTP based E-Mail messages.
@@ -229,7 +230,7 @@ public void send() throws AddressException, MessagingException {
   Message message = new MimeMessage(session);
   message.setSubject(getSubject());
   message.setContent(getBody(),getMimeType());
-  message.setFrom(makeAddress(getFromAddress().replaceAll("[\r\n]", "")));
+  message.setFrom(makeAddress(escapeHtml4(getFromAddress())));
   for (String sTo: getRecipients()) {
     message.addRecipient(Message.RecipientType.TO,makeAddress(sTo));
   }
