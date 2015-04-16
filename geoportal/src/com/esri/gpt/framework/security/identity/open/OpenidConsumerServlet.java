@@ -21,6 +21,7 @@ import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
+import java.rmi.ServerException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.UUID;
@@ -240,6 +241,9 @@ public class OpenidConsumerServlet extends HttpServlet {
           else url += "&";
           url += "err="+URLEncoder.encode(err,"UTF-8");
         }
+        if (!Val.isUrl(url)) {
+            throw new ServerException("Invalid redicrect URL.");
+        }
         response.sendRedirect(url);
         
       // process a request to enter Openid credentials
@@ -328,6 +332,9 @@ public class OpenidConsumerServlet extends HttpServlet {
           url += "err="+URLEncoder.encode(err,"UTF-8");
         }
         LOGGER.finer("Redirecting for authentication: "+url);
+        if (!Val.isUrl(url)) {
+            throw new ServerException("Invalid redicrect URL.");
+        }
         response.sendRedirect(url);
         
       } else {

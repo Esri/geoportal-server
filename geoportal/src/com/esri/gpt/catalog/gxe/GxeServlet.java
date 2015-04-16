@@ -23,19 +23,15 @@ import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
-import com.esri.gpt.framework.xml.DomUtil;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.fileupload.FileItem;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * The Geoportal XML editor servlet.
@@ -289,7 +285,7 @@ public class GxeServlet extends BaseServlet {
     // write the response
     //LOGGER.finest("gxeResponse:\n"+sResponse);
     response.setContentType("APPLICATION/OCTET-STREAM; charset=UTF-8");
-    response.setHeader("Content-Disposition","attachment; filename=\""+sFilename+"\"");          
+    response.setHeader("Content-Disposition","attachment; filename=\""+StringEscapeUtils.escapeHtml4(Val.stripControls(sFilename))+"\"");          
     writeCharacterResponse(response,sResponse,"UTF-8","APPLICATION/OCTET-STREAM; charset=UTF-8");
   }    
   

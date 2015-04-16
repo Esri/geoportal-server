@@ -131,6 +131,22 @@ public class Val {
             return "";
         }
     }
+    
+    /**
+     * Checks if URL is a valid URL.
+     * @param url URL
+     * @return <code>true</code> if this is valid URL
+     */
+    public static boolean isUrl(String url) {
+        url = chkStr(url);
+        try {
+            URL u = new URL(url);
+            u.toURI();
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
 
     /**
      * Converts a string to an int value.

@@ -23,6 +23,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.rmi.ServerException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -258,6 +259,9 @@ public class IntegrationLinkServlet extends HttpServlet {
     // send the redirect
     if ((fwd != null) && (fwd.length() > 0)) {
       LOGGER.finer("Redirecting to: "+fwd);
+      if (!Val.isUrl(fwd)) {
+          throw new ServerException("Invalid redicrect URL.");
+      }
       response.sendRedirect(fwd);
     }
   }
@@ -356,6 +360,9 @@ public class IntegrationLinkServlet extends HttpServlet {
       // send the redirect
       if ((fwd != null) && (fwd.length() > 0)) {
         LOGGER.finer("Redirecting to: "+fwd);
+        if (!Val.isUrl(fwd)) {
+            throw new ServerException("Invalid redicrect URL.");
+        }
         response.sendRedirect(fwd);
       }
     }
