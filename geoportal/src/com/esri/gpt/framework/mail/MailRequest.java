@@ -231,7 +231,7 @@ public void send() throws AddressException, MessagingException {
   Message message = new MimeMessage(session);
   message.setSubject(getSubject());
   message.setContent(getBody(),getMimeType());
-  message.setFrom(makeAddress(stripControls(getFromAddress())));
+  message.setFrom(makeAddress(escapeHtml4(stripControls(getFromAddress()))));
   for (String sTo: getRecipients()) {
     message.addRecipient(Message.RecipientType.TO,makeAddress(sTo));
   }
@@ -239,5 +239,4 @@ public void send() throws AddressException, MessagingException {
   // send the message
   Transport.send(message);
 }
-
 }
