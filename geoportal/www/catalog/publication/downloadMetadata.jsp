@@ -20,6 +20,8 @@
 <%@page import="com.esri.gpt.framework.util.LogUtil"%>
 <%@page import="com.esri.gpt.framework.util.Val"%>
 <%@page import="java.util.logging.Level"%>
+<%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
+<%@page import="com.esri.gpt.framework.util.Val"%>
 <%
   String sUuid = Val.chkStr(request.getParameter("uuid"));
   boolean bAsAttachment = !Val.chkStr(request.getParameter("option")).equals("view");;
@@ -46,7 +48,7 @@
     if (bAsAttachment) {
       response.reset();
       response.setContentType("APPLICATION/OCTET-STREAM; charset=UTF-8");
-      response.setHeader("Content-Disposition","attachment; filename=\""+sUuid+".xml\"");
+      response.setHeader("Content-Disposition","attachment; filename=\""+StringEscapeUtils.escapeHtml4(Val.stripControls(sUuid))+".xml\"");
       out.clear();
       out.print(sXml);
       out.flush();
