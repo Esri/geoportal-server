@@ -241,8 +241,9 @@ public class OpenidConsumerServlet extends HttpServlet {
           else url += "&";
           url += "err="+URLEncoder.encode(err,"UTF-8");
         }
+        url = Val.stripControls(url);
         if (!Val.isUrl(url)) {
-            throw new ServerException("Invalid redicrect URL.");
+            throw new ServerException("Invalid redirect URL.");
         }
         response.sendRedirect(url);
         
@@ -332,8 +333,9 @@ public class OpenidConsumerServlet extends HttpServlet {
           url += "err="+URLEncoder.encode(err,"UTF-8");
         }
         LOGGER.finer("Redirecting for authentication: "+url);
+        url = Val.stripControls(url);
         if (!Val.isUrl(url)) {
-            throw new ServerException("Invalid redicrect URL.");
+            throw new ServerException("Invalid redirect URL.");
         }
         response.sendRedirect(url);
         

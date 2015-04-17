@@ -74,18 +74,18 @@ public class AgpClient {
                                        AgpProperties requestHeader, 
                                        ContentProvider contentProvider) 
     throws Exception {
-    LOGGER.finest("Sending URL: "+url);
+    LOGGER.finest("Sending URL: "+Val.stripControls(url));
     StringHandler handler = new StringHandler();
     this.executeRequest(url,requestHeader,contentProvider,handler);
     String sResponse = handler.getContent();
-    LOGGER.finest("Response for URL: "+url+"\n"+sResponse);
+    LOGGER.finest("Response for URL: "+Val.stripControls(url)+"\n"+sResponse);
     
     JSONObject jsoResponse = null;
     try {
       if (sResponse == null) {
-        LOGGER.finest("Response for URL: "+url+"\nnull response");
+        LOGGER.finest("Response for URL: "+Val.stripControls(url)+"\nnull response");
       } else if (sResponse.length() == 0) {
-        LOGGER.finest("Response for URL: "+url+"\nempty response");
+        LOGGER.finest("Response for URL: "+Val.stripControls(url)+"\nempty response");
       } else {
         jsoResponse = new JSONObject(sResponse); 
         if (jsoResponse.has("error") && (!jsoResponse.isNull("error"))) {

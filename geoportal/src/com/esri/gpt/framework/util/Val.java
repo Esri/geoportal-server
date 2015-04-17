@@ -489,8 +489,6 @@ public class Val {
             char c = input.charAt(i);
             if (c > 0x20 && c < 0x7f) {
                 sb.append(c);
-            } else {
-                sb.append(' ');
             }
         }
         return sb.toString();
