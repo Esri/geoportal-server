@@ -16,9 +16,7 @@ package com.esri.gpt.framework.util;
 
 import com.esri.gpt.framework.context.ApplicationContext;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -485,10 +483,14 @@ public class Val {
      */
     public static String stripControls(String input) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < input.length(); i++) {
-            char c = input.charAt(i);
-            if (c > 0x20 && c < 0x7f) {
-                sb.append(c);
+        if (input!=null) {
+            for (int i = 0; i < input.length(); i++) {
+                char c = input.charAt(i);
+                if (c > 0x20 && c < 0x7f) {
+                    sb.append(c);
+                } else {
+                    sb.append('_');
+                }
             }
         }
         return sb.toString();

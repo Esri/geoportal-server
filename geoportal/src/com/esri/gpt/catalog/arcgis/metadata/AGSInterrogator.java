@@ -87,12 +87,12 @@ public class AGSInterrogator {
           String validated = this.pingCatalogWsdl(soapEndpoint);
           this.target.setSoapUrl(validated);
           String msg = "ArcGIS services catalog soap url guessed from rest url:";
-          msg += "\n restUrl="+restUrl+"\n soapUrl="+this.target.getSoapUrl();
+          msg += "\n restUrl="+Val.stripControls(restUrl)+"\n soapUrl="+Val.stripControls(this.target.getSoapUrl());
           LOGGER.finer(msg);
           return;
         } catch (IOException ioe) { 
           String msg = "ArcGIS services catalog (soap) not found at guessed endpoint:";
-          msg += "\n restUrl="+restUrl+"\n soapUrl="+soapEndpoint;
+          msg += "\n restUrl="+Val.stripControls(restUrl)+"\n soapUrl="+Val.stripControls(soapEndpoint);
           LOGGER.finest(msg+"\n"+ioe.toString());
         }
       }
@@ -104,7 +104,7 @@ public class AGSInterrogator {
       if (soapEndpoint.length() > 0) {
         this.target.setSoapUrl(soapEndpoint);
         String msg = "ArcGIS services catalog soap url determined from html scrape:";
-        msg += "\n restUrl="+restUrl+"\n soapUrl="+this.target.getSoapUrl();
+        msg += "\n restUrl="+Val.stripControls(restUrl)+"\n soapUrl="+Val.stripControls(this.target.getSoapUrl());
         LOGGER.finer(msg);
         return;
       }
@@ -182,7 +182,7 @@ public class AGSInterrogator {
                 }
               } catch (IOException ioe) {
                 String msg = "Cannot scrape ArcGIS service html response::";
-                msg += "\n restUrl="+restUrl+"\n htmlUrl="+this.httpClient.getUrl();
+                msg += "\n restUrl="+Val.stripControls(restUrl)+"\n htmlUrl="+Val.stripControls(this.httpClient.getUrl());
                 LOGGER.finer(msg+"\n"+ioe.toString());
               }
               
@@ -195,7 +195,7 @@ public class AGSInterrogator {
                 }
               } catch (IOException ioe) {
                 String msg = "Unable to ping ArcGIS services catalog soap url:";
-                msg += "\n restUrl="+restUrl+"\n soapUrl="+soapEndpoint;
+                msg += "\n restUrl="+Val.stripControls(restUrl)+"\n soapUrl="+Val.stripControls(soapEndpoint);
                 LOGGER.finer(msg+"\n"+ioe.toString());
               }
               
@@ -210,7 +210,7 @@ public class AGSInterrogator {
                 }
               } catch (IOException ioe) {
                 String msg = "Unable to ping ArcGIS services catalog soap url (try reverse proxy):";
-                msg += "\n restUrl="+restUrl+"\n soapUrl="+soapEndpoint;
+                msg += "\n restUrl="+Val.stripControls(restUrl)+"\n soapUrl="+Val.stripControls(soapEndpoint);
                 LOGGER.finer(msg+"\n"+ioe.toString());
               }
               
@@ -219,7 +219,7 @@ public class AGSInterrogator {
         }
       }
     } catch (JSONException e) {
-      LOGGER.finest("No ArcGIS services: "+baseUrl+" - "+e.toString());
+      LOGGER.finest("No ArcGIS services: "+Val.stripControls(baseUrl)+" - "+e.toString());
     }
     
     // loop through the folders
@@ -238,7 +238,7 @@ public class AGSInterrogator {
         }
       }
     } catch (JSONException e) {
-      LOGGER.finest("No ArcGIS folders: "+baseUrl+" - "+e.toString());
+      LOGGER.finest("No ArcGIS folders: "+Val.stripControls(baseUrl)+" - "+e.toString());
     }
     
     return null;
@@ -268,7 +268,7 @@ public class AGSInterrogator {
       
     } catch (MalformedURLException e) {
       String msg = "Unable to guess ArcGIS services catalog soap url (try reverse proxy):";
-      msg += "\n restUrl="+this.target.getRestUrl()+"\n soapUrl="+soapEndpoint;
+      msg += "\n restUrl="+Val.stripControls(this.target.getRestUrl())+"\n soapUrl="+Val.stripControls(soapEndpoint);
       LOGGER.finer(msg+"\n"+e.toString());
     }
     return null;

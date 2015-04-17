@@ -92,7 +92,7 @@ public class Ags2AgpCopy {
    * @throws Exception if anything fails
    */
   public void copy() throws Exception {
-    LOGGER.log(Level.INFO, "Starting synchronization from ArcGIS Server "+source.getRestUrl()+" into Portal for ArcGIS "+destination.getConnection().getHost());
+    LOGGER.log(Level.INFO, "Starting synchronization from ArcGIS Server "+Val.stripControls(source.getRestUrl())+" into Portal for ArcGIS "+Val.stripControls(destination.getConnection().getHost()));
     RequestContext requestContext = RequestContext.extract(null);
     try {
 
@@ -122,7 +122,7 @@ public class Ags2AgpCopy {
 
     } finally {
       requestContext.onExecutionPhaseCompleted();
-      LOGGER.log(Level.INFO, "Completed synchronization from ArcGIS Server "+source.getRestUrl()+" into Portal for ArcGIS "+destination.getConnection().getHost());
+      LOGGER.log(Level.INFO, "Completed synchronization from ArcGIS Server "+Val.stripControls(source.getRestUrl())+" into Portal for ArcGIS "+Val.stripControls(destination.getConnection().getHost()));
     }
   }
   

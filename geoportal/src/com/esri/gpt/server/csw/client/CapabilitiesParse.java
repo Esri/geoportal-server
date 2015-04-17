@@ -104,7 +104,7 @@ public void startElement(String uri, String localName, String qName,
   if (localName.equals("")) {
     localName = qName;
   }
-  LOG.finer("ELEMENT BEGIN " + localName);
+  LOG.finer("ELEMENT BEGIN " + Val.stripControls(localName));
 
   // Define handling rules 
   text = new StringBuffer();
@@ -148,8 +148,8 @@ public void endElement(String uri, String localName, String qName)
     localName = qName;
   }
 
-  LOG.finer("TEXT IN ELEMENT " + text);
-  LOG.finer("ELEMENT END " + localName);
+  LOG.finer("TEXT IN ELEMENT " + Val.stripControls(text.toString()));
+  LOG.finer("ELEMENT END " + Val.stripControls(localName));
   try {
     text = new StringBuffer(chkStr(text.toString()));
     if (capabilities && getRecords && post && constraint

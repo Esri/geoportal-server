@@ -77,7 +77,7 @@ public class AsnServlet extends BaseServlet {
     }
     
     // write the response
-    LOGGER.finer("assertionResponse:\n"+sResponse);
+    LOGGER.finer("assertionResponse:\n"+Val.stripControls(sResponse));
     if ((sResponse != null) && (sResponse.length() > 0)) {
       writeCharacterResponse(response,sResponse,"UTF-8",mimeType+"; charset=UTF-8");
     }

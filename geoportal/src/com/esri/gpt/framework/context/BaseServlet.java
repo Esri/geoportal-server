@@ -112,7 +112,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
   throws ServletException, IOException {
   RequestContext context = null;
   try {
-    getLogger().finer("Query string="+request.getQueryString());
+    getLogger().finer("Query string="+Val.stripControls(request.getQueryString()));
     logHeader(request);
     String sEncoding = request.getCharacterEncoding();
     if ((sEncoding == null) || (sEncoding.trim().length() == 0)) {
@@ -164,7 +164,7 @@ private void logHeader(HttpServletRequest request) {
         sb.append("\n  "+sName+"="+sValue);
       }
     }
-    LOGGER.finest(sb.toString());
+    LOGGER.finest(Val.stripControls(sb.toString()));
   }
 }
 
@@ -192,7 +192,7 @@ protected UsernamePasswordCredentials getCredentials(HttpServletRequest request)
   throws IOException, CredentialsDeniedException {
   UsernamePasswordCredentials creds = null;
   String sAuthorization = request.getHeader("Authorization");
-  getLogger().finer("Authorization header="+sAuthorization);
+  getLogger().finer("Authorization header="+Val.stripControls(sAuthorization));
   if (sAuthorization != null) {
     creds = new UsernamePasswordCredentials();
     if (sAuthorization.startsWith("Basic ")) {

@@ -130,7 +130,7 @@ public String generateCSWGetMetadataByIDRequestURL(String baseURL,
   try {
     recordId = URLEncoder.encode(recordId, "UTF-8");
   } catch (Exception e) {
-    LOG.log(Level.WARNING, "Could not encode record Id " + recordId, e);
+    LOG.log(Level.WARNING, "Could not encode record Id " + Val.stripControls(recordId), e);
   }
   StringBuffer requeststring = new StringBuffer();
   requeststring.append(baseURL);
@@ -201,7 +201,7 @@ public String generateCSWGetRecordsRequest(CswSearchCriteria search)
   request += "</GetRecords>";
   
 
-  LOG.fine("Internal CSW Request = \n"+ request);
+  LOG.fine("Internal CSW Request = \n"+ Val.stripControls(request));
 
   //Get an XSL Transformer object
   String requestStr = this.getRequestxsltobj().transform(request);

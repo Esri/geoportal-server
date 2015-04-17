@@ -19,6 +19,7 @@ import com.esri.gpt.control.webharvest.common.CommonResult;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
+import com.esri.gpt.framework.util.Val;
 import java.util.logging.Logger;
 
 /**
@@ -55,14 +56,14 @@ public AtomQuery(IterationContext context, BaseAtomInfo info, AtomProxy proxy, C
 
   @Override
 public Result execute()  {
-  LOGGER.finer("Executing query: "+this);
+  LOGGER.finer("Executing query: "+Val.stripControls(this.toString()));
   Result r = new CommonResult(new AtomFolders(context, info, proxy, criteria)) {
     @Override
     public void destroy() {
       info.destroy();
     }
   };
-  LOGGER.finer("Completed query execution: "+this);
+  LOGGER.finer("Completed query execution: "+Val.stripControls(this.toString()));
   return r;
 }
 
