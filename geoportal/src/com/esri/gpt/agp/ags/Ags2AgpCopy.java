@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONObject;
 
 /**
@@ -92,7 +93,7 @@ public class Ags2AgpCopy {
    * @throws Exception if anything fails
    */
   public void copy() throws Exception {
-    LOGGER.log(Level.INFO, "Starting synchronization from ArcGIS Server "+Val.stripControls(source.getRestUrl())+" into Portal for ArcGIS "+Val.stripControls(destination.getConnection().getHost()));
+    LOGGER.log(Level.INFO, "Starting synchronization from ArcGIS Server "+StringEscapeUtils.escapeHtml4(Val.stripControls(source.getRestUrl()))+" into Portal for ArcGIS "+StringEscapeUtils.escapeHtml4(Val.stripControls(destination.getConnection().getHost())));
     RequestContext requestContext = RequestContext.extract(null);
     try {
 
@@ -122,7 +123,7 @@ public class Ags2AgpCopy {
 
     } finally {
       requestContext.onExecutionPhaseCompleted();
-      LOGGER.log(Level.INFO, "Completed synchronization from ArcGIS Server "+Val.stripControls(source.getRestUrl())+" into Portal for ArcGIS "+Val.stripControls(destination.getConnection().getHost()));
+      LOGGER.log(Level.INFO, "Completed synchronization from ArcGIS Server "+StringEscapeUtils.escapeHtml4(Val.stripControls(source.getRestUrl()))+" into Portal for ArcGIS "+StringEscapeUtils.escapeHtml4(Val.stripControls(destination.getConnection().getHost())));
     }
   }
   
