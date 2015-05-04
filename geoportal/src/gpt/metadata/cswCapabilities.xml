@@ -14,20 +14,20 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<csw:Capabilities version="2.0.2" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xlink="http://www.w3.org/1999/xlink">
+<csw:Capabilities version="3.0" xmlns:csw="http://www.opengis.net/cat/csw/3.0" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xlink="http://www.w3.org/1999/xlink">
   <ows:ServiceIdentification>
     <ows:Title>
-      ArcGIS Server Geoportal Extension 10 - OGC CSW 2.0.2 ISO AP
+      ArcGIS Server Geoportal Extension 10 - OGC CSW 3.0 ISO AP
     </ows:Title>
     <ows:Abstract>
-      A catalogue service that conforms to the HTTP protocol binding of the OpenGIS Catalogue Service ISO Metadata Application Profile specification (version 2.0.2)
+      A catalogue service that conforms to the HTTP protocol binding of the OpenGIS Catalogue Service ISO Metadata Application Profile specification (version 3.0)
     </ows:Abstract>
     <ows:Keywords>
       <ows:Keyword>keyword1</ows:Keyword>
       <ows:Keyword>keyword2</ows:Keyword>
     </ows:Keywords>
     <ows:ServiceType>CSW</ows:ServiceType>
-    <ows:ServiceTypeVersion>2.0.2</ows:ServiceTypeVersion>
+    <ows:ServiceTypeVersion>3.0</ows:ServiceTypeVersion>
     <ows:Fees>unknown</ows:Fees>
     <ows:AccessConstraints>unknown</ows:AccessConstraints>
   </ows:ServiceIdentification>
@@ -70,7 +70,7 @@
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="AcceptVersions">
-        <ows:Value>2.0.2</ows:Value>
+        <ows:Value>3.0</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="Sections">
         <ows:Value>ServiceIdentification</ows:Value>
@@ -126,7 +126,7 @@
         <ows:Value>text/xml</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="outputSchema">
-        <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+        <ows:Value>http://www.opengis.net/cat/csw/3.0</ows:Value>
         <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="resultType">
@@ -230,7 +230,7 @@
         <ows:Value>text/xml</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="outputSchema">
-        <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+        <ows:Value>http://www.opengis.net/cat/csw/3.0</ows:Value>
         <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
 		<ows:Value>original</ows:Value>
       </ows:Parameter>
@@ -249,10 +249,10 @@
     </ows:Operation>
     <ows:Parameter name="service">
       <ows:Value>CSW</ows:Value>
-      <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+      <ows:Value>http://www.opengis.net/cat/csw/3.0</ows:Value>
     </ows:Parameter>
     <ows:Parameter name="version">
-      <ows:Value>2.0.2</ows:Value>
+      <ows:Value>3.0</ows:Value>
     </ows:Parameter>
     <ows:Constraint name="PostEncoding">
       <ows:Value>XML</ows:Value>
