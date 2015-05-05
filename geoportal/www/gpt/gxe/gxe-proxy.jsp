@@ -13,6 +13,8 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 --%>
+<%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
+<%@page import="com.esri.gpt.framework.util.Val"%>
 <% // gxe-proxy.jsp - Serves as a proxy for GXE servlet requests. %>
 <%@page session="false"%>
 <%@page import="java.net.*,java.io.*" %>
@@ -82,10 +84,10 @@
       try {
         if (responseData.length() > 0) {
 		      response.setCharacterEncoding("UTF-8");
-		      response.setContentType(httpCon.getContentType());
+		      response.setContentType(StringEscapeUtils.escapeHtml4(Val.stripControls(httpCon.getContentType())));
 		      String cd = httpCon.getHeaderField("Content-Disposition");
 		      if ((cd != null) && (cd.length() > 0)) {
-		        response.setHeader("Content-Disposition",cd);
+		        response.setHeader("Content-Disposition",StringEscapeUtils.escapeHtml4(Val.stripControls(cd)));
 		      }
           writer = response.getWriter();
           writer.write(responseData);

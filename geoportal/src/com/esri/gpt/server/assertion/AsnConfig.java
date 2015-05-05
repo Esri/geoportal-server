@@ -487,7 +487,7 @@ public class AsnConfig {
         //this.indexReferences.add(indexRef);
       } catch (Exception e) {
         indexRef.setEnabled(false);
-        String msg = "Problem accessing assertion."+name+".location="+indexRef.getIndexLocation();
+        String msg = "Problem accessing assertion."+Val.stripControls(name)+".location="+Val.stripControls(indexRef.getIndexLocation());
         msg += " Assertions will be disabled.";
         LOGGER.log(Level.SEVERE,msg,e);
       }

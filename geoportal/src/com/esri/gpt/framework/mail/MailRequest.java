@@ -15,6 +15,7 @@
 package com.esri.gpt.framework.mail;
 import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.util.Val;
+import static com.esri.gpt.framework.util.Val.stripControls;
 import java.util.Properties;
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -230,7 +231,7 @@ public void send() throws AddressException, MessagingException {
   Message message = new MimeMessage(session);
   message.setSubject(getSubject());
   message.setContent(getBody(),getMimeType());
-  message.setFrom(makeAddress(escapeHtml4(getFromAddress())));
+  message.setFrom(makeAddress(escapeHtml4(stripControls(getFromAddress()))));
   for (String sTo: getRecipients()) {
     message.addRecipient(Message.RecipientType.TO,makeAddress(sTo));
   }
@@ -238,5 +239,4 @@ public void send() throws AddressException, MessagingException {
   // send the message
   Transport.send(message);
 }
-
 }

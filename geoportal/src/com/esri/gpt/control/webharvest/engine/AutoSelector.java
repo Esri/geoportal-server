@@ -85,7 +85,7 @@ public void run() {
         if (nextDue!=null) {
           Date nextHarvestDate = nextDue.getNextHarvestDate();
           duration = nextHarvestDate.getTime() - (new Date()).getTime() ;
-          LOGGER.log(Level.INFO,"[SYNCHRONIZER] Next synchronization time : "+nextHarvestDate.toString()+" has been determined based on scheduling of "+nextDue.getUuid()+"/\""+nextDue.getName()+"\" harvesting site.");
+          LOGGER.log(Level.INFO,"[SYNCHRONIZER] Next synchronization time : "+Val.stripControls(nextHarvestDate.toString())+" has been determined based on scheduling of "+Val.stripControls(nextDue.getUuid())+"/\""+Val.stripControls(nextDue.getName())+"\" harvesting site.");
         } else {
           duration = autoSelectFrequency;
           LOGGER.log(Level.INFO,"[SYNCHRONIZER] Next synchronization time couldn't been determined at this time.");

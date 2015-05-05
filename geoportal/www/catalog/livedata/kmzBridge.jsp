@@ -13,6 +13,8 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 --%>
+<%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
+<%@page import="com.esri.gpt.framework.util.Val"%>
 <% // kmzBridge.jsp - Serves as a proxy for the KMZ files %>
 <%@page session="false"%>
 <%@page import="java.net.*,java.io.*,java.util.zip.*" %>
@@ -89,7 +91,7 @@
 		  try {
 		    if (responseData.length() > 0) {
 		      response.setCharacterEncoding("UTF-8");
-		      response.setContentType(httpCon.getContentType());
+		      response.setContentType(StringEscapeUtils.escapeHtml4(Val.stripControls(httpCon.getContentType())));
 		      writer = response.getWriter();
 		      writer.write(responseData);
 		      writer.flush();

@@ -248,7 +248,7 @@ public class AGSProcessor extends ResourceProcessor {
           
           // collect
           try {
-            LOGGER.log(Level.FINER, "Collecting metadata for: {0}", info.getSoapUrl());
+            LOGGER.log(Level.FINER, "Collecting metadata for: {0}", Val.stripControls(info.getSoapUrl()));
             handler.collectMetadata(this,info);
           } catch (Exception e) {
             ProcessedRecord processedRcord = new ProcessedRecord();
@@ -258,7 +258,7 @@ public class AGSProcessor extends ResourceProcessor {
             this.getContext().incrementNumberFailed();
             this.getContext().setLastException(e);
             this.getContext().getProcessedRecords().add(processedRcord);
-            LOGGER.log(Level.FINER,"Error\n"+processedRcord.getSourceUri(),e);
+            LOGGER.log(Level.FINER,"Error\n"+Val.stripControls(processedRcord.getSourceUri()),e);
           }
           
           // publish

@@ -200,7 +200,7 @@ public InputStream submitHttpRequest(String method, String urlString,
 
 	
   if (LOG.isLoggable(Level.FINER)) {
-    LOG.finer("Data being sent.  URL = " + urlString + "\n Data = " + postdata);
+    LOG.finer("Data being sent.  URL = " + Val.stripControls(urlString) + "\n Data = " + Val.stripControls(postdata));
   }
 
   urlString = Utils.chkStr(urlString);

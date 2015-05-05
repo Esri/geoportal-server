@@ -90,7 +90,7 @@ public Capabilities getCapabilities() {
 public Query newQuery(Criteria crt) {
   AtomProxy proxy = new AtomProxy(info);
   Query q = new AtomQuery(context, info, proxy, crt);
-  LOGGER.finer("Query created: " + q);
+  LOGGER.finer("Query created: " + Val.stripControls(q.toString()));
   return q;
 }
 

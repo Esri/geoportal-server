@@ -22,6 +22,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * Bundles the XML documents associated with a set of keys into a single response
@@ -62,9 +63,9 @@ public class XslBundler extends KeysetProcessor {
       if (sMimeType.length() == 0) {
         sMimeType = "text/plain";
       }
-      response.setContentType(sMimeType+";charset=UTF-8"); 
+      response.setContentType(StringEscapeUtils.escapeHtml4(Val.stripControls(sMimeType))+";charset=UTF-8"); 
       if (sContentDisposition.length() > 0) {
-        response.addHeader("Content-Disposition",sContentDisposition);
+        response.addHeader("Content-Disposition",StringEscapeUtils.escapeHtml4(Val.stripControls(sContentDisposition)));
       }
       
       try {   

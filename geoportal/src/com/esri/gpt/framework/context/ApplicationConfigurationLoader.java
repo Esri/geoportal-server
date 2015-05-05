@@ -1230,7 +1230,7 @@ private void loadHarvesterConfiguration(ApplicationConfiguration appConfig, Docu
           processorFactory.init(ndDataProcessorFactory);
           cfg.getDataProcessorFactories().add(processorFactory);
         } catch (Exception ex) {
-          getLogger().log(Level.SEVERE, "Error creating processor factory: "+className, ex);
+          getLogger().log(Level.SEVERE, "Error creating processor factory: "+Val.stripControls(className), ex);
         }
       } else {
         if (LocalDataProcessorFactory.class.getCanonicalName().equals(className)) {
@@ -1277,7 +1277,7 @@ private void loadProtocolFactories(ApplicationConfiguration appConfig, Document 
         String resourceKey = Val.chkStr((String) xpath.evaluate("@resourceKey", ndProto, XPathConstants.STRING));
         factories.put(factory.getName(), factory, resourceKey);
       } catch (Exception ex) {
-        getLogger().log(Level.WARNING, "Error loading protocol: "+factoryClass, ex);
+        getLogger().log(Level.WARNING, "Error loading protocol: "+Val.stripControls(factoryClass), ex);
       }
       
       String validatorFactoryClass = Val.chkStr((String) xpath.evaluate("validator/@factoryClass", ndProto, XPathConstants.STRING));
@@ -1287,7 +1287,7 @@ private void loadProtocolFactories(ApplicationConfiguration appConfig, Document 
           IValidatorFactory factory = (IValidatorFactory) fc.newInstance();
           ValidatorFactory.register(factory);
         } catch (Exception ex) {
-          getLogger().log(Level.WARNING, "Error loading protocol validator factory: "+validatorFactoryClass, ex);
+          getLogger().log(Level.WARNING, "Error loading protocol validator factory: "+Val.stripControls(validatorFactoryClass), ex);
         }
       }
     }

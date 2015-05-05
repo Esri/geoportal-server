@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 package com.esri.gpt.control.arcims;
+import com.esri.gpt.framework.util.Val;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,17 +23,13 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.Principal;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * Provides a basic proxy servlet for ArcXML requests
@@ -208,7 +205,7 @@ public class ServletConnectorProxy extends HttpServlet {
 				String authenticateHdr = httpCon.getHeaderField("WWW-Authenticate");
 				if(authenticateHdr != null){
 				  LOGGER.finer(" WWW-Authenticate : " + authenticateHdr);
-				  response.setHeader("WWW-Authenticate", authenticateHdr);
+				  response.setHeader("WWW-Authenticate", StringEscapeUtils.escapeHtml4(Val.stripControls(authenticateHdr)));
 				}
         LOGGER.finer(" Response Code : " + httpCon.getResponseCode());
         

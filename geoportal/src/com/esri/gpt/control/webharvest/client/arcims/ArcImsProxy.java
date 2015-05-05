@@ -72,7 +72,7 @@ public ExtendedQueryRequest getQueryRequest(Criteria criteria) {
 }
 
 public String read(String sourceUri) throws IOException {
-  LOGGER.finer("Reading metadata of source URI: \"" +sourceUri+ "\" through proxy: "+this);
+  LOGGER.finer("Reading metadata of source URI: \"" +Val.stripControls(sourceUri)+ "\" through proxy: "+Val.stripControls(this.toString()));
   try {
     HarvestMetadataRequest harvestMetadataRequest = new HarvestMetadataRequest();
     harvestMetadataRequest.setService(info.newService());
@@ -81,7 +81,7 @@ public String read(String sourceUri) throws IOException {
 
     String md = harvestMetadataRequest.getMetadata();
     if (md.length()==0) {
-      LOGGER.finer("Reading metadata of source URI: \"" +sourceUri+ "\" through proxy: "+this+"; Received no METADATA response.");
+      LOGGER.finer("Reading metadata of source URI: \"" +Val.stripControls(sourceUri)+ "\" through proxy: "+Val.stripControls(this.toString())+"; Received no METADATA response.");
       return "";
     }
 
@@ -110,7 +110,7 @@ public String read(String sourceUri) throws IOException {
     XPath xPath = xPathFactory.newXPath();
 
     String url = (String) xPath.evaluate("/METADATA/METADATA_DATASET/@url", doc, XPathConstants.STRING);
-    LOGGER.finer("Reading metadata of id: \"" +sourceUri+ "\" through proxy: "+this+"; Received no metadata URL within METADATA response.");
+    LOGGER.finer("Reading metadata of id: \"" +Val.stripControls(sourceUri)+ "\" through proxy: "+Val.stripControls(this.toString())+"; Received no metadata URL within METADATA response.");
     if (url.length()==0) return "";
 
     url = Val.chkStr(url).replaceAll("\\{", "%7B").replaceAll("\\}", "%7D");
@@ -123,7 +123,7 @@ public String read(String sourceUri) throws IOException {
     cr.execute();
 
     String mdText = sh.getContent();
-    LOGGER.finer("Received metadata of id: \"" +sourceUri+ "\" through proxy: "+this);
+    LOGGER.finer("Received metadata of id: \"" +Val.stripControls(sourceUri)+ "\" through proxy: "+Val.stripControls(this.toString()));
     LOGGER.finest(mdText);
     return mdText;
 

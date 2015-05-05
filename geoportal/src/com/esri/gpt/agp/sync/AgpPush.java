@@ -25,6 +25,7 @@ import com.esri.gpt.agp.client.AgpSearchCriteria;
 import com.esri.gpt.agp.client.AgpSearchRequest;
 import com.esri.gpt.agp.client.AgpUtil;
 import com.esri.gpt.agp.multipart2.MultipartProvider;
+import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -257,9 +258,9 @@ push-working.jsp
     JSONObject jso = client.executeJsonRequest(sUrl,hdr,params,sMimeType);
     if (jso.has("success") && jso.getString("success").equals("true")) { 
       this.numRelationshipsAdded++;
-      LOGGER.finer("Relationship added: "+sUrl+" "+sMsg);
+      LOGGER.finer("Relationship added: "+Val.stripControls(sUrl)+" "+sMsg);
     } else {
-      LOGGER.finer("Add relationship failed: "+sUrl+" "+sMsg);
+      LOGGER.finer("Add relationship failed: "+Val.stripControls(sUrl)+" "+sMsg);
       // TODO: throw exception here??
     }
   }
@@ -277,7 +278,7 @@ push-working.jsp
     String sSrcId = sourceItem.getProperties().getValue("id");
     String sDestId = destItem.getProperties().getValue("id");
     String sTitle = sourceItem.getProperties().getValue("title");
-    LOGGER.finer("Publishing item: "+sSrcId+" "+sTitle);
+    LOGGER.finer("Publishing item: "+Val.stripControls(sSrcId)+" "+sTitle);
     if (LOGGER.isLoggable(Level.FINEST)) {
       LOGGER.finest(sourceItem.getProperties().toString());
       LOGGER.finest(destItem.getProperties().toString());
@@ -321,14 +322,14 @@ push-working.jsp
       }  
       if (bInsert) {
         this.numItemsInserted++; 
-        LOGGER.finer("Item inserted: "+sUrl);
+        LOGGER.finer("Item inserted: "+Val.stripControls(sUrl));
       } else {
         this.numItemsUpdated++;
-        LOGGER.finer("Item updated: "+sUrl);
+        LOGGER.finer("Item updated: "+Val.stripControls(sUrl));
       }
       
     } else {
-      LOGGER.finer("Publish item FAILED for: "+sUrl);
+      LOGGER.finer("Publish item FAILED for: "+Val.stripControls(sUrl));
       // TODO: throw exception here??
     }
   }
@@ -363,9 +364,9 @@ push-working.jsp
     JSONObject jso = client.executeJsonRequest(sUrl,hdr,provider);
     if (jso.has("success") && jso.getString("success").equals("true")) {  
       this.numMetadataPublished++;
-      LOGGER.finer("Metadata updated for: "+sUrl);
+      LOGGER.finer("Metadata updated for: "+Val.stripControls(sUrl));
     } else {
-      LOGGER.finer("Metadata update FAILED for: "+sUrl);
+      LOGGER.finer("Metadata update FAILED for: "+Val.stripControls(sUrl));
       // TODO: throw exception here??
     }
   }
@@ -398,7 +399,7 @@ push-working.jsp
       // 1.6.02         HTTP Request failed: HTTP/1.1 500 Internal Server Error
       // AGOL 4/13/2012 HTTP Request failed: HTTP/1.1 400 Bad Request
       if (s.contains("HTTP Request failed")) {
-        LOGGER.finest("No metadata found for item:"+sSrcId+" "+s);
+        LOGGER.finest("No metadata found for item:"+Val.stripControls(sSrcId)+" "+s);
       } else {
         //TODO: throw exception here?
         ioe.printStackTrace(System.err);
@@ -539,17 +540,17 @@ push-working.jsp
     String sType = sourceItem.getProperties().getValue("type");
     String sTitle = sourceItem.getProperties().getValue("title");
     String sMsg = "Processing item ("+this.numItemsConsidered+")";
-    sMsg += ", id:"+sId+", type:"+sType+", title:"+sTitle;
+    sMsg += ", id:"+Val.stripControls(sId)+", type:"+Val.stripControls(sType)+", title:"+Val.stripControls(sTitle);
     LOGGER.info(sMsg);
 
     // check the id and type
     if (sId == null) {
       this.numWithNullId++;
-      LOGGER.finer("Ignoring item with null id: "+sTitle);
+      LOGGER.finer("Ignoring item with null id: "+Val.stripControls(sTitle));
       return false;
     } else if (sType == null) {
       this.numWithNullType++;
-      LOGGER.finer("Ignoring item with null type: "+sId+" "+sTitle);
+      LOGGER.finer("Ignoring item with null type: "+Val.stripControls(sId)+" "+Val.stripControls(sTitle));
       return false;
     } else if (sType.equalsIgnoreCase("Code Attachment")) {
       // don't publish Code Attachments now, publish within processRelatedItems
@@ -564,7 +565,7 @@ push-working.jsp
     if (bUnsyncedItemExists) {
       this.numUnsyncedExistingAtDestination++;
       String s = "Ignoring unsynced item existing at destination: ";
-      LOGGER.finer(s+sId+" "+sTitle);
+      LOGGER.finer(s+Val.stripControls(sId)+" "+Val.stripControls(sTitle));
       return false;
     }
     
@@ -573,7 +574,7 @@ push-working.jsp
     if (bIsSyncedItem) {
       this.numOriginatedFromSynchronization++;
       String s = "Ignoring, an item that originated from synchronization will not be repropagated: ";
-      LOGGER.finer(s+sId+" "+sTitle);
+      LOGGER.finer(s+Val.stripControls(sId)+" "+Val.stripControls(sTitle));
       return false;
     }
     

@@ -441,7 +441,7 @@ public class Content extends Component {
     throws XPathExpressionException {
     clearAllValues();
     String sSelect = getSelect();
-    LOGGER.finer("Evaluating xpath: "+sSelect);
+    LOGGER.finer("Evaluating xpath: "+Val.stripControls(sSelect));
     if (sSelect.length() > 0) {
       
       // evaluate single or multiple node values
@@ -462,7 +462,7 @@ public class Content extends Component {
     parameter.getValidation().setNilReasonValue("");
     String sNil = this.getNilReasonPath();
     if (sNil.length() > 0) {
-      LOGGER.finer("Evaluating nilReason xpath: "+sNil);
+      LOGGER.finer("Evaluating nilReason xpath: "+Val.stripControls(sNil));
       parameter.getValidation().setNilReasonValue(xpath.evaluate(sNil,dom));
     }
   }
