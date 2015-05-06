@@ -17,12 +17,12 @@ import com.esri.gpt.framework.context.BaseServlet;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.security.identity.NotAuthorizedException;
 import com.esri.gpt.framework.util.Val;
-import com.esri.gpt.server.csw.provider.components.IOriginalXmlProvider;
-import com.esri.gpt.server.csw.provider.components.IProviderFactory;
-import com.esri.gpt.server.csw.provider.components.OperationContext;
-import com.esri.gpt.server.csw.provider.components.OperationResponse;
-import com.esri.gpt.server.csw.provider.components.OwsException;
-import com.esri.gpt.server.csw.provider.components.RequestHandler;
+import com.esri.gpt.server.csw.components.IOriginalXmlProvider;
+import com.esri.gpt.server.csw.components.IProviderFactory;
+import com.esri.gpt.server.csw.components.IRequestHandler;
+import com.esri.gpt.server.csw.components.OperationContext;
+import com.esri.gpt.server.csw.components.OperationResponse;
+import com.esri.gpt.server.csw.components.OwsException;
 import com.esri.gpt.server.csw.provider.local.ProviderFactory;
 
 import java.io.UnsupportedEncodingException;
@@ -129,7 +129,7 @@ public class CswServlet extends BaseServlet {
     LOGGER.fine("Executing CSW provider request....");
     String cswResponse = "";
     String mimeType = "application/xml";
-    RequestHandler handler = null;
+    IRequestHandler handler = null;
     OperationResponse opResponse = null;
     try {
       String cswRequest = readInputCharacters(request);
@@ -202,11 +202,11 @@ public class CswServlet extends BaseServlet {
    * @param context the request context
    * @return the request handler
    */
-  protected RequestHandler makeRequestHandler(HttpServletRequest request,
+  protected IRequestHandler makeRequestHandler(HttpServletRequest request,
                                               HttpServletResponse response,
                                               RequestContext context) {
     IProviderFactory factory = new ProviderFactory();
-    RequestHandler handler = factory.makeRequestHandler(
+    IRequestHandler handler = factory.makeRequestHandler(
         request,context,this.cswSubContextPath,this.resourceFilePrefix);
     if (handler != null) {
       handler.getOperationContext().getServiceProperties().setAllowTransactions(this.allowTransactions);
@@ -228,7 +228,7 @@ public class CswServlet extends BaseServlet {
                                RequestContext context,
                                String id) 
     throws Exception {
-    RequestHandler handler = this.makeRequestHandler(request,response,context);
+    IRequestHandler handler = this.makeRequestHandler(request,response,context);
     OperationContext opContext = handler.getOperationContext();
     IProviderFactory factory = opContext.getProviderFactory();
     IOriginalXmlProvider oxp = factory.makeOriginalXmlProvider(opContext);

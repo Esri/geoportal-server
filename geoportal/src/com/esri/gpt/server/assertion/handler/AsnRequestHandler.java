@@ -27,7 +27,7 @@ import com.esri.gpt.server.assertion.components.AsnValueFilter;
 import com.esri.gpt.server.assertion.components.AsnValueType;
 import com.esri.gpt.server.assertion.exception.AsnInsufficientPrivilegeException;
 import com.esri.gpt.server.assertion.exception.AsnInvalidOperationException;
-import com.esri.gpt.server.csw.provider.components.ParseHelper;
+import com.esri.gpt.server.csw.components.ParseHelper;
 
 import java.io.BufferedReader;
 import java.io.IOException;

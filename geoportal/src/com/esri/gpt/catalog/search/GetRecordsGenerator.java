@@ -19,7 +19,7 @@ import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.XmlIoUtil;
-import com.esri.gpt.server.csw.provider.components.CswNamespaces;
+import com.esri.gpt.server.csw.components.CswNamespaces;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

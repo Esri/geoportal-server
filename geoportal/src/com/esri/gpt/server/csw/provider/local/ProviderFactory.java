@@ -13,17 +13,43 @@
  * limitations under the License.
  */
 package com.esri.gpt.server.csw.provider.local;
+import com.esri.gpt.server.csw.components.IProviderFactory;
+import com.esri.gpt.server.csw.components.SupportedParameter;
+import com.esri.gpt.server.csw.components.RequestOptions;
+import com.esri.gpt.server.csw.components.OwsException;
+import com.esri.gpt.server.csw.components.DescribeRecordResponse;
+import com.esri.gpt.server.csw.components.SupportedValues;
+import com.esri.gpt.server.csw.components.SupportedParameters;
+import com.esri.gpt.server.csw.components.IResponseGenerator;
+import com.esri.gpt.server.csw.components.IQueryEvaluator;
+import com.esri.gpt.server.csw.components.GetCapabilitiesResponse;
+import com.esri.gpt.server.csw.components.CapabilityOptions;
+import com.esri.gpt.server.csw.components.CswConstants;
+import com.esri.gpt.server.csw.components.AnySupportedValues;
+import com.esri.gpt.server.csw.components.OperationResponse;
+import com.esri.gpt.server.csw.components.ISortByParser;
+import com.esri.gpt.server.csw.components.ParseHelper;
+import com.esri.gpt.server.csw.components.IOriginalXmlProvider;
+import com.esri.gpt.server.csw.components.ICqlParser;
+import com.esri.gpt.server.csw.components.QueryOptions;
+import com.esri.gpt.server.csw.components.AcknowlegementResponse;
+import com.esri.gpt.server.csw.components.NoSupportedValues;
+import com.esri.gpt.server.csw.components.IFilterParser;
+import com.esri.gpt.server.csw.components.OperationContext;
+import com.esri.gpt.server.csw.components.IOperationProvider;
+import com.esri.gpt.server.csw.components.ServiceProperties;
 import com.esri.gpt.catalog.context.CatalogConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.ConfigurationException;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.util.Val;
+import com.esri.gpt.server.csw.components.IRequestHandler;
+import com.esri.gpt.server.csw.components.OriginalXmlProvider;
 import com.esri.gpt.server.csw.provider.DescribeRecordProvider;
 import com.esri.gpt.server.csw.provider.GetCapabilitiesProvider;
 import com.esri.gpt.server.csw.provider.GetRecordByIdProvider;
 import com.esri.gpt.server.csw.provider.GetRecordsProvider;
 import com.esri.gpt.server.csw.provider.TransactionProvider;
-import com.esri.gpt.server.csw.provider.components.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -64,7 +90,7 @@ public class ProviderFactory implements IProviderFactory {
       System.err.println(xml);
       
       IProviderFactory self = new ProviderFactory();
-      RequestHandler handler = self.makeRequestHandler(null,rc,cswCtx,resPfx);
+      IRequestHandler handler = self.makeRequestHandler(null,rc,cswCtx,resPfx);
       
       OperationResponse opResponse = handler.handleXML(xml);
       System.err.println(opResponse.getResponseXml());
@@ -347,8 +373,9 @@ public class ProviderFactory implements IProviderFactory {
    * @param requestContext the active request context
    * @return the request handler
    */
-  public static RequestHandler newHandler(RequestContext requestContext) {
-    IProviderFactory factory = ProviderFactory.newFactory(requestContext);
+  @Override
+  public IRequestHandler newHandler(RequestContext requestContext) {
+    IProviderFactory factory = new ProviderFactory().newFactory(requestContext);
     return factory.makeRequestHandler(null,requestContext,"/csw","gpt/metadata/csw");
   }
   

@@ -18,9 +18,10 @@ import com.esri.gpt.catalog.discovery.Discoverable;
 import com.esri.gpt.catalog.discovery.Discoverables;
 import com.esri.gpt.catalog.discovery.DiscoveryQuery;
 import com.esri.gpt.framework.collection.StringSet;
-import com.esri.gpt.server.csw.provider.components.CswConstants;
-import com.esri.gpt.server.csw.provider.components.OperationContext;
-import com.esri.gpt.server.csw.provider.components.QueryOptions;
+import com.esri.gpt.server.csw.components.CoreQueryables;
+import com.esri.gpt.server.csw.components.CswConstants;
+import com.esri.gpt.server.csw.components.OperationContext;
+import com.esri.gpt.server.csw.components.QueryOptions;
 
 /**
  * Provides a context for executing CSW operation against the local catalog. 

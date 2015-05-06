@@ -25,7 +25,7 @@ import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
-import com.esri.gpt.server.csw.provider.local.CoreQueryables;
+import com.esri.gpt.server.csw.components.CoreQueryables;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;

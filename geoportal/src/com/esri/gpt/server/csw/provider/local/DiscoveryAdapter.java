@@ -15,8 +15,8 @@
 package com.esri.gpt.server.csw.provider.local;
 import com.esri.gpt.catalog.discovery.Discoverable;
 import com.esri.gpt.framework.util.Val;
-import com.esri.gpt.server.csw.provider.components.OperationContext;
-import com.esri.gpt.server.csw.provider.components.OwsException;
+import com.esri.gpt.server.csw.components.OperationContext;
+import com.esri.gpt.server.csw.components.OwsException;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;

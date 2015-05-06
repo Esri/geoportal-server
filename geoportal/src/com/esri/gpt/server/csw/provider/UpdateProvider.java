@@ -14,8 +14,8 @@
  */
 package com.esri.gpt.server.csw.provider;
 import com.esri.gpt.framework.security.principal.Publisher;
-import com.esri.gpt.server.csw.provider.components.OperationContext;
-import com.esri.gpt.server.csw.provider.components.OwsException;
+import com.esri.gpt.server.csw.components.OperationContext;
+import com.esri.gpt.server.csw.components.OwsException;
 
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;

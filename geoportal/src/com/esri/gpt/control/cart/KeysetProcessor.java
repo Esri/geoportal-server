@@ -18,8 +18,8 @@ import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.XsltTemplate;
 import com.esri.gpt.framework.xml.XsltTemplates;
-import com.esri.gpt.server.csw.provider.components.OperationContext;
-import com.esri.gpt.server.csw.provider.local.OriginalXmlProvider;
+import com.esri.gpt.server.csw.components.OperationContext;
+import com.esri.gpt.server.csw.components.OriginalXmlProvider;
 
 import java.io.IOException;
 import javax.servlet.ServletException;

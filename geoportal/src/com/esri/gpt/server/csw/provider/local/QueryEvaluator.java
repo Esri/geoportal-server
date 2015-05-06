@@ -20,14 +20,14 @@ import com.esri.gpt.catalog.discovery.DiscoveryQuery;
 import com.esri.gpt.catalog.discovery.DiscoveryQueryAdapter;
 import com.esri.gpt.catalog.discovery.LogicalClause;
 import com.esri.gpt.catalog.discovery.PropertyClause;
-import com.esri.gpt.catalog.lucene.SchemaFilter;
 import com.esri.gpt.framework.util.Val;
-import com.esri.gpt.server.csw.provider.components.CswConstants;
-import com.esri.gpt.server.csw.provider.components.IQueryEvaluator;
-import com.esri.gpt.server.csw.provider.components.OperationContext;
-import com.esri.gpt.server.csw.provider.components.OwsException;
-import com.esri.gpt.server.csw.provider.components.QueryOptions;
-import com.esri.gpt.server.csw.provider.components.TransactionOptions;
+import com.esri.gpt.server.csw.components.CswConstants;
+import com.esri.gpt.server.csw.components.IQueryEvaluator;
+import com.esri.gpt.server.csw.components.OperationContext;
+import com.esri.gpt.server.csw.components.OriginalXmlProvider;
+import com.esri.gpt.server.csw.components.OwsException;
+import com.esri.gpt.server.csw.components.QueryOptions;
+import com.esri.gpt.server.csw.components.TransactionOptions;
 
 import java.util.logging.Logger;
 

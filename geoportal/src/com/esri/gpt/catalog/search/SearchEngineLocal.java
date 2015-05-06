@@ -17,16 +17,15 @@ import com.esri.gpt.catalog.discovery.DiscoveryException;
 import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.MessageBroker;
-import com.esri.gpt.framework.search.DcList;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.server.csw.client.CswRecord;
 import com.esri.gpt.server.csw.client.CswRecords;
-import com.esri.gpt.server.csw.client.Utils;
-import com.esri.gpt.server.csw.provider.components.IOriginalXmlProvider;
-import com.esri.gpt.server.csw.provider.components.OperationContext;
-import com.esri.gpt.server.csw.provider.components.OperationResponse;
-import com.esri.gpt.server.csw.provider.components.RequestHandler;
-import com.esri.gpt.server.csw.provider.local.ProviderFactory;
+import com.esri.gpt.server.csw.components.IOriginalXmlProvider;
+import com.esri.gpt.server.csw.components.IRequestHandler;
+import com.esri.gpt.server.csw.components.OperationContext;
+import com.esri.gpt.server.csw.components.OperationResponse;
+import com.esri.gpt.server.csw.components.ProviderFactoryHelper;
+import com.esri.gpt.server.csw.provider30.local.ProviderFactory;
 
 import java.io.StringReader;
 import java.util.HashMap;
@@ -98,7 +97,7 @@ public class SearchEngineLocal extends SearchEngineCSW {
       GetRecordsGenerator generator = new GetRecordsGenerator(this.getRequestContext());
       String cswRequest = generator.generateCswByIdRequest(uuid);
       
-      RequestHandler handler = ProviderFactory.newHandler(this.getRequestContext());
+      IRequestHandler handler = ProviderFactoryHelper.newInstance(this.getRequestContext()).newHandler(this.getRequestContext());
       OperationResponse resp = handler.handleXML(cswRequest);
       cswResponse = resp.getResponseXml();
       
@@ -134,7 +133,7 @@ public class SearchEngineLocal extends SearchEngineCSW {
         String fullMetadataXml = "";       
         try {
           
-          RequestHandler handler = ProviderFactory.newHandler(this.getRequestContext());
+          IRequestHandler handler = ProviderFactoryHelper.newInstance(this.getRequestContext()).newHandler(this.getRequestContext());
           OperationContext ctx = handler.getOperationContext();
           IOriginalXmlProvider oxp = ctx.getProviderFactory().makeOriginalXmlProvider(ctx);
           fullMetadataXml = oxp.provideOriginalXml(ctx,uuid);
@@ -253,7 +252,7 @@ public class SearchEngineLocal extends SearchEngineCSW {
         isSitemapRequest = ((String)obj).equalsIgnoreCase("true");
       }
       
-      RequestHandler handler = ProviderFactory.newHandler(this.getRequestContext());
+      IRequestHandler handler = ProviderFactoryHelper.newInstance(this.getRequestContext()).newHandler(this.getRequestContext());
       OperationResponse resp = handler.handleXML(cswRequest);
       String cswResponse = resp.getResponseXml();
       

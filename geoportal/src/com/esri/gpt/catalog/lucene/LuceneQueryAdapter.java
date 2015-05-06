@@ -30,7 +30,7 @@ import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.security.identity.AuthenticationStatus;
 import com.esri.gpt.framework.security.metadata.MetadataAcl;
 import com.esri.gpt.framework.util.Val;
-import com.esri.gpt.server.csw.provider.components.QueryOptions;
+import com.esri.gpt.server.csw.components.QueryOptions;
 
 import java.io.IOException;
 import java.net.URLEncoder;

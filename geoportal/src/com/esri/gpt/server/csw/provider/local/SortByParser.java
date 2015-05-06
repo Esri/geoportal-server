@@ -16,9 +16,9 @@ package com.esri.gpt.server.csw.provider.local;
 import com.esri.gpt.catalog.discovery.DiscoveryQuery;
 import com.esri.gpt.catalog.discovery.Sortable;
 import com.esri.gpt.catalog.discovery.Sortables;
-import com.esri.gpt.server.csw.provider.components.ISortByParser;
-import com.esri.gpt.server.csw.provider.components.OperationContext;
-import com.esri.gpt.server.csw.provider.components.OwsException;
+import com.esri.gpt.server.csw.components.ISortByParser;
+import com.esri.gpt.server.csw.components.OperationContext;
+import com.esri.gpt.server.csw.components.OwsException;
 
 import java.util.logging.Logger;
 import javax.xml.xpath.XPath;

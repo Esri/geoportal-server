@@ -14,16 +14,16 @@
  */
 package com.esri.gpt.server.csw.provider;
 import com.esri.gpt.framework.util.Val;
-import com.esri.gpt.server.csw.provider.components.CswConstants;
-import com.esri.gpt.server.csw.provider.components.IOperationProvider;
-import com.esri.gpt.server.csw.provider.components.ISupportedValues;
-import com.esri.gpt.server.csw.provider.components.OperationContext;
-import com.esri.gpt.server.csw.provider.components.OwsException;
-import com.esri.gpt.server.csw.provider.components.ParseHelper;
-import com.esri.gpt.server.csw.provider.components.ServiceProperties;
-import com.esri.gpt.server.csw.provider.components.SupportedValues;
-import com.esri.gpt.server.csw.provider.components.TransactionOptions;
-import com.esri.gpt.server.csw.provider.components.ValidationHelper;
+import com.esri.gpt.server.csw.components.CswConstants;
+import com.esri.gpt.server.csw.components.IOperationProvider;
+import com.esri.gpt.server.csw.components.ISupportedValues;
+import com.esri.gpt.server.csw.components.OperationContext;
+import com.esri.gpt.server.csw.components.OwsException;
+import com.esri.gpt.server.csw.components.ParseHelper;
+import com.esri.gpt.server.csw.components.ServiceProperties;
+import com.esri.gpt.server.csw.components.SupportedValues;
+import com.esri.gpt.server.csw.components.TransactionOptions;
+import com.esri.gpt.server.csw.components.ValidationHelper;
 
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;

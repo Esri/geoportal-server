@@ -47,9 +47,10 @@ import com.esri.gpt.framework.security.identity.IdentityException;
 import com.esri.gpt.framework.security.principal.Publisher;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.XsltTemplate;
-import com.esri.gpt.server.csw.provider.components.OperationResponse;
-import com.esri.gpt.server.csw.provider.components.RequestHandler;
-import com.esri.gpt.server.csw.provider.local.ProviderFactory;
+import com.esri.gpt.server.csw.components.IRequestHandler;
+import com.esri.gpt.server.csw.components.OperationResponse;
+import com.esri.gpt.server.csw.components.ProviderFactoryHelper;
+import com.esri.gpt.server.csw.provider30.local.ProviderFactory;
 
 /**
  * Servlet Connector for an AtcIMS MetadataServer
@@ -214,7 +215,7 @@ public String makeCswRequestFromAxl(RequestContext context,
 		getLogger().finest(" AXL2CSW transformed request : " + cswRequest);
 		String cswResponse = "";
     try {
-      RequestHandler handler = ProviderFactory.newHandler(context);
+      IRequestHandler handler = ProviderFactoryHelper.newInstance(context).newHandler(context);
       OperationResponse resp = handler.handleXML(cswRequest);
       cswResponse = resp.getResponseXml();
     } catch (Exception e) {
