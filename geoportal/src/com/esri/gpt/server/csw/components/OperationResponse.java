@@ -28,12 +28,15 @@ public class OperationResponse {
   private String   outputFormat;
   private Document responseDom;
   private String   responseXml;
+  private final CswNamespaces namespaces;
   
   /** constructors ============================================================ */
   
-  /** Default constructor */
-  public OperationResponse() {
-    super();
+  /** Default constructor
+     * @param namespaces namespaces
+     */
+  public OperationResponse(CswNamespaces namespaces) {
+    this.namespaces = namespaces;
   }
   
   /** properties ============================================================== */
@@ -94,14 +97,14 @@ public class OperationResponse {
     if (!rootName.startsWith("csw:")) {
       rootName = "csw:"+rootName;
     }
-    Element root = this.getResponseDom().createElementNS(CswNamespaces.URI_CSW,rootName);
-    root.setAttribute("xmlns:csw",CswNamespaces.URI_CSW);
-    root.setAttribute("xmlns:dc", CswNamespaces.URI_DC);
-    root.setAttribute("xmlns:dct",CswNamespaces.URI_DCT);
-    root.setAttribute("xmlns:gml",CswNamespaces.URI_GML);
-    root.setAttribute("xmlns:ows",CswNamespaces.URI_OWS);
-    root.setAttribute("xmlns:dcmiBox",CswNamespaces.URI_dcmiBox);
-    root.setAttribute("xmlns:xsd",CswNamespaces.URI_XSD);
+    Element root = this.getResponseDom().createElementNS(namespaces.URI_CSW(),rootName);
+    root.setAttribute("xmlns:csw",namespaces.URI_CSW());
+    root.setAttribute("xmlns:dc", namespaces.URI_DC);
+    root.setAttribute("xmlns:dct",namespaces.URI_DCT);
+    root.setAttribute("xmlns:gml",namespaces.URI_GML);
+    root.setAttribute("xmlns:ows",namespaces.URI_OWS());
+    root.setAttribute("xmlns:dcmiBox",namespaces.URI_dcmiBox);
+    root.setAttribute("xmlns:xsd",namespaces.URI_XSD);
     this.getResponseDom().appendChild(root);
     return root;
   }

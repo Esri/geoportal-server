@@ -110,4 +110,15 @@ public interface IProviderFactory {
    */
   public IRequestHandler newHandler(RequestContext requestContext);
   
+  /**
+   * Gets CSW version.
+   * @return CSW version
+   */
+  public String getVersion();
+  
+  /**
+   * Gets namespaces.
+   * @return namespaces
+   */
+  public CswNamespaces getNamespaces();
 }

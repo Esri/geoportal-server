@@ -26,7 +26,7 @@ public class OperationContext {
   /** instance variables ====================================================== */
   private Map<String,Object> additionalProperties = new HashMap<String,Object>();
   private String             operationName;
-  private OperationResponse  operationResponse = new OperationResponse();
+  private OperationResponse  operationResponse;
   private IProviderFactory   providerFactory;
   private RequestContext     requestContext;
   private RequestOptions     requestOptions = new RequestOptions();
@@ -37,7 +37,9 @@ public class OperationContext {
   /** constructors ============================================================ */
   
   /** Default constructor */
-  public OperationContext() {}
+  public OperationContext(CswNamespaces namespaces) {
+      operationResponse = new OperationResponse(namespaces);
+  }
   
   /** properties ============================================================== */
   

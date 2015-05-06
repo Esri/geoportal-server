@@ -198,7 +198,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       OperationResponse opResponse = context.getOperationResponse();
       Document responseDom = opResponse.getResponseDom();
       String recNamespacePfx = "csw";
-      String recNamespaceUri = CswNamespaces.URI_CSW;
+      String recNamespaceUri = CswNamespaces.CSW_30.URI_CSW();
       String recLocalName = "Record";
       StringSet elementNames = qOptions.getElementNames();
       boolean hasElementNames = (elementNames != null) && (elementNames.size() > 0);
@@ -286,12 +286,12 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
     
     // create and add the status element
     String sTimestamp = opResponse.toIso8601(new Timestamp(System.currentTimeMillis()));
-    Element elStatus = responseDom.createElementNS(CswNamespaces.URI_CSW,"csw:SearchStatus");
+    Element elStatus = responseDom.createElementNS(CswNamespaces.CSW_30.URI_CSW(),"csw:SearchStatus");
     elStatus.setAttribute("timestamp",sTimestamp);
     parent.appendChild(elStatus);
     
     // create and add the results element
-    Element elResults = responseDom.createElementNS(CswNamespaces.URI_CSW,"csw:SearchResults");
+    Element elResults = responseDom.createElementNS(CswNamespaces.CSW_30.URI_CSW(),"csw:SearchResults");
     elResults.setAttribute("numberOfRecordsMatched",""+numberOfRecordsMatched);
     elResults.setAttribute("numberOfRecordsReturned",""+numberOfRecordsReturned);
     if (nextRecord >= 0) {
@@ -304,7 +304,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       elResults.setAttribute("elementSet",type);
     }
     if (qOptions.isDublinCoreResponse()) {
-      elResults.setAttribute("recordSchema",CswNamespaces.URI_CSW);
+      elResults.setAttribute("recordSchema",CswNamespaces.CSW_30.URI_CSW());
     } else {
       elResults.setAttribute("recordSchema",qOptions.getOutputSchema());
     }
@@ -355,8 +355,8 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       if (!rootName.startsWith("csw:")) {
         rootName = "csw:"+rootName;
       }
-      Element root = dom.createElementNS(CswNamespaces.URI_CSW,rootName);
-      root.setAttribute("xmlns:csw",CswNamespaces.URI_CSW);
+      Element root = dom.createElementNS(CswNamespaces.CSW_30.URI_CSW(),rootName);
+      root.setAttribute("xmlns:csw",CswNamespaces.CSW_30.URI_CSW());
       dom.appendChild(root);
       context.getOperationResponse().setResponseDom(dom);
       return root;

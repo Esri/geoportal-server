@@ -149,7 +149,7 @@ public class GetRecordsProvider implements IOperationProvider {
     // make the dom, find the ogc:Filter node
     try {
       Document dom = DomUtil.makeDomFromString(sbXml.toString(),true);
-      CswNamespaces ns = new CswNamespaces();
+      CswNamespaces ns = CswNamespaces.CSW_30;
       XPath xpath = XPathFactory.newInstance().newXPath();
       xpath.setNamespaceContext(ns.makeNamespaceContext());
       
@@ -279,7 +279,7 @@ public class GetRecordsProvider implements IOperationProvider {
     ISupportedValues supported;
     IProviderFactory factory = context.getProviderFactory();
     
-    CswNamespaces ns = new CswNamespaces();
+    CswNamespaces ns = CswNamespaces.CSW_30;
     XPath xpath = XPathFactory.newInstance().newXPath();
     xpath.setNamespaceContext(ns.makeNamespaceContext());
     

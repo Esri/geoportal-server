@@ -12,8 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.server.csw.components;
+package com.esri.gpt.server.csw.provider.local;
 import com.esri.gpt.framework.xml.XmlIoUtil;
+import com.esri.gpt.server.csw.components.CswNamespaces;
+import com.esri.gpt.server.csw.components.IResponseGenerator;
+import com.esri.gpt.server.csw.components.OperationContext;
+import com.esri.gpt.server.csw.components.OperationResponse;
 
 import java.sql.Timestamp;
 import java.util.logging.Logger;
@@ -59,7 +63,7 @@ public class AcknowlegementResponse implements IResponseGenerator {
     root.setAttribute("timeStamp", sTimestamp);
       
     // echo the request, complete the response
-    Element elEcho = responseDom.createElementNS(CswNamespaces.URI_CSW,"EchoedRequest");
+    Element elEcho = responseDom.createElementNS(CswNamespaces.CSW_202.URI_CSW(),"EchoedRequest");
     Node ndRequest = requestDom.getFirstChild().cloneNode(true);
     elEcho.appendChild(responseDom.adoptNode(ndRequest));
     root.appendChild(elEcho);

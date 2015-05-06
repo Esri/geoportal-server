@@ -17,12 +17,10 @@ import com.esri.gpt.server.csw.components.IProviderFactory;
 import com.esri.gpt.server.csw.components.SupportedParameter;
 import com.esri.gpt.server.csw.components.RequestOptions;
 import com.esri.gpt.server.csw.components.OwsException;
-import com.esri.gpt.server.csw.components.DescribeRecordResponse;
 import com.esri.gpt.server.csw.components.SupportedValues;
 import com.esri.gpt.server.csw.components.SupportedParameters;
 import com.esri.gpt.server.csw.components.IResponseGenerator;
 import com.esri.gpt.server.csw.components.IQueryEvaluator;
-import com.esri.gpt.server.csw.components.GetCapabilitiesResponse;
 import com.esri.gpt.server.csw.components.CapabilityOptions;
 import com.esri.gpt.server.csw.components.CswConstants;
 import com.esri.gpt.server.csw.components.AnySupportedValues;
@@ -32,7 +30,6 @@ import com.esri.gpt.server.csw.components.ParseHelper;
 import com.esri.gpt.server.csw.components.IOriginalXmlProvider;
 import com.esri.gpt.server.csw.components.ICqlParser;
 import com.esri.gpt.server.csw.components.QueryOptions;
-import com.esri.gpt.server.csw.components.AcknowlegementResponse;
 import com.esri.gpt.server.csw.components.NoSupportedValues;
 import com.esri.gpt.server.csw.components.IFilterParser;
 import com.esri.gpt.server.csw.components.OperationContext;
@@ -43,6 +40,7 @@ import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.ConfigurationException;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.util.Val;
+import com.esri.gpt.server.csw.components.CswNamespaces;
 import com.esri.gpt.server.csw.components.IRequestHandler;
 import com.esri.gpt.server.csw.components.OriginalXmlProvider;
 import com.esri.gpt.server.csw.provider.DescribeRecordProvider;
@@ -268,7 +266,7 @@ public class ProviderFactory implements IProviderFactory {
                                            String resourceFilePrefix) {
     
     // make the operation context
-    OperationContext context = new OperationContext();
+    OperationContext context = new OperationContext(CswNamespaces.CSW_202);
     context.setProviderFactory(this);
     context.setRequestContext(requestContext);
         
@@ -421,5 +419,15 @@ public class ProviderFactory implements IProviderFactory {
       }
     }
   }
+
+    @Override
+    public String getVersion() {
+        return "2.0.2";
+    }
+
+    @Override
+    public CswNamespaces getNamespaces() {
+        return CswNamespaces.CSW_202;
+    }
   
 }

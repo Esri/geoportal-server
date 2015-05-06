@@ -12,12 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.server.csw.components;
+package com.esri.gpt.server.csw.provider30.local;
 import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.XmlIoUtil;
+import com.esri.gpt.server.csw.components.CapabilityOptions;
+import com.esri.gpt.server.csw.components.CswNamespaces;
+import com.esri.gpt.server.csw.components.IResponseGenerator;
+import com.esri.gpt.server.csw.components.OperationContext;
+import com.esri.gpt.server.csw.components.ServiceProperties;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,7 +92,7 @@ public class GetCapabilitiesResponse implements IResponseGenerator {
     //dom.getDocumentElement().normalize();   
     
     // make an XPath for the CSW name space context
-    CswNamespaces ns = new CswNamespaces();
+    CswNamespaces ns = CswNamespaces.CSW_30;
     XPath xpath = XPathFactory.newInstance().newXPath();
     xpath.setNamespaceContext(ns.makeNamespaceContext());
     
@@ -99,7 +104,7 @@ public class GetCapabilitiesResponse implements IResponseGenerator {
       Node ndParent = ((Attr)ndRef).getOwnerElement();
       String nsParent = Val.chkStr(ndParent.getNamespaceURI());
       String parentName = ndParent.getLocalName();
-      if (nsParent.equals(CswNamespaces.URI_OWS)) {
+      if (nsParent.equals(ns.URI_OWS())) {
         if (parentName.equals("Get") || parentName.equals("Post")) {
           if ((href == null) || !href.startsWith("http")) {
             href = Val.chkStr(href);
@@ -126,11 +131,11 @@ public class GetCapabilitiesResponse implements IResponseGenerator {
       HashMap<String,String> keep = new HashMap<String,String>();
       for (String section: sections) {
         if (section.equalsIgnoreCase("ServiceIdentification")) {
-          keep.put(CswNamespaces.URI_OWS+"#ServiceIdentification","");
+          keep.put(ns.URI_OWS()+"#ServiceIdentification","");
         } else if (section.equalsIgnoreCase("ServiceProvider")) {
-          keep.put(CswNamespaces.URI_OWS+"#ServiceProvider","");
+          keep.put(ns.URI_OWS()+"#ServiceProvider","");
         } else if (section.equalsIgnoreCase("OperationsMetadata")) {
-          keep.put(CswNamespaces.URI_OWS+"#OperationsMetadata","");
+          keep.put(ns.URI_OWS()+"#OperationsMetadata","");
         } else if (section.equalsIgnoreCase("Filter_Capabilities")) {
           keep.put(CswNamespaces.URI_OGC+"#Filter_Capabilities","");
         }

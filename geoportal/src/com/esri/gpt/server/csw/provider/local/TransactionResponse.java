@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 package com.esri.gpt.server.csw.provider.local;
-import com.esri.gpt.server.csw.provider30.local.*;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.server.csw.components.IResponseGenerator;
 import com.esri.gpt.server.csw.components.OperationContext;

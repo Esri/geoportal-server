@@ -16,7 +16,9 @@
 package com.esri.gpt.server.csw.components;
 
 import com.esri.gpt.framework.context.RequestContext;
-import com.esri.gpt.server.csw.provider30.local.ProviderFactory;
+import com.esri.gpt.framework.util.Val;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Provider factory helper.
@@ -29,6 +31,16 @@ public class ProviderFactoryHelper {
      * @return instance of the provider factory.
      */
     public static IProviderFactory newInstance(RequestContext requestContext) {
-        return new ProviderFactory();
+        if (requestContext!=null) {
+            ServletRequest servletRequest = requestContext.getServletRequest();
+            if (servletRequest instanceof HttpServletRequest) {
+                HttpServletRequest request = (HttpServletRequest)servletRequest;
+                String version = Val.chkStr(request.getParameter("version"));
+                if ("2.0.2".equals(version)) {
+                    return new com.esri.gpt.server.csw.provider.local.ProviderFactory();
+                }
+            }
+        }
+        return new com.esri.gpt.server.csw.provider30.local.ProviderFactory();
     }
 }

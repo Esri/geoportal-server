@@ -20,6 +20,8 @@ import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.XmlIoUtil;
 import com.esri.gpt.server.csw.components.CswNamespaces;
+import com.esri.gpt.server.csw.components.IProviderFactory;
+import com.esri.gpt.server.csw.components.ProviderFactoryHelper;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -36,7 +38,8 @@ public class GetRecordsGenerator {
   private String   resultType = "RESULTS";
   private String   typeNames = "csw:Record";
   private String   service = "CSW";
-  private String   version = "2.0.2";
+  private final String        version;
+  private final CswNamespaces namespaces;
   
   /** constructors ============================================================ */
   
@@ -44,7 +47,11 @@ public class GetRecordsGenerator {
    * Constructs with a an active request context.
    * @param context the request context
    */
-  public GetRecordsGenerator(RequestContext context) {}
+  public GetRecordsGenerator(RequestContext context) {
+      IProviderFactory providerFactory = ProviderFactoryHelper.newInstance(context);
+      this.version = providerFactory.getVersion();
+      this.namespaces = providerFactory.getNamespaces();
+  }
   
   /** properties ============================================================== */
   
@@ -157,15 +164,6 @@ public class GetRecordsGenerator {
    */
   public String getVersion() {
     return this.version;
-  }
-  /** 
-   * Sets the CSW version.
-   * <br/>Default = "2.0.2"
-   * <br/>Modifying the CSW version will not change the generation logic.
-   * @param version the CSW version
-   */
-  public void setVersion(String version) {
-    this.version = Val.chkStr(version);
   }
   
   /** methods ================================================================= */
@@ -375,11 +373,11 @@ public class GetRecordsGenerator {
     // make the XML document and root element
     DiscoveryFilter filter = query.getFilter();
     setDom(DomUtil.newDocument());
-    Element root = getDom().createElementNS(CswNamespaces.URI_CSW,"csw:GetRecords");
+    Element root = getDom().createElementNS(namespaces.URI_CSW(),"csw:GetRecords");
     //root.setAttribute("xmlns:dc", CswNamespaces.URI_DC);
     //root.setAttribute("xmlns:dct",CswNamespaces.URI_DCT);
     root.setAttribute("xmlns:gml",CswNamespaces.URI_GML);
-    root.setAttribute("xmlns:ows",CswNamespaces.URI_OWS);
+    root.setAttribute("xmlns:ows",namespaces.URI_OWS());
     root.setAttribute("xmlns:ogc",CswNamespaces.URI_OGC);
     //root.setAttribute("xmlns:dcmiBox",CswNamespaces.URI_dcmiBox);
     //root.setAttribute("xmlns:xsd",CswNamespaces.URI_XSD);    
@@ -395,17 +393,17 @@ public class GetRecordsGenerator {
     root.setAttribute("maxRecords",""+filter.getMaxRecords());
     
     // append the query element
-    Element elQuery = getDom().createElementNS(CswNamespaces.URI_CSW,"csw:Query");
+    Element elQuery = getDom().createElementNS(namespaces.URI_CSW(),"csw:Query");
     elQuery.setAttribute("typeNames",getTypeNames());
     root.appendChild(elQuery);
     
     // append the element set name
-    Element elSetName = getDom().createElementNS(CswNamespaces.URI_CSW,"csw:ElementSetName");
+    Element elSetName = getDom().createElementNS(namespaces.URI_CSW(),"csw:ElementSetName");
     elSetName.setTextContent(getElementSetName());
     elQuery.appendChild(elSetName);
     
     // append the constraint element
-    Element elConstraint = getDom().createElementNS(CswNamespaces.URI_CSW,"csw:Constraint");
+    Element elConstraint = getDom().createElementNS(namespaces.URI_CSW(),"csw:Constraint");
     elConstraint.setAttribute("version",getFilterVersion());
     elQuery.appendChild(elConstraint);
     
@@ -430,9 +428,9 @@ public class GetRecordsGenerator {
         
     // make the XML document and root element
     setDom(DomUtil.newDocument());
-    Element root = getDom().createElementNS(CswNamespaces.URI_CSW,"csw:GetRecordById");
+    Element root = getDom().createElementNS(namespaces.URI_CSW(),"csw:GetRecordById");
     root.setAttribute("xmlns:gml",CswNamespaces.URI_GML);
-    root.setAttribute("xmlns:ows",CswNamespaces.URI_OWS);
+    root.setAttribute("xmlns:ows",namespaces.URI_OWS());
     root.setAttribute("xmlns:ogc",CswNamespaces.URI_OGC);   
     getDom().appendChild(root);
     
@@ -441,12 +439,12 @@ public class GetRecordsGenerator {
     root.setAttribute("version",getVersion());
 
     // append the id element
-    Element elId = getDom().createElementNS(CswNamespaces.URI_CSW,"csw:Id");
+    Element elId = getDom().createElementNS(namespaces.URI_CSW(),"csw:Id");
     elId.setTextContent(id);
     root.appendChild(elId);
     
     // append the element set name
-    Element elSetName = getDom().createElementNS(CswNamespaces.URI_CSW,"csw:ElementSetName");
+    Element elSetName = getDom().createElementNS(namespaces.URI_CSW(),"csw:ElementSetName");
     elSetName.setTextContent(getElementSetName());
     root.appendChild(elSetName);
 

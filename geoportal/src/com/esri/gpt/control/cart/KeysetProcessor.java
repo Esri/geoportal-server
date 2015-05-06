@@ -18,8 +18,10 @@ import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.XsltTemplate;
 import com.esri.gpt.framework.xml.XsltTemplates;
+import com.esri.gpt.server.csw.components.IProviderFactory;
 import com.esri.gpt.server.csw.components.OperationContext;
 import com.esri.gpt.server.csw.components.OriginalXmlProvider;
+import com.esri.gpt.server.csw.components.ProviderFactoryHelper;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -138,7 +140,8 @@ public abstract class KeysetProcessor {
                         RequestContext context, 
                         String id) 
     throws Exception {
-    OperationContext opContext = new OperationContext();
+    IProviderFactory providerFactory = ProviderFactoryHelper.newInstance(context);
+    OperationContext opContext = new OperationContext(providerFactory.getNamespaces());
     opContext.setRequestContext(context);
     OriginalXmlProvider xmlProvider = new OriginalXmlProvider(); 
     return xmlProvider.provideOriginalXml(opContext,id);

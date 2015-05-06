@@ -12,11 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.server.csw.components;
+package com.esri.gpt.server.csw.provider.local;
 import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.XmlIoUtil;
+import com.esri.gpt.server.csw.components.CswNamespaces;
+import com.esri.gpt.server.csw.components.DescribeRecordOptions;
+import com.esri.gpt.server.csw.components.IResponseGenerator;
+import com.esri.gpt.server.csw.components.OperationContext;
+import com.esri.gpt.server.csw.components.OwsException;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -63,7 +68,7 @@ public class DescribeRecordResponse implements IResponseGenerator {
     //dom.getDocumentElement().normalize();   
     
     // make an XPath for the CSW name space context
-    CswNamespaces ns = new CswNamespaces();
+    CswNamespaces ns = CswNamespaces.CSW_202;
     XPath xpath = XPathFactory.newInstance().newXPath();
     xpath.setNamespaceContext(ns.makeNamespaceContext());
     

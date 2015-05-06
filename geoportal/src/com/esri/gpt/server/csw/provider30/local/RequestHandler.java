@@ -179,7 +179,7 @@ public class RequestHandler implements IRequestHandler {
       context.getRequestOptions().setRequestDom(dom);
       
       // make an XPath for the CSW name space context
-      CswNamespaces ns = new CswNamespaces();
+      CswNamespaces ns = CswNamespaces.CSW_30;
       XPath xpath = XPathFactory.newInstance().newXPath();
       xpath.setNamespaceContext(ns.makeNamespaceContext());
       
@@ -265,7 +265,7 @@ public class RequestHandler implements IRequestHandler {
       IOperationProvider opProvider = null;
       String namespace = root.getNamespaceURI();
       opName = root.getLocalName();
-      if (CswNamespaces.URI_CSW.equals(namespace)) {
+      if (CswNamespaces.CSW_30.URI_CSW().equals(namespace)) {
         context.setOperationName(opName);
         if (opName != null) {
           opProvider = factory.makeOperationProvider(context,opName);

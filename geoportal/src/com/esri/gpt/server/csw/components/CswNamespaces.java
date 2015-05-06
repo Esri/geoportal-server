@@ -20,12 +20,37 @@ import javax.xml.namespace.NamespaceContext;
 /**
  * Defines CSW name spaces.
  */
-public class CswNamespaces {
+public abstract class CswNamespaces {
   
   /** class variables ========================================================= */
+  public static final CswNamespaces CSW_202 = new CswNamespaces() {
+
+      @Override
+      public String URI_CSW() {
+          return "http://www.opengis.net/cat/csw/2.0.2";
+      }
+
+      @Override
+      public String URI_OWS() {
+          return "http://www.opengis.net/ows";
+      }
+  };
+  
+  public static final CswNamespaces CSW_30 = new CswNamespaces() {
+
+      @Override
+      public String URI_CSW() {
+          return "http://www.opengis.net/cat/csw/3.0";
+      }
+
+      @Override
+      public String URI_OWS() {
+          return "http://www.opengis.net/ows/2.0";
+      }
+  };
       
   /** URI CSW - "http://www.opengis.net/cat/csw/2.0.2" */
-  public static final String URI_CSW = "http://www.opengis.net/cat/csw/2.0.2";
+  //public static final String URI_CSW = "http://www.opengis.net/cat/csw/2.0.2";
   
   /** URI DC - "http://purl.org/dc/elements/1.1/" */
   public static final String URI_DC = "http://purl.org/dc/elements/1.1/";
@@ -49,7 +74,7 @@ public class CswNamespaces {
   public static final String URI_OGC = "http://www.opengis.net/ogc";
   
   /** URI OWS - "http://www.opengis.net/ows" */
-  public static final String URI_OWS = "http://www.opengis.net/ows";
+  //public static final String URI_OWS = "http://www.opengis.net/ows";
 
   /** URI SOAP - "http://www.w3.org/2001/12/soap-envelope" */
   public static final String URI_SOAP = "http://www.w3.org/2001/12/soap-envelope";
@@ -72,9 +97,11 @@ public class CswNamespaces {
   /** constructors ============================================================ */
       
   /** Default constructor. */
-  public CswNamespaces() {}
+  private CswNamespaces() {}
   
   /** methods ================================================================= */
+  public abstract String URI_CSW();
+  public abstract String URI_OWS();
   
   /**
    * Makes a context for CSW name spaces.
@@ -90,14 +117,14 @@ public class CswNamespaces {
    */
   private Namespaces makeNamespaces() {
     Namespaces namespaces = new Namespaces();
-    namespaces.add("csw",URI_CSW);
+    namespaces.add("csw",URI_CSW());
     namespaces.add("dc", URI_DC);
     namespaces.add("dct",URI_DCT);
     namespaces.add("gml",URI_GML);
     namespaces.add("inspire_common",URI_INSPIRE_COMMON);
     namespaces.add("inspire_ds",URI_INSPIRE_DS);
     namespaces.add("ogc",URI_OGC);
-    namespaces.add("ows",URI_OWS);
+    namespaces.add("ows",URI_OWS());
     namespaces.add("soap",URI_SOAP);
     namespaces.add("SOAP-ENV",URI_SOAP_ENV);
     namespaces.add("soap_2003_05",URI_SOAP_2003_05);
