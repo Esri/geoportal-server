@@ -168,14 +168,14 @@ public class ProviderFactory implements IProviderFactory {
     if (operationName.equalsIgnoreCase("GetCapabilities")) {
       GetCapabilitiesProvider gcp = new GetCapabilitiesProvider();
       opProvider = gcp;
-      String loc = resPfx+"Capabilities.xml";
+      String loc = resPfx+"Capabilities30.xml";
       reqOptions.getCapabilityOptions().setCapabilitiesLocation(loc);
       
     // DescribeRecord
     } else if (operationName.equals("DescribeRecord")) {
       DescribeRecordProvider drp = new DescribeRecordProvider();
       opProvider = drp;
-      String loc = resPfx+"DescribeRecord.xml";
+      String loc = resPfx+"DescribeRecord30.xml";
       reqOptions.getDescribeRecordOptions().setDescribeRecordLocation(loc); 
       
       values = new SupportedValues("XMLSCHEMA,http://www.w3.org/XML/Schema",",");
@@ -186,7 +186,7 @@ public class ProviderFactory implements IProviderFactory {
       opProvider = new GetRecordByIdProvider();
       
       values = new SupportedValues(
-          "csw:Record,http://www.opengis.net/cat/csw/2.0.2,original,http://www.isotc211.org/2005/gmd",",");
+          "csw:Record,http://www.opengis.net/cat/csw/3.0,original,http://www.isotc211.org/2005/gmd",",");
       parameters.add(new SupportedParameter(CswConstants.Parameter_OutputSchema,values));
       values = new SupportedValues("brief,summary,full",",");
       parameters.add(new SupportedParameter(CswConstants.Parameter_ElementSetType,values));
@@ -197,7 +197,7 @@ public class ProviderFactory implements IProviderFactory {
       opProvider = grp;
       
       values = new SupportedValues(
-          "csw:Record,http://www.opengis.net/cat/csw/2.0.2,http://www.isotc211.org/2005/gmd",",");
+          "csw:Record,http://www.opengis.net/cat/csw/3.0,http://www.isotc211.org/2005/gmd",",");
       parameters.add(new SupportedParameter(CswConstants.Parameter_OutputSchema,values));
       
       // query type names
@@ -291,7 +291,7 @@ public class ProviderFactory implements IProviderFactory {
     // supported service name and versions
     values = new SupportedValues("CSW",",");
     parameters.add(new SupportedParameter(CswConstants.Parameter_Service,values));
-    values = new SupportedValues("2.0.2",",");
+    values = new SupportedValues("2.0.2,3.0.0",",");
     parameters.add(new SupportedParameter(CswConstants.Parameter_Version,values));
     
     // supported operations

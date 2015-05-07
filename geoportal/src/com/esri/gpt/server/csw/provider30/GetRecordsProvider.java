@@ -136,7 +136,7 @@ public class GetRecordsProvider implements IOperationProvider {
       cswPfx = "";
     } else {
       cswPfx = "csw:";
-      nsBuffer.append(" xmlns:csw=\"http://www.opengis.net/cat/csw/2.0.2\"");
+      nsBuffer.append(" xmlns:csw=\"http://www.opengis.net/cat/csw/3.0\"");
     }
     sbXml.append("\r\n<").append(cswPfx).append("Constraint");
     if (nsBuffer.length() > 0) {
@@ -317,7 +317,7 @@ public class GetRecordsProvider implements IOperationProvider {
     supported = svcProps.getSupportedValues(CswConstants.Parameter_ResultType);
     qOptions.setResultType(vHelper.validateValue(supported,locator,parsed,false));
     if (qOptions.getResultType() == null) {
-      qOptions.setResultType(CswConstants.ResultType_Hits);
+      qOptions.setResultType(CswConstants.ResultType_Results);
     }
     
     // query type names
@@ -454,7 +454,7 @@ public class GetRecordsProvider implements IOperationProvider {
     supported = svcProps.getSupportedValues(CswConstants.Parameter_ResultType);
     qOptions.setResultType(vHelper.validateValue(supported,locator,parsed,false));
     if (qOptions.getResultType() == null) {
-      qOptions.setResultType(CswConstants.ResultType_Hits);
+      qOptions.setResultType(CswConstants.ResultType_Results);
     }
     
     // find the query node

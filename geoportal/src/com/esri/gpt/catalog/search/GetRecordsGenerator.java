@@ -42,6 +42,10 @@ public class GetRecordsGenerator {
   private final CswNamespaces namespaces;
   
   /** constructors ============================================================ */
+  public GetRecordsGenerator() {
+      this.version = "2.0.2";
+      this.namespaces = CswNamespaces.CSW_202;
+  }
   
   /**
    * Constructs with a an active request context.

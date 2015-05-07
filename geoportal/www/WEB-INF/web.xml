@@ -223,7 +223,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>CswServlet</servlet-name>
-        <servlet-class>com.esri.gpt.server.csw.provider.CswServlet</servlet-class>
+        <servlet-class>com.esri.gpt.server.csw.provider30.CswServlet</servlet-class>
         <init-param>
             <param-name>cswSubContextPath</param-name>
             <param-value>/csw</param-value>

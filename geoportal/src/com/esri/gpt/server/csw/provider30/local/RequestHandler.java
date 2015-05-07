@@ -270,6 +270,10 @@ public class RequestHandler implements IRequestHandler {
         if (opName != null) {
           opProvider = factory.makeOperationProvider(context,opName);
         }
+      } else if (CswNamespaces.CSW_202.URI_CSW().equals(namespace)) {
+          com.esri.gpt.server.csw.provider.local.ProviderFactory factory202 = new com.esri.gpt.server.csw.provider.local.ProviderFactory();
+          IRequestHandler handler202 = factory202.newHandler(this.getOperationContext().getRequestContext());
+          return handler202.handleXML(xml);
       }
       
       // ensure a valid operation provider

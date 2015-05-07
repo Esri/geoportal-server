@@ -50,7 +50,7 @@ public class TransactionResponse implements IResponseGenerator {
     LOGGER.finer("Generating csw:Transaction response...");
     TransactionOptions tOptions = context.getRequestOptions().getTransactionOptions();
      
-    String cswNamespace = "http://www.opengis.net/cat/csw/2.0.2";
+    String cswNamespace = "http://www.opengis.net/cat/csw/3.0";
     String version = "2.0.2";
     String requestId = tOptions.getRequestId();
     int numInserted = tOptions.getSummary().getTotalInserted();

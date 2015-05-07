@@ -263,7 +263,7 @@ public class RestQueryServlet extends BaseServlet {
       // generate the CSW request string
       String cswRequest = "";
       try {
-        GetRecordsGenerator grg = new GetRecordsGenerator(context);
+        GetRecordsGenerator grg = new GetRecordsGenerator();
         cswRequest = grg.generateCswRequest(query);
       } catch (Exception e) {
         throw new SearchException(e);

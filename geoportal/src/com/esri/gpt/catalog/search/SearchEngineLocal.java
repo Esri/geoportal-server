@@ -171,7 +171,7 @@ public class SearchEngineLocal extends SearchEngineCSW {
       DocumentBuilder builder = factory.newDocumentBuilder();
       org.w3c.dom.Document dom = builder.parse(src);
       
-      String cswNamespace = "http://www.opengis.net/cat/csw/2.0.2";
+      String cswNamespace = "http://www.opengis.net/cat/csw/3.0";
       String dcNamespace = "http://purl.org/dc/elements/1.1/";
       String dctNamespace = "http://purl.org/dc/terms/";
       String idScheme = "urn:x-esri:specification:ServiceType:ArcIMS:Metadata:DocID";
@@ -252,7 +252,7 @@ public class SearchEngineLocal extends SearchEngineCSW {
         isSitemapRequest = ((String)obj).equalsIgnoreCase("true");
       }
       
-      IRequestHandler handler = ProviderFactoryHelper.newInstance(this.getRequestContext()).newHandler(this.getRequestContext());
+      IRequestHandler handler = new com.esri.gpt.server.csw.provider.local.ProviderFactory().newHandler(this.getRequestContext());
       OperationResponse resp = handler.handleXML(cswRequest);
       String cswResponse = resp.getResponseXml();
       
