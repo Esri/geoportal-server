@@ -18,6 +18,7 @@ package com.esri.gpt.control.georss.dcatdef;
 import com.esri.gpt.catalog.search.ResourceLink;
 import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedRecord;
+import com.esri.gpt.framework.util.Val;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,6 +47,9 @@ public class ReferencesField  implements DcatFieldDefinition {
   public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
     ArrayList<String> selectedLinks = new ArrayList<String>();
     for (ResourceLink link: r.getResourceLinks()) {
+      if (!Val.isUrl(link.getUrl())) {
+          continue;
+      }
       if (predicate==null || predicate.accept(link)) {
         selectedLinks.add(link.getUrl());
       }
