@@ -243,6 +243,9 @@ private void executeChangePassword(ActionEvent event, RequestContext context)
     msgBroker.addErrorMessage("identity.changePassword.err.new");
   } catch (PasswordConfirmationException e) {
     msgBroker.addErrorMessage("identity.changePassword.err.confirm");
+  } catch (javax.naming.NamingException e) {	  	
+	getLogger().log(Level.SEVERE,"NamingException",e);
+	throw new SelfCareException(e.getCause());
   }
 }
 
@@ -340,6 +343,9 @@ private void executeRegisterUser(ActionEvent event, RequestContext context)
     msgBroker.addErrorMessage("identity.profile.err.email");
   } catch (javax.naming.NameAlreadyBoundException e) {
     msgBroker.addErrorMessage("identity.profile.err.userExists");
+  } catch (javax.naming.NamingException e) {	  	
+	getLogger().log(Level.SEVERE,"NamingException",e);
+	throw new SelfCareException(e.getCause());
   }
 }
 
@@ -438,6 +444,9 @@ private void executeUpdateProfile(ActionEvent event, RequestContext context)
     msgBroker.addErrorMessage("identity.profile.err.email");
   } catch (javax.naming.NameAlreadyBoundException e) {
     msgBroker.addErrorMessage("identity.profile.err.userExists");
+  } catch (javax.naming.NamingException e){	  	
+	getLogger().log(Level.SEVERE,"NamingException",e);
+	throw new SelfCareException(e.getCause());
   }
 }
 
