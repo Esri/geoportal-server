@@ -103,11 +103,11 @@ public class DcatRecordDefinition {
       protected String readValue(DcatSchemas dcatSchemas, DcatField dcatField, IFeedRecord r, IFeedAttribute attr) {
         Map<String, IFeedAttribute> index = getIndex(r);
         if (index == null) {
-          return null;
+          return "";
         }
         DcatField field = getAttributeField(dcatSchemas, index, r, "accessLevel");
         if (field == null) {
-          return null;
+          return "";
         }
         IFeedAttribute accessLevelAttribute = getFeedAttribute(index, field);
     
