@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 package com.esri.gpt.framework.security.identity.ldap;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -145,8 +146,9 @@ private Attributes prepareRegistrationAttributes(UsernamePasswordCredentials cre
   // add the username and password from the credentials
   // ignore those profile attributes that do not have a corresponding LDAP key
   String sUsername = credentials.getUsername();
+
   String sPassword = credentials.encryptLdapPassword(
-                     userProps.getPasswordEncryptionAlgorithm());
+                    userProps.getPasswordEncryptionAlgorithm());
   localMap.set(UserAttributeMap.TAG_USER_NAME,sUsername);
   localMap.set(UserAttributeMap.TAG_USER_PASSWORD,sPassword);
 
@@ -158,11 +160,12 @@ private Attributes prepareRegistrationAttributes(UsernamePasswordCredentials cre
     String sLdapKey = nameMap.findLdapName(localAttr.getKey());
     String sLocalValue = localAttr.getValue();
     if ((sLdapKey.length() > 0) && (sLocalValue != null) && (sLocalValue.length() > 0)) {
-      basicAttr = new BasicAttribute(sLdapKey,localAttr.getValue());
-      ldapAttributes.put(basicAttr);
-      if (sLdapKey.equalsIgnoreCase("cn")) {
-        bHasCN = false;
-      }
+      if(sLdapKey.equalsIgnoreCase(UserAttributeMap.TAG_USER_UNICODE_PASSWORD)) continue;
+	      basicAttr = new BasicAttribute(sLdapKey,localAttr.getValue());      
+	      ldapAttributes.put(basicAttr);
+	      if (sLdapKey.equalsIgnoreCase("cn")) {
+	        bHasCN = false;
+	      }
     }
   }
 
@@ -270,9 +273,46 @@ protected void registerUser(DirContext dirContext, User user)
   }
 
   // prepare attributes and add the new user to LDAP
-  Attributes attributes = prepareRegistrationAttributes(upCreds,user.getProfile());  
-  addEntry(dirContext,user.getDistinguishedName(),attributes);
+  Attributes attributes = prepareRegistrationAttributes(upCreds,user.getProfile());
 
+  // logic for active directory ldap   
+  boolean isActiveDirectory = false;  
+  LdapNameMapping  nameMap  = userProps.getUserProfileMapping();
+  UserAttributeMap localMap = user.getProfile();
+  for (UserAttribute localAttr: localMap.values()) {
+    String sLocalKey = localAttr.getKey();
+    String sLdapKey = nameMap.findLdapName(localAttr.getKey());
+		if (sLocalKey != null && sLocalKey.equalsIgnoreCase(UserAttributeMap.TAG_USER_PASSWORD) 
+			  && sLdapKey != null && sLdapKey.equalsIgnoreCase(UserAttributeMap.TAG_USER_UNICODE_PASSWORD)) {
+		  isActiveDirectory = true;
+		  break;
+		}
+  }
+	  if(isActiveDirectory){	
+		    //some useful constants
+			int UF_NORMAL_ACCOUNT = 0x0200;
+			int UF_DONT_EXPIRE_PASSWD = 0x10000;
+			
+			//Note that you need to create the user object before you can set the password. Therefore as the user is created with no
+			//password, user AccountControl must be set to the following otherwise the Win2K3 password filter will return error 53 unwilling to perform.	
+			Attribute userCont = new BasicAttribute(UserAttributeMap.TAG_USER_ACCOUNT_CONTROL,Integer.toString(UF_NORMAL_ACCOUNT + UF_DONT_EXPIRE_PASSWD));
+			attributes.put(userCont);
+		
+			String password = upCreds.getPassword();
+			//Replace the "unicodePwd" attribute with a new value Password must be both Unicode and a quoted string
+			String newQuotedPassword = "\"" + password + "\"";
+			byte[] newUnicodePassword = null;
+			try {
+				newUnicodePassword = newQuotedPassword.getBytes("UTF-16LE");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}	
+			attributes.put(new BasicAttribute(UserAttributeMap.TAG_USER_UNICODE_PASSWORD, newUnicodePassword));
+	 }
+  //end - logic for active directory ldap 
+  
+  addEntry(dirContext,user.getDistinguishedName(),attributes);
+	  
   // add user to general user group
   Roles configuredRoles = getConfiguration().getIdentityConfiguration().getConfiguredRoles();
   if (configuredRoles.getAuthenticatedUserRequiresRole()) {
@@ -331,23 +371,6 @@ protected void addUserToGroup(DirContext dirContext, User user, String groupDn)
   groupAttribute.add(user.getDistinguishedName());
   groupAttributes.put(groupAttribute);
   addAttribute(dirContext,groupDn,groupAttributes);  
-  /*
-  Roles configuredRoles = getConfiguration().getIdentityConfiguration().getConfiguredRoles();     
-  for (Role role : configuredRoles.values()){
-	  if(role.getDistinguishedName().equalsIgnoreCase(groupDn)){
-		  String accessKeyAttribute = Val.chkStr(role.getAccessKey());
-		  if(accessKeyAttribute.length() > 0){
-			  BasicAttribute accessAttr = new BasicAttribute(accessKeyAttribute);
-			  BasicAttributes attributes = new BasicAttributes();
-			  attributes.put(accessAttr);
-			  try {
-				  removeEntry(dirContext,user.getDistinguishedName(), attributes);
-			  }catch(javax.naming.directory.AttributeInUseException aue){}
-			  catch(javax.naming.directory.NoSuchAttributeException nse){}
-			  break;
-		  }
-	  }
-  }*/
 }
 
 
@@ -408,29 +431,51 @@ protected void updateUserProfile(DirContext dirContext,
       } else if (sLocalKey.equalsIgnoreCase(UserAttributeMap.TAG_USER_PASSWORD)) {
         if (!considerPassword) sLdapKey = "";
       }
-
+                  
       if (sLdapKey.length() > 0) {
 
         // if the attribute exists in LDAP then replace the value,
         // otherwise create a new attribute
         Attribute ldapAttribute = ldapAttributes.get(sLdapKey);
-        if (ldapAttribute != null) {
-          if (!ldapAttribute.isOrdered()) {
-            ldapAttribute.clear();
-            ldapAttribute.add(sLocalValue);
-          } else {
-            ldapAttribute.set(0,sLocalValue);
-          }
-          modItem = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,ldapAttribute);
-          alModItems.add(modItem);
-        } else {
-          if ((sLocalValue != null) && (sLocalValue.length() > 0)) {
-            BasicAttribute basicAttr = new BasicAttribute(sLdapKey,sLocalValue);
-            modItem = new ModificationItem(DirContext.ADD_ATTRIBUTE,basicAttr);
-            alModItems.add(modItem);
-          }
+      
+        boolean isActiveDirectoryPassword = false;
+        if (sLocalKey.equalsIgnoreCase(UserAttributeMap.TAG_USER_PASSWORD) 
+      		  && sLdapKey.equalsIgnoreCase(UserAttributeMap.TAG_USER_UNICODE_PASSWORD)) {
+      	  isActiveDirectoryPassword = true;
         }
-
+        if(isActiveDirectoryPassword){        	
+        	if ((sLocalValue != null) && (sLocalValue.length() > 0)) {
+	    		//Replace the "unicodePwd" attribute with a new value Password must be both Unicode and a quoted string
+	    		String newQuotedPassword = "\"" + sLocalValue + "\"";
+	    		byte[] newUnicodePassword = null;
+	    		try {
+	    			newUnicodePassword = newQuotedPassword.getBytes("UTF-16LE");
+	    		} catch (UnsupportedEncodingException e) {
+	    			e.printStackTrace();
+	    		}	
+	            BasicAttribute basicAttr = new BasicAttribute(sLdapKey,newUnicodePassword);
+	            modItem = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,basicAttr);
+	            alModItems.add(modItem);
+           }        	
+        }else { // not active directory ldap
+	        if (ldapAttribute != null) {
+	          if (!ldapAttribute.isOrdered()) {
+	            ldapAttribute.clear();
+	            ldapAttribute.add(sLocalValue);
+	          } else {
+	            ldapAttribute.set(0,sLocalValue);
+	          }
+	          modItem = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,ldapAttribute);
+	          alModItems.add(modItem);
+	        } else {        
+	          if ((sLocalValue != null) && (sLocalValue.length() > 0)) {
+	            BasicAttribute basicAttr = new BasicAttribute(sLdapKey,sLocalValue);
+	            modItem = new ModificationItem(DirContext.ADD_ATTRIBUTE,basicAttr);
+	            alModItems.add(modItem);
+	          }
+	        }
+        }
+        
        } else {
         // no associated LDAP key, we won't throw an exception in this case
       }
@@ -458,10 +503,10 @@ protected void updateUserPassword(DirContext dirContext,
                                   UsernamePasswordCredentials newCredentials)
   throws NamingException {
   User userUpd = new User();
-  userUpd.setDistinguishedName(user.getDistinguishedName());
+  userUpd.setDistinguishedName(user.getDistinguishedName());    
   String sPassword = newCredentials.encryptLdapPassword(
-         getConfiguration().getUserProperties().getPasswordEncryptionAlgorithm());
-  userUpd.getProfile().set(UserAttributeMap.TAG_USER_PASSWORD,sPassword);
+         getConfiguration().getUserProperties().getPasswordEncryptionAlgorithm());  
+  userUpd.getProfile().set(UserAttributeMap.TAG_USER_PASSWORD,sPassword);  
   updateUserProfile(dirContext,userUpd,false,true);
 }
 
