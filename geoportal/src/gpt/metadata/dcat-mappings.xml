@@ -55,8 +55,8 @@
 	  <field name="mbox"	index="dcat.mbox" required="true"/>
 	  <field name="identifier" required="true"/>  
 	  <field name="accessLevel" index="dcat.accessLevel" required="true">
-        <map from="High Confidentiality|Non-public" to="non-public"/>
-        <map from="Medium Confidentiality|Restricted" to="restricted public"/>
+        <map from="High Confidentiality|Non-public|Secret|Top Secret" to="non-public"/>
+        <map from="Medium Confidentiality|Restricted|Confidential|Sensitive" to="restricted public"/>
         <map from="No Confidentiality|Unclassified" to="public"/>
         <map from=".*" to="public"/>
       </field>
@@ -85,8 +85,8 @@
 	  <field name="mbox" index="dcat.mbox;dcat.metc.mbox" required="true"/>
 	  <field name="identifier" required="true"/>  
 	  <field name="accessLevel" index="dcat.accessLevel" required="true">
-        <map from="High Confidentiality|Non-public" to="non-public"/>
-        <map from="Medium Confidentiality|Restricted" to="restricted public"/>
+        <map from="High Confidentiality|Non-public|Secret|Top Secret" to="non-public"/>
+        <map from="Medium Confidentiality|Restricted|Confidential|Sensitive" to="restricted public"/>
         <map from="No Confidentiality|Unclassified" to="public"/>
         <map from=".*" to="public"/>
       </field>
@@ -144,12 +144,12 @@
 	  <field name="mbox" index="dcat.mbox" required="true"/>
 	  <field name="identifier" required="true"/> 
 	  <field name="accessLevel" index="dcat.accessLevel" required="true">
-        <map from="High Confidentiality|Non-public" to="non-public"/>
-        <map from="Medium Confidentiality|Restricted" to="restricted public"/>
+        <map from="High Confidentiality|Non-public|Secret|Top Secret" to="non-public"/>
+        <map from="Medium Confidentiality|Restricted|Confidential|Sensitive" to="restricted public"/>
         <map from="No Confidentiality|Unclassified" to="public"/>
         <map from=".*" to="public"/>
       </field>
-	  <field name="accessLevelComment" index="apiso.AccessConstraints" maxChars="255" required="false"/>
+	  <field name="accessLevelComment" index="apiso.AccessConstraints;dcat.accessLevelComment" maxChars="255" required="false"/>
 	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
 	  <field name="programCode" index="dcat.programCode" type="array" required="true"/>
 	  <field name="dataDictionary" index="dcat.dataDictionary" />
