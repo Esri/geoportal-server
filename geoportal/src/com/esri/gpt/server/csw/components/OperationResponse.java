@@ -88,6 +88,16 @@ public class OperationResponse {
   
   /** methods ================================================================= */
     
+  public void setNSAttributes(Element root) {
+    root.setAttribute("xmlns:csw",namespaces.URI_CSW());
+    root.setAttribute("xmlns:dc", namespaces.URI_DC);
+    root.setAttribute("xmlns:dct",namespaces.URI_DCT);
+    root.setAttribute("xmlns:gml",namespaces.URI_GML);
+    root.setAttribute("xmlns:ows",namespaces.URI_OWS());
+    root.setAttribute("xmlns:dcmiBox",namespaces.URI_dcmiBox);
+    root.setAttribute("xmlns:xsd",namespaces.URI_XSD);
+  }
+  
   /**
    * Creates and appends the root element to the XML document.
    * @param rootName the name of the root element
@@ -98,13 +108,7 @@ public class OperationResponse {
       rootName = "csw:"+rootName;
     }
     Element root = this.getResponseDom().createElementNS(namespaces.URI_CSW(),rootName);
-    root.setAttribute("xmlns:csw",namespaces.URI_CSW());
-    root.setAttribute("xmlns:dc", namespaces.URI_DC);
-    root.setAttribute("xmlns:dct",namespaces.URI_DCT);
-    root.setAttribute("xmlns:gml",namespaces.URI_GML);
-    root.setAttribute("xmlns:ows",namespaces.URI_OWS());
-    root.setAttribute("xmlns:dcmiBox",namespaces.URI_dcmiBox);
-    root.setAttribute("xmlns:xsd",namespaces.URI_XSD);
+    setNSAttributes(root);
     this.getResponseDom().appendChild(root);
     return root;
   }

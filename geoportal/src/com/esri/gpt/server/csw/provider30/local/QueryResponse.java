@@ -33,6 +33,7 @@ import com.esri.gpt.server.csw.components.IOriginalXmlProvider;
 import com.esri.gpt.server.csw.components.IResponseGenerator;
 import com.esri.gpt.server.csw.components.OperationContext;
 import com.esri.gpt.server.csw.components.OperationResponse;
+import com.esri.gpt.server.csw.components.OwsException;
 import com.esri.gpt.server.csw.components.QueryOptions;
 import com.esri.gpt.server.csw.components.ServiceProperties;
 
@@ -327,7 +328,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
     if (opName.equalsIgnoreCase(CswConstants.Operation_GetRecordById)) {
       LOGGER.finer("Generating GetRecordByIdResponse...");
       OperationResponse opResponse = context.getOperationResponse();
-      Element root = this.newResponseDom(context,"GetRecordByIdResponse");
+      Document root = this.newResponseDom(context);
       this.appendDiscoveredRecords(context,root);
       opResponse.setResponseXml(XmlIoUtil.domToString(opResponse.getResponseDom()));
       
@@ -337,6 +338,19 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       Element root = this.newResponseDom(context,"GetRecordsResponse");
       this.appendSearchResultsElement(context,root);
       opResponse.setResponseXml(XmlIoUtil.domToString(opResponse.getResponseDom()));
+    }
+  }
+  
+  public Document newResponseDom(OperationContext context) throws Exception {
+    QueryOptions qOptions = context.getRequestOptions().getQueryOptions();
+    if (qOptions.isDublinCoreResponse()) {
+      Document dom = context.getOperationResponse().newResponseDom();
+      context.getOperationResponse().setResponseDom(dom);
+      return dom;
+    } else {
+      Document dom = DomUtil.newDocument();
+      context.getOperationResponse().setResponseDom(dom);
+      return dom;
     }
   }
   
@@ -362,5 +376,85 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       return root;
     }
   }
+
+    protected void appendDiscoveredRecords(OperationContext context, Document root) throws Exception {
+    
+    // determine the record element's namespace URI, namespace prefix, 
+    // local name and qualified name
+    QueryOptions qOptions = context.getRequestOptions().getQueryOptions();
+    DiscoveryQuery query = this.getDiscoveryContext().getDiscoveryQuery();
+    boolean isDublinCore = qOptions.isDublinCoreResponse();
+    
+    String elementSetType = Val.chkStr(qOptions.getElementSetType());
+    String outputSchema = Val.chkStr(qOptions.getOutputSchema());
+    StringSet elementSetTypeNames = qOptions.getElementSetTypeNames();
+    boolean isBrief = elementSetType.equalsIgnoreCase(CswConstants.ElementSetType_Brief);
+    boolean isSummary = elementSetType.equalsIgnoreCase(CswConstants.ElementSetType_Summary);
+    boolean isFull = elementSetType.equalsIgnoreCase(CswConstants.ElementSetType_Full);
+    
+    // Dublin Core based responses
+    if (isDublinCore) {
+      OperationResponse opResponse = context.getOperationResponse();
+      Document responseDom = opResponse.getResponseDom();
+      String recNamespacePfx = "csw";
+      String recNamespaceUri = CswNamespaces.CSW_30.URI_CSW();
+      String recLocalName = "Record";
+      StringSet elementNames = qOptions.getElementNames();
+      boolean hasElementNames = (elementNames != null) && (elementNames.size() > 0);
+      if (!hasElementNames) {
+        if (isBrief) {
+          recLocalName = "BriefRecord";
+        } else if (isSummary) {
+          recLocalName = "SummaryRecord";
+        }
+      }
+      String recQName = recNamespacePfx+":"+recLocalName;
+      
+      // append each record
+      DiscoveredRecords records = query.getResult().getRecords();
+      if (records.size()!=1) {
+          throw new OwsException(OwsException.OWSCODE_UnexpectedStatus,"record","no record");
+      }
+      
+      for (DiscoveredRecord record: records) {
+        Element elRecord = responseDom.createElementNS(recNamespaceUri,recQName);
+        for (Returnable returnable: record.getFields()) {
+          this.appendDiscoveredField(context,elRecord,returnable);
+        }
+        context.getOperationResponse().setNSAttributes(elRecord);
+        root.appendChild(elRecord);
+      }
+    
+    // non Dublin Core based responses
+    } else {
+      
+      IOriginalXmlProvider oxp = context.getProviderFactory().makeOriginalXmlProvider(context);
+      DiscoveredRecords records = query.getResult().getRecords();
+      if (records.size()!=1) {
+          throw new OwsException(OwsException.OWSCODE_UnexpectedStatus,"record","no record");
+      }
+      for (DiscoveredRecord record: records) {
+        String responseXml = Val.chkStr(record.getResponseXml());
+        if (responseXml.length() > 0) {
+          Document dom = DomUtil.makeDomFromString(responseXml,true);
+          NodeList nl = dom.getChildNodes(); 
+          for (int i=0; i<nl.getLength(); i++) {
+            if (nl.item(i).getNodeType() == Node.ELEMENT_NODE){ 
+              Node ndXml = nl.item(i);
+              Node ndImported = root.importNode(ndXml,true);
+              if (ndImported instanceof Element) {
+                context.getOperationResponse().setNSAttributes((Element) ndImported);
+              }
+              root.appendChild(ndImported);
+              break;
+            }
+          }
+        } else {
+          //TODO throw exception here?
+        }        
+      }
+      
+    }
+    }
   
 }

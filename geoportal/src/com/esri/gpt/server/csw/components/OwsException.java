@@ -50,6 +50,9 @@ public class OwsException extends RuntimeException {
   /** "VersionNegotiationFailed" - List of versions in "acceptVersions" parameter value did not include any version supported by this server. */
   public static final String OWSCODE_VersionNegotiationFailed = "VersionNegotiationFailed";
   
+  /** "VersionNegotiationFailed" - List of versions in "acceptVersions" parameter value did not include any version supported by this server. */
+  public static final String OWSCODE_UnexpectedStatus = "UnexpectedStatus";
+  
   // ?? CurrentUpdateSequence/InvalidUpdateSequence/NoDataAvailable ??
   
   /** instance variables ====================================================== */ 
