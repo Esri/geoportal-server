@@ -25,8 +25,8 @@
 	  <field name="mbox"	index="dcat.mbox" required="true"/>
 	  <field name="identifier" required="true"/>  
 	  <field name="accessLevel" index="accessLevel" required="true">
-        <map from="High Confidentiality|Non-public" to="non-public"/>
-        <map from="Medium Confidentiality|Restricted" to="restricted public"/>
+        <map from="High Confidentiality|Non-public|Secret|Top Secret" to="non-public"/>
+        <map from="Medium Confidentiality|Restricted|Confidential|Sensitive" to="restricted public"/>
         <map from="No Confidentiality|Unclassified" to="public"/>
         <map from=".*" to="public"/>
       </field>
