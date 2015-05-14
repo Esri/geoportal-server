@@ -38,6 +38,10 @@ import com.esri.gpt.server.csw.components.QueryOptions;
 import com.esri.gpt.server.csw.components.ServiceProperties;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.logging.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -216,7 +220,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       DiscoveredRecords records = query.getResult().getRecords();
       for (DiscoveredRecord record: records) {
         Element elRecord = responseDom.createElementNS(recNamespaceUri,recQName);
-        for (Returnable returnable: record.getFields()) {
+        for (Returnable returnable: sortFields(record.getFields())) {
           this.appendDiscoveredField(context,elRecord,returnable);
         }
         parent.appendChild(elRecord);
@@ -418,7 +422,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       
       for (DiscoveredRecord record: records) {
         Element elRecord = responseDom.createElementNS(recNamespaceUri,recQName);
-        for (Returnable returnable: record.getFields()) {
+        for (Returnable returnable: sortFields(record.getFields())) {
           this.appendDiscoveredField(context,elRecord,returnable);
         }
         context.getOperationResponse().setNSAttributes(elRecord);
@@ -457,4 +461,26 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
     }
     }
   
+    private Collection<Returnable> sortFields(Collection<Returnable> colFields) {
+        ArrayList<Returnable> arrFields = new ArrayList<Returnable>(colFields);
+        Collections.sort(arrFields, new Comparator<Returnable>() {
+            @Override
+            public int compare(Returnable o1, Returnable o2) {
+                boolean g1 = isGeometry(o1);
+                boolean g2 = isGeometry(o2);
+                
+                if (g1==g2) return 0;
+                if (g1) return 1;
+                if (g2) return -1;
+                
+                return 0;
+            }
+            
+            private boolean isGeometry(Returnable r) {
+                PropertyMeaning meaning = r.getMeaning();
+                return meaning.getValueType().equals(PropertyValueType.GEOMETRY);
+            }
+        });
+        return arrFields;
+    }
 }
