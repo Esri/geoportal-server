@@ -413,7 +413,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       // append each record
       DiscoveredRecords records = query.getResult().getRecords();
       if (records.size()!=1) {
-          throw new OwsException(OwsException.OWSCODE_UnexpectedStatus,"record","no record");
+          throw new OwsException(OwsException.OWSCODE_UnexpectedStatus,"record",records.isEmpty()? "no record": "to many records");
       }
       
       for (DiscoveredRecord record: records) {
@@ -431,7 +431,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       IOriginalXmlProvider oxp = context.getProviderFactory().makeOriginalXmlProvider(context);
       DiscoveredRecords records = query.getResult().getRecords();
       if (records.size()!=1) {
-          throw new OwsException(OwsException.OWSCODE_UnexpectedStatus,"record","no record");
+          throw new OwsException(OwsException.OWSCODE_UnexpectedStatus,"record",records.isEmpty()? "no record": "to many records");
       }
       for (DiscoveredRecord record: records) {
         String responseXml = Val.chkStr(record.getResponseXml());
