@@ -16,6 +16,7 @@ package com.esri.gpt.server.csw.components;
 import com.esri.gpt.framework.xml.DomUtil;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import javax.servlet.http.HttpServletResponse;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -29,6 +30,7 @@ public class OperationResponse {
   private Document responseDom;
   private String   responseXml;
   private final CswNamespaces namespaces;
+  private int responseCode = HttpServletResponse.SC_OK;
   
   /** constructors ============================================================ */
   
@@ -40,6 +42,14 @@ public class OperationResponse {
   }
   
   /** properties ============================================================== */
+    public int getResponseCode() {
+        return responseCode;
+    }
+
+    public void setResponseCode(int responseCode) {
+        this.responseCode = responseCode;
+    }
+
   
   /**
    * Gets the HTTP output format (MIME type).

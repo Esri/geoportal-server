@@ -154,6 +154,7 @@ public class CswServlet extends BaseServlet {
         opContext = handler.getOperationContext();
       }
       cswResponse = handleException(opContext,e);
+      response.setStatus(opContext.getOperationResponse().getResponseCode());
     }
     
     // write the response

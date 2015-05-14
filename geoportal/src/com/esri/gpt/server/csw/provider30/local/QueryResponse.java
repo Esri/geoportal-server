@@ -43,6 +43,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletResponse;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -66,115 +67,112 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
   public QueryResponse(OperationContext context) {
     super(context);
   }
-  
-  /** methods ================================================================= */
-  
-  /**
-   * Creates and appends elements associated with a returnable property to a 
-   * record element.
-   * @param context the operation context
-   * @param record the parent element that will hold the fields (a Record)
-   * @param returnable the returnable property
-   */
-  protected void appendDiscoveredField(OperationContext context, 
-                                       Element record, 
-                                       Returnable returnable) {
-    
-    // initialize
-    ServiceProperties svcProps = context.getServiceProperties();
-    String httpContextPath = Val.chkStr(svcProps.getHttpContextPath());
-    String cswBaseUrl = Val.chkStr(svcProps.getCswBaseURL());
-    OperationResponse opResponse = context.getOperationResponse();
-    Document responseDom = opResponse.getResponseDom();
-    PropertyMeaning meaning = returnable.getMeaning();
-    PropertyMeaningType meaningType = meaning.getMeaningType();
-    Object[] values = returnable.getValues();
-    DcElement dcElement = meaning.getDcElement();
-    if ((dcElement == null) || dcElement.getElementName().startsWith("!")) {
-      return;
-    }
-    
-    // TODO create an empty element if the values are null?
-    // return if the values are null
-    if (values == null) {
-      //Element elField = dom.createElement(returnable.getClientName());
-      //elField.appendChild(dom.createTextNode(""));
-      //record.appendChild(elField);
-      return;
-    }
-    
-    // add an element for each value found
-    for (Object oValue: values) {
-      if (oValue != null) {
-        if (meaning.getValueType().equals(PropertyValueType.GEOMETRY)) {
-          if (oValue instanceof Envelope) {
-            
-            // TODO include multiple envelope types in the response
-            Envelope env = (Envelope)oValue;
-            String sLower = env.getMinX()+" "+env.getMinY();
-            String sUpper = env.getMaxX()+" "+env.getMaxY();
-            
-            Element elField = responseDom.createElement("ows:WGS84BoundingBox");
-            Element elLower = responseDom.createElement("ows:LowerCorner");
-            Element elUpper = responseDom.createElement("ows:UpperCorner");
-            elLower.appendChild(responseDom.createTextNode(sLower));
-            elUpper.appendChild(responseDom.createTextNode(sUpper));
-            elField.appendChild(elLower);
-            elField.appendChild(elUpper);
-            record.appendChild(elField);
-            
-            elField = responseDom.createElement("ows:BoundingBox");
-            elLower = responseDom.createElement("ows:LowerCorner");
-            elUpper = responseDom.createElement("ows:UpperCorner");
-            elLower.appendChild(responseDom.createTextNode(sLower));
-            elUpper.appendChild(responseDom.createTextNode(sUpper));
-            elField.appendChild(elLower);
-            elField.appendChild(elUpper);
-            record.appendChild(elField);
-          }
-                     
-        } else {
-          
-          String sValue = oValue.toString();
-          if (oValue instanceof Timestamp) {
-            if (meaningType.equals(PropertyMeaningType.DATEMODIFIED)) {
-              sValue = opResponse.toIso8601((Timestamp)oValue);
-            } else {
-              sValue = opResponse.toIso8601Date((Timestamp)oValue);
-            }
-          }
-          if (meaningType.equals(PropertyMeaningType.XMLURL)) {
-            if ((sValue != null) && sValue.startsWith("?getxml=")) {
-              sValue = cswBaseUrl+sValue;
-            }
-          } else if (meaningType.equals(PropertyMeaningType.THUMBNAILURL)) {
-            if ((sValue != null) && sValue.startsWith("/thumbnail?uuid")) {
-              sValue = httpContextPath+sValue;
-            } 
-          }
-          if ((sValue != null) && (dcElement != null) && (dcElement.getElementName().length() > 0)) {
-            String elName = dcElement.getElementName().replaceAll("~","");
-            Element elField = responseDom.createElement(elName);
-            elField.appendChild(responseDom.createTextNode(sValue));
-            if (dcElement.getScheme().length() > 0) {
-              elField.setAttribute("scheme",dcElement.getScheme());
-              
-              // don't return unknown content types
-              if (sValue.equalsIgnoreCase("unknown")) {
-                if (dcElement.getScheme().toLowerCase().endsWith("contenttype")) {
-                  elField = null;
-                }
-              }
-            }
-            if (elField != null) {
-              record.appendChild(elField);
-            }
-          }          
-          
+
+    /** methods ================================================================= */
+
+    /**
+     * Creates and appends elements associated with a returnable property to a
+     * record element.
+     * @param context the operation context
+     * @param record the parent element that will hold the fields (a Record)
+     * @param returnable the returnable property
+     */
+    protected void appendDiscoveredField(OperationContext context, Element record, Returnable returnable) {
+        // initialize
+        ServiceProperties svcProps = context.getServiceProperties();
+        String httpContextPath = Val.chkStr(svcProps.getHttpContextPath());
+        String cswBaseUrl = Val.chkStr(svcProps.getCswBaseURL());
+        OperationResponse opResponse = context.getOperationResponse();
+        Document responseDom = opResponse.getResponseDom();
+        PropertyMeaning meaning = returnable.getMeaning();
+        PropertyMeaningType meaningType = meaning.getMeaningType();
+        Object[] values = returnable.getValues();
+        DcElement dcElement = meaning.getDcElement();
+        if ((dcElement == null) || dcElement.getElementName().startsWith("!")) {
+            return;
         }
-      }
+        
+        // TODO create an empty element if the values are null?
+        // return if the values are null
+        if (values == null) {
+            //Element elField = dom.createElement(returnable.getClientName());
+            //elField.appendChild(dom.createTextNode(""));
+            //record.appendChild(elField);
+            return;
+        }
+        
+        // add an element for each value found
+        for (Object oValue: values) {
+            if (oValue != null) {
+                if (meaning.getValueType().equals(PropertyValueType.GEOMETRY)) {
+                    if (oValue instanceof Envelope) {
+                        
+                        // TODO include multiple envelope types in the response
+                        Envelope env = (Envelope)oValue;
+                        String sLower = env.getMinX()+" "+env.getMinY();
+                        String sUpper = env.getMaxX()+" "+env.getMaxY();
+                        
+                        Element elField = responseDom.createElement("ows:WGS84BoundingBox");
+                        Element elLower = responseDom.createElement("ows:LowerCorner");
+                        Element elUpper = responseDom.createElement("ows:UpperCorner");
+                        elLower.appendChild(responseDom.createTextNode(sLower));
+                        elUpper.appendChild(responseDom.createTextNode(sUpper));
+                        elField.appendChild(elLower);
+                        elField.appendChild(elUpper);
+                        record.appendChild(elField);
+                        
+                        elField = responseDom.createElement("ows:BoundingBox");
+                        elLower = responseDom.createElement("ows:LowerCorner");
+                        elUpper = responseDom.createElement("ows:UpperCorner");
+                        elLower.appendChild(responseDom.createTextNode(sLower));
+                        elUpper.appendChild(responseDom.createTextNode(sUpper));
+                        elField.appendChild(elLower);
+                        elField.appendChild(elUpper);
+                        record.appendChild(elField);
+                    }
+                    
+                } else {
+                    
+                    String sValue = oValue.toString();
+                    if (oValue instanceof Timestamp) {
+                        if (meaningType.equals(PropertyMeaningType.DATEMODIFIED)) {
+                            sValue = opResponse.toIso8601((Timestamp)oValue);
+                        } else {
+                            sValue = opResponse.toIso8601Date((Timestamp)oValue);
+                        }
+                    }
+                    if (meaningType.equals(PropertyMeaningType.XMLURL)) {
+                        if ((sValue != null) && sValue.startsWith("?getxml=")) {
+                            sValue = cswBaseUrl+sValue;
+                        }
+                    } else if (meaningType.equals(PropertyMeaningType.THUMBNAILURL)) {
+                        if ((sValue != null) && sValue.startsWith("/thumbnail?uuid")) {
+                            sValue = httpContextPath+sValue;
+                        }
+                    }
+                    if ((sValue != null) && (dcElement != null) && (dcElement.getElementName().length() > 0)) {
+                        String elName = dcElement.getElementName().replaceAll("~","");
+                        Element elField = responseDom.createElement(elName);
+                        elField.appendChild(responseDom.createTextNode(sValue));
+                        if (dcElement.getScheme().length() > 0) {
+                            elField.setAttribute("scheme",dcElement.getScheme());
+                            
+                            // don't return unknown content types
+                            if (sValue.equalsIgnoreCase("unknown")) {
+                                if (dcElement.getScheme().toLowerCase().endsWith("contenttype")) {
+                                    elField = null;
+                                }
+                            }
+                        }
+                        if (elField != null) {
+                            record.appendChild(elField);
+                        }
+                    }
+                    
+                }
+            }
+        }
     }
-  }
   
   /**
    * Creates and appends the discovered record elements to the XML document.
@@ -417,6 +415,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       // append each record
       DiscoveredRecords records = query.getResult().getRecords();
       if (records.size()!=1) {
+          context.getOperationResponse().setResponseCode(HttpServletResponse.SC_NOT_FOUND);
           throw new OwsException(OwsException.OWSCODE_UnexpectedStatus,"record",records.isEmpty()? "no record": "to many records");
       }
       
@@ -435,6 +434,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       IOriginalXmlProvider oxp = context.getProviderFactory().makeOriginalXmlProvider(context);
       DiscoveredRecords records = query.getResult().getRecords();
       if (records.size()!=1) {
+          context.getOperationResponse().setResponseCode(HttpServletResponse.SC_NOT_FOUND);
           throw new OwsException(OwsException.OWSCODE_UnexpectedStatus,"record",records.isEmpty()? "no record": "to many records");
       }
       for (DiscoveredRecord record: records) {
