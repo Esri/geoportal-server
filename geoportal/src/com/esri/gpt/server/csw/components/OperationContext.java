@@ -14,9 +14,11 @@
  */
 package com.esri.gpt.server.csw.components;
 import com.esri.gpt.framework.context.RequestContext;
+import java.util.Arrays;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Holds context information associated with an operation.
@@ -148,4 +150,24 @@ public class OperationContext {
     this.serviceProperties = serviceProperties;
   }
   
+  /**
+   * Determines if the response is Dublin Core based.
+   * @return true if the response is Dublin Core
+   */
+  public boolean isDublinCoreResponse() {
+      return getRequestOptions().getQueryOptions().isDublinCoreResponse();
+  }
+  
+  /**
+   * Determines if the response is Atom response.
+   * @return true if the response is Atom response
+   */
+  public boolean isAtomResponse() {
+      String [] accepts = (getRequestContext().getServletRequest() instanceof HttpServletRequest)
+              ? new ParseHelper().getHeaderValues((HttpServletRequest) getRequestContext().getServletRequest(), "Accept", ",")
+              : new String[0];
+      boolean isAtom = "application/atom+xml".equals(getOperationResponse().getOutputFormat())
+              || Arrays.binarySearch(accepts, "application/atom+xml", String.CASE_INSENSITIVE_ORDER)>=0;
+      return isAtom;
+  }
 }

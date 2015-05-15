@@ -385,7 +385,8 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
     // local name and qualified name
     QueryOptions qOptions = context.getRequestOptions().getQueryOptions();
     DiscoveryQuery query = this.getDiscoveryContext().getDiscoveryQuery();
-    boolean isDublinCore = qOptions.isDublinCoreResponse();
+    boolean isDublinCore = context.isDublinCoreResponse();
+    boolean isAtom = context.isAtomResponse();
     
     String elementSetType = Val.chkStr(qOptions.getElementSetType());
     String outputSchema = Val.chkStr(qOptions.getOutputSchema());

@@ -30,7 +30,6 @@ public class RequestOptions {
   private Document              requestDom;
   private String                requestXml;
   private TransactionOptions    transactionOptions = new TransactionOptions();
-  private boolean               isAtom;
   
   /** constructors ============================================================ */
   
@@ -149,12 +148,4 @@ public class RequestOptions {
   public void setTransactionOptions(TransactionOptions options) {
     this.transactionOptions = options;
   }
-
-    public void setIsAtom(boolean atom) {
-        this.isAtom = atom;
-    }
-  
-    public boolean getIsAtom() {
-        return this.isAtom;
-    }
 }

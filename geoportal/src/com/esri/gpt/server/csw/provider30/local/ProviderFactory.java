@@ -186,6 +186,9 @@ public class ProviderFactory implements IProviderFactory {
     } else if (operationName.equals("GetRecordById")) {
       opProvider = new GetRecordByIdProvider();
       
+      values = new SupportedValues("application/xml,text/xml,application/atom+xml",",");
+      parameters.add(new SupportedParameter(CswConstants.Parameter_OutputFormat,values));
+      
       values = new SupportedValues(
           "csw:Record,http://www.opengis.net/cat/csw/3.0,original,http://www.isotc211.org/2005/gmd",",");
       parameters.add(new SupportedParameter(CswConstants.Parameter_OutputSchema,values));
@@ -315,14 +318,6 @@ public class ProviderFactory implements IProviderFactory {
           cOptions.setLanguageCode(tmp);
         }
       }
-    }
-    
-    // initalize atom request
-    if (request != null) {
-        ParseHelper pHelper = new ParseHelper();
-        String [] accepts = pHelper.getHeaderValues(request, "Accept", ",");
-        boolean isAtom = Arrays.binarySearch(accepts, "application/atom+xml", String.CASE_INSENSITIVE_ORDER)>=0;
-        context.getRequestOptions().setIsAtom(isAtom);
     }
     
     return handler;
