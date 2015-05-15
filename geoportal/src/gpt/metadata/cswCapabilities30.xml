@@ -27,7 +27,8 @@
       <ows:Keyword>keyword2</ows:Keyword>
     </ows:Keywords>
     <ows:ServiceType>CSW</ows:ServiceType>
-    <ows:ServiceTypeVersion>3.0</ows:ServiceTypeVersion>
+    <ows:ServiceTypeVersion>2.0.2</ows:ServiceTypeVersion>
+    <ows:ServiceTypeVersion>3.0.0</ows:ServiceTypeVersion>
     <ows:Fees>unknown</ows:Fees>
     <ows:AccessConstraints>unknown</ows:AccessConstraints>
   </ows:ServiceIdentification>
