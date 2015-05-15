@@ -34,6 +34,7 @@ import com.esri.gpt.catalog.discovery.rest.RestQuery;
 import com.esri.gpt.catalog.lucene.LuceneQueryAdapter;
 import com.esri.gpt.catalog.search.OpenSearchProperties;
 import com.esri.gpt.catalog.search.ResourceIdentifier;
+import static com.esri.gpt.control.georss.FieldMetaLoader.loadLuceneMeta;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
 import com.esri.gpt.framework.jsf.MessageBroker;

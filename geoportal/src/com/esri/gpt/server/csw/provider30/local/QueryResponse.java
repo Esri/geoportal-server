@@ -22,6 +22,11 @@ import com.esri.gpt.catalog.discovery.PropertyMeaningType;
 import com.esri.gpt.catalog.discovery.PropertyMeaning;
 import com.esri.gpt.catalog.discovery.PropertyValueType;
 import com.esri.gpt.catalog.discovery.Returnable;
+import com.esri.gpt.catalog.search.ResourceIdentifier;
+import com.esri.gpt.control.georss.AtomFeedWriter;
+import com.esri.gpt.control.georss.DiscoveredRecordAdapter;
+import com.esri.gpt.control.georss.DiscoveredRecordsAdapter;
+import com.esri.gpt.control.georss.SearchResultRecordsAdapter;
 import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.util.Val;
@@ -36,6 +41,10 @@ import com.esri.gpt.server.csw.components.OperationResponse;
 import com.esri.gpt.server.csw.components.OwsException;
 import com.esri.gpt.server.csw.components.QueryOptions;
 import com.esri.gpt.server.csw.components.ServiceProperties;
+import java.io.ByteArrayInputStream;
+import java.io.CharArrayWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -396,7 +405,31 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
     boolean isFull = elementSetType.equalsIgnoreCase(CswConstants.ElementSetType_Full);
     
     // Dublin Core based responses
-    if (isDublinCore) {
+    if (isAtom) {
+        CharArrayWriter writer = new CharArrayWriter();
+        PrintWriter printWriter = new PrintWriter(writer);
+        AtomFeedWriter atomWriter = new AtomFeedWriter(printWriter);
+        
+        DiscoveredRecords records = query.getResult().getRecords();
+        if (records.size()==1) {
+            DiscoveredRecordAdapter discoveredRecordAdapter = new DiscoveredRecordAdapter(new ResourceIdentifier(), records.get(0));
+            atomWriter.write(context.getRequestContext(), discoveredRecordAdapter);
+        }
+        
+        Document dom = DomUtil.makeDomFromString(writer.toString(),true);
+        NodeList nl = dom.getChildNodes(); 
+        for (int i=0; i<nl.getLength(); i++) {
+            if (nl.item(i).getNodeType() == Node.ELEMENT_NODE){ 
+              Node ndXml = nl.item(i);
+              Node ndImported = root.importNode(ndXml,true);
+              if (ndImported instanceof Element) {
+                context.getOperationResponse().setNSAttributes((Element) ndImported);
+              }
+              root.appendChild(ndImported);
+              break;
+            }
+        }
+    } else if (isDublinCore) {
       OperationResponse opResponse = context.getOperationResponse();
       Document responseDom = opResponse.getResponseDom();
       String recNamespacePfx = "csw";
@@ -428,9 +461,8 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
         context.getOperationResponse().setNSAttributes(elRecord);
         root.appendChild(elRecord);
       }
-    
-    // non Dublin Core based responses
     } else {
+        // non Dublin Core based responses
       
       IOriginalXmlProvider oxp = context.getProviderFactory().makeOriginalXmlProvider(context);
       DiscoveredRecords records = query.getResult().getRecords();

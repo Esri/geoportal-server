@@ -22,6 +22,7 @@ import com.esri.gpt.catalog.lucene.LuceneIndexAdapter;
 import com.esri.gpt.catalog.lucene.LuceneQueryAdapter;
 import com.esri.gpt.catalog.search.OpenSearchProperties;
 import com.esri.gpt.catalog.search.ResourceIdentifier;
+import static com.esri.gpt.control.georss.FieldMetaLoader.loadLuceneMeta;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
@@ -167,7 +168,9 @@ public abstract class JsonSearchEngine {
     lqa.execute(context, query);
     startRecord += query.getFilter().getMaxRecords();
 
-    loadLuceneMeta(context, fields);
+    if (!isLuceneMetaAllowed()) {
+        loadLuceneMeta(context, fields);
+    }
 
     OpenSearchProperties osProps = new OpenSearchProperties();
     osProps.setShortName(msgBroker.retrieveMessage("catalog.openSearch.shortName"));
@@ -187,33 +190,6 @@ public abstract class JsonSearchEngine {
     }
 
     return discoveredRecordsAdapter;
-  }
-
-  /**
-   * Loads Lucene index metadata.
-   * @param context request context
-   * @param fields list of fields
-   * @throws CatalogIndexException if accessing index fails
-   */
-  protected void loadLuceneMeta(RequestContext context, List<IFeedRecords.FieldMeta> fields) throws CatalogIndexException {
-    if (!isLuceneMetaAllowed()) {
-      return;
-    }
-
-    LuceneIndexAdapter indexAdapter = new LuceneIndexAdapter(context);
-    IndexSearcher searcher = null;
-    try {
-      searcher = indexAdapter.newSearcher();
-      IndexReader indexReader = searcher.getIndexReader();
-      for (String fieldName : indexReader.getFieldNames(IndexReader.FieldOption.ALL)) {
-        fields.add(new IFeedRecords.FieldMeta(IFeedRecord.STD_COLLECTION_INDEX + "." + fieldName, "esriFieldTypeString", fieldName));
-      }
-    } catch (Exception e) {
-      String sMsg = "Error accessing index:\n " + Val.chkStr(e.getMessage());
-      throw new CatalogIndexException(sMsg, e);
-    } finally {
-      indexAdapter.closeSearcher(searcher);
-    }
   }
 
   /**

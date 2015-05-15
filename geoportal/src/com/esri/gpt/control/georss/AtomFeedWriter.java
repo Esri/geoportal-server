@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.control.georss;
 
+import com.esri.gpt.catalog.context.CatalogIndexException;
 import com.esri.gpt.catalog.search.OpenSearchProperties;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,9 +27,18 @@ import java.util.logging.Logger;
 import com.esri.gpt.catalog.search.ResourceLink;
 import com.esri.gpt.catalog.search.SearchResultRecord;
 import com.esri.gpt.catalog.search.SearchResultRecords;
+import com.esri.gpt.control.AbstractFeedRecords;
+import static com.esri.gpt.control.georss.FieldMetaLoader.loadLuceneMeta;
+import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
 import java.io.BufferedWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 
 /**
@@ -146,6 +156,36 @@ public void set_messageBroker(MessageBroker broker) {
 
 // methods
 // ==================================================================
+public void write(RequestContext requestContext, IFeedRecord singleRecord) throws CatalogIndexException {
+    final OpenSearchProperties osProps = new OpenSearchProperties();
+    osProps.setShortName(getMessageBroker().retrieveMessage("catalog.openSearch.shortName"));
+    osProps.setNumberOfHits(1);
+    osProps.setStartRecord(1);
+    osProps.setRecordsPerPage(1);
+    
+    final ArrayList<IFeedRecords.FieldMeta> fields = new ArrayList<IFeedRecords.FieldMeta>();
+    
+    loadLuceneMeta(requestContext, fields);
+    
+    List<IFeedRecord> records = Arrays.asList(singleRecord);
+    
+    AbstractFeedRecords feedRecords = new AbstractFeedRecords(records) {
+
+        @Override
+        public OpenSearchProperties getOpenSearchProperties() {
+            return osProps;
+        }
+
+        @Override
+        public List<IFeedRecords.FieldMeta> getMetaData() {
+            return fields;
+        }
+        
+    };
+    
+    write(feedRecords);
+}
+
 /**
  * Write Atom Feed.
  * 
