@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 package com.esri.gpt.server.csw.components;
+import com.esri.gpt.framework.util.Val;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,31 @@ public class ParseHelper {
   
   /** methods ================================================================= */
 
+  /**
+   * Gets header value.
+   * @param request HTTP request
+   * @param name header name
+   * @return value
+   */
+  public String getHeaderValues(HttpServletRequest request, String name) {
+      return request.getHeader(name);
+  }
+  
+  /**
+   * Gets header values.
+   * @param request HTTP request
+   * @param name header name
+   * @param delimiter delimiter (might be <code>null</code>)
+   * @return values
+   */
+  public String[] getHeaderValues(HttpServletRequest request, String name, String delimiter) {
+      if (delimiter==null) {
+          return new String[]{getHeaderValues(request, name)};
+      } else {
+          return Val.chkStr(getHeaderValues(request, name)).split(delimiter);
+      }
+  }
+  
   /**
    * Gets the HTTP request parameter values associated with a key.
    * @param request the HTTP request

@@ -48,6 +48,7 @@ import com.esri.gpt.server.csw.provider30.GetCapabilitiesProvider;
 import com.esri.gpt.server.csw.provider30.GetRecordByIdProvider;
 import com.esri.gpt.server.csw.provider30.GetRecordsProvider;
 import com.esri.gpt.server.csw.provider30.TransactionProvider;
+import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -314,6 +315,14 @@ public class ProviderFactory implements IProviderFactory {
           cOptions.setLanguageCode(tmp);
         }
       }
+    }
+    
+    // initalize atom request
+    if (request != null) {
+        ParseHelper pHelper = new ParseHelper();
+        String [] accepts = pHelper.getHeaderValues(request, "Accept", ",");
+        boolean isAtom = Arrays.binarySearch(accepts, "application/atom+xml", String.CASE_INSENSITIVE_ORDER)>=0;
+        context.getRequestOptions().setIsAtom(isAtom);
     }
     
     return handler;
