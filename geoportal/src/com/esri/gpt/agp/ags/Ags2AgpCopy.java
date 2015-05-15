@@ -72,7 +72,7 @@ public class Ags2AgpCopy {
     agsToAgpType.put("ImageServer", "Image Service");
     agsToAgpType.put("FeatureServer", "Feature Service");
     agsToAgpType.put("WFSServer", "Feature Service");
-    agsToAgpType.put("WMSServer", "WMS");
+    agsToAgpType.put("WFSServer", "Feature Service");
     //agsToAgpType.put("GPServer", "Geoprocessing Service");
     //agsToAgpType.put("NASServer", "Network Analysis Service");
     //agsToAgpType.put("GeometryServer", "Geometry Service");
