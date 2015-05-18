@@ -1,6 +1,6 @@
 =====================================================
 ESRI Geoportal Server
-Copyright ©2013 Esri. 
+Copyright ©2015 Esri. 
 
 =====================================================
 
@@ -27,6 +27,9 @@ Copyright 2001-2013 The Apache Software Foundation
 
 Apache Commons IO
 Copyright 2002-2011 The Apache Software Foundation
+
+Apache Commons Lang
+Copyright 2001-2015 The Apache Software Foundation
 
 Apache Commons Logging
 Copyright 2003-2007 The Apache Software Foundation
