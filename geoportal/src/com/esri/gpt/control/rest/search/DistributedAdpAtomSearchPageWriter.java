@@ -28,7 +28,7 @@ import com.esri.gpt.catalog.search.ASearchEngine;
 import com.esri.gpt.catalog.search.ResourceLink;
 import com.esri.gpt.catalog.search.SearchException;
 import com.esri.gpt.control.georss.AtomFeedWriter;
-import com.esri.gpt.control.georss.AtomFeedWriter.AtomEntry;
+import com.esri.gpt.control.georss.AtomEntry;
 import com.esri.gpt.control.georss.AtomFeedWriter.AtomFeed;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
@@ -247,7 +247,7 @@ public void searchEvent(DistributedSearchEvent event) {
   }
   message = Val.chkStr(message);
   if(!"".equals(message)) {
-    AtomEntry ae = new AtomFeedWriter(this.getPrintWriter()).new AtomEntry();
+    AtomEntry ae = new AtomEntry();
     ae.setId(event.getSearchStatus().getRid());
     ae.setTitle(ae.getId() + " " + message);
     

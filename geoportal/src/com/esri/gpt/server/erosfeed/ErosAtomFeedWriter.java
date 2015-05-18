@@ -16,6 +16,7 @@
 package com.esri.gpt.server.erosfeed;
 
 import com.esri.gpt.catalog.search.*;
+import com.esri.gpt.control.georss.AtomEntry;
 import com.esri.gpt.control.georss.AtomFeedWriter;
 import com.esri.gpt.control.georss.IFeedRecord;
 import com.esri.gpt.control.georss.IFeedRecords;
@@ -97,25 +98,7 @@ public class ErosAtomFeedWriter extends AtomFeedWriter {
     af.setOsProps(records.getOpenSearchProperties());
     for (IFeedRecord record : records) {
       ErosAtomEntry ae = new ErosAtomEntry();
-      ae.setId(record.getUuid());
-      ae.setPublished(record.getModfiedDate());
-      ae.setTitle(record.getTitle());
-      ae.setSummary(record.getAbstract());
-      for (ResourceLink link : record.getResourceLinks()) {
-        ae.addResourceLink(link);
-      }
-      ae.addResourceLink(record.getResourceLinks().getThumbnail());
-      if (record.getEnvelope() != null) {
-        ae.setMinx(record.getEnvelope().getMinX());
-        ae.setMiny(record.getEnvelope().getMinY());
-        ae.setMaxx(record.getEnvelope().getMaxX());
-        ae.setMaxy(record.getEnvelope().getMaxY());
-      }
-      // Eros specific
-      ae.setResourceUrl(record.getResourceUrl());
-      ae.setEmailAddress(findEmailAddress(record));
-      ae.setServiceType(findServiceType(record));
-      ae.setMetadataUrl(findMetadataUrl(record));
+      ae.setData(record);
       af.addEntry(ae);
     }
     af.WriteTo(_writer);
@@ -205,11 +188,35 @@ public class ErosAtomFeedWriter extends AtomFeedWriter {
      * The RES t_ fin d_ pattern.
      */
     private final String REST_FIND_PATTERN = "/rest/document/";
-    private String resourceUrl;
-    private String serviceType;
-    private String emailAddress;
-    private String metadataUrl;
+    String resourceUrl;
+    String serviceType;
+    String emailAddress;
+    String metadataUrl;
 
+    @Override
+    public void setData(IFeedRecord record) {
+      this.setId(record.getUuid());
+      this.setPublished(record.getModfiedDate());
+      this.setTitle(record.getTitle());
+      this.setSummary(record.getAbstract());
+      for (ResourceLink link : record.getResourceLinks()) {
+        this.addResourceLink(link);
+      }
+      this.addResourceLink(record.getResourceLinks().getThumbnail());
+      if (record.getEnvelope() != null) {
+        this.setMinx(record.getEnvelope().getMinX());
+        this.setMiny(record.getEnvelope().getMinY());
+        this.setMaxx(record.getEnvelope().getMaxX());
+        this.setMaxy(record.getEnvelope().getMaxY());
+      }
+      // Eros specific
+      this.setResourceUrl(record.getResourceUrl());
+      this.setEmailAddress(findEmailAddress(record));
+      this.setServiceType(findServiceType(record));
+      this.setMetadataUrl(findMetadataUrl(record));
+    }
+
+    
     public String getResourceUrl() {
       return resourceUrl;
     }

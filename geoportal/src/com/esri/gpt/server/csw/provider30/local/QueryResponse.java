@@ -23,10 +23,8 @@ import com.esri.gpt.catalog.discovery.PropertyMeaning;
 import com.esri.gpt.catalog.discovery.PropertyValueType;
 import com.esri.gpt.catalog.discovery.Returnable;
 import com.esri.gpt.catalog.search.ResourceIdentifier;
-import com.esri.gpt.control.georss.AtomFeedWriter;
+import com.esri.gpt.control.georss.AtomEntry;
 import com.esri.gpt.control.georss.DiscoveredRecordAdapter;
-import com.esri.gpt.control.georss.DiscoveredRecordsAdapter;
-import com.esri.gpt.control.georss.SearchResultRecordsAdapter;
 import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.util.Val;
@@ -41,10 +39,8 @@ import com.esri.gpt.server.csw.components.OperationResponse;
 import com.esri.gpt.server.csw.components.OwsException;
 import com.esri.gpt.server.csw.components.QueryOptions;
 import com.esri.gpt.server.csw.components.ServiceProperties;
-import java.io.ByteArrayInputStream;
 import java.io.CharArrayWriter;
 import java.io.PrintWriter;
-import java.io.Writer;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -57,6 +53,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 /**
  * Generates a CSW query response.
@@ -408,27 +405,36 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
     if (isAtom) {
         CharArrayWriter writer = new CharArrayWriter();
         PrintWriter printWriter = new PrintWriter(writer);
-        AtomFeedWriter atomWriter = new AtomFeedWriter(printWriter);
+        printWriter.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        AtomEntry atomEntry = new AtomEntry();
         
         DiscoveredRecords records = query.getResult().getRecords();
         if (records.size()==1) {
             DiscoveredRecordAdapter discoveredRecordAdapter = new DiscoveredRecordAdapter(new ResourceIdentifier(), records.get(0));
-            atomWriter.write(context.getRequestContext(), discoveredRecordAdapter);
-        }
-        
-        Document dom = DomUtil.makeDomFromString(writer.toString(),true);
-        NodeList nl = dom.getChildNodes(); 
-        for (int i=0; i<nl.getLength(); i++) {
-            if (nl.item(i).getNodeType() == Node.ELEMENT_NODE){ 
-              Node ndXml = nl.item(i);
-              Node ndImported = root.importNode(ndXml,true);
-              if (ndImported instanceof Element) {
-                context.getOperationResponse().setNSAttributes((Element) ndImported);
-              }
-              root.appendChild(ndImported);
-              break;
+            atomEntry.setData(discoveredRecordAdapter);
+            atomEntry.WriteNsTo(writer);
+            
+            String xml = writer.toString();
+            Document dom = DomUtil.makeDomFromString(xml,true);
+            NodeList nl = dom.getChildNodes(); 
+            for (int i=0; i<nl.getLength(); i++) {
+                if (nl.item(i).getNodeType() == Node.ELEMENT_NODE){ 
+                  Node ndXml = nl.item(i);
+                  Node ndImported = root.importNode(ndXml,true);
+                  if (ndImported instanceof Element) {
+                    context.getOperationResponse().setNSAttributes((Element) ndImported);
+                    Element dcIdentifier = root.createElement("dc:identifier");
+                    Text textNode = root.createTextNode(discoveredRecordAdapter.getUuid());
+                    dcIdentifier.appendChild(textNode);
+                    ndImported.appendChild(dcIdentifier);
+                  }
+                  root.appendChild(ndImported);
+                  xml = XmlIoUtil.domToString(root);
+                  break;
+                }
             }
         }
+        
     } else if (isDublinCore) {
       OperationResponse opResponse = context.getOperationResponse();
       Document responseDom = opResponse.getResponseDom();
