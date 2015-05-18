@@ -224,7 +224,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       DiscoveredRecords records = query.getResult().getRecords();
       for (DiscoveredRecord record: records) {
         Element elRecord = responseDom.createElementNS(recNamespaceUri,recQName);
-        for (Returnable returnable: sortFields(record.getFields())) {
+        for (Returnable returnable: sortFields(filterFields(record.getFields(),new RejectFileIdentifiersPredicate()))) {
           this.appendDiscoveredField(context,elRecord,returnable);
         }
         parent.appendChild(elRecord);
@@ -499,7 +499,31 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       
     }
     }
-  
+    
+    /**
+     * Filters fields.
+     * @param colFields collection of fields
+     * @param predicate predicate used to filter fields
+     * @return 
+     */
+    private Collection<Returnable> filterFields(Collection<Returnable> colFields, IPredicate<Returnable> predicate) {
+        ArrayList<Returnable> arrFields = new ArrayList<Returnable>();
+        for (Returnable returnable: colFields) {
+            if (predicate==null || predicate.accept(returnable)) {
+                arrFields.add(returnable);
+            }
+        }
+        return arrFields;
+    }
+    
+    /**
+     * Sorts fields.
+     * <p/>
+     * The goal of sorting is to push any geometry field at the end while all
+     * other fields should stay in the same position
+     * @param colFields collection of filters to sort.
+     * @return sorted fields
+     */
     private Collection<Returnable> sortFields(Collection<Returnable> colFields) {
         ArrayList<Returnable> arrFields = new ArrayList<Returnable>(colFields);
         Collections.sort(arrFields, new Comparator<Returnable>() {
@@ -521,5 +545,31 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
             }
         });
         return arrFields;
+    }
+  
+    /**
+     * Filter fredicate.
+     * 
+     * @param <T> 
+     */
+    private static interface IPredicate<T> {
+        /**
+         * Decides if the element should be accepted or rejected during filtering.
+         * @param element element to interrogate
+         * @return <code>true</code> if element should be accepted
+         */
+        boolean accept(T element);
+    }
+    
+    /**
+     * Predicate to reject any file identifiers.
+     */
+    private static class RejectFileIdentifiersPredicate implements IPredicate<Returnable> {
+
+        @Override
+        public boolean accept(Returnable element) {
+            return element.getMeaning().getMeaningType()!=PropertyMeaningType.FILEIDENTIFIER;
+        }
+        
     }
 }
