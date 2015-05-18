@@ -39,10 +39,10 @@ Required tools for project compilation and testing:
    - version 3.5 or above
 
 2. ArcGIS Desktop and ArcGIS Desktop Dotnet SDK:
-   - version 10.2	
+   - version 10.3.1	
 
 3. IDE (developed on):
-   - Microsoft Visual Studio 2010
+   - Microsoft Visual Studio 2012
 
 =====================================================
    
@@ -50,7 +50,7 @@ Quick start:
 
 1. Get source code 
    
-2. Open solution file(.sln) with Microsoft Visual Studio 2010
+2. Open solution file(.sln) with Microsoft Visual Studio 2012
 
 3. Get source code and add reference to AppLoger project
 
