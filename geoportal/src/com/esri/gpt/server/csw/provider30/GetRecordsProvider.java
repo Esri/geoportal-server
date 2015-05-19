@@ -236,6 +236,7 @@ public class GetRecordsProvider implements IOperationProvider {
     // initialize
     LOGGER.finer("Executing csw:GetRecords request...");
     IProviderFactory factory = context.getProviderFactory();
+    QueryOptions qOptions = context.getRequestOptions().getQueryOptions();
     
     // evaluate the query
     IQueryEvaluator evaluator = factory.makeQueryEvaluator(context);
@@ -243,6 +244,8 @@ public class GetRecordsProvider implements IOperationProvider {
       String msg = "IProviderFactory.makeQueryEvaluator: instantiation failed.";
       LOGGER.log(Level.SEVERE,msg);
       throw new OwsException(msg);
+    } if (!qOptions.getIDs().isEmpty()) {
+      evaluator.evaluateIdQuery(context,qOptions.getIDs().toArray(new String[0]));
     } else {
       evaluator.evaluateQuery(context);
     }
@@ -300,6 +303,11 @@ public class GetRecordsProvider implements IOperationProvider {
     parsed = pHelper.getParameterValues(request,locator);
     supported = svcProps.getSupportedValues(CswConstants.Parameter_OutputSchema);
     qOptions.setOutputSchema(vHelper.validateValue(supported,locator,parsed,false));
+    
+    // record ids
+    locator = "recordIds";
+    parsed = pHelper.getParameterValues(request,locator,",");
+    qOptions.setIDs(vHelper.validateValues(locator,parsed,false)); 
     
     // start and max records
     parsed = pHelper.getParameterValues(request,"startPosition");
