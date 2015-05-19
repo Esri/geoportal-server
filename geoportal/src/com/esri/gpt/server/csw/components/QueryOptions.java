@@ -259,7 +259,7 @@ public class QueryOptions {
       return true;
     } else if (schema.equalsIgnoreCase("csw:Record")) {
       return true;
-    } else if (schema.equalsIgnoreCase("http://www.opengis.net/cat/csw/2.0.2")) {
+    } else if (schema.equalsIgnoreCase(CswNamespaces.CSW_202.URI_CSW()) || schema.equalsIgnoreCase(CswNamespaces.CSW_30.URI_CSW())) {
       return true;   
     } else {
       return false;    
