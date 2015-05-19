@@ -33,6 +33,7 @@ com.esri.gpt.control.download
 com.esri.gpt.control.filter
 com.esri.gpt.control.georss
 com.esri.gpt.control.georss.dcatcache
+com.esri.gpt.control.georss.dcatdef
 com.esri.gpt.control.harvest
 com.esri.gpt.control.identity
 com.esri.gpt.control.livedata
@@ -90,6 +91,7 @@ com.esri.gpt.framework.search
 com.esri.gpt.framework.security.codec
 com.esri.gpt.framework.security.credentials
 com.esri.gpt.framework.security.identity
+com.esri.gpt.framework.security.identity.agp
 com.esri.gpt.framework.security.identity.ldap
 com.esri.gpt.framework.security.identity.local
 com.esri.gpt.framework.security.identity.open
@@ -98,8 +100,8 @@ com.esri.gpt.framework.security.principal
 com.esri.gpt.framework.sql
 com.esri.gpt.framework.util
 com.esri.gpt.framework.xml
-com.esri.gpt.migration.to1
 com.esri.gpt.sdisuite
+com.esri.gpt.server.apps
 com.esri.gpt.server.assertion
 com.esri.gpt.server.assertion.components
 com.esri.gpt.server.assertion.exception
