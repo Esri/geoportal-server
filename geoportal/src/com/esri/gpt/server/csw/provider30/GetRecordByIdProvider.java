@@ -32,6 +32,7 @@ import com.esri.gpt.server.csw.components.ValidationHelper;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.xpath.XPath;
 import org.w3c.dom.Node;
 
@@ -133,14 +134,24 @@ public class GetRecordByIdProvider implements IOperationProvider {
     locator = "outputFormat";
     parsed = pHelper.getParameterValues(request,locator);
     supported = svcProps.getSupportedValues(CswConstants.Parameter_OutputFormat);
-    context.getOperationResponse().setOutputFormat(
-        vHelper.validateValue(supported,locator,parsed,false));
+    try {
+        context.getOperationResponse().setOutputFormat(
+            vHelper.validateValue(supported,locator,parsed,false));
+    } catch (OwsException ex) {
+        context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
+        throw ex;
+    }
         
     // output schema
     locator = "outputSchema";
     parsed = pHelper.getParameterValues(request,locator);
     supported = svcProps.getSupportedValues(CswConstants.Parameter_OutputSchema);
-    qOptions.setOutputSchema(vHelper.validateValue(supported,locator,parsed,false));
+    try {
+        qOptions.setOutputSchema(vHelper.validateValue(supported,locator,parsed,false));
+    } catch (OwsException ex) {
+        context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
+        throw ex;
+    }
     
     // IDs
     locator = "Id";

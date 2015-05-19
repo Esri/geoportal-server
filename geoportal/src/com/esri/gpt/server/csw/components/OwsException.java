@@ -165,10 +165,9 @@ public class OwsException extends RuntimeException {
    * @return the exception report string
    */
   public String getReport(OperationContext context) {
-    
     // start the exception report
     String version = "1.2.0";
-    String xmlns = "http://www.opengis.net/ows";
+    String xmlns = context.getOperationResponse().getNamespaces().URI_OWS();
     StringBuffer sb = new StringBuffer();
     sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     sb.append("\r\n<ExceptionReport");  

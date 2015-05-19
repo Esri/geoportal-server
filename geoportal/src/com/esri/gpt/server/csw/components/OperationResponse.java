@@ -42,13 +42,29 @@ public class OperationResponse {
   }
   
   /** properties ============================================================== */
-    public int getResponseCode() {
-        return responseCode;
-    }
+  /**
+   * Gets namespaces.
+   * @return namespaces.
+   */
+  public CswNamespaces getNamespaces() {
+      return this.namespaces;
+  }
+  
+  /**
+   * Gets HTTP response code.
+   * @return HTTP response code
+   */
+  public int getResponseCode() {
+      return responseCode;
+  }
 
-    public void setResponseCode(int responseCode) {
-        this.responseCode = responseCode;
-    }
+  /**
+   * Sets HTTP response code.
+   * @param responseCode HTTP response code
+   */
+  public void setResponseCode(int responseCode) {
+      this.responseCode = responseCode;
+  }
 
   
   /**
