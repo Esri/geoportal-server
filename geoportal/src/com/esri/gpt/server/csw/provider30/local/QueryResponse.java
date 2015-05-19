@@ -27,6 +27,7 @@ import com.esri.gpt.control.georss.AtomEntry;
 import com.esri.gpt.control.georss.DiscoveredRecordAdapter;
 import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.geometry.Envelope;
+import com.esri.gpt.framework.util.UuidUtil;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.XmlIoUtil;
@@ -43,10 +44,12 @@ import java.io.CharArrayWriter;
 import java.io.PrintWriter;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
 import org.w3c.dom.Document;
@@ -63,6 +66,10 @@ import org.w3c.dom.Text;
 public class QueryResponse extends DiscoveryAdapter implements IResponseGenerator { 
   
   /** class variables ========================================================= */
+    /** The DAT e_ forma t_ pattern. */
+    static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd";
+    /** The TIM e_ forma t_ pattern. */
+    static final String TIME_FORMAT_PATTERN = "kk:mm:ss";
   
   /** The Logger. */
   private static Logger LOGGER = Logger.getLogger(QueryResponse.class.getName());
@@ -269,6 +276,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
     QueryOptions qOptions = context.getRequestOptions().getQueryOptions();
     DiscoveryQuery query = this.getDiscoveryContext().getDiscoveryQuery();
     OperationResponse opResponse = context.getOperationResponse();
+    
     Document responseDom = opResponse.getResponseDom();
     DiscoveryResult result = query.getResult();
     int numberOfRecordsMatched = result.getNumberOfHits();
@@ -324,6 +332,115 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       this.appendDiscoveredRecords(context,elResults);
     } 
   }
+    
+  /**
+   * Creates and appends the Atom elements to the XML document.
+   * <br/>Applies to csw:GetRecordsResponse.
+   * <br/>Discovered records are also created and appended.
+   * @param root the parent element that will hold the results (typically the root)
+   */
+  protected void appendAtomResultsElement(OperationContext context) 
+    throws Exception{
+    String atomns = "http://www.w3.org/2005/Atom";
+
+    DiscoveryQuery query = this.getDiscoveryContext().getDiscoveryQuery();
+    OperationResponse opResponse = context.getOperationResponse();
+    
+    Document responseDom = opResponse.getResponseDom();
+    
+    Element elFeed = responseDom.createElement("feed");
+    elFeed.setAttribute("xmlns", atomns);
+    elFeed.setAttribute("xmlns:georss", "http://www.georss.org/georss");
+    elFeed.setAttribute("xmlns:opensearch", "http://a9.com/-/spec/opensearch/1.1/");
+    elFeed.setAttribute("xmlns:dc", CswNamespaces.URI_DC);
+    responseDom.appendChild(elFeed);
+    
+    Element elTitle = responseDom.createElementNS(atomns, "title");
+    elTitle.appendChild(responseDom.createTextNode("Title"));
+    elFeed.appendChild(elTitle);
+    
+    SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
+    SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT_PATTERN);
+    Date now = new Date();
+    String published = dateFormat.format(now) + "T" + timeFormat.format(now) + "Z";
+    
+    Element elPublished = responseDom.createElementNS(atomns, "updated");
+    elPublished.appendChild(responseDom.createTextNode(published));
+    elFeed.appendChild(elPublished);
+    
+    Element elId = responseDom.createElementNS(atomns, "id");
+    elId.appendChild(responseDom.createTextNode("urn:uuid:"+UuidUtil.makeUuid()));
+    elFeed.appendChild(elId);
+    
+    DiscoveredRecords records = query.getResult().getRecords();
+    for (DiscoveredRecord record: records) {
+        AtomEntry atomEntry = new AtomEntry();
+        DiscoveredRecordAdapter discoveredRecordAdapter = new DiscoveredRecordAdapter(new ResourceIdentifier(), record);
+        atomEntry.setData(discoveredRecordAdapter);
+        atomEntry.AppendTo(elFeed);
+    }
+    
+    /*
+    // determine records counts
+    QueryOptions qOptions = context.getRequestOptions().getQueryOptions();
+    DiscoveryQuery query = this.getDiscoveryContext().getDiscoveryQuery();
+    
+    Document responseDom = opResponse.getResponseDom();
+    DiscoveryResult result = query.getResult();
+    int numberOfRecordsMatched = result.getNumberOfHits();
+    int numberOfRecordsReturned = 0;
+    int nextRecord = 0;
+    String rtname = qOptions.getResultType();
+    boolean isHits = rtname.equalsIgnoreCase(CswConstants.ResultType_Hits);
+    if (isHits || (query.getFilter().getMaxRecords() <= 0)) {
+      if (numberOfRecordsMatched > 0) {
+        nextRecord = 1;
+      }
+    } else {
+      numberOfRecordsReturned = result.getRecords().size();
+      if (numberOfRecordsReturned > 0) {
+        if (numberOfRecordsReturned < numberOfRecordsMatched) {
+          nextRecord = query.getFilter().getStartRecord() + numberOfRecordsReturned;
+          if (nextRecord > numberOfRecordsMatched) nextRecord = 0;
+        }
+      }
+    } 
+      
+    // the following attributes are not currently populated:
+    //   resultSetId expires
+    
+    // create and add the status element
+    String sTimestamp = opResponse.toIso8601(new Timestamp(System.currentTimeMillis()));
+    Element elStatus = responseDom.createElementNS(CswNamespaces.CSW_30.URI_CSW(),"csw:SearchStatus");
+    elStatus.setAttribute("timestamp",sTimestamp);
+    parent.appendChild(elStatus);
+    
+    // create and add the results element
+    Element elResults = responseDom.createElementNS(CswNamespaces.CSW_30.URI_CSW(),"csw:SearchResults");
+    elResults.setAttribute("numberOfRecordsMatched",""+numberOfRecordsMatched);
+    elResults.setAttribute("numberOfRecordsReturned",""+numberOfRecordsReturned);
+    if (nextRecord >= 0) {
+      elResults.setAttribute("nextRecord",""+nextRecord);
+    }
+    StringSet elementNames = qOptions.getElementNames();
+    boolean hasElementNames = (elementNames != null) && (elementNames.size() > 0);
+    if (!hasElementNames) {
+      String type = qOptions.getElementSetType();
+      elResults.setAttribute("elementSet",type);
+    }
+    if (qOptions.isDublinCoreResponse()) {
+      elResults.setAttribute("recordSchema",CswNamespaces.CSW_30.URI_CSW());
+    } else {
+      elResults.setAttribute("recordSchema",qOptions.getOutputSchema());
+    }
+    parent.appendChild(elResults);
+    
+    // append the discovered records
+    if (!isHits) {
+      this.appendDiscoveredRecords(context,elResults);
+    } 
+    */
+  }
   
   /**
    * Generates the response.
@@ -343,8 +460,13 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
     } else if (opName.equalsIgnoreCase(CswConstants.Operation_GetRecords)) {
       LOGGER.finer("Generating GetRecordsResponse...");
       OperationResponse opResponse = context.getOperationResponse();
-      Element root = this.newResponseDom(context,"GetRecordsResponse");
-      this.appendSearchResultsElement(context,root);
+      if (!context.isAtomResponse()) {
+        Element root = this.newResponseDom(context,"GetRecordsResponse");
+        this.appendSearchResultsElement(context,root);
+      } else {
+        this.newResponseDom(context);
+        this.appendAtomResultsElement(context);
+      }
       opResponse.setResponseXml(XmlIoUtil.domToString(opResponse.getResponseDom()));
     }
   }
@@ -409,29 +531,32 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
         AtomEntry atomEntry = new AtomEntry();
         
         DiscoveredRecords records = query.getResult().getRecords();
-        if (records.size()==1) {
-            DiscoveredRecordAdapter discoveredRecordAdapter = new DiscoveredRecordAdapter(new ResourceIdentifier(), records.get(0));
-            atomEntry.setData(discoveredRecordAdapter);
-            atomEntry.WriteNsTo(writer);
-            
-            String xml = writer.toString();
-            Document dom = DomUtil.makeDomFromString(xml,true);
-            NodeList nl = dom.getChildNodes(); 
-            for (int i=0; i<nl.getLength(); i++) {
-                if (nl.item(i).getNodeType() == Node.ELEMENT_NODE){ 
-                  Node ndXml = nl.item(i);
-                  Node ndImported = root.importNode(ndXml,true);
-                  if (ndImported instanceof Element) {
-                    context.getOperationResponse().setNSAttributes((Element) ndImported);
-                    Element dcIdentifier = root.createElement("dc:identifier");
-                    Text textNode = root.createTextNode(discoveredRecordAdapter.getUuid());
-                    dcIdentifier.appendChild(textNode);
-                    ndImported.appendChild(dcIdentifier);
-                  }
-                  root.appendChild(ndImported);
-                  xml = XmlIoUtil.domToString(root);
-                  break;
-                }
+        if (records.size()!=1) {
+            context.getOperationResponse().setResponseCode(HttpServletResponse.SC_NOT_FOUND);
+            throw new OwsException(OwsException.OWSCODE_UnexpectedStatus,"record",records.isEmpty()? "no records found": "to many records found");
+        }
+        
+        DiscoveredRecordAdapter discoveredRecordAdapter = new DiscoveredRecordAdapter(new ResourceIdentifier(), records.get(0));
+        atomEntry.setData(discoveredRecordAdapter);
+        atomEntry.WriteNsTo(writer);
+
+        String xml = writer.toString();
+        Document dom = DomUtil.makeDomFromString(xml,true);
+        NodeList nl = dom.getChildNodes(); 
+        for (int i=0; i<nl.getLength(); i++) {
+            if (nl.item(i).getNodeType() == Node.ELEMENT_NODE){ 
+              Node ndXml = nl.item(i);
+              Node ndImported = root.importNode(ndXml,true);
+              if (ndImported instanceof Element) {
+                context.getOperationResponse().setNSAttributes((Element) ndImported);
+                Element dcIdentifier = root.createElement("dc:identifier");
+                Text textNode = root.createTextNode(discoveredRecordAdapter.getUuid());
+                dcIdentifier.appendChild(textNode);
+                ndImported.appendChild(dcIdentifier);
+              }
+              root.appendChild(ndImported);
+              xml = XmlIoUtil.domToString(root);
+              break;
             }
         }
         
@@ -456,7 +581,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       DiscoveredRecords records = query.getResult().getRecords();
       if (records.size()!=1) {
           context.getOperationResponse().setResponseCode(HttpServletResponse.SC_NOT_FOUND);
-          throw new OwsException(OwsException.OWSCODE_UnexpectedStatus,"record",records.isEmpty()? "no record": "to many records");
+          throw new OwsException(OwsException.OWSCODE_UnexpectedStatus,"record",records.isEmpty()? "no records found": "to many records found");
       }
       
       for (DiscoveredRecord record: records) {
@@ -474,7 +599,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       DiscoveredRecords records = query.getResult().getRecords();
       if (records.size()!=1) {
           context.getOperationResponse().setResponseCode(HttpServletResponse.SC_NOT_FOUND);
-          throw new OwsException(OwsException.OWSCODE_UnexpectedStatus,"record",records.isEmpty()? "no record": "to many records");
+          throw new OwsException(OwsException.OWSCODE_UnexpectedStatus,"record",records.isEmpty()? "no records found": "to many records found");
       }
       for (DiscoveredRecord record: records) {
         String responseXml = Val.chkStr(record.getResponseXml());

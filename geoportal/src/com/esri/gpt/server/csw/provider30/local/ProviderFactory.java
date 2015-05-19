@@ -200,6 +200,9 @@ public class ProviderFactory implements IProviderFactory {
       GetRecordsProvider grp = new GetRecordsProvider();
       opProvider = grp;
       
+      values = new SupportedValues("application/xml,text/xml,application/atom+xml",",");
+      parameters.add(new SupportedParameter(CswConstants.Parameter_OutputFormat,values));
+      
       values = new SupportedValues(
           "csw:Record,http://www.opengis.net/cat/csw/3.0,http://www.isotc211.org/2005/gmd",",");
       parameters.add(new SupportedParameter(CswConstants.Parameter_OutputSchema,values));

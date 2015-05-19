@@ -146,6 +146,9 @@ public class CswServlet extends BaseServlet {
         if (fmt.equalsIgnoreCase("text/xml")) {
           mimeType = "text/xml";
         }
+        if (fmt.equalsIgnoreCase("application/atom+xml")) {
+          mimeType = "application/atom+xml";
+        }
       }
  
     } catch (Exception e) {

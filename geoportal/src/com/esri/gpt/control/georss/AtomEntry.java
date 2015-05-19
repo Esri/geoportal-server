@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 // Private classes
 
@@ -308,6 +310,60 @@ public class AtomEntry {
     
     public void WriteNsTo(java.io.Writer writer) {
         WriteTo(this.ENTITY_OPEN_TAG_NS, writer);
+    }
+    
+    public void AppendTo(Element elFeed) {
+        String atomns = "http://www.w3.org/2005/Atom";
+        String dcns = "http://purl.org/dc/elements/1.1/";
+        Document parent = elFeed.getOwnerDocument();
+        
+        Element elEntry = parent.createElementNS(atomns,"entry");
+        elFeed.appendChild(elEntry);
+        
+        if (getTitle()!=null) {
+            Element elTitle = parent.createElementNS(atomns, "title");
+            elTitle.appendChild(parent.createTextNode(Val.chkStr(getTitle())));
+            elEntry.appendChild(elTitle);
+        }
+        
+        if (getId()!=null) {
+            Element elId = parent.createElementNS(atomns, "id");
+            elId.appendChild(parent.createTextNode("urn:uuid:"+Val.chkStr(getId())));
+            elEntry.appendChild(elId);
+
+
+            Element elIdentifier = parent.createElementNS(dcns, "identifier");
+            elIdentifier.appendChild(parent.createTextNode(Val.chkStr(getId())));
+            elEntry.appendChild(elIdentifier);
+        }
+        
+        if (getSummary()!=null) {
+            Element elSummary = parent.createElementNS(atomns, "summary");
+            elSummary.appendChild(parent.createTextNode(Val.chkStr(getSummary())));
+            elEntry.appendChild(elSummary);
+        }
+        
+        if (getPublished() != null) {
+            try {
+                SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_PATTERN);
+                String data = format.format(getPublished());
+                format = new SimpleDateFormat(TIME_FORMAT_PATTERN);
+                data = data + "T" + format.format(getPublished()) + "Z";
+                Element elPublished = parent.createElementNS(atomns, "updated");
+                elPublished.appendChild(parent.createTextNode(data));
+                elEntry.appendChild(elPublished);
+            } catch (Exception e) {
+                LOGGER.log(Level.WARNING, "", e);
+            }
+        }
+        
+        if (getLinks() != null) {
+            for (String lnk : getLinks()) {
+                Element elLink = parent.createElementNS(atomns, "link");
+                elLink.setAttribute("href", lnk);
+                elEntry.appendChild(elLink);
+            }
+        }
     }
     
     /**
