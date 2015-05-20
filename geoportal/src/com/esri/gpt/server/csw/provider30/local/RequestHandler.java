@@ -123,19 +123,24 @@ public class RequestHandler implements IRequestHandler {
     String locator;
     String[] parsed;
     ISupportedValues supported;
-    
-    // determine the operation name and provider
     String opName = null;
     IOperationProvider opProvider = null;
-    locator = "request";
-    parsed = pHelper.getParameterValues(request,locator);
-    supported = svcProps.getSupportedValues(CswConstants.Parameter_OperationName);
-    try {
-        opName = vHelper.validateValueCs(supported,locator,parsed,true);
-    } catch (OwsException ex) {
-        context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
-        throw ex;
+    
+    if (request.getQueryString()==null) {
+        opName = "GetCapabilities";
+    } else {
+        // determine the operation name and provider
+        locator = "request";
+        parsed = pHelper.getParameterValues(request,locator);
+        supported = svcProps.getSupportedValues(CswConstants.Parameter_OperationName);
+        try {
+            opName = vHelper.validateValueCs(supported,locator,parsed,true);
+        } catch (OwsException ex) {
+            context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
+            throw ex;
+        }
     }
+    
     context.setOperationName(opName);
     if (opName != null) {
       opProvider = factory.makeOperationProvider(context,opName);
@@ -152,8 +157,13 @@ public class RequestHandler implements IRequestHandler {
       }
     }
     
-    // parse the service and version
-    this.parseServiceAndVersion(context,request);
+    if (request.getQueryString()==null) {
+        svcProps.setServiceName("csw");
+        svcProps.setServiceVersion("3.0.0");
+    } else {
+        // parse the service and version
+        this.parseServiceAndVersion(context,request);
+    }
     
     // parse and execute the operation
     opProvider.handleGet(context,request);
