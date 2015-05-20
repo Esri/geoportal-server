@@ -540,7 +540,7 @@ public class ManageDocumentServlet extends BaseServlet {
         } else if (approve.equals("true")) {
           pubRecord.setApprovalStatus(MmdEnums.ApprovalStatus.approved.toString());
           if (!publisher.getIsAdministrator()) {
-            LOGGER.fine("Approving of uploaded documents through the REST without being administrator.");
+            throw new NotAuthorizedException("Not authorized.");
           }
         }
         
