@@ -162,6 +162,52 @@ public class ValidationHelper {
     }
     return null;
   }
+  
+  /**
+   * Validates a requested parameter value.
+   * @param supported the supported values
+   * @param locator the OwsException locator
+   * @param parsed the list of parsed values
+   * @param required <code>true</code if this parameter value is required
+   * @return the valid value
+   * @throws OwsException if validation fails
+   */
+  public String validateValueCs(ISupportedValues supported,
+                              String locator, 
+                              String[] parsed, 
+                              boolean required) 
+    throws OwsException {
+    if (parsed == null) {
+      if (required) {
+        String msg = "The parameter value was missing.";
+        throw new OwsException(OwsException.OWSCODE_MissingParameterValue,locator,msg);
+      }
+    } else if (parsed.length == 0) {
+      String msg = "The parameter value was empty.";
+      throw new OwsException(OwsException.OWSCODE_InvalidParameterValue,locator,msg);
+    } else if (parsed.length > 1) {
+      String msg = "More than one parameter value was supplied.";
+      throw new OwsException(OwsException.OWSCODE_InvalidParameterValue,locator,msg);
+    } else {
+      String value = Val.chkStr(parsed[0]);
+      if (value.length() == 0) {
+        String msg = "The parameter value was empty.";
+        throw new OwsException(OwsException.OWSCODE_InvalidParameterValue,locator,msg);
+      } else if (supported == null) {
+        String msg = "This parameter value is not supported: "+value;
+        throw new OwsException(OwsException.OWSCODE_InvalidParameterValue,locator,msg);
+      } else {
+        String validValue = supported.getSupportedValueCs(value);
+        if (validValue == null) {
+          String msg = "This parameter value is not supported: "+value;
+          throw new OwsException(OwsException.OWSCODE_InvalidParameterValue,locator,msg);
+        } else {
+          return validValue;
+        }        
+      }
+    }
+    return null;
+  }
     
   /**
    * Populates a collection of requested parameter values.

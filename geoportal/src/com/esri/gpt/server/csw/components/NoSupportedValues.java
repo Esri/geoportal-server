@@ -44,4 +44,14 @@ public class NoSupportedValues implements ISupportedValues {
     return false;
   }
 
+    @Override
+    public String getSupportedValueCs(String requestedValue) {
+        return null;
+    }
+
+    @Override
+    public boolean isValueSupportedCs(String value) {
+        return false;
+    }
+
 }

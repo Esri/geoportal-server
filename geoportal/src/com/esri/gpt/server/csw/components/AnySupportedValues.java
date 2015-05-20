@@ -44,4 +44,14 @@ public class AnySupportedValues implements ISupportedValues {
     return true;
   }
 
+    @Override
+    public String getSupportedValueCs(String requestedValue) {
+        return requestedValue;
+    }
+
+    @Override
+    public boolean isValueSupportedCs(String value) {
+        return true;
+    }
+
 }

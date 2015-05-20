@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -129,7 +130,12 @@ public class RequestHandler implements IRequestHandler {
     locator = "request";
     parsed = pHelper.getParameterValues(request,locator);
     supported = svcProps.getSupportedValues(CswConstants.Parameter_OperationName);
-    opName = vHelper.validateValue(supported,locator,parsed,true);
+    try {
+        opName = vHelper.validateValueCs(supported,locator,parsed,true);
+    } catch (OwsException ex) {
+        context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
+        throw ex;
+    }
     context.setOperationName(opName);
     if (opName != null) {
       opProvider = factory.makeOperationProvider(context,opName);
@@ -427,8 +433,13 @@ public class RequestHandler implements IRequestHandler {
     locator = "service";
     parsed = pHelper.getParameterValues(request,locator);
     supported = svcProps.getSupportedValues(CswConstants.Parameter_Service);
-    String service = vHelper.validateValue(supported,locator,parsed,true);
-    svcProps.setServiceName(service);
+    try {
+        String service = vHelper.validateValue(supported,locator,parsed,true);
+        svcProps.setServiceName(service);
+    } catch(OwsException ex) {
+        context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
+        throw ex;
+    }
     
     // service version
     locator = "acceptVersions";

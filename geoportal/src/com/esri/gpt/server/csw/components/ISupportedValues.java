@@ -29,9 +29,22 @@ public interface ISupportedValues {
   public abstract String getSupportedValue(String requestedValue);
   
   /**
+   * Gets the supported value associated with a requested value (case sensitive).
+   * @param requestedValue the requested value
+   * @return the supported value (null if unsupported)
+   */
+  public abstract String getSupportedValueCs(String requestedValue);
+  
+  /**
    * Determines if a requested value is supported.
    * @return <code>true</code> if the value is supported
    */
   public abstract boolean isValueSupported(String value);
+  
+  /**
+   * Determines if a requested value is supported (case sensitive).
+   * @return <code>true</code> if the value is supported
+   */
+  public abstract boolean isValueSupportedCs(String value);
   
 }
