@@ -110,6 +110,10 @@ public class QueryFilterParser extends DiscoveryAdapter implements IFilterParser
     }
     
   }
+
+  @Override
+  public void parseKeywords(OperationContext context, String[] keywords) throws OwsException, XPathExpressionException {
+  }
   
   /**
    * Parses a parent node for logical, property comparison and spatial sub-clauses.

@@ -320,6 +320,18 @@ public class GetRecordsProvider implements IOperationProvider {
     parsed = pHelper.getParameterValues(request,locator,",");
     qOptions.setIDs(vHelper.validateValues(locator,parsed,false)); 
     
+    // keywords
+    locator = "q";
+    parsed = pHelper.getParameterValues(request,locator," ");
+    if ((parsed != null) && (parsed.length) > 0) {
+        IFilterParser parser = factory.makeFilterParser(context,null);
+        if (parser == null) {
+          String msg = "IProviderFactory.makeFilterParser: instantiation failed.";
+          throw new OwsException(OwsException.OWSCODE_NoApplicableCode,locator,msg);
+        }
+        parser.parseKeywords(context, parsed);
+    }
+    
     // start and max records
     parsed = pHelper.getParameterValues(request,"startPosition");
     if ((parsed != null) && (parsed.length) > 0) {

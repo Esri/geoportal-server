@@ -33,4 +33,13 @@ public interface IFilterParser {
   public void parseFilter(OperationContext context, Node filterNode, XPath xpath) 
     throws OwsException, XPathExpressionException;
 
+  /**
+   * Parses keywords.
+   * @param context operation context
+   * @param keywords keywords
+   * @throws OwsException if validation fails
+   * @throws XPathExpressionException if an XPath related exception occurs
+   */
+  public void parseKeywords(OperationContext context, String [] keywords) 
+    throws OwsException, XPathExpressionException;
 }
