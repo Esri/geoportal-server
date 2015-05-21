@@ -22,6 +22,7 @@ import com.esri.gpt.server.csw.components.IFilterParser;
 import com.esri.gpt.server.csw.components.IOperationProvider;
 import com.esri.gpt.server.csw.components.IProviderFactory;
 import com.esri.gpt.server.csw.components.IQueryEvaluator;
+import com.esri.gpt.server.csw.components.IQueryParser;
 import com.esri.gpt.server.csw.components.IResponseGenerator;
 import com.esri.gpt.server.csw.components.ISortByParser;
 import com.esri.gpt.server.csw.components.ISupportedValues;
@@ -324,12 +325,12 @@ public class GetRecordsProvider implements IOperationProvider {
     locator = "q";
     parsed = pHelper.getParameterValues(request,locator," ");
     if ((parsed != null) && (parsed.length) > 0) {
-        IFilterParser parser = factory.makeFilterParser(context,null);
+        IQueryParser parser = factory.makeQueryParser(context);
         if (parser == null) {
           String msg = "IProviderFactory.makeFilterParser: instantiation failed.";
           throw new OwsException(OwsException.OWSCODE_NoApplicableCode,locator,msg);
         }
-        parser.parseKeywords(context, parsed);
+        parser.parseQuery(context, parsed);
     }
     
     // start and max records

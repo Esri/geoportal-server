@@ -110,28 +110,6 @@ public class QueryFilterParser extends DiscoveryAdapter implements IFilterParser
     }
     
   }
-
-  @Override
-  public void parseKeywords(OperationContext context, String[] keywords) 
-    throws OwsException, XPathExpressionException {
-      if (keywords!=null && keywords.length>0) {
-        QueryOptions qOptions = context.getRequestOptions().getQueryOptions();
-        DiscoveryQuery query = this.getDiscoveryContext().getDiscoveryQuery();
-        DiscoveryFilter filter = query.getFilter();
-        filter.setRootClause(new LogicalAnd());
-        LogicalClause rootClause = filter.getRootClause();
-        Discoverable anytext = this.getDiscoveryContext().findDiscoverable("anytext");
-        
-        if (anytext!=null) {
-            for (String keyword: keywords) {
-                PropertyClause propertyIsLike = new PropertyClause.PropertyIsLike();
-                propertyIsLike.setTarget(anytext);
-                propertyIsLike.setLiteral(Val.chkStr(keyword));
-                rootClause.getClauses().add(propertyIsLike);
-            }
-        }
-      }
-  }
   
   /**
    * Parses a parent node for logical, property comparison and spatial sub-clauses.

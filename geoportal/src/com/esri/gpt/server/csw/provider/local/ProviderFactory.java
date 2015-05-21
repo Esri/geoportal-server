@@ -41,6 +41,7 @@ import com.esri.gpt.framework.context.ConfigurationException;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.server.csw.components.CswNamespaces;
+import com.esri.gpt.server.csw.components.IQueryParser;
 import com.esri.gpt.server.csw.components.IRequestHandler;
 import com.esri.gpt.server.csw.components.OriginalXmlProvider;
 import com.esri.gpt.server.csw.provider.DescribeRecordProvider;
@@ -140,6 +141,11 @@ public class ProviderFactory implements IProviderFactory {
       }
       throw new OwsException(OwsException.OWSCODE_InvalidParameterValue,locator,msg);
     }
+  }
+
+  @Override
+  public IQueryParser makeQueryParser(OperationContext context) throws OwsException {
+      return null;
   }
   
   /**

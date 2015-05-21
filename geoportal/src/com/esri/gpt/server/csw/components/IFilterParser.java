@@ -40,6 +40,8 @@ public interface IFilterParser {
    * @throws OwsException if validation fails
    * @throws XPathExpressionException if an XPath related exception occurs
    */
+  /*
   public void parseKeywords(OperationContext context, String [] keywords) 
     throws OwsException, XPathExpressionException;
+  */
 }

@@ -43,6 +43,15 @@ public interface IProviderFactory {
    */
   public IFilterParser makeFilterParser(OperationContext context, String version)
     throws OwsException;
+  
+  /**
+   * Makes a parser for an "q" parameter.
+   * @param context the operation context
+   * @return the query parser
+   * @throws OwsException if the method is unsupported
+   */
+  public IQueryParser makeQueryParser(OperationContext context)
+    throws OwsException;
     
   /**
    * Makes an operation provider for a given operation name.
