@@ -455,15 +455,20 @@ public class RequestHandler implements IRequestHandler {
     locator = "acceptVersions";
     parsed = pHelper.getParameterValues(request,locator,",");
     supported = svcProps.getSupportedValues(CswConstants.Parameter_Version);
-    String version = Val.chkStr(vHelper.negotiateValue(supported,locator,parsed,false));
-    if (version.length() > 0) {
-      svcProps.setServiceVersion(version);
-    } else {
-      locator = "version";
-      parsed = pHelper.getParameterValues(request,locator);
-      supported = svcProps.getSupportedValues(CswConstants.Parameter_Version);
-      version = vHelper.validateValue(supported,locator,parsed,false);
-      svcProps.setServiceVersion(version);
+    try {
+        String version = Val.chkStr(vHelper.negotiateValue(supported,locator,parsed,false));
+        if (version.length() > 0) {
+          svcProps.setServiceVersion(version);
+        } else {
+          locator = "version";
+          parsed = pHelper.getParameterValues(request,locator);
+          supported = svcProps.getSupportedValues(CswConstants.Parameter_Version);
+          version = vHelper.validateValue(supported,locator,parsed,false);
+          svcProps.setServiceVersion(version);
+        }
+    } catch (OwsException ex) {
+        context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
+        throw ex;
     }
   }
   
