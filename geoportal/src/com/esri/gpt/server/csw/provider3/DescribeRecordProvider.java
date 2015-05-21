@@ -12,11 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.server.csw.provider30;
-import com.esri.gpt.framework.collection.StringSet;
-import com.esri.gpt.framework.util.Val;
-import com.esri.gpt.server.csw.components.CapabilityOptions;
+package com.esri.gpt.server.csw.provider3;
 import com.esri.gpt.server.csw.components.CswConstants;
+import com.esri.gpt.server.csw.components.DescribeRecordOptions;
 import com.esri.gpt.server.csw.components.IOperationProvider;
 import com.esri.gpt.server.csw.components.IProviderFactory;
 import com.esri.gpt.server.csw.components.IResponseGenerator;
@@ -25,30 +23,28 @@ import com.esri.gpt.server.csw.components.OperationContext;
 import com.esri.gpt.server.csw.components.OwsException;
 import com.esri.gpt.server.csw.components.ParseHelper;
 import com.esri.gpt.server.csw.components.ServiceProperties;
-import com.esri.gpt.server.csw.components.SupportedValues;
 import com.esri.gpt.server.csw.components.ValidationHelper;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.xpath.XPath;
 import org.w3c.dom.Node;
 
 /**
- * Provides the CSW GetCapabilities operation.
+ * Provides the CSW DescribeRecord operation.
  */
-public class GetCapabilitiesProvider implements IOperationProvider {
+public class DescribeRecordProvider implements IOperationProvider {
   
   /** class variables ========================================================= */
   
   /** The Logger. */
-  private static Logger LOGGER = Logger.getLogger(GetCapabilitiesProvider.class.getName());
-    
+  private static Logger LOGGER = Logger.getLogger(DescribeRecordProvider.class.getName());
+  
   /** constructors ============================================================ */
   
   /** Default constructor */
-  public GetCapabilitiesProvider() {
+  public DescribeRecordProvider() {
     super();
   }
           
@@ -70,7 +66,7 @@ public class GetCapabilitiesProvider implements IOperationProvider {
       generator.generateResponse(context);
     } 
   }
-    
+  
   /**
    * Handles a URL based request (HTTP GET).
    * @param context the operation context
@@ -81,8 +77,8 @@ public class GetCapabilitiesProvider implements IOperationProvider {
     throws Exception {
     
     // initialize
-    LOGGER.finer("Handling csw:GetCapabilities request URL...");
-    CapabilityOptions cOptions = context.getRequestOptions().getCapabilityOptions();
+    LOGGER.finer("Handling csw:DescribeRecord request URL...");
+    DescribeRecordOptions drOptions = context.getRequestOptions().getDescribeRecordOptions();
     ServiceProperties svcProps = context.getServiceProperties();
     ParseHelper pHelper = new ParseHelper();
     ValidationHelper vHelper = new ValidationHelper();
@@ -90,39 +86,25 @@ public class GetCapabilitiesProvider implements IOperationProvider {
     String[] parsed;
     ISupportedValues supported;
     
-    // service and version and language code are parsed by the parent RequestHandler,
-    // the language code is initialized within the associated IProviderFactory
-                
-    // output format
-    locator = "acceptFormats";
-    parsed = pHelper.getParameterValues(request,locator,",");
-    supported = svcProps.getSupportedValues(CswConstants.Parameter_OutputFormat);
-    String outputFormat = Val.chkStr(vHelper.negotiateValue(supported,locator,parsed,false));
-    if (outputFormat.length() > 0) {
-      context.getOperationResponse().setOutputFormat(outputFormat);
-    } else {
-      if (parsed!=null) {
-          context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
-          throw new OwsException(OwsException.OWSCODE_InvalidParameterValue, "acceptFormats", "Invalid output format");
-      }
-      locator = "outputFormat";
-      parsed = pHelper.getParameterValues(request,locator);
-      supported = svcProps.getSupportedValues(CswConstants.Parameter_OutputFormat);
-      outputFormat = vHelper.validateValue(supported,locator,parsed,false);
-      context.getOperationResponse().setOutputFormat(outputFormat);
-    }
+    // service and version are parsed by the parent RequestHandler
     
-    // sections (an empty sections parameter should return all non-optional sections)
-    locator = "sections";
+    // output format
+    locator = "outputFormat";
+    parsed = pHelper.getParameterValues(request,locator);
+    supported = svcProps.getSupportedValues(CswConstants.Parameter_OutputFormat);
+    context.getOperationResponse().setOutputFormat(
+        vHelper.validateValue(supported,locator,parsed,false));
+    
+    // schema language
+    locator = "schemaLanguage";
+    parsed = pHelper.getParameterValues(request,locator);
+    supported = svcProps.getSupportedValues(CswConstants.Parameter_SchemaLanguage);
+    drOptions.setSchemaLanguage(vHelper.validateValue(supported,locator,parsed,false));
+    
+    // type names
+    locator = "TypeName";
     parsed = pHelper.getParameterValues(request,locator,",");
-    if ((parsed != null) && (parsed.length == 0)) {
-      cOptions.setSections(new StringSet());
-      cOptions.getSections().add("Filter_Capabilities");
-    } else {
-      supported = new SupportedValues(
-          "ServiceIdentification,ServiceProvider,OperationsMetadata,Filter_Capabilities",",");
-      cOptions.setSections(vHelper.validateValues(supported,locator,parsed,false));
-    }
+    drOptions.setTypeNames(vHelper.validateValues(locator,parsed,false));
     
     // execute
     this.execute(context);
@@ -139,48 +121,34 @@ public class GetCapabilitiesProvider implements IOperationProvider {
     throws Exception {
     
     // initialize
-    LOGGER.finer("Handling csw:GetCapabilities request XML...");
-    CapabilityOptions cOptions = context.getRequestOptions().getCapabilityOptions();
+    LOGGER.finer("Handling csw:DescribeRecord request XML...");
+    DescribeRecordOptions drOptions = context.getRequestOptions().getDescribeRecordOptions();
     ServiceProperties svcProps = context.getServiceProperties();
     ParseHelper pHelper = new ParseHelper();
     ValidationHelper vHelper = new ValidationHelper();
     String locator;
     String[] parsed;
     ISupportedValues supported;
-
+    
     // service and version are parsed by the parent RequestHandler
-        
+    
     // output format
-    locator = "ows:AcceptFormats/ows:OutputFormat";
+    locator = "@outputFormat";
     parsed = pHelper.getParameterValues(root,xpath,locator);
     supported = svcProps.getSupportedValues(CswConstants.Parameter_OutputFormat);
-    String outputFormat = Val.chkStr(vHelper.negotiateValue(supported,locator,parsed,false));
-    if (outputFormat.length() > 0) {
-      context.getOperationResponse().setOutputFormat(outputFormat);
-    } else {
-      locator = "@outputFormat";
-      parsed = pHelper.getParameterValues(root,xpath,locator);
-      supported = svcProps.getSupportedValues(CswConstants.Parameter_OutputFormat);
-      outputFormat = vHelper.validateValue(supported,locator,parsed,false);
-      context.getOperationResponse().setOutputFormat(outputFormat);
-    }
+    context.getOperationResponse().setOutputFormat(
+        vHelper.validateValue(supported,locator,parsed,false));
     
-    // sections (an empty sections parameter should return all non-optional sections)
-    locator = "ows:Sections/ows:Section";
+    // schema language
+    locator = "@schemaLanguage";  
     parsed = pHelper.getParameterValues(root,xpath,locator);
-    supported = new SupportedValues(
-        "ServiceIdentification,ServiceProvider,OperationsMetadata,Filter_Capabilities",",");
-    if (parsed == null) {
-      parsed = pHelper.getParameterValues(root,xpath,"ows:Sections");
-      if (parsed != null) {
-        cOptions.setSections(new StringSet());
-        cOptions.getSections().add("Filter_Capabilities");
-      } else {
-        cOptions.setSections(vHelper.validateValues(supported,locator,parsed,false));
-      }
-    } else {
-      cOptions.setSections(vHelper.validateValues(supported,locator,parsed,false));
-    }
+    supported = svcProps.getSupportedValues(CswConstants.Parameter_SchemaLanguage);
+    drOptions.setSchemaLanguage(vHelper.validateValue(supported,locator,parsed,false));
+    
+    // type names
+    locator = "csw:TypeName";
+    parsed = pHelper.getParameterValues(root,xpath,locator);
+    drOptions.setTypeNames(vHelper.validateValues(locator,parsed,false)); 
     
     // execute
     this.execute(context);

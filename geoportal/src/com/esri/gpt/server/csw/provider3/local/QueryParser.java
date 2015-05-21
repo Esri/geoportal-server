@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.esri.gpt.server.csw.provider30.local;
+package com.esri.gpt.server.csw.provider3.local;
 
 import com.esri.gpt.catalog.discovery.Discoverable;
 import com.esri.gpt.catalog.discovery.DiscoveryFilter;

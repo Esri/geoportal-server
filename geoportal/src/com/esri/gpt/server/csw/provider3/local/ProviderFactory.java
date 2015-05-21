@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.server.csw.provider30.local;
+package com.esri.gpt.server.csw.provider3.local;
 import com.esri.gpt.server.csw.components.OriginalXmlProvider;
 import com.esri.gpt.server.csw.components.IProviderFactory;
 import com.esri.gpt.server.csw.components.SupportedParameter;
@@ -44,11 +44,11 @@ import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.server.csw.components.CswNamespaces;
 import com.esri.gpt.server.csw.components.IQueryParser;
 import com.esri.gpt.server.csw.components.IRequestHandler;
-import com.esri.gpt.server.csw.provider30.DescribeRecordProvider;
-import com.esri.gpt.server.csw.provider30.GetCapabilitiesProvider;
-import com.esri.gpt.server.csw.provider30.GetRecordByIdProvider;
-import com.esri.gpt.server.csw.provider30.GetRecordsProvider;
-import com.esri.gpt.server.csw.provider30.TransactionProvider;
+import com.esri.gpt.server.csw.provider3.DescribeRecordProvider;
+import com.esri.gpt.server.csw.provider3.GetCapabilitiesProvider;
+import com.esri.gpt.server.csw.provider3.GetRecordByIdProvider;
+import com.esri.gpt.server.csw.provider3.GetRecordsProvider;
+import com.esri.gpt.server.csw.provider3.TransactionProvider;
 import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;

@@ -25,7 +25,7 @@ import com.esri.gpt.server.csw.components.IRequestHandler;
 import com.esri.gpt.server.csw.components.OperationContext;
 import com.esri.gpt.server.csw.components.OperationResponse;
 import com.esri.gpt.server.csw.components.ProviderFactoryHelper;
-import com.esri.gpt.server.csw.provider30.local.ProviderFactory;
+import com.esri.gpt.server.csw.provider3.local.ProviderFactory;
 
 import java.io.StringReader;
 import java.util.HashMap;

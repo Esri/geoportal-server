@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.server.csw.provider30;
+package com.esri.gpt.server.csw.provider3;
 import com.esri.gpt.catalog.management.MmdEnums;
 import com.esri.gpt.catalog.publication.PublicationRecord;
 import com.esri.gpt.catalog.publication.PublicationRequest;

@@ -50,7 +50,7 @@ import com.esri.gpt.framework.xml.XsltTemplate;
 import com.esri.gpt.server.csw.components.IRequestHandler;
 import com.esri.gpt.server.csw.components.OperationResponse;
 import com.esri.gpt.server.csw.components.ProviderFactoryHelper;
-import com.esri.gpt.server.csw.provider30.local.ProviderFactory;
+import com.esri.gpt.server.csw.provider3.local.ProviderFactory;
 
 /**
  * Servlet Connector for an AtcIMS MetadataServer

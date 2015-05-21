@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.server.csw.provider30.local;
+package com.esri.gpt.server.csw.provider3.local;
 import com.esri.gpt.server.csw.components.OriginalXmlProvider;
 import com.esri.gpt.catalog.discovery.Discoverable;
 import com.esri.gpt.catalog.discovery.DiscoveredRecord;

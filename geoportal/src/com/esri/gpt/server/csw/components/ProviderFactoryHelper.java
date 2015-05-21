@@ -41,6 +41,6 @@ public class ProviderFactoryHelper {
                 }
             }
         }
-        return new com.esri.gpt.server.csw.provider30.local.ProviderFactory();
+        return new com.esri.gpt.server.csw.provider3.local.ProviderFactory();
     }
 }

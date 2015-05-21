@@ -31,7 +31,7 @@
     </filter-mapping>
     ............................................ -->
     <listener>
-      <listener-class>com.esri.gpt.framework.context.ApplicationContextListener</listener-class>
+        <listener-class>com.esri.gpt.framework.context.ApplicationContextListener</listener-class>
     </listener>
     <filter>
         <filter-name>EncodingFilter</filter-name>
@@ -223,7 +223,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Csw3Servlet</servlet-name>
-        <servlet-class>com.esri.gpt.server.csw.provider30.CswServlet</servlet-class>
+        <servlet-class>com.esri.gpt.server.csw.provider3.CswServlet</servlet-class>
         <init-param>
             <param-name>cswSubContextPath</param-name>
             <param-value>/csw3</param-value>

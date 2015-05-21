@@ -15,4 +15,4 @@
 /**
  * CSW response provider.
  */
-package com.esri.gpt.server.csw.provider30;
+package com.esri.gpt.server.csw.provider3;

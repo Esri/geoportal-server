@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.server.csw.provider30;
+package com.esri.gpt.server.csw.provider3;
 import com.esri.gpt.framework.security.principal.Publisher;
 import com.esri.gpt.server.csw.components.OperationContext;
 import com.esri.gpt.server.csw.components.OwsException;

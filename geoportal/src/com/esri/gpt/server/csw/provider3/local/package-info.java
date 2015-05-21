@@ -15,4 +15,4 @@
 /**
  * CSW support for the local catalog.
  */
-package com.esri.gpt.server.csw.provider30.local;
+package com.esri.gpt.server.csw.provider3.local;

@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.server.csw.provider30.local;
+package com.esri.gpt.server.csw.provider3.local;
 import com.esri.gpt.server.csw.components.IRequestHandler;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.security.credentials.UsernameCredential;
