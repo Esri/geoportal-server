@@ -52,6 +52,15 @@ public interface IProviderFactory {
    */
   public IQueryParser makeQueryParser(OperationContext context)
     throws OwsException;
+  
+  /**
+   * Makes a parser for an "bbox" parameter.
+   * @param context the operation context
+   * @return the bbox parser
+   * @throws OwsException if the method is unsupported
+   */
+  public IBBOXParser makeBBOXParser(OperationContext context)
+    throws OwsException;
     
   /**
    * Makes an operation provider for a given operation name.

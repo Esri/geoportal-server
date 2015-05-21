@@ -16,7 +16,6 @@ import com.esri.gpt.server.csw.components.OperationContext;
 import com.esri.gpt.server.csw.components.OwsException;
 import com.esri.gpt.server.csw.components.QueryOptions;
 import java.util.logging.Logger;
-import javax.xml.xpath.XPathExpressionException;
 
 /**
  * Query parser parses "q" parameter.
@@ -43,7 +42,7 @@ public class QueryParser extends DiscoveryAdapter implements IQueryParser {
 
   @Override
   public void parseQuery(OperationContext context, String[] keywords) 
-    throws OwsException, XPathExpressionException {
+    throws OwsException {
       if (keywords!=null && keywords.length>0) {
         QueryOptions qOptions = context.getRequestOptions().getQueryOptions();
         DiscoveryQuery query = this.getDiscoveryContext().getDiscoveryQuery();

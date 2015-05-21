@@ -42,6 +42,7 @@ import com.esri.gpt.framework.context.ConfigurationException;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.server.csw.components.CswNamespaces;
+import com.esri.gpt.server.csw.components.IBBOXParser;
 import com.esri.gpt.server.csw.components.IQueryParser;
 import com.esri.gpt.server.csw.components.IRequestHandler;
 import com.esri.gpt.server.csw.provider3.DescribeRecordProvider;
@@ -129,6 +130,7 @@ public class ProviderFactory implements IProviderFactory {
    * @return the filter adapter
    * @throws OwsException if the method is unsupported
    */
+  @Override
   public IFilterParser makeFilterParser(OperationContext context, String version)
     throws OwsException {
     version = Val.chkStr(version);
@@ -144,9 +146,14 @@ public class ProviderFactory implements IProviderFactory {
     }
   }
 
-    @Override
+  @Override
   public IQueryParser makeQueryParser(OperationContext context) throws OwsException {
     return new QueryParser(context);
+  }
+
+  @Override
+  public IBBOXParser makeBBOXParser(OperationContext context) throws OwsException {
+      return new BBOXParser(context);
   }
   
   /**

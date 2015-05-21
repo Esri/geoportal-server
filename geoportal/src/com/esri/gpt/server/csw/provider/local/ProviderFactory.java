@@ -41,6 +41,7 @@ import com.esri.gpt.framework.context.ConfigurationException;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.server.csw.components.CswNamespaces;
+import com.esri.gpt.server.csw.components.IBBOXParser;
 import com.esri.gpt.server.csw.components.IQueryParser;
 import com.esri.gpt.server.csw.components.IRequestHandler;
 import com.esri.gpt.server.csw.components.OriginalXmlProvider;
@@ -145,6 +146,11 @@ public class ProviderFactory implements IProviderFactory {
 
   @Override
   public IQueryParser makeQueryParser(OperationContext context) throws OwsException {
+      return null;
+  }
+
+  @Override
+  public IBBOXParser makeBBOXParser(OperationContext context) throws OwsException {
       return null;
   }
   

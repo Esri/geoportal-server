@@ -17,6 +17,7 @@ import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.server.csw.components.CswConstants;
 import com.esri.gpt.server.csw.components.CswNamespaces;
+import com.esri.gpt.server.csw.components.IBBOXParser;
 import com.esri.gpt.server.csw.components.ICqlParser;
 import com.esri.gpt.server.csw.components.IFilterParser;
 import com.esri.gpt.server.csw.components.IOperationProvider;
@@ -328,9 +329,33 @@ public class GetRecordsProvider implements IOperationProvider {
         IQueryParser parser = factory.makeQueryParser(context);
         if (parser == null) {
           String msg = "IProviderFactory.makeFilterParser: instantiation failed.";
+          context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
           throw new OwsException(OwsException.OWSCODE_NoApplicableCode,locator,msg);
         }
-        parser.parseQuery(context, parsed);
+        try {
+            parser.parseQuery(context, parsed);
+        } catch (OwsException ex) {
+            context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
+            throw ex;
+        }
+    }
+    
+    // bbox
+    locator = "bbox";
+    parsed = pHelper.getParameterValues(request,locator,",");
+    if ((parsed != null) && (parsed.length) > 0) {
+        IBBOXParser parser = factory.makeBBOXParser(context);
+        if (parser == null) {
+          String msg = "IProviderFactory.makeFilterParser: instantiation failed.";
+          context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
+          throw new OwsException(OwsException.OWSCODE_NoApplicableCode,locator,msg);
+        }
+        try {
+            parser.parseBBOX(context, parsed);
+        } catch (OwsException ex) {
+            context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
+            throw ex;
+        }
     }
     
     // start and max records

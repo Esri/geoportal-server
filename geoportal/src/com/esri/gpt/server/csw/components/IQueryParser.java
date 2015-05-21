@@ -17,8 +17,7 @@ public interface IQueryParser {
    * @param context operation context
    * @param keywords keywords
    * @throws OwsException if validation fails
-   * @throws XPathExpressionException if an XPath related exception occurs
    */
   public void parseQuery(OperationContext context, String [] keywords) 
-    throws OwsException, XPathExpressionException;
+    throws OwsException;
 }
