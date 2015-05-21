@@ -222,8 +222,20 @@
         <url-pattern>/rest/distributed</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>CswServlet</servlet-name>
+        <servlet-name>Csw3Servlet</servlet-name>
         <servlet-class>com.esri.gpt.server.csw.provider30.CswServlet</servlet-class>
+        <init-param>
+            <param-name>cswSubContextPath</param-name>
+            <param-value>/csw3</param-value>
+        </init-param>
+        <init-param>
+            <param-name>resourceFilePrefix</param-name>
+            <param-value>gpt/metadata/csw</param-value>
+        </init-param>
+    </servlet>
+    <servlet>
+        <servlet-name>CswServlet</servlet-name>
+        <servlet-class>com.esri.gpt.server.csw.provider.CswServlet</servlet-class>
         <init-param>
             <param-name>cswSubContextPath</param-name>
             <param-value>/csw</param-value>
@@ -233,6 +245,26 @@
             <param-value>gpt/metadata/csw</param-value>
         </init-param>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>Csw3Servlet</servlet-name>
+        <url-pattern>/csw3</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Csw3Servlet</servlet-name>
+        <url-pattern>/csw3/discovery</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Csw3Servlet</servlet-name>
+        <url-pattern>/csw3/discovery/soap</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Csw3Servlet</servlet-name>
+        <url-pattern>/csw3/publication</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Csw3Servlet</servlet-name>
+        <url-pattern>/csw3/publication/soap</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CswServlet</servlet-name>
         <url-pattern>/csw</url-pattern>
