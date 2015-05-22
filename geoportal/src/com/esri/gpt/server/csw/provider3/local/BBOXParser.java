@@ -52,7 +52,7 @@ public class BBOXParser extends DiscoveryAdapter implements IBBOXParser {
      * methods =================================================================
      */
     @Override
-    public void parseBBOX(OperationContext context, String[] bboxDefinition) throws OwsException {
+    public void parseBBOX(OperationContext context, String[] bboxDefinition, String crs) throws OwsException {
 
         QueryOptions qOptions = context.getRequestOptions().getQueryOptions();
         DiscoveryQuery query = this.getDiscoveryContext().getDiscoveryQuery();
@@ -72,7 +72,7 @@ public class BBOXParser extends DiscoveryAdapter implements IBBOXParser {
         spatialClause.getBoundingEnvelope().setMinY(parseNumber(bboxDefinition[1]));
         spatialClause.getBoundingEnvelope().setMaxX(parseNumber(bboxDefinition[2]));
         spatialClause.getBoundingEnvelope().setMaxY(parseNumber(bboxDefinition[3]));
-        spatialClause.setSrsName("4326");
+        spatialClause.setSrsName(crs!=null? crs: "4326");
     }
 
     private double parseNumber(String number) throws OwsException {

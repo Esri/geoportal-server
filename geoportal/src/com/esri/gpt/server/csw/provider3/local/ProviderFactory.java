@@ -233,6 +233,9 @@ public class ProviderFactory implements IProviderFactory {
       values = new SupportedValues("1.0.0,1.1.0",",");
       parameters.add(new SupportedParameter(CswConstants.Parameter_ConstraintVersion,values));
       
+      values = new SupportedValues("4326,urn:ogc:def:crs:EPSG::4326",",");
+      parameters.add(new SupportedParameter(CswConstants.Parameter_Crs,values));
+      
       parameters.add(new SupportedParameter(CswConstants.Parameter_ConstraintCql,new NoSupportedValues()));
       
       // Transaction

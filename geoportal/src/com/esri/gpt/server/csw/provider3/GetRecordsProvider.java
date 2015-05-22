@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+import org.apache.commons.lang3.ArrayUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -344,14 +345,24 @@ public class GetRecordsProvider implements IOperationProvider {
     locator = "bbox";
     parsed = pHelper.getParameterValues(request,locator,",");
     if ((parsed != null) && (parsed.length) > 0) {
-        IBBOXParser parser = factory.makeBBOXParser(context);
-        if (parser == null) {
-          String msg = "IProviderFactory.makeFilterParser: instantiation failed.";
-          context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
-          throw new OwsException(OwsException.OWSCODE_NoApplicableCode,locator,msg);
-        }
         try {
-            parser.parseBBOX(context, parsed);
+            IBBOXParser parser = factory.makeBBOXParser(context);
+            if (parser == null) {
+              String msg = "IProviderFactory.makeFilterParser: instantiation failed.";
+              throw new OwsException(OwsException.OWSCODE_NoApplicableCode,locator,msg);
+            }
+            if (parsed.length<4 || parsed.length>5) {
+              String msg = "GetRecordsProvider:handleGet: invalid bbox.";
+              throw new OwsException(OwsException.OWSCODE_InvalidParameterValue,locator,msg);
+            }
+            String crs = null;
+            if (parsed.length==5) {
+                crs = parsed[4];
+                parsed = ArrayUtils.subarray(parsed, 0, 4);
+                supported = svcProps.getSupportedValues(CswConstants.Parameter_Crs);
+                vHelper.validateValue(supported,locator+":crs",parsed,true);
+            }
+            parser.parseBBOX(context, parsed, crs);
         } catch (OwsException ex) {
             context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
             throw ex;

@@ -111,6 +111,9 @@ public class CswConstants {
   /** ="version", applies to: all operations */
   public static String Parameter_Version = "version";
   
+  /** ="version", applies to: all operations */
+  public static String Parameter_Crs = "crs";
+  
   
   
   
