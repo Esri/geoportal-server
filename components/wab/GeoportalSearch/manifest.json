@@ -1,0 +1,10 @@
+{
+  "name": "GeoportalSearch",
+  "platform": "HTML",
+  "version": "1.1",
+  "wabVersion": "1.1",
+  "author": "Esri Inc.",
+  "description": "Federated search widget",
+  "copyright": "Esri Inc.",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0"
+}
