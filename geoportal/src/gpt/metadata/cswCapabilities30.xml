@@ -82,6 +82,11 @@
                 <ows:Value>OperationsMetadata</ows:Value>
                 <ows:Value>Filter_Capabilities</ows:Value>
             </ows:Parameter>
+            <ows:Constraint  name="OpenSearchDescriptionDocument">
+                <ows:AllowedValues>
+                   <ows:Value>/openSearchDescription</ows:Value>
+                </ows:AllowedValues>
+            </ows:Constraint >
         </ows:Operation>
         <ows:Operation name="DescribeRecord">
             <ows:DCP>
