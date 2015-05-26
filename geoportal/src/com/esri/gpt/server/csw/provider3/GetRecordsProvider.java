@@ -348,7 +348,7 @@ public class GetRecordsProvider implements IOperationProvider {
         try {
             IBBOXParser parser = factory.makeBBOXParser(context);
             if (parser == null) {
-              String msg = "IProviderFactory.makeFilterParser: instantiation failed.";
+              String msg = "IProviderFactory.makeBBOXParser: instantiation failed.";
               throw new OwsException(OwsException.OWSCODE_NoApplicableCode,locator,msg);
             }
             if (parsed.length<4 || parsed.length>5) {
@@ -399,14 +399,16 @@ public class GetRecordsProvider implements IOperationProvider {
     supported = svcProps.getSupportedValues(CswConstants.Parameter_ElementSetType);
     qOptions.setElementSetType(vHelper.validateValue(supported,locator,parsed,false));
     
-    // response element names
-    if (qOptions.getElementSetType() == null) {
-      // TODO supported ElementNames this for GetRecordById as well?
-      locator = "ElementName";
-      parsed = pHelper.getParameterValues(request,locator,",");
-      supported = svcProps.getSupportedValues(CswConstants.Parameter_ElementName);
-      qOptions.setElementNames(vHelper.validateValues(supported,locator,parsed,false));
+    // TODO supported ElementNames this for GetRecordById as well?
+    locator = "ElementName";
+    parsed = pHelper.getParameterValues(request,locator,",");
+    if (parsed != null && qOptions.getElementSetType() != null) {
+        String msg = "GetRecordsProvider:handleGet: elementName not allowed if elementSetName present.";
+        context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
+        throw new OwsException(OwsException.OWSCODE_NoApplicableCode,locator,msg);
     }
+    supported = svcProps.getSupportedValues(CswConstants.Parameter_ElementName);
+    qOptions.setElementNames(vHelper.validateValues(supported,locator,parsed,false));
     
     // constraint language
     locator = "constraintLanguage";
