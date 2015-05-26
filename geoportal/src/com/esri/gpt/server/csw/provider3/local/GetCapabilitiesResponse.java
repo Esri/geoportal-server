@@ -234,7 +234,10 @@ public class GetCapabilitiesResponse implements IResponseGenerator {
 
     // update OpenSearchDescriptionDocument node
     if (httpContextPath.length() > 0) {
-        NodeList nlOSRefs = (NodeList)xpath.evaluate("/csw:Capabilities/ows:OperationsMetadata/ows:Operation[@name='GetCapabilities']/ows:Constraint[@name='OpenSearchDescriptionDocument']/ows:AllowedValues/ows:Value",dom,XPathConstants.NODESET);
+        NodeList nlOSRefs = (NodeList)xpath.evaluate(
+                "//ows:Constraint[@name='OpenSearchDescriptionDocument']/ows:AllowedValues/ows:Value | "
+              + "//ows:Constraint[@name='OpenSearchDescriptionDocument']/ows:Value | "
+              + "//ows:Constraint[@name='OpenSearchDescriptionDocument']/ows:DefaultValue",dom,XPathConstants.NODESET);
         for (int i=0; i<nlOSRefs.getLength(); i++) {
           Node nlOSRef = nlOSRefs.item(i);
           String osRef = nlOSRef.getTextContent();

@@ -82,12 +82,14 @@
                 <ows:Value>OperationsMetadata</ows:Value>
                 <ows:Value>Filter_Capabilities</ows:Value>
             </ows:Parameter>
-            <ows:Constraint  name="OpenSearchDescriptionDocument">
-                <ows:DefaultValue>TRUE</ows:DefaultValue>
+            <ows:Constraint name="http://www.opengis.net/spec/csw/3.0/conf/OpenSearch">
                 <ows:AllowedValues>
-                   <ows:Value>/openSearchDescription</ows:Value>
+                    <ows:Value>FALSE</ows:Value>
+                    <ows:Value>TRUE</ows:Value>
                 </ows:AllowedValues>
-            </ows:Constraint >
+                <ows:DefaultValue>TRUE</ows:DefaultValue>
+                <ows:Meaning>Conformance class</ows:Meaning>
+            </ows:Constraint>        
         </ows:Operation>
         <ows:Operation name="DescribeRecord">
             <ows:DCP>
@@ -217,6 +219,10 @@
                 <ows:Value>apiso:SpecificationDate</ows:Value>
                 <ows:Value>apiso:SpecificationDateType</ows:Value>		
             </ows:Constraint> 
+            
+            <ows:Constraint  name="OpenSearchDescriptionDocument">
+                <ows:Value>/openSearchDescription</ows:Value>
+            </ows:Constraint>
         </ows:Operation>
         <ows:Operation name="GetRecordById">
             <ows:DCP>
