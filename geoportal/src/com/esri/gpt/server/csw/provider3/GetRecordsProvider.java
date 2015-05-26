@@ -500,19 +500,27 @@ public class GetRecordsProvider implements IOperationProvider {
     // service and version are parsed by the parent RequestHandler
     
     // TODO requestId
-        
-    // output format
     locator = "@outputFormat";
     parsed = pHelper.getParameterValues(root,xpath,locator);
     supported = svcProps.getSupportedValues(CswConstants.Parameter_OutputFormat);
-    context.getOperationResponse().setOutputFormat(
-        vHelper.validateValue(supported,locator,parsed,false));
-    
+    try {
+        context.getOperationResponse().setOutputFormat(
+            vHelper.validateValue(supported,locator,parsed,false));
+    } catch (OwsException ex) {
+        context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
+        throw ex;
+    }
+        
     // output schema
     locator = "@outputSchema";
     parsed = pHelper.getParameterValues(root,xpath,locator);
     supported = svcProps.getSupportedValues(CswConstants.Parameter_OutputSchema);
-    qOptions.setOutputSchema(vHelper.validateValue(supported,locator,parsed,false));
+    try {
+        qOptions.setOutputSchema(vHelper.validateValue(supported,locator,parsed,false));
+    } catch (OwsException ex) {
+        context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
+        throw ex;
+    }
     
     // start and max records
     qOptions.setStartRecord(Math.max(Val.chkInt(xpath.evaluate("@startPosition",root),1),1));
@@ -551,14 +559,15 @@ public class GetRecordsProvider implements IOperationProvider {
         qOptions.setElementSetTypeNames(vHelper.validateValues(locator,parsed,false)); 
       }
       
-      // response element names
-      if (elementSetType == null) {
-        // TODO supported ElementNames
-        locator = "csw:ElementName";
-        parsed = pHelper.getParameterValues(ndQuery,xpath,locator);
-        supported = svcProps.getSupportedValues(CswConstants.Parameter_ElementName);
-        qOptions.setElementNames(vHelper.validateValues(supported,locator,parsed,false));
+      locator = "csw:ElementName";
+      parsed = pHelper.getParameterValues(ndQuery,xpath,locator);
+      if (parsed != null && qOptions.getElementSetType() != null) {
+          String msg = "GetRecordsProvider:handleGet: elementName not allowed if elementSetName present.";
+          context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
+          throw new OwsException(OwsException.OWSCODE_NoApplicableCode,locator,msg);
       }
+      supported = svcProps.getSupportedValues(CswConstants.Parameter_ElementName);
+      qOptions.setElementNames(vHelper.validateValues(supported,locator,parsed,false));
       
       // find the constraint node
       Node ndConstraint = (Node)xpath.evaluate("csw:Constraint",ndQuery,XPathConstants.NODE);
