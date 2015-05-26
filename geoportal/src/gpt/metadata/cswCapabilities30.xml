@@ -83,6 +83,7 @@
                 <ows:Value>Filter_Capabilities</ows:Value>
             </ows:Parameter>
             <ows:Constraint  name="OpenSearchDescriptionDocument">
+                <ows:DefaultValue>TRUE</ows:DefaultValue>
                 <ows:AllowedValues>
                    <ows:Value>/openSearchDescription</ows:Value>
                 </ows:AllowedValues>
