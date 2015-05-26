@@ -36,6 +36,7 @@ import com.esri.gpt.server.csw.components.ServiceProperties;
 import com.esri.gpt.server.csw.components.ValidationHelper;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -127,7 +128,16 @@ public class RequestHandler implements IRequestHandler {
     IOperationProvider opProvider = null;
     
     if (request.getQueryString()==null) {
-        opName = "GetCapabilities";
+        String[] accepts = new ParseHelper().getHeaderValues(request, "Accept", ",");
+        String[] osAccepts = new String[]{"application/opensearchdescription+xml","application/vnd.a9.opensearchdescription+xml"};
+        boolean isOpenSearch = false;
+        for (String osAccept: osAccepts) {
+            if (Arrays.binarySearch(accepts, osAccept, String.CASE_INSENSITIVE_ORDER)>=0) {
+                isOpenSearch = true;
+                break;
+            }
+        }
+        opName = !isOpenSearch? "GetCapabilities": "GetOpenSearchDescription";
     } else {
         // determine the operation name and provider
         locator = "request";

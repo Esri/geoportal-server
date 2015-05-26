@@ -13,13 +13,8 @@
  * limitations under the License.
  */
 package com.esri.gpt.control.rest;
-import com.esri.gpt.catalog.context.CatalogConfiguration;
 import com.esri.gpt.framework.context.BaseServlet;
 import com.esri.gpt.framework.context.RequestContext;
-import com.esri.gpt.framework.jsf.MessageBroker;
-import com.esri.gpt.framework.util.ResourcePath;
-import com.esri.gpt.framework.util.Val;
-import com.esri.gpt.framework.xml.XmlIoUtil;
 
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -45,9 +40,6 @@ public class OpenSearchDescriptionServlet extends BaseServlet {
   
   /** The Logger. */
   private static Logger LOGGER = Logger.getLogger(OpenSearchDescriptionServlet.class.getName());
-  
-  /** The location of the OpenSearch description XML file */
-  private static final String XML_LOCATION = "gpt/search/openSearchDescription.xml";
       
   /** methods ================================================================= */
   
@@ -65,43 +57,11 @@ public class OpenSearchDescriptionServlet extends BaseServlet {
   
     // process the request
     LOGGER.finer("Returning openSearchDescription XML ....");
-    String xml = readXml(request,context);
+    OpenSearchDescriptionProvider provider = new OpenSearchDescriptionProvider();
+    String xml = provider.readXml(request,context);
     String contentType = "application/opensearchdescription+xml; charset=UTF-8";
     LOGGER.finer("openSearchDescription.xml:\n"+xml);
     writeCharacterResponse(response,xml,"UTF-8",contentType);
-  }
-  
-  /**
-   * Reads the OpenSearch description XML.
-   * @param request the servlet request
-   * @param context the request context
-   * @return the description XML string
-   * @throws Exception if an exception occurs
-   */
-  private String readXml(HttpServletRequest request, RequestContext context) 
-    throws Exception {
-    
-    // initialize values for substitution
-    CatalogConfiguration catCfg = context.getCatalogConfiguration();
-    MessageBroker msgBroker = new MessageBroker();
-    msgBroker.setBundleBaseName("gpt.resources.gpt");
-    
-    String basePath = RequestContext.resolveBaseContextPath(request);
-    String restPath = basePath+"/rest/find/document";
-    String imagePath = basePath+"/catalog/images";
-    String shortName = Val.escapeXml(msgBroker.retrieveMessage("catalog.openSearch.shortName"));
-    String description = Val.escapeXml(msgBroker.retrieveMessage("catalog.openSearch.description"));
-        
-    // read the XML, substitute values
-    ResourcePath rp = new ResourcePath();
-    rp.makeUrl(XML_LOCATION);
-    String xml = XmlIoUtil.readXml(rp.makeUrl(XML_LOCATION).toExternalForm());
-    xml = xml.replaceAll("\\{openSearch.restPath\\}",restPath);
-    xml = xml.replaceAll("\\{openSearch.imagePath\\}",imagePath);
-    xml = xml.replaceAll("\\{openSearch.shortName\\}",shortName);
-    xml = xml.replaceAll("\\{openSearch.description\\}",description);
-    
-    return xml;
   }
 
 }

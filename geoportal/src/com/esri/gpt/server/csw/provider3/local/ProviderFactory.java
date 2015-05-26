@@ -50,7 +50,6 @@ import com.esri.gpt.server.csw.provider3.GetCapabilitiesProvider;
 import com.esri.gpt.server.csw.provider3.GetRecordByIdProvider;
 import com.esri.gpt.server.csw.provider3.GetRecordsProvider;
 import com.esri.gpt.server.csw.provider3.TransactionProvider;
-import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -184,8 +183,9 @@ public class ProviderFactory implements IProviderFactory {
       opProvider = gcp;
       String loc = resPfx+"Capabilities30.xml";
       reqOptions.getCapabilityOptions().setCapabilitiesLocation(loc);
-      
-    // DescribeRecord
+    } else if (operationName.equalsIgnoreCase("GetOpenSearchDescription")) {
+      GetOpenSearchProvider gosp = new GetOpenSearchProvider();
+      opProvider = gosp;
     } else if (operationName.equals("DescribeRecord")) {
       DescribeRecordProvider drp = new DescribeRecordProvider();
       opProvider = drp;
