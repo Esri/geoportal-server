@@ -37,6 +37,7 @@ import com.esri.gpt.server.csw.components.ValidationHelper;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -129,6 +130,7 @@ public class RequestHandler implements IRequestHandler {
     
     if (request.getQueryString()==null) {
         String[] accepts = new ParseHelper().getHeaderValues(request, "Accept", ",");
+        Arrays.sort(accepts);
         String[] osAccepts = new String[]{"application/opensearchdescription+xml","application/vnd.a9.opensearchdescription+xml"};
         boolean isOpenSearch = false;
         for (String osAccept: osAccepts) {

@@ -166,6 +166,7 @@ public class OperationContext {
       String [] accepts = (getRequestContext().getServletRequest() instanceof HttpServletRequest)
               ? new ParseHelper().getHeaderValues((HttpServletRequest) getRequestContext().getServletRequest(), "Accept", ",")
               : new String[0];
+      Arrays.sort(accepts);
       boolean isAtom = "application/atom+xml".equals(getOperationResponse().getOutputFormat())
               || Arrays.binarySearch(accepts, "application/atom+xml", String.CASE_INSENSITIVE_ORDER)>=0;
       return isAtom;
