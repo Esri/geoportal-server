@@ -94,7 +94,7 @@ public class SearchEngineLocal extends SearchEngineCSW {
     
     // send the GetRecordsById request
     try {
-      GetRecordsGenerator generator = new GetRecordsGenerator(this.getRequestContext());
+      GetRecordsGenerator generator = new GetRecordsGenerator();
       String cswRequest = generator.generateCswByIdRequest(uuid);
       
       IRequestHandler handler = ProviderFactoryHelper.newInstance(this.getRequestContext()).newHandler(this.getRequestContext());
