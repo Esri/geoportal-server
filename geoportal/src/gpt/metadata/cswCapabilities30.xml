@@ -227,14 +227,6 @@
                 <ows:Value>Filter_Capabilities</ows:Value>
                 <ows:Value>All</ows:Value>
             </ows:Parameter>
-            <ows:Constraint name="http://www.opengis.net/spec/csw/3.0/conf/OpenSearch">
-                <ows:AllowedValues>
-                    <ows:Value>FALSE</ows:Value>
-                    <ows:Value>TRUE</ows:Value>
-                </ows:AllowedValues>
-                <ows:DefaultValue>TRUE</ows:DefaultValue>
-                <ows:Meaning>Conformance class</ows:Meaning>
-            </ows:Constraint>        
         </ows:Operation>
         <ows:Operation name="DescribeRecord">
             <ows:DCP>
