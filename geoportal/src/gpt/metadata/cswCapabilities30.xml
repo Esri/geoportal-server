@@ -14,7 +14,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<csw:Capabilities version="3.0.0" xmlns:csw="http://www.opengis.net/cat/csw/3.0" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows/2.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:fes="http://www.opengis.net/fes/2.0">
+<csw:Capabilities version="3.0.0" xmlns:csw="http://www.opengis.net/cat/csw/3.0" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows/2.0" xmlns:ows11="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:fes="http://www.opengis.net/fes/2.0">
     <ows:ServiceIdentification>
         <ows:Title>
             ArcGIS Server Geoportal Extension 10 - OGC CSW 3.0.0 ISO AP
@@ -61,6 +61,147 @@
         </ows:ServiceContact>
     </ows:ServiceProvider>
     <ows:OperationsMetadata>
+        <ows:Constraint name="http://www.opengis.net/spec/csw/3.0/conf/OpenSearch">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+        </ows:Constraint>        
+        <ows:Constraint name="GetCapabilities-XML">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>        
+        <ows:Constraint name="GetRecordById-XML">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>        
+        <ows:Constraint name="GetRecords-Basic-XML">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>        
+        <ows:Constraint name="GetRecords-Distributed-XML">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>        
+        <ows:Constraint name="GetRecords-Distributed-KVP">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>      
+        <ows:Constraint name="GetRecords-Async-XML">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>      
+        <ows:Constraint name="GetRecords-Async-KVP">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>      
+        <ows:Constraint name="GetDomain-XML">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>      
+        <ows:Constraint name="GetDomain-KVP">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>      
+        <ows:Constraint name="Transaction">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+        </ows:Constraint>      
+        <ows:Constraint name="Harvest-Basic-XML">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>      
+        <ows:Constraint name="Harvest-Basic-KVP">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>      
+        <ows:Constraint name="Harvest-Async-XML">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>      
+        <ows:Constraint name="Harvest-Async-KVP">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>      
+        <ows:Constraint name="Harvest-Periodic-XML">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>      
+        <ows:Constraint name="Harvest-Periodic-KVP">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>      
+        <ows:Constraint name="Filter-CQL">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+        </ows:Constraint>      
+        <ows:Constraint name="Filter-FES-XML">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+        </ows:Constraint>      
+        <ows:Constraint name="Filter-FES-KVP-Advanced">
+            <ows:AllowedValues>
+                <ows:Value>FALSE</ows:Value>
+                <ows:Value>TRUE</ows:Value>
+            </ows:AllowedValues>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>      
+          
         <ows:Operation name="GetCapabilities">
             <ows:DCP>
                 <ows:HTTP>
@@ -74,13 +215,17 @@
                 </ows:HTTP>
             </ows:DCP>
             <ows:Parameter name="AcceptVersions">
-                <ows:Value>3.0</ows:Value>
+                <ows:Value>3.0.0</ows:Value>
+            </ows:Parameter>
+            <ows:Parameter name="AcceptFormats">
+                <ows:Value>text/xml</ows:Value>
             </ows:Parameter>
             <ows:Parameter name="Sections">
                 <ows:Value>ServiceIdentification</ows:Value>
                 <ows:Value>ServiceProvider</ows:Value>
                 <ows:Value>OperationsMetadata</ows:Value>
                 <ows:Value>Filter_Capabilities</ows:Value>
+                <ows:Value>All</ows:Value>
             </ows:Parameter>
             <ows:Constraint name="http://www.opengis.net/spec/csw/3.0/conf/OpenSearch">
                 <ows:AllowedValues>
@@ -136,10 +281,12 @@
             <ows:Parameter name="outputFormat">
                 <ows:Value>application/xml</ows:Value>
                 <ows:Value>text/xml</ows:Value>
+                <ows:Value>application/atom+xml</ows:Value>
             </ows:Parameter>
             <ows:Parameter name="outputSchema">
                 <ows:Value>http://www.opengis.net/cat/csw/3.0</ows:Value>
                 <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
+                <ows:Value>http://www.w3.org/2005/Atom</ows:Value>
             </ows:Parameter>
             <ows:Parameter name="resultType">
                 <ows:Value>results</ows:Value>
@@ -320,6 +467,9 @@
         <fes:Conformance>
             <fes:Constraint name="String">
                 <ows:AnyValue/>
+            </fes:Constraint>
+            <fes:Constraint name="ImplementsMinSpatialFilter">
+                <ows11:DefaultValue>TRUE</ows11:DefaultValue>
             </fes:Constraint>
         </fes:Conformance>
         <fes:Scalar_Capabilities>
