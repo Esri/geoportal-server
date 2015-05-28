@@ -138,17 +138,22 @@ public class RestQueryServlet extends BaseServlet {
     // execute the query, write the response
     try {
       if (format == RestQueryServlet.ResponseFormat.xjson) {
-        String callback = request.getParameter("callback");
-        if (callback != null) {
-          printWriter.print(callback + "(");
-        }
 
         // init query
         query.setReturnables(new CoreQueryables(context).getFull());
         toSearchCriteria(request, context, query);
         
+        IFeedRecords result = JsonSearchEngine.createInstance().search(request, response, context, query);
+        if (result.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
         
-        feedWriter.write(JsonSearchEngine.createInstance().search(request, response, context, query));
+        String callback = request.getParameter("callback");
+        if (callback != null) {
+          printWriter.print(callback + "(");
+        }
+        
+        feedWriter.write(result);
 
         if (callback != null) {
           printWriter.print(")");
@@ -156,16 +161,22 @@ public class RestQueryServlet extends BaseServlet {
 
       }else if (format == RestQueryServlet.ResponseFormat.dcat) {
         
+        // The following part of the code has been disabled since DCAT content
+        // is being cached.
+        query.setReturnables(new CoreQueryables(context).getFull());
+        toSearchCriteria(request, context, query);
+        
+        IFeedRecords result = DcatJsonSearchEngine.createInstance().search(request, response, context, query);
+        if (result.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        
         String callback = request.getParameter("callback");
         if (callback != null) {
           printWriter.print(callback + "(");
         }
         
-        // The following part of the code has been disabled since DCAT content
-        // is being cached.
-        query.setReturnables(new CoreQueryables(context).getFull());
-        toSearchCriteria(request, context, query);
-        feedWriter.write(DcatJsonSearchEngine.createInstance().search(request, response, context, query));
+        feedWriter.write(result);
 
         if (callback != null) {
           printWriter.print(")");
@@ -173,6 +184,9 @@ public class RestQueryServlet extends BaseServlet {
 
       } else {
         SearchResult result = executeQuery1(request, context, msgBroker, query);
+        if (!result.getHasRecords()) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
         if (feedWriter instanceof FeedWriter2) {
           ((FeedWriter2) feedWriter).write(result);
         } else if (feedWriter instanceof HtmlAdvancedWriter) {

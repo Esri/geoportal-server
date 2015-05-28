@@ -34,6 +34,8 @@ import com.esri.gpt.server.csw.components.QueryOptions;
 import com.esri.gpt.server.csw.components.ServiceProperties;
 import com.esri.gpt.server.csw.components.SupportedValues;
 import com.esri.gpt.server.csw.components.ValidationHelper;
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,21 +70,13 @@ public class GetRecordsProvider implements IOperationProvider {
   /** methods ================================================================= */
   
   /**
-   * Builds an ogc:Filter node from HTTP GET parameters.
-   * @param namespace the namespace parameter values
-   * @param constraintFilter the constraint parameter value
-   * @throws Exception if a processing exception occurs
+   * Parses namespace
+   * @param array of namespaces
+   * @return array of KVP's (uri,prefix)
+   * @throws OwsException 
    */
-  protected Node buildFilterNode(String[] namespace, String constraintFilter) throws Exception {
-    
-    // TODO GetRecordsDomBuilder had a different pattern??
-    
-    // parse namespaces
-    // pattern: namespace=xmlns(ogc=http://www.opengis.net/ogc),xmlns(gml=http://www.opengis.net/gml)...
-    StringBuilder nsBuffer = new StringBuilder();
-    boolean hasCswUri = false;
-    boolean hasCswPfx = false;
-    String cswPfx = "";
+  protected List<String[]> parseNamespace(String[] namespace) throws OwsException {
+      ArrayList<String[]> namespaces = new ArrayList<String[]>();
     if (namespace != null) {
       for (String ns: namespace) {
         ns = Val.chkStr(ns);
@@ -110,22 +104,52 @@ public class GetRecordsProvider implements IOperationProvider {
           msg += " xmlns(pfx1=uri1),xmlns(pfx2=uri2),...";
           throw new OwsException(OwsException.OWSCODE_InvalidParameterValue,"namespace",msg);
         } else {
-          if (nsUri.equals("http://www.opengis.net/cat/csw/")) {
-            hasCswUri = true;
-            if ((nsPfx != null) && (nsPfx.length() > 0)) {
-              hasCswPfx = true;
-              cswPfx = nsPfx;
-            }
-          }
           nsUri = Val.escapeXml(nsUri);
           if ((nsPfx == null) || (nsPfx.length() == 0)) {
-            nsBuffer.append(" xmlns=\"").append(nsUri).append("\"");
+            namespaces.add(new String[]{Val.chkStr(nsUri),""});
           } else {
-            nsBuffer.append(" xmlns:").append(nsPfx).append("=\"").append(nsUri).append("\"");
+            namespaces.add(new String[]{Val.chkStr(nsUri),Val.chkStr(nsPfx)});
           }
         }
       }
-    }   
+    }
+    return namespaces;
+  }
+  
+  /**
+   * Builds an ogc:Filter node from HTTP GET parameters.
+   * @param namespace the namespace parameter values
+   * @param constraintFilter the constraint parameter value
+   * @throws Exception if a processing exception occurs
+   */
+  protected Node buildFilterNode(String[] namespace, String constraintFilter) throws Exception {
+    
+    // TODO GetRecordsDomBuilder had a different pattern??
+    
+    // parse namespaces
+    // pattern: namespace=xmlns(ogc=http://www.opengis.net/ogc),xmlns(gml=http://www.opengis.net/gml)...
+    StringBuilder nsBuffer = new StringBuilder();
+    boolean hasCswUri = false;
+    boolean hasCswPfx = false;
+    String cswPfx = "";
+    
+    List<String[]> parseNamespace = parseNamespace(namespace);
+    for (String[] ns: parseNamespace) {
+      String nsUri = ns[0];
+      String nsPfx = ns[1];
+      if (nsUri.equals(CswNamespaces.CSW_30.URI_CSW())) {
+          hasCswUri = true;
+          if (!nsPfx.isEmpty()) {
+              hasCswPfx = true;
+              cswPfx = nsPfx;
+          }
+      }
+      if (nsPfx.isEmpty()) {
+        nsBuffer.append(" xmlns=\"").append(nsUri).append("\"");
+      } else {
+        nsBuffer.append(" xmlns:").append(nsPfx).append("=\"").append(nsUri).append("\"");
+      }
+    }
     
     // use ogc as the default namespace if no namespace parameter was supplied
     if (nsBuffer.length() == 0) {
