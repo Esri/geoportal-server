@@ -127,7 +127,7 @@ public class GetCapabilitiesResponse implements IResponseGenerator {
     
     // remove sections that were not requested
     StringSet sections = cOptions.getSections();
-    if ((sections != null) && (sections.size() > 0)) {
+    if ((sections != null) && (sections.size() > 0) && (!sections.contains("All"))) {
       HashMap<String,String> keep = new HashMap<String,String>();
       for (String section: sections) {
         if (section.equalsIgnoreCase("ServiceIdentification")) {

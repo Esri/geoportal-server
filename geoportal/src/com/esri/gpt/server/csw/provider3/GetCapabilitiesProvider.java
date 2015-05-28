@@ -120,7 +120,7 @@ public class GetCapabilitiesProvider implements IOperationProvider {
       cOptions.getSections().add("Filter_Capabilities");
     } else {
       supported = new SupportedValues(
-          "ServiceIdentification,ServiceProvider,OperationsMetadata,Filter_Capabilities",",");
+          "ServiceIdentification,ServiceProvider,OperationsMetadata,Filter_Capabilities,All",",");
       cOptions.setSections(vHelper.validateValues(supported,locator,parsed,false));
     }
     
