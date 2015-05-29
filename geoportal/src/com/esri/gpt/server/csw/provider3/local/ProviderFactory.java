@@ -37,6 +37,7 @@ import com.esri.gpt.server.csw.components.OperationContext;
 import com.esri.gpt.server.csw.components.IOperationProvider;
 import com.esri.gpt.server.csw.components.ServiceProperties;
 import com.esri.gpt.catalog.context.CatalogConfiguration;
+import com.esri.gpt.catalog.discovery.AliasedDiscoverables;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.ConfigurationException;
 import com.esri.gpt.framework.context.RequestContext;
@@ -50,6 +51,7 @@ import com.esri.gpt.server.csw.provider3.GetCapabilitiesProvider;
 import com.esri.gpt.server.csw.provider3.GetRecordByIdProvider;
 import com.esri.gpt.server.csw.provider3.GetRecordsProvider;
 import com.esri.gpt.server.csw.provider3.TransactionProvider;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -225,7 +227,9 @@ public class ProviderFactory implements IProviderFactory {
       values = new SupportedValues("brief,summary,full",",");
       parameters.add(new SupportedParameter(CswConstants.Parameter_ElementSetType,values));
       
-      parameters.add(new SupportedParameter(CswConstants.Parameter_ElementName,new AnySupportedValues()));
+      Set<String> dcProperties = context.getRequestContext().getCatalogConfiguration().getConfiguredSchemas().getPropertyMeanings().getDcPropertySets().getAllAliased().keySet();
+      values = new SupportedValues(dcProperties);
+      parameters.add(new SupportedParameter(CswConstants.Parameter_ElementName,values));
       
       values = new SupportedValues("hits,results,validate",",");
       parameters.add(new SupportedParameter(CswConstants.Parameter_ResultType,values));

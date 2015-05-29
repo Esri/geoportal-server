@@ -15,6 +15,7 @@
 package com.esri.gpt.server.csw.components;
 import com.esri.gpt.framework.collection.CaseInsensitiveMap;
 import com.esri.gpt.framework.util.Val;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -25,8 +26,8 @@ import java.util.StringTokenizer;
 public class SupportedValues implements ISupportedValues {
   
   /** instance variables ====================================================== */
-  private CaseInsensitiveMap<String> supported = new CaseInsensitiveMap<String>(false);
-  private Set<String> supportedcs = new HashSet<String>();
+  private final CaseInsensitiveMap<String> supported = new CaseInsensitiveMap<String>(false);
+  private final Set<String> supportedcs = new HashSet<String>();
 
   /** constructors ============================================================ */
   
@@ -47,10 +48,21 @@ public class SupportedValues implements ISupportedValues {
       StringTokenizer st = new StringTokenizer(tokens,delimiter);
       while (st.hasMoreElements()) {
         String token = Val.chkStr((String)st.nextElement());
-        this.supported.put(token,token);
-        this.supportedcs.add(token);
+        this.addToken(token);
       }
     }
+  }
+  
+  /**
+   * Constructs the set of supported values from collections of tokens.
+   * @param tokens collection of tokens
+   */
+  public SupportedValues(Collection<String> tokens) {
+      if (tokens!=null) {
+          for (String token: tokens) {
+              addToken(token);
+          }
+      }
   }
   
   /** methods ================================================================= */
@@ -60,6 +72,7 @@ public class SupportedValues implements ISupportedValues {
    * @param requestedValue the requested value
    * @return the supported value (null if unsupported)
    */
+  @Override
   public String getSupportedValue(String requestedValue) {
     return this.supported.get(requestedValue);
   }
@@ -69,6 +82,7 @@ public class SupportedValues implements ISupportedValues {
    * @param requestedValue the requested value
    * @return the supported value (null if unsupported)
    */
+  @Override
   public String getSupportedValueCs(String requestedValue) {
     return this.supportedcs.contains(requestedValue)? requestedValue: null;
   }
@@ -78,6 +92,7 @@ public class SupportedValues implements ISupportedValues {
    * @param requestedValue the requested value
    * @return <code>true</code> if the value is supported
    */
+  @Override
   public boolean isValueSupported(String requestedValue) {
     return this.supported.containsKey(requestedValue);
   }
@@ -87,8 +102,17 @@ public class SupportedValues implements ISupportedValues {
    * @param requestedValue the requested value
    * @return <code>true</code> if the value is supported
    */
+  @Override
   public boolean isValueSupportedCs(String requestedValue) {
     return this.supportedcs.contains(requestedValue);
   }
 
+  /**
+   * Adds a single token.
+   * @param token token
+   */
+  private void addToken(String token) {
+    this.supported.put(token,token);
+    this.supportedcs.add(token);
+  }
 }

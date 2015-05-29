@@ -20,11 +20,13 @@
   <Tags>geospatial metadata</Tags>
   <Contact>{openSearch.contact}</Contact>
   <Url type="application/rss+xml" indexOffset="1" pageOffset="1"
-    template="{openSearch.restPath}?uuid={geo:uid?}&amp;searchText={searchTerms}&amp;start={startIndex?}&amp;max={count?}&amp;bbox={geo:box?}&amp;f=georss"/>
+    template="{openSearch.restPath}?searchText={searchTerms}&amp;start={startIndex?}&amp;max={count?}&amp;bbox={geo:box?}&amp;f=georss"/>
   <Url type="text/html" indexOffset="1" pageOffset="1"
-    template="{openSearch.restPath}?uuid={geo:uid?}&amp;searchText={searchTerms}&amp;start={startIndex?}&amp;max={count?}&amp;bbox={geo:box?}&amp;f=html"/>
+    template="{openSearch.restPath}?searchText={searchTerms}&amp;start={startIndex?}&amp;max={count?}&amp;bbox={geo:box?}&amp;f=html"/>
   <Url type="application/atom+xml" indexOffset="1" pageOffset="1"
-    template="{openSearch.restPath}?uuid={geo:uid?}&amp;searchText={searchTerms}&amp;start={startIndex?}&amp;max={count?}&amp;bbox={geo:box?}&amp;f=atom"/>
+    template="{openSearch.restPath}?searchText={searchTerms}&amp;start={startIndex?}&amp;max={count?}&amp;bbox={geo:box?}&amp;f=atom"/>
+  <Url type="application/atom+xml" indexOffset="1" pageOffset="1"
+    template="{openSearch.restPath}?uuid={geo:uid?}&amp;f=atom"/>
   <Url type="application/xml" indexOffset="1" pageOffset="1"
     template="{openSearch.basePath}/csw3?request=GetRecords&amp;typeNames=Record&amp;service=CSW&amp;version=3.0.0&amp;elementSetName=brief&amp;outputschema=http://www.opengis.net/cat/csw/3.0&amp;startPosition={startIndex}&amp;maxRecords={count}&amp;q={searchTerms}"/>
     

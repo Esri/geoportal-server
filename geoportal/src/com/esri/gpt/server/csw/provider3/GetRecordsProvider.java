@@ -41,6 +41,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -68,6 +69,35 @@ public class GetRecordsProvider implements IOperationProvider {
   }
 
   /** methods ================================================================= */
+
+  /**
+   * Translates namespaces.
+   * @param parsed parsed namespaces
+   * @param namespaces available namespaces
+   */
+  protected void translateNamespaces(String[] parsed, List<String[]> namespaces) {
+      if (parsed!=null && namespaces!=null) {
+        NamespaceContext namespaceContext = CswNamespaces.CSW_30.makeNamespaceContext();
+        for (int i = 0; i < parsed.length; i++) {
+            String name = parsed[i];
+            String[] el = name.split(":");
+            if (el.length == 2) {
+                String pfx = el[0];
+                for (String[] namespace : namespaces) {
+                    if (namespace[1].equals(pfx)) {
+                        String uri = namespace[0];
+                        String defPfx = namespaceContext.getPrefix(uri);
+                        if (defPfx != null) {
+                            name = defPfx + ":" + el[1];
+                            break;
+                        }
+                    }
+                }
+            }
+            parsed[i] = name;
+        }
+      }
+  }
   
   /**
    * Parses namespace
@@ -76,7 +106,7 @@ public class GetRecordsProvider implements IOperationProvider {
    * @throws OwsException 
    */
   protected List<String[]> parseNamespace(String[] namespace) throws OwsException {
-      ArrayList<String[]> namespaces = new ArrayList<String[]>();
+    ArrayList<String[]> namespaces = new ArrayList<String[]>();
     if (namespace != null) {
       for (String ns: namespace) {
         ns = Val.chkStr(ns);
@@ -431,8 +461,17 @@ public class GetRecordsProvider implements IOperationProvider {
         context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
         throw new OwsException(OwsException.OWSCODE_NoApplicableCode,locator,msg);
     }
+    if (parsed!=null) {
+        List<String[]> namespaces = parseNamespace(pHelper.getParameterValues(request,"namespace",","));
+        translateNamespaces(parsed, namespaces);
+    }
     supported = svcProps.getSupportedValues(CswConstants.Parameter_ElementName);
-    qOptions.setElementNames(vHelper.validateValues(supported,locator,parsed,false));
+    try {
+        qOptions.setElementNames(vHelper.validateValues(supported,locator,parsed,false));
+    } catch (OwsException ex) {
+        context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
+        throw ex;
+    }
     
     // constraint language
     locator = "constraintLanguage";
