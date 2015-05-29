@@ -184,7 +184,7 @@ public class RestQueryServlet extends BaseServlet {
 
       } else {
         SearchResult result = executeQuery1(request, context, msgBroker, query);
-        if (!result.getHasRecords()) {
+        if (!result.getHasRecords() && !Val.chkStr(request.getParameter("uuid")).isEmpty()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
         if (feedWriter instanceof FeedWriter2) {
