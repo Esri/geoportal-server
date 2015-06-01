@@ -656,7 +656,7 @@ public class GetRecordsProvider implements IOperationProvider {
         } else {
         
           // ogc:Filter
-          locator = "ogc:Filter";
+          locator = "fes:Filter";
           Node ndFilter = (Node)xpath.evaluate(locator,ndConstraint,XPathConstants.NODE);
           if (ndFilter != null) {
             IFilterParser parser = factory.makeFilterParser(context,constraintVersion);

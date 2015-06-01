@@ -96,7 +96,7 @@ public class QueryFilterParser extends DiscoveryAdapter implements IFilterParser
     
     // parse the ogc:Filter
     if (filterNode != null) {
-      LOGGER.finer("Parsing ogc:Filter...");
+      LOGGER.finer("Parsing fes:Filter...");
       filter.setRootClause(new LogicalAnd());
       LogicalClause rootClause = filter.getRootClause();
       this.parseLogicalClause(filterNode,xpath,rootClause);
@@ -132,7 +132,7 @@ public class QueryFilterParser extends DiscoveryAdapter implements IFilterParser
       if (uri.length() > 0) {
         String localName = Val.chkStr(subNode.getLocalName());
         LOGGER.finer("Parsing node ("+uri+")"+localName);
-        if (uri.equals(CswNamespaces.URI_OGC)) {
+        if (uri.equals(CswNamespaces.URI_FES)) {
 
           // logical clauses - add then recurse
           if (localName.equals("And")) {
@@ -262,7 +262,7 @@ public class QueryFilterParser extends DiscoveryAdapter implements IFilterParser
     if (discoverable.getMeaning().getMeaningType().equals(PropertyMeaningType.ANYTEXT)) {
       if (!(propertyClause instanceof PropertyClause.PropertyIsLike)) {
         String sPropName = "AnyText";
-        Node ndPropName = (Node)xpath.evaluate("ogc:PropertyName",parent,XPathConstants.NODE);
+        Node ndPropName = (Node)xpath.evaluate("fes:PropertyName",parent,XPathConstants.NODE);
         if (ndPropName != null) {
           sPropName = Val.chkStr(ndPropName.getTextContent());
         }

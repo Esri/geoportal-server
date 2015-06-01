@@ -93,6 +93,9 @@ public abstract class CswNamespaces {
   
   /** URI XSD - "http://www.w3.org/2001/XMLSchema" */
   public static final String URI_XSD = "http://www.w3.org/2001/XMLSchema";
+  
+  /** URI FES - "http://www.opengis.net/fes/2.0" */
+  public static final String URI_FES = "http://www.opengis.net/fes/2.0";
       
   /** constructors ============================================================ */
       
@@ -131,6 +134,7 @@ public abstract class CswNamespaces {
     namespaces.add("tcExt",URI_TCEXT);
     namespaces.add("xlink",URI_XLINK);
     namespaces.add("xsd",URI_XSD);
+    namespaces.add("fes",URI_FES);
     return namespaces;
   }
 
