@@ -165,12 +165,12 @@ define([
       },{
         useProxy:false
       });
-    requestHandle.then(this._onQueryFinish, this._onQueryError);
+    requestHandle.then(lang.hitch(this,this._onQueryFinish), this._onQueryError);
 
   },
 
   _onQueryFinish: function(results, io){
-    topic.publish("/widgets/GeoportalSearch/action/search", null, { success: true, results: results, io:io });
+    topic.publish("/widgets/GeoportalSearch/action/search", null, { success: true, results: results, inputQueryCatalog: this.inputQueryCatalog.value, io:io });
   },
 
   _onQueryError:function(error, io){

@@ -13,6 +13,7 @@ define({
     footprints: "Footprints: ",
     show: "Show",
     hide: "Hide",
+    metadata: "Metadata",
     featuresSelected: "Features found: ",
     noResults: "No results",
     queryError:"Query failed !",

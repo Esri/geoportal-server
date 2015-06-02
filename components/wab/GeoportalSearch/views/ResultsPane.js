@@ -10,10 +10,34 @@ define([
   'dijit/_WidgetsInTemplateMixin',
   'dojo/text!./ResultsPane.html',
   'dojo/i18n!widgets/GeoportalSearch/nls/strings',
-  'widgets/GeoportalSearch/views/RecordInfo',
+  'widgets/GeoportalSearch/views/Record',
   'widgets/GeoportalSearch/common/Util',
   'widgets/GeoportalSearch/common/List',
-  'dojo/topic',  
+  
+  'esri/tasks/query',
+  'esri/tasks/QueryTask',
+  'esri/SpatialReference',
+  'esri/layers/ArcGISDynamicMapServiceLayer',
+  'esri/layers/ArcGISTiledMapServiceLayer',
+  'esri/layers/ArcGISImageServiceLayer',
+  'esri/layers/KMLLayer',
+  'esri/layers/GraphicsLayer',
+  'esri/layers/FeatureLayer',
+  'esri/layers/WMSLayer',
+  'esri/graphic',
+  'esri/geometry/Point',
+  'esri/geometry/Extent',
+  'esri/symbols/SimpleMarkerSymbol',
+  'esri/symbols/PictureMarkerSymbol',
+  'esri/geometry/Polyline',
+  'esri/symbols/SimpleLineSymbol',
+  'esri/geometry/Polygon',
+  
+  'esri/symbols/SimpleFillSymbol',
+    'esri/InfoTemplate',
+    'esri/symbols/jsonUtils',
+    'esri/geometry/webMercatorUtils',
+  'dojo/topic',    
   'dijit/ProgressBar',
     'dijit/form/TextBox',
   'dijit/form/RadioButton',
@@ -22,7 +46,15 @@ define([
     'dojo/store/Memory',
     'dojo/data/ObjectStore'
 ],function(declare,lang,array,domConstruct,domClass,html,_WidgetBase,_TemplatedMixin,_WidgetsInTemplateMixin, template, nls, 
-           RecordInfo, util,List,topic){
+           Record, util,List,
+           Query, 
+          QueryTask, SpatialReference, ArcGISDynamicMapServiceLayer, 
+          ArcGISTiledMapServiceLayer, ArcGISImageServiceLayer, 
+          KMLLayer, GraphicsLayer, FeatureLayer, WMSLayer,
+          Graphic, Point, Extent, SimpleMarkerSymbol, PictureMarkerSymbol, 
+          Polyline, SimpleLineSymbol, Polygon, SimpleFillSymbol, InfoTemplate, 
+          jsonUtils, webMercatorUtils,
+           topic){
   return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin],{
     
     baseClass: 'geoportal-results-view',
@@ -65,7 +97,7 @@ define([
 
       this.own(topic.subscribe("/widgets/GeoportalSearch/action/search", lang.hitch(this, function (sender, args) { 
         if(args.success){       
-          this._onQueryFinish(args.results, args.io);
+          this._onQueryFinish(args.results,args.inputQueryCatalog, args.io);
         }else {
           this._onQueryError(args.error, args.io);
         }
@@ -94,7 +126,24 @@ define([
       console.debug(error);
   },
 
-  _onQueryFinish: function(results, io) {
+
+  _processRecords: function(results){
+
+    theList = dojo.byId("list"); // dnw this.list.domNode;
+    theList.innerHTML = "";   
+     var len = results.records.length;
+    for (var i = 0; i < len; i++) {          
+      var record = results.records[i];
+      var recordInfo = new Record({record: record, index:i});
+      recordInfo.startup();
+      domConstruct.place(recordInfo.domNode,theList);
+      
+      //theList.innerHTML += theListContent;
+    }  
+
+  },
+
+  _onQueryFinish: function(results, inputQueryCatalog, io) {
     var progressBar = this.progressBar;
     var divResult = this.divResult;
     html.setStyle(this.progressBar,'display','none');
@@ -104,7 +153,7 @@ define([
     }
 
     var title = "";
-    var titlefield = this.inputQueryCatalog.value; //this.catalogs.value;
+    var titlefield = inputQueryCatalog; //this.catalogs.value;
     
     var len = results.records.length;
     var divResultMessage = this.divResultMessage;
@@ -115,174 +164,24 @@ define([
       divResultMessage.textContent = "Features found: " + results.totalResults; //this.nls.featuresSelected + results.records.length;
     }
 
-    theList = this.list;
-    theList.innerHTML = "";
-    var suffixes = ["csv", "doc", "docx", "ppt", "pptx", "xls", "xlsx", "gml", "pdf", "zip", "xml", "html", "htm", "aspx", "lyr"];
-    var suffixesKML = [".kml","kmz"];
-    
-    
-    for (var i = 0; i < len; i++) {
-      var theListContent = "";
-      var record = results.records[i];
-      var label = "",content = "";
-      label = record.title;        
-      title = record.title;           
-      content = record.summary;
-      var metadataLinkSnippet = "";
-      var mapserviceLinkSnippet = "";
-      var theLinkType = "";
-          
-      for (var j=0; j < record.links.length; j++) {
-        
-        var theLink = record.links[j];
-        
-        if ((theLink.type == "open") || (theLink.type == "customLink") || (theLink.type == "agslyr")  || (theLink.type == "addToMap")) {
+   this._processRecords(results);
+   this._addFootprints(results);
+  },
 
-          // if a link type has already been established other than www
-          if (theLinkType.length > 0 && theLinkType != "www") continue;
-                
-          var href = theLink.href;
-          var hrefLower = href.toLowerCase();
-          
-          // if the link ends in any of the suffixes, it's not a map service, but general web link
-          // if not assigned value yet, check for typical file types
-          if ((theLinkType.length == 0) || (theLinkType === "www")){
-            for (k=0; k<suffixes.length; k++) {
-              var suffix = suffixes[i];
-              //if (hrefLower.indexOf(suffix, hrefLower.length - suffix.length) !== -1) {
-              if (hrefLower.indexOf(suffix) + suffix.length == hrefLower.length) {
-                theLinkType = "www";
-                break;
-              }
-            }
-          }
-
-          // if not assigned value yet, check for KML/KMZ
-          if ((theLinkType.length == 0) || (theLinkType === "www")) {
-            for (k=0; k<suffixesKML.length; k++) {
-              var suffix = suffixesKML[k];
-              if (hrefLower.indexOf(suffix, hrefLower.length - suffix.length) !== -1) {
-                theLinkType = "kml";
-                break;
-              }
-            }
-          }
-          
-          // if not assigned value yet, check for services
-          if ((theLinkType.length == 0) || (theLinkType === "www")) {
-            if (hrefLower.indexOf("request=getcapabilities") !== -1) {
-              if (hrefLower.indexOf("service=wms") !== -1) {
-                theLinkType = "wms";
-              } else {
-                theLinkType = "unsupported";
-              }
-              
-            } else if (hrefLower.indexOf("/rest/services/") !== -1) {
-              theLinkType = hrefLower.split("/").pop();
-              
-              if (hrefLower.indexOf("?f=") > 0) {
-                theLinkType = theLinkType.substr(0, theLinkType.indexOf("?f="));
-                href = href.substr(0, href.indexOf("?f="));
-              }
-              
-            } else if (hrefLower.indexOf("/services/") !== -1) {
-              if (hrefLower.indexOf("/mapserver/wmsserver") !== -1) {
-                theLinkType = "wms";
-              }
-              
-            } else if (hrefLower.indexOf("/com.esri.wms.esrimap") !== -1) {
-              theLinkType = "wms";
-              if (hrefLower.indexOf("?") > 0) {
-                href = href.substr(0, href.indexOf("?"));
-              }
-              
-            } else if ((hrefLower.indexOf("viewer.html") !== -1) && (hrefLower.indexOf("url=") !== -1)) {
-              // http:\/\/hogeweg.esri.com\/arcgis\/home\/webmap\/viewer.html?&url=https%3A%2F%2Fservices.arcgis.com%2F1Teogo5Do835pBNl%2Farcgis%2Frest%2Fservices%2FWFS_Licenses_TONL_Homepage_ALL_02%2FFeatureServer
-              href = href.substr(href.indexOf("url=")+4);
-              href = decodeURIComponent(href);
-              theLinkType = href.split("/").pop().toLowerCase();
-              
-            } else if ((hrefLower.indexOf("/sharing/content/items/") !== -1) && (hrefLower.split("/").pop() == "data")) {
-              theLinkType = "webmap";
-              if (hrefLower.indexOf("?") > 0) {
-                href = href.substr(0, href.indexOf("?"));
-              }
-            }
-          }
-
-          // if not assigned value yet, check if the layer ends with f=lyr cause then we can make a rest URL of it
-          if ((theLinkType.length == 0) || (theLinkType === "www")) {
-            suffix = "?f=lyr";
-            if (hrefLower.indexOf(suffix) + suffix.length == hrefLower.length) {
-              theLinkType = hrefLower.split("/").pop();
-              href = href.replace(suffix, "");
-              break;
-            }
-          }
-          
-          // if all else fails, just make it a generic web link
-          if (theLinkType.length == 0) {
-            theLinkType = "www";
-          }
-          
-          mapserviceLinkSnippet = "<input id='" + record.id + "_href' type='hidden' data-linktype='" + theLinkType + "' value='" + href + "'/>";
-        } else if (theLink.type == "metadata") {
-          metadataLinkSnippet = "<a id='" + record.id + "_metadata' href='" + theLink.href + "' target='_blank'>Metadata</a>";
-        }
-      }
-      
-      var imgURL = "";
-      switch(theLinkType) {
-      case "www":
-          imgURL = "widgets/GeoportalSearch/images/ContentType_clearinghouse.png";
-          break;
-      case "webmap":
-          imgURL = "widgets/GeoportalSearch/images/ContentType_liveData.png";
-          break;
-      case "mapserver":
-          imgURL = "widgets/GeoportalSearch/images/ContentType_liveData.png";
-          break;
-      case "featureserver":
-          imgURL = "widgets/GeoportalSearch/images/ContentType_liveData.png";
-          break;
-      case "imageserver":
-          imgURL = "widgets/GeoportalSearch/images/ContentType_liveData.png";
-          break;
-      case "wms":
-          imgURL = "widgets/GeoportalSearch/images/ContentType_liveData.png";
-          break;
-      case "kml":
-          imgURL = "widgets/GeoportalSearch/images/ContentType_geographicActivities.png";
-          break;
-      default:
-          imgURL = "widgets/GeoportalSearch/images/ContentType_unknown.png";
-      } 
-      var imgSnippet = "<img src='" + imgURL + "'/>";
-      
-      theListContent += "<div class='snippet'>";
-      theListContent += "<div id='" + record.id + "' class='title' onmouseenter='this.list'>" + imgSnippet + record.title + "</div>";
-      theListContent += "<div class='abstract'>" + record.summary + "</div>";
-      theListContent += "<div class='links'>";
-      theListContent += mapserviceLinkSnippet;
-      theListContent += metadataLinkSnippet;
-      theListContent += "</div>";
-      theListContent += "</div>";
-      theList.innerHTML += theListContent;
-    }
-
+  _addFootprints:function(results){
     var features = results.records;
     var symbol = new SimpleFillSymbol();
     symbol.setColor(new esri.Color([0,0,0,0.05]));
     
     var footprints;
     if (this.footprints) {
-      this.footprints = this._viewerMap.getLayer("footprints");
+      this.footprints = this.map.getLayer("footprints");
       
     } else {
       this.resultLayer = new GraphicsLayer();
       this.resultLayer.id = "footprints";
-      this._viewerMap.addLayer(this.resultLayer);
-      this.footprints = this._viewerMap.getLayer("footprints");
+      this.map.addLayer(this.resultLayer);
+      this.footprints = this.map.getLayer("footprints");
       this.footprints.clear();
     }
     
@@ -297,31 +196,30 @@ define([
         json.spatialReference = 4326;
       }
       switch (type) {
-      case "multipoint":
-      case "point":
-        break;
-      case "polyline":
-        break;
-      case "extent":
-      case "Polygon":
-      case "polygon":
-       if(feature.bbox){
-        var bbox = feature.bbox;
-        geometry = Extent(bbox[0],bbox[1],bbox[2],bbox[3], new SpatialReference(4326)); 
-        centerpoint = geometry.getCenter();
-       }
-        break;
-      default:
-        break;
+        case "multipoint":
+        case "point":
+          break;
+        case "polyline":
+          break;
+        case "extent":
+        case "Polygon":
+        case "polygon":
+         if(feature.bbox){
+          var bbox = feature.bbox;
+          geometry = Extent(bbox[0],bbox[1],bbox[2],bbox[3], new SpatialReference(4326)); 
+          centerpoint = geometry.getCenter();
+         }
+          break;
+        default:
+          break;
       }
 
       var title = feature.title;
       var content = feature.summary;
       var it = new InfoTemplate(title, title + "<br>" + content);
       var graphic = new Graphic(geometry,symbol,feature,it);
-      //this.resultLayer.add(graphic);
       this.footprints.add(graphic);
-    }   
+    } 
   },
 
   _getAlias: function(att) {
@@ -336,7 +234,7 @@ define([
     return att;
   },
 
-  _drawResults: function(results) {
+/*  _drawResults: function(results) {
     var symbol;
     if(this.config.symbol){
       if(this.config.symbol.url){
@@ -357,25 +255,25 @@ define([
         json.spatialReference = 4326;
       }
       switch (type) {
-      case "multipoint":
-      case "point":
-        break;
-      case "polyline":
-        break;
-      case "extent":
-      case "Polygon":
-      case "polygon":
-       if(feature.bbox){
-        var bbox = feature.bbox;
-        geometry = Extent(bbox[0],bbox[1],bbox[2],bbox[3], new SpatialReference(4326)); 
-        if(!symbol){
-          symbol = new SimpleFillSymbol();
-        }
-        centerpoint = geometry.getCenter();
-       }
-        break;
-      default:
-        break;
+        case "multipoint":
+        case "point":
+          break;
+        case "polyline":
+          break;
+        case "extent":
+        case "Polygon":
+        case "polygon":
+         if(feature.bbox){
+          var bbox = feature.bbox;
+          geometry = Extent(bbox[0],bbox[1],bbox[2],bbox[3], new SpatialReference(4326)); 
+          if(!symbol){
+            symbol = new SimpleFillSymbol();
+          }
+          centerpoint = geometry.getCenter();
+         }
+          break;
+        default:
+          break;
       }
 
       if(this.resultLayer.renderer){
@@ -389,7 +287,7 @@ define([
       listItem.graphic = graphic;          
       this.resultLayer.add(graphic);
     }
-  },
+  },*/
 
   _selectResultItem: function(index, item) {
     var x = index.clientX;
@@ -476,7 +374,9 @@ define([
         this.map.infoWindow.show(item.centerpoint);
       }));
     }
-  },  
+  }, 
+
+
   
   _onFetchWebMapFinish: function(response) {
     console.log('_onFetchWebMapFinish');
@@ -495,7 +395,7 @@ define([
         } else {
           mapserverLayer = new ArcGISDynamicMapServiceLayer(href);
         }
-        this._viewerMap.addLayer(mapserverLayer);
+        this.map.addLayer(mapserverLayer);
       
       } else if (linkType == "featureserver") {
         var featureLayer = new FeatureLayer(href, {
@@ -504,19 +404,19 @@ define([
           infoTemplate: infoTemplate
         });
 
-        this._viewerMap.addLayer(featureLayer);
+        this.map.addLayer(featureLayer);
         
       } else if (linkType == "imageserver") {
         var imageServiceLayer = new ArcGISImageServiceLayer(href);
-        this._viewerMap.addLayer(imageServiceLayer);
+        this.map.addLayer(imageServiceLayer);
       
       } else if (linkType == "kml") {
         var kmlLayer = new KMLLayer(href);
-        this._viewerMap.addLayer(kmlLayer);
+        this.map.addLayer(kmlLayer);
       
       } else if (linkType == "wms") {
         var wmsLayer = new WMSLayer(href);
-        this._viewerMap.addLayer(wmsLayer);
+        this.map.addLayer(wmsLayer);
       }
       
     }
@@ -539,17 +439,17 @@ define([
 
     addToMap:function (service){
       console.log('_addToMap: ' + service);
-        },
+    },
 
-     toggleFootprints: function() {
-    var footprints = this.map.getLayer("footprints");
-    if (footprints.visible) {
-      footprints.hide();
-      this.btnToggleFootprints.textContent = this.nls.show;
-    } else {
-      footprints.show();
-      this.btnToggleFootprints.textContent = this.nls.hide;
-    }
+    toggleFootprints: function() {
+      var footprints = this.map.getLayer("footprints");
+      if (footprints.visible) {
+        footprints.hide();
+        this.btnToggleFootprints.textContent = this.nls.show;
+      } else {
+        footprints.show();
+        this.btnToggleFootprints.textContent = this.nls.hide;
+      }
     
   },
 
@@ -564,7 +464,7 @@ define([
     
     divResultMessage = this.divResultMessage;
     divResultMessage.textContent = "";
-    theList = this.list;
+    theList = dojo.byId("list");
     theList.innerHTML = "";
           
     return false;
