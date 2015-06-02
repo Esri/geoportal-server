@@ -53,7 +53,7 @@ public void testNewQuery() {
       assertNotNull(query);
       Result result = query.execute();
       assertNotNull(result);
-      Iterable<Resource> resources = result.getResources();
+      Iterable<? extends Resource> resources = result.getResources();
       assertNotNull(resources);
       int count = 0;
       for (Resource resource : resources) {

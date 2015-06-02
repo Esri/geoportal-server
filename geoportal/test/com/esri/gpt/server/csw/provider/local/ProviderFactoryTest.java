@@ -13,11 +13,11 @@ import com.esri.gpt.junit.cfg.CfgAssertion;
 import com.esri.gpt.junit.cfg.CfgAssertionHelper;
 import com.esri.gpt.junit.cfg.CfgConfigFileProcessor;
 import com.esri.gpt.junit.facade.HttpServletRequestFacade;
-import com.esri.gpt.server.csw.provider.components.CswNamespaces;
-import com.esri.gpt.server.csw.provider.components.OperationContext;
-import com.esri.gpt.server.csw.provider.components.OwsException;
-import com.esri.gpt.server.csw.provider.components.RequestHandler;
-import com.esri.gpt.server.csw.provider.components.RequestOptions;
+import com.esri.gpt.server.csw.components.CswNamespaces;
+import com.esri.gpt.server.csw.components.IRequestHandler;
+import com.esri.gpt.server.csw.components.OperationContext;
+import com.esri.gpt.server.csw.components.OwsException;
+import com.esri.gpt.server.csw.components.RequestOptions;
 
 import java.io.File;
 import java.net.URL;
@@ -94,7 +94,7 @@ public class ProviderFactoryTest implements CfgActionHandler {
    */
   public void testAction(CfgAction action) throws Exception {
     RequestContext rc = null;
-    RequestHandler handler = null;
+    IRequestHandler handler = null;
     boolean succeeded = false;
     try {
 
@@ -120,7 +120,7 @@ public class ProviderFactoryTest implements CfgActionHandler {
       
       // make the CSW request handler
       rc = RequestContext.extract(httpRequest);
-      handler = ProviderFactory.newHandler(rc);
+      handler = ProviderFactory.newFactory(rc).newHandler(rc);
       RequestOptions rOptions = handler.getOperationContext().getRequestOptions();
       rOptions.getTransactionOptions().setAutoApprove(true);
       
@@ -179,7 +179,7 @@ public class ProviderFactoryTest implements CfgActionHandler {
       OperationContext ctx = handler.getOperationContext();
       String resultXml = ctx.getOperationResponse().getResponseXml();
       if (this.xpath == null) {
-        CswNamespaces ns = new CswNamespaces();
+        CswNamespaces ns = CswNamespaces.CSW_202;
         this.xpath = XPathFactory.newInstance().newXPath();
         this.xpath.setNamespaceContext(ns.makeNamespaceContext());
       }
