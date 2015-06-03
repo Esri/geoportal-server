@@ -13,13 +13,19 @@ define({
     footprints: "Footprints: ",
     show: "Show",
     hide: "Hide",
+    first: "First",
+    next: "Next",
+    last: "Last",
     metadata: "Metadata",
-    featuresSelected: "Features found: ",
-    noResults: "No results",
+    featuresSelected: "Records found: ",
+    noResults: "Search returned no results",
     queryError:"Query failed !",
     queryResult:"Query result",
     intersecting: "Intersecting",
     within: "Within",
-    anywhere: "Anywhere"
+    anywhere: "Anywhere",
+    summaryPattern: "{0} results",
+    summaryPatternFiltered: "{0} filtered results",
+    pageSummaryPattern: "Showing {0}-{1}"
   })
 });

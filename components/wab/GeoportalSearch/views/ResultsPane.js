@@ -12,10 +12,10 @@ define([
   'dojo/i18n!widgets/GeoportalSearch/nls/strings',
   'widgets/GeoportalSearch/views/Record',
   'widgets/GeoportalSearch/common/Util',
-  'widgets/GeoportalSearch/common/List',
-  
-  'esri/tasks/query',
-  'esri/tasks/QueryTask',
+  'widgets/GeoportalSearch/common/List',  
+  'widgets/GeoportalSearch/common/Query',
+  'widgets/GeoportalSearch/common/QueryTask',
+
   'esri/SpatialReference',
   'esri/layers/ArcGISDynamicMapServiceLayer',
   'esri/layers/ArcGISTiledMapServiceLayer',
@@ -45,15 +45,15 @@ define([
   'dijit/form/Select',
     'dojo/store/Memory',
     'dojo/data/ObjectStore'
-],function(declare,lang,array,domConstruct,domClass,html,_WidgetBase,_TemplatedMixin,_WidgetsInTemplateMixin, template, nls, 
-           Record, util,List,
-           Query, 
-          QueryTask, SpatialReference, ArcGISDynamicMapServiceLayer, 
-          ArcGISTiledMapServiceLayer, ArcGISImageServiceLayer, 
-          KMLLayer, GraphicsLayer, FeatureLayer, WMSLayer,
-          Graphic, Point, Extent, SimpleMarkerSymbol, PictureMarkerSymbol, 
-          Polyline, SimpleLineSymbol, Polygon, SimpleFillSymbol, InfoTemplate, 
-          jsonUtils, webMercatorUtils,
+],function(declare,lang,array,domConstruct,domClass,html,
+           _WidgetBase,_TemplatedMixin,_WidgetsInTemplateMixin, template, nls, 
+           Record, util,List, Query, QueryTask, 
+           SpatialReference, ArcGISDynamicMapServiceLayer, 
+           ArcGISTiledMapServiceLayer, ArcGISImageServiceLayer, 
+           KMLLayer, GraphicsLayer, FeatureLayer, WMSLayer,
+           Graphic, Point, Extent, SimpleMarkerSymbol, PictureMarkerSymbol, 
+           Polyline, SimpleLineSymbol, Polygon, SimpleFillSymbol, InfoTemplate, 
+           jsonUtils, webMercatorUtils,
            topic){
   return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin],{
     
@@ -62,42 +62,27 @@ define([
     
     nls: nls,
     list: null,
+    results: null,
     
      postCreate: function() {
        this.inherited(arguments);
-        this._initList();
-        this.attachTopics();
-       // this.own(util.subscribeRecords(lang.hitch(this,this.handleRecords)));
+       this._initList();
+       this.attachTopics();
+       this.nItemsPerPage = this.config.recordsPerPage;
      },
-     
-    /* handleRecords: function(records) {
-       console.log("Records received:", records);
-       if (records==null) {
-         domConstruct.empty(this.domNode);
-       } else {
-         array.forEach(records,lang.hitch(this,this.appendRecord));
-       }
-     },*/
+
 
      _initList: function() {
-      console.log('onSignOut');
-      this.list = new List();
-      this.list.startup();
-  },
-     
-    /* appendRecord: function(record) {
-       var recordInfo = new RecordInfo({record: record});
-       recordInfo.startup();
-       domConstruct.place(recordInfo.domNode,this.domNode);
-       var total = this.domNode.childNodes.length;
-       domClass.add(recordInfo.domNode,total%2==0? "even": "odd");
-     },*/
+        console.log('onSignOut');
+        this.list = new List();
+        this.list.startup();
+     },
 
      attachTopics: function(){
 
       this.own(topic.subscribe("/widgets/GeoportalSearch/action/search", lang.hitch(this, function (sender, args) { 
         if(args.success){       
-          this._onQueryFinish(args.results,args.inputQueryCatalog, args.io);
+          this._onQueryFinish(args.results,args.query, args.io);
         }else {
           this._onQueryError(args.error, args.io);
         }
@@ -112,7 +97,7 @@ define([
 
     },    
 
-    _onQueryError: function(error, io) {
+  _onQueryError: function(error, io) {
       var progressBar = this.progressBar;
       var divResult = this.divResult;
       html.setStyle(this.progressBar,'display','none');
@@ -126,24 +111,122 @@ define([
       console.debug(error);
   },
 
+  _paginateResults: function(){
 
-  _processRecords: function(results){
+    var elHdr = this.pagination;
+    var nStartIndex = this.query.start;
+    var nTotalResults = this.results.totalResults;
+
+    var currentPageNumber = Math.ceil(nStartIndex / this.nItemsPerPage);
+    var nOfPages = Math.ceil(nTotalResults / this.nItemsPerPage);
+    var iFrom = (currentPageNumber - 2) > 1 ? (currentPageNumber - 2) : 1;
+    var iTo = (currentPageNumber + 2) > nOfPages ? nOfPages : (currentPageNumber + 2);
+    if (iTo < 6) {
+      iTo = nOfPages >= 5 ? 5 : nOfPages;
+      iFrom = 1;
+    }else if (iTo == nOfPages){
+      iFrom = nOfPages - 4;
+    }
+    var nEndIndex = nStartIndex + this.nItemsPerPage - 1;
+    if (nEndIndex > nTotalResults) nEndIndex = nTotalResults;
+
+    if(this.elPageControl){
+      elHdr.removeChild(this.elPageControl);
+    }
+    this.elPageControl = document.createElement("div");
+    //this.elPageControl.id = this.resultsHeaderId+"-pageControl";
+    this.elPageControl.className = "nav";
+    
+    var sPageSummary = this.nls.pageSummaryPattern;
+    sPageSummary = sPageSummary.replace("{0}",nStartIndex);
+    sPageSummary = sPageSummary.replace("{1}",nEndIndex);
+    var elPageSummary = document.createElement("span");
+    elPageSummary.className = "result";
+    elPageSummary.appendChild(document.createTextNode(sPageSummary));
+    this.elPageControl.appendChild(elPageSummary);
+    
+    var elPageNumbers = document.createElement("span");
+    this.elPageControl.appendChild(elPageNumbers);
+    if (iFrom > 1) {
+      var elPage = document.createElement("a");
+      elPage.setAttribute("href","javascript:void(0);");
+      elPage.pageNumber = 1;
+      elPage.appendChild(document.createTextNode(this.nls.first));
+      elPageNumbers.appendChild(elPage);
+      dojo.connect(elPage,"onclick",this,"_onPageClicked");
+
+       var elPage = document.createElement("a");
+       elPage.setAttribute("href","javascript:void(0);");
+       elPage.pageNumber = iFrom;
+       elPage.appendChild(document.createTextNode("<"));
+       elPageNumbers.appendChild(elPage);
+       dojo.connect(elPage,"onclick",this,"_onPageClicked");
+    }
+    if (iTo > 1) {
+      for (var i=iFrom; i<=iTo; i++) {          
+        var elPage = document.createElement("a");
+        elPage.setAttribute("href","javascript:void(0);");
+        elPage.pageNumber = i;       
+        elPage.appendChild(document.createTextNode(""+i));        
+        if (i == currentPageNumber) {
+          elPage.className = "current";
+        }
+        elPageNumbers.appendChild(elPage);
+        dojo.connect(elPage,"onclick",this,"_onPageClicked");
+    
+      }      
+    }
+
+    if (iTo < nOfPages) {  
+      var elPage = document.createElement("a");
+      elPage.setAttribute("href","javascript:void(0);");
+      elPage.pageNumber = iTo;
+      elPage.appendChild(document.createTextNode(">"));
+      elPageNumbers.appendChild(elPage);
+      dojo.connect(elPage,"onclick",this,"_onPageClicked");
+      var elPage = document.createElement("a");
+      elPage.setAttribute("href","javascript:void(0);");
+      elPage.pageNumber = nOfPages;
+      elPage.appendChild(document.createTextNode(this.nls.last));
+      elPageNumbers.appendChild(elPage);
+      dojo.connect(elPage,"onclick",this,"_onPageClicked");
+    }
+
+     elHdr.appendChild(this.elPageControl);
+
+  },
+
+  _onPageClicked: function(e){
+    if (!e) e = window.event;
+    var el = (window.event) ? e.srcElement : e.target;
+    if ((el != null) && (el.pageNumber != null)) {
+      this.query.start = ((el.pageNumber - 1) * this.nItemsPerPage) + 1;
+      var queryTask = new QueryTask();
+      queryTask.execute(this.query);
+    }
+  },
+
+  _processRecords: function(){
+
+    var len = this.results.records.length;
+    if(len > 0){
+      this._paginateResults();
+    }
 
     theList = dojo.byId("list"); // dnw this.list.domNode;
     theList.innerHTML = "";   
-     var len = results.records.length;
+     
     for (var i = 0; i < len; i++) {          
-      var record = results.records[i];
+      var record = this.results.records[i];
       var recordInfo = new Record({record: record, index:i});
       recordInfo.startup();
       domConstruct.place(recordInfo.domNode,theList);
-      
-      //theList.innerHTML += theListContent;
     }  
 
   },
 
-  _onQueryFinish: function(results, inputQueryCatalog, io) {
+  _onQueryFinish: function(results, query, io) {
+
     var progressBar = this.progressBar;
     var divResult = this.divResult;
     html.setStyle(this.progressBar,'display','none');
@@ -152,8 +235,11 @@ define([
      this.resultLayer.clear();
     }
 
+    this.results = results;
+    this.query = query;
+
     var title = "";
-    var titlefield = inputQueryCatalog; //this.catalogs.value;
+    var titlefield = query.queryUrl; //this.catalogs.value;
     
     var len = results.records.length;
     var divResultMessage = this.divResultMessage;
@@ -161,15 +247,15 @@ define([
       divResultMessage.textContent = "No results"; // this.nls.noResults;  
       return;
     } else {
-      divResultMessage.textContent = "Features found: " + results.totalResults; //this.nls.featuresSelected + results.records.length;
+      divResultMessage.textContent = "Results found: " + results.totalResults; //this.nls.featuresSelected + results.records.length;
     }
 
-   this._processRecords(results);
-   this._addFootprints(results);
+   this._processRecords();
+   this._addFootprints();
   },
 
   _addFootprints:function(results){
-    var features = results.records;
+    var features = this.results.records;
     var symbol = new SimpleFillSymbol();
     symbol.setColor(new esri.Color([0,0,0,0.05]));
     
@@ -233,61 +319,6 @@ define([
     }
     return att;
   },
-
-/*  _drawResults: function(results) {
-    var symbol;
-    if(this.config.symbol){
-      if(this.config.symbol.url){
-        this.config.symbol.url = this.folderUrl + this.config.symbol.url;
-      }
-      symbol = jsonUtils.fromJson(this.config.symbol);
-    }
-    var features = results.records;
-    for (var i = 0, len = features.length; i < len; i++) {
-      var feature = features[i];
-      var listItem = this.list.items[i];
-      var type = feature.geometry.type;
-      var json = {};
-      var geometry, centerpoint;
-      if(feature.geometry.spatialReference){
-       json.spatialReference = feature.geometry.spatialReference;
-      }else{
-        json.spatialReference = 4326;
-      }
-      switch (type) {
-        case "multipoint":
-        case "point":
-          break;
-        case "polyline":
-          break;
-        case "extent":
-        case "Polygon":
-        case "polygon":
-         if(feature.bbox){
-          var bbox = feature.bbox;
-          geometry = Extent(bbox[0],bbox[1],bbox[2],bbox[3], new SpatialReference(4326)); 
-          if(!symbol){
-            symbol = new SimpleFillSymbol();
-          }
-          centerpoint = geometry.getCenter();
-         }
-          break;
-        default:
-          break;
-      }
-
-      if(this.resultLayer.renderer){
-        symbol = null;
-      }
-      var title = listItem.title;
-      var content = listItem.content;
-      var it = new InfoTemplate(title, title + "<br>" + content);
-      var graphic = new Graphic(geometry,symbol,feature,it);
-      listItem.centerpoint = centerpoint;
-      listItem.graphic = graphic;          
-      this.resultLayer.add(graphic);
-    }
-  },*/
 
   _selectResultItem: function(index, item) {
     var x = index.clientX;
@@ -456,6 +487,11 @@ define([
 
   clear: function() {
     this._hideInfoWindow();
+
+    if(this.elPageControl){
+      this.pagination.removeChild(this.elPageControl);
+      this.elPageControl = null;
+    }
     
     var footprints = this.map.getLayer("footprints");
     footprints.hide();
