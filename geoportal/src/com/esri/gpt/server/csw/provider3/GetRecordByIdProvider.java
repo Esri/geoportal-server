@@ -156,7 +156,12 @@ public class GetRecordByIdProvider implements IOperationProvider {
     // IDs
     locator = "Id";
     parsed = pHelper.getParameterValues(request,locator,",");
-    qOptions.setIDs(vHelper.validateValues(locator,parsed,true)); 
+    try {
+      qOptions.setIDs(vHelper.validateValues(locator,parsed,true)); 
+    } catch (OwsException ex) {
+      context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
+      throw ex;
+    }
     
     // validate the ID count if an original output schema was requested
     this.validateIfOriginalSchema(context,"Id","outputSchema");
