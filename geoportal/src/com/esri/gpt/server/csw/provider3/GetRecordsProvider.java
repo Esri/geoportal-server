@@ -461,7 +461,12 @@ public class GetRecordsProvider implements IOperationProvider {
     locator = "ElementSetName";
     parsed = pHelper.getParameterValues(request,locator);
     supported = svcProps.getSupportedValues(CswConstants.Parameter_ElementSetType);
-    qOptions.setElementSetType(vHelper.validateValue(supported,locator,parsed,false));
+    try {
+      qOptions.setElementSetType(vHelper.validateValue(supported,locator,parsed,false));
+    } catch (OwsException ex) {
+      context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
+      throw ex;
+    }
     
     // TODO supported ElementNames this for GetRecordById as well?
     locator = "ElementName";
