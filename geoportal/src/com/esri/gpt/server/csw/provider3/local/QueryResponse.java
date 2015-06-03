@@ -342,6 +342,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
   protected void appendAtomResultsElement(OperationContext context) 
     throws Exception{
     String atomns = "http://www.w3.org/2005/Atom";
+    String opensearchns = "http://a9.com/-/spec/opensearch/1.1/";
 
     DiscoveryQuery query = this.getDiscoveryContext().getDiscoveryQuery();
     OperationResponse opResponse = context.getOperationResponse();
@@ -351,7 +352,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
     Element elFeed = responseDom.createElement("feed");
     elFeed.setAttribute("xmlns", atomns);
     elFeed.setAttribute("xmlns:georss", "http://www.georss.org/georss");
-    elFeed.setAttribute("xmlns:opensearch", "http://a9.com/-/spec/opensearch/1.1/");
+    elFeed.setAttribute("xmlns:opensearch", opensearchns);
     elFeed.setAttribute("xmlns:dc", CswNamespaces.URI_DC);
     responseDom.appendChild(elFeed);
     
@@ -371,6 +372,22 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
     Element elId = responseDom.createElementNS(atomns, "id");
     elId.appendChild(responseDom.createTextNode("urn:uuid:"+UuidUtil.makeUuid()));
     elFeed.appendChild(elId);
+    
+    int maxRecords = query.getFilter().getMaxRecords();
+    int startRecord = query.getFilter().getStartRecord();
+    int numberOfHits = query.getResult().getNumberOfHits();
+
+    Element elTotalResults = responseDom.createElement("opensearch:totalResults");
+    elTotalResults.appendChild(responseDom.createTextNode(""+numberOfHits));
+    elFeed.appendChild(elTotalResults);
+
+    Element elStartIndex = responseDom.createElement("opensearch:startIndex");
+    elStartIndex.appendChild(responseDom.createTextNode(""+startRecord));
+    elFeed.appendChild(elStartIndex);
+
+    Element elItemsPerPage = responseDom.createElement("opensearch:itemsPerPage");
+    elItemsPerPage.appendChild(responseDom.createTextNode(""+maxRecords));
+    elFeed.appendChild(elItemsPerPage);
     
     DiscoveredRecords records = query.getResult().getRecords();
     for (DiscoveredRecord record: records) {
