@@ -83,14 +83,37 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
 
     /** methods ================================================================= */
 
+  protected void appendGeometry(Element record, Document responseDom, Envelope env) {
+    String sLower = env.getMinX()+" "+env.getMinY();
+    String sUpper = env.getMaxX()+" "+env.getMaxY();
+
+    Element elField = responseDom.createElement("ows:WGS84BoundingBox");
+    Element elLower = responseDom.createElement("ows:LowerCorner");
+    Element elUpper = responseDom.createElement("ows:UpperCorner");
+    elLower.appendChild(responseDom.createTextNode(sLower));
+    elUpper.appendChild(responseDom.createTextNode(sUpper));
+    elField.appendChild(elLower);
+    elField.appendChild(elUpper);
+    record.appendChild(elField);
+
+    elField = responseDom.createElement("ows:BoundingBox");
+    elLower = responseDom.createElement("ows:LowerCorner");
+    elUpper = responseDom.createElement("ows:UpperCorner");
+    elLower.appendChild(responseDom.createTextNode(sLower));
+    elUpper.appendChild(responseDom.createTextNode(sUpper));
+    elField.appendChild(elLower);
+    elField.appendChild(elUpper);
+    record.appendChild(elField);
+  }
     /**
      * Creates and appends elements associated with a returnable property to a
      * record element.
      * @param context the operation context
      * @param record the parent element that will hold the fields (a Record)
      * @param returnable the returnable property
+     * @return property meaning of the added element or <code>null</code> if element not added
      */
-    protected void appendDiscoveredField(OperationContext context, Element record, Returnable returnable) {
+    protected PropertyMeaning appendDiscoveredField(OperationContext context, Element record, Returnable returnable) {
         // initialize
         ServiceProperties svcProps = context.getServiceProperties();
         String httpContextPath = Val.chkStr(svcProps.getHttpContextPath());
@@ -98,11 +121,12 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
         OperationResponse opResponse = context.getOperationResponse();
         Document responseDom = opResponse.getResponseDom();
         PropertyMeaning meaning = returnable.getMeaning();
+        PropertyMeaning returnedMeaning = null;
         PropertyMeaningType meaningType = meaning.getMeaningType();
         Object[] values = returnable.getValues();
         DcElement dcElement = meaning.getDcElement();
         if ((dcElement == null) || dcElement.getElementName().startsWith("!")) {
-            return;
+            return null;
         }
         
         // TODO create an empty element if the values are null?
@@ -111,7 +135,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
             //Element elField = dom.createElement(returnable.getClientName());
             //elField.appendChild(dom.createTextNode(""));
             //record.appendChild(elField);
-            return;
+            return null;
         }
         
         // add an element for each value found
@@ -122,26 +146,8 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
                         
                         // TODO include multiple envelope types in the response
                         Envelope env = (Envelope)oValue;
-                        String sLower = env.getMinX()+" "+env.getMinY();
-                        String sUpper = env.getMaxX()+" "+env.getMaxY();
-                        
-                        Element elField = responseDom.createElement("ows:WGS84BoundingBox");
-                        Element elLower = responseDom.createElement("ows:LowerCorner");
-                        Element elUpper = responseDom.createElement("ows:UpperCorner");
-                        elLower.appendChild(responseDom.createTextNode(sLower));
-                        elUpper.appendChild(responseDom.createTextNode(sUpper));
-                        elField.appendChild(elLower);
-                        elField.appendChild(elUpper);
-                        record.appendChild(elField);
-                        
-                        elField = responseDom.createElement("ows:BoundingBox");
-                        elLower = responseDom.createElement("ows:LowerCorner");
-                        elUpper = responseDom.createElement("ows:UpperCorner");
-                        elLower.appendChild(responseDom.createTextNode(sLower));
-                        elUpper.appendChild(responseDom.createTextNode(sUpper));
-                        elField.appendChild(elLower);
-                        elField.appendChild(elUpper);
-                        record.appendChild(elField);
+                        appendGeometry(record, responseDom, env);
+                        returnedMeaning = meaning;
                     }
                     
                 } else {
@@ -179,12 +185,15 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
                         }
                         if (elField != null) {
                             record.appendChild(elField);
+                            returnedMeaning = meaning;
                         }
                     }
                     
                 }
             }
         }
+        
+        return returnedMeaning;
     }
   
   /**
@@ -231,8 +240,16 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       DiscoveredRecords records = query.getResult().getRecords();
       for (DiscoveredRecord record: records) {
         Element elRecord = responseDom.createElementNS(recNamespaceUri,recQName);
+        boolean hasGeometry = false;
         for (Returnable returnable: sortFields(filterFields(record.getFields(),new RejectFileIdentifiersPredicate()))) {
-          this.appendDiscoveredField(context,elRecord,returnable);
+          PropertyMeaning meaning = this.appendDiscoveredField(context,elRecord,returnable);
+          if (meaning!=null && meaning.getValueType().equals(PropertyValueType.GEOMETRY)) {
+            hasGeometry = true;
+          }
+        }
+        if (!hasGeometry) {
+          Envelope env = new Envelope(-180, -90, 180, 90);
+          appendGeometry(elRecord, responseDom, env);
         }
         parent.appendChild(elRecord);
       }
@@ -603,8 +620,16 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       
       for (DiscoveredRecord record: records) {
         Element elRecord = responseDom.createElementNS(recNamespaceUri,recQName);
+        boolean hasGeometry = false;
         for (Returnable returnable: sortFields(record.getFields())) {
-          this.appendDiscoveredField(context,elRecord,returnable);
+          PropertyMeaning meaning = this.appendDiscoveredField(context,elRecord,returnable);
+          if (meaning!=null && meaning.getValueType().equals(PropertyValueType.GEOMETRY)) {
+            hasGeometry = true;
+          }
+        }
+        if (!hasGeometry) {
+          Envelope env = new Envelope(-180, -90, 180, 90);
+          appendGeometry(elRecord, responseDom, env);
         }
         context.getOperationResponse().setNSAttributes(elRecord);
         root.appendChild(elRecord);
