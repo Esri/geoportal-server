@@ -242,6 +242,9 @@ public class ProviderFactory implements IProviderFactory {
       
       parameters.add(new SupportedParameter(CswConstants.Parameter_ConstraintCql,new NoSupportedValues()));
       
+      values = new SupportedValues("Record,csw:Record,gmd:MD_Metadata",",");
+      parameters.add(new SupportedParameter(CswConstants.Parameter_TypeNames,values));
+      
       // Transaction
     } else if (operationName.equals("Transaction")) { 
       if (!svcProps.getAllowTransactions()) {

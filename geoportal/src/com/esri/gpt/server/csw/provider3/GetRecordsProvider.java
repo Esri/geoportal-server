@@ -445,7 +445,17 @@ public class GetRecordsProvider implements IOperationProvider {
     // query type names
     locator = "typeNames";
     parsed = pHelper.getParameterValues(request,locator);
-    qOptions.setQueryTypeNames(vHelper.validateValues(locator,parsed,false));
+    if (parsed!=null) {
+        List<String[]> namespaces = parseNamespace(pHelper.getParameterValues(request,"namespace",","));
+        translateNamespaces(parsed, namespaces);
+    }
+    supported = svcProps.getSupportedValues(CswConstants.Parameter_TypeNames);
+    try {
+      qOptions.setQueryTypeNames(vHelper.validateValues(supported,locator,parsed,false));
+    } catch (OwsException ex) {
+      context.getOperationResponse().setResponseCode(HttpServletResponse.SC_BAD_REQUEST);
+      throw ex;
+    }
     
     // response element set type
     locator = "ElementSetName";

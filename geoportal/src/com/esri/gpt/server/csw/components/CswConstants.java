@@ -70,6 +70,9 @@ public class CswConstants {
   /** ="elementName", applies to: GetRecords */
   public static String Parameter_ElementName = "elementName";
   
+  /** ="typeNames", applies to: GetRecords */
+  public static String Parameter_TypeNames = "typeNames";
+  
   /** ="elementSetType", applies to: GetRecordById, GetRecords e.g. brief,summary,full */
   public static String Parameter_ElementSetType = "elementSetType";
   
