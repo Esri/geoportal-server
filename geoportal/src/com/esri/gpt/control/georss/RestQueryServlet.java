@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.control.georss;
 
+import com.esri.gpt.catalog.discovery.DiscoveryClause;
 import com.esri.gpt.catalog.discovery.SpatialClause;
 import com.esri.gpt.catalog.discovery.rest.RestQuery;
 import com.esri.gpt.catalog.discovery.rest.RestQueryParser;
@@ -40,6 +41,7 @@ import com.esri.gpt.catalog.search.SearchResult;
 import com.esri.gpt.catalog.search.SearchResultRecords;
 import com.esri.gpt.framework.context.BaseServlet;
 import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
@@ -118,6 +120,17 @@ public class RestQueryServlet extends BaseServlet {
     }
     if (query == null) {
       query = new RestQuery();
+    }
+    
+    // validate spatial clause
+    for (DiscoveryClause clause: query.getFilter().getRootClause().getClauses()) {
+      if (clause instanceof SpatialClause) {
+        Envelope env = ((SpatialClause)clause).getBoundingEnvelope();
+        if (!env.isEmpty() && !env.isValidWGS84()) {
+          response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+          return;
+        }
+      }
     }
 
 
