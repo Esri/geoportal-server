@@ -22,6 +22,14 @@ import java.io.Serializable;
 public class Envelope extends Geometry implements Cloneable, Serializable {
 
 // class variables =============================================================
+public static final Envelope ENVELOPE_EMPTY = new ImmutableEnvelopeWrapper(new Envelope());
+public static final Envelope ENVELOPE_WORLD;
+static {
+  Envelope env = new Envelope(-180,-90,180,90);
+  env.setWkid("4326");
+  ENVELOPE_WORLD = new ImmutableEnvelopeWrapper(env);
+}
+
 public static final double EMPTY = -9999;
 
 // instance variables ==========================================================
@@ -263,6 +271,27 @@ public boolean isEmpty() {
  */
 public boolean isValid() {
   return !isEmpty();
+}
+
+/**
+ * Checks if is valid WGS84 range.
+ * @return <code>true</code> if is valid WGS84 range
+ */
+public boolean isValidWGS84() {
+  return !isEmpty() 
+          && inRange(getMinX(),-180,180) && inRange(getMaxX(),-180,180) && inRange(getMinY(), -90, 90) && inRange(getMaxY(), -90, 90)
+          && getMinX() <= getMaxX() && getMinY() <= getMaxY();
+}
+
+/**
+ * Checks if the value is in range (inclusive)
+ * @param value value
+ * @param min min value
+ * @param max max value
+ * @return 
+ */
+private boolean inRange(double value, double min, double max) {
+  return value>=min && value<=max;
 }
 
 /**

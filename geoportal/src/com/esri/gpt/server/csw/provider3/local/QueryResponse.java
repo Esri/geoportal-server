@@ -248,8 +248,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
           }
         }
         if (!hasGeometry) {
-          Envelope env = new Envelope(-180, -90, 180, 90);
-          appendGeometry(elRecord, responseDom, env);
+          appendGeometry(elRecord, responseDom, Envelope.ENVELOPE_WORLD);
         }
         parent.appendChild(elRecord);
       }
@@ -628,8 +627,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
           }
         }
         if (!hasGeometry) {
-          Envelope env = new Envelope(-180, -90, 180, 90);
-          appendGeometry(elRecord, responseDom, env);
+          appendGeometry(elRecord, responseDom, Envelope.ENVELOPE_WORLD);
         }
         context.getOperationResponse().setNSAttributes(elRecord);
         root.appendChild(elRecord);
