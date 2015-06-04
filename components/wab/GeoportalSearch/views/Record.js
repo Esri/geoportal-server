@@ -17,20 +17,21 @@ define([
     domConstruct,dom,
     util, LayerFactory,RecordLink,RecordServiceLink,RecordContentType){
   return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin],{
+    
     baseClass: 'geoportal-search-record',
     templateString: template,
     nls: nls,
     suffixes: null,
     suffixesKML: null,
 
-     postCreate: function() {
+    postCreate: function() {
        this.inherited(arguments);       
        this.suffixes = ["csv", "doc", "docx", "ppt", "pptx", "xls", "xlsx", "gml", "pdf", "zip", "xml", "html", "htm", "aspx", "lyr"];
        this.suffixesKML = [".kml","kmz"];
        this.processRecord();
-     },
+    },
     
-     _processLink: function(link,theLinkType){
+   _processLink: function(link,theLinkType){
 
       var theLink = link;
       
@@ -51,7 +52,6 @@ define([
                 //if (hrefLower.indexOf(suffix, hrefLower.length - suffix.length) !== -1) {
                 if (hrefLower.indexOf(suffix) + suffix.length == hrefLower.length) {
                   theLinkType = "www";
-                  return true;
                 }
               }
             }
@@ -62,7 +62,6 @@ define([
                 var suffix = this.suffixesKML[k];
                 if (hrefLower.indexOf(suffix, hrefLower.length - suffix.length) !== -1) {
                   theLinkType = "kml";
-                  return true;
                 }
               }
             }
@@ -114,7 +113,6 @@ define([
               if (hrefLower.indexOf(suffix) + suffix.length == hrefLower.length) {
                 theLinkType = hrefLower.split("/").pop();
                 href = href.replace(suffix, "");
-                return true;
               }
             }
             
@@ -128,12 +126,6 @@ define([
             link.mapServiceUrl = href;
 
           }
-
-          /*else if (theLink.type == "metadata") {
-          
-            metadataLinkSnippet = "<a id='" + record.id + "_metadata' href='" + theLink.href + "' target='_blank'>Metadata</a>";
-          
-          }*/
 
           return theLinkType;
   },
@@ -164,18 +156,22 @@ define([
             imgURL = "widgets/GeoportalSearch/images/ContentType_geographicActivities.png";
             break;
         default:
-            imgURL = "widgets/GeoportalSearch/images/ContentType_unknown.png";
-
-        return imgURL;
+            imgURL = "widgets/GeoportalSearch/images/ContentType_unknown.png";        
       }
+
+      return imgURL;
   },
 
   processRecord: function(){  
 
     var theLinkType = "";
+    var firstLinkType = "";
     for (var j=0; j < this.record.links.length; j++) {
       var link = this.record.links[j];       
-      if(this._processLink(link,theLinkType)) break;
+      theLinkType = this._processLink(link,theLinkType);
+      if(j==0){
+        firstLinkType = theLinkType;
+      }
       var linkInfo;
       if(link.mapServicetype){
         linkInfo = new RecordServiceLink({record:this.record, link:link});          
@@ -186,7 +182,7 @@ define([
       domConstruct.place(linkInfo.domNode,this.links);        
     } 
 
-    var contentTypeUrl = this._getContentTypeUrl(theLinkType);
+    var contentTypeUrl = this._getContentTypeUrl(firstLinkType);
     this.record.contentTypeUrl = contentTypeUrl;
     var contentTypeIcon = new RecordContentType({record:this.record});
     contentTypeIcon.startup();

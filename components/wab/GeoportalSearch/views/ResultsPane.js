@@ -245,8 +245,10 @@ define([
     var divResultMessage = this.divResultMessage;
     if (len === 0) {
       divResultMessage.textContent = "No results"; // this.nls.noResults;  
+      this.clear();
       return;
     } else {
+      this.clear();
       divResultMessage.textContent = "Results found: " + results.totalResults; //this.nls.featuresSelected + results.records.length;
     }
 
@@ -494,12 +496,15 @@ define([
     }
     
     var footprints = this.map.getLayer("footprints");
-    footprints.hide();
+    if(footprints){
+     footprints.hide();
+    }
     
     this.divResultMessage.textContent = this.nls.noResults;
     
     divResultMessage = this.divResultMessage;
     divResultMessage.textContent = "";
+    
     theList = dojo.byId("list");
     theList.innerHTML = "";
           
