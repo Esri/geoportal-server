@@ -24,7 +24,6 @@ import com.esri.gpt.server.csw.components.IResponseGenerator;
 import com.esri.gpt.server.csw.components.IQueryEvaluator;
 import com.esri.gpt.server.csw.components.CapabilityOptions;
 import com.esri.gpt.server.csw.components.CswConstants;
-import com.esri.gpt.server.csw.components.AnySupportedValues;
 import com.esri.gpt.server.csw.components.OperationResponse;
 import com.esri.gpt.server.csw.components.ISortByParser;
 import com.esri.gpt.server.csw.components.ParseHelper;
@@ -37,7 +36,6 @@ import com.esri.gpt.server.csw.components.OperationContext;
 import com.esri.gpt.server.csw.components.IOperationProvider;
 import com.esri.gpt.server.csw.components.ServiceProperties;
 import com.esri.gpt.catalog.context.CatalogConfiguration;
-import com.esri.gpt.catalog.discovery.AliasedDiscoverables;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.ConfigurationException;
 import com.esri.gpt.framework.context.RequestContext;
@@ -46,7 +44,6 @@ import com.esri.gpt.server.csw.components.CswNamespaces;
 import com.esri.gpt.server.csw.components.IBBOXParser;
 import com.esri.gpt.server.csw.components.IQueryParser;
 import com.esri.gpt.server.csw.components.IRequestHandler;
-import com.esri.gpt.server.csw.provider3.DescribeRecordProvider;
 import com.esri.gpt.server.csw.provider3.GetCapabilitiesProvider;
 import com.esri.gpt.server.csw.provider3.GetRecordByIdProvider;
 import com.esri.gpt.server.csw.provider3.GetRecordsProvider;
@@ -188,14 +185,6 @@ public class ProviderFactory implements IProviderFactory {
     } else if (operationName.equalsIgnoreCase("GetOpenSearchDescription")) {
       GetOpenSearchProvider gosp = new GetOpenSearchProvider();
       opProvider = gosp;
-    } else if (operationName.equals("DescribeRecord")) {
-      DescribeRecordProvider drp = new DescribeRecordProvider();
-      opProvider = drp;
-      String loc = resPfx+"DescribeRecord30.xml";
-      reqOptions.getDescribeRecordOptions().setDescribeRecordLocation(loc); 
-      
-      values = new SupportedValues("XMLSCHEMA,http://www.w3.org/XML/Schema",",");
-      parameters.add(new SupportedParameter(CswConstants.Parameter_SchemaLanguage,values));
       
     // GetRecordById
     } else if (operationName.equals("GetRecordById")) {
