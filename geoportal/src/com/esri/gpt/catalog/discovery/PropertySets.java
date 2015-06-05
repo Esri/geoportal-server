@@ -21,6 +21,7 @@ public class PropertySets extends DiscoveryComponent {
   
   /** instance variables ====================================================== */
   private AliasedDiscoverables allAliased = new AliasedDiscoverables();
+  private Discoverables minimal = new Discoverables();
   private Discoverables brief = new Discoverables();
   private Discoverables full = new Discoverables();
   private Discoverables summary = new Discoverables();
@@ -40,6 +41,15 @@ public class PropertySets extends DiscoveryComponent {
    */
   public AliasedDiscoverables getAllAliased() {
     return allAliased;
+  }
+
+  
+  /** 
+   * Gets the minimal discoverable set. 
+   * @return the minimal discoverable set
+   */
+  public Discoverables getMinimal() {
+    return minimal;
   }
   
   /** 

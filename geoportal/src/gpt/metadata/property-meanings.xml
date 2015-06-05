@@ -167,15 +167,20 @@
       
   <!--  Dublin Core response property sets (brief, summary, full) -->
   <propertySets>
+    <minimal>
+      <dc>
+        <meaning-names>uuid,title</meaning-names>
+      </dc>
+    </minimal>
     <brief>
       <dc>
         <meaning-names>fileIdentifier,uuid,title,contentType,geometry</meaning-names>
       </dc>
     </brief>
-     <summary>
+    <summary>
       <dc>
         <meaning-names>fileIdentifier,uuid,title</meaning-names>
-                <meaning-names>contentType,dataTheme,sys.childlist,sys.parentlist</meaning-names>
+        <meaning-names>contentType,dataTheme,sys.childlist,sys.parentlist</meaning-names>
         <meaning-names>dateModified,abstract</meaning-names>
         <meaning-names>resource.url,website.url,thumbnail.url,xml.url</meaning-names>
         <meaning-names>geometry,date,relation</meaning-names>

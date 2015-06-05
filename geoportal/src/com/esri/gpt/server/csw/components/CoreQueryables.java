@@ -46,6 +46,14 @@ public class CoreQueryables {
   }
   
   /**
+   * Gets the collection of discoverables associated with the minimal element set.
+   * @return the brief set
+   */
+  public Discoverables getMinimal() {
+    return this.propertyMeanings.getDcPropertySets().getMinimal();
+  }
+  
+  /**
    * Gets the collection of discoverables associated with the brief element set.
    * @return the brief set
    */

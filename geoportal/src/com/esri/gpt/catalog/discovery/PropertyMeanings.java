@@ -237,9 +237,11 @@ public class PropertyMeanings extends CaseInsensitiveMap<PropertyMeaning> {
     if (root != null) {
       Node ndSets = (Node)xpath.evaluate("propertySets",root,XPathConstants.NODE);
       if (ndSets != null) {
+        Node ndMinimal = (Node)xpath.evaluate("minimal",ndSets,XPathConstants.NODE);
         Node ndBrief = (Node)xpath.evaluate("brief",ndSets,XPathConstants.NODE);
         Node ndSummary = (Node)xpath.evaluate("summary",ndSets,XPathConstants.NODE);
         Node ndFull = (Node)xpath.evaluate("full",ndSets,XPathConstants.NODE);
+        loadDcPropertySet(ndMinimal,xpath,dcAliased,dcPropertySets.getMinimal());
         loadDcPropertySet(ndBrief,xpath,dcAliased,dcPropertySets.getBrief());
         loadDcPropertySet(ndSummary,xpath,dcAliased,dcPropertySets.getSummary());
         loadDcPropertySet(ndFull,xpath,dcAliased,dcPropertySets.getFull());

@@ -80,7 +80,7 @@ public class DiscoveryContext {
       boolean hasElementNames = (elementNames != null) && (elementNames.size() > 0);
       if (isDublinCore && hasElementNames) {
         AliasedDiscoverables aliased = this.queryables.getAllAliased();
-        query.setReturnables(new Discoverables());
+        query.setReturnables(queryables.getMinimal());
         for (String elementName: elementNames) {
           Discoverable discoverable = aliased.get(elementName);
           if (discoverable != null) {
