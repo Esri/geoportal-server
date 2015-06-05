@@ -186,6 +186,9 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
                         if (elField != null) {
                             record.appendChild(elField);
                             returnedMeaning = meaning;
+                            if (meaning.getMeaningType()==PropertyMeaningType.CONTENTTYPE) {
+                              break;
+                            }
                         }
                     }
                     
@@ -224,7 +227,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       Document responseDom = opResponse.getResponseDom();
       String recNamespacePfx = "csw";
       String recNamespaceUri = CswNamespaces.CSW_30.URI_CSW();
-      String recLocalName = "Record";
+      String recLocalName = "SummaryRecord";
       StringSet elementNames = qOptions.getElementNames();
       boolean hasElementNames = (elementNames != null) && (elementNames.size() > 0);
       if (!hasElementNames) {
@@ -232,6 +235,8 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
           recLocalName = "BriefRecord";
         } else if (isSummary) {
           recLocalName = "SummaryRecord";
+        } else if (isFull) {
+          recLocalName = "Record";
         }
       }
       String recQName = recNamespacePfx+":"+recLocalName;
@@ -598,7 +603,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       Document responseDom = opResponse.getResponseDom();
       String recNamespacePfx = "csw";
       String recNamespaceUri = CswNamespaces.CSW_30.URI_CSW();
-      String recLocalName = "Record";
+      String recLocalName = "SummaryRecord";
       StringSet elementNames = qOptions.getElementNames();
       boolean hasElementNames = (elementNames != null) && (elementNames.size() > 0);
       if (!hasElementNames) {
@@ -606,6 +611,8 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
           recLocalName = "BriefRecord";
         } else if (isSummary) {
           recLocalName = "SummaryRecord";
+        } else if (isFull) {
+          recLocalName = "Record";
         }
       }
       String recQName = recNamespacePfx+":"+recLocalName;

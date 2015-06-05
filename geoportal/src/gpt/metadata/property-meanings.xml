@@ -60,7 +60,7 @@
     <dc name="dct:abstract" aliases="abstract"/>
   </property-meaning>  
   
-  <property-meaning name="contentType" valueType="String" comparisonType="keyword">
+  <property-meaning name="contentType" meaningType="contentType" valueType="String" comparisonType="keyword">
     <dc name="dc:type" aliases="type,format,dc:format" 
         scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType"/>
   </property-meaning> 

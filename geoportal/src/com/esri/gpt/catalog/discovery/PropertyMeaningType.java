@@ -21,7 +21,7 @@ import com.esri.gpt.framework.util.Val;
 public enum PropertyMeaningType {
   ABSTRACT,
   ANYTEXT,
-  CONTENTYPE,
+  CONTENTTYPE,
   DATATYPE,
   DATEMODIFIED,
   GEOMETRY,
