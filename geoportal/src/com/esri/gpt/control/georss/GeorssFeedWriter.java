@@ -129,6 +129,7 @@ public void write(IFeedRecords records) {
   _writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
   _writer.println("<rss version=\"2.0\""+
                   " xmlns:georss=\"http://www.georss.org/georss\""+
+                  " xmlns:georss10=\"http://www.georss.org/georss/10\""+
                   " xmlns:media=\"http://search.yahoo.com/mrss/\""+
                   " xmlns:opensearch=\"http://a9.com/-/spec/opensearch/1.1/\""+
                   " xmlns:atom=\"http://www.w3.org/2005/Atom\""+
@@ -280,7 +281,8 @@ private void writeRecord(
   }
   
   // write geometry
-  writeGeometry(record);
+  writeGeometry("georss", record);
+  writeGeometry("georss10", record);
 
   // resource URL
   ResourceLink openRL = record.getResourceLinks().findByTag(ResourceLink.TAG_OPEN);
@@ -305,18 +307,18 @@ private void writeRecord(
  * Writes geometry.
  * @param envelope envelope
  */
-private void writeGeometry(IFeedRecord record) {
+private void writeGeometry(String namespace, IFeedRecord record) {
   if (record.getEnvelope()!=null && record.getEnvelope().isValid()) {
     switch (getGeometry()) {
       case esriGeometryPoint:
-        writePoint(record.getEnvelope());
+        writePoint(namespace, record.getEnvelope());
         break;
       default:
       case esriGeometryPolygon:
-        writePolygon(record.getEnvelope());
+        writePolygon(namespace, record.getEnvelope());
         break;
       case esriGeometryEnvelope:
-        writeBox(record.getEnvelope());
+        writeBox(namespace, record.getEnvelope());
         break;
     }
   }
@@ -337,18 +339,18 @@ private void writeTag(String name, String value) {
  * Writes geometry as esriGeometryPoint.
  * @param envelope envelope
  */
-private void writePoint(Envelope envelope) {
-  _writer.print("<georss:point>");
+private void writePoint(String namespace, Envelope envelope) {
+  _writer.print(String.format("<%s:point>", namespace));
   _writer.print(getValidCenterY(envelope) + " " + getValidCenterX(envelope));
-  _writer.println("</georss:point>");
+  _writer.println(String.format("</%s:point>",namespace));
 }
 
 /**
  * Writes geometry as esriGeometryPolygon.
  * @param envelope envelope
  */
-private void writePolygon(Envelope envelope) {
-  _writer.print("<georss:polygon>");
+private void writePolygon(String namespace, Envelope envelope) {
+  _writer.print(String.format("<%s:polygon>", namespace));
   _writer.print(getValidMaxY(envelope) + " " + envelope.getMinX());
   _writer.print(" ");
   _writer.print(getValidMaxY(envelope) + " " + envelope.getMaxX());
@@ -358,19 +360,19 @@ private void writePolygon(Envelope envelope) {
   _writer.print(getValidMinY(envelope) + " " + envelope.getMinX());
   _writer.print(" ");
   _writer.print(getValidMaxY(envelope) + " " + envelope.getMinX());
-  _writer.println("</georss:polygon>");
+  _writer.println(String.format("</%s:polygon>", namespace));
 }
 
 /**
  * Writes geometry as esriGeometryPolygon.
  * @param envelope envelope
  */
-private void writeBox(Envelope envelope) {
-  _writer.print("<georss:box>");
+private void writeBox(String namespace, Envelope envelope) {
+  _writer.print(String.format("<%s:box>", namespace));
   _writer.print(getValidMinY(envelope) + " " + envelope.getMinX());
   _writer.print(" ");
   _writer.print(getValidMaxY(envelope) + " " + envelope.getMaxX());
-  _writer.println("</georss:box>");
+  _writer.println(String.format("</%s:box>", namespace));
 }
 
 /**
@@ -423,7 +425,7 @@ spatial;
 /**
  * Checks value given as string.
  * @param value value given as string
- * @return geometry reprsented by the string or {@link Geometry#esriGeometryPolygon} if
+ * @return geometry represented by the string or {@link Geometry#esriGeometryEnvelope} if
  * geometry not recognized
  */
 public static Geometry checkValueOf(String value) {
@@ -433,7 +435,7 @@ public static Geometry checkValueOf(String value) {
       return g;
     }
   }
-  return esriGeometryPolygon;
+  return esriGeometryEnvelope;
 }
   }
 }
