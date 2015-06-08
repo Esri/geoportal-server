@@ -31,7 +31,7 @@ public class AtomEntry {
     /** The TIM e_ forma t_ pattern. */
     static final String TIME_FORMAT_PATTERN = "kk:mm:ss";
     /** The ENTIT y_ ope n_ tag. */
-    private final String ENTITY_OPEN_TAG_NS_PATTERN = "<%s  xmlns=\"http://www.w3.org/2005/Atom\" xmlns:georss=\"http://www.georss.org/georss\" xmlns:opensearch=\"http://a9.com/-/spec/opensearch/1.1/\">";
+    private final String ENTITY_OPEN_TAG_NS_PATTERN = "<%s  xmlns=\"http://www.w3.org/2005/Atom\" xmlns:georss=\"http://www.georss.org/georss\" xmlns:opensearch=\"http://a9.com/-/spec/opensearch/1.1/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">";
     private final String ENTITY_OPEN_TAG_NS;
     private final String ENTITY_OPEN_TAG_PATTERN = "<%s>";
     private final String ENTITY_OPEN_TAG;
@@ -49,6 +49,10 @@ public class AtomEntry {
     private final String ID_OPEN_TAG = "<id>";
     /** The I d_ clos e_ tag. */
     private final String ID_CLOSE_TAG = "</id>";
+    /** DC Identifier open tag. */
+    private final String DCIDENTIFIER_OPEN_TAG = "<dc:identifier>";
+    /** DC Identifier closing tag. */
+    private final String DCIDENTIFIER_CLOSE_TAG = "</dc:identifier>";
     /** The UPDATE d_ ope n_ tag. */
     private final String UPDATED_OPEN_TAG = "<updated>";
     /** The UPDATE d_ clos e_ tag. */
@@ -61,8 +65,6 @@ public class AtomEntry {
     private final String BOX_OPEN_TAG = "<georss:box>";
     /** The BO x_ clos e_ tag. */
     private final String BOX_CLOSE_TAG = "</georss:box>";
-    /** The RES t_ fin d_ pattern. */
-    private final String REST_FIND_PATTERN = "/rest/document/";
     /** The _id. */
     private String _id = null;
     /** The _title. */
@@ -401,6 +403,10 @@ public class AtomEntry {
                 try {
                     data = Val.escapeXml(getId());
                     data = ID_OPEN_TAG + "urn:uuid:" + data.substring(1, data.length() - 1) + ID_CLOSE_TAG;
+                    writer.append("\t" + data + lineSeparator);
+                    
+                    data = Val.escapeXml(getId());
+                    data = DCIDENTIFIER_OPEN_TAG + data + DCIDENTIFIER_CLOSE_TAG;
                     writer.append("\t" + data + lineSeparator);
                 } catch (Exception e) {
                     LOGGER.log(Level.WARNING, "", e);
