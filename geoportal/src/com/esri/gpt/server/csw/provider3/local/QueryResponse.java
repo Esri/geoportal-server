@@ -373,6 +373,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
     Element elFeed = responseDom.createElement("feed");
     elFeed.setAttribute("xmlns", atomns);
     elFeed.setAttribute("xmlns:georss", "http://www.georss.org/georss");
+    elFeed.setAttribute("xmlns:georss10", "http://www.georss.org/georss/10");
     elFeed.setAttribute("xmlns:opensearch", opensearchns);
     elFeed.setAttribute("xmlns:dc", CswNamespaces.URI_DC);
     responseDom.appendChild(elFeed);

@@ -321,6 +321,8 @@ public class AtomEntry {
     public void AppendTo(Element elFeed) {
         String atomns = "http://www.w3.org/2005/Atom";
         String dcns = "http://purl.org/dc/elements/1.1/";
+        String georss = "http://www.georss.org/georss";
+        String georss10 = "http://www.georss.org/georss/10";
         Document parent = elFeed.getOwnerDocument();
         
         Element elEntry = parent.createElementNS(atomns,"entry");
@@ -370,6 +372,14 @@ public class AtomEntry {
                 elEntry.appendChild(elLink);
             }
         }
+        
+        Element elBox = parent.createElementNS(georss, "box");
+        elBox.appendChild(parent.createTextNode(makeGeorssEnvelope()));
+        elEntry.appendChild(elBox);
+        
+        Element elBox10 = parent.createElementNS(georss10, "box");
+        elBox10.appendChild(parent.createTextNode(makeGeorssEnvelope()));
+        elEntry.appendChild(elBox10);
     }
     
     /**
@@ -438,10 +448,10 @@ public class AtomEntry {
             }
             if (hasEnvelope()) {
                 try {
-                    data = BOX_OPEN_TAG + getMiny() + " " + getMinx() + " " + getMaxy() + " " + getMaxx() + BOX_CLOSE_TAG;
+                    data = BOX_OPEN_TAG + makeGeorssEnvelope() + BOX_CLOSE_TAG;
                     writer.append("\t" + data + lineSeparator);
                     
-                    data = BOX10_OPEN_TAG + getMiny() + " " + getMinx() + " " + getMaxy() + " " + getMaxx() + BOX10_CLOSE_TAG;
+                    data = BOX10_OPEN_TAG + makeGeorssEnvelope() + BOX10_CLOSE_TAG;
                     writer.append("\t" + data + lineSeparator);
                 } catch (Exception e) {
                     LOGGER.log(Level.WARNING, "", e);
@@ -454,6 +464,14 @@ public class AtomEntry {
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "", e);
         }
+    }
+    
+    /**
+     * Makes envelope string for georss.
+     * @return envelope string
+     */
+    private String makeGeorssEnvelope() {
+      return getMiny() + " " + getMinx() + " " + getMaxy() + " " + getMaxx();
     }
 
     /**
