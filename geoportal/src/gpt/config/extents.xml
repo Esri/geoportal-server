@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extents>
+	<extent place="Piemonte"  ext="6.62;44.06;9.22;46.47"/>
+	<extent place="Valle d'Aosta/Vallée d'Aoste"  ext="6.8;45.46;7.94;45.99"/>
+	<extent place="Lombardia"  ext="8.49;44.67;11.43;46.64"/>
+	<extent place="Trentino-Alto Adige"  ext="10.38;45.67;12.48;47.1"/>
+	<extent place="Veneto"  ext="10.62;44.79;13.11;46.69"/>
+	<extent place="Friuli-Venezia Giulia"  ext="12.32;45.58;13.92;46.65"/>
+	<extent place="Liguria"  ext="7.49;43.77;10.08;44.68"/>
+	<extent place="Emilia-Romagna"  ext="9.19;43.73;12.76;45.14"/>
+	<extent place="Toscana"  ext="9.68;42.23;12.38;44.48"/>
+	<extent place="Umbria"  ext="11.89;42.36;13.27;43.62"/>
+	<extent place="Marche"  ext="12.18;42.68;13.92;43.97"/>
+	<extent place="Lazio"  ext="11.44;40.78;14.03;42.84"/>
+	<extent place="Abruzzo"  ext="13.01;41.68;14.79;42.9"/>
+	<extent place="Molise"  ext="13.94;41.36;15.17;42.07"/>
+	<extent place="Campania"  ext="13.76;39.99;15.81;41.51"/>
+	<extent place="Puglia"  ext="14.93;39.79;18.53;42.23"/>
+	<extent place="Basilicata"  ext="15.33;39.89;16.87;41.14"/>
+	<extent place="Calabria"  ext="15.63;37.91;17.21;40.15"/>
+	<extent place="Sicilia"  ext="11.92;35.49;15.66;38.82"/>
+	<extent place="Sardegna"  ext="8.13;38.85;9.83;41.32"/>
+</extents>
