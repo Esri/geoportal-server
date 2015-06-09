@@ -26,6 +26,7 @@ define({
     anywhere: "Anywhere",
     summaryPattern: "{0} results",
     summaryPatternFiltered: "{0} filtered results",
-    pageSummaryPattern: "Showing {0}-{1}"
+    pageSummaryPattern: "Showing {0}-{1}",
+    _onQueryError: "Error occurred while quering catalog."
   })
 });

@@ -43,13 +43,12 @@ define([
             var href = theLink.href;
             var hrefLower = href.toLowerCase();
             
-            // if the link ends in any of the this.suffixes, it's not a map service, but general web link
+            // if the link ends in any of the this.this.suffixes, it's not a map service, but general web link
             // if not assigned value yet, check for typical file types
             if (
               (theLinkType.length == 0) || (theLinkType === "www")){
-              for (k=0; k<this.suffixes.length; k++) {
-                var suffix = this.suffixes[this.index];
-                //if (hrefLower.indexOf(suffix, hrefLower.length - suffix.length) !== -1) {
+              for (k=0; k<this.this.suffixes.length; k++) {
+                var suffix = this.this.suffixes[this.index];
                 if (hrefLower.indexOf(suffix) + suffix.length == hrefLower.length) {
                   theLinkType = "www";
                 }
@@ -58,8 +57,8 @@ define([
 
             // if not assigned value yet, check for KML/KMZ
             if ((theLinkType.length == 0) || (theLinkType === "www")) {
-              for (k=0; k<this.suffixesKML.length; k++) {
-                var suffix = this.suffixesKML[k];
+              for (k=0; k<this.this.suffixesKML.length; k++) {
+                var suffix = this.this.suffixesKML[k];
                 if (hrefLower.indexOf(suffix, hrefLower.length - suffix.length) !== -1) {
                   theLinkType = "kml";
                 }
@@ -130,7 +129,65 @@ define([
           return theLinkType;
   },
 
-  _getContentTypeUrl: function(theLinkType){
+  _getContentTypeUrl: function(links){
+
+   
+    for (var j=0; j < links.length; j++) {
+          
+          var theLink = links[j];
+           var theLinkType = "";
+          theLink.mapServiceType = theLinkType; 
+          if ((theLink.type == "open")) {
+
+              var href = theLink.href;
+              var hrefLower = href.toLowerCase();
+            
+              if (hrefLower.indexOf("request=getcapabilities") !== -1) {
+                if (hrefLower.indexOf("service=wms") !== -1) {
+                  theLinkType = "wms";
+                } else {
+                  theLinkType = "unsupported"; 
+                }
+                
+              } else if (hrefLower.indexOf("/rest/services/") !== -1) {
+                theLinkType = hrefLower.split("/").pop();
+                
+                if (hrefLower.indexOf("?f=") > 0) {
+                  theLinkType = theLinkType.substr(0, theLinkType.indexOf("?f="));
+                  href = href.substr(0, href.indexOf("?f="));
+                }
+                
+              } else if (hrefLower.indexOf("/services/") !== -1) {
+                if (hrefLower.indexOf("/mapserver/wmsserver") !== -1) {
+                  theLinkType = "wms";
+                }
+                
+              } else if (hrefLower.indexOf("/com.esri.wms.esrimap") !== -1) {
+                theLinkType = "wms";
+                if (hrefLower.indexOf("?") > 0) {
+                  href = href.substr(0, href.indexOf("?"));
+                }
+                
+              } else if ((hrefLower.indexOf("viewer.html") !== -1) && (hrefLower.indexOf("url=") !== -1)) {
+                href = href.substr(href.indexOf("url=")+4);
+                href = decodeURIComponent(href);
+                theLinkType = href.split("/").pop().toLowerCase();
+                
+              } else if ((hrefLower.indexOf("index.jsp") !== -1) && (hrefLower.indexOf("resource=") !== -1)) {
+                href = href.substr(href.indexOf("url=")+4);
+                href = decodeURIComponent(href);
+                theLinkType = href.split("/").pop().toLowerCase();
+                
+              } else if ((hrefLower.indexOf("/sharing/content/items/") !== -1) && (hrefLower.split("/").pop() == "data")) {
+                theLinkType = "webmap";
+                if (hrefLower.indexOf("?") > 0) {
+                  href = href.substr(0, href.indexOf("?"));
+                }
+              } 
+              theLink.mapServiceType = theLinkType;                                
+            }                       
+          }             
+        
 
       var imgURL = "";
       switch(theLinkType) {
@@ -166,10 +223,15 @@ define([
 
     var theLinkType = "";
     var firstLinkType = "";
-    for (var j=0; j < this.record.links.length; j++) {
-      var link = this.record.links[j];       
-      theLinkType = this._processLink(link,theLinkType);
-      if(j==0){
+    var links = this.record.links;
+    
+    var contentTypeUrl = this._getContentTypeUrl(links);
+    this.record.contentTypeUrl = contentTypeUrl;
+
+    for (var j=0; j < links.length; j++) {
+      var link = links[j];       
+      // theLinkType = this._processLink(link,theLinkType);
+      /*if(j==0){
         firstLinkType = theLinkType;
       }
       var linkInfo;
@@ -177,13 +239,13 @@ define([
         linkInfo = new RecordServiceLink({record:this.record, link:link});          
       }else{
         linkInfo = new RecordLink({record:this.record, link:link});
-      }
+      }*/
+      linkInfo = new RecordLink({record:this.record, link:link});
       linkInfo.startup();
       domConstruct.place(linkInfo.domNode,this.links);        
     } 
 
-    var contentTypeUrl = this._getContentTypeUrl(firstLinkType);
-    this.record.contentTypeUrl = contentTypeUrl;
+    
     var contentTypeIcon = new RecordContentType({record:this.record});
     contentTypeIcon.startup();
     domConstruct.place(contentTypeIcon.domNode,this.contentType);      

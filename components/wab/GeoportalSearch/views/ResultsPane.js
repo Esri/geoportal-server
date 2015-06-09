@@ -15,6 +15,7 @@ define([
   'widgets/GeoportalSearch/common/List',  
   'widgets/GeoportalSearch/common/Query',
   'widgets/GeoportalSearch/common/QueryTask',
+  'jimu/dijit/Message',
 
   'esri/SpatialReference',
   'esri/layers/ArcGISDynamicMapServiceLayer',
@@ -32,7 +33,7 @@ define([
   'esri/geometry/Polyline',
   'esri/symbols/SimpleLineSymbol',
   'esri/geometry/Polygon',
-  
+
   'esri/symbols/SimpleFillSymbol',
     'esri/InfoTemplate',
     'esri/symbols/jsonUtils',
@@ -42,12 +43,12 @@ define([
     'dijit/form/TextBox',
   'dijit/form/RadioButton',
     'dijit/form/CheckBox',
-  'dijit/form/Select',
+  'dijit/form/Select',  
     'dojo/store/Memory',
     'dojo/data/ObjectStore'
 ],function(declare,lang,array,domConstruct,domClass,html,
            _WidgetBase,_TemplatedMixin,_WidgetsInTemplateMixin, template, nls, 
-           Record, util,List, Query, QueryTask, 
+           Record, util,List, Query, QueryTask,Message,
            SpatialReference, ArcGISDynamicMapServiceLayer, 
            ArcGISTiledMapServiceLayer, ArcGISImageServiceLayer, 
            KMLLayer, GraphicsLayer, FeatureLayer, WMSLayer,
@@ -326,68 +327,89 @@ define([
     var x = index.clientX;
     var y = index.clientY;
     var element = document.elementFromPoint(x, y);
-    var link = dojo.byId(element.id + "_href");
-    var href = "";
-    
-    var linkType = "unknown";
-    if (link) {
-      linkType = link.dataset.linktype;
-      href = link.value;
+   // var record = dojo.byId(element.id);
+
+    var elementId = element.id;
+    var elParts = elementId.split("_addToMap");
+    var recordId = "";
+    if(elParts && elParts.length==2){
+      recordId = elParts[0];
     }
-    
+
+    var link = dojo.byId(recordId + "_open");
+    if(!link) {
+      link = dojo.byId(elementId);
+    }
+
+  //  var addToMapLink = dojo.byId(element.id);// + "_addToMap");
+
+    if(!link) return;
+
+    var href = link.dataset.href;    
+    var linkType = "unknown";
+         
     console.log('_selectResultItem=' + element.id + ", linktype=" + linkType);
     
     var infoTemplate = new InfoTemplate("Attributes", "${*}");
   
-    if (linkType == "mapserver") {
-      var mapserverLayer = null;
-      if (href.indexOf("tiles.arcgis.com/tiles") > 0) {
-        mapserverLayer = new ArcGISTiledMapServiceLayer(href);
-      } else {
-        mapserverLayer = new ArcGISDynamicMapServiceLayer(href);
-      }
-      this.map.addLayer(mapserverLayer);
-      
-    } else if (linkType == "featureserver") {
-      var featureLayer = new FeatureLayer(href, {
-      mode: FeatureLayer.MODE_SNAPSHOT,
-      outFields: ["*"],
-      infoTemplate: infoTemplate
-    });
+    if (link) {
 
-      this.map.addLayer(featureLayer);
-      
-    } else if (linkType == "imageserver") {
-      var imageServiceLayer = new ArcGISImageServiceLayer(href);
-      this.map.addLayer(imageServiceLayer);
-    
-    } else if (linkType == "kml") {
-      var kmlLayer = new KMLLayer(href);
-      this.map.addLayer(kmlLayer);
-    
-    } else if (linkType == "wms") {
-      var wmsLayer = new WMSLayer(href);
-      this.map.addLayer(wmsLayer);
-      
-    } else if (linkType == "webmap") {
-      //this.map.addLayer(imageServiceLayer);
-      //http://www.arcgis.com/sharing/content/items/57c2df89f4064d748e9b84a690d7865a/data
-      /*
-      arcgisUtils.arcgisUrl = href.substr(0, href.indexOf("/sharing/content/items")) + "/sharing/content/items";
-      var webmap = href.substr(href.indexOf("/sharing/content/items/") + 23, href.length-1);
-      arcgisUtils.createMap(webmap);
-      arcgisUtils.createMap(webmap,"map").then(function(response){
-        this.map = response.map;
+      linkType = link.dataset.linktype;
+
+      if (linkType == "mapserver") {
+        var mapserverLayer = null;
+        if (href.indexOf("tiles.arcgis.com/tiles") > 0) {
+          mapserverLayer = new ArcGISTiledMapServiceLayer(href);
+        } else {
+          mapserverLayer = new ArcGISDynamicMapServiceLayer(href);
+        }
+        this.map.addLayer(mapserverLayer);
+        
+      } else if (linkType == "featureserver") {
+        var featureLayer = new FeatureLayer(href, {
+        mode: FeatureLayer.MODE_SNAPSHOT,
+        outFields: ["*"],
+        infoTemplate: infoTemplate
       });
-      */
-      var requestHandle = esriRequest({
-        "url": href,
-        handleAs:'json'
-      },{
-        useProxy:false
-      });
-      requestHandle.then(this._onFetchWebMapFinish, this._onFetchWebMapError);
-    
+
+        this.map.addLayer(featureLayer);
+        
+      } else if (linkType == "imageserver") {
+        var imageServiceLayer = new ArcGISImageServiceLayer(href);
+        this.map.addLayer(imageServiceLayer);
+      
+      } else if (linkType == "kml") {
+        var kmlLayer = new KMLLayer(href);
+        this.map.addLayer(kmlLayer);
+      
+      } else if (linkType == "wms") {
+        var wmsLayer = new WMSLayer(href);
+        this.map.addLayer(wmsLayer);
+        
+      } else if (linkType == "webmap") {
+        //this.map.addLayer(imageServiceLayer);
+        //http://www.arcgis.com/sharing/content/items/57c2df89f4064d748e9b84a690d7865a/data
+        /*
+        arcgisUtils.arcgisUrl = href.substr(0, href.indexOf("/sharing/content/items")) + "/sharing/content/items";
+        var webmap = href.substr(href.indexOf("/sharing/content/items/") + 23, href.length-1);
+        arcgisUtils.createMap(webmap);
+        arcgisUtils.createMap(webmap,"map").then(function(response){
+          this.map = response.map;
+        });
+        */
+        var requestHandle = esriRequest({
+          "url": href,
+          handleAs:'json'
+        },{
+          useProxy:false
+        });
+        requestHandle.then(this._onFetchWebMapFinish, this._onFetchWebMapError);
+      
+      } else {
+        var win = window.open(href, '_blank');
+        win.focus();
+      }
+
     } else {
       var win = window.open(href, '_blank');
       win.focus();
@@ -407,6 +429,8 @@ define([
         this.map.infoWindow.show(item.centerpoint);
       }));
     }
+
+
   }, 
 
 
@@ -497,7 +521,8 @@ define([
     
     var footprints = this.map.getLayer("footprints");
     if(footprints){
-     footprints.hide();
+     // footprints.hide();
+     footprints.clear();
     }
     
     this.divResultMessage.textContent = this.nls.noResults;
@@ -509,6 +534,17 @@ define([
     theList.innerHTML = "";
           
     return false;
-  }
+  },
+
+  _hideInfoWindow:function(){
+        if(this.map && this.map.infoWindow){
+          this.map.infoWindow.hide();
+          if(typeof this.map.infoWindow.setFeatures === 'function'){
+            this.map.infoWindow.setFeatures([]);
+          }
+          this.map.infoWindow.setTitle('');
+          this.map.infoWindow.setContent('');
+        }
+      }
   });
 });

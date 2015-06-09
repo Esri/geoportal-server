@@ -1,10 +1,6 @@
 {
   "catalogs": [
       {
-        "name": "EPA Geoplatform",
-        "url": "http://hogeweg.esri.com/geoportal/rest/find/document?rid=EPA"
-      },
-      {
         "name": "Geoportal Sandbox",
         "url": "http://gptogc.esri.com/geoportal/rest/find/document"
       },

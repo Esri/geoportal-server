@@ -3,7 +3,7 @@
         <label data-dojo-attach-point="labelQueryName">${nls.searchText}</label>
         <br>
         <input type="text" style="width:100%;margin-top:10px;" data-dojo-type="dijit/form/TextBox" 
-            data-dojo-attach-point="inputQueryName" data-dojo-props="trim:true" />
+            data-dojo-attach-point="inputQueryName" data-dojo-props="trim:true" data-dojo-attach-event="keydown:onKeyDown"/>
       </div>
       <div style="margin:0 0 20px 0;">
         <label data-dojo-attach-point="labelCatalog">${nls.labelCatalog}</label>
@@ -31,7 +31,7 @@
         <div class="col-2-3">
         </div>
         <div class="col-1-3">
-          <div class="jimu-btn buttonSearch" data-dojo-attach-event="onclick:onSearch">${nls.search}</div>
+          <div class="jimu-btn buttonSearch"  data-dojo-attach-point="_searchButton" data-dojo-attach-event="onclick:onSearch,keydown:onKeyDown">${nls.search}</div>
         </div>        
       </div>
 </div>

@@ -67,14 +67,14 @@ define([
         this.inputQueryCatalog.setStore(catalogsStore);
     },
      
-     onTextKeyDown: function(evt) {
-       if (evt.keyCode==13 && !this._searchButton.get('disabled')) {
-         this.handleSearch(evt);
+     onKeyDown: function(evt) {
+       if (evt.keyCode==13 ){ // && !this._searchButton.get('disabled')) {
+         this.onSearch();
        }
      },
      
      onTextChanged: function(evt) {
-       this._searchButton.setDisabled(this.getText().length==0);
+       //this._searchButton.setDisabled(this.getText().length==0);
      },
 
      disableAll: function(disabled) {

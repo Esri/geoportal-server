@@ -72,6 +72,7 @@ define([
         console.log("inside _setCatalogsTable");
         var catalogs = this.config.catalogs;
         this.catalogsTable.clear();
+        this.recordsPerPage.set("value", this.config.recordsPerPage);
         array.forEach(catalogs,lang.hitch(this,function(catalog){                   
             this._populateCatalogTableRow(catalog);            
         }));
@@ -162,12 +163,49 @@ define([
               });
             });
       },
+
+      _populateRepositories: function(response){
+        var catalogUrl = this.catalogUrl.value;
+        array.forEach(response.rows, lang.hitch(this, function(row, index){
+          var catalog = { "name": row.name, "url": catalogUrl + "/rest/find/document?rid=" + row.id}
+          this._populateCatalogTableRow(catalog); 
+        }));
+      },
+
+      _fetchCatalogs: function(){
+        var getCatalogsUrl = this.catalogUrl.value + "/rest/repositories?protocol=all";
+        esriRequest({
+          url: getCatalogsUrl,
+          handleAs: "text"
+        }).then(lang.hitch(this,function(data){
+           if(typeof(data) == 'undefined' || data == null) {
+            data = "";
+           }
+           var catalogs = dojo.eval("[{" + data + "}]");
+           if(typeof(catalogs.length) != 'undefined'
+             && catalogs.length == 1) {
+             catalogs = catalogs[0];
+             
+           }
+           if(typeof(catalogs.rows) == 'undefined') {
+             catalogs.rows = new Array();
+           }
+          this._populateRepositories(catalogs); 
+        }), lang.hitch(this,function(err){
+            console.error(err);
+            new Message({
+                message: this.nls.invalidUrl
+            });         
+        }));
+          
+      },
      
       getConfig: function() {
       	console.log("GetConfig");
         
+        this.config.recordsPerPage = this.recordsPerPage.get("value");
+        
         this.config.catalogs = new Array();
-
         var trs = this.catalogsTable.getRows();
         var flds = new Array();
         array.forEach(trs,lang.hitch(this,function(tr){
