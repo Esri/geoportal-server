@@ -31,7 +31,7 @@ public class AtomEntry {
     /** The TIM e_ forma t_ pattern. */
     static final String TIME_FORMAT_PATTERN = "kk:mm:ss";
     /** The ENTIT y_ ope n_ tag. */
-    private final String ENTITY_OPEN_TAG_NS_PATTERN = "<%s  xmlns=\"http://www.w3.org/2005/Atom\" xmlns:georss=\"http://www.georss.org/georss\" xmlns:opensearch=\"http://a9.com/-/spec/opensearch/1.1/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">";
+    private final String ENTITY_OPEN_TAG_NS_PATTERN = "<%s  xmlns=\"http://www.w3.org/2005/Atom\" xmlns:georss=\"http://www.georss.org/georss\" xmlns:georss10=\"http://www.georss.org/georss/10\" xmlns:opensearch=\"http://a9.com/-/spec/opensearch/1.1/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">";
     private final String ENTITY_OPEN_TAG_NS;
     private final String ENTITY_OPEN_TAG_PATTERN = "<%s>";
     private final String ENTITY_OPEN_TAG;
@@ -65,6 +65,10 @@ public class AtomEntry {
     private final String BOX_OPEN_TAG = "<georss:box>";
     /** The BO x_ clos e_ tag. */
     private final String BOX_CLOSE_TAG = "</georss:box>";
+    /** The BO x_ ope n_ tag. */
+    private final String BOX10_OPEN_TAG = "<georss10:box>";
+    /** The BO x_ clos e_ tag. */
+    private final String BOX10_CLOSE_TAG = "</georss10:box>";
     /** The _id. */
     private String _id = null;
     /** The _title. */
@@ -435,6 +439,9 @@ public class AtomEntry {
             if (hasEnvelope()) {
                 try {
                     data = BOX_OPEN_TAG + getMiny() + " " + getMinx() + " " + getMaxy() + " " + getMaxx() + BOX_CLOSE_TAG;
+                    writer.append("\t" + data + lineSeparator);
+                    
+                    data = BOX10_OPEN_TAG + getMiny() + " " + getMinx() + " " + getMaxy() + " " + getMaxx() + BOX10_CLOSE_TAG;
                     writer.append("\t" + data + lineSeparator);
                 } catch (Exception e) {
                     LOGGER.log(Level.WARNING, "", e);

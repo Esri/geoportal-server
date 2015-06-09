@@ -239,8 +239,8 @@ public class AtomFeed {
 private final String ATOM_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 
 /** The ATO m_ roo t_ ope n_ tag. */
-private final String ATOM_ROOT_OPEN_TAG_PATTERN = "<%s xmlns=\"http://www.w3.org/2005/Atom\" xmlns:georss=\"http://www.georss.org/georss\" xmlns:opensearch=\"http://a9.com/-/spec/opensearch/1.1/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">";
-private String ATOM_ROOT_OPEN_TAG = "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:georss=\"http://www.georss.org/georss\" xmlns:opensearch=\"http://a9.com/-/spec/opensearch/1.1/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">";
+private final String ATOM_ROOT_OPEN_TAG_PATTERN = "<%s xmlns=\"http://www.w3.org/2005/Atom\" xmlns:georss=\"http://www.georss.org/georss\" xmlns:georss10=\"http://www.georss.org/georss/10\" xmlns:opensearch=\"http://a9.com/-/spec/opensearch/1.1/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">";
+private String ATOM_ROOT_OPEN_TAG = "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:georss=\"http://www.georss.org/georss\" xmlns:georss10=\"http://www.georss.org/georss/10\" xmlns:opensearch=\"http://a9.com/-/spec/opensearch/1.1/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">";
 
 /** The ATO m_ roo t_ clos e_ tag. */
 private final String ATOM_ROOT_CLOSE_TAG_PATTERN = "</%s>";
