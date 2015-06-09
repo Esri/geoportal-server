@@ -32,6 +32,7 @@ import com.esri.gpt.framework.util.Val;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -41,6 +42,9 @@ public class AtomFeedWriter implements FeedWriter {
 
 /** The LOGGER. */
 private static Logger LOGGER = Logger.getLogger(AtomFeedWriter.class.getName());
+
+/** The request */
+private final HttpServletRequest request;
 
 /** The _writer. */
 private PrintWriter _writer;
@@ -63,9 +67,11 @@ private String rootName = "feed";
 /**
  * Constructor.
  * 
+ * @param request request
  * @param writer the writer
  */
-public AtomFeedWriter(PrintWriter writer) {
+public AtomFeedWriter(HttpServletRequest request, PrintWriter writer) {
+  this.request = request;
   _writer = writer;
   lineSeparator =	(String) java.security.AccessController.doPrivileged(
               new sun.security.action.GetPropertyAction("line.separator"));
@@ -74,10 +80,12 @@ public AtomFeedWriter(PrintWriter writer) {
 /**
  * Constructor.
  * 
+ * @param request request
  * @param writer the writer
  * @param entryBaseUrl provider URL
  */
-public AtomFeedWriter(PrintWriter writer, String entryBaseUrl) {
+public AtomFeedWriter(HttpServletRequest request, PrintWriter writer, String entryBaseUrl) {
+  this.request = request;
   _writer = writer;
   _entryBaseUrl = entryBaseUrl;
   lineSeparator =	(String) java.security.AccessController.doPrivileged(
@@ -256,8 +264,9 @@ private final String AUTHOR_OPEN_TAG = "<author><name>";
 /** The AUTHOR clos e_ tag. */
 private final String AUTHOR_CLOSE_TAG = "</name></author>";
 
-/** The LIN k_ tag. */
+/** The LINK tag. */
 private final String LINK_TAG = "<link rel=\"self\" href=\"?\"/>";
+private final String OSLINK_TAG = "<link rel=\"search\" type=\"application/opensearchdescription+xml\" href=\"?\"/>";
 
 /** The UPDATED open tag. */
 private final String UPDATED_OPEN_TAG = "<updated>";
@@ -549,15 +558,19 @@ public void writePreamble(java.io.Writer writer) throws IOException {
       LOGGER.log(Level.WARNING, "", e);
     }
   }
-  if (getLink() != null) {
+  if (getEntryBaseUrl() != null) {
     try {
       data = LINK_TAG.replace("?", Val.escapeXml(getEntryBaseUrl()));
+      writer.append(data+lineSeparator);
+      
+      data = OSLINK_TAG.replace("?", Val.escapeXml(getEntryBaseUrl()+"/openSearchDescription"));
       writer.append(data+lineSeparator);
     } catch (Exception e) {
       LOGGER.log(Level.WARNING, "", e);
     }
-
   }
+  
+  
   if (getAuthor() != null) {
     try {
       data = Val.escapeXml(getAuthor());
@@ -588,6 +601,19 @@ public void writePreamble(java.io.Writer writer) throws IOException {
     _writer.println(ITEMS_PER_PAGE_OPEN_TAG + getOsProps().getRecordsPerPage()
         + ITEMS_PER_PAGE_CLOSE_TAG);
   }
+  
+  writer.append("<opensearch:Query role=\"request\"");
+  if (request!=null) {
+    String searchText = Val.chkStr(request.getParameter("searchText"));
+    String uuid = Val.chkStr(request.getParameter("uuid"));
+    if (!searchText.isEmpty()) {
+      writer.append(" searchText=\"").append(Val.escapeXml(searchText)).append("\"");
+    }
+    if (!uuid.isEmpty()) {
+      writer.append(" uuid=\"").append(Val.escapeXml(uuid)).append("\"");
+    }
+  }
+  writer.append("/>");
 }
 
 /**
@@ -606,7 +632,6 @@ public void writeEnd(java.io.Writer writer) throws IOException {
  * @param writer the writer
  */
 public void WriteTo(java.io.Writer writer) {
-  String data = null;
   if (writer == null)
     return;
   try {

@@ -323,7 +323,7 @@ public void searchDone() throws Exception {
  */
 private AtomFeed getAtomFeed() {
   if(_atomFeed == null) {
-    AtomFeed af = new AtomFeedWriter(this.getPrintWriter()).new AtomFeed();
+    AtomFeed af = new AtomFeedWriter(_httpServletRequest, this.getPrintWriter()).new AtomFeed();
     af.setTitle(getMessageBroker().retrieveMessage("catalog.rest.title"));
     af.setDescription(getMessageBroker().retrieveMessage(
         "catalog.rest.description"));

@@ -512,7 +512,7 @@ public class RestQueryServlet extends BaseServlet {
 
       // ATOM writer  
     } else if (format.equals(RestQueryServlet.ResponseFormat.atom)) {
-      AtomFeedWriter atomWriter = new AtomFeedWriter(printWriter);
+      AtomFeedWriter atomWriter = new AtomFeedWriter(request, printWriter);
       atomWriter.setEntryBaseUrl(query.getRssProviderUrl());
       atomWriter.set_messageBroker(messageBroker);
       atomWriter.setTarget(target);

@@ -26,6 +26,7 @@ import java.io.Writer;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Eros atom feed writer.
@@ -49,15 +50,15 @@ public class ErosAtomFeedWriter extends AtomFeedWriter {
   ErosEmailFinder emailFinder;
   private ResourceIdentifier resourceIdentifier;
 
-  public ErosAtomFeedWriter(ErosEmailFinder emailFinder, ResourceIdentifier resourceIdentifier, PrintWriter writer) {
-    super(writer);
+  public ErosAtomFeedWriter(HttpServletRequest request, ErosEmailFinder emailFinder, ResourceIdentifier resourceIdentifier, PrintWriter writer) {
+    super(request, writer);
     this.emailFinder = emailFinder;
     this.resourceIdentifier = resourceIdentifier;
     this._writer = writer;
   }
 
-  public ErosAtomFeedWriter(ErosEmailFinder emailFinder, ResourceIdentifier resourceIdentifier, PrintWriter writer, String entryBaseUrl) {
-    super(writer, entryBaseUrl);
+  public ErosAtomFeedWriter(HttpServletRequest request, ErosEmailFinder emailFinder, ResourceIdentifier resourceIdentifier, PrintWriter writer, String entryBaseUrl) {
+    super(request, writer, entryBaseUrl);
     this.emailFinder = emailFinder;
     this.resourceIdentifier = resourceIdentifier;
     this._writer = writer;

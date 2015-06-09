@@ -263,7 +263,7 @@ public class ErosQueryServlet extends RestQueryServlet {
       
       String sTarget = query.getResponseTarget();
       RecordSnippetWriter.Target target = RecordSnippetWriter.Target.checkValueOf(sTarget);
-      AtomFeedWriter atomWriter = new ErosAtomFeedWriter(emailFinder, resourceIdentifier, printWriter);
+      AtomFeedWriter atomWriter = new ErosAtomFeedWriter(request,emailFinder, resourceIdentifier, printWriter);
       atomWriter.setEntryBaseUrl(query.getRssProviderUrl());
       atomWriter.set_messageBroker(messageBroker);
       atomWriter.setTarget(target);
