@@ -15,46 +15,26 @@ define([
   'widgets/GeoportalSearch/common/List',  
   'widgets/GeoportalSearch/common/Query',
   'widgets/GeoportalSearch/common/QueryTask',
+  'widgets/GeoportalSearch/common/Paginator',
+  'widgets/GeoportalSearch/common/LayerFactory',
+  'widgets/GeoportalSearch/common/WebmapProcessor',
+  'widgets/GeoportalSearch/common/FootprintsGenerator',
   'jimu/dijit/Message',
+  "esri/layers/GraphicsLayer",
 
-  'esri/SpatialReference',
-  'esri/layers/ArcGISDynamicMapServiceLayer',
-  'esri/layers/ArcGISTiledMapServiceLayer',
-  'esri/layers/ArcGISImageServiceLayer',
-  'esri/layers/KMLLayer',
-  'esri/layers/GraphicsLayer',
-  'esri/layers/FeatureLayer',
-  'esri/layers/WMSLayer',
-  'esri/graphic',
-  'esri/geometry/Point',
-  'esri/geometry/Extent',
-  'esri/symbols/SimpleMarkerSymbol',
-  'esri/symbols/PictureMarkerSymbol',
-  'esri/geometry/Polyline',
-  'esri/symbols/SimpleLineSymbol',
-  'esri/geometry/Polygon',
-
-  'esri/symbols/SimpleFillSymbol',
-    'esri/InfoTemplate',
-    'esri/symbols/jsonUtils',
-    'esri/geometry/webMercatorUtils',
   'dojo/topic',    
   'dijit/ProgressBar',
-    'dijit/form/TextBox',
+  'dijit/form/TextBox',
   'dijit/form/RadioButton',
-    'dijit/form/CheckBox',
+  'dijit/form/CheckBox',
   'dijit/form/Select',  
-    'dojo/store/Memory',
-    'dojo/data/ObjectStore'
+  'dojo/store/Memory',
+  'dojo/data/ObjectStore'
 ],function(declare,lang,array,domConstruct,domClass,html,
            _WidgetBase,_TemplatedMixin,_WidgetsInTemplateMixin, template, nls, 
-           Record, util,List, Query, QueryTask,Message,
-           SpatialReference, ArcGISDynamicMapServiceLayer, 
-           ArcGISTiledMapServiceLayer, ArcGISImageServiceLayer, 
-           KMLLayer, GraphicsLayer, FeatureLayer, WMSLayer,
-           Graphic, Point, Extent, SimpleMarkerSymbol, PictureMarkerSymbol, 
-           Polyline, SimpleLineSymbol, Polygon, SimpleFillSymbol, InfoTemplate, 
-           jsonUtils, webMercatorUtils,
+           Record, util, List, Query, QueryTask,Paginator, LayerFactory,
+           WebmapProcessor,FootprintsGenerator,
+           Message,GraphicsLayer,
            topic){
   return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin],{
     
@@ -112,117 +92,30 @@ define([
       console.debug(error);
   },
 
-  _paginateResults: function(){
-
-    var elHdr = this.pagination;
-    var nStartIndex = this.query.start;
-    var nTotalResults = this.results.totalResults;
-
-    var currentPageNumber = Math.ceil(nStartIndex / this.nItemsPerPage);
-    var nOfPages = Math.ceil(nTotalResults / this.nItemsPerPage);
-    var iFrom = (currentPageNumber - 2) > 1 ? (currentPageNumber - 2) : 1;
-    var iTo = (currentPageNumber + 2) > nOfPages ? nOfPages : (currentPageNumber + 2);
-    if (iTo < 6) {
-      iTo = nOfPages >= 5 ? 5 : nOfPages;
-      iFrom = 1;
-    }else if (iTo == nOfPages){
-      iFrom = nOfPages - 4;
-    }
-    var nEndIndex = nStartIndex + this.nItemsPerPage - 1;
-    if (nEndIndex > nTotalResults) nEndIndex = nTotalResults;
-
-    if(this.elPageControl){
-      elHdr.removeChild(this.elPageControl);
-    }
-    this.elPageControl = document.createElement("div");
-    //this.elPageControl.id = this.resultsHeaderId+"-pageControl";
-    this.elPageControl.className = "nav";
-    
-    var sPageSummary = this.nls.pageSummaryPattern;
-    sPageSummary = sPageSummary.replace("{0}",nStartIndex);
-    sPageSummary = sPageSummary.replace("{1}",nEndIndex);
-    var elPageSummary = document.createElement("span");
-    elPageSummary.className = "result";
-    elPageSummary.appendChild(document.createTextNode(sPageSummary));
-    this.elPageControl.appendChild(elPageSummary);
-    
-    var elPageNumbers = document.createElement("span");
-    this.elPageControl.appendChild(elPageNumbers);
-    if (iFrom > 1) {
-      var elPage = document.createElement("a");
-      elPage.setAttribute("href","javascript:void(0);");
-      elPage.pageNumber = 1;
-      elPage.appendChild(document.createTextNode(this.nls.first));
-      elPageNumbers.appendChild(elPage);
-      dojo.connect(elPage,"onclick",this,"_onPageClicked");
-
-       var elPage = document.createElement("a");
-       elPage.setAttribute("href","javascript:void(0);");
-       elPage.pageNumber = iFrom;
-       elPage.appendChild(document.createTextNode("<"));
-       elPageNumbers.appendChild(elPage);
-       dojo.connect(elPage,"onclick",this,"_onPageClicked");
-    }
-    if (iTo > 1) {
-      for (var i=iFrom; i<=iTo; i++) {          
-        var elPage = document.createElement("a");
-        elPage.setAttribute("href","javascript:void(0);");
-        elPage.pageNumber = i;       
-        elPage.appendChild(document.createTextNode(""+i));        
-        if (i == currentPageNumber) {
-          elPage.className = "current";
-        }
-        elPageNumbers.appendChild(elPage);
-        dojo.connect(elPage,"onclick",this,"_onPageClicked");
-    
-      }      
-    }
-
-    if (iTo < nOfPages) {  
-      var elPage = document.createElement("a");
-      elPage.setAttribute("href","javascript:void(0);");
-      elPage.pageNumber = iTo;
-      elPage.appendChild(document.createTextNode(">"));
-      elPageNumbers.appendChild(elPage);
-      dojo.connect(elPage,"onclick",this,"_onPageClicked");
-      var elPage = document.createElement("a");
-      elPage.setAttribute("href","javascript:void(0);");
-      elPage.pageNumber = nOfPages;
-      elPage.appendChild(document.createTextNode(this.nls.last));
-      elPageNumbers.appendChild(elPage);
-      dojo.connect(elPage,"onclick",this,"_onPageClicked");
-    }
-
-     elHdr.appendChild(this.elPageControl);
-
-  },
-
-  _onPageClicked: function(e){
-    if (!e) e = window.event;
-    var el = (window.event) ? e.srcElement : e.target;
-    if ((el != null) && (el.pageNumber != null)) {
-      this.query.start = ((el.pageNumber - 1) * this.nItemsPerPage) + 1;
-      var queryTask = new QueryTask();
-      queryTask.execute(this.query);
-    }
-  },
-
   _processRecords: function(){
 
     var len = this.results.records.length;
     if(len > 0){
-      this._paginateResults();
+      domConstruct.empty(this.pagination);
+      var paginator = new Paginator();
+      paginator.paginateResults({
+                                  container:this.pagination,
+                                  results:this.results,
+                                  query:this.query,
+                                  nItemsPerPage:this.config.nItemsPerPage,
+                                  nls:this.nls
+                                });
     }
 
     theList = dojo.byId("list"); // dnw this.list.domNode;
     theList.innerHTML = "";   
      
-    for (var i = 0; i < len; i++) {          
-      var record = this.results.records[i];
-      var recordInfo = new Record({record: record, index:i});
+    var records = this.results.records;         
+    array.forEach(records, lang.hitch(this, function(record, index){
+      var recordInfo = new Record({record: record, index:index});
       recordInfo.startup();
       domConstruct.place(recordInfo.domNode,theList);
-    }  
+    }));  
 
   },
 
@@ -244,24 +137,20 @@ define([
     
     var len = results.records.length;
     var divResultMessage = this.divResultMessage;
-    if (len === 0) {
-      divResultMessage.textContent = "No results"; // this.nls.noResults;  
+    if (len === 0) {      
       this.clear();
+      divResultMessage.textContent =  this.nls.noResults;  
       return;
     } else {
       this.clear();
-      divResultMessage.textContent = "Results found: " + results.totalResults; //this.nls.featuresSelected + results.records.length;
+      divResultMessage.textContent = this.nls.featuresSelected + results.totalResults;
     }
 
    this._processRecords();
    this._addFootprints();
   },
 
-  _addFootprints:function(results){
-    var features = this.results.records;
-    var symbol = new SimpleFillSymbol();
-    symbol.setColor(new esri.Color([0,0,0,0.05]));
-    
+  _addFootprints:function(){    
     var footprints;
     if (this.footprints) {
       this.footprints = this.map.getLayer("footprints");
@@ -274,41 +163,8 @@ define([
       this.footprints.clear();
     }
     
-    for (var i = 0, len = features.length; i < len; i++) {
-      var feature = features[i];
-      var type = feature.geometry.type;
-      var json = {};
-      var geometry, centerpoint;
-      if(feature.geometry.spatialReference){
-       json.spatialReference = feature.geometry.spatialReference;
-      }else{
-        json.spatialReference = 4326;
-      }
-      switch (type) {
-        case "multipoint":
-        case "point":
-          break;
-        case "polyline":
-          break;
-        case "extent":
-        case "Polygon":
-        case "polygon":
-         if(feature.bbox){
-          var bbox = feature.bbox;
-          geometry = Extent(bbox[0],bbox[1],bbox[2],bbox[3], new SpatialReference(4326)); 
-          centerpoint = geometry.getCenter();
-         }
-          break;
-        default:
-          break;
-      }
-
-      var title = feature.title;
-      var content = feature.summary;
-      var it = new InfoTemplate(title, title + "<br>" + content);
-      var graphic = new Graphic(geometry,symbol,feature,it);
-      this.footprints.add(graphic);
-    } 
+    var fpGenerator = new FootprintsGenerator();
+    fpGenerator.addFootprints(this.footprints,this.results.records);
   },
 
   _getAlias: function(att) {
@@ -350,65 +206,26 @@ define([
          
     console.log('_selectResultItem=' + element.id + ", linktype=" + linkType);
     
-    var infoTemplate = new InfoTemplate("Attributes", "${*}");
+    //var infoTemplate = new InfoTemplate("Attributes", "${*}");
   
     if (link) {
 
       linkType = link.dataset.linktype;
 
-      if (linkType == "mapserver") {
-        var mapserverLayer = null;
-        if (href.indexOf("tiles.arcgis.com/tiles") > 0) {
-          mapserverLayer = new ArcGISTiledMapServiceLayer(href);
-        } else {
-          mapserverLayer = new ArcGISDynamicMapServiceLayer(href);
-        }
-        this.map.addLayer(mapserverLayer);
+      if (linkType == "mapserver" || linkType == "featureserver" || linkType == "imageserver" 
+        || linkType == "kml" || linkType == "wms") {
         
-      } else if (linkType == "featureserver") {
-        var featureLayer = new FeatureLayer(href, {
-        mode: FeatureLayer.MODE_SNAPSHOT,
-        outFields: ["*"],
-        infoTemplate: infoTemplate
-      });
-
-        this.map.addLayer(featureLayer);
-        
-      } else if (linkType == "imageserver") {
-        var imageServiceLayer = new ArcGISImageServiceLayer(href);
-        this.map.addLayer(imageServiceLayer);
-      
-      } else if (linkType == "kml") {
-        var kmlLayer = new KMLLayer(href);
-        this.map.addLayer(kmlLayer);
-      
-      } else if (linkType == "wms") {
-        var wmsLayer = new WMSLayer(href);
-        this.map.addLayer(wmsLayer);
-        
-      } else if (linkType == "webmap") {
-        //this.map.addLayer(imageServiceLayer);
-        //http://www.arcgis.com/sharing/content/items/57c2df89f4064d748e9b84a690d7865a/data
-        /*
-        arcgisUtils.arcgisUrl = href.substr(0, href.indexOf("/sharing/content/items")) + "/sharing/content/items";
-        var webmap = href.substr(href.indexOf("/sharing/content/items/") + 23, href.length-1);
-        arcgisUtils.createMap(webmap);
-        arcgisUtils.createMap(webmap,"map").then(function(response){
-          this.map = response.map;
-        });
-        */
-        var requestHandle = esriRequest({
-          "url": href,
-          handleAs:'json'
-        },{
-          useProxy:false
-        });
-        requestHandle.then(this._onFetchWebMapFinish, this._onFetchWebMapError);
-      
+        LayerFactory.createLayer(href,linkType).then(lang.hitch(this,function(layer){
+            this.map.addLayer(layer);
+        }));
+               
+      } else if (linkType == "webmap") {        
+          var wmProcessor = new WebMapProcessor();
+          wmProcessor.process(href,this.map);
       } else {
         var win = window.open(href, '_blank');
         win.focus();
-      }
+      }  
 
     } else {
       var win = window.open(href, '_blank');
@@ -430,59 +247,8 @@ define([
       }));
     }
 
-
   }, 
-
-
   
-  _onFetchWebMapFinish: function(response) {
-    console.log('_onFetchWebMapFinish');
-    
-    var numLayers = response.operationalLayers.length;
-    for (var ii=0; ii < numLayers; ii++) {
-      var theLayer = response.operationalLayers[ii];
-      var href = theLayer.url;
-      var hrefLower = href.toLowerCase();
-      var linkType = hrefLower.split("/").pop();
-  
-      if (linkType == "mapserver") {
-        var mapserverLayer = null;
-        if (href.indexOf("tiles.arcgis.com/tiles") > 0) {
-          mapserverLayer = new ArcGISTiledMapServiceLayer(href);
-        } else {
-          mapserverLayer = new ArcGISDynamicMapServiceLayer(href);
-        }
-        this.map.addLayer(mapserverLayer);
-      
-      } else if (linkType == "featureserver") {
-        var featureLayer = new FeatureLayer(href, {
-          mode: FeatureLayer.MODE_SNAPSHOT,
-          outFields: ["*"],
-          infoTemplate: infoTemplate
-        });
-
-        this.map.addLayer(featureLayer);
-        
-      } else if (linkType == "imageserver") {
-        var imageServiceLayer = new ArcGISImageServiceLayer(href);
-        this.map.addLayer(imageServiceLayer);
-      
-      } else if (linkType == "kml") {
-        var kmlLayer = new KMLLayer(href);
-        this.map.addLayer(kmlLayer);
-      
-      } else if (linkType == "wms") {
-        var wmsLayer = new WMSLayer(href);
-        this.map.addLayer(wmsLayer);
-      }
-      
-    }
-    },
-    
-    _onFetchWebMapError: function(error) {
-      console.log('_onFetchWebMapError');
-    },
-      
     _hideInfoWindow:function(){
       if(this.map &&　this.map.infoWindow){
         this.map.infoWindow.hide();
@@ -514,9 +280,8 @@ define([
   clear: function() {
     this._hideInfoWindow();
 
-    if(this.elPageControl){
-      this.pagination.removeChild(this.elPageControl);
-      this.elPageControl = null;
+    if(this.pagination){
+      domConstruct.empty(this.pagination);
     }
     
     var footprints = this.map.getLayer("footprints");

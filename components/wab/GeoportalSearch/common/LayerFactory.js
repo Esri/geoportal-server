@@ -2,24 +2,55 @@ define([
   'dojo/Deferred',
   'esri/layers/ArcGISDynamicMapServiceLayer',
   'esri/layers/ArcGISTiledMapServiceLayer',
+  "esri/layers/ArcGISImageServiceVectorLayer",
   'esri/layers/ArcGISImageServiceLayer',
   'esri/layers/FeatureLayer',
+  'esri/layers/KMLLayer',
+  'esri/layers/WMSLayer',
+  "esri/layers/WMTSLayer",
+  "esri/layers/CSVLayer",
+  "esri/layers/GeoRSSLayer",
+  "esri/layers/RasterLayer",
+  "esri/layers/StreamLayer",
+  'esri/InfoTemplate',
   'esri/request'
-],function(Deferred,ArcGISDynamicMapServiceLayer,ArcGISTiledMapServiceLayer,ArcGISImageServiceLayer,FeatureLayer,esriRequest){
+],function(Deferred,
+          ArcGISDynamicMapServiceLayer,
+          ArcGISTiledMapServiceLayer,
+          ArcGISImageServiceVectorLayer,
+          ArcGISImageServiceLayer,
+          FeatureLayer,
+          KMLLayer,
+          WMSLayer,
+          WMTSLayer, 
+          CSVLayer,
+          GeoRSSLayer,
+          RasterLayer,
+          StreamLayer,
+          InfoTemplate, 
+          esriRequest){
   return {
-    getAgsServiceType: function(url) {
-      if ((/\/MapServer$/gi).test(url)) return "MapServer";
-      if ((/\/ImageServer/gi).test(url)) return "ImageServer";
-      if ((/\/MapServer\/\d+$/gi).test(url)) return "FeatureLayer";
+
+    _getAgsServiceType: function(url) {
+      if ((/\/MapServer$/gi).test(url)) return "mapserver";
+      if ((/\/ImageServer/gi).test(url)) return "imageserver";
+      if ((/\/MapServer\/\d+$/gi).test(url)) return "featurelayer";
+
       return "";
     },
     
-    createLayer: function(url) {
+    createLayer: function(url,type) {
+       
        var deferred = new Deferred();
        var layer = null;
-       var type = this.getAgsServiceType(url);
+
+       if(!type){
+         type = this.getAgsServiceType(url);
+       }
+
        switch (type) {
-         case "MapServer":
+
+         case "mapserver":
             esriRequest({
               url: url,
               content: { f: "json" },
@@ -38,21 +69,72 @@ define([
              deferred.resolve(null);
            });
            break;
-         case "ImageServer":
+
+         case "imageserver":
            layer = new ArcGISImageServiceLayer(url);
            deferred.resolve(layer);
            break;
-         case "FeatureLayer":
+
+         case "imageservervectorlayer":
+           layer = new ArcGISImageServiceVectorLayer(url);
+           deferred.resolve(layer);
+           break;
+        
+         case "featureserver":
+         case "featurelayer":
+           var infoTemplate = new InfoTemplate("Attributes", "${*}");
            layer = new FeatureLayer(url, {
               mode: FeatureLayer.MODE_SNAPSHOT,
-              outFields: [ "*" ]
+              outFields: [ "*" ],
+              infoTemplate: infoTemplate
            });
            deferred.resolve(layer);
            break;
+
+        case "kml":
+         layer = new KMLLayer(url);
+         deferred.resolve(layer);
+         break;
+
+        case "wms":
+         layer = new WMSLayer(url);
+         deferred.resolve(layer);
+         break;
+
+        case "wms":
+         layer = new WMSLayer(url);
+         deferred.resolve(layer);
+         break;
+
+        case "wmts":
+         layer = new WMTSLayer(url);
+         break;
+
+        case "cvs":
+         layer = new CVSLayer(url);
+         deferred.resolve(layer);
+         break;
+
+        case "georss":
+         layer = new GeoRSSLayer(url);
+         deferred.resolve(layer);
+         break;
+
+        case "stream":
+         layer = new StreamLayer(url);
+         deferred.resolve(layer);
+         break;
+
+        case "raster":
+         layer = new RasterLayer(url);
+         deferred.resolve(layer);
+         break;
+
          default:
            deferred.resolve(layer);
            break;
        }
+
        return deferred;
     }
     
