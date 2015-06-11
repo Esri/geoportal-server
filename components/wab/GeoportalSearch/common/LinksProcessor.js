@@ -47,69 +47,79 @@ define([
 
    _processLink: function(links){
 
-    var contentTypeLinkType = "";
+      var contentTypeLinkType = "";
 
-    for (var j=0; j < links.length; j++) {
-          
+      for (var j=0; j < links.length; j++) {
+            
           var theLink = links[j];
-           var theLinkType = "";
+          var theLinkType = "";
           theLink.mapServiceType = theLinkType; 
           if ((theLink.type == "open")) {
 
               var href = theLink.href;
-              var hrefLower = href.toLowerCase();
-            
-              if (hrefLower.indexOf("request=getcapabilities") !== -1) {
-                if (hrefLower.indexOf("service=wms") !== -1) {
-                  theLinkType = "wms";
-                } else {
-                  theLinkType = "unsupported"; 
-                }
-                
-              } else if (hrefLower.indexOf("/rest/services/") !== -1) {
-                theLinkType = hrefLower.split("/").pop();
-                
-                if (hrefLower.indexOf("?f=") > 0) {
-                  theLinkType = theLinkType.substr(0, theLinkType.indexOf("?f="));
-                  href = href.substr(0, href.indexOf("?f="));
-                }
-                
-              } else if (hrefLower.indexOf("/services/") !== -1) {
-                if (hrefLower.indexOf("/mapserver/wmsserver") !== -1) {
-                  theLinkType = "wms";
-                }
-                
-              } else if (hrefLower.indexOf("/com.esri.wms.esrimap") !== -1) {
-                theLinkType = "wms";
-                if (hrefLower.indexOf("?") > 0) {
-                  href = href.substr(0, href.indexOf("?"));
-                }
-                
-              } else if ((hrefLower.indexOf("viewer.html") !== -1) && (hrefLower.indexOf("url=") !== -1)) {
-                href = href.substr(href.indexOf("url=")+4);
-                href = decodeURIComponent(href);
-                theLinkType = href.split("/").pop().toLowerCase();
-                
-              } else if ((hrefLower.indexOf("index.jsp") !== -1) && (hrefLower.indexOf("resource=") !== -1)) {
-                href = href.substr(href.indexOf("url=")+4);
-                href = decodeURIComponent(href);
-                theLinkType = href.split("/").pop().toLowerCase();
-                
-              } else if ((hrefLower.indexOf("/sharing/content/items/") !== -1) && (hrefLower.split("/").pop() == "data")) {
-                theLinkType = "webmap";
-                if (hrefLower.indexOf("?") > 0) {
-                  href = href.substr(0, href.indexOf("?"));
-                }
-              } 
+              theLinkType = this.getServiceType(href);
+
               theLink.mapServiceType = theLinkType; 
 
               contentTypeLinkType =  theLinkType;                              
             } 
 
-          }   
+      }   
 
-          return contentTypeLinkType;     
-      },
+      return contentTypeLinkType;     
+  },
+
+
+  getServiceType: function(href) {
+
+    var theLinkType = "";
+    var hrefLower = href.toLowerCase();
+  
+    if (hrefLower.indexOf("request=getcapabilities") !== -1) {
+      if (hrefLower.indexOf("service=wms") !== -1) {
+        theLinkType = "wms";
+      } else {
+        theLinkType = "unsupported"; 
+      }
+      
+    } else if (hrefLower.indexOf("/rest/services/") !== -1) {
+      theLinkType = hrefLower.split("/").pop();
+      
+      if (hrefLower.indexOf("?f=") > 0) {
+        theLinkType = theLinkType.substr(0, theLinkType.indexOf("?f="));
+        href = href.substr(0, href.indexOf("?f="));
+      }
+      
+    } else if (hrefLower.indexOf("/services/") !== -1) {
+      if (hrefLower.indexOf("/mapserver/wmsserver") !== -1) {
+        theLinkType = "wms";
+      }
+      
+    } else if (hrefLower.indexOf("/com.esri.wms.esrimap") !== -1) {
+      theLinkType = "wms";
+      if (hrefLower.indexOf("?") > 0) {
+        href = href.substr(0, href.indexOf("?"));
+      }
+      
+    } else if ((hrefLower.indexOf("viewer.html") !== -1) && (hrefLower.indexOf("url=") !== -1)) {
+      href = href.substr(href.indexOf("url=")+4);
+      href = decodeURIComponent(href);
+      theLinkType = href.split("/").pop().toLowerCase();
+      
+    } else if ((hrefLower.indexOf("index.jsp") !== -1) && (hrefLower.indexOf("resource=") !== -1)) {
+      href = href.substr(href.indexOf("url=")+4);
+      href = decodeURIComponent(href);
+      theLinkType = href.split("/").pop().toLowerCase();
+      
+    } else if ((hrefLower.indexOf("/sharing/content/items/") !== -1) && (hrefLower.split("/").pop() == "data")) {
+      theLinkType = "webmap";
+      if (hrefLower.indexOf("?") > 0) {
+        href = href.substr(0, href.indexOf("?"));
+      }
+    } 
+
+    return theLinkType;
+  },
 
 
   _processLink2: function(link,theLinkType){

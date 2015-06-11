@@ -18,14 +18,16 @@ define([
     'dojo/dom-construct',
 	  'dojo/dom',
 	  'dojo/topic',
+    'widgets/GeoportalSearch/common/ResourceHandler',
 	  'widgets/GeoportalSearch/views/SearchPane',
-    'widgets/GeoportalSearch/views/ResultsPane'
+    'widgets/GeoportalSearch/views/ResultsPane'    
   ],
 
 function(declare, _WidgetsInTemplateMixin, BaseWidget, 
 	TabContainer, Message, utils, LoadingShelter, 	
 	JSON,lang, html, array,
-  query, mouse, on, aspect, domConstruct, dom,topic) {	
+  query, mouse, on, aspect, domConstruct, dom,topic,
+  ResourceHandler) {	
   return declare([BaseWidget, _WidgetsInTemplateMixin], {
 
   	name: 'GeoportalSearch',
@@ -40,14 +42,15 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget,
 	
     postCreate: function() {
   	  console.log('postCreate');
-	    this.inherited(arguments);
+	    this.inherited(arguments);      
       this._initTabContainer();	 	  
-	},
+      this._attachTopics();      
+	  },
 
     startup: function() {
       console.log('startup');
 	    this.inherited(arguments);
-	    this.attachTopics();
+      this._addResource();	    
     },
 
     onOpen: function(){
@@ -59,6 +62,15 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget,
 		this._hideInfoWindow();
 		this.inherited(arguments);
 	 },
+
+   _addResource: function(){
+    console.log('_addResource');
+    var resourceHandler = new ResourceHandler();
+    resourceHandler.addResource({
+                                  map:this.map, 
+                                  nls:this.nls
+                               });
+   },
 
 	destroy:function(){
     console.log('destroy');
@@ -97,7 +109,7 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget,
         this._startedNow = true;
     },
 
-    attachTopics: function(){
+  _attachTopics: function(){
       this.own(topic.subscribe("/widgets/GeoportalSearch/action/switchTab", lang.hitch(this, function (sender, args) { 
       	if(args.tab == this.nls.results){       
        		this.tabContainer.selectTab(this.nls.results); 
