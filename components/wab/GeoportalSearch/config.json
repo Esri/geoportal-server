@@ -1,0 +1,13 @@
+{
+  "catalogs": [
+      {
+        "name": "Geoportal Sandbox",
+        "url": "http://gptogc.esri.com/geoportal/rest/find/document"
+      },
+      {
+        "name": "California Geoportal",
+        "url": "http://portal.gis.ca.gov/geoportal/rest/find/document"
+      }
+  ],
+  "recordsPerPage": 10
+}

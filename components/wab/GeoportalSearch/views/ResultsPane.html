@@ -1,0 +1,17 @@
+<div>
+  <div  data-dojo-type="dijit/ProgressBar" data-dojo-attach-point="progressBar" data-dojo-props='indeterminate: true' style="display:none;margin:0;padding:0;"></div>
+      
+      <div class="result-div" data-dojo-attach-point="divResult">
+        <label  data-dojo-attach-point="divResultMessage">${nls.noResults}</label>
+        <a style="float:right; margin-right:10px" href="#" data-dojo-attach-point="btnToggleFootprints" data-dojo-attach-event="click:toggleFootprints">${nls.hide}</a>
+        <a style="float:right; margin-right:10px" href="#" data-dojo-attach-point="btnClear" data-dojo-attach-event="click:clear">${nls.clear}</a>
+      </div>
+
+      <div class="pagination" data-dojo-attach-point="pagination"></div>
+      <hr>
+
+      <div  id="list" data-dojo-attach-point="list" class="jimu-container" data-dojo-attach-event="click:_selectResultItem" style="position:absolute;width:100%;height:400px;left:0;right:0;top:45px;bottom:0;overflow-x:hidden;overflow-y:auto;"></div>
+
+	 <input type="hidden" data-dojo-attach-point="selectedItemId" value=""/>
+   
+</div>

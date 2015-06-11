@@ -1,0 +1,37 @@
+  <div>
+     <div style="margin:0 0 20px 0;">
+        <label data-dojo-attach-point="labelQueryName">${nls.searchText}</label>
+        <br>
+        <input type="text" style="width:100%;margin-top:10px;" data-dojo-type="dijit/form/TextBox" 
+            data-dojo-attach-point="inputQueryName" data-dojo-props="trim:true" data-dojo-attach-event="keydown:onKeyDown"/>
+      </div>
+      <div style="margin:0 0 20px 0;">
+        <label data-dojo-attach-point="labelCatalog">${nls.labelCatalog}</label>
+        <br>
+        <div style="width:100%;margin-top:10px;" data-dojo-attach-point="inputQueryCatalog" data-dojo-type="dijit/form/Select"
+          data-dojo-props="labelAttr: 'Name'">
+				</div>
+      </div>
+      <div style="margin:0 0 20px 0;">        
+        <span  data-dojo-attach-point="inputQueryLiveDataFilter" data-dojo-type="dijit/form/CheckBox"></span>
+        <label data-dojo-attach-point="labelIsLiveData">${nls.liveData}</label>
+      </div>
+      <div style="margin:0 0 20px 0;">                          
+          <span  data-dojo-attach-point="inputExtentAnywhere" data-dojo-type="dijit/form/RadioButton"
+                 data-dojo-props="value:'anywhere'"></span>
+          <label data-dojo-attach-point="labelExtentAnywhere">${nls.anywhere}</label>                   
+          <span  data-dojo-attach-point="inputExtentIntersecting" data-dojo-type="dijit/form/RadioButton"
+                 data-dojo-props="value:'intersecting'"></span>
+          <label data-dojo-attach-point="labelExtentIntersecting">${nls.intersecting}</label>                    
+          <span  data-dojo-attach-point="inputExtentFullyWithin" data-dojo-type="dijit/form/RadioButton"
+                 data-dojo-props="value:'within'"></span>
+          <label data-dojo-attach-point="labelExtentFullyWithin">${nls.within}</label>
+      </div>
+      <div class="jimu-r-row play-section">
+        <div class="col-2-3">
+        </div>
+        <div class="col-1-3">
+          <div class="jimu-btn buttonSearch"  data-dojo-attach-point="_searchButton" data-dojo-attach-event="onclick:onSearch,keydown:onKeyDown">${nls.search}</div>
+        </div>        
+      </div>
+</div>

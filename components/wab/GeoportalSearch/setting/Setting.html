@@ -1,0 +1,41 @@
+<div style="width:100%;height:100%;">
+
+    <div class="catalogs-section" data-dojo-attach-point="catalogsSection" onselectstart="return false;">
+            
+        <div>            
+              <span>${nls.recordsPerPage}</span>
+              <input data-dojo-attach-point="recordsPerPage" data-dojo-type="dijit/form/ValidationTextBox"/>
+        </div>
+        <div>
+          <div>            
+              <span>${nls.geoportalCatalog}</span>
+              <input data-dojo-attach-point="catalogUrl" data-dojo-type="dijit/form/ValidationTextBox"/>
+              <div class="btn-add-section"  data-dojo-attach-point="btnGetCatalogs" data-dojo-attach-event="onclick:_fetchCatalogs">
+                <span class="btn-add-icon"></span>
+                <span class="btn-add-label">${nls.getCatalogs}</span>
+              </div>
+          </div>
+          <br/>
+          <span>${nls.or}</span>
+          <br/>
+          <div>
+            <div class="btn-add-section"  data-dojo-attach-point="btnAdd">
+                <span class="btn-add-icon"></span>
+                <span class="btn-add-label">${nls.add}</span>
+            </div>
+          </div>
+        </div>
+
+        <br/>
+        
+        <div data-dojo-attach-point="catalogsTable" 
+             data-dojo-type="jimu/dijit/SimpleTable" 
+             data-dojo-props='fields:[
+                                      {name:"label",title:"${nls.title}","class":"label",type:"empty",width:"250px"},
+                                      {name:"layer",title:"${nls.url}","class":"label",type:"empty",width:"430px"},
+                                      {name:"actions",title:"${nls.actions}","class":"actions",type:"actions",actions:["up","down","delete"],width:"70px"}]'>
+        </div>        
+
+    </div>
+
+</div>
