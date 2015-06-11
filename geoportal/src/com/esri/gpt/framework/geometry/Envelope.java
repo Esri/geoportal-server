@@ -279,8 +279,8 @@ public boolean isValid() {
  */
 public boolean isValidWGS84() {
   return !isEmpty() 
-          && inRange(getMinX(),-180,180) && inRange(getMaxX(),-180,180) && inRange(getMinY(), -90, 90) && inRange(getMaxY(), -90, 90)
-          && getMinX() <= getMaxX() && getMinY() <= getMaxY();
+          && inRange(getMinX(),-1000,1000) && inRange(getMaxX(),-1000,1000) 
+          && inRange(getMinY(), -500, 500) && inRange(getMaxY(), -500, 500);
 }
 
 /**
