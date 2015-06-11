@@ -94,40 +94,6 @@
                 </ows:AllowedValues>
             </ows:Parameter>
         </ows:Operation>
-        <ows:Operation name="DescribeRecord">
-            <ows:DCP>
-                <ows:HTTP>
-                    <ows:Get xlink:href=""/>
-                    <ows:Post xlink:href="">
-                        <ows:Constraint name="PostEncoding">
-                            <ows:AllowedValues>
-                                <ows:Value>XML</ows:Value>
-                                <ows:Value>SOAP</ows:Value>
-                            </ows:AllowedValues>
-                        </ows:Constraint>
-                    </ows:Post>
-                </ows:HTTP>
-            </ows:DCP>
-            <ows:Parameter name="typeName">
-                <ows:AllowedValues>
-                    <ows:Value>csw:Record</ows:Value>
-                    <ows:Value>csw:SummaryRecord</ows:Value>
-                    <ows:Value>csw:BriefRecord</ows:Value>
-                </ows:AllowedValues>
-            </ows:Parameter>
-            <ows:Parameter name="outputFormat">
-                <ows:AllowedValues>
-                    <ows:Value>text/xml</ows:Value>
-                    <ows:Value>application/xml</ows:Value>
-                </ows:AllowedValues>
-            </ows:Parameter>
-            <ows:Parameter name="schemaLanguage">
-                <ows:AllowedValues>
-                    <ows:Value>XMLSCHEMA</ows:Value>
-                    <ows:Value>http://www.w3.org/XML/Schema</ows:Value>
-                </ows:AllowedValues>
-            </ows:Parameter>
-        </ows:Operation>
         <ows:Operation name="GetRecords">
             <ows:DCP>
                 <ows:HTTP>

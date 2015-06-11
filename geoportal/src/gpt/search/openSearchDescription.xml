@@ -35,14 +35,4 @@
   <OutputEncoding>UTF-8</OutputEncoding>
   <InputEncoding>UTF-8</InputEncoding>
   
-  <!-- 
-  <LongName>Example.com Web Search</LongName>
-  <Image height="64" width="64" type="image/png">{openSearch.imagePath}/websearch.png</Image>
-  <Developer>Example.com Development Team</Developer>
-  <Attribution>Search data Copyright 2005, Example.com, Inc., All Rights Reserved</Attribution>
-  <SyndicationRight>open</SyndicationRight>
-  <AdultContent>false</AdultContent>
-  <Language>en-us</Language>
-  -->
-  
 </OpenSearchDescription>
