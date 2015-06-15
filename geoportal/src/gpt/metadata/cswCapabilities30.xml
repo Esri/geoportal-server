@@ -273,7 +273,6 @@
         <ows:Parameter name="service">
             <ows:AllowedValues>
                 <ows:Value>CSW</ows:Value>
-                <ows:Value>http://www.opengis.net/cat/csw/3.0</ows:Value>
             </ows:AllowedValues>
         </ows:Parameter>
         <ows:Parameter name="version">
@@ -410,7 +409,7 @@
                 <ows:Value>FALSE</ows:Value>
                 <ows:Value>TRUE</ows:Value>
             </ows:AllowedValues>
-            <ows:DefaultValue>TRUE</ows:DefaultValue>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
         </ows:Constraint>
         <ows:Constraint name="Filter-FES-XML">
             <ows:AllowedValues>
