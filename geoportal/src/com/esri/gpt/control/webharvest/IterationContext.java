@@ -19,7 +19,7 @@ package com.esri.gpt.control.webharvest;
  */
 public interface IterationContext {
   /**
-   * Privides a way to capture exception which cannot be rethrown. Both methods
+   * Provides a way to capture exception which cannot be re-thrown. Both methods
    * {@link java.util.Iterator#hasNext()} and {@link java.util.Iterator#next()}
    * don't allow to throw any checked exception even if an implementation actually
    * should throw it.

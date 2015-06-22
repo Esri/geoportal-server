@@ -26,6 +26,7 @@ import com.esri.gpt.catalog.publication.DeleteSourceUrisRequest;
 import com.esri.gpt.catalog.publication.HarvesterRequest;
 import com.esri.gpt.catalog.schema.SchemaException;
 import com.esri.gpt.catalog.schema.ValidationException;
+import com.esri.gpt.control.webharvest.engine.Suspender.PeriodicExpiration;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
@@ -75,14 +76,17 @@ class LocalDataProcessor implements DataProcessor {
   private String baseContextPath = "";
   /** name */
   private String name = "Local";
+  /** suspender */
+  private Suspender suspender;
 
   /**
    * Creates instance of the processor.
    * @param messageBroker message broker
    * @param baseContextPath base context path
    * @param listener listener array
+   * @param suspender suspender
    */
-  public LocalDataProcessor(String name, MessageBroker messageBroker, String baseContextPath, Harvester.Listener listener) {
+  public LocalDataProcessor(String name, MessageBroker messageBroker, String baseContextPath, Harvester.Listener listener, Suspender suspender) {
     if (messageBroker == null) {
       throw new IllegalArgumentException("No message broker provided.");
     }
@@ -93,6 +97,7 @@ class LocalDataProcessor implements DataProcessor {
     this.messageBroker = messageBroker;
     this.listener = listener;
     this.name = Val.chkStr(name, this.name);
+    this.suspender = suspender;
   }
 
   @Override
@@ -161,6 +166,9 @@ class LocalDataProcessor implements DataProcessor {
    */
   @Override
   public void onEnd(final ExecutionUnit unit, boolean success) {
+    if (!success) {
+      suspender.suspend(unit.getRepository().getUuid(), Suspender.DAY);
+    }
     final ExecutionUnitHelper helper = new ExecutionUnitHelper(unit);
     RequestContext context = RequestContext.extract(null);
     Date endTime = new Date();
@@ -424,6 +432,9 @@ class LocalDataProcessor implements DataProcessor {
    */
   @Override
   public void onIterationException(ExecutionUnit unit, Exception ex) {
+    if (ex instanceof IOException) {
+      suspender.suspend(unit.getRepository().getUuid(), Suspender.DAY);
+    }
     LOGGER.log(Level.SEVERE, "[SYNCHRONIZER] Iteration exception through: " + unit, ex);
     unit.setCleanupFlag(false);
     ExecutionUnitHelper helper = new ExecutionUnitHelper(unit);
