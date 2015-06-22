@@ -66,6 +66,11 @@ public class Suspender implements Serializable {
     private final long end;
     private final TimePeriod duration;
     
+    public PeriodicExpiration(TimePeriod duration) {
+      this.duration = duration;
+      end = (new Date()).getTime() + duration.getValue();
+    }
+    
     public PeriodicExpiration(long duration) {
       this.duration = new TimePeriod(duration);
       end = (new Date()).getTime() + duration;
