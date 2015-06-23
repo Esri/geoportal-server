@@ -42,7 +42,12 @@ public class LocalDataProcessorFactory implements DataProcessorFactory {
 
   @Override
   public DataProcessor newProcessor(MessageBroker messageBroker, String baseContextPath, Harvester.Listener listener) {
-    return new LocalDataProcessor(getName(), messageBroker, baseContextPath, listener);
+    return new LocalDataProcessor(getName(), messageBroker, baseContextPath, listener, new Suspender());
+  }
+
+  @Override
+  public DataProcessor newProcessor(MessageBroker messageBroker, String baseContextPath, Harvester.Listener listener, Suspender suspender) {
+    return new LocalDataProcessor(getName(), messageBroker, baseContextPath, listener, suspender);
   }
   
 }

@@ -120,12 +120,15 @@ public class Harvester implements HarvesterMBean {
     if (cfg.getActive()) {
       LOGGER.info("[SYNCHRONIZER] Initializing synchronizer engine.");
       this.taskQueue = new TaskQueue();
+      
+      Suspender suspender = new Suspender();
+      
       this.pool = new Pool(
-        new DataProcessorDispatcher(createDataProcessors(messageBroker, cfg.getBaseContextPath(), listenerArray)),
+        new DataProcessorDispatcher(createDataProcessors(messageBroker, cfg.getBaseContextPath(), listenerArray, suspender)),
         taskQueue, cfg.getPoolSize());
 
       if (cfg.getAutoSelectFrequency() > 0) {
-        this.autoSelector = new AutoSelector(cfg.getAutoSelectFrequency()) {
+        this.autoSelector = new AutoSelector(cfg.getAutoSelectFrequency(), suspender) {
 
           @Override
           protected void onSelect(HrRecord resource) {
@@ -532,10 +535,10 @@ public class Harvester implements HarvesterMBean {
     }
   }
   
-  private List<DataProcessor> createDataProcessors(MessageBroker messageBroker, String baseContextPath, Harvester.Listener listener) {
+  private List<DataProcessor> createDataProcessors(MessageBroker messageBroker, String baseContextPath, Harvester.Listener listener, Suspender suspender) {
     List<DataProcessor> processors = new ArrayList<DataProcessor>();
     for (DataProcessorFactory factory : cfg.getDataProcessorFactories()) {
-      processors.add(factory.newProcessor(messageBroker, baseContextPath, listener));
+      processors.add(factory.newProcessor(messageBroker, baseContextPath, listener, suspender));
     }
     return processors;
   }

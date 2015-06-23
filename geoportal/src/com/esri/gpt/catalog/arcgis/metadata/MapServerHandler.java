@@ -33,7 +33,9 @@ import com.esri.gpt.server.csw.client.NullReferenceException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.transform.TransformerException;
@@ -230,8 +232,40 @@ public class MapServerHandler extends ServiceHandler {
   private class LayerInfoRecord extends ServiceInfoProvider implements Publishable {
     private final LayerInfo layerInfo;
     
-    public LayerInfoRecord(ServiceInfo info, LayerInfo layerInfo) {
-      super(info);
+    public LayerInfoRecord(ServiceInfo info, final LayerInfo layerInfo) {
+      super(new ServiceInfoWrapper(info) {
+
+          @Override
+          public List<LayerInfo> getLayersInfo() {
+              return Collections.EMPTY_LIST;
+          }
+
+          @Override
+          public String getResourceUrl() {
+              return layerInfo.getResourceUrl();
+          }
+
+          @Override
+          public String getRestUrl() {
+              return layerInfo.getResourceUrl();
+          }
+
+          @Override
+          public String getName() {
+              return layerInfo.getTitle();
+          }
+
+          @Override
+          public String getDescription() {
+              return layerInfo.getDescription();
+          }
+
+          @Override
+          public String getType() {
+              return "FeatureServer";
+          }
+          
+      });
       this.layerInfo = layerInfo;
     }
 

@@ -1,0 +1,33 @@
+define({
+  root: ({
+    label1: "Geoportal Search widget.",
+    label2: "This is configurable.",
+    labelCatalog: "Catalog",
+    selectByAttribute: "Search",
+    results: "Results",
+    showAll: "Show all",
+    search: "Search",
+    searchText: "Keywords",
+    liveData: "Live Data Maps",
+    clear: "Clear",
+    footprints: "Footprints: ",
+    show: "Show Footprints",
+    hide: "Hide Footprints",
+    first: "First",
+    next: "Next",
+    last: "Last",
+    metadata: "Metadata",
+    featuresSelected: "Records found: ",
+    noResults: "Search returned no results",
+    queryError:"Query failed !",
+    queryResult:"Query result",
+    intersecting: "Intersecting",
+    within: "Within",
+    anywhere: "Anywhere",
+    summaryPattern: "{0} results",
+    summaryPatternFiltered: "{0} filtered results",
+    pageSummaryPattern: "Showing {0}-{1}",
+    _onQueryError: "Error occurred while quering catalog.",
+    _onLayerLoadError: "Error occurred while loading layer."
+  })
+});

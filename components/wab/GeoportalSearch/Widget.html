@@ -1,0 +1,13 @@
+<div>
+  <div data-dojo-attach-point="tabQuery">
+    <div class="query-tab-node" data-dojo-attach-point="queryNode1">
+		 <div data-dojo-type="widgets/GeoportalSearch/views/SearchPane" data-dojo-props="appConfig: this.appConfig,config: this.config, map:this.map"></div>
+    </div>
+    
+    <div class="query-tab-node" data-dojo-attach-point="queryNode2">      
+      <div data-dojo-type="widgets/GeoportalSearch/views/ResultsPane" data-dojo-props="appConfig: this.appConfig,config: this.config, map:this.map"></div>
+	</div>
+
+  	<div data-dojo-type="jimu/dijit/LoadingShelter" data-dojo-attach-point="shelter" data-dojo-props="hidden:true"></div>
+  </div>
+</div>

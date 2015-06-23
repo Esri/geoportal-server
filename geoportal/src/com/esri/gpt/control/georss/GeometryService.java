@@ -27,14 +27,22 @@ import org.json.JSONObject;
  * Geometry service.
  */
 public class GeometryService {
-  private String geometryServiceURL;
+  private final String geometryServiceURL;
   
   /**
    * Creates instance of the service object.
    * @param URL URL to the service
    */
   public GeometryService(String URL) {
-    this.geometryServiceURL = URL;
+    this.geometryServiceURL = adjustUrl(URL);
+  }
+  
+  private String adjustUrl(String URL) {
+      URL = Val.chkStr(URL);
+      if (URL.startsWith("//")) {
+          URL = "http:"+URL;
+      }
+      return URL;
   }
   
   /**

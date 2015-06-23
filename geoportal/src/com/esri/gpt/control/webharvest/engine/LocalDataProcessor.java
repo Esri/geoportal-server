@@ -26,7 +26,10 @@ import com.esri.gpt.catalog.publication.DeleteSourceUrisRequest;
 import com.esri.gpt.catalog.publication.HarvesterRequest;
 import com.esri.gpt.catalog.schema.SchemaException;
 import com.esri.gpt.catalog.schema.ValidationException;
+import com.esri.gpt.control.webharvest.engine.Suspender.Expiration;
+import com.esri.gpt.control.webharvest.engine.Suspender.PeriodicExpiration;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
+import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
@@ -41,6 +44,7 @@ import com.esri.gpt.framework.security.identity.IdentityAdapter;
 import com.esri.gpt.framework.security.identity.IdentityConfiguration;
 import com.esri.gpt.framework.security.identity.local.LocalDao;
 import com.esri.gpt.framework.security.principal.*;
+import com.esri.gpt.framework.util.TimePeriod;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.XsltTemplate;
 import com.esri.gpt.server.csw.client.NullReferenceException;
@@ -75,14 +79,17 @@ class LocalDataProcessor implements DataProcessor {
   private String baseContextPath = "";
   /** name */
   private String name = "Local";
+  /** suspender */
+  private Suspender suspender;
 
   /**
    * Creates instance of the processor.
    * @param messageBroker message broker
    * @param baseContextPath base context path
    * @param listener listener array
+   * @param suspender suspender
    */
-  public LocalDataProcessor(String name, MessageBroker messageBroker, String baseContextPath, Harvester.Listener listener) {
+  public LocalDataProcessor(String name, MessageBroker messageBroker, String baseContextPath, Harvester.Listener listener, Suspender suspender) {
     if (messageBroker == null) {
       throw new IllegalArgumentException("No message broker provided.");
     }
@@ -93,6 +100,7 @@ class LocalDataProcessor implements DataProcessor {
     this.messageBroker = messageBroker;
     this.listener = listener;
     this.name = Val.chkStr(name, this.name);
+    this.suspender = suspender;
   }
 
   @Override
@@ -161,6 +169,9 @@ class LocalDataProcessor implements DataProcessor {
    */
   @Override
   public void onEnd(final ExecutionUnit unit, boolean success) {
+    if (!success) {
+      suspend(unit.getRepository());
+    }
     final ExecutionUnitHelper helper = new ExecutionUnitHelper(unit);
     RequestContext context = RequestContext.extract(null);
     Date endTime = new Date();
@@ -424,6 +435,9 @@ class LocalDataProcessor implements DataProcessor {
    */
   @Override
   public void onIterationException(ExecutionUnit unit, Exception ex) {
+    if (ex instanceof IOException) {
+      suspend(unit.getRepository());
+    }
     LOGGER.log(Level.SEVERE, "[SYNCHRONIZER] Iteration exception through: " + unit, ex);
     unit.setCleanupFlag(false);
     ExecutionUnitHelper helper = new ExecutionUnitHelper(unit);
@@ -562,6 +576,22 @@ class LocalDataProcessor implements DataProcessor {
     } catch (MalformedURLException ex) {
       return false;
     }
+  }
+  
+  private void suspend(HrRecord record) {
+    ApplicationContext appCtx = ApplicationContext.getInstance();
+    ApplicationConfiguration appCfg = appCtx.getConfiguration();
+    StringAttributeMap appCfgParams = appCfg.getCatalogConfiguration().getParameters();
+    String autoSelectSuspendPeriod = Val.chkStr(appCfgParams.getValue("webharvester.autoSelectSuspendPeriod"));
+    TimePeriod timePeriod = null;
+    try {
+      timePeriod = TimePeriod.parseValue(autoSelectSuspendPeriod);
+    } catch (IllegalArgumentException ex) {
+      timePeriod = new TimePeriod(1000*60*60*24);
+    }
+    
+    Expiration expiration = new PeriodicExpiration(timePeriod);
+    this.suspender.suspend(name, expiration);
   }
   
   /**

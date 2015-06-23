@@ -10,7 +10,7 @@ Please refer to https://github.com/Esri/geoportal-server/wiki for more informati
 =====================================================
 Required tools for project compilation and testing:
 
-1. Java SDK 6 or 7 (tested against):
+1. Java SDK 6, 7 or 8 (tested against):
    - version 1.6.22 or later
    
 2. Java Server Faces 2.0 (tested against):
@@ -25,9 +25,9 @@ Required tools for project compilation and testing:
    - Apache Directory Server 1.5.7   
    
 5. Database and JDBC drivers for Java 6 (tested against):
-   - PostgreSQL 8.4.5
-   - Microsoft SQL Server 2008
-   - Oracle Database Server 10g, 11g
+   - PostgreSQL 8.4.5, 9.1, or 9.3
+   - Microsoft SQL Server 2008, 2012, or 2014
+   - Oracle Database Server 10g, 11g, or 12c
    
 6. IDE (developed on):
    - Eclipse IDE

@@ -35,6 +35,12 @@ public static final String TAG_USER_NAME = "username";
 /** The password attribute tag = "password" */
 public static final String TAG_USER_PASSWORD = "password";
 
+/** The unicodePwd attribute tag = "unicodePwd" */
+public static final String TAG_USER_UNICODE_PASSWORD = "unicodePwd";
+
+/** The userAccountControl attribute tag = "userAccountControl" */
+public static final String TAG_USER_ACCOUNT_CONTROL = "userAccountControl";
+
 // instance variables ==========================================================
 
 // constructors ================================================================

@@ -43,6 +43,17 @@ public interface DataProcessorFactory {
    * @param baseContextPath base context path
    * @param listener listener
    * @return data processor instance
+   * @deprecated 
    */
+  @Deprecated
   DataProcessor newProcessor(MessageBroker messageBroker, String baseContextPath, Harvester.Listener listener);
+  /**
+   * Creates new processor.
+   * @param messageBroker message broker
+   * @param baseContextPath base context path
+   * @param listener listener
+   * @param suspender suspender
+   * @return data processor instance
+   */
+  DataProcessor newProcessor(MessageBroker messageBroker, String baseContextPath, Harvester.Listener listener, Suspender suspender);
 }

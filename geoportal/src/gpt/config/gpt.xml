@@ -14,7 +14,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<gptConfig version="1.2.5">
+<gptConfig version="1.2.6">
 
     <databaseReference name="gpt" jndiName="jdbc/gpt"/>
     
@@ -214,7 +214,7 @@
                 <parameter key="profileId" 
                     value="urn:ogc:CSW:2.0.2:HTTP:APISO:PYCSW" /> 
                 <parameter key="url" 
-                    value="http://catalog.data.gov/csw?service=CSW&amp;version=2.0.2&amp;request=GetCapabilities" /> 
+                    value="http://catalog.data.gov/csw-all?service=CSW&amp;version=2.0.2&amp;request=GetCapabilities" /> 
             </repository>
             <repository
                  key="geodab"
@@ -297,6 +297,8 @@
 				Note! its is not possible to set this flag to false if webharvester.active is true
             - webharvester.poolsize: pool size of the Threads. Default: 4
             - webharvester.autoSelectFrequency: Resources auto-selection frequency. Default: 1[HOUR]
+            - webharvester.autoSelectSuspendPeriod: period for how long can repository be suspended from 
+                                                    harvesting after unsucessful harvest. Default: 1[Day]
             - webharvester.watchDogFrequency: Watch-dog activation frequency. Default: 1[MINUTE]
             - webharvester.baseContextPath: Base context path used inside email notifications. Default: none (no report link in the notification)
             - webharvester.maxRepRecords: Maximum number of records to report. Default: 10000. -1 to remove limit.
@@ -314,6 +316,7 @@
         <parameter key="webharvester.queueEnabled" value=""/>
         <parameter key="webharvester.poolsize" value=""/>
         <parameter key="webharvester.autoSelectFrequency" value=""/>
+        <parameter key="webharvester.autoSelectSuspendPeriod" value=""/>
         <parameter key="webharvester.watchDogFrequency" value=""/>
         <parameter key="webharvester.baseContextPath" value=""/>
         <parameter key="webharvester.maxRepRecords" value="70"/> 

@@ -42,15 +42,29 @@ private Thread workerThread;
 private volatile boolean shutdown;
 /** autoselect frequency */
 private long autoSelectFrequency;
+/** suspender */
+private Suspender suspender;
 /** suspended */
 private volatile boolean suspended;
 
 /**
  * Creates instance of auto selector.
  * @param autoSelectFrequency auto select frequency (milliseconds)
+ * @param suspender suspender
  */
-public AutoSelector(long autoSelectFrequency) {
+public AutoSelector(long autoSelectFrequency, Suspender suspender) {
   this.autoSelectFrequency = autoSelectFrequency;
+  this.suspender = suspender; 
+}
+
+private HrRecords filterSuspended(HrRecords records) {
+  HrRecords clean = new HrRecords();
+  for (HrRecord r: records) {
+    if (!suspender.isSuspended(r.getUuid())) {
+      clean.add(r);
+    }
+  }
+  return clean;
 }
 
 @Override
@@ -68,7 +82,7 @@ public void run() {
         HrRecords records = selectRecords();
 
         // selecting all records with harvest date due now
-        HrRecords recordsDueNow = records.findHarvestDue();
+        HrRecords recordsDueNow = filterSuspended(records.findHarvestDue());
         LOGGER.log(Level.FINER, "[SYNCHRONIZER] AutoSelector selected {0} records with harvest date due now.", recordsDueNow.size());
 
         // process all with harvest date due now

@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -100,13 +101,24 @@ public class DcatRecordDefinition {
 
       @Override
       protected String readValue(DcatSchemas dcatSchemas, DcatField dcatField, IFeedRecord r, IFeedAttribute attr) {
-        IFeedAttribute accessLevelAttribute = this.getFeedAttribute(dcatSchemas, r, "accessLevel");
+        Map<String, IFeedAttribute> index = getIndex(r);
+        if (index == null) {
+          return "";
+        }
+        DcatField field = getAttributeField(dcatSchemas, index, r, "accessLevel");
+        if (field == null) {
+          return "";
+        }
+        IFeedAttribute accessLevelAttribute = getFeedAttribute(index, field);
+    
         List<String> accessLevelList = accessLevelAttribute!=null? accessLevelAttribute.asList(): new ArrayList<String>();
         
         boolean nonPublic = false;
         for (String accessLevel: accessLevelList) {
+          accessLevel = field.translate(accessLevel);
           if (!"public".equals(accessLevel)) {
             nonPublic = true;
+            break;
           }
         }
         
