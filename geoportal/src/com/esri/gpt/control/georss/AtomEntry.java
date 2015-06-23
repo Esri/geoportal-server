@@ -102,7 +102,7 @@ public class AtomEntry {
         this.ENTITY_OPEN_TAG = String.format(this.ENTITY_OPEN_TAG_PATTERN, entryName);
         this.ENTITY_OPEN_TAG_NS = String.format(this.ENTITY_OPEN_TAG_NS_PATTERN, entryName);
         this.ENTITY_CLOSE_TAG = String.format(this.ENTITY_CLOSE_TAG_PATTERN, entryName);
-        lineSeparator = (String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"));
+        this.lineSeparator = System.getProperty("line.separator");
     }
     
     public void setData(IFeedRecord record) {
