@@ -375,6 +375,9 @@ public class AtomEntry {
                 if (ResourceLink.TAG_METADATA.equals(lnk.getTag())) {
                   elLink.setAttribute("rel", "via");
                 }
+                if (ResourceLink.TAG_OPEN.equals(lnk.getTag())) {
+                  elLink.setAttribute("rel", "enclosure");
+                }
                 elEntry.appendChild(elLink);
             }
         }
@@ -418,6 +421,9 @@ public class AtomEntry {
                         }
                         if (ResourceLink.TAG_METADATA.equals(lnk.getTag())) {
                           rel = " rel=\"via\"";
+                        }
+                        if (ResourceLink.TAG_OPEN.equals(lnk.getTag())) {
+                          rel = " rel=\"enclosure\"";
                         }
                         data = LINK_TAG.replace("?", Val.escapeXml(lnk.getUrl())).replace("{rel}", rel);
                         writer.append("\t" + data + lineSeparator);
