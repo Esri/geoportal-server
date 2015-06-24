@@ -14,7 +14,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:geo="http://a9.com/-/opensearch/extensions/geo/1.0/">
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:geo="http://a9.com/-/opensearch/extensions/geo/1.0/" xmlns:parameters="http://a9.com/-/spec/opensearch/extensions/parameters/1.0/" xmlns:atom="http://www.w3.org/2005/Atom">
   <ShortName>{openSearch.shortName}</ShortName>
   <Description>{openSearch.description}</Description>
   <Tags>geospatial metadata</Tags>
@@ -30,40 +30,40 @@
   <Url type="application/xml" indexOffset="1" pageOffset="1"
     template="{openSearch.basePath}/csw3?request=GetRecords&amp;service=CSW&amp;version=3.0.0&amp;elementSetName=full&amp;outputschema=http://www.opengis.net/cat/csw/3.0&amp;startPosition={startIndex}&amp;maxRecords={count}&amp;q={searchTerms}"/>
   
-  <Parameter name="searchText" 
+  <parameters:Parameter name="searchText" 
     value="{searchTerms}" 
     title="inventory containing all the specified keywords separated by space, case-insensitive, Apache Lucene syntax" 
     uiDisplay="Search text"
     minimum="0">
-      <link rel="profile" 
+      <atom:link rel="profile" 
             href="http://www.lucenetutorial.com/lucene-query-syntax.html" 
             title="This parameter follows the Apache Lucene free text search implementations" />
-  </Parameter>
+  </parameters:Parameter>
   
-  <Parameter name="start" 
+  <parameters:Parameter name="start" 
     value="{startIndex?}" 
     title="index of the first record on the page" 
     uiDisplay="Start index"
     minimum="1"/>
   
-  <Parameter name="max" 
+  <parameters:Parameter name="max" 
     value="{count?}" 
     title="number of records per page" 
     uiDisplay="Page size"
     minimum="0" 
     maxInclusive="10000"/>
   
-  <Parameter name="bbox" 
+  <parameters:Parameter name="bbox" 
     value="{geo:bbox?}" 
     title="inventory which has a spatial extent overlapping this geometry" 
     uiDisplay="Bounding box"
     minimum="0">
-      <link rel="profile" 
+      <atom:link rel="profile" 
             href="http://www.opengis.net/wkt/ENVELOPE" 
             title="This service accepts WKT Polygons"/>
-  </Parameter>
+  </parameters:Parameter>
   
-  <Parameter name="uuid" 
+  <parameters:Parameter name="uuid" 
     value="{geo:uid}" 
     title="record identifier" 
     uiDisplay="Record identifier"
