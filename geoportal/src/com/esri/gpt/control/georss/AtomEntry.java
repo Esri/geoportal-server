@@ -44,7 +44,7 @@ public class AtomEntry {
     private final String TITLE_CLOSE_TAG = "</title>";
     // private final String LINK_TAG = "<link type=\"text/html\" href=\"?\"/>";
     /** The LIN k_ tag. */
-    private final String LINK_TAG = "<link href=\"?\"/>";
+    private final String LINK_TAG = "<link href=\"?\"{rel}/>";
     /** The I d_ ope n_ tag. */
     private final String ID_OPEN_TAG = "<id>";
     /** The I d_ clos e_ tag. */
@@ -74,7 +74,7 @@ public class AtomEntry {
     /** The _title. */
     private String _title = null;
     /** The _link. */
-    private LinkedList<String> _link = null;
+    private LinkedList<ResourceLink> _link = null;
     /** The _published. */
     private Date _published = null;
     /** The _summary. */
@@ -217,7 +217,7 @@ public class AtomEntry {
      *
      * @return the links
      */
-    public LinkedList<String> getLinks() {
+    public LinkedList<ResourceLink> getLinks() {
         return _link;
     }
 
@@ -303,10 +303,10 @@ public class AtomEntry {
             return;
         }
         if (_link == null) {
-            _link = new LinkedList<String>();
+            _link = new LinkedList<ResourceLink>();
         }
         if (resourcelink.getUrl() != null && resourcelink.getUrl().length() > 0) {
-            _link.add(resourcelink.getUrl());
+            _link.add(resourcelink);
         }
     }
 
@@ -366,9 +366,15 @@ public class AtomEntry {
         }
         
         if (getLinks() != null) {
-            for (String lnk : getLinks()) {
+            for (ResourceLink lnk : getLinks()) {
                 Element elLink = parent.createElementNS(atomns, "link");
-                elLink.setAttribute("href", lnk);
+                elLink.setAttribute("href", lnk.getUrl());
+                if (ResourceLink.TAG_DETAILS.equals(lnk.getTag())) {
+                  elLink.setAttribute("rel", "describedBy");
+                }
+                if (ResourceLink.TAG_METADATA.equals(lnk.getTag())) {
+                  elLink.setAttribute("rel", "via");
+                }
                 elEntry.appendChild(elLink);
             }
         }
@@ -404,9 +410,16 @@ public class AtomEntry {
             }
             // add the rest of links if they exist
             if (getLinks() != null) {
-                for (String lnk : getLinks()) {
+                for (ResourceLink lnk : getLinks()) {
                     try {
-                        data = LINK_TAG.replace("?", Val.escapeXml(lnk));
+                        String rel = "";
+                        if (ResourceLink.TAG_DETAILS.equals(lnk.getTag())) {
+                          rel = " rel=\"describedBy\"";
+                        }
+                        if (ResourceLink.TAG_METADATA.equals(lnk.getTag())) {
+                          rel = " rel=\"via\"";
+                        }
+                        data = LINK_TAG.replace("?", Val.escapeXml(lnk.getUrl())).replace("{rel}", rel);
                         writer.append("\t" + data + lineSeparator);
                     } catch (Exception e) {
                         LOGGER.log(Level.WARNING, "", e);
