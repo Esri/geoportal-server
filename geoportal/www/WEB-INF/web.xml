@@ -210,6 +210,10 @@
         <url-pattern>/openSearchDescription</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>OpenSearchDescription</servlet-name>
+        <url-pattern>/openSearchDescription.xml</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>SimpleSOSBridge</servlet-name>
         <url-pattern>/SimpleSOSBridge</url-pattern>
     </servlet-mapping>

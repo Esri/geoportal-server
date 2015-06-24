@@ -65,6 +65,12 @@ public class OpenSearchDescriptionProvider {
     xml = xml.replaceAll("\\{openSearch.description\\}",description);
     xml = xml.replaceAll("\\{openSearch.contact\\}",contact);
     
+    String clientId = Val.chkStr(request.getParameter("clientId"));
+    if (!clientId.isEmpty()) {
+      clientId="&amp;clientId="+clientId;
+    }
+    xml = xml.replaceAll("\\{clientId\\}",clientId);
+    
     return xml;
   }
 }
