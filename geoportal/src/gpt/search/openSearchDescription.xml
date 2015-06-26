@@ -1,19 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
- See the NOTICE file distributed with
- this work for additional information regarding copyright ownership.
- Esri Inc. licenses this file to You under the Apache License, Version 2.0
- (the "License"); you may not use this file except in compliance with
- the License.  You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
--->
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:geo="http://a9.com/-/opensearch/extensions/geo/1.0/" xmlns:parameters="http://a9.com/-/spec/opensearch/extensions/parameters/1.0/" xmlns:atom="http://www.w3.org/2005/Atom">
   <ShortName>{openSearch.shortName}</ShortName>
   <Description>{openSearch.description}</Description>
@@ -21,163 +6,58 @@
   <Contact>{openSearch.contact}</Contact>
   <Image height="16" width="16" type="image/png">{openSearch.imagePath}/openSearch.png</Image>
   <Url type="application/rss+xml" indexOffset="1" pageOffset="1"
-       template="{openSearch.restPath}?searchText={searchTerms}&amp;start={startIndex?}&amp;max={count?}&amp;bbox={geo:box?}&amp;f=georss">
-    <parameters:Parameter name="searchText" 
-                        value="{searchTerms}" 
-                        title="inventory containing all the specified keywords separated by space, case-insensitive, Apache Lucene syntax" 
-                        uiDisplay="Search text"
-                        minimum="0">
-      <atom:link rel="profile" 
-                 href="http://www.lucenetutorial.com/lucene-query-syntax.html" 
-                 title="This parameter follows the Apache Lucene free text search implementations" />
-    </parameters:Parameter>
-  
-    <parameters:Parameter name="start" 
-                        value="{startIndex?}" 
-                        title="index of the first record on the page" 
-                        uiDisplay="Start index"
-                        minimum="1"/>
-  
-    <parameters:Parameter name="max" 
-                        value="{count?}" 
-                        title="number of records per page" 
-                        uiDisplay="Page size"
-                        minimum="0" 
-                        maxInclusive="10000"/>
-  
-    <parameters:Parameter name="bbox" 
-                        value="{geo:bbox?}" 
-                        title="inventory which has a spatial extent overlapping this geometry" 
-                        uiDisplay="Bounding box"
-                        minimum="0">
-      <atom:link rel="profile" 
-                 href="http://www.opengis.net/wkt/ENVELOPE" 
-                 title="This service accepts WKT Envelope"/>
-    </parameters:Parameter>
-  </Url>
+       template="{openSearch.restPath}?searchText={searchTerms}&amp;start={startIndex?}&amp;max={count?}&amp;bbox={geo:box?}&amp;f=georss"/>
   <Url type="text/html" indexOffset="1" pageOffset="1"
-       template="{openSearch.restPath}?searchText={searchTerms}&amp;start={startIndex?}&amp;max={count?}&amp;bbox={geo:box?}&amp;f=html">
-    <parameters:Parameter name="searchText" 
-                        value="{searchTerms}" 
-                        title="inventory containing all the specified keywords separated by space, case-insensitive, Apache Lucene syntax" 
-                        uiDisplay="Search text"
-                        minimum="0">
-      <atom:link rel="profile" 
-                 href="http://www.lucenetutorial.com/lucene-query-syntax.html" 
-                 title="This parameter follows the Apache Lucene free text search implementations" />
-    </parameters:Parameter>
-  
-    <parameters:Parameter name="start" 
-                        value="{startIndex?}" 
-                        title="index of the first record on the page" 
-                        uiDisplay="Start index"
-                        minimum="1"/>
-  
-    <parameters:Parameter name="max" 
-                        value="{count?}" 
-                        title="number of records per page" 
-                        uiDisplay="Page size"
-                        minimum="0" 
-                        maxInclusive="10000"/>
-  
-    <parameters:Parameter name="bbox" 
-                        value="{geo:bbox?}" 
-                        title="inventory which has a spatial extent overlapping this geometry" 
-                        uiDisplay="Bounding box"
-                        minimum="0">
-      <atom:link rel="profile" 
-                 href="http://www.opengis.net/wkt/ENVELOPE" 
-                 title="This service accepts WKT Envelope"/>
-    </parameters:Parameter>
-  </Url>
+       template="{openSearch.restPath}?searchText={searchTerms}&amp;start={startIndex?}&amp;max={count?}&amp;bbox={geo:box?}&amp;f=html"/>
   <Url type="application/atom+xml" indexOffset="1" pageOffset="1"
-       template="{openSearch.restPath}?searchText={searchTerms}&amp;start={startIndex?}&amp;max={count?}&amp;bbox={geo:box?}&amp;f=atom{clientId}">
-    <parameters:Parameter name="searchText" 
-                        value="{searchTerms}" 
-                        title="inventory containing all the specified keywords separated by space, case-insensitive, Apache Lucene syntax" 
-                        uiDisplay="Search text"
-                        minimum="0">
-      <atom:link rel="profile" 
-                 href="http://www.opengis.net/wkt/ENVELOPE" 
-                 title="This service accepts WKT Envelope"/>
-    </parameters:Parameter>
-  
-    <parameters:Parameter name="start" 
-                        value="{startIndex?}" 
-                        title="index of the first record on the page" 
-                        uiDisplay="Start index"
-                        minimum="1"/>
-  
-    <parameters:Parameter name="max" 
-                        value="{count?}" 
-                        title="number of records per page" 
-                        uiDisplay="Page size"
-                        minimum="0" 
-                        maxInclusive="10000"/>
-  
-    <parameters:Parameter name="bbox" 
-                        value="{geo:bbox?}" 
-                        title="inventory which has a spatial extent overlapping this geometry" 
-                        uiDisplay="Bounding box"
-                        minimum="0">
-      <atom:link rel="profile" 
-                 href="http://www.opengis.net/wkt/ENVELOPE" 
-                 title="This service accepts WKT Envelope"/>
-    </parameters:Parameter>
-  </Url>
+       template="{openSearch.restPath}?searchText={searchTerms}&amp;start={startIndex?}&amp;max={count?}&amp;bbox={geo:box?}&amp;f=atom{clientId}"/>
   <Url type="application/atom+xml" indexOffset="1" pageOffset="1"
-       template="{openSearch.restPath}?uuid={geo:uid}&amp;f=atom{clientId}">
-    <parameters:Parameter name="uuid" 
-                        value="{geo:uid}" 
-                        title="record identifier" 
-                        uiDisplay="Record identifier"
-                        minimum="0"/>
-  </Url>
+       template="{openSearch.restPath}?uuid={geo:uid}&amp;f=atom{clientId}"/>
   <Url type="application/xml" indexOffset="1" pageOffset="1"
-       template="{openSearch.basePath}/csw3?request=GetRecords&amp;service=CSW&amp;version=3.0.0&amp;elementSetName=full&amp;outputschema=http://www.opengis.net/cat/csw/3.0&amp;startPosition={startIndex}&amp;maxRecords={count}&amp;q={searchTerms}">
-  
-    <parameters:Parameter name="searchText" 
-                        value="{searchTerms}" 
-                        title="inventory containing all the specified keywords separated by space, case-insensitive, Apache Lucene syntax" 
-                        uiDisplay="Search text"
-                        minimum="0">
-      <atom:link rel="profile" 
-                 href="http://www.lucenetutorial.com/lucene-query-syntax.html" 
-                 title="This parameter follows the Apache Lucene free text search implementations" />
-    </parameters:Parameter>
-  
-    <parameters:Parameter name="start" 
-                        value="{startIndex?}" 
-                        title="index of the first record on the page" 
-                        uiDisplay="Start index"
-                        minimum="1"/>
-  
-    <parameters:Parameter name="max" 
-                        value="{count?}" 
-                        title="number of records per page" 
-                        uiDisplay="Page size"
-                        minimum="0" 
-                        maxInclusive="10000"/>
-  
-    <parameters:Parameter name="bbox" 
-                        value="{geo:bbox?}" 
-                        title="inventory which has a spatial extent overlapping this geometry" 
-                        uiDisplay="Bounding box"
-                        minimum="0">
-      <atom:link rel="profile" 
-                 href="http://www.opengis.net/wkt/ENVELOPE" 
-                 title="This service accepts WKT Polygons"/>
-    </parameters:Parameter>
-  
-    <parameters:Parameter name="uuid" 
-                        value="{geo:uid}" 
-                        title="record identifier" 
-                        uiDisplay="Record identifier"
-                        minimum="0"/>
-  </Url>
+       template="{openSearch.basePath}/csw3?request=GetRecords&amp;service=CSW&amp;version=3.0.0&amp;elementSetName=full&amp;outputschema=http://www.opengis.net/cat/csw/3.0&amp;startPosition={startIndex}&amp;maxRecords={count}&amp;q={searchTerms}"/>
   
   <Query role="example" searchTerms="land" />
   <InputEncoding>UTF-8</InputEncoding>
   <OutputEncoding>UTF-8</OutputEncoding>
   
+  <!--
+  <Parameter name="searchText" 
+             value="{searchTerms}" 
+             title="inventory containing all the specified keywords separated by space, case-insensitive, Apache Lucene syntax" 
+             uiDisplay="Search text"
+             minimum="0">
+    <atom:link rel="profile" 
+               href="http://www.lucenetutorial.com/lucene-query-syntax.html" 
+               title="This parameter follows the Apache Lucene free text search implementations" />
+  </Parameter>
+  
+  <Parameter name="start" 
+             value="{startIndex?}" 
+             title="index of the first record on the page" 
+             uiDisplay="Start index"
+             minimum="1"/>
+  
+  <Parameter name="max" 
+             value="{count?}" 
+             title="number of records per page" 
+             uiDisplay="Page size"
+             minimum="0" 
+             maxInclusive="10000"/>
+  
+  <Parameter name="bbox" 
+             value="{geo:bbox?}" 
+             title="inventory which has a spatial extent overlapping this geometry" 
+             uiDisplay="Bounding box"
+             minimum="0">
+    <atom:link rel="profile" 
+               href="http://www.opengis.net/wkt/ENVELOPE" 
+               title="This service accepts WKT Envelope"/>
+  </Parameter>
+  
+  <Parameter name="uuid" 
+               value="{geo:uid}" 
+               title="record identifier" 
+               uiDisplay="Record identifier"
+               minimum="0"/>
+  -->
 </OpenSearchDescription>
