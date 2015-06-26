@@ -369,16 +369,26 @@ public class AtomEntry {
             for (ResourceLink lnk : getLinks()) {
                 Element elLink = parent.createElementNS(atomns, "link");
                 elLink.setAttribute("href", lnk.getUrl());
+                boolean recognized = false;
                 if (ResourceLink.TAG_DETAILS.equals(lnk.getTag())) {
                   elLink.setAttribute("rel", "describedBy");
+                  recognized = true;
                 }
                 if (ResourceLink.TAG_METADATA.equals(lnk.getTag())) {
                   elLink.setAttribute("rel", "via");
+                  recognized = true;
                 }
                 if (ResourceLink.TAG_OPEN.equals(lnk.getTag())) {
                   elLink.setAttribute("rel", "enclosure");
+                  recognized = true;
                 }
-                elEntry.appendChild(elLink);
+                if (ResourceLink.TAG_THUMBNAIL.equals(lnk.getTag())) {
+                  elLink.setAttribute("rel", "icon");
+                  recognized = true;
+                }
+                if (recognized) {
+                  elEntry.appendChild(elLink);
+                }
             }
         }
         
@@ -425,8 +435,13 @@ public class AtomEntry {
                         if (ResourceLink.TAG_OPEN.equals(lnk.getTag())) {
                           rel = " rel=\"enclosure\"";
                         }
-                        data = LINK_TAG.replace("?", Val.escapeXml(lnk.getUrl())).replace("{rel}", rel);
-                        writer.append("\t" + data + lineSeparator);
+                        if (ResourceLink.TAG_THUMBNAIL.equals(lnk.getTag())) {
+                          rel = " rel=\"icon\"";
+                        }
+                        if (!rel.isEmpty()) {
+                          data = LINK_TAG.replace("?", Val.escapeXml(lnk.getUrl())).replace("{rel}", rel);
+                          writer.append("\t" + data + lineSeparator);
+                        }
                     } catch (Exception e) {
                         LOGGER.log(Level.WARNING, "", e);
                     }
