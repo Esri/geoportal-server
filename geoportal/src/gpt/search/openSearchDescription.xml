@@ -30,6 +30,11 @@
   <Url type="application/xml" indexOffset="1" pageOffset="1"
     template="{openSearch.basePath}/csw3?request=GetRecords&amp;service=CSW&amp;version=3.0.0&amp;elementSetName=full&amp;outputschema=http://www.opengis.net/cat/csw/3.0&amp;startPosition={startIndex}&amp;maxRecords={count}&amp;q={searchTerms}"/>
   
+  <Image height="16" width="16" type="image/png">{openSearch.imagePath}/openSearch.png</Image>
+  <Query role="example" searchTerms="land" />
+  <OutputEncoding>UTF-8</OutputEncoding>
+  <InputEncoding>UTF-8</InputEncoding>
+  
   <parameters:Parameter name="searchText" 
     value="{searchTerms}" 
     title="inventory containing all the specified keywords separated by space, case-insensitive, Apache Lucene syntax" 
@@ -68,10 +73,5 @@
     title="record identifier" 
     uiDisplay="Record identifier"
     minimum="0"/>
-  
-  <Image height="16" width="16" type="image/png">{openSearch.imagePath}/openSearch.png</Image>
-  <Query role="example" searchTerms="land" />
-  <OutputEncoding>UTF-8</OutputEncoding>
-  <InputEncoding>UTF-8</InputEncoding>
   
 </OpenSearchDescription>
