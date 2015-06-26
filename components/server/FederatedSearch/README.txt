@@ -42,3 +42,24 @@ var targetHeaderNode = dojo.byId("resultsLabel");
 var targetSortersNode = dojo.byId("arcgisonline_sharing_dijit_Sorter_0");
  
 This is necessary because the the Portal for ArcGIS search.html page changed some IDs of HTML elements at 10.3.
+
+
+10.3.1 DEPLOYMENT:
+
+Follow the 10.2 deployment steps above.
+
+Open the file "federated-searches-json.js" that is within folder "custom".
+
+Remove the prefix "esri_" from the IDs, at lines 87 and 88.
+
+var targetNode = dojo.byId("arcgisonline_sharing_dijit_SearchResultsSimple_0");
+var targetHeaderNode = dojo.byId("resultsLabel");
+
+Change :
+var targetSortersNode = dojo.byId("arcgisonline_sharing_dijit_Sorter_0");
+by : 
+var targetSortersNode = dojo.byId("sorters");
+
+This is necessary because the the Portal for ArcGIS search.html page changed some IDs of HTML elements at 10.3.1.
+
+
