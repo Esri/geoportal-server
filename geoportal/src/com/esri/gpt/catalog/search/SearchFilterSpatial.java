@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.util.Val;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 
 
@@ -67,7 +68,7 @@ transient private Envelope _selectedEnvelope = new Envelope();
 private String _selectedBounds = OptionsBounds.anywhere.name();
 
 /** The envelope. */
-transient private Envelope _visibleEnvelope = new Envelope();
+transient private Envelope _visibleEnvelope = new EnvelopeWrapper(new Envelope());
 
 // constructor =================================================================
 /**
@@ -152,7 +153,7 @@ public void setSelectedBounds(String selectedBounds) {
  */
 public Envelope getVisibleEnvelope() {
   if(_visibleEnvelope == null) {
-    this.setVisibleEnvelope(new Envelope());
+    this.setVisibleEnvelope(new EnvelopeWrapper(new Envelope()));
   }
   return _visibleEnvelope;
 }
@@ -163,7 +164,7 @@ public Envelope getVisibleEnvelope() {
  */
 public void setVisibleEnvelope(Envelope envelope) {
   _visibleEnvelope = envelope;
-  if (_visibleEnvelope == null) _visibleEnvelope = new Envelope();
+  if (_visibleEnvelope == null) _visibleEnvelope = new EnvelopeWrapper(new Envelope());
 }
 
 // methods =====================================================================
@@ -174,7 +175,7 @@ public void setVisibleEnvelope(Envelope envelope) {
 public void reset() {
   this.setSelectedEnvelope(new Envelope());
   this.setSelectedBounds(OptionsBounds.anywhere.name());
-  this.setVisibleEnvelope(new Envelope());
+  this.setVisibleEnvelope(new EnvelopeWrapper(new Envelope()));
 }
  
 /**
@@ -250,7 +251,7 @@ public void setParams(SearchParameterMap parameterMap) {
   if (envelope.isEmpty()) envelope = new Envelope();
   this.setSelectedEnvelope(envelope);
   
-  envelope = new Envelope();
+  envelope = new EnvelopeWrapper(new Envelope());
   try {
     envelope.setMinX(parameterMap.get("visible.minx").getParamValue());
     envelope.setMinY(parameterMap.get("visible.miny").getParamValue());
@@ -338,4 +339,153 @@ public void setEnvelope(Envelope envelope) {
   
 }
 
+private static class EnvelopeWrapper extends Envelope {
+    private final Envelope src;
+
+    public EnvelopeWrapper(Envelope src) {
+      this.src = src;
+    }
+
+    @Override
+    public double getHeight() {
+      return src.getHeight();
+    }
+
+    @Override
+    public double getMaxX() {
+      return src.getMaxX();
+    }
+
+    @Override
+    public void setMaxX(double d) {
+      src.setMaxX(d);
+    }
+
+    @Override
+    public void setMaxX(String s) {
+      src.setMaxX(s);
+    }
+
+    @Override
+    public double getMaxY() {
+      return src.getMaxY();
+    }
+
+    @Override
+    public void setMaxY(double d) {
+      src.setMaxY(d);
+    }
+
+    @Override
+    public void setMaxY(String s) {
+      src.setMaxY(s);
+    }
+
+    @Override
+    public double getMinX() {
+      return src.getMinX();
+    }
+
+    @Override
+    public void setMinX(double d) {
+      src.setMinX(d);
+    }
+
+    @Override
+    public void setMinX(String s) {
+      src.setMinX(s);
+    }
+
+    @Override
+    public double getMinY() {
+      return src.getMinY();
+    }
+
+    @Override
+    public void setMinY(double d) {
+      src.setMinY(d);
+    }
+
+    @Override
+    public void setMinY(String s) {
+      src.setMinY(s);
+    }
+
+    @Override
+    public double getWidth() {
+      return src.getWidth();
+    }
+
+    @Override
+    public double getCenterX() {
+      return src.getCenterX();
+    }
+
+    @Override
+    public double getCenterY() {
+      return src.getCenterY();
+    }
+
+    @Override
+    public void echo(StringBuffer sb) {
+      src.echo(sb);
+    }
+
+    @Override
+    public String toString() {
+      return src.toString();
+    }
+
+    @Override
+    public boolean hasSize() {
+      return src.hasSize();
+    }
+
+    @Override
+    public boolean isEmpty() {
+      return src.isEmpty();
+    }
+
+    @Override
+    public boolean isValid() {
+      return src.isValid();
+    }
+
+    @Override
+    public void put(double minx, double miny, double maxx, double maxy) {
+      src.put(minx, miny, maxx, maxy);
+    }
+
+    @Override
+    public void put(String minx, String miny, String maxx, String maxy) {
+      src.put(minx, miny, maxx, maxy);
+    }
+
+    @Override
+    public Envelope clone() {
+      return src.clone();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      return src.equals(obj);
+    }
+
+    @Override
+    public void merge(Envelope envelope) {
+      src.merge(envelope);
+    }
+
+    @Override
+    public String getWkid() {
+      return src.getWkid();
+    }
+
+    @Override
+    public void setWkid(String wkid) {
+      src.setWkid(StringEscapeUtils.escapeHtml4(wkid));
+    }
+  
+    
+}
 }
