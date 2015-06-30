@@ -20,6 +20,7 @@ import java.util.logging.Level;
 
 import com.esri.gpt.framework.util.LogUtil;
 import com.esri.gpt.framework.util.Val;
+import java.util.Arrays;
 
 /**
  * An OGC-OWS related exception.
@@ -216,7 +217,7 @@ public class OwsException extends RuntimeException {
             String sFormat = Val.chkStr(bundle.getString("catalog.csw.exceptionText.format"));
             if (sFormat.length() > 0) {
               String[] formatParams = new String[]{sCodeMsg,this.locator};
-              localizedText = MessageFormat.format(sFormat,formatParams);
+              localizedText = MessageFormat.format(sFormat,Arrays.asList(formatParams));
             }
           }
         }        
