@@ -117,7 +117,6 @@ th {
 	margin: 0pt auto;
 	max-width: 88em;
 	min-width: 880px;
-	width:expression(document.body.clientWidth > 1070 ? "1068px" : "auto" );
 
 	padding: 0 15px 0pt;
 	position: static;
