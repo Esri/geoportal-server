@@ -73,8 +73,7 @@ private String rootName = "feed";
 public AtomFeedWriter(HttpServletRequest request, PrintWriter writer) {
   this.request = request;
   _writer = writer;
-  lineSeparator =	(String) java.security.AccessController.doPrivileged(
-              new sun.security.action.GetPropertyAction("line.separator"));
+  lineSeparator = System.getProperty("line.separator");
 }
 
 /**
@@ -88,8 +87,7 @@ public AtomFeedWriter(HttpServletRequest request, PrintWriter writer, String ent
   this.request = request;
   _writer = writer;
   _entryBaseUrl = entryBaseUrl;
-  lineSeparator =	(String) java.security.AccessController.doPrivileged(
-              new sun.security.action.GetPropertyAction("line.separator"));
+  lineSeparator = System.getProperty("line.separator");
 }
 
 // properties
