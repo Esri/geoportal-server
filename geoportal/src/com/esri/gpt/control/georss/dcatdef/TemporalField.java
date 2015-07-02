@@ -32,11 +32,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Temporal field.
  */
 public class TemporalField extends BaseDcatField {
+  private static final Logger LOGGER = Logger.getLogger(TemporalField.class.getCanonicalName());
   protected static final IsoDateFormat ISODF = new IsoDateFormat();
 
   /**
@@ -148,10 +151,17 @@ public class TemporalField extends BaseDcatField {
     }
     
     if (value==null) return;
+    
     ArrayList<String>  strDates = new ArrayList<String>();
     for (Date date: value) {
-      strDates.add(ISODF.format(date));
+      try {
+        strDates.add(ISODF.format(date));
+      } catch (IllegalArgumentException ex) {
+        LOGGER.log(Level.FINE, "Invalid date format", ex);
+      }
     }
+    
+    if (strDates.isEmpty()) return;
     
     String temporal = Val.join(strDates.toArray(new String[strDates.size()]), field.getDelimiter());
     

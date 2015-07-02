@@ -25,15 +25,20 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Dcat field.
  */
 public class DateField extends BaseDcatField {
+
+  private static final Logger LOGGER = Logger.getLogger(DateField.class.getCanonicalName());
   protected static final IsoDateFormat ISODF = new IsoDateFormat();
 
   /**
    * Creates instance of the class.
+   *
    * @param fldName field name
    */
   public DateField(String fldName) {
@@ -42,19 +47,21 @@ public class DateField extends BaseDcatField {
 
   /**
    * Creates instance of the class.
+   *
    * @param fldName field name
    * @param flags flags
    */
   public DateField(String fldName, long flags) {
     super(fldName, flags);
   }
-  
+
   protected Date getDefaultValue(Properties properties) {
     return Calendar.getInstance().getTime();
   }
-  
+
   /**
    * Reads date.
+   *
    * @param attr attribute
    * @return date
    */
@@ -70,19 +77,24 @@ public class DateField extends BaseDcatField {
   @Override
   public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
     IFeedAttribute attr = getFeedAttribute(dcatSchemas, r);
-    
+
     String value;
-    if (attr==null) {
-      if ((flags.provide(r, attr, properties) & OBLIGATORY)!=0) {
-        value = ISODF.format(getDefaultValue(properties));
+    try {
+      if (attr == null) {
+        if ((flags.provide(r, attr, properties) & OBLIGATORY) != 0) {
+          value = ISODF.format(getDefaultValue(properties));
+        } else {
+          return;
+        }
       } else {
-        return;
+        value = ISODF.format(readValue(attr));
       }
-    } else {
-      value = ISODF.format(readValue(attr));
+    } catch (IllegalArgumentException ex) {
+      LOGGER.log(Level.FINE, "Invalid date format", ex);
+      return;
     }
-    
+
     jsonWriter.name(getOutFieldName()).value(value);
   }
-  
+
 }
