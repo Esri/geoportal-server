@@ -58,7 +58,9 @@ public class BBOXParser extends DiscoveryAdapter implements IBBOXParser {
         DiscoveryQuery query = this.getDiscoveryContext().getDiscoveryQuery();
         DiscoveryFilter filter = query.getFilter();
         
-        filter.setRootClause(new LogicalClause.LogicalAnd());
+        if (filter.getRootClause()==null) {
+          filter.setRootClause(new LogicalClause.LogicalAnd());
+        }
         LogicalClause rootClause = filter.getRootClause();
         SpatialClause spatialClause = new SpatialClause.GeometryBBOXIntersects();
         rootClause.getClauses().add(spatialClause);

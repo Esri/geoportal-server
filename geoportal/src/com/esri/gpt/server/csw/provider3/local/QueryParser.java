@@ -47,7 +47,9 @@ public class QueryParser extends DiscoveryAdapter implements IQueryParser {
         QueryOptions qOptions = context.getRequestOptions().getQueryOptions();
         DiscoveryQuery query = this.getDiscoveryContext().getDiscoveryQuery();
         DiscoveryFilter filter = query.getFilter();
-        filter.setRootClause(new LogicalClause.LogicalAnd());
+        if (filter.getRootClause()==null) {
+          filter.setRootClause(new LogicalClause.LogicalAnd());
+        }
         LogicalClause rootClause = filter.getRootClause();
         Discoverable anytext = this.getDiscoveryContext().findDiscoverable("anytext");
         
