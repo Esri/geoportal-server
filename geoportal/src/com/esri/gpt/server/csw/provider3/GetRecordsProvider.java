@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 package com.esri.gpt.server.csw.provider3;
+import static com.esri.gpt.catalog.discovery.DiscoveryFilter.getMaxRecordsThreshold;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.server.csw.components.CswConstants;
@@ -332,6 +333,7 @@ public class GetRecordsProvider implements IOperationProvider {
     // initialize
     LOGGER.finer("Handling csw:GetRecords request URL...");
     QueryOptions qOptions = context.getRequestOptions().getQueryOptions();
+    qOptions.setMaxRecordsThreshold(getMaxRecordsThreshold());
     ServiceProperties svcProps = context.getServiceProperties();
     ParseHelper pHelper = new ParseHelper();
     ValidationHelper vHelper = new ValidationHelper();
@@ -430,7 +432,11 @@ public class GetRecordsProvider implements IOperationProvider {
     }
     parsed = pHelper.getParameterValues(request,"maxRecords");
     if ((parsed != null) && (parsed.length) > 0) {
-      qOptions.setMaxRecords(Val.chkInt(parsed[0],10));
+      if (parsed[0].equalsIgnoreCase("unlimited")) {
+        qOptions.setMaxRecords(getMaxRecordsThreshold());
+      } else {
+        qOptions.setMaxRecords(Val.chkInt(parsed[0],10));
+      }
     }
     
     // result type

@@ -115,7 +115,7 @@ public class DiscoveryFilter extends DiscoveryComponent {
    * If not, use THRESHOLD_MAXRECORDS.
    * @return max records threshold
    */
-  private static synchronized int getMaxRecordsThreshold() {
+  public static synchronized int getMaxRecordsThreshold() {
     if (maxRecordsThreshold==null) {
       ApplicationContext appCtx = ApplicationContext.getInstance();
       ApplicationConfiguration appCfg = appCtx.getConfiguration();
