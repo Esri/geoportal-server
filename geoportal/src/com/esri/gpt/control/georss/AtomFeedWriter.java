@@ -268,7 +268,8 @@ private final String FIRST_LINK_TAG = "<link rel=\"first\" href=\"?\" type=\"app
 private final String LAST_LINK_TAG = "<link rel=\"last\" href=\"?\" type=\"application/atom+xml\"/>";
 private final String PREV_LINK_TAG = "<link rel=\"prev\" href=\"?\" type=\"application/atom+xml\"/>";
 private final String NEXT_LINK_TAG = "<link rel=\"next\" href=\"?\" type=\"application/atom+xml\"/>";
-private final String OSLINK_TAG = "<link rel=\"search\" type=\"application/opensearchdescription+xml\" href=\"?\"/>";
+private final String OSDDLINK_TAG = "<link rel=\"search\" type=\"application/opensearchdescription+xml\" href=\"?\" title=\"Content Search\"/>";
+private final String OSDDCSWLINK_TAG = "<link rel=\"search\" type=\"application/opensearchdescription+xml\" href=\"?\" title=\"Content Search through CSW 3.0\"/>";
 
 /** The UPDATED open tag. */
 private final String UPDATED_OPEN_TAG = "<updated>";
@@ -562,7 +563,10 @@ public void writePreamble(java.io.Writer writer) throws IOException {
   }
   if (getEntryBaseUrl() != null) {
     try {
-      data = OSLINK_TAG.replace("?", Val.escapeXml(getEntryBaseUrl()+"/openSearchDescription"));
+      data = OSDDLINK_TAG.replace("?", Val.escapeXml(getEntryBaseUrl()+"/openSearchDescription"));
+      writer.append(data+lineSeparator);
+      
+      data = OSDDCSWLINK_TAG.replace("?", Val.escapeXml(getEntryBaseUrl()+"/openSearchDescriptionCsw30"));
       writer.append(data+lineSeparator);
     } catch (Exception e) {
       LOGGER.log(Level.WARNING, "", e);
