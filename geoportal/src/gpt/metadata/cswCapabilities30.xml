@@ -217,7 +217,7 @@
             </ows:Constraint>
             <ows:Constraint name="OpenSearchDescriptionDocument">
                 <ows:AllowedValues>
-                    <ows:Value>/openSearchDescription</ows:Value>
+                    <ows:Value>/openSearchDescriptionCsw30</ows:Value>
                 </ows:AllowedValues>
             </ows:Constraint>
         </ows:Operation>

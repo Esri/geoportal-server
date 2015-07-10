@@ -17,6 +17,8 @@ import com.esri.gpt.framework.context.BaseServlet;
 import com.esri.gpt.framework.context.RequestContext;
 
 import java.util.logging.Logger;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,8 +43,16 @@ public class OpenSearchDescriptionServlet extends BaseServlet {
   /** The Logger. */
   private static Logger LOGGER = Logger.getLogger(OpenSearchDescriptionServlet.class.getName());
       
-  /** methods ================================================================= */
+  private String osddLocation;
   
+  /** methods ================================================================= */
+  @Override
+  public void init(ServletConfig config) throws ServletException {
+    super.init(config);
+    
+    osddLocation = config.getInitParameter("osddLocation");
+  }
+
   /**
    * Executes a request.
    * @param request the servlet request
@@ -50,14 +60,10 @@ public class OpenSearchDescriptionServlet extends BaseServlet {
    * @param context the request context
    * @throws Exception if an exception occurs
    */
-  protected void execute(HttpServletRequest request, 
-                         HttpServletResponse response,
-                         RequestContext context)
-    throws Exception {
-  
+  protected void execute(HttpServletRequest request, HttpServletResponse response, RequestContext context) throws Exception {
     // process the request
     LOGGER.finer("Returning openSearchDescription XML ....");
-    OpenSearchDescriptionProvider provider = new OpenSearchDescriptionProvider();
+    OpenSearchDescriptionProvider provider = new OpenSearchDescriptionProvider(osddLocation);
     String xml = provider.readXml(request,context);
     String contentType = "application/opensearchdescription+xml; charset=UTF-8";
     LOGGER.finer("openSearchDescription.xml:\n"+xml);

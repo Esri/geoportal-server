@@ -29,7 +29,12 @@ import javax.servlet.http.HttpServletRequest;
 public class OpenSearchDescriptionProvider {
   
   /** The location of the OpenSearch description XML file */
-  private static final String XML_LOCATION = "gpt/search/openSearchDescription.xml";
+  private final String osddLocation;
+
+  public OpenSearchDescriptionProvider(String osddLocation) {
+    this.osddLocation = osddLocation;
+  }
+  
   
   /**
    * Reads the OpenSearch description XML.
@@ -42,7 +47,6 @@ public class OpenSearchDescriptionProvider {
     throws Exception {
     
     // initialize values for substitution
-    CatalogConfiguration catCfg = context.getCatalogConfiguration();
     MailConfiguration mailCfg = context.getMailConfiguration();
     MessageBroker msgBroker = new MessageBroker();
     msgBroker.setBundleBaseName("gpt.resources.gpt");
@@ -56,8 +60,7 @@ public class OpenSearchDescriptionProvider {
         
     // read the XML, substitute values
     ResourcePath rp = new ResourcePath();
-    rp.makeUrl(XML_LOCATION);
-    String xml = XmlIoUtil.readXml(rp.makeUrl(XML_LOCATION).toExternalForm());
+    String xml = XmlIoUtil.readXml(rp.makeUrl(osddLocation).toExternalForm());
     xml = xml.replaceAll("\\{openSearch.basePath\\}",basePath);
     xml = xml.replaceAll("\\{openSearch.restPath\\}",restPath);
     xml = xml.replaceAll("\\{openSearch.imagePath\\}",imagePath);

@@ -5,10 +5,7 @@
   <Tags>geospatial metadata</Tags>
   <Contact>{openSearch.contact}</Contact>
   <Image height="16" width="16" type="image/png">{openSearch.imagePath}/openSearch.png</Image>
-  <!--
-  <Url type="application/rss+xml" indexOffset="1" pageOffset="1"
-       template="{openSearch.restPath}?searchText={searchTerms}&amp;start={startIndex?}&amp;max={count?}&amp;bbox={geo:box?}&amp;f=georss"/>
-  -->       
+  
   <Url type="text/html" indexOffset="1" pageOffset="1"
        template="{openSearch.restPath}?searchText={searchTerms}&amp;start={startIndex?}&amp;max={count?}&amp;bbox={geo:box?}&amp;f=html"/>
   <Url type="application/atom+xml" indexOffset="1" pageOffset="1"
@@ -21,4 +18,15 @@
   <Query role="example" searchTerms="land" />
   <InputEncoding>UTF-8</InputEncoding>
   <OutputEncoding>UTF-8</OutputEncoding>
+
+  <parameters:Parameter name="searchText" value="{searchTerms}" title="inventory containing all the specified keywords separated by space, case-insensitive, Apache Lucene syntax" uiDisplay="Search text" minimum="0">
+      <atom:link rel="profile" href="http://www.lucenetutorial.com/lucene-query-syntax.html" title="This parameter follows the Apache Lucene free text search implementations"/>
+  </parameters:Parameter>
+  <parameters:Parameter name="start" value="{startIndex?}" title="index of the first record on the page" uiDisplay="Start index" minimum="1"/>
+  <parameters:Parameter name="max" value="{count?}" title="number of records per page" uiDisplay="Page size" minimum="0" maxInclusive="10000"/>
+  <parameters:Parameter name="bbox" value="{geo:bbox?}" title="inventory which has a spatial extent overlapping this geometry" uiDisplay="Bounding box" minimum="0">
+      <atom:link rel="profile" href="http://www.opengis.net/wkt/ENVELOPE" title="This service accepts WKT Polygons"/>
+  </parameters:Parameter>
+  <parameters:Parameter name="uuid" value="{geo:uid}" title="record identifier" uiDisplay="Record identifier" minimum="0"/>
+    
 </OpenSearchDescription>

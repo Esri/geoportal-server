@@ -25,9 +25,14 @@ import org.w3c.dom.Node;
  * Open Search Provider.
  */
 public class GetOpenSearchProvider implements IOperationProvider {
+    private final String osddLocation;
+
+    public GetOpenSearchProvider(String osddLocation) {
+      this.osddLocation = osddLocation;
+    }
 
     protected void execute(OperationContext context, HttpServletRequest request) throws Exception {
-        OpenSearchDescriptionProvider osProvider = new OpenSearchDescriptionProvider();
+        OpenSearchDescriptionProvider osProvider = new OpenSearchDescriptionProvider(osddLocation);
         String xml = osProvider.readXml(request, context.getRequestContext());
         context.getOperationResponse().setResponseXml(xml);  
     }

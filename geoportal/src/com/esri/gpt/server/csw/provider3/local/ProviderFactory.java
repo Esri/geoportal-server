@@ -183,7 +183,7 @@ public class ProviderFactory implements IProviderFactory {
       String loc = resPfx+"Capabilities30.xml";
       reqOptions.getCapabilityOptions().setCapabilitiesLocation(loc);
     } else if (operationName.equalsIgnoreCase("GetOpenSearchDescription")) {
-      GetOpenSearchProvider gosp = new GetOpenSearchProvider();
+      GetOpenSearchProvider gosp = new GetOpenSearchProvider("gpt/search/osdd/openSearchDescriptionCsw30.xml");
       opProvider = gosp;
       
     // GetRecordById
