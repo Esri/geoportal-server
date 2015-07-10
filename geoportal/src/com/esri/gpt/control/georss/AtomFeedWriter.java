@@ -263,7 +263,11 @@ private final String AUTHOR_OPEN_TAG = "<author><name>";
 private final String AUTHOR_CLOSE_TAG = "</name></author>";
 
 /** The LINK tag. */
-private final String LINK_TAG = "<link rel=\"self\" href=\"?\"/>";
+private final String SELF_LINK_TAG = "<link rel=\"self\" href=\"?\" type=\"application/atom+xml\"/>";
+private final String FIRST_LINK_TAG = "<link rel=\"first\" href=\"?\" type=\"application/atom+xml\"/>";
+private final String LAST_LINK_TAG = "<link rel=\"last\" href=\"?\" type=\"application/atom+xml\"/>";
+private final String PREV_LINK_TAG = "<link rel=\"prev\" href=\"?\" type=\"application/atom+xml\"/>";
+private final String NEXT_LINK_TAG = "<link rel=\"next\" href=\"?\" type=\"application/atom+xml\"/>";
 private final String OSLINK_TAG = "<link rel=\"search\" type=\"application/opensearchdescription+xml\" href=\"?\"/>";
 
 /** The UPDATED open tag. */
@@ -558,9 +562,6 @@ public void writePreamble(java.io.Writer writer) throws IOException {
   }
   if (getEntryBaseUrl() != null) {
     try {
-      data = LINK_TAG.replace("?", Val.escapeXml(getEntryBaseUrl()));
-      writer.append(data+lineSeparator);
-      
       data = OSLINK_TAG.replace("?", Val.escapeXml(getEntryBaseUrl()+"/openSearchDescription"));
       writer.append(data+lineSeparator);
     } catch (Exception e) {
@@ -598,6 +599,36 @@ public void writePreamble(java.io.Writer writer) throws IOException {
         + START_INDEX_CLOSE_TAG);
     _writer.println(ITEMS_PER_PAGE_OPEN_TAG + getOsProps().getRecordsPerPage()
         + ITEMS_PER_PAGE_CLOSE_TAG);
+    
+    String selfLink = getOsProps().getSelfUrl();
+    if (!selfLink.isEmpty()) {
+      data = SELF_LINK_TAG.replace("?", Val.escapeXml(selfLink));
+      writer.append(data+lineSeparator);
+    }
+    
+    String firstLink = getOsProps().getFirstUrl();
+    if (!firstLink.isEmpty()) {
+      data = FIRST_LINK_TAG.replace("?", Val.escapeXml(firstLink));
+      writer.append(data+lineSeparator);
+    }
+    
+    String lastLink = getOsProps().getLastUrl();
+    if (!lastLink.isEmpty()) {
+      data = LAST_LINK_TAG.replace("?", Val.escapeXml(lastLink));
+      writer.append(data+lineSeparator);
+    }
+    
+    String prevLink = getOsProps().getPrevUrl();
+    if (!prevLink.isEmpty()) {
+      data = PREV_LINK_TAG.replace("?", Val.escapeXml(prevLink));
+      writer.append(data+lineSeparator);
+    }
+    
+    String nextLink = getOsProps().getNextUrl();
+    if (!nextLink.isEmpty()) {
+      data = NEXT_LINK_TAG.replace("?", Val.escapeXml(nextLink));
+      writer.append(data+lineSeparator);
+    }
   }
   
   writer.append("<opensearch:Query role=\"request\"");

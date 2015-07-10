@@ -210,6 +210,10 @@ public class ErosQueryServlet extends RestQueryServlet {
       OpenSearchProperties osProps = new OpenSearchProperties();
       osProps.setShortName(messageBroker.retrieveMessage("catalog.openSearch.shortName"));
       osProps.setDescriptionURL(osURL);
+      osProps.setRestURL(basePath+"/rest/find/document");
+      osProps.setSearchText(request.getParameter("searchText"));
+      osProps.setBbox(request.getParameter("bbox"));
+      osProps.setClientId(request.getParameter("clientId"));
       osProps.setNumberOfHits(hrAcceptedRecords.size());
       osProps.setStartRecord(query.getFilter().getStartRecord());
       osProps.setRecordsPerPage(query.getFilter().getMaxRecords());

@@ -15,6 +15,9 @@
 package com.esri.gpt.catalog.search;
 
 import com.esri.gpt.framework.util.Val;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * Maintains property information supporting OpenSearch response elements.
@@ -23,10 +26,14 @@ public class OpenSearchProperties {
   
   /** instance variables ====================================================== */
   private String descriptionURL = "";
+  private String restURL = "";
   private int    numberOfHits = 0;
   private int    recordsPerPage = 10;
   private String shortName = "";
   private int    startRecord = 1;
+  private String searchText = "";
+  private String bbox = "";
+  private String clientId = "";
   
   /** constructors ============================================================ */
   
@@ -48,6 +55,38 @@ public class OpenSearchProperties {
    */
   public void setDescriptionURL(String url) {
     this.descriptionURL = Val.chkStr(url);
+  }
+
+  public String getRestURL() {
+    return restURL;
+  }
+
+  public void setRestURL(String restURL) {
+    this.restURL = Val.chkStr(restURL);
+  }
+
+  public String getSearchText() {
+    return searchText;
+  }
+
+  public void setSearchText(String searchText) {
+    this.searchText = Val.chkStr(searchText);
+  }
+
+  public String getBbox() {
+    return bbox;
+  }
+
+  public void setBbox(String bbox) {
+    this.bbox = Val.chkStr(bbox);
+  }
+
+  public String getClientId() {
+    return clientId;
+  }
+
+  public void setClientId(String clientId) {
+    this.clientId = Val.chkStr(clientId);
   }
   
   /**
@@ -115,5 +154,65 @@ public class OpenSearchProperties {
   }
     
   /** methods ================================================================= */
-    
+  
+  public String getSelfUrl() {
+    return getNavUrl(getStartRecord());
+  }
+  
+  public String getFirstUrl() {
+    return getNavUrl(1);
+  }
+  
+  public String getLastUrl() {
+    int lastIndex = getLastIndex();
+    return getNavUrl(lastIndex);
+  }
+  
+  public String getPrevUrl() {
+    if (getStartRecord()>1) {
+      return getNavUrl(Math.max(getStartRecord()-getRecordsPerPage(), 1));
+    }
+    return "";
+  }
+  
+  public String getNextUrl() {
+    if (getStartRecord()+getRecordsPerPage()<=getLastIndex()) {
+      return getNavUrl(getStartRecord()+getRecordsPerPage());
+    }
+    return "";
+  }
+  
+  private String getNavUrl(int start) {
+    if (!getRestURL().isEmpty()) {
+      StringBuilder query = new StringBuilder();
+      if (!getSearchText().isEmpty()) {
+        query.append(query.length()>0? "&": "").append("searchText=").append(enc(getSearchText()));
+      }
+      query.append(query.length()>0? "&": "").append("start=").append(start);
+      query.append(query.length()>0? "&": "").append("max=").append(getRecordsPerPage());
+      if (!getBbox().isEmpty()) {
+        query.append(query.length()>0? "&": "").append("bbox=").append(enc(getBbox()));
+      }
+      if (!getClientId().isEmpty()) {
+        query.append(query.length()>0? "&": "").append("clientId=").append(enc(getClientId()));
+      }
+      query.append(query.length()>0? "&": "").append("f=").append("atom");
+      return getRestURL() + (query.length()>0? "?"+query: "");
+    }
+    return "";
+  }
+  
+  private int getLastIndex() {
+    int pagesCount = getNumberOfHits()/getRecordsPerPage() + (getNumberOfHits() % getRecordsPerPage()>0? 1: 0);
+    int lastIndex = 1 + (pagesCount-1) * getRecordsPerPage();
+    return lastIndex;
+  }
+  
+  private String enc(String str) {
+    try {
+      return URLEncoder.encode(str, "UTF-8");
+    } catch (IOException ex) {
+      return str;
+    }
+  }
 }
