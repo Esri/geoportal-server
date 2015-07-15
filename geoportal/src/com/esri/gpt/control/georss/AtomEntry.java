@@ -450,7 +450,7 @@ public class AtomEntry {
             if (getId() != null) {
                 try {
                     data = Val.escapeXml(getId());
-                    data = ID_OPEN_TAG + "urn:uuid:" + data.substring(1, data.length() - 1) + ID_CLOSE_TAG;
+                    data = ID_OPEN_TAG + "urn:uuid:" + Val.chkStr(data).replaceAll("&\\{|\\}$", "") + ID_CLOSE_TAG;
                     writer.append("\t" + data + lineSeparator);
                     
                     data = Val.escapeXml(getId());

@@ -358,7 +358,7 @@ public void runWorker() {
           + this.getRID());
     }
     if (this.rid.equalsIgnoreCase("local")) {
-      GetRecordsGenerator grg = new GetRecordsGenerator(rc);
+      GetRecordsGenerator grg = new GetRecordsGenerator();
       if (engine.getHitsOnly()) {
         grg.setResultType("HITS");
       }
