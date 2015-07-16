@@ -240,8 +240,8 @@ public class AGSProcessor extends ResourceProcessor {
         
         // make a handler for this service type
         ServiceHandler handler = this.factory.makeHandler(desc.getType());
-        handler.setCredentials(getCredentials());
         if (handler != null) {
+          handler.setCredentials(getCredentials());
       
           // initialize service information
           ServiceInfo info = handler.createServiceInfo(null, desc, currentRestUrl, currentSoapUrl);
