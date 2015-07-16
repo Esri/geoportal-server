@@ -22,7 +22,7 @@ With the Geoportal Server you can:
 
 Want to learn more? Try our [sandbox site](http://gptogc.esri.com)!
 
-Want to get started right away? Download the [compiled distribution and installation files] (http://esri.github.io/geoportal-server/distribution/1.2.5/geoportal-1.2.5.zip).
+Want to get started right away? Download the [compiled distribution and installation files] (http://esri.github.io/geoportal-server/distribution/1.2.6/geoportal-1.2.6.zip).
 
 ## Features
 
