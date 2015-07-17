@@ -88,7 +88,10 @@ define([
       if (hrefLower.indexOf("?f=") > 0) {
         theLinkType = theLinkType.substr(0, theLinkType.indexOf("?f="));
         href = href.substr(0, href.indexOf("?f="));
-      }
+      } else if (!isNaN(theLinkType)) {
+		  // this refers to a layer in the service. treat this as a featureserver
+		  theLinkType = "featureserver";		  
+	  }
       
     } else if (hrefLower.indexOf("/services/") !== -1) {
       if (hrefLower.indexOf("/mapserver/wmsserver") !== -1) {
