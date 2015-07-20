@@ -33,6 +33,7 @@ import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.XmlIoUtil;
 import com.esri.gpt.server.csw.components.CswConstants;
 import com.esri.gpt.server.csw.components.CswNamespaces;
+import static com.esri.gpt.server.csw.components.CswNamespaces.URI_DC;
 import com.esri.gpt.server.csw.components.IOriginalXmlProvider;
 import com.esri.gpt.server.csw.components.IResponseGenerator;
 import com.esri.gpt.server.csw.components.OperationContext;
@@ -52,6 +53,9 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -241,6 +245,10 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       }
       String recQName = recNamespacePfx+":"+recLocalName;
       
+      XPathFactory xPathFactory = XPathFactory.newInstance();
+      XPath xPath = xPathFactory.newXPath();
+      xPath.setNamespaceContext(context.getOperationResponse().getNamespaces().makeNamespaceContext());
+      
       // append each record
       DiscoveredRecords records = query.getResult().getRecords();
       for (DiscoveredRecord record: records) {
@@ -255,6 +263,18 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
         if (!hasGeometry) {
           appendGeometry(elRecord, responseDom, Envelope.ENVELOPE_WORLD);
         }
+        
+        long subjectCount = ((Double)xPath.evaluate("count(subject)", elRecord, XPathConstants.NUMBER)).longValue();
+        if (subjectCount==0) {
+          Node titleNode = (Node)xPath.evaluate("title", elRecord, XPathConstants.NODE);
+          Element elSubject = responseDom.createElement("dc:subject");
+          if (titleNode.getNextSibling()!=null) {
+            titleNode.getParentNode().insertBefore(elSubject, titleNode.getNextSibling());
+          } else {
+            titleNode.getParentNode().appendChild(elSubject);
+          }
+        }
+        
         parent.appendChild(elRecord);
       }
     
