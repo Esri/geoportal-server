@@ -260,19 +260,22 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
             hasGeometry = true;
           }
         }
-        if (!hasGeometry) {
-          appendGeometry(elRecord, responseDom, Envelope.ENVELOPE_WORLD);
-        }
-        
-        long subjectCount = ((Double)xPath.evaluate("count(subject)", elRecord, XPathConstants.NUMBER)).longValue();
-        if (subjectCount==0) {
-          Node titleNode = (Node)xPath.evaluate("title", elRecord, XPathConstants.NODE);
-          Element elSubject = responseDom.createElement("dc:subject");
-          if (titleNode.getNextSibling()!=null) {
-            titleNode.getParentNode().insertBefore(elSubject, titleNode.getNextSibling());
-          } else {
-            titleNode.getParentNode().appendChild(elSubject);
+        if (!hasElementNames) {
+          if (!hasGeometry) {
+            appendGeometry(elRecord, responseDom, Envelope.ENVELOPE_WORLD);
           }
+          /*
+          long subjectCount = ((Double)xPath.evaluate("count(subject)", elRecord, XPathConstants.NUMBER)).longValue();
+          if (subjectCount==0) {
+            Node titleNode = (Node)xPath.evaluate("title", elRecord, XPathConstants.NODE);
+            Element elSubject = responseDom.createElement("dc:subject");
+            if (titleNode.getNextSibling()!=null) {
+              titleNode.getParentNode().insertBefore(elSubject, titleNode.getNextSibling());
+            } else {
+              titleNode.getParentNode().appendChild(elSubject);
+            }
+          }
+          */
         }
         
         parent.appendChild(elRecord);
