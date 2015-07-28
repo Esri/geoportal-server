@@ -418,8 +418,6 @@ public void readGetRecordsResponse(String responseString,
         record.setReference(nodeValue);
       } else if (nodeName.equals("Types")) {
         record.setTypes(nodeValue);
-      } else if (nodeName.equals("ModifiedDate")) {
-        record.setTypes(nodeValue);
       }
     }
     
