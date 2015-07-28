@@ -273,6 +273,14 @@ public class GxeFile {
           int n = baseUris.size();
           for (int i=0; i<n; i++) {
             URI testUri = baseUris.get(i).resolve(relUri);
+            
+            // managing issue for JBoss-vfs url
+            if (testUri.toURL().toString().startsWith("vfs")){
+              String urlString = testUri.toURL().toString();
+              urlString = urlString.substring(3);
+              testUri = new URI("File"+urlString);
+            }            
+            
             // this won't work for http based URIs
             if ((new File(testUri)).exists()) {
               locUrl = testUri.toURL();
