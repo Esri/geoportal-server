@@ -443,7 +443,7 @@ public class Gpt2AgpPush {
    * @return <code>true</code> if item has been updated
    * @throws Exception if an exception occurs
    */
-  private boolean syncItem(AgpItem sourceItem, String uuid, String xml) throws Exception {
+  protected boolean syncItem(AgpItem sourceItem, String uuid, String xml) throws Exception {
     this.numItemsConsidered++;
     GptSource src = this.source;
     AgpDestination dest = this.destination; 
