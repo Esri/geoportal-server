@@ -328,9 +328,17 @@ function selectSection(section) {
   
   enableSection("agp2agp", section=="agp2agp");
   enableSection("ags2agp", section=="ags2agp");
+  enableSection("gpt2agp", section=="gpt2agp");
   enableSection("dcat", section=="dcat");
   
-  dojo.query(".onBehalfOf").style("display",section!="agp2agp" && section!="ags2agp"? "block": "none");
+  dojo.query(".onBehalfOf").style("display",section!="agp2agp" && section!="ags2agp" && section!="gpt2agp"? "block": "none");
+  dojo.query(".hostUrlClass").style("display",section!="gpt2agp"? "block": "none");
+  
+  if (section=="gpt2agp") {
+    dojo.query("#harvestCreate\\:nameLabel").addClass("requiredField");
+  } else {
+    dojo.query("#harvestCreate\\:nameLabel").removeClass("requiredField");
+  }
 
   adjustSearchable(section);
   adjustFindable(section);
@@ -500,7 +508,9 @@ dojo.addOnLoad(function() {
   var fetchOwners = dojo.byId("fetchOwners");
   var fetchFolders = dojo.byId("fetchFolders");
   var fetchAgs2AgpOwners = dojo.byId("ags2agp-fetchOwners");
+  var fetchGpt2AgpOwners = dojo.byId("gpt2agp-fetchOwners");
   var fetchAgs2AgpFolders = dojo.byId("ags2agp-fetchFolders");
+  var fetchGpt2AgpFolders = dojo.byId("gpt2agp-fetchFolders");
   
   var closeFoldersDialog = dojo.byId("closeFoldersDialog");
   var foldersDiv = dojo.byId("foldersDiv");
@@ -528,6 +538,10 @@ dojo.addOnLoad(function() {
     fetchOwnersFun("ags2agp");
   });
   
+  dojo.connect(fetchGpt2AgpOwners,"onclick",function(evt){
+    fetchOwnersFun("gpt2agp");
+  });
+  
   var fetchFoldersFun = function(protocolType) {
     var foldersDialog = dijit.byId("foldersDialog");
     dojo.empty(foldersDiv);
@@ -546,6 +560,10 @@ dojo.addOnLoad(function() {
   
   dojo.connect(fetchAgs2AgpFolders,"onclick",function(evt){
     fetchFoldersFun("ags2agp");
+  });
+  
+  dojo.connect(fetchGpt2AgpFolders,"onclick",function(evt){
+    fetchFoldersFun("gpt2agp");
   });
 
   dojo.connect(closeFoldersDialog,"onclick",function(evt){
@@ -980,9 +998,9 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   styleClass="formTable" columnClasses="formLabelColumn harvestExtra,formInputColumn">
 
 <%-- Host Url --%>
-<h:outputLabel id="hostUrlLabel" for="hostUrl" styleClass="requiredField" value=""/>
+<h:outputLabel id="hostUrlLabel" for="hostUrl" styleClass="requiredField hostUrlClass" value=""/>
 
-<h:panelGroup>
+<h:panelGroup styleClass="hostUrlClass">
   <h:inputText size="50" value="#{HarvestController.editor.hostUrl}" id="hostUrl"/>
   <h:outputText value="&nbsp;" escape="false"/>
   <h:commandButton 
@@ -1051,7 +1069,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   </verbatim>
 </h:panelGroup>
 <%-- Repository Name --%>
-<h:outputLabel for="name" styleClass="" value="#{gptMsg['catalog.harvest.manage.edit.name']}"/>
+<h:outputLabel id="nameLabel" for="name" styleClass="" value="#{gptMsg['catalog.harvest.manage.edit.name']}"/>
 <h:inputText size="50" value="#{HarvestController.editor.name}" id="name"/>
 
 <%-- ArcIMS specific properties ----------------------------------------------%>
