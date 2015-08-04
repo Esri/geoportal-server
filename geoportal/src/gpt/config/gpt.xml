@@ -682,7 +682,7 @@
                resourceKey="catalog.harvest.manage.edit.protocol.agp2agp"/>  
 -->
 <!--      
-      <protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.Gpt2AgpRelaxedProtocolFactory"
+      <protocol factoryClass="com.esri.gpt.control.webharvest.protocol.factories.Gpt2AgpProtocolFactory"
                resourceKey="catalog.harvest.manage.edit.protocol.gpt2agp"/>  
 -->
 
