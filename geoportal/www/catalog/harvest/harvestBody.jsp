@@ -603,12 +603,26 @@ function getAgs2AgpDestination() {
   return destination;
 };
 
+function getGpt2AgpDestination() {
+  var destination = {
+    h: dojo.trim(dojo.attr("harvestCreate:gpt-dest-h","value")),
+    u: dojo.trim(dojo.attr("harvestCreate:gpt-dest-u","value")),
+    p: dojo.trim(dojo.attr("harvestCreate:gpt-dest-p","value")),
+    o: dojo.trim(dojo.attr("harvestCreate:gpt-dest-o","value")),
+    f: dojo.trim(dojo.attr("harvestCreate:gpt-dest-f","value"))
+  };
+  return destination;
+};
+
 function getDestination(protocolType) {
   if (protocolType=="agp2agp") {
     return getAgp2AgpDestination();
   }
   if (protocolType=="ags2agp") {
     return getAgs2AgpDestination();
+  }
+  if (protocolType=="gpt2agp") {
+    return getGpt2AgpDestination();
   }
   return null;
 }
@@ -620,6 +634,9 @@ function setDestinationOwner(protocolType,owner) {
   if (protocolType=="ags2agp") {
     dojo.attr("harvestCreate:ags-dest-o","value",owner);
   }
+  if (protocolType=="gpt2agp") {
+    dojo.attr("harvestCreate:gpt-dest-o","value",owner);
+  }
 }
 
 function setDestinationFolder(protocolType,folder) {
@@ -628,6 +645,9 @@ function setDestinationFolder(protocolType,folder) {
   }
   if (protocolType=="ags2agp") {
     dojo.attr("harvestCreate:ags-dest-f","value",folder);
+  }
+  if (protocolType=="gpt2agp") {
+    dojo.attr("harvestCreate:gpt-dest-f","value",folder);
   }
 }
 
@@ -944,8 +964,8 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <h:outputText escape="false" value="<hr align=\"center\"/>"/>
 
 <%-- General repository info -------------------------------------------------%>  
-<h:panelGrid id="repositoryMain"  columns="2" summary="#{gptMsg['catalog.general.designOnly']}"
-  styleClass="formTable" columnClasses="formLabelColumn harvestExtra,formInputColumn">
+<h:panelGrid id="repositoryHeader"  columns="1" summary="#{gptMsg['catalog.general.designOnly']}"
+             styleClass="formTable" columnClasses="formInputColumn harvestExtra" style="width: 100%">
 
 <%-- Protocol Type --%>
 <h:outputText value="#{gptMsg['catalog.harvest.manage.edit.protocolType']}"/>
@@ -953,6 +973,11 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <h:selectOneRadio value="#{HarvestController.editor.type}" id="protocolType">
   <f:selectItems value="#{HarvestController.protocols}"/>
 </h:selectOneRadio>
+  
+</h:panelGrid>
+
+<h:panelGrid id="repositoryMain"  columns="2" summary="#{gptMsg['catalog.general.designOnly']}"
+  styleClass="formTable" columnClasses="formLabelColumn harvestExtra,formInputColumn">
 
 <%-- Host Url --%>
 <h:outputLabel id="hostUrlLabel" for="hostUrl" styleClass="requiredField" value=""/>
@@ -1262,6 +1287,57 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 </f:verbatim>
 </h:panelGroup>
 
+
+<%-- GPT-TO-AGP specific properties ------------------------------------------%>
+
+<h:outputText styleClass="gpt2agp agp2agpCaption" value=""/>
+<h:outputText styleClass="gpt2agp agp2agpCaption" value="#{gptMsg['catalog.harvest.manage.edit.dest.caption']}"/>
+
+<%-- dest host --%>
+<h:outputLabel styleClass="requiredField gpt2agp" for="gpt-dest-h" value="#{gptMsg['catalog.harvest.manage.edit.dest.h']}"/>
+<h:inputText   styleClass="gpt2agp" size="30" value="#{HarvestController.editor.attrs['gpt-dest-h']}" id="gpt-dest-h"/>
+<h:panelGroup></h:panelGroup>
+<h:panelGroup>
+  <verbatim>
+    <div class="hint gpt2agp" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">my.host.com/portal</span>
+    </div>
+  </verbatim>
+</h:panelGroup>
+
+<%-- dest user name --%>
+<h:outputLabel styleClass="requiredField gpt2agp" for="gpt-dest-u" value="#{gptMsg['catalog.harvest.manage.edit.dest.u']}"/>
+<h:inputText   styleClass="gpt2agp" size="30" value="#{HarvestController.editor.attrs['gpt-dest-u']}" id="gpt-dest-u"/>
+
+<%-- dest password --%>
+<h:outputLabel styleClass="requiredField gpt2agp" for="gpt-dest-p" value="#{gptMsg['catalog.harvest.manage.edit.dest.p']}"/>
+<h:panelGroup>
+<h:inputSecret redisplay="true" styleClass="gpt2agp" size="30" value="#{HarvestController.editor.attrs['gpt-dest-p']}" id="gpt-dest-p"/>
+<h:commandButton 
+  id="gpt2agp-testClient"
+  value="#{gptMsg['catalog.harvest.manage.test.msg.agp2agp.button.testClient']}" 
+  actionListener="#{HarvestController.handleTestAgpDestination}" />
+</h:panelGroup>
+
+<%-- dest owner --%>
+<h:outputLabel styleClass="requiredField gpt2agp" for="gpt-dest-o" value="#{gptMsg['catalog.harvest.manage.edit.dest.o']}"/>
+<h:panelGroup>
+<h:inputText styleClass="gpt2agp" size="30" value="#{HarvestController.editor.attrs['gpt-dest-o']}" id="gpt-dest-o"/>
+<f:verbatim>
+  <input type="button" style="left: -4px;" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.button.fetchOwners"/>" id="gpt2agp-fetchOwners"/>
+</f:verbatim>
+</h:panelGroup>
+
+<%-- dest folder ID --%>
+<h:outputLabel styleClass="requiredField gpt2agp" for="gpt-dest-f" value="#{gptMsg['catalog.harvest.manage.edit.dest.f']}"/>
+<h:panelGroup>
+<h:inputText   styleClass="gpt2agp" size="40" value="#{HarvestController.editor.attrs['gpt-dest-f']}" id="gpt-dest-f"/>
+<f:verbatim>
+  <input type="button" style="left: -4px;" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.button.fetchFolders"/>" id="gpt2agp-fetchFolders"/>
+</f:verbatim>
+</h:panelGroup>
+  
 <%-- DCAT Portal specific properties -----------------------------------------%>
 <h:outputLabel styleClass="requiredField dcat" for="dcat-format" value="#{gptMsg['catalog.harvest.manage.edit.dcat.format']}"/>
 <h:inputText styleClass="dcat" size="30" value="#{HarvestController.editor.attrs['dcatFormat']}" id="dcat-format"/>

@@ -72,11 +72,11 @@ public class HarvestProtocolGpt2Agp extends AbstractHTTPHarvestProtocol {
     con2.setWebContext(pair.getContext());
     con2.setTokenCriteria(new AgpTokenCriteria());
     con2.getTokenCriteria().setCredentials(new AgpCredentials(
-            attrs.getValue("ags-dest-u"), attrs.getValue("ags-dest-p")));
+            attrs.getValue("gpt-dest-u"), attrs.getValue("gpt-dest-p")));
     con2.getTokenCriteria().setReferer(getReferrer());
     destination.setConnection(con2);
-    destination.setDestinationOwner(attrs.getValue("ags-dest-o"));
-    destination.setDestinationFolderID(attrs.getValue("ags-dest-f"));
+    destination.setDestinationOwner(attrs.getValue("gpt-dest-o"));
+    destination.setDestinationFolderID(attrs.getValue("gpt-dest-f"));
 
     return destination;
   }
@@ -86,7 +86,7 @@ public class HarvestProtocolGpt2Agp extends AbstractHTTPHarvestProtocol {
    * @return host name
    */
   public String getDestinationHost() {
-    return getAttributeMap().getValue("ags-dest-h");
+    return getAttributeMap().getValue("gpt-dest-h");
   }
   
   @Override
