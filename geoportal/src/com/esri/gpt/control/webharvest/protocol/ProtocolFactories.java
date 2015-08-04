@@ -21,6 +21,7 @@ import com.esri.gpt.control.webharvest.protocol.factories.ArcImsProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.AtomProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.CswProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.DCATProtocolFactory;
+import com.esri.gpt.control.webharvest.protocol.factories.Gpt2AgpProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.OaiProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.ResourceProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.ThreddsProtocolFactory;
@@ -112,6 +113,7 @@ public void initDefault() {
   put("ATOM"   , new AtomProtocolFactory(),     "catalog.harvest.manage.edit.protocol.atom");
   put("AGP2AGP", new Agp2AgpProtocolFactory(),  "catalog.harvest.manage.edit.protocol.agp2agp");
   put("AGS2AGP", new Ags2AgpProtocolFactory(),  "catalog.harvest.manage.edit.protocol.ags2agp");
+  put("GPT2AGP", new Gpt2AgpProtocolFactory(),  "catalog.harvest.manage.edit.protocol.gpt2agp");
   put("DCAT"   , new DCATProtocolFactory(),     "catalog.harvest.manage.edit.protocol.dcat");
   /* NOTE! This is EXPERIMENTAL feature. It might be removed at any time in the future.
   put("AGP"    , new AgpProtocolFactory(),      "catalog.harvest.manage.edit.protocol.agp");
