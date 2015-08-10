@@ -430,4 +430,5 @@
   <property-meaning name="dcat.metc.per.org" valueType="String" comparisonType="value"/>
   <property-meaning name="dcat.metc.per.per" valueType="String" comparisonType="value"/>
   <property-meaning name="dcat.publisher.origin" valueType="String" comparisonType="value"/>
+  <property-meaning name="dcat.parentIdentifier" valueType="String" comparisonType="value"/>
 </property-meanings>

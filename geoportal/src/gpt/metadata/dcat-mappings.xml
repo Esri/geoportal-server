@@ -133,6 +133,7 @@
         <map from="asNeeded|notPlanned|unknown" to="irregular"/>
         <map from=".*" to="irregular"/>
       </field>
+      <field name="isPartOf" index="dcat.parentIdentifier"  required="false"/>
 	</fields>
 	<fields schema="iso-19115,iso-19119,iso19115-2,gemini-iso-19115,gemini-iso-19119,inspire-iso-19115,inspire-iso-19119"> 
 	  <field name="title" index="title"  required="true"/>  
@@ -204,5 +205,6 @@
       <field name="references" index="dcat.references" type="array" required="false"/>
       <field name="size" index="dcat.size"  required="false"/>
       <field name="landingPage" index="dcat.landingPage"  required="false"/>
+      <field name="isPartOf" index="dcat.parentIdentifier"  required="false"/>
 	  </fields>
 </dcat>

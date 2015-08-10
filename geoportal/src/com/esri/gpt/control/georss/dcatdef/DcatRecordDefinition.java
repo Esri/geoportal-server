@@ -198,6 +198,7 @@ public class DcatRecordDefinition {
     fieldDefinitions.add(new SpatialField("spatial"));
     fieldDefinitions.add(new TemporalField("temporal"));
     fieldDefinitions.add(new DcatDistributionField("distribution"));
+    fieldDefinitions.add(new StringField("isPartOf"));
   }
   
   /**
