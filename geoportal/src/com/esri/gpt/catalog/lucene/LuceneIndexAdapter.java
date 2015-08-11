@@ -28,6 +28,7 @@ import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.security.metadata.MetadataAcl;
+import static com.esri.gpt.framework.sql.BaseDao.closeStatement;
 import com.esri.gpt.framework.util.Val;
 
 import java.io.File;
@@ -36,6 +37,7 @@ import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -738,6 +740,15 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
         storeables = (Storeables)schema.getMeaning().getStoreables();
       }
       
+      String sParentIdentifier = "";
+      IStoreable parentIdentifier = storeables.get("dcat.parentidentifier");
+      if (parentIdentifier!=null) {
+        Object[] values = parentIdentifier.getValues();
+        if (values!=null && values.length>0 && values[0]!=null) {
+          sParentIdentifier = Val.chkStr(values[0].toString());
+        }
+      }
+      
       // resolve the thumbnail URL          
       if (Val.chkStr(schema.getMeaning().getThumbnailUrl()).length() == 0) {
         String thumbBinary = Val.chkStr(schema.getMeaning().getThumbnailBinary());
@@ -783,8 +794,18 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
       if (bReadDB) {
         CatalogConfiguration cfg = this.getRequestContext().getCatalogConfiguration();
         this.getRequestContext().getCatalogConfiguration().getResourceTableName();
-        String sql = "SELECT SITEUUID, TITLE FROM "+cfg.getResourceTableName()+" WHERE DOCUUID=?";
         Connection con = this.returnConnection().getJdbcConnection();
+        
+        String syspid = "";
+        if (!sParentIdentifier.isEmpty()) {
+          syspid = Val.chkStr(queryFileIdentifier(con, cfg.getResourceTableName(), sParentIdentifier), sParentIdentifier);
+          fldName = "sys.parentid";
+          LOGGER.log(Level.FINER, "Appending field: {0} ={1}", new Object[]{fldName, syspid});
+          fld = new Field(fldName,syspid,Field.Store.YES,Field.Index.NOT_ANALYZED,Field.TermVector.NO);
+          document.add(fld);
+        }
+        
+        String sql = "SELECT SITEUUID, TITLE FROM "+cfg.getResourceTableName()+" WHERE DOCUUID=?";
         this.logExpression(sql);
         st = con.prepareStatement(sql);
         st.setString(1,uuid);
@@ -1077,5 +1098,30 @@ public class LuceneIndexAdapter extends CatalogIndexAdapter {
       closeWriter(writer);
     }
   }
+
+/**
+ * Queries the file idenitfier assoicated with a uuid.
+ * @param uuid the document UUID
+ * @return the approval status (empty string if not found)
+ * @throws SQLException if a database exception occurs
+ */
+private String queryFileIdentifier(Connection con, String tableName, String uuid) throws SQLException {
+  PreparedStatement st = null;
+  try {
+    uuid = Val.chkStr(uuid);
+    if (uuid.length() > 0) {
+      String sSql = "SELECT FILEIDENTIFIER FROM "+tableName+" WHERE DOCUUID=?";
+      st = con.prepareStatement(sSql);
+      st.setString(1,uuid);
+      ResultSet rs = st.executeQuery();
+      if (rs.next()) {
+        return Val.chkStr(rs.getString(1));
+      }
+    }
+  } finally {
+    closeStatement(st);
+  }
+  return "";
+}
 
 }
