@@ -42,6 +42,12 @@ public interface DcatRecord {
    */
   List<String> getKeywords();
   /**
+   * Gets themes
+   * @return list of themes
+   */
+  List<String> getThemes();
+  
+  /**
    * Gets modified date.
    * @return modified date
    */
@@ -50,7 +56,9 @@ public interface DcatRecord {
    * Gets publisher.
    * @return publisher
    */
-  String getPublisher();
+//  String getPublisher();
+  DcatPublisher getPublisher();
+  
   /**
    * Gets contact point.
    * @return contact point

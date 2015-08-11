@@ -17,10 +17,12 @@ package com.esri.gpt.framework.dcat.adaptors;
 
 import com.esri.gpt.framework.dcat.dcat.DcatContactPoint;
 import com.esri.gpt.framework.dcat.dcat.DcatDistributionList;
+import com.esri.gpt.framework.dcat.dcat.DcatPublisher;
 import com.esri.gpt.framework.dcat.dcat.DcatRecord;
 import com.esri.gpt.framework.dcat.json.JsonAttribute;
 import com.esri.gpt.framework.dcat.json.JsonRecord;
 import com.esri.gpt.framework.util.Val;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +63,15 @@ public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
       keywords.add(keyword.getString());
     }
     return keywords;
+  }
+  
+  @Override
+  public List<String> getThemes() {
+    ArrayList<String> themes = new ArrayList<String>();
+    for (JsonAttribute theme: record.getThemes()) {
+      themes.add(theme.getString());
+    }
+    return themes;
   }
 
   @Override
@@ -119,10 +130,10 @@ public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
   }
 
   @Override
-  public String getPublisher() {
-    return getString("publisher");
+  public DcatPublisher getPublisher() {
+	    return new DcatPublisherAdaptor(record);
   }
-
+  
   @Override
   public String getPerson() {
     return getString("person");
