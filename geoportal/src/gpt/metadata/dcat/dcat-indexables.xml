@@ -78,8 +78,10 @@
   <property meaning="dcat.dataQuality" xpath="/rdf:RDF/dcat:dataset/pod:dataQuality"/>
   <property meaning="dcat.accessUrl" xpath="/rdf:RDF/dcat:dataset/dcat:distribution/dcat:accessURL"/>
   <property meaning="dcat.downloadUrl" xpath="/rdf:RDF/dcat:dataset/dcat:distribution/dcat:downloadURL"/>
-  <property meaning="timeperiod.l.0" xpath="/rdf:RDF/dcat:dataset/dct:temporal[0]"/>
-  <property meaning="timeperiod.u.0" xpath="/rdf:RDF/dcat:dataset/dct:temporal[1]"/>
+  <property xpath="/rdf:RDF/dcat:dataset">
+    <property meaning="timeperiod.analyze" xpathType="STRING"
+      xpath="concat('tp.begin.',dct:temporal[1],'.end.',dct:temporal[2])"/>
+  </property>
     
 </indexables>
 
