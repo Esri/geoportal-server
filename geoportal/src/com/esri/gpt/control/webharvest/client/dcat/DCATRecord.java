@@ -195,7 +195,7 @@ public class DCATRecord extends CommonPublishable {
   private String getTemporal() {
     StringBuilder sb = new StringBuilder();
     String temporalDef = Val.chkStr(baseRecord.getTemporal());
-    String [] temporalRange = temporalDef.split(",");
+    String [] temporalRange = temporalDef.split("/");
     for (String temporal: temporalRange) {
       sb.append("<dct:temporal>").append(escapeXml(temporal)).append("</dct:temporal>");
     }
