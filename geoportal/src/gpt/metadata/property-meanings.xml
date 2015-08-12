@@ -377,6 +377,8 @@
   </property-meaning>
   <property-meaning name="dcat.programCode" valueType="String" comparisonType="value">
   </property-meaning>  
+  <property-meaning name="dcat.bureauCode" valueType="String" comparisonType="value">
+  </property-meaning>  
   <property-meaning name="dcat.accessLevel" valueType="String" comparisonType="value">
   </property-meaning>  
   <property-meaning name="dcat.accessLevelComment" valueType="String" comparisonType="value">
@@ -431,4 +433,6 @@
   <property-meaning name="dcat.metc.per.per" valueType="String" comparisonType="value"/>
   <property-meaning name="dcat.publisher.origin" valueType="String" comparisonType="value"/>
   <property-meaning name="dcat.parentIdentifier" valueType="String" comparisonType="value"/>
+  <property-meaning name="dcat.primaryITInvestmentUII" valueType="String" comparisonType="value"/>
+  
 </property-meanings>
