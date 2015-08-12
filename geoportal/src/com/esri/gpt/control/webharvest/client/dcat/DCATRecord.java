@@ -54,24 +54,6 @@ public class DCATRecord extends CommonPublishable {
   public String getContent() throws IOException, TransformerException, SAXException, NullReferenceException {
 	  String theXML = "";
 	  
-	  /*
-	  theXML = "<?xml version='1.0' encoding='UTF-8'?>"
-      + "<rdf:RDF xmlns:dct='http://purl.org/dc/terms/' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:fo='http://www.w3.org/1999/XSL/Format' xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#' xmlns:exslt='http://exslt.org/common' xmlns:rim='urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0' xmlns:dcmiBox='http://dublincore.org/documents/2000/07/11/dcmi-box/' xmlns:ows='http://www.opengis.net/ows'>"
-      + "<rdf:Description rdf:about='rdf_about'>"
-      + "<dc:title>" + escapeXml(baseRecord.getTitle()) + "</dc:title>"
-      + "<dc:description>" + escapeXml(baseRecord.getDescription())+ "</dc:description>"
-      + "<dct:abstract>" + escapeXml(baseRecord.getAbstract()) + "</dct:abstract>"
-      + "<dc:format>" + escapeXml(baseRecord.getFormat()) + "</dc:format>"
-      + "<dct:publisher>" + escapeXml(baseRecord.getPublisher()) + "</dct:publisher>"
-      + "<dc:identifier>" + escapeXml(baseRecord.getIdentifier()) + "</dc:identifier>"
-      + getSubjects() +
-      "<dct:modified>" + escapeXml(baseRecord.getModified()) + "</dct:modified>"
-      + getReferences() +
-      "<ows:WGS84BoundingBox>" + escapeXml(baseRecord.getSpatial()) + "</ows:WGS84BoundingBox>"
-      + "</rdf:Description>"
-      + "</rdf:RDF>";
-	   */
-	  
 	  theXML = "<?xml version='1.0' encoding='UTF-8'?>" +
 				"<rdf:RDF " +
 				"	xmlns:pod='http://project-open-data.cio.gov/v1.1/schema' " +
@@ -98,10 +80,14 @@ public class DCATRecord extends CommonPublishable {
 				"	 <pod:accessLevel>" + escapeXml(baseRecord.getAccessLevel()) + "</pod:accessLevel>" +
 				"	 <pod:bureauCode>" + escapeXml(baseRecord.getBureauCode()) + "</pod:bureauCode>" +
 				"	 <pod:programCode>" + escapeXml(baseRecord.getProgramCode()) + "</pod:programCode>" +
+				"	 <pod:dataQuality>" + escapeXml(baseRecord.getDataQuality()) + "</pod:dataQuality>" +
+				"	 <pod:primaryITInvestmentUII>" + escapeXml(baseRecord.getPrimaryITInvestmentUII()) + "</pod:primaryITInvestmentUII>" +
+				"	 <pod:isPartOf>" + escapeXml(baseRecord.getIsPartOf()) + "</pod:isPartOf>" +
 				getDistributions() +
 				"	 <dct:license>" + escapeXml(baseRecord.getLicense()) + "</dct:license>" +
 				"	 <dct:rights>" + escapeXml(baseRecord.getRights()) + "</dct:rights>" +
 				getWGS84BoundingBox() +
+                getTemporal() +
 				"	 <dct:accrualPeriodicity>" + escapeXml(baseRecord.getAccrualPeriodicity()) + "</dct:accrualPeriodicity>" +
 				"	 <dct:language>" + escapeXml(baseRecord.getLanguage()) + "</dct:language>" +
 				getThemes() +
@@ -202,6 +188,16 @@ public class DCATRecord extends CommonPublishable {
       if (reference.length()>0) {
     	  sb.append("<dct:references>").append(escapeXml(reference)).append("</dct:references>");
       }
+    }
+    return sb.toString();
+  }
+  
+  private String getTemporal() {
+    StringBuilder sb = new StringBuilder();
+    String temporalDef = Val.chkStr(baseRecord.getTemporal());
+    String [] temporalRange = temporalDef.split(",");
+    for (String temporal: temporalRange) {
+      sb.append("<dct:temporal>").append(escapeXml(temporal)).append("</dct:temporal>");
     }
     return sb.toString();
   }

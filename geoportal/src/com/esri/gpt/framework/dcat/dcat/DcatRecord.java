@@ -174,6 +174,11 @@ public interface DcatRecord {
    * @return theme
    */
   String getTheme();
+  /**
+   * Gets isPartOf.
+   * @return isPartOf
+   */
+  String getIsPartOf();
  
 
   /**

@@ -256,6 +256,11 @@ public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
   public String getTheme() {
     return getString("theme");
   }
+
+  @Override
+  public String getIsPartOf() {
+    return getString("isPartOf");
+  }
   
   
 }

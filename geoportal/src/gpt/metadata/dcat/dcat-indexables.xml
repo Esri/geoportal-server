@@ -31,10 +31,11 @@
   <namespace prefix="skos" uri="http://www.w3.org/2004/02/skos/core#" />
   <namespace prefix="vcard" uri="http://www.w3.org/2006/vcard/ns#" />
 
-  <property meaning="fileIdentifier" xpath="/rdf:RDF/dcat:dataset"/>
+  <property meaning="fileIdentifier" xpath="/rdf:RDF/dcat:dataset/dct:identifier"/>
 
   <property meaning="title" xpath="/rdf:RDF/dcat:dataset/dct:title"/>
   <property meaning="abstract" xpath="/rdf:RDF/dcat:dataset/dct:description"/>
+  <property meaning="publisher" xpath="/rdf:RDF/dcat:dataset/dct:publisher/foaf:name"/>
     
   <property meaning="keywords" xpath="/rdf:RDF/dcat:dataset/dcat:keyword"/>
     
@@ -51,15 +52,34 @@
     
   <property meaning="resource.url" xpath="/rdf:RDF/dcat:dataset/dcat:distribution[1]/dcat:downloadURL"/>
   <property meaning="website.url" xpath="/rdf:RDF/dcat:dataset/dcat:landingPage"/>
-  
-  <!-- <property meaning="thumbnail.url" xpath=""/> -->
-  <!-- <property meaning="thumbnail.binary" xpath=""/> -->
     
   <property meaning="contentType" xpath="/rdf:RDF/dcat:dataset/dcat:distribution[1]/dcat:mediaType"/>
   <property meaning="dataTheme" xpath="/rdf:RDF/dcat:dataset/dcat:theme[1]"/>
-  
+    
   <!-- index all text content as part of the body field -->
   <property meaning="body" xpath="/rdf:RDF/dcat:dataset/*"/>
-  
+
+  <!-- dcat-specific -->
+  <property meaning="dcat.modified" xpath="/rdf:RDF/dcat:dataset/dct:modified"/>
+  <property meaning="dcat.issued" xpath="/rdf:RDF/dcat:dataset/dct:issued"/>
+  <property meaning="dcat.publisher" xpath="/rdf:RDF/dcat:dataset/dct:publisher/foaf:name"/>
+  <property meaning="dcat.person" xpath="/rdf:RDF/dcat:dataset/dcat:contactPoint/vcard:fn"/>
+  <property meaning="dcat.mbox" xpath="/rdf:RDF/dcat:dataset/dcat:contactPoint/vcard:hasEmail"/>
+  <property meaning="dcat.accessLevel" xpath="/rdf:RDF/dcat:dataset/pod:accessLevel"/>
+  <property meaning="dcat.programCode" xpath="/rdf:RDF/dcat:dataset/pod:programCode"/>   
+  <property meaning="dcat.bureauCode" xpath="/rdf:RDF/dcat:dataset/pod:bureauCode"/>   
+  <property meaning="dcat.license" xpath="/rdf:RDF/dcat:dataset/dct:license"/>
+  <property meaning="dcat.accessLevelComment" xpath="/rdf:RDF/dcat:dataset/dct:rights"/> 
+  <property meaning="dcat.accrualPeriodicity" xpath="/rdf:RDF/dcat:dataset/dct:accrualPeriodicity"/>
+  <property meaning="dcat.language" xpath="/rdf:RDF/dcat:dataset/dct:language"/>
+  <property meaning="dcat.landingPage" xpath="/rdf:RDF/dcat:dataset/dcat:landingPage"/>
+  <property meaning="dcat.primaryITInvestmentUII" xpath="/rdf:RDF/dcat:dataset/pod:primaryITInvestmentUII"/>
+  <property meaning="dcat.parentIdentifier" xpath="/rdf:RDF/dcat:dataset/pod:isPartOf"/>
+  <property meaning="dcat.dataQuality" xpath="/rdf:RDF/dcat:dataset/pod:dataQuality"/>
+  <property meaning="dcat.accessUrl" xpath="/rdf:RDF/dcat:dataset/dcat:distribution/dcat:accessURL"/>
+  <property meaning="dcat.downloadUrl" xpath="/rdf:RDF/dcat:dataset/dcat:distribution/dcat:downloadURL"/>
+  <property meaning="timeperiod.l.0" xpath="/rdf:RDF/dcat:dataset/dct:temporal[0]"/>
+  <property meaning="timeperiod.u.0" xpath="/rdf:RDF/dcat:dataset/dct:temporal[1]"/>
+    
 </indexables>
 
