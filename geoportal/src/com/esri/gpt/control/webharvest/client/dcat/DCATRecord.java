@@ -151,12 +151,12 @@ public class DCATRecord extends CommonPublishable {
 	    StringBuilder sb = new StringBuilder();
 	    for (DcatDistribution distribution: baseRecord.getDistribution()) {
 	    	sb.append("<dcat:distribution>");
-	    	sb.append("    <dcat:downloadURL>" + distribution.getDownloadURL() + "</dcat:downloadURL>");
-	    	sb.append("    <dcat:accessURL>" + distribution.getAccessURL() + "</dcat:accessURL>");
-	    	sb.append("    <dcat:mediaType>" + distribution.getMediaType() + "</dcat:mediaType>");
-	    	sb.append("    <dct:format>" + distribution.getFormat() + "</dct:format>");
-	    	sb.append("    <dct:title>" + distribution.getTitle() + "</dct:title>");
-	    	sb.append("    <dct:description>" + distribution.getDescription() + "</dct:description>");
+	    	sb.append("    <dcat:downloadURL>" + escapeXml(distribution.getDownloadURL()) + "</dcat:downloadURL>");
+	    	sb.append("    <dcat:accessURL>" + escapeXml(distribution.getAccessURL()) + "</dcat:accessURL>");
+	    	sb.append("    <dcat:mediaType>" + escapeXml(distribution.getMediaType()) + "</dcat:mediaType>");
+	    	sb.append("    <dct:format>" + escapeXml(distribution.getFormat()) + "</dct:format>");
+	    	sb.append("    <dct:title>" + escapeXml(distribution.getTitle()) + "</dct:title>");
+	    	sb.append("    <dct:description>" + escapeXml(distribution.getDescription()) + "</dct:description>");
 	    	sb.append("</dcat:distribution>");
 	    }
 	    return sb.toString();

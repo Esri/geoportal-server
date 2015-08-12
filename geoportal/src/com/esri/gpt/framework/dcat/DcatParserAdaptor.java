@@ -44,6 +44,14 @@ public class DcatParserAdaptor implements Iterable<DcatRecord> {
   }
 
   /**
+   * Gets parsed DCAT version.
+   * @return version
+   */
+  public DcatVersion getDcatVersion() {
+    return parser.getDcatVersion();
+  }
+
+  /**
    * Closes adaptor.
    * <p>
    * It also closes underlying parser. This method is called either by the user

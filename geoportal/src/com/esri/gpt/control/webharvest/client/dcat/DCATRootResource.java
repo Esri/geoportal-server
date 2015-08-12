@@ -19,6 +19,7 @@ import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.waf.DestroyableResource;
 import com.esri.gpt.framework.dcat.DcatParserAdaptor;
 import com.esri.gpt.framework.dcat.DcatParser;
+import com.esri.gpt.framework.dcat.DcatVersion;
 import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.util.ReadOnlyIterator;
@@ -131,7 +132,7 @@ class DCATRootResource implements DestroyableResource {
       // check for the next available data
       while (iterator.hasNext()) {
         Publishable next = iterator.next();
-        if (totalCount==0) {
+        if (totalCount==0 && adaptor.getDcatVersion().compareTo(DcatVersion.DV10)==0) {
           totalCount++;
           continue;
         }

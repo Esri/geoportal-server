@@ -77,6 +77,14 @@ public class DcatParser {
   }
 
   /**
+   * Gets parsed DCAT version.
+   * @return version
+   */
+  public DcatVersion getDcatVersion() {
+    return version;
+  }
+  
+  /**
    * Closes parser.
    * @throws java.io.IOException if error closing reader
    */
