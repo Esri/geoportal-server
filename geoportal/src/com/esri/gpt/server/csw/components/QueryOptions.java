@@ -30,6 +30,7 @@ public class QueryOptions {
   private StringSet ids = new StringSet();
   private int       maxRecords = 10;
   private int       maxRecordsThreshold = 5000;
+  private boolean   unlimited;
   private String    outputSchema;
   private String    queryConstraintCql;
   private String    queryConstraintVersion;
@@ -142,6 +143,22 @@ public class QueryOptions {
    */
   public void setMaxRecordsThreshold(int maxRecordsThreshold) {
     this.maxRecordsThreshold = maxRecordsThreshold;
+  }
+
+  /**
+   * Check if requested unlimited number of records.
+   * @return <code>true</code> if requested unlimited number of records
+   */
+  public boolean getIsUnlimited() {
+    return unlimited;
+  }
+
+  /**
+   * Set to request unlimited number of records.
+   * @param unlimited <code>true</code> to request unlimited number of records
+   */
+  public void setUnlimited(boolean unlimited) {
+    this.unlimited = unlimited;
   }
   
   /**

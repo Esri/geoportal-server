@@ -323,7 +323,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
     
     Document responseDom = opResponse.getResponseDom();
     DiscoveryResult result = query.getResult();
-    int numberOfRecordsMatched = result.getNumberOfHits();
+    int numberOfRecordsMatched = !qOptions.getIsUnlimited()? result.getNumberOfHits(): result.getRecords().size();
     int numberOfRecordsReturned = 0;
     int nextRecord = 0;
     String rtname = qOptions.getResultType();
