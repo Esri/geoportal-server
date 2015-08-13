@@ -42,7 +42,7 @@
   <indexables fileName="gpt/metadata/dcat/dcat-indexables.xml"/>
   
   <!-- Geoportal XML editor -->
-  <editor fileName="gpt/metadata/dcat/gxe/dcat-editor.xml"/> 
+  <!--editor fileName="gpt/metadata/dcat/gxe/dcat-editor.xml"/--> 
   
   <!-- identification section -->
   <section key="identification">
