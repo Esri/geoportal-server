@@ -17,7 +17,7 @@
 <csw:Capabilities version="3.0.0" xmlns:csw="http://www.opengis.net/cat/csw/3.0" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows/2.0" xmlns:ows11="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <ows:ServiceIdentification>
         <ows:Title>
-            ArcGIS Server Geoportal Extension 10 - OGC CSW 3.0.0 ISO AP
+            Esri Geoportal Server - OGC CSW
         </ows:Title>
         <ows:Abstract>
             A catalogue service that conforms to the HTTP protocol binding of the OpenGIS Catalogue Service ISO Metadata Application Profile specification (version 3.0)
