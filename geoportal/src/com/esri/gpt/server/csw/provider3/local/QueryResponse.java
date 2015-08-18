@@ -254,7 +254,7 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
       for (DiscoveredRecord record: records) {
         Element elRecord = responseDom.createElementNS(recNamespaceUri,recQName);
         boolean hasGeometry = false;
-        for (Returnable returnable: sortFields(record.getFields())) {
+        for (Returnable returnable: sortFields(filterFields(record.getFields(),new RejectFileIdentifiersPredicate()))) {
           PropertyMeaning meaning = this.appendDiscoveredField(context,elRecord,returnable);
           if (meaning!=null && meaning.getValueType().equals(PropertyValueType.GEOMETRY)) {
             hasGeometry = true;
@@ -264,6 +264,18 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
           if (!hasGeometry) {
             appendGeometry(elRecord, responseDom, Envelope.ENVELOPE_WORLD);
           }
+          /*
+          long subjectCount = ((Double)xPath.evaluate("count(subject)", elRecord, XPathConstants.NUMBER)).longValue();
+          if (subjectCount==0) {
+            Node titleNode = (Node)xPath.evaluate("title", elRecord, XPathConstants.NODE);
+            Element elSubject = responseDom.createElement("dc:subject");
+            if (titleNode.getNextSibling()!=null) {
+              titleNode.getParentNode().insertBefore(elSubject, titleNode.getNextSibling());
+            } else {
+              titleNode.getParentNode().appendChild(elSubject);
+            }
+          }
+          */
         }
         
         parent.appendChild(elRecord);
@@ -685,6 +697,22 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
     }
     
     /**
+     * Filters fields.
+     * @param colFields collection of fields
+     * @param predicate predicate used to filter fields
+     * @return 
+     */
+    private Collection<Returnable> filterFields(Collection<Returnable> colFields, IPredicate<Returnable> predicate) {
+        ArrayList<Returnable> arrFields = new ArrayList<Returnable>();
+        for (Returnable returnable: colFields) {
+            if (predicate==null || predicate.accept(returnable)) {
+                arrFields.add(returnable);
+            }
+        }
+        return arrFields;
+    }
+    
+    /**
      * Sorts fields.
      * <p/>
      * The goal of sorting is to push any geometry field at the end while all
@@ -700,17 +728,9 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
                 boolean g1 = isGeometry(o1);
                 boolean g2 = isGeometry(o2);
                 
-                if (g1!=g2) {
-                  if (g1) return 1;
-                  if (g2) return -1;
-                }
-                
-                // if two fields are either UUID or FILEIDENZTIFIER, make sure FILEIDENTIFIER is first
-                if (isDocId(o1) && isDocId(o2)) {
-                  if (o1.getMeaning().getMeaningType()!=o2.getMeaning().getMeaningType()) {
-                    return o1.getMeaning().getMeaningType()==PropertyMeaningType.UUID? 1: -1;
-                  }
-                }
+                if (g1==g2) return 0;
+                if (g1) return 1;
+                if (g2) return -1;
                 
                 return 0;
             }
@@ -719,12 +739,33 @@ public class QueryResponse extends DiscoveryAdapter implements IResponseGenerato
                 PropertyMeaning meaning = r.getMeaning();
                 return meaning.getValueType().equals(PropertyValueType.GEOMETRY);
             }
-            
-            private boolean isDocId(Returnable r) {
-                PropertyMeaning meaning = r.getMeaning();
-                return meaning.getMeaningType()==PropertyMeaningType.UUID || meaning.getMeaningType()==PropertyMeaningType.FILEIDENTIFIER;
-            }
         });
         return arrFields;
+    }
+  
+    /**
+     * Filter fredicate.
+     * 
+     * @param <T> 
+     */
+    private static interface IPredicate<T> {
+        /**
+         * Decides if the element should be accepted or rejected during filtering.
+         * @param element element to interrogate
+         * @return <code>true</code> if element should be accepted
+         */
+        boolean accept(T element);
+    }
+    
+    /**
+     * Predicate to reject any file identifiers.
+     */
+    private static class RejectFileIdentifiersPredicate implements IPredicate<Returnable> {
+
+        @Override
+        public boolean accept(Returnable element) {
+            return element.getMeaning().getMeaningType()!=PropertyMeaningType.FILEIDENTIFIER;
+        }
+        
     }
 }
