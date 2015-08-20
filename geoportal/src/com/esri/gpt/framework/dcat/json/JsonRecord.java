@@ -68,6 +68,6 @@ public class JsonRecord extends JsonAttributes {
   }
 
 	public List<JsonAttribute> getThemes() {
-	    return keywords;
+	    return themes;
 	}
 }
