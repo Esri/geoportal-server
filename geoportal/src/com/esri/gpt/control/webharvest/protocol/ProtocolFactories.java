@@ -213,11 +213,11 @@ public Protocol parseProtocol(String xmlString) throws ProtocolParseException {
 
     return protocol;
   } catch (ParserConfigurationException ex) {
-    throw new ProtocolParseException("Error parsing protocol.", ex);
+    throw new ProtocolParseException(String.format("Error parsing protocol: %s", xmlString), ex);
   } catch (SAXException ex) {
-    throw new ProtocolParseException("Error parsing protocol.", ex);
+    throw new ProtocolParseException(String.format("Error parsing protocol: %s", xmlString), ex);
   } catch (IOException ex) {
-    throw new ProtocolParseException("Error parsing protocol.", ex);
+    throw new ProtocolParseException(String.format("Error parsing protocol: %s", xmlString), ex);
   }
 }
 
