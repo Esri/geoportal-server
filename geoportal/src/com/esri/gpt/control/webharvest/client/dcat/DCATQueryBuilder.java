@@ -20,6 +20,7 @@ import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.common.CommonCapabilities;
 import com.esri.gpt.framework.dcat.DcatParser;
 import com.esri.gpt.framework.dcat.DcatParserAdaptor;
+import com.esri.gpt.framework.dcat.DcatVersion;
 import com.esri.gpt.framework.resource.api.Native;
 import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.api.SourceUri;
@@ -83,7 +84,7 @@ public class DCATQueryBuilder implements QueryBuilder {
       URL url = new URL(info.getUrl());
       adaptor = new DCATIteratorAdaptor(info.getFormat(), new DcatParserAdaptor(new DcatParser(url.openStream())));
       Iterator<Publishable> iterator = adaptor.iterator();
-      if (iterator.hasNext()) {
+      if (iterator.hasNext() && adaptor.getDcatVersion().compareTo(DcatVersion.DV10)==0) {
         return new NativeImpl(iterator.next().getContent());
       }
     } catch (Exception ex) {
