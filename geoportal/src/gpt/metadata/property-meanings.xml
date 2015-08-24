@@ -434,5 +434,7 @@
   <property-meaning name="dcat.publisher.origin" valueType="String" comparisonType="value"/>
   <property-meaning name="dcat.parentIdentifier" valueType="String" comparisonType="value"/>
   <property-meaning name="dcat.primaryITInvestmentUII" valueType="String" comparisonType="value"/>
+  <property-meaning name="dcat.describedBy" valueType="String" comparisonType="value"/>
+  <property-meaning name="dcat.describedByType" valueType="String" comparisonType="value"/>
   
 </property-meanings>

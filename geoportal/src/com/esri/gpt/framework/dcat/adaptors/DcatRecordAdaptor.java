@@ -210,7 +210,7 @@ public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
   }
 
   @Override
-  public String getdescribedByType() {
+  public String getDescribedByType() {
     return getString("describedByType");
   }
 
@@ -225,8 +225,12 @@ public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
   }
 
   @Override
-  public String getLanguage() {
-    return getString("language");
+  public List<String> getLanguages() {
+    ArrayList<String> languages = new ArrayList<String>();
+    for (JsonAttribute reference: record.getLanguages()) {
+      languages.add(reference.getString());
+    }
+    return languages;
   }
 
   @Override

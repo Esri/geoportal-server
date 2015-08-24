@@ -133,7 +133,7 @@ public interface DcatRecord {
    * Gets described by type.
    * @return described by type
    */
-  String getdescribedByType();
+  String getDescribedByType();
   /**
    * Gets collection of which record is a subset.
    * @return collection of which record is a subset
@@ -148,7 +148,7 @@ public interface DcatRecord {
    * Gets language.
    * @return language
    */
-  String getLanguage();
+  List<String> getLanguages();
   /**
    * Gets landing page.
    * @return landing page

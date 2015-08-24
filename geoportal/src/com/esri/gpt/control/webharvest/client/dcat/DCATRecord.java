@@ -89,16 +89,26 @@ public class DCATRecord extends CommonPublishable {
 				getWGS84BoundingBox() +
                 getTemporal() +
 				"	 <dct:accrualPeriodicity>" + escapeXml(baseRecord.getAccrualPeriodicity()) + "</dct:accrualPeriodicity>" +
-				"	 <dct:language>" + escapeXml(baseRecord.getLanguage()) + "</dct:language>" +
+				getLanguages() +
 				getThemes() +
 			    getReferences() +
 			    "    <dcat:landingPage>" + escapeXml(baseRecord.getLandingPage()) + "</dcat:landingPage>" +
+			    "    <dcat:describedBy>" + escapeXml(baseRecord.getDescribedBy()) + "</dcat:describedBy>" +
+			    "    <dcat:describedByType>" + escapeXml(baseRecord.getDescribedByType()) + "</dcat:describedByType>" +
 			    "  </dcat:dataset>" +
 				"</rdf:RDF>";
 	  
 	  
 	  
 	  return theXML;
+  }
+  
+  private String getLanguages() {
+    StringBuilder sb = new StringBuilder();
+    for (String language: baseRecord.getLanguages()) {
+      sb.append("<dct:language>").append(language).append("</dct:language>");
+    }
+    return sb.toString();
   }
   
   private String getBureauCodes() {

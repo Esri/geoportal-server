@@ -128,6 +128,10 @@
       <field name="isPartOf" index="sys.parentid"  required="false"/>
       <field name="primaryITInvestmentUII" index="dcat.primaryITInvestmentUII"  required="false"/>
       <field name="dataQuality" index="dcat.dataQuality"  required="false"/>
+      <field name="describedBy" index="dcat.describedBy"  required="false"/>
+      <field name="describedByType" index="dcat.describedByType"  required="false"/>
+      <field name="language" index="dcat.language" type="array" required="false" />
+      <field name="references" index="dcat.references" type="array" required="false"/>
 	</fields>
 	<fields schema="fgdc">
 	  <field name="title" index="title" required="true"/>  

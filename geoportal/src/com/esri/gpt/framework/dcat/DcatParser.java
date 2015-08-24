@@ -301,6 +301,18 @@ public class DcatParser {
             jsonReader.beginArray();
             parsePrimitiveArray(record.getProgramCodes());
             jsonReader.endArray();
+          } else if ("language".equals(attrName)) {
+            jsonReader.beginArray();
+            parsePrimitiveArray(record.getLanguages());
+            jsonReader.endArray();
+          } else if ("theme".equals(attrName)) {
+            jsonReader.beginArray();
+            parsePrimitiveArray(record.getThemes());
+            jsonReader.endArray();
+          } else if ("references".equals(attrName)) {
+            jsonReader.beginArray();
+            parsePrimitiveArray(record.getReferences());
+            jsonReader.endArray();
           } else {
             // skip
             jsonReader.skipValue();
