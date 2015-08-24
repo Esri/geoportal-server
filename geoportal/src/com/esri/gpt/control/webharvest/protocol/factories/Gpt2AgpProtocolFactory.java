@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 pete5162.
+ * Copyright 2015 Esri, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,7 @@ import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 
 /**
- *
- * @author pete5162
+ * Gpt2Agp protocol factory.
  */
 public class Gpt2AgpProtocolFactory implements ProtocolFactory {
 

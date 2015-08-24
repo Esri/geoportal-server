@@ -200,6 +200,7 @@ public class DcatRecordDefinition {
     fieldDefinitions.add(new DcatDistributionField("distribution"));
     fieldDefinitions.add(new StringField("isPartOf"));
     fieldDefinitions.add(new ArrayField("theme"));
+    fieldDefinitions.add(new BooleanField("dataQuality"));
   }
   
   /**
