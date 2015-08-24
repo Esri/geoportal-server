@@ -34,12 +34,12 @@ public class DcatContactPointAdaptor extends DcatAdaptor implements DcatContactP
 
   @Override
   public String getName() {
-    return getString("fn");
+    return getString("contactPoint");
   }
 
   @Override
   public String getMBox() {
-    return getString("hasEmail");
+    return getString("mbox");
   }
   
 }

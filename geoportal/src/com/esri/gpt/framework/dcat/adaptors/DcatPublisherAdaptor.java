@@ -17,6 +17,7 @@ package com.esri.gpt.framework.dcat.adaptors;
 
 import com.esri.gpt.framework.dcat.dcat.DcatPublisher;
 import com.esri.gpt.framework.dcat.json.JsonAttributes;
+import com.esri.gpt.framework.util.Val;
 
 /**
  * DCAT contact point adaptor.
@@ -34,7 +35,7 @@ public class DcatPublisherAdaptor extends DcatAdaptor implements DcatPublisher {
 
   @Override
   public String getName() {
-    return getString("name");
+    return getString("publisher");
   }
 
   @Override
