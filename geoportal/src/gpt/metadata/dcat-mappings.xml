@@ -79,7 +79,7 @@
 	  <field name="title" index="title" type="string" required="true"/>  
 	  <field name="description" index="abstract" type="string" required="true"/>
 	  <field name="keyword" index="keywords" type="array" required="true"/>
-	  <field name="modified" index="dateModified" isDate="true" dateFormat="yyyy-MM-dd" type="date" delimiter="/" required="true"/>
+	  <field name="modified" index="dcat.modified" isDate="true" dateFormat="yyyy-MM-dd" type="date" delimiter="/" required="true"/>
 	  <field name="publisher" index="publisher" required="true"/>
 	  <field name="contactPoint" index="dcat.person" required="true"/>
 	  <field name="mbox"	index="dcat.mbox" required="true"/>
