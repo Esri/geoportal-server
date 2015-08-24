@@ -78,8 +78,8 @@ public class DCATRecord extends CommonPublishable {
 				getPublisher() +
 				getContactPoint() +
 				"	 <pod:accessLevel>" + escapeXml(baseRecord.getAccessLevel()) + "</pod:accessLevel>" +
-				"	 <pod:bureauCode>" + escapeXml(baseRecord.getBureauCode()) + "</pod:bureauCode>" +
-				"	 <pod:programCode>" + escapeXml(baseRecord.getProgramCode()) + "</pod:programCode>" +
+                getBureauCodes() +
+                getProgramCodes() +
 				"	 <pod:dataQuality>" + escapeXml(baseRecord.getDataQuality()) + "</pod:dataQuality>" +
 				"	 <pod:primaryITInvestmentUII>" + escapeXml(baseRecord.getPrimaryITInvestmentUII()) + "</pod:primaryITInvestmentUII>" +
 				"	 <pod:isPartOf>" + escapeXml(baseRecord.getIsPartOf()) + "</pod:isPartOf>" +
@@ -99,6 +99,22 @@ public class DCATRecord extends CommonPublishable {
 	  
 	  
 	  return theXML;
+  }
+  
+  private String getBureauCodes() {
+    StringBuilder sb = new StringBuilder();
+    for (String code: baseRecord.getBureauCodes()) {
+      sb.append("<pod:bureauCode>").append(code).append("</pod:bureauCode>");
+    }
+    return sb.toString();
+  }
+  
+  private String getProgramCodes() {
+    StringBuilder sb = new StringBuilder();
+    for (String code: baseRecord.getProgramCodes()) {
+      sb.append("<pod:programCode>").append(code).append("</pod:programCode>");
+    }
+    return sb.toString();
   }
   
   private String getWGS84BoundingBox() {

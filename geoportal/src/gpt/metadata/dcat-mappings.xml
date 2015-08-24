@@ -91,8 +91,8 @@
         <map from=".*" to="public"/>
       </field>
 	  <field name="accessLevelComment" index="dcat.accessLevelComment" maxChars="255" required="false"/>
-	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
-	  <field name="programCode" index="programCode" type="array" required="true"/>
+	  <field name="bureauCode" index="dcat.bureauCode" type="array" required="true"/>
+	  <field name="programCode" index="dcat.programCode" type="array" required="true"/>
 	  <field name="dataDictionary" index="dcat.dataDictionary"  />
 	  <field name="webService" index="resource.url" required="false"/> 
 	  <field name="format" index="dcat.format" required="false"/>
@@ -145,7 +145,7 @@
         <map from=".*" to="public"/>
       </field>
 	  <field name="accessLevelComment" index="dcat.accessLevelComment" maxChars="255" required="false"/>
-	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
+	  <field name="bureauCode" index="dcat.bureauCode" type="array" required="true"/>
 	  <field name="programCode" index="dcat.programCode" type="array" required="true"/>
 	  <field name="dataDictionary" index="dcat.dataDictionary" />
       <!--
@@ -205,7 +205,7 @@
         <map from=".*" to="public"/>
       </field>
 	  <field name="accessLevelComment" index="apiso.AccessConstraints;dcat.accessLevelComment" maxChars="255" required="false"/>
-	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
+	  <field name="bureauCode" index="dcat.bureauCode" type="array" required="true"/>
 	  <field name="programCode" index="dcat.programCode" type="array" required="true"/>
 	  <field name="dataDictionary" index="dcat.dataDictionary" />
       <!--

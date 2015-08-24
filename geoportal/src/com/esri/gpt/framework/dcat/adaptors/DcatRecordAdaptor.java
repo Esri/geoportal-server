@@ -170,13 +170,23 @@ public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
   }
 
   @Override
-  public String getBureauCode() {
-    return getString("bureauCode");
+  public List<String> getBureauCodes() {
+    ArrayList<String> codes = new ArrayList<String>();
+    for (JsonAttribute jsonCcode: record.getBureauCodes()) {
+      String code = jsonCcode.getString();
+      codes.add(code);
+    }
+    return codes;
   }
 
   @Override
-  public String getProgramCode() {
-    return getString("programCode");
+  public List<String> getProgramCodes() {
+    ArrayList<String> codes = new ArrayList<String>();
+    for (JsonAttribute jsonCcode: record.getProgramCodes()) {
+      String code = jsonCcode.getString();
+      codes.add(code);
+    }
+    return codes;
   }
 
   @Override

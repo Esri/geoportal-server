@@ -75,15 +75,15 @@ public interface DcatRecord {
    */
   String getAccessLevel();
   /**
-   * Gets bureau code.
-   * @return bureau code
+   * Gets bureau codes.
+   * @return bureau codes
    */
-  String getBureauCode();
+  List<String> getBureauCodes();
   /**
-   * Gets program code.
-   * @return program code
+   * Gets program codes.
+   * @return program codes
    */
-  String getProgramCode();
+  List<String> getProgramCodes();
   /**
    * Gets license.
    * @return license
