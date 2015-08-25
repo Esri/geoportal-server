@@ -214,6 +214,8 @@ public class DcatRecordDefinition {
     fieldDefinitions.add(new StringField("isPartOf"));
     fieldDefinitions.add(new ArrayField("theme"));
     fieldDefinitions.add(new BooleanField("dataQuality"));
+    fieldDefinitions.add(new StringField("describedBy"));
+    fieldDefinitions.add(new StringField("describedByType"));
   }
   
   /**

@@ -134,6 +134,7 @@
       <field name="language" index="dcat.language" type="array" required="false" />
       <field name="references" index="dcat.references" type="array" required="false"/>
       <field name="accessLevelComment" index="dcat.accessLevelComment" maxChars="255" required="false"/>
+      <field name="landingPage" index="dcat.landingPage"  required="false"/>
 	</fields>
 	<fields schema="fgdc">
 	  <field name="title" index="title" required="true"/>  

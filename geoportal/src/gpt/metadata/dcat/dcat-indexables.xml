@@ -82,8 +82,8 @@
     <property meaning="timeperiod.analyze" xpathType="STRING"
       xpath="concat('tp.begin.',dct:temporal[1],'.end.',dct:temporal[2])"/>
   </property>
-  <property meaning="dcat.descibedBy" xpath="/rdf:RDF/dcat:dataset/dcat:descibedBy"/>
-  <property meaning="dcat.descibedByType" xpath="/rdf:RDF/dcat:dataset/dcat:descibedByType"/>
+  <property meaning="dcat.describedBy" xpath="/rdf:RDF/dcat:dataset/dcat:describedBy"/>
+  <property meaning="dcat.describedByType" xpath="/rdf:RDF/dcat:dataset/dcat:describedByType"/>
   <property meaning="dcat.references" xpath="/rdf:RDF/dcat:dataset/dct:references"/>
     
 </indexables>
