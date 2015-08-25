@@ -80,6 +80,7 @@
 	  <field name="description" index="abstract" type="string" required="true"/>
 	  <field name="keyword" index="keywords" type="array" required="true"/>
 	  <field name="modified" index="dcat.modified" isDate="true" dateFormat="yyyy-MM-dd" type="date" delimiter="/" required="true"/>
+      <field name="issued" index="dcat.issued"  isDate="true" type="date" dateFormat="yyyy-MM-dd" required="false"/>	
 	  <field name="publisher" index="publisher" required="true"/>
 	  <field name="contactPoint" index="dcat.person" required="true"/>
 	  <field name="mbox"	index="dcat.mbox" required="true"/>
@@ -132,6 +133,7 @@
       <field name="describedByType" index="dcat.describedByType"  required="false"/>
       <field name="language" index="dcat.language" type="array" required="false" />
       <field name="references" index="dcat.references" type="array" required="false"/>
+      <field name="accessLevelComment" index="dcat.accessLevelComment" maxChars="255" required="false"/>
 	</fields>
 	<fields schema="fgdc">
 	  <field name="title" index="title" required="true"/>  

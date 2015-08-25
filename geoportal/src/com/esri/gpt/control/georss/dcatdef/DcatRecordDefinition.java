@@ -76,6 +76,19 @@ public class DcatRecordDefinition {
       }
       
     });
+    fieldDefinitions.add(new DateField  ("issued",DcatFieldDefinition.OBLIGATORY){
+
+      @Override
+      protected Date getDefaultValue(Properties properties) {
+        String sDate = properties.getProperty(fldName);
+        try {
+          return ISODF.parseObject(sDate);
+        } catch (ParseException ex) {
+          return new Date();
+        }
+      }
+      
+    });
     fieldDefinitions.add(new PublisherField("publisher"));
     fieldDefinitions.add(new ContactPointField("contactPoint"));
     fieldDefinitions.add(new IdentifierField("identifier",DcatFieldDefinition.OBLIGATORY));
