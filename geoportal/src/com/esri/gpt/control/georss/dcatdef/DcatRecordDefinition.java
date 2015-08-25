@@ -21,6 +21,7 @@ import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedRecord;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
+import com.esri.gpt.framework.isodate.IsoDateFormat;
 import com.esri.gpt.framework.util.Val;
 import static com.esri.gpt.framework.util.Val.chkStr;
 import com.google.gson.stream.JsonWriter;
@@ -39,6 +40,8 @@ import java.util.Properties;
  * Record definition.
  */
 public class DcatRecordDefinition {
+  
+  private static final IsoDateFormat ISODF = new IsoDateFormat();
   private static final ArrayList<DcatFieldDefinition> fieldDefinitions = new ArrayList<DcatFieldDefinition>();
   static {
     fieldDefinitions.add(new StringField("title",DcatFieldDefinition.OBLIGATORY){
@@ -76,7 +79,7 @@ public class DcatRecordDefinition {
       }
       
     });
-    fieldDefinitions.add(new DateField  ("issued",DcatFieldDefinition.OBLIGATORY){
+    fieldDefinitions.add(new DateField  ("issued"){
 
       @Override
       protected Date getDefaultValue(Properties properties) {

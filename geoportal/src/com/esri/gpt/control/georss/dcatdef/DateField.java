@@ -15,15 +15,19 @@
  */
 package com.esri.gpt.control.georss.dcatdef;
 
+import com.esri.gpt.control.georss.DcatField;
 import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedRecord;
 import static com.esri.gpt.control.georss.dcatdef.DcatFieldDefinition.OBLIGATORY;
 import com.esri.gpt.framework.isodate.IsoDateFormat;
+import com.esri.gpt.framework.util.Val;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +38,7 @@ import java.util.logging.Logger;
 public class DateField extends BaseDcatField {
 
   private static final Logger LOGGER = Logger.getLogger(DateField.class.getCanonicalName());
-  protected static final IsoDateFormat ISODF = new IsoDateFormat();
+  private static final String DATE_FORMAT = "yyyy-MM-dd";
 
   /**
    * Creates instance of the class.
@@ -58,7 +62,7 @@ public class DateField extends BaseDcatField {
   protected Date getDefaultValue(Properties properties) {
     return Calendar.getInstance().getTime();
   }
-
+  
   /**
    * Reads date.
    *
@@ -70,24 +74,39 @@ public class DateField extends BaseDcatField {
       String value = attr.simplify().getValue().toString();
       return new Date(Long.parseLong(value));
     } catch (NumberFormatException ex) {
-      return getDefaultValue(null);
+      return null;
     }
   }
 
   @Override
   public void print(JsonWriter jsonWriter, Properties properties, DcatSchemas dcatSchemas, IFeedRecord r) throws IOException {
-    IFeedAttribute attr = getFeedAttribute(dcatSchemas, r);
+    Map<String, IFeedAttribute> index = getIndex(r);
+    if (index == null) {
+      return;
+    }
+    DcatField field = getAttributeField(dcatSchemas, index, r, fldName);
+    if (field == null) {
+      return;
+    }
+    IFeedAttribute attr = getFeedAttribute(index, field);
+    
+    String dateFormat = Val.chkStr(field.getDateFormat(),DATE_FORMAT);
+    SimpleDateFormat DF = new SimpleDateFormat(dateFormat);
 
     String value;
     try {
+      Date defaultDate = getDefaultValue(properties);
+      defaultDate = defaultDate!=null? defaultDate: Calendar.getInstance().getTime();
+      
       if (attr == null) {
         if ((flags.provide(r, attr, properties) & OBLIGATORY) != 0) {
-          value = ISODF.format(getDefaultValue(properties));
+          value = DF.format(defaultDate);
         } else {
           return;
         }
       } else {
-        value = ISODF.format(readValue(attr));
+        Date date = readValue(attr);
+        value = DF.format(date!=null? date: defaultDate);
       }
     } catch (IllegalArgumentException ex) {
       LOGGER.log(Level.FINE, "Invalid date format", ex);

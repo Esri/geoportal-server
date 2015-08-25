@@ -43,7 +43,7 @@
 	  <field name="accessURL" index="dcat.accessUrl" required="true"/>
 	  <field name="downloadURL" index="dcat.downloadUrl" required="true"/>
 	  <field name="spatial" index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" required="true"/>
-	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" required="true" delimiter="/"/>
+	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" dateFormat="yyyy-MM-dd" required="true" delimiter="/"/>
 	</fields>
 	<fields schema="others">
 	  <field name="title" index="title" type="string" required="true"/>  
@@ -73,7 +73,7 @@
 	  <field name="accessURL" index="dcat.accessUrl" required="false"/>
 	  <field name="downloadURL" index="dcat.downloadUrl" required="true"/>
 	  <field name="spatial" index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" required="true"/>
-	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" required="true" delimiter="/"/>
+	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" dateFormat="yyyy-MM-dd" required="true" delimiter="/"/>
 	</fields>
 	<fields schema="dcat">
 	  <field name="title" index="title" type="string" required="true"/>  
@@ -101,7 +101,7 @@
 	  <field name="accessURL" index="dcat.accessUrl" required="false"/>
 	  <field name="downloadURL" index="dcat.downloadUrl" required="true"/>
 	  <field name="spatial" index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" required="true"/>
-	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" required="true" delimiter="/"/>
+	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" dateFormat="yyyy-MM-dd" required="true" delimiter="/"/>
       <field name="theme" index="dataTheme" required="false" />
       <field name="accrualPeriodicity" index="dcat.accrualPeriodicity"  required="false">
         <map from="Decennial" to="R/P10Y"/>
@@ -167,7 +167,7 @@
 	  <field name="format" index="dcat.format" required="false"/>
 	  <field name="license" index="dcat.license" required="false"/>
 	  <field name="spatial" index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" required="true"/>
-	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" required="true" delimiter="/"/>
+	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" dateFormat="yyyy-MM-dd" required="true" delimiter="/"/>
       <field name="references" index="dcat.references" type="array" required="false"/>
       <field name="landingPage" index="dcat.landingPage"  required="false"/>
       <field name="theme" index="dataTheme" required="false" />

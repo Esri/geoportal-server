@@ -22,10 +22,10 @@ import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedAttribute.FeedList;
 import com.esri.gpt.control.georss.IFeedRecord;
 import static com.esri.gpt.control.georss.dcatdef.DcatFieldDefinition.OBLIGATORY;
-import com.esri.gpt.framework.isodate.IsoDateFormat;
 import com.esri.gpt.framework.util.Val;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -40,7 +40,7 @@ import java.util.logging.Logger;
  */
 public class TemporalField extends BaseDcatField {
   private static final Logger LOGGER = Logger.getLogger(TemporalField.class.getCanonicalName());
-  protected static final IsoDateFormat ISODF = new IsoDateFormat();
+  private static final String DATE_FORMAT = "yyyy-MM-dd";
 
   /**
    * Creates instance of the class.
@@ -151,11 +151,14 @@ public class TemporalField extends BaseDcatField {
     }
     
     if (value==null) return;
+
+    String dateFormat = Val.chkStr(field.getDateFormat(),DATE_FORMAT);
+    SimpleDateFormat DF = new SimpleDateFormat(dateFormat);
     
     ArrayList<String>  strDates = new ArrayList<String>();
     for (Date date: value) {
       try {
-        strDates.add(ISODF.format(date));
+        strDates.add(DF.format(date));
       } catch (IllegalArgumentException ex) {
         LOGGER.log(Level.FINE, "Invalid date format", ex);
       }
