@@ -38,7 +38,7 @@ import java.util.logging.Logger;
 public class DateField extends BaseDcatField {
 
   private static final Logger LOGGER = Logger.getLogger(DateField.class.getCanonicalName());
-  private static final String DATE_FORMAT = "yyyy-MM-dd";
+  private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 
   /**
    * Creates instance of the class.
@@ -64,18 +64,28 @@ public class DateField extends BaseDcatField {
   }
   
   /**
-   * Reads date.
+   * Reads date as date.
    *
    * @param attr attribute
    * @return date
    */
-  protected Date readValue(IFeedAttribute attr) {
+  protected Date readValueAsDate(IFeedAttribute attr) {
     try {
-      String value = attr.simplify().getValue().toString();
+      String value = readValueAsString(attr);
       return new Date(Long.parseLong(value));
     } catch (NumberFormatException ex) {
       return null;
     }
+  }
+  
+  /**
+   * Reads date as string.
+   *
+   * @param attr attribute
+   * @return date
+   */
+  protected String readValueAsString(IFeedAttribute attr) {
+    return attr.simplify().getValue().toString();
   }
 
   @Override
@@ -90,7 +100,7 @@ public class DateField extends BaseDcatField {
     }
     IFeedAttribute attr = getFeedAttribute(index, field);
     
-    String dateFormat = Val.chkStr(field.getDateFormat(),DATE_FORMAT);
+    String dateFormat = Val.chkStr(field.getDateFormat(),DEFAULT_DATE_FORMAT);
     SimpleDateFormat DF = new SimpleDateFormat(dateFormat);
 
     String value;
@@ -105,8 +115,14 @@ public class DateField extends BaseDcatField {
           return;
         }
       } else {
-        Date date = readValue(attr);
-        value = DF.format(date!=null? date: defaultDate);
+        if ("date".equals(field.getType().toLowerCase())) {
+          Date date = readValueAsDate(attr);
+          value = DF.format(date!=null? date: defaultDate);
+        } else if ("string".equals(field.getType().toLowerCase())) {
+          value = readValueAsString(attr);
+        } else {
+          value = "";
+        }
       }
     } catch (IllegalArgumentException ex) {
       LOGGER.log(Level.FINE, "Invalid date format", ex);

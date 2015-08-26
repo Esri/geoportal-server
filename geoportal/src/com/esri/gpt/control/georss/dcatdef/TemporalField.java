@@ -84,28 +84,74 @@ public class TemporalField extends BaseDcatField {
   /**
    * Reads value.
    * @param attr attribute
-   * @param field field
    * @return value
    */
-  protected List<Date> readValue(IFeedAttribute attr,DcatField field) {
+  protected List<Date> readValuesAsDate(IFeedAttribute attr) {
     ArrayList<Date> dates = new ArrayList<Date>();
     List valueList = (List)attr.getValue();
     
-    try {
-      for (Object v: valueList) {
-        String value = ((IFeedAttribute)v).simplify().getValue().toString();
-        long lValue = Long.parseLong(value);
-        if (lValue>=0) {
-          Date date = new Date(lValue);
-          dates.add(date);
+    for (Object v: valueList) {
+      try {
+        Date date = readValueAsDate(attr);
+        if (date!=null) {
+          dates.add(date); 
         }
+      } catch (NumberFormatException ex) {
+
       }
-    } catch (NumberFormatException ex) {
-      
     }
+      
     return dates.size()==2? dates: null;
   }
   
+  /**
+   * Reads value.
+   * @param attr attribute
+   * @return value
+   */
+  protected List<String> readValuesAsString(IFeedAttribute attr) {
+    ArrayList<String> dates = new ArrayList<String>();
+    List valueList = (List)attr.getValue();
+    
+    for (Object v: valueList) {
+      try {
+        String date = readValueAsString(attr);
+        if (date!=null) {
+          dates.add(date); 
+        }
+      } catch (NumberFormatException ex) {
+
+      }
+    }
+      
+    return dates.size()==2? dates: null;
+  }
+    
+  /**
+   * Reads date as date.
+   *
+   * @param attr attribute
+   * @return date
+   */
+  protected Date readValueAsDate(IFeedAttribute attr) {
+    try {
+      String value = readValueAsString(attr);
+      return new Date(Long.parseLong(value));
+    } catch (NumberFormatException ex) {
+      return null;
+    }
+  }
+  
+  /**
+   * Reads date as string.
+   *
+   * @param attr attribute
+   * @return date
+   */
+  protected String readValueAsString(IFeedAttribute attr) {
+    return attr.simplify().getValue().toString();
+  }
+
   /**
    * Reads default value.
    * @param properties properties
@@ -139,34 +185,40 @@ public class TemporalField extends BaseDcatField {
     }
     IFeedAttribute attr = getFeedAttribute(index, field);
     
-    List<Date> value;
+    List<Date> dateValue = null;
+    List<String> stringValue = null;
+    
     if (attr==null) {
       if ((flags.provide(r, attr, properties) & OBLIGATORY)!=0) {
-        value = getDefaultValue(properties);
+        dateValue = getDefaultValue(properties);
       } else {
         return;
       }
     } else {
-      value = readValue(attr,field);
+      if ("date".equals(field.getType().toLowerCase())) {
+        dateValue = readValuesAsDate(attr);
+      } else if ("string".equals(field.getType().toLowerCase())) {
+        stringValue = readValuesAsString(attr);
+      }
     }
-    
-    if (value==null) return;
 
-    String dateFormat = Val.chkStr(field.getDateFormat(),DATE_FORMAT);
-    SimpleDateFormat DF = new SimpleDateFormat(dateFormat);
-    
-    ArrayList<String>  strDates = new ArrayList<String>();
-    for (Date date: value) {
-      try {
-        strDates.add(DF.format(date));
-      } catch (IllegalArgumentException ex) {
-        LOGGER.log(Level.FINE, "Invalid date format", ex);
+    if (dateValue!=null) {
+      String dateFormat = Val.chkStr(field.getDateFormat(),DATE_FORMAT);
+      SimpleDateFormat DF = new SimpleDateFormat(dateFormat);
+
+      stringValue = new ArrayList<String>();
+      for (Date date: dateValue) {
+        try {
+          stringValue.add(DF.format(date));
+        } catch (IllegalArgumentException ex) {
+          LOGGER.log(Level.FINE, "Invalid date format", ex);
+        }
       }
     }
     
-    if (strDates.isEmpty()) return;
+    if (stringValue==null || stringValue.isEmpty()) return;
     
-    String temporal = Val.join(strDates.toArray(new String[strDates.size()]), field.getDelimiter());
+    String temporal = Val.join(stringValue.toArray(new String[stringValue.size()]), field.getDelimiter());
     
     jsonWriter.name(getOutFieldName()).value(temporal);
   }
