@@ -118,6 +118,14 @@ public class TimeperiodProperty extends Storeable {
         long nCurUpper = interval.getUpper().longValue();
         lFields.add(this.makeBoundaryField(sLowerField,nCurLower));
         lFields.add(this.makeBoundaryField(sUpperField,nCurUpper));
+        
+        if (!interval.getLowerDescription().isEmpty()) {
+          lFields.add(new Field(sLowerField+".input", interval.getLowerDescription(), Field.Store.YES, Field.Index.NO));
+        }
+        if (!interval.getUpperDescription().isEmpty()) {
+          lFields.add(new Field(sUpperField+".input", interval.getUpperDescription(), Field.Store.YES, Field.Index.NO));
+        }
+        
         if (firstInterval == null) {
           firstInterval = interval;
         }

@@ -389,6 +389,10 @@ public class TpParser {
             position.setInterval(new TpInterval(nLower,nUpper));
           }
         }
+        if (position.getInterval()!=null) {
+            position.getInterval().setLowerDescription(begin.getPositionDescriptor());
+            position.getInterval().setUpperDescription(end.getPositionDescriptor());
+        }
         if (sWarn != null) {
           this.addWarning(descriptor,sWarn);
           this.numInvalid++;
@@ -412,6 +416,9 @@ public class TpParser {
             }
           } 
         }
+        if (begin.getInterval()!=null) {
+            begin.getInterval().setLowerDescription(begin.getPositionDescriptor());
+        }
         if (bOpen && this.allowOpenEndedRange) {
           this.valid.add(begin);
         } else {
@@ -432,6 +439,9 @@ public class TpParser {
               bOpen = false;
             }
           }
+        }
+        if (end.getInterval()!=null) {
+            end.getInterval().setUpperDescription(end.getPositionDescriptor());
         }
         if (bOpen && this.allowOpenEndedRange) {
           this.valid.add(end);
@@ -586,6 +596,8 @@ public class TpParser {
       assert (nLower != null);
       assert (nUpper != null);
       TpInterval interval = new TpInterval(nLower,nUpper,sIndeterminate);
+      interval.setLowerDescription(position.getInterval().getLowerDescription());
+      interval.setUpperDescription(position.getInterval().getUpperDescription());
       intervals.add(interval);
     }
     this.intervals = intervals;

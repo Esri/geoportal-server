@@ -14,6 +14,8 @@
  */
 package com.esri.gpt.catalog.schema.indexable.tp;
 
+import com.esri.gpt.framework.util.Val;
+
 /**
  * Represents the boundaries of a time period interval.
  * <p/>
@@ -27,7 +29,9 @@ public class TpInterval {
   /** instance variables ====================================================== */
   private String indeterminate;
   private Long   lower;
+  private String lowerDescription = "";
   private Long   upper;
+  private String upperDescription = "";
 
   /** constructors ============================================================ */
   
@@ -56,7 +60,23 @@ public class TpInterval {
   }
 
   /** properties ============================================================== */
+
+  public String getLowerDescription() {
+    return lowerDescription;
+  }
   
+  public String getUpperDescription() {  
+    return upperDescription;
+  }
+
+  public void setLowerDescription(String lowerDescription) {
+    this.lowerDescription = Val.chkStr(lowerDescription);
+  }
+
+  public void setUpperDescription(String upperDescription) {
+    this.upperDescription = Val.chkStr(upperDescription);
+  }
+
   /**
    * Gets the predicate for an indeterminate interval.
    * <br/>unknown now now.lower now.upper 
