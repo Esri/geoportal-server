@@ -65,6 +65,27 @@ public class TemporalField extends BaseDcatField {
     
     if (field.getIndex().isEmpty()) return null;
     
+    List<List<String>> lIndexes = field.getIndex();
+    
+    top:
+    for (List<String> lIndex: lIndexes) {
+      for (String idxItem: lIndex) {
+        String[] indexes = idxItem.split(",");
+        for (String idx: indexes) {
+          IFeedAttribute attr = index.get(idx);
+          if (attr!=null) {
+            list.add(attr);
+          }
+        }
+        if (list.size()!=2) {
+          list.clear();
+        } else {
+          break top;
+        }
+      }
+    }
+
+    /*
     for (String idxItem: field.getIndex().get(0)) {
       String[] indexes = idxItem.split(",");
       for (String idx: indexes) {
@@ -77,81 +98,79 @@ public class TemporalField extends BaseDcatField {
         list.clear();
       }
     }
+    */
     
     return list.size()==2? new FeedList(list): null;
   }
+
   
   /**
    * Reads value.
    * @param attr attribute
+   * @param field field
    * @return value
    */
-  protected List<Date> readValuesAsDate(IFeedAttribute attr) {
+  protected List<String> readValuesAsString(IFeedAttribute attr,DcatField field) {
+    List<String> dates = new ArrayList<String>();
+    List valueList = (List)attr.getValue();
+    
+    for (Object v: valueList) {
+      String value = ((IFeedAttribute)v).simplify().getValue().toString();
+      if (value!=null) {
+        dates.add(value);
+      }
+    }
+    
+    return dates.size()==2? dates: null;
+  }
+  
+  /**
+   * Reads value.
+   * @param attr attribute
+   * @param field field
+   * @return value
+   */
+  protected List<Date> readValuesAsDate(IFeedAttribute attr,DcatField field) {
+    List<String> sDates = readValuesAsString(attr, field);
+    List<Date> dates = new ArrayList<Date>();
+    
+    for (String sDate: sDates) {
+      try {
+        Date date = new Date(Long.parseLong(sDate));
+        dates.add(date);
+      } catch (NumberFormatException ex) {
+        
+      }
+    }
+    
+    return dates.size()==2? dates: null;
+  }
+  
+  /**
+   * Reads value.
+   * @param attr attribute
+   * @param field field
+   * @return value
+   */
+  protected List<Date> readValue(IFeedAttribute attr,DcatField field) {
     ArrayList<Date> dates = new ArrayList<Date>();
     List valueList = (List)attr.getValue();
     
-    for (Object v: valueList) {
-      try {
-        Date date = readValueAsDate(attr);
-        if (date!=null) {
-          dates.add(date); 
-        }
-      } catch (NumberFormatException ex) {
-
-      }
-    }
-      
-    return dates.size()==2? dates: null;
-  }
-  
-  /**
-   * Reads value.
-   * @param attr attribute
-   * @return value
-   */
-  protected List<String> readValuesAsString(IFeedAttribute attr) {
-    ArrayList<String> dates = new ArrayList<String>();
-    List valueList = (List)attr.getValue();
-    
-    for (Object v: valueList) {
-      try {
-        String date = readValueAsString(attr);
-        if (date!=null) {
-          dates.add(date); 
-        }
-      } catch (NumberFormatException ex) {
-
-      }
-    }
-      
-    return dates.size()==2? dates: null;
-  }
-    
-  /**
-   * Reads date as date.
-   *
-   * @param attr attribute
-   * @return date
-   */
-  protected Date readValueAsDate(IFeedAttribute attr) {
     try {
-      String value = readValueAsString(attr);
-      return new Date(Long.parseLong(value));
+      for (Object v: valueList) {
+        String value = ((IFeedAttribute)v).simplify().getValue().toString();
+        long lValue = Long.parseLong(value);
+        if (lValue>=0) {
+          Date date = new Date(lValue);
+          dates.add(date);
+        }
+      }
     } catch (NumberFormatException ex) {
-      return null;
+      
     }
+    return dates.size()==2? dates: null;
   }
   
-  /**
-   * Reads date as string.
-   *
-   * @param attr attribute
-   * @return date
-   */
-  protected String readValueAsString(IFeedAttribute attr) {
-    return attr.simplify().getValue().toString();
-  }
-
   /**
    * Reads default value.
    * @param properties properties
@@ -185,40 +204,39 @@ public class TemporalField extends BaseDcatField {
     }
     IFeedAttribute attr = getFeedAttribute(index, field);
     
-    List<Date> dateValue = null;
-    List<String> stringValue = null;
-    
+    List<String> sValue = null;
+    List<Date> value = null;
     if (attr==null) {
       if ((flags.provide(r, attr, properties) & OBLIGATORY)!=0) {
-        dateValue = getDefaultValue(properties);
+        value = getDefaultValue(properties);
       } else {
         return;
       }
     } else {
       if ("date".equals(field.getType().toLowerCase())) {
-        dateValue = readValuesAsDate(attr);
+        value = readValuesAsDate(attr,field);
       } else if ("string".equals(field.getType().toLowerCase())) {
-        stringValue = readValuesAsString(attr);
+        sValue = readValuesAsString(attr, field);
       }
     }
-
-    if (dateValue!=null) {
+    
+    if (value!=null) {
       String dateFormat = Val.chkStr(field.getDateFormat(),DATE_FORMAT);
       SimpleDateFormat DF = new SimpleDateFormat(dateFormat);
-
-      stringValue = new ArrayList<String>();
-      for (Date date: dateValue) {
+      
+      sValue = new ArrayList<String>();
+      for (Date date: value) {
         try {
-          stringValue.add(DF.format(date));
+          sValue.add(DF.format(date));
         } catch (IllegalArgumentException ex) {
           LOGGER.log(Level.FINE, "Invalid date format", ex);
         }
       }
     }
     
-    if (stringValue==null || stringValue.isEmpty()) return;
+    if (sValue==null || sValue.isEmpty()) return;
     
-    String temporal = Val.join(stringValue.toArray(new String[stringValue.size()]), field.getDelimiter());
+    String temporal = Val.join(sValue.toArray(new String[sValue.size()]), field.getDelimiter());
     
     jsonWriter.name(getOutFieldName()).value(temporal);
   }
