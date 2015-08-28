@@ -19,6 +19,7 @@ import com.esri.gpt.control.georss.DcatField;
 import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedRecord;
+import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.isodate.IsoDateFormat;
@@ -101,9 +102,18 @@ public class DcatRecordDefinition {
         return chkStr(properties.getProperty(fldName),"public");
       }
     });
-    fieldDefinitions.add(new StringField ("accrualPeriodicity"));
-    fieldDefinitions.add(new ReferencesField("references","contentType"));
     fieldDefinitions.add(new StringField("accessLevelComment"){
+      private Boolean writeAlways;
+      
+      private boolean getWriteAlways() {
+        if (writeAlways==null) {
+          ApplicationContext appCtx = ApplicationContext.getInstance();
+          ApplicationConfiguration appCfg = appCtx.getConfiguration();
+          StringAttributeMap parameters = appCfg.getCatalogConfiguration().getParameters();
+          writeAlways = Val.chkBool(parameters.getValue("dcat.rights.writeAlways"), false);
+        }
+        return writeAlways;
+      }
 
       @Override
       protected String getOutFieldName() {
@@ -130,12 +140,17 @@ public class DcatRecordDefinition {
         List<String> accessLevelList = accessLevelAttribute!=null? accessLevelAttribute.asList(): new ArrayList<String>();
         
         boolean nonPublic = false;
-        for (String accessLevel: accessLevelList) {
-          accessLevel = field.translate(accessLevel);
-          if (!"public".equals(accessLevel)) {
-            nonPublic = true;
-            break;
+        
+        if (!getWriteAlways()) {
+          for (String accessLevel: accessLevelList) {
+            accessLevel = field.translate(accessLevel);
+            if (!"public".equals(accessLevel)) {
+              nonPublic = true;
+              break;
+            }
           }
+        } else {
+          nonPublic = true;
         }
         
         if (nonPublic) {
@@ -154,6 +169,8 @@ public class DcatRecordDefinition {
       }
       
     });
+    fieldDefinitions.add(new StringField ("accrualPeriodicity"));
+    fieldDefinitions.add(new ReferencesField("references","contentType"));
     fieldDefinitions.add(new ArrayField("bureauCode",DcatFieldDefinition.OBLIGATORY){
       @Override
       protected List<String> getDefaultValue(Properties properties) {
