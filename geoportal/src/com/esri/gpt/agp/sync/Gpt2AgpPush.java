@@ -34,6 +34,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,7 +55,7 @@ public class Gpt2AgpPush {
 	
 /*
  * TODO
- * 
+ *
  * Dublin Core, ArcGIS Metadata
  * 
  * Summary: numFailed?
@@ -76,6 +78,8 @@ public class Gpt2AgpPush {
  * FGDC -> limit tags to theme only?
  * ISO -> limit tags to theme only?, licenseInfo - multiple locations (concatenate?)
  * 
+ * WMS based item: format title extent description/abstract
+ * WMS based item: service=WMS is removed from the item URL
  */
 	
 /*
@@ -143,6 +147,7 @@ public class Gpt2AgpPush {
   private int numWithNullTitle = 0;
   private int numWithNullType = 0;
   private int numWithXsltError = 0;
+  private int numWithSyncError = 0;
   
   private Connection con;
   private RequestContext context;
@@ -211,7 +216,6 @@ public class Gpt2AgpPush {
     	//System.err.println(destProp.getName()+":" +destProp.getValue());
       provider.add(destProp.getName(),destProp.getValue());
     }
-    // TODO thumbnails and data
     //this.partHelper.addThumbnailPart(provider,src,sourceItem,dest,destItem);
     //this.partHelper.addDataPart(provider,src,sourceItem,dest,destItem);
         
@@ -293,6 +297,12 @@ public class Gpt2AgpPush {
     return template;
   }
   
+  /**
+   * Gets a double value.
+   * @param jsoItem the JSON item
+   * @param key the property key
+   * @return the value
+   */
   private Double getDouble(JSONObject jsoItem, String key) {
   	if (jsoItem.has(key) && (!jsoItem.isNull(key))) {
   		try {
@@ -332,11 +342,16 @@ public class Gpt2AgpPush {
     msg.append(", considered:").append(this.numItemsConsidered);
     msg.append(" inserted:").append(this.numItemsInserted);
     msg.append(" updated:").append(this.numItemsUpdated);
-    msg.append(" metadataPublished:").append(this.numMetadataPublished);
-    msg.append(" relationshipsAdded:").append(this.numRelationshipsAdded);
+    
+    if (this.numMetadataPublished > 0) {
+    	msg.append(" metadataPublished:").append(this.numMetadataPublished);
+    }
+    if (this.numRelationshipsAdded > 0) {
+    	msg.append(" relationshipsAdded:").append(this.numRelationshipsAdded);
+    }
     
     int n = this.numUnsyncedExistingAtDestination+this.numOriginatedFromSynchronization;
-    n += this.numWithNullId+this.numWithNullTitle+this.numWithNullType+this.numWithXsltError;
+    n += this.numWithNullId+this.numWithNullTitle+this.numWithNullType+this.numWithXsltError+this.numWithSyncError;
     if (n > 0) {
       msg.append(nl).append(" ignored:").append(n);
       if (this.numUnsyncedExistingAtDestination > 0) {
@@ -357,12 +372,20 @@ public class Gpt2AgpPush {
       if (this.numWithXsltError > 0) {
         msg.append(" numWithXsltError:").append(this.numWithXsltError);
       }
+      if (this.numWithSyncError > 0) {
+        msg.append(" numWithSyncError:").append(this.numWithSyncError);
+      }
     }
     return msg.toString();
   }
   
+  /**
+   * Prepare an item for publication.
+   * @param jsoItem the JSON item
+   * @param sourceItem the source item
+   * @throws Exception if an exception occurs
+   */
   private void prepareItem(JSONObject jsoItem, AgpItem sourceItem) throws Exception {
-  	
     String type = null, url = null;
     if (jsoItem.has("_links") && (!jsoItem.isNull("_links"))) {
       JSONArray jsoValues = jsoItem.getJSONArray("_links");
@@ -371,17 +394,19 @@ public class Gpt2AgpPush {
         if (s.length() == 0) continue;
         //System.err.println("link:"+s);
 				String[] p = s.split("\\?");
-				if (p.length > 1) {
+				if (p[0].indexOf("/MapServer/WMSServer") > 0) {
+				  type = "WMS";
+				  url = s;
+				} else if (p.length > 1) {
 					String[] p2 = p[1].split("&");
 					for (String kvp: p2) {
 					  String[] p3 = kvp.split("=");
 					  if (p3.length != 2) continue;
 					  if (p3[0].equalsIgnoreCase("service")) {
 							if (p3[1].equalsIgnoreCase("WMS")) {
-							  //System.err.println("link-wms:"+s);
 							  type = "WMS";
 							  url = s;
-							  break;
+								break;
 							}
 					  }
 					}
@@ -389,7 +414,7 @@ public class Gpt2AgpPush {
 				if (type != null) break;
       }
     } 
-    // TODO: force type to null
+    
     sourceItem.getProperties().add(new AgpProperty("type",null));
     if (type != null) {
       sourceItem.getProperties().add(new AgpProperty("type",type));
@@ -397,10 +422,7 @@ public class Gpt2AgpPush {
     if ((url != null) && (url.length() > 0)) {
     	sourceItem.getProperties().add(new AgpProperty("url",url));
     }
-    //sourceItem.getProperties().add(new AgpProperty("type","WMS"));
-    //sourceItem.getProperties().add(new AgpProperty("url","http://urbanm.esri.com/wms"));
     
-    // TODO 
     if (!jsoItem.has("extent") || (jsoItem.isNull("extent"))) {
       Double minX = getDouble(jsoItem,"_minX"), minY = getDouble(jsoItem,"_minY");
       Double maxX = getDouble(jsoItem,"_maxX"), maxY = getDouble(jsoItem,"_maxY");
@@ -413,369 +435,13 @@ public class Gpt2AgpPush {
     if (jsoItem.has("_thumbnailurl") && (!jsoItem.isNull("_thumbnailurl"))) {
     	String s = Val.chkStr(jsoItem.getString("_thumbnailurl"));
     	if (s.startsWith("http://") || (s.startsWith("https://"))) {
-    		//System.err.println("*** "+s);
     		sourceItem.getProperties().add(new AgpProperty("thumbnailurl",s));
     	}
     }
-
-  }
-  
-  private void parseWmsLayer(Node layerNode) throws Exception {
-  	String s, name = null, title = null, abs = null;
-    NodeList nl = layerNode.getChildNodes(); 
-    for (int i=0; i<nl.getLength(); i++) {
-      Node nd = nl.item(i);
-      if (nd.getNodeType() != Node.ELEMENT_NODE) continue;
-      String ln = Val.chkStr(nd.getNodeName());
-      if (ln.equalsIgnoreCase("Name")) {
-  			s = Val.chkStr(nd.getTextContent());
-  			if (s.length() > 0) name = s;
-      } else if (ln.equalsIgnoreCase("Title")) {
-  			s = Val.chkStr(nd.getTextContent());
-  			if (s.length() > 0) title = s;
-      } else if (ln.equalsIgnoreCase("Abstract")) {
-  			s = Val.chkStr(nd.getTextContent());
-  			if (s.length() > 0) abs = s;
-      } else if (ln.equalsIgnoreCase("BoundingBox")) {
-      } else if (ln.equalsIgnoreCase("SRS") || ln.equalsIgnoreCase("CRS")) {
-        // supported spatial references
-        // <SRS>EPSG:4326</SRS> or <SRS>EPSG:4326 EPSG:32624 EPSG:32661</SRS>
-      	
-      } else if (ln.equalsIgnoreCase("Style")) {
-      } else if (ln.equalsIgnoreCase("Layer")) {
-      	parseWmsLayer(nd);
-      }
-    }
-  }
-  
-  private void readCapabilities(AgpItem destItem) throws Exception {
-  	
-  	// https://devtopia.esri.com/WebGIS/arcgis-js-api/blob/master/esri/layers/WMSLayer.js
-  	// https://devtopia.esri.com/WebGIS/arcgis-portal-app/blob/7bf69cd63a85c89f9ccc5456d7b17b691340fcbd/src/js/arcgisonline/sharing/dijit/dialog/AddItemDlg.js
-    // _addOGCUrl, _getWMSData, _loadOGC, _getOGCServiceInfo
-  	
-  	/*
-
-      item = dojo.mixin(item,{
-        "url"              : wmsLayer.url,
-        "description"      : wmsLayer.description || "",
-        "accessInformation": wmsLayer.copyright || "",
-        "text"             : this._getWMSData(wmsLayer, selectedLayers),
-        "extent"           : fullExtent
-      });
-      
-      
-    _getWMSData: function(wmsLayer, selectedLayers){
-//    return dojo.toJson({
-      return dojo.json.stringify({
-        "title" : wmsLayer.title || "",
-        "url" : wmsLayer.url,
-        "mapUrl" : wmsLayer.getMapURL,
-        "version" : wmsLayer.version,
-        "layers" : selectedLayers,
-        "copyright" : wmsLayer.copyright || "",
-        "maxHeight" : wmsLayer.maxHeight,
-        "maxWidth" : wmsLayer.maxWidth,
-        "spatialReferences" : wmsLayer.spatialReferences,
-        "format" : wmsLayer.getImageFormat() !== "png" ? wmsLayer.getImageFormat() : null
-      });
-    },
-
-  	 */
-  	
-  	String url = Val.chkStr(destItem.getProperties().getValue("url"));
-  	
-  	url = "http://inspiresrv4:6080/arcgis/services/abu/MapServer/WMSServer?request=GetCapabilities&service=WMS";
-  	
-  	//url = "http://nowcoast.noaa.gov/wms/com.esri.wms.Esrimap/obs?request=GetCapabilities&service=WMS";
-  	
-  	HttpClientRequest http = new HttpClientRequest();
-  	http.setUrl(url);
-  	String xml = http.readResponseAsCharacters();
-  	System.err.println("xml:\r\n"+xml);
-  	
-  	JSONObject data = new JSONObject();
-  	data.put("version","1.3.0");
-  	data.put("title","");
-  	data.put("url","");
-  	data.put("mapUrl","");
-  	data.put("copyright","");
-  	data.put("maxWidth",5000);
-  	data.put("maxHeight",5000);
-  	data.put("format",JSONObject.NULL);
-  	data.put("layers",JSONObject.NULL);
-  	data.put("spatialReferences",JSONObject.NULL);
-  	
-  	// item: extent, accessInformation, description, url
-  	
-  	Document dom = DomUtil.makeDomFromString(xml,true);
-  	Node root = dom.getDocumentElement();
-  	
-  	if (root != null) {
-  		String ln = Val.chkStr(root.getNodeName());
-  		if (ln.equals("WMT_MS_Capabilities")) {
-  		} else if (ln.equals("WMS_Capabilities")) {
-  		} else {
-  			// TODO logging here
-  			root = null;
-  		}
-  	}
-  	if (root == null) return;
-  	
-  	String version = null, title = null, name = null, sAbstract = null, getmapUrl = null;
-  	Node ndv = root.getAttributes().getNamedItem("version");
-  	if (ndv != null) version = ndv.getNodeValue();
-  	if (version == null || version.length() == 0) version = "1.3.0";
-  	//System.err.println("****version="+version);
-  	
-  	String s; int n;
-    NodeList nl = root.getChildNodes(); 
-    for (int i=0; i<nl.getLength(); i++) {
-      Node nd = nl.item(i);
-      if (nd.getNodeType() == Node.ELEMENT_NODE) { 
-        //String ns = Val.chkStr(nd.getNamespaceURI());
-        String ln = Val.chkStr(nd.getNodeName());
-        if (ln.equalsIgnoreCase("Service")) {
-          NodeList nl2 = nd.getChildNodes(); 
-          for (int i2=0; i2<nl2.getLength(); i2++) {
-          	Node nd2 = nl2.item(i2);
-          	if (nd2.getNodeType() == Node.ELEMENT_NODE) { 
-          		String ln2 = Val.chkStr(nd2.getNodeName());
-          		if (ln2.equalsIgnoreCase("Name")) {
-          			s = Val.chkStr(nd2.getTextContent());
-          			if (s.length() > 0) name = s;
-          		} else if (ln2.equalsIgnoreCase("Title")) {
-          			s = Val.chkStr(nd2.getTextContent());
-          			if (s.length() > 0) {
-          				title = s;
-          				data.put("title",s);
-          			}
-          		} else if (ln2.equalsIgnoreCase("Abstract")) {
-          			s = Val.chkStr(nd2.getTextContent());
-          			if (s.length() > 0) sAbstract = s;
-          		} else if (ln2.equalsIgnoreCase("AccessConstraints")) {
-          			s = Val.chkStr(nd2.getTextContent());
-          			if (s.length() > 0) data.put("copyright",s);
-          		} else if (ln2.equalsIgnoreCase("MaxWidth")) {
-          			s = Val.chkStr(nd2.getTextContent());
-          			if (s.length() > 0) {
-          				n = Val.chkInt(s,-1);
-          				if (n > 0) data.put("maxWidth",n);
-          			}
-          		} else if (ln2.equalsIgnoreCase("MaxHeight")) {
-          			s = Val.chkStr(nd2.getTextContent());
-          			if (s.length() > 0) {
-          				n = Val.chkInt(s,-1);
-          				if (n > 0) data.put("maxHeight",n);
-          			}
-          		}
-          	}
-          }
-        } else if (ln.equalsIgnoreCase("Capability")) {
-          NodeList nl2 = nd.getChildNodes(); 
-          for (int i2=0; i2<nl2.getLength(); i2++) {
-          	Node nd2 = nl2.item(i2);
-          	if (nd2.getNodeType() == Node.ELEMENT_NODE) { 
-          		String ln2 = Val.chkStr(nd2.getNodeName());
-          		if (ln2.equalsIgnoreCase("Request")) {
-          			Node ndGetMap = DomUtil.findFirst(nd2,"GetMap");
-          			if (ndGetMap != null) {
-          				Node[] dcps = DomUtil.findChildren(ndGetMap,"DCPType");
-          				for (Node dcp: dcps) {
-          					Node[] https = DomUtil.findChildren(dcp,"HTTP");
-            				for (Node ndHttp: https) {
-            					Node ndGet = DomUtil.findFirst(ndHttp,"Get");
-            					if (ndGet != null) {
-            						Node ndRes = DomUtil.findFirst(ndGet,"OnlineResource");
-            						if (ndRes != null) {
-            							Node ndx = ndRes.getAttributes().getNamedItemNS("http://www.w3.org/1999/xlink","href");
-            							if (ndx != null) {
-            								s = Val.chkStr(ndx.getNodeValue());
-            								if ((getmapUrl == null) && (s.length() > 0)) {
-            									getmapUrl = s;
-            									// TODO: 
-            									// this.getMapURL = this._stripParameters(getMapHREF, ["service", "request"]);
-            									System.err.println("**************getmapUrl="+getmapUrl);
-            								}
-            							}
-            						}
-            					}
-            				}
-          				}
-          				
-          				/*
-          				Node[] fmts = DomUtil.findChildren(ndGetMap,"Format");
-          				for (Node fmt: fmts) {
-    								s = Val.chkStr(fmt.getTextContent());
-    								if (s.length() > 0) {
-    									// TODO check the formats
-    									//System.err.println("**************format="+s);
-								      // make sure the format we want is supported; otherwise switch
-								      //if (!array.some(this.getMapFormats, function(el){
-								        // also support: <Format>image/png; mode=24bit</Format>
-								      //  return el.indexOf(this.imageFormat) > -1;
-								      //}, this)) {
-								      //  this.imageFormat = this.getMapFormats[0];
-								      //}
-    								}
-          				}
-          				*/
-          				
-          			}
-          		} else if (ln2.equalsIgnoreCase("Layer")) {
-          			// "LatLonBoundingBox"
-/*
-
-					      var result = new WMSLayerInfo();
-					      result.name = "";
-					      result.title = "";
-					      result.description = "";
-					      result.allExtents = [];
-					      result.spatialReferences = [];
-					      result.subLayers = []; // not sure why this has to be done
-					      // all services have LatLonBoundingBox or EX_GeographicBoundingBox (might not be on the first layer ...)
-					      var latLonBoundingBox = this._getTag("LatLonBoundingBox", layerXML);
-					      if (latLonBoundingBox) {
-					        result.allExtents[0] = this._getExtent(latLonBoundingBox, 4326);
-					      }
-					      var geographicBoundingBox = this._getTag("EX_GeographicBoundingBox", layerXML);
-					      var extent;
-					      if (geographicBoundingBox) {
-					        extent = new Extent(0, 0, 0, 0, new SpatialReference({
-					          wkid: 4326
-					        }));
-					        extent.xmin = parseFloat(this._getTagValue("westBoundLongitude", geographicBoundingBox, 0));
-					        extent.ymin = parseFloat(this._getTagValue("southBoundLatitude", geographicBoundingBox, 0));
-					        extent.xmax = parseFloat(this._getTagValue("eastBoundLongitude", geographicBoundingBox, 0));
-					        extent.ymax = parseFloat(this._getTagValue("northBoundLatitude", geographicBoundingBox, 0));
-					        result.allExtents[0] = extent;
-					      }
-					      if (!latLonBoundingBox && !geographicBoundingBox) {
-					        // not according to spec
-					        extent = new Extent(-180, -90, 180, 90, new SpatialReference({
-					          wkid: 4326
-					        }));
-					        result.allExtents[0] = extent;
-					      }
-					      result.extent = result.allExtents[0];
-					      
-
-
-					      //var srAttrName = (this.version == "1.3.0") ? "CRS" : "SRS";
-					      var srAttrName = (array.indexOf(["1.0.0","1.1.0","1.1.1"],this.version) > -1) ? "SRS" : "CRS";
-					      array.forEach(layerXML.childNodes, function(childNode){
-					        if (childNode.nodeName == "Name") {
-					          // unique name
-					          result.name = (childNode.text ? childNode.text : childNode.textContent) || "";
-					        } else if (childNode.nodeName == "Title") {
-					          // title
-					          result.title = (childNode.text ? childNode.text : childNode.textContent) || "";
-					        } else if (childNode.nodeName == "Abstract") {
-					          //description
-					          result.description = (childNode.text ? childNode.text : childNode.textContent) || "";
-					          
-					        } else if (childNode.nodeName == "BoundingBox") {
-					          // other extents
-					          // <BoundingBox CRS="CRS:84" minx="-164.765831" miny="25.845557" maxx="-67.790980" maxy="70.409756"/>  
-					          // <BoundingBox CRS="EPSG:4326" minx="25.845557" miny="-164.765831" maxx="70.409756" maxy="-67.790980"/>  
-					          var srAttr = childNode.getAttribute(srAttrName), wkid;
-					          if (srAttr && srAttr.indexOf("EPSG:") === 0) {
-					            wkid = parseInt(srAttr.substring(5), 10);
-					            if (wkid !== 0 && !isNaN(wkid)) {
-					              var extent;
-					              if (this.version == "1.3.0") {
-					                extent = this._getExtent(childNode, wkid, this._useLatLong(wkid));
-					              } else {
-					                extent = this._getExtent(childNode, wkid);
-					              }
-					              result.allExtents[wkid] = extent;
-					              if (!result.extent) {
-					                result.extent = extent; // only first one
-					              }
-					            }
-					          } else if (srAttr && srAttr.indexOf("CRS:") === 0) {
-					            wkid = parseInt(srAttr.substring(4), 10);
-					            if (wkid !== 0 && !isNaN(wkid)) {
-					              if (this._CRS_TO_EPSG[wkid]) {
-					                wkid = this._CRS_TO_EPSG[wkid];
-					              }
-					              result.allExtents[wkid] = this._getExtent(childNode, wkid);
-					            }
-					          } else {
-					            wkid = parseInt(srAttr, 10);
-					            if (wkid !== 0 && !isNaN(wkid)) {
-					              result.allExtents[wkid] = this._getExtent(childNode, wkid);
-					            }
-					          }
-					          
-					        } else if (childNode.nodeName == srAttrName) {
-					          // supported spatial references
-					          // <SRS>EPSG:4326</SRS> or <SRS>EPSG:4326 EPSG:32624 EPSG:32661</SRS>
-					          var value = childNode.text ? childNode.text : childNode.textContent; // EPSG:102100
-					          var arr = value.split(" ");
-					          array.forEach(arr, function(val){
-					            if (val.indexOf(":") > -1) {
-					              val = parseInt(val.split(":")[1], 10);
-					            } else {
-					              val = parseInt(val, 10);
-					            }
-					            if (val !== 0 && !isNaN(val)) { // val !== 84 && 
-					              if (this._CRS_TO_EPSG[val]) {
-					                val = this._CRS_TO_EPSG[val];
-					              }
-					              if (array.indexOf(result.spatialReferences, val) == -1) {
-					                result.spatialReferences.push(val);
-					              }
-					            }
-					          }, this);
-					          
-					        } else if (childNode.nodeName == "Style") {
-					          // legend URL
-					          var legendXML = this._getTag("LegendURL", childNode);
-					          if (legendXML) {
-					            var onlineResourceXML = this._getTag("OnlineResource", legendXML);
-					            if (onlineResourceXML) {
-					              result.legendURL = onlineResourceXML.getAttribute("xlink:href");
-					            }
-					          }
-					          
-					        } else if (childNode.nodeName === "Layer") {
-					          // sub layers
-					          result.subLayers.push(this._getLayerInfo(childNode));
-					        }
-					      }, this);
-					
-					      result.title = result.title || result.name; 
-					          
-					      return result;
-      
-
- */
-          			
-          			
-          			
-          			
-          			
-          			
-          		}
-          	}
-          }
-        }
-      }
-    }
-    if (title == null) {
-    	if (name != null) {
-    		data.put("title",name);
-    	}
-    }
-        
-  	String text = data.toString(1);
-  	System.err.println("****text\r\n"+text);
-    
   }
   
   /**
-   * Reads the context of the metadata XML column.
+   * Reads the content of the metadata XML column.
    * <br/>This is not applicable when the ArcIMS metadata server is active.
    * @param uuid the UUID for the record to read
    * @throws SQLException if a database exception occurs
@@ -804,68 +470,30 @@ public class Gpt2AgpPush {
    */
   protected boolean syncItem(AgpItem sourceItem, String uuid, String xml) throws Exception {
     this.numItemsConsidered++;
-    GptSource src = this.source;
     AgpDestination dest = this.destination; 
     
-    String sId = uuid.replaceAll("\\{","").replaceAll("}","").replaceAll("-","");
-    sourceItem.getProperties().add(new AgpProperty("id",sId));
-    String sType = Val.chkStr(sourceItem.getProperties().getValue("type"));
-    String sTitle = Val.chkStr(sourceItem.getProperties().getValue("title"));
-    String sMsg = "Processing item ("+this.numItemsConsidered+")";
-    sMsg += ", id:"+Val.stripControls(sId)+", type:"+Val.stripControls(sType)+", title:"+Val.stripControls(sTitle);
-    LOGGER.finer(sMsg);
+    String id = uuid.replaceAll("\\{","").replaceAll("}","").replaceAll("-","");
+    sourceItem.getProperties().add(new AgpProperty("id",id));
+    String type = Val.chkStr(sourceItem.getProperties().getValue("type"));
+    String title = Val.chkStr(sourceItem.getProperties().getValue("title"));
+    String msg = "Processing item ("+this.numItemsConsidered+")";
+    msg += ", id:"+Val.stripControls(id)+", type:"+Val.stripControls(type)+", title:"+Val.stripControls(title);
+    LOGGER.finer(msg);
 
     // check the item
-    if (sTitle.length() == 0) {
+    if (title.length() == 0) {
     	this.numWithNullTitle++;
     	LOGGER.log(Level.FINEST,"No title for uuid="+uuid+"\r\n"+xml);
     	return false;
-    } else if (sType.length() == 0) {
+    } else if (type.length() == 0) {
     	this.numWithNullType++;
     	LOGGER.log(Level.FINEST,"No type for uuid="+uuid+"\r\n"+xml);
     	return false;
     }
     
-    /*
-    if (sId == null) {
-      this.numWithNullId++;
-      LOGGER.finer("Ignoring item with null id: "+Val.stripControls(sTitle));
-      return false;
-    } else if (sType == null) {
-      this.numWithNullType++;
-      LOGGER.finer("Ignoring item with null type: "+Val.stripControls(sId)+" "+Val.stripControls(sTitle));
-      return false;
-    }
-    *
-    
-    // TODO re-tweet issues
-    
-    /*
-    // don't re-publish items when the exact itemId exists at the destination
-    boolean bUnsyncedItemExists = this.itemHelper.doesUnsyncedItemExist(sourceItem,dest);
-    if (bUnsyncedItemExists) {
-      this.numUnsyncedExistingAtDestination++;
-      String s = "Ignoring unsynced item existing at destination: ";
-      LOGGER.finer(s+Val.stripControls(sId)+" "+Val.stripControls(sTitle));
-      return false;
-    }
-    
-    // don't propagate synced items from portal to portal
-    boolean bIsSyncedItem = this.itemHelper.isSyncedItem(sourceItem);
-    if (bIsSyncedItem) {
-      this.numOriginatedFromSynchronization++;
-      String s = "Ignoring, an item that originated from synchronization will not be repropagated: ";
-      LOGGER.finer(s+Val.stripControls(sId)+" "+Val.stripControls(sTitle));
-      return false;
-    }
-    */
-    
-       
     // make the destination item, determine if the item requires an update, publish
     // TODO: there will be problems if the item is no longer visible to this user
     AgpItem destItem = this.itemHelper.makeDestinationItem(null,sourceItem);
-    
-    // TODO: temporary
     if (Val.chkStr(sourceItem.getProperties().getValue("thumbnailurl")).length() > 0) {
     	destItem.getProperties().add(new AgpProperty("thumbnailurl",sourceItem.getProperties().getValue("thumbnailurl")));
     }
@@ -874,15 +502,21 @@ public class Gpt2AgpPush {
     //System.err.println(destItem.getProperties());
     boolean bRequiresUpdate = this.itemHelper.requiresUpdate(sourceItem,dest,destItem);
     if (this.forceUpdates || bRequiresUpdate) {
+    	boolean bPublish = false;
     	
-    	 //this.readCapabilities(destItem);
+      if (type.equals("WMS")) {
+   	    WMS wms = new WMS();
+   	    wms.readCapabilities(destItem);
+   	    bPublish = wms.ok;
+      }
+      
+      if (bPublish) {
+        this.execPublishItem(sourceItem,destItem);
     	 
-    	 //System.err.println("update.......................");
-       this.execPublishItem(sourceItem,destItem);
-    	 
-       // TODO publish metadata
-       //this.execPublishMetadata(sDestId,sXml);
-      return true;
+        // TODO publish metadata
+        //this.execPublishMetadata(sDestId,sXml);
+      }
+      return bPublish;
     }
     
     return false;
@@ -908,7 +542,7 @@ public class Gpt2AgpPush {
       this.resourceDataTable =  this.context.getCatalogConfiguration().getResourceDataTableName();
       	
     	String sql = "SELECT DOCUUID,UPDATEDATE,APPROVALSTATUS,PROTOCOL_TYPE,FINDABLE FROM "+this.resourceTable;
-    	sql += " WHERE DOCUUID ='{81727D9E-AFBD-4829-B185-5C74E7DCFFA2}'";
+    	//sql += " WHERE DOCUUID ='{E51DA72A-2600-4C2C-B50D-C859CF9BDFE9}'";
       st = this.con.prepareStatement(sql);
       ResultSet rs = st.executeQuery();     
       while (rs.next()) {
@@ -922,7 +556,8 @@ public class Gpt2AgpPush {
         String status = rs.getString(3);
         String protocolType = Val.chkStr(rs.getString(4));
         boolean findable = Val.chkBool(rs.getString(5),false);
-        boolean sync = (mod != null) && (status != null) && (status.equalsIgnoreCase("approved") || status.equalsIgnoreCase("reviewed"));
+        boolean indexable = (status != null) && (status.equalsIgnoreCase("approved") || status.equalsIgnoreCase("reviewed"));
+        boolean sync = (mod != null) && indexable;
         if (sync && (protocolType.length() > 0) && !findable) sync = false;
         
         if (sync) {
@@ -933,19 +568,28 @@ public class Gpt2AgpPush {
         		String result = Val.chkStr(xslt.transform(xml));
         		//System.err.println(result);
         		if ((result != null) && (result.length() > 0)) {
+        			JSONObject jsoItem = null;
         			try {
-        				JSONObject jsoItem = new JSONObject(result); 
+        				jsoItem = new JSONObject(result); 
         				sourceItem.parseItem(jsoItem);
-                sourceItem.getProperties().add(new AgpProperty("modified",""+mod.getTime()));
-                this.prepareItem(jsoItem,sourceItem);
-                //System.err.println("type:"+sourceItem.getProperties().getValue("type"));
-                //System.err.println(sourceItem.getProperties());
-                this.syncItem(sourceItem,uuid,xml);
         			} catch (Exception ejson) {
+        				jsoItem = null;
         				this.numWithXsltError++;
         				LOGGER.log(Level.WARNING,"JSON failed to load for "+uuid+", json="+result);
         				LOGGER.log(Level.WARNING,"JSON failed with exception: ",ejson);
         			}
+        			if (jsoItem != null) {
+        				try {
+	                sourceItem.getProperties().add(new AgpProperty("modified",""+mod.getTime()));
+	                this.prepareItem(jsoItem,sourceItem);
+	                //System.err.println("type:"+sourceItem.getProperties().getValue("type"));
+	                //System.err.println(sourceItem.getProperties());
+	                this.syncItem(sourceItem,uuid,xml);
+	        			} catch (Exception esync) {
+	        				this.numWithSyncError++;
+	        				LOGGER.log(Level.WARNING,"Sync failed with exception for: "+uuid,esync);
+	        			}
+              }
         		}
         	}
         }
@@ -974,6 +618,431 @@ public class Gpt2AgpPush {
       this.millisEnd = System.currentTimeMillis();
       LOGGER.info(this.getSummary(false));
     }
+  }
+  
+  /* ........................................................................ */
+  
+  /**
+   * A WMS item.
+   */
+  private class WMS {
+  	
+  	private boolean ok = true;
+  	
+  	/**
+  	 * Finds the GetMap node within a capabilities document.
+  	 * @param root the root node
+  	 * @return the GetMap node
+  	 * @throws Exception if an exception occurs
+  	 */
+  	private Node findGetMapNode(Node root) throws Exception {
+  		Node ndCapability = DomUtil.findFirst(root,"Capability");
+  		if (ndCapability != null) {
+  			Node ndRequest = DomUtil.findFirst(ndCapability,"Request");
+  			if (ndRequest != null)
+  			  return  DomUtil.findFirst(ndRequest,"GetMap");
+  		}
+  		return null;
+  	}
+  	
+  	/**
+  	 * Finds the GetMap url.
+  	 * @param getMapNode the GetMap mode
+  	 * @return the url
+  	 * @throws Exception  if an exception occurs
+  	 */
+  	private String findGetMapUrl(Node getMapNode) throws Exception {
+  		if (getMapNode != null) {
+				Node[] dcps = DomUtil.findChildren(getMapNode,"DCPType");
+				for (Node dcp: dcps) {
+					Node[] https = DomUtil.findChildren(dcp,"HTTP");
+  				for (Node ndHttp: https) {
+  					Node ndGet = DomUtil.findFirst(ndHttp,"Get");
+  					if (ndGet != null) {
+  						Node ndRes = DomUtil.findFirst(ndGet,"OnlineResource");
+  						if (ndRes != null) {
+  							Node ndx = ndRes.getAttributes().getNamedItemNS("http://www.w3.org/1999/xlink","href");
+  							if (ndx != null) {
+  								return ndx.getNodeValue();
+  							}
+  						}
+  					}
+  				}
+				}
+  		}
+  		return null;
+  	}
+  	
+  	/**
+  	 * Makes a GetCapabilities url.
+  	 * @param url the item url
+  	 * @return the capabilities url
+  	 */
+  	private String makeCapabilitiesUrl(String url) {
+      url = rmParams(url);
+      String base = url, q = "service=WMS&request=GetCapabilities";
+      int idx = url.indexOf("?");
+      if (idx != -1) {
+      	base = url.substring(0,idx);
+        String q2 = url.substring(idx+1);
+        if (q2.length() > 0) {
+        	q = q+"&"+q2;
+        }
+      }
+      return base+"?"+q;
+  	}
+    
+  	/**
+  	 * Reads the capabilities.
+  	 * @param destItem the destination item
+  	 * @throws Exception if an exception occurs
+  	 */
+    private void readCapabilities(AgpItem destItem) throws Exception {
+      	
+    	String url = Val.chkStr(destItem.getProperties().getValue("url"));
+    	//url = "http://54.176.223.239/server/services/SampleWorldCities/MapServer/WMSServer?request=GetCapabilities&service=WMS";
+	
+    	String capabilitiesUrl = this.makeCapabilitiesUrl(url);
+    	System.err.println("capabilitiesUrl="+capabilitiesUrl);
+    	HttpClientRequest http = new HttpClientRequest();
+    	http.setUrl(capabilitiesUrl);
+    	String xml = http.readResponseAsCharacters();
+    	//System.err.println("xml:\r\n"+xml);
+    	
+    	JSONObject data = new JSONObject();
+    	data.put("version","1.3.0");
+    	data.put("title","");
+    	data.put("url","");
+    	data.put("mapUrl","");
+    	data.put("copyright","");
+    	data.put("maxWidth",5000);
+    	data.put("maxHeight",5000);
+    	data.put("format",JSONObject.NULL);
+    	data.put("layers",new JSONArray());
+    	data.put("spatialReferences",new JSONArray());
+    	List<Integer> allSpatialReferences = new ArrayList<Integer>();
+    	
+    	Document dom = DomUtil.makeDomFromString(xml,true);
+    	Node root = dom.getDocumentElement();
+    	if (root != null) {
+    		String ln = Val.chkStr(root.getNodeName());
+    		if (ln.equals("WMT_MS_Capabilities")) {
+    		} else if (ln.equals("WMS_Capabilities")) {
+    		} else {
+    			root = null;
+    			throw new Exception("WMS has no known root node "+capabilitiesUrl);
+    		}
+    	}
+    	if (root == null) return;
+    	
+    	String s; int n;
+    	
+    	String version = null;
+    	Node ndVersion = root.getAttributes().getNamedItem("version");
+    	if (ndVersion != null) version = ndVersion.getNodeValue();
+    	if (version == null || version.length() == 0) version = "1.3.0";
+    	data.put("version",version);    
+    	
+    	// TODO removing service=WMS from url?
+    	String sUrl2 = rmParams(url);
+    	data.put("url",sUrl2);
+    	destItem.getProperties().get("url").setValue(sUrl2);
+    	
+    	Node ndGetMap = this.findGetMapNode(root);
+    	String sGetMapUrl = Val.chkStr(this.findGetMapUrl(ndGetMap));
+    	if (sGetMapUrl != null) {
+    		sGetMapUrl = rmParams(sGetMapUrl);
+    		data.put("mapUrl",sGetMapUrl);
+    	} else {
+    		throw new Exception("WMS has no GetMap endpoint "+capabilitiesUrl);
+    	}
+    	
+    	Node ndService = DomUtil.findFirst(root,"Service");
+    	if (ndService != null) {
+    		String name = null, title = null;
+        NodeList nl = ndService.getChildNodes(); 
+        for (int i=0; i<nl.getLength(); i++) {
+        	Node nd = nl.item(i);
+        	if (nd.getNodeType() == Node.ELEMENT_NODE) { 
+        		String ln2 = Val.chkStr(nd.getNodeName());
+        		if (ln2.equalsIgnoreCase("Name")) {
+        			s = Val.chkStr(nd.getTextContent());
+        			if (s.length() > 0) name = s;
+        		} else if (ln2.equalsIgnoreCase("Title")) {
+        			s = Val.chkStr(nd.getTextContent());
+        			if (s.length() > 0) {
+        				title = s;
+        				data.put("title",s);
+        			}
+        		} else if (ln2.equalsIgnoreCase("Abstract")) {
+        			//s = Val.chkStr(nd.getTextContent());
+        		} else if (ln2.equalsIgnoreCase("AccessConstraints")) {
+        			s = Val.chkStr(nd.getTextContent());
+        			if (s.length() > 0) data.put("copyright",s);
+        		} else if (ln2.equalsIgnoreCase("MaxWidth")) {
+        			s = Val.chkStr(nd.getTextContent());
+        			if (s.length() > 0) {
+        				n = Val.chkInt(s,-1);
+        				if (n > 0) data.put("maxWidth",n);
+        			}
+        		} else if (ln2.equalsIgnoreCase("MaxHeight")) {
+        			s = Val.chkStr(nd.getTextContent());
+        			if (s.length() > 0) {
+        				n = Val.chkInt(s,-1);
+        				if (n > 0) data.put("maxHeight",n);
+        			}
+        		}
+        	}
+        }
+        if ((title == null) && (name != null)) {
+        	data.put("title",name);
+        } 
+    	}
+    	
+			/*
+    	if (ndGetMap != null) {
+  			Node[] fmts = DomUtil.findChildren(ndGetMap,"Format");
+  			for (Node fmt: fmts) {
+  				String s = Val.chkStr(fmt.getTextContent());
+  				if (s.length() > 0) {
+  					// check the formats ???
+  					//System.err.println("**************format="+s);
+  		      // make sure the format we want is supported; otherwise switch
+  		      //if (!array.some(this.getMapFormats, function(el){
+  		        // also support: <Format>image/png; mode=24bit</Format>
+  		      //  return el.indexOf(this.imageFormat) > -1;
+  		      //}, this)) {
+  		      //  this.imageFormat = this.getMapFormats[0];
+  		      //}
+  				}
+  			}    		
+    	}
+    	*/
+    	
+    	Node ndCapability = DomUtil.findFirst(root,"Capability");
+    	if (ndCapability != null) {
+    		JSONArray jsaLayers = data.getJSONArray("layers");
+    		JSONArray jsaRefs = data.getJSONArray("spatialReferences");
+				Node[] layerNodes = DomUtil.findChildren(ndCapability,"Layer");
+				for (Node ndLayer: layerNodes) {
+    			// TODO can there be more than one main layer?
+        	WMSLayerInfo layer = new WMSLayerInfo();
+        	layer.parse(ndLayer,allSpatialReferences);
+        	if (layer.subLayers.size() == 0) {
+        		layer.append(jsaLayers);
+        	} else {
+        		for (WMSLayerInfo subLayer: layer.subLayers) {
+        			subLayer.append(jsaLayers);
+        		}
+        	}
+				}
+				for (int ref: allSpatialReferences) {
+					jsaRefs.put(ref);
+				}
+    	}
+         	
+    	String text = data.toString(1);
+    	destItem.getProperties().add(new AgpProperty("text",text));
+    	//System.err.println("----text----\r\n"+text);
+    }
+    
+    /**
+     * Removes several WMS related parameters from a url.
+     * @param url the url
+     * @return the modified url
+     */
+  	private String rmParams(String url) {
+  		String[] rm = {"version", "service", "request", "bbox", "format", "height", "width", "layers", 
+  				"srs", "crs", "styles", "transparent", "bgcolor", "exceptions", "time", "elevation", "sld", "wfs"};
+  		boolean wasModified = false;
+      int idx = url.indexOf("?");
+      if (idx != -1) {
+      	String base = url.substring(0,idx);
+      	StringBuilder sbq = new StringBuilder();
+        String queryString = url.substring(idx+1);
+        String[] pairs = queryString.split("&");
+        for (String pair: pairs) {
+        	boolean bAdd = true;
+          idx = pair.indexOf("=");
+          if (idx > 0) {
+            String key = pair.substring(0,idx);
+            //String value = pair.substring(idx+1);
+            for (String s: rm) {
+            	if (key.equalsIgnoreCase(s)) {
+            		bAdd = false;
+            		break;
+            	}
+            }
+          } 
+          if (bAdd) {
+          	if (sbq.length() > 0) sbq.append("&");
+          	sbq.append(pair);
+          } else {
+          	wasModified = true;
+          }
+        }
+        if (wasModified) {
+        	if (sbq.length() > 0) {
+        		return base+"?"+sbq.toString();
+        	} else {
+        		return base;
+        	}
+        }
+      }
+      return url;
+  	}
+  	 
+  }
+  
+  /**
+   * A WMS layer.
+   */
+  private class WMSLayerInfo {
+  	
+  	private String name;
+  	private String title;
+  	@SuppressWarnings("unused")
+  	private String description;
+  	private String legendURL;
+  	//Extent extent;
+    //List<Extent> allExtents = new ArrayList<Extent>();
+  	private List<WMSLayerInfo> subLayers = new ArrayList<WMSLayerInfo>();
+  	private List<Integer> spatialReferences = new ArrayList<Integer>();
+  	
+  	/**
+  	 * Appends info to an array of layers.
+  	 * @param layers the array of layers
+  	 * @throws Exception if an exception occurs
+  	 */
+  	private void append(JSONArray layers) throws Exception {
+  		JSONObject layer = new JSONObject();
+  		if ((this.name != null) && (this.name.length() > 0)) {
+  			layer.put("name",this.name);
+  		} else {
+  			return;
+  		}
+  		if ((this.title != null) && (this.title.length() > 0)) {
+  			layer.put("title",this.title);
+  		}
+  		if ((this.legendURL != null) && (this.legendURL.length() > 0)) {
+  			layer.put("legendURL",this.legendURL);
+  		}
+  		layers.put(layer);
+  	}
+  	
+  	/**
+  	 * Parses a WMS layer node.
+  	 * @param layerNode the layer node
+  	 * @param allSpatialReferences the list of spatial references for the service
+  	 * @throws Exception if an exception occurs
+  	 */
+  	private void parse(Node layerNode, List<Integer> allSpatialReferences) throws Exception {
+
+      /*  		
+  		// all services have LatLonBoundingBox or EX_GeographicBoundingBox (might not be on the first layer ...)
+			Node ndLLBB = DomUtil.findFirst(layerNode,"LatLonBoundingBox");
+			Node ndGeoBB = DomUtil.findFirst(layerNode,"EX_GeographicBoundingBox");
+			if (ndLLBB != null) {
+        //var minx = parseFloat(boundsXML.getAttribute("minx"));
+        //var miny = parseFloat(boundsXML.getAttribute("miny"));
+        //var maxx = parseFloat(boundsXML.getAttribute("maxx"));
+        //var maxy = parseFloat(boundsXML.getAttribute("maxy"));
+			}
+			if (ndGeoBB != null) {
+        //extent.xmin = parseFloat(this._getTagValue("westBoundLongitude", geographicBoundingBox, 0));
+        //extent.ymin = parseFloat(this._getTagValue("southBoundLatitude", geographicBoundingBox, 0));
+        //extent.xmax = parseFloat(this._getTagValue("eastBoundLongitude", geographicBoundingBox, 0));
+        //extent.ymax = parseFloat(this._getTagValue("northBoundLatitude", geographicBoundingBox, 0));        	
+			}
+      //if (!latLonBoundingBox && !geographicBoundingBox) {
+        // not according to spec
+        //extent = new Extent(-180, -90, 180, 90, new SpatialReference({
+          //wkid: 4326
+        //}));
+        //result.allExtents[0] = extent;
+      //}
+      */
+			
+    	String s;
+      NodeList nl = layerNode.getChildNodes(); 
+      for (int i=0; i<nl.getLength(); i++) {
+        Node nd = nl.item(i);
+        if (nd.getNodeType() != Node.ELEMENT_NODE) continue;
+        String ln = Val.chkStr(nd.getNodeName());
+        
+        if (ln.equalsIgnoreCase("Name")) {
+    			s = Val.chkStr(nd.getTextContent());
+    			if (s.length() > 0) this.name = s;
+        } else if (ln.equalsIgnoreCase("Title")) {
+    			s = Val.chkStr(nd.getTextContent());
+    			if (s.length() > 0) this.title = s;
+        } else if (ln.equalsIgnoreCase("Abstract")) {
+    			s = Val.chkStr(nd.getTextContent());
+    			if (s.length() > 0) this.description = s;	
+
+        } else if (ln.equalsIgnoreCase("BoundingBox")) {
+        	
+        } else if (ln.equalsIgnoreCase("SRS") || ln.equalsIgnoreCase("CRS")) {
+          // supported spatial references
+          // <SRS>EPSG:4326</SRS> or <SRS>EPSG:4326 EPSG:32624 EPSG:32661</SRS>
+        	s = Val.chkStr(nd.getTextContent());
+        	String[] a = s.split(" ");
+        	for (String s2: a) {
+        		boolean isCRS = ln.equalsIgnoreCase("CRS");
+        		String s3 = null;
+        		if (s2.indexOf(":") != -1) {
+        			String[] a2 = s2.split(":");
+        			if (a2.length == 2) {
+        				s3 = Val.chkStr(a2[1]);
+        				isCRS = a2[0].equalsIgnoreCase("CRS");
+        			}
+        		} else {
+        			s3 = Val.chkStr(s2);
+        		}
+        		int v = 0;
+        		if ((s3 != null) && (s3.length() > 0)) {
+        			v = Val.chkInt(s3,0);
+        		}
+        		if (v > 0) {
+        			if (isCRS) {
+          			if (v == 84) v = 4326;
+          			else if (v == 83) v = 4269;
+          			else if (v == 27) v = 4267;        				
+        			}
+        			if (!this.spatialReferences.contains(v)) {
+        				this.spatialReferences.add(v);
+        			}
+        			if (!allSpatialReferences.contains(v)) {
+        				allSpatialReferences.add(v);
+        			}
+        		}
+        	}
+        	
+        } else if (ln.equalsIgnoreCase("Style")) {
+    			Node ndUrl = DomUtil.findFirst(nd,"LegendURL");
+    			if (ndUrl != null) {
+						Node ndRes = DomUtil.findFirst(ndUrl,"OnlineResource");
+						if (ndRes != null) {
+							Node ndx = ndRes.getAttributes().getNamedItemNS("http://www.w3.org/1999/xlink","href");
+							if (ndx != null) {
+								s = Val.chkStr(ndx.getNodeValue());
+								if (s.length() > 0) this.legendURL = s;
+							}
+						}
+    			}
+        	
+        } else if (ln.equalsIgnoreCase("Layer")) {
+        	WMSLayerInfo subLayer = new WMSLayerInfo();
+        	subLayer.parse(nd,allSpatialReferences);
+        	this.subLayers.add(subLayer);
+        }
+      }
+      
+      if ((this.title == null) || (this.title.length() == 0)) {
+      	this.title = this.name;
+      }
+    }
+  	
   }
 
 }
