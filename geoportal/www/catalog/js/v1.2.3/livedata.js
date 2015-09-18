@@ -279,7 +279,7 @@ dojo.declare("gpt.LiveData", dijit._Widget, {
 
   /** parses proxy response **/
   _parseResponse: function(response, io) {
-    if (response instanceof String) {
+    if (dojo.isString(response)) {
       response = dojo.trim(response);
     }
     if (response.length>0) {
@@ -625,7 +625,7 @@ dojo.declare("esri.gpt.layers.WMSLayer", esri.layers.DynamicMapServiceLayer, {
       dojo.mixin(params, { layers: layersAsString });
 
       /** do callback **/
-      callback(this._mapUrl + dojo.objectToQuery(params));
+      callback(this._proxyUrl + "?" + this._mapUrl + dojo.objectToQuery(params));
     } catch (e) {
       // handle exception, display information if verbose mode
       gpt.LiveData.handleInternalException(e);
@@ -638,7 +638,7 @@ dojo.declare("esri.gpt.layers.WMSLayer", esri.layers.DynamicMapServiceLayer, {
       url: this._proxyUrl + "?" + this._url,
       timeout: 30000,
       sync: true,
-      load: this._parseCapabilities,
+      load: dojo.hitch(this,this._parseCapabilities),
       error: gpt.LiveData.handleHttpError
     });
   },

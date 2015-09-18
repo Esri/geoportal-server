@@ -203,6 +203,11 @@ public class LiveDataController extends BaseActionListener implements ILiveDataP
    * @return context root
    */
   private static String getContextRoot(HttpServletRequest request) {
-    return RequestContext.resolveBaseContextPath(request);
+    String baseContextPath = RequestContext.resolveBaseContextPath(request);
+    int contextIdx = baseContextPath.indexOf(request.getContextPath());
+    if (contextIdx>=0) {
+      baseContextPath = baseContextPath.substring(contextIdx);
+    }
+    return baseContextPath;
   }
 }

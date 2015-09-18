@@ -21,6 +21,7 @@ import com.esri.gpt.control.georss.IFeedRecord;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.request.Record;
 import com.esri.gpt.framework.util.Val;
+import javax.faces.context.FacesContext;
 
 /**
  * The Class SearchResultRecord. Contains attributes describing a metadata
@@ -349,8 +350,10 @@ public SearchResultRecord() {
    * <br/>SearchResultRecord.getResourceLinks().getThumbnail();
    * @return thumbnail link
    */
-  public ResourceLink getThumbnailLink() {
-    return this.getResourceLinks().getThumbnail();
+  public String getThumbnailUrl() {
+    FacesContext facesContext = FacesContext.getCurrentInstance();
+    String scheme = facesContext.getExternalContext().getRequestScheme();
+    return Val.stripHttpProtocol(this.getResourceLinks().getThumbnail().getUrl(), scheme+":");
   }
   
   /**

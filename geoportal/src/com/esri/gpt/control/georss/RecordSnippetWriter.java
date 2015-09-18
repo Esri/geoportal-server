@@ -274,7 +274,7 @@ public class RecordSnippetWriter {
         //imgStyle = "border:1px solid #000000;";
         _writer.println("<img class=\""+THUMBNAIL_STYLE_CLASS+"\" "+ 
             " alt=\""+ this.getMessageBroker().retrieveMessage("catalog.rest.thumbNail")+ "\" " +
-            " src=\""+ url+"\" style=\""+imgStyle+"\"/>");
+            " src=\""+ Val.stripHttpProtocol(url)+"\" style=\""+imgStyle+"\"/>");
       }
       _writer.println(Val.escapeXmlForBrowser(sAbstract));
       _writer.println("</div>");

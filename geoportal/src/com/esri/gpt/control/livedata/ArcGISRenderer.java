@@ -14,6 +14,8 @@
  */
 package com.esri.gpt.control.livedata;
 
+import static com.esri.gpt.framework.util.Val.stripHttpProtocol;
+
 /**
  * ARCGIS Renderer.
  */
@@ -28,9 +30,9 @@ package com.esri.gpt.control.livedata;
   @Override
   protected String newLayerDeclaration() {
     if (isImageService()) {
-      return "new esri.layers.ArcGISImageServiceLayer(\"" +getUrl()+ "\")";
+      return "new esri.layers.ArcGISImageServiceLayer(\"" +stripHttpProtocol(getUrl())+ "\")";
     } else {
-      return "new esri.layers.ArcGISDynamicMapServiceLayer(\"" +getUrl()+ "\")";
+      return "new esri.layers.ArcGISDynamicMapServiceLayer(\"" +stripHttpProtocol(getUrl())+ "\")";
     }
   }
 

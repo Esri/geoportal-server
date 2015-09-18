@@ -14,6 +14,8 @@
  */
 package com.esri.gpt.control.livedata;
 
+import static com.esri.gpt.framework.util.Val.stripHttpProtocol;
+
 /**
  * KML Renderer.
  */
@@ -25,7 +27,7 @@ package com.esri.gpt.control.livedata;
 
   @Override
   protected String newLayerDeclaration() {
-    return "new esri.gpt.layers.KmlLayer(\"" +getUrl()+ "\",\"" +getProxyUrl()+ "\",geometryService)";
+    return "new esri.gpt.layers.KmlLayer(\"" +getUrl()+ "\",\"" +stripHttpProtocol(getProxyUrl())+ "\",geometryService)";
   }
 
   @Override

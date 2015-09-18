@@ -15,7 +15,7 @@
 --%>
 <% RendererFactories factories = new RendererFactories(
   request.getContextPath(),
-  "/catalog/download/proxy.jsp",
+  "/proxy",
   "/catalog/livedata/kmzBridge.jsp");
 String url = request.getParameter("url");
 CredentialProvider cp = extractCredentialProvider(request);

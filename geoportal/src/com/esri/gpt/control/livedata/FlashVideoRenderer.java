@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.control.livedata;
 
+import static com.esri.gpt.framework.util.Val.stripHttpProtocol;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -57,7 +58,7 @@ abstract class FlashVideoRenderer implements IRenderer {
       "       }" +
       "    }" +
       "    style = styles.join(\";\");" +
-      "    node.innerHTML = \"<object width=\\\"\"+width+\"\\\" height=\\\"\"+height+\"\\\"><param name=\\\"movie\\\" value=\\\"" +getUrl()+ "\\\"></param><param name=\\\"allowFullScreen\\\" value=\\\"true\\\"></param><param name=\\\"allowscriptaccess\\\" value=\\\"always\\\"></param><embed src=\\\"" +getUrl()+ "\\\" type=\\\"application/x-shockwave-flash\\\" allowscriptaccess=\\\"always\\\" allowfullscreen=\\\"true\\\" width=\\\"\"+width+\"\\\" height=\\\"\"+height+\"\\\"></embed></object>\";" +
+      "    node.innerHTML = \"<object width=\\\"\"+width+\"\\\" height=\\\"\"+height+\"\\\"><param name=\\\"movie\\\" value=\\\"" +stripHttpProtocol(getUrl())+ "\\\"></param><param name=\\\"allowFullScreen\\\" value=\\\"true\\\"></param><param name=\\\"allowscriptaccess\\\" value=\\\"always\\\"></param><embed src=\\\"" +getUrl()+ "\\\" type=\\\"application/x-shockwave-flash\\\" allowscriptaccess=\\\"always\\\" allowfullscreen=\\\"true\\\" width=\\\"\"+width+\"\\\" height=\\\"\"+height+\"\\\"></embed></object>\";" +
       "} }");
   }
 

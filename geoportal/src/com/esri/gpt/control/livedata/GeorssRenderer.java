@@ -14,6 +14,8 @@
  */
 package com.esri.gpt.control.livedata;
 
+import static com.esri.gpt.framework.util.Val.stripHttpProtocol;
+
 /**
  * Georss renderer.
  */
@@ -25,7 +27,7 @@ package com.esri.gpt.control.livedata;
 
   @Override
   protected String newLayerDeclaration() {
-    return "new esri.gpt.layers.GeorssLayer(\"" +getUrl()+ "\",\"" +getProxyUrl()+ "\",geometryService)";
+    return "new esri.gpt.layers.GeorssLayer(\"" +getUrl()+ "\",\"" +stripHttpProtocol(getProxyUrl())+ "\",geometryService)";
   }
 
   @Override
