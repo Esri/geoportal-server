@@ -93,6 +93,11 @@ public interface IFeedRecord {
    */
   String getFileIdentifier();
   /**
+   * Gets thumbnail url.
+   * @return thumbnail url
+   */
+  String getThumbnailUrl();
+  /**
    * Gets free data.
    * @param collection id of the collection of data
    * @return map of attributes

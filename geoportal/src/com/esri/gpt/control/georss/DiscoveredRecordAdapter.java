@@ -126,6 +126,11 @@ public class DiscoveredRecordAdapter implements IFeedRecord {
   public String getFileIdentifier() {
     return select(Meaning.MEANINGTYPE_FILEIDENTIFIER);
   }
+
+  @Override
+  public String getThumbnailUrl() {
+    return select(Meaning.MEANINGTYPE_THUMBNAIL_URL);
+  }
   
   @Override
   public Map<String,IFeedAttribute> getData(String collection) {
