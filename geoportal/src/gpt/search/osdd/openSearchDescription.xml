@@ -29,7 +29,7 @@
     </parameters:Parameter>
   </Url>
   <Url type="application/atom+xml" indexOffset="1" pageOffset="1"
-       template="{openSearch.restPath}?searchText={searchTerms}&amp;start={startIndex?}&amp;max={count?}&amp;bbox={geo:box?}&amp;f=atom{clientId}">
+       template="{openSearch.restPath}?searchText={searchTerms}&amp;start={startIndex?}&amp;max={count?}&amp;bbox={geo:box?}&amp;uuid={geo:uid}&amp;f=atom{clientId}">
     <parameters:Parameter name="searchText" value="{searchTerms}" title="inventory containing all the specified keywords separated by space, case-insensitive, Apache Lucene syntax" uiDisplay="Search text" minimum="0">
         <atom:link rel="profile" href="http://www.lucenetutorial.com/lucene-query-syntax.html" title="This parameter follows the Apache Lucene free text search implementations"/>
     </parameters:Parameter>
@@ -38,9 +38,6 @@
     <parameters:Parameter name="bbox" value="{geo:bbox?}" title="inventory which has a spatial extent overlapping this geometry" uiDisplay="Bounding box" minimum="0">
         <atom:link rel="profile" href="http://www.opengis.net/wkt/ENVELOPE" title="This service accepts WKT Polygons"/>
     </parameters:Parameter>
-  </Url>
-  <Url type="application/atom+xml" indexOffset="1" pageOffset="1"
-       template="{openSearch.restPath}?uuid={geo:uid}&amp;f=atom{clientId}">
     <parameters:Parameter name="uuid" value="{geo:uid}" title="record identifier" uiDisplay="Record identifier" minimum="0"/>
   </Url>
   <Url type="application/xml" indexOffset="1" pageOffset="1"
