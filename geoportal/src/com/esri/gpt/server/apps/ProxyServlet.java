@@ -26,6 +26,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URLDecoder;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
  * Proxy servlet.
  */
 public class ProxyServlet extends HttpServlet {
+  private static final Logger LOG = Logger.getLogger(ProxyServlet.class.getName());
 
   /**
    * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -108,7 +111,15 @@ public class ProxyServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException {
-    processRequest(request, response);
+    try {
+      processRequest(request, response);
+    } catch (ServletException ex) {
+      LOG.log(Level.SEVERE, "Proxy error", ex);
+      throw ex;
+    } catch (IOException ex) {
+      LOG.log(Level.SEVERE, "Proxy error", ex);
+      throw ex;
+    }
   }
 
   /**

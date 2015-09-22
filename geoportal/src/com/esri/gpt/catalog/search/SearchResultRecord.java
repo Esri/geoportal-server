@@ -18,10 +18,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.esri.gpt.control.georss.IFeedRecord;
+import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.request.Record;
 import com.esri.gpt.framework.util.Val;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * The Class SearchResultRecord. Contains attributes describing a metadata
@@ -350,10 +352,29 @@ public SearchResultRecord() {
    * <br/>SearchResultRecord.getResourceLinks().getThumbnail();
    * @return thumbnail link
    */
+  public ResourceLink getThumbnailLink() {
+    return this.getResourceLinks().getThumbnail();
+  }  
+  
+  /** 
+   * Gets the thumbnail link associated with the record.
+   * <br/>Convienence method for:
+   * <br/>SearchResultRecord.getResourceLinks().getThumbnail();
+   * @return thumbnail link
+   */
   public String getThumbnailUrl() {
     FacesContext facesContext = FacesContext.getCurrentInstance();
-    String scheme = facesContext.getExternalContext().getRequestScheme();
-    return Val.stripHttpProtocol(this.getResourceLinks().getThumbnail().getUrl(), scheme+":");
+    Object request = facesContext.getExternalContext();
+    String baseContextPath = Val.chkStr(request instanceof HttpServletRequest? RequestContext.resolveBaseContextPath((HttpServletRequest)request): "");
+    String baseScheme = baseContextPath.indexOf(":")>=0? baseContextPath.substring(0, baseContextPath.indexOf(":")): "";
+    String facesScheme = facesContext.getExternalContext().getRequestScheme();
+    String scheme = !baseScheme.isEmpty()? baseScheme: facesScheme;
+    String thumbnailUrl = this.getResourceLinks().getThumbnail().getUrl();
+    String thumbnailScheme = thumbnailUrl.indexOf(":")>=0? thumbnailUrl.substring(0, thumbnailUrl.indexOf(":")): "";
+    if (scheme.toLowerCase().endsWith("http") && thumbnailScheme.toLowerCase().equals("https")) {
+      scheme = "https";
+    }
+    return Val.stripHttpProtocol(thumbnailUrl, !scheme.isEmpty()? scheme+":": "");
   }
   
   /**
