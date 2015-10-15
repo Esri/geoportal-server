@@ -23,6 +23,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,11 +42,22 @@ public class RobotsTxtParser {
   private final String userAgent;
 
   public static void main(String[] args) throws Exception {
+    /*
+    PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:"+"/*.php");
+    Path path = Paths.get("/alpha/beta/data.php");
+    boolean matches = pathMatcher.matches(path);
+    
+    System.out.println("Ready");
+    */
+    
     RobotsTxt robotsTxt = new RobotsTxtParser().parseRobotsTxt("http://www.data.gov");
     if (robotsTxt!=null) {
-      System.out.println(robotsTxt.toString());
+      boolean cgibindata = robotsTxt.hasAccess("/cgi-bin/data");
+      boolean alapage = robotsTxt.hasAccess("/ala?page=10");
+      System.out.println("Done");
     }
     System.out.println("Ready");
+    
   }
   
   /**
@@ -79,6 +94,7 @@ public class RobotsTxtParser {
         if (robotsTxtUrl != null) {
           RobotsContentHandler handler = new RobotsContentHandler();
           HttpClientRequest request = new HttpClientRequest();
+          request.setRequestHeader("User-Agent", userAgent);
           request.setUrl(robotsTxtUrl.toExternalForm());
           request.setContentHandler(handler);
           request.execute();
@@ -155,10 +171,10 @@ public class RobotsTxtParser {
           startSection = true;
         } else if (currentSection != null && key.equalsIgnoreCase("Disallow")) {
           startSection = false;
-          currentSection.addAccess(new Access(new Path(value), false));
+          currentSection.addAccess(new Access(new AccessPath(value), false));
         } else if (currentSection != null && key.equalsIgnoreCase("Allow")) {
           startSection = false;
-          currentSection.addAccess(new Access(new Path(value), true));
+          currentSection.addAccess(new Access(new AccessPath(value), true));
         } else if (key.equalsIgnoreCase("Crawl-delay")) {
           if (robots == null) {
             robots = newRobots();

@@ -18,7 +18,7 @@ package com.esri.gpt.framework.robots;
  * Access
  */
 class Access {
-  private final Path accessPath;
+  private final AccessPath accessPath;
   private final boolean accessAllowed;
 
   /**
@@ -26,7 +26,7 @@ class Access {
    * @param accessPath access path
    * @param accessAllowed access to the path
    */
-  public Access(Path accessPath, boolean accessAllowed) {
+  public Access(AccessPath accessPath, boolean accessAllowed) {
     this.accessPath = accessPath;
     this.accessAllowed = accessAllowed;
   }
