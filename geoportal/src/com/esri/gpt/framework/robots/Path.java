@@ -51,7 +51,7 @@ class Path {
     if (elements.size()>current.size()) return false;
     
     for (int i=0; i<elements.size(); i++) {
-      if (!elements.get(i).equals(current.get(i))) {
+      if (!elements.get(i).equalsIgnoreCase(current.get(i))) {
         return false;
       }
     }
@@ -70,10 +70,9 @@ class Path {
   
   private List<String> splitNames(String path) {
     ArrayList<String> names = new ArrayList<String>();
-    for (String element: Val.chkStr(path).split("/")) {
+    for (String element: Val.chkStr(path).replaceAll("[*]+$", "").split("/")) {
       element = Val.chkStr(element);
       if (element.isEmpty()) continue;
-      if (element.equals("*")) continue;
       names.add("/"+element);
     }
     return names;

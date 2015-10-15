@@ -14,8 +14,6 @@
  */
 package com.esri.gpt.framework.robots;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +24,14 @@ class Section {
   private final List<String> userAgents = new ArrayList<String>();
   private final AccessList accessList = new AccessList();
   private boolean anyAgent;
+
+  public boolean isAnyAgent() {
+    return anyAgent;
+  }
+
+  public void setAnyAgent(boolean anyAgent) {
+    this.anyAgent = anyAgent;
+  }
   
   /**
    * Adds user agent.
@@ -52,11 +58,11 @@ class Section {
    * @param relativaPath absolute path
    * @return <code>true</code> if has access
    */
-  public boolean hasAccess(String userAgant, String relativaPath) {
+  public Access findAccess(String userAgant, String relativaPath) {
     if (!matchUserAgant(userAgant)) {
-      return true;
+      return null;
     }
-    return accessList.hasAccess(relativaPath);
+    return accessList.findAccess(relativaPath);
   }
   
   @Override

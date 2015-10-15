@@ -41,12 +41,12 @@ class AccessList {
    * @param relativePath relative path
    * @return <code>true</code> if path has access
    */
-  public boolean hasAccess(String relativePath) {
+  public Access findAccess(String relativePath) {
     List<Access> allMatching = selectMatching(relativePath);
     int maxLength = findMaxLength(allMatching);
     Access firstMatching = findFirstByLength(allMatching, maxLength);
     
-    return firstMatching!=null? firstMatching.isAllowed(): true;
+    return firstMatching;
   }
   
   private Access findFirstByLength(List<Access> allMatching, int length) {

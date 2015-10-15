@@ -28,6 +28,7 @@ import java.util.List;
 public class Robots {
 
   private static final String DEFAULT_USER_AGENT = "esri-geoportal";
+  private Section defaultSection;
   private final List<Section> sections = new ArrayList<Section>();
   private final List<String> sitemaps = new ArrayList<String>();
   private final List<String> hosts = new ArrayList<String>();
@@ -45,7 +46,7 @@ public class Robots {
     return crawlDelay;
   }
 
-  public void setCrawlDelay(int crawlDelay) {
+  void setCrawlDelay(int crawlDelay) {
     this.crawlDelay = crawlDelay;
   }
 
@@ -55,7 +56,13 @@ public class Robots {
    * @param section section
    */
   void addSection(Section section) {
-    sections.add(section);
+    if (section!=null) {
+      if (section.isAnyAgent()) {
+        this.defaultSection = section;
+      } else {
+        sections.add(section);
+      }
+    }
   }
 
   /**
@@ -77,8 +84,15 @@ public class Robots {
    */
   public boolean hasAccess(String userAgent, String relativePath) {
     for (Section sec : sections) {
-      if (!sec.hasAccess(userAgent, relativePath)) {
-        return false;
+      Access access = sec.findAccess(userAgent, relativePath);
+      if (access!=null) {
+        return access.hasAccess();
+      }
+    }
+    if (defaultSection!=null) {
+      Access defaultAccess = defaultSection.findAccess(userAgent, relativePath);
+      if (defaultAccess!=null) {
+        return defaultAccess.hasAccess();
       }
     }
     return true;
@@ -109,7 +123,7 @@ public class Robots {
         int hashIndex = rest.indexOf("#");
         String value = Val.chkStr(hashIndex >= 0 ? rest.substring(0, hashIndex) : rest);
 
-        if (key.equals("User-agent")) {
+        if (key.equalsIgnoreCase("User-agent")) {
           if (!startSection && currentSection != null) {
             if (robots == null) {
               robots = new Robots();
@@ -124,23 +138,23 @@ public class Robots {
 
           currentSection.addUserAgent(value);
           startSection = true;
-        } else if (currentSection != null && key.equals("Disallow")) {
+        } else if (currentSection != null && key.equalsIgnoreCase("Disallow")) {
           startSection = false;
           currentSection.addAccess(new Access(new Path(value), false));
-        } else if (currentSection != null && key.equals("Allow")) {
+        } else if (currentSection != null && key.equalsIgnoreCase("Allow")) {
           startSection = false;
           currentSection.addAccess(new Access(new Path(value), true));
-        } else if (key.equals("Crawl-delay")) {
+        } else if (key.equalsIgnoreCase("Crawl-delay")) {
             if (robots == null) {
               robots = new Robots();
             }
             robots.setCrawlDelay(Val.chkInt(value, 0));
-        } else if (key.equals("Sitemap")) {
+        } else if (key.equalsIgnoreCase("Sitemap")) {
             if (robots == null) {
               robots = new Robots();
             }
             robots.getSitemaps().add(value);
-        } else if (key.equals("Host")) {
+        } else if (key.equalsIgnoreCase("Host")) {
             if (robots == null) {
               robots = new Robots();
             }
@@ -156,7 +170,9 @@ public class Robots {
       }
       return robots;
     } finally {
-      reader.close();
+      try {
+        reader.close();
+      } catch (IOException ex) {}
     }
   }
 }
