@@ -29,6 +29,15 @@ class Section {
   private final List<String> userAgents = new ArrayList<String>();
   private final AccessList accessList = new AccessList();
   private boolean anyAgent;
+  private Integer crawlDelay;
+
+  public Integer getCrawlDelay() {
+    return crawlDelay;
+  }
+
+  public void setCrawlDelay(Integer crawlDelay) {
+    this.crawlDelay = crawlDelay;
+  }
 
   public boolean isAnyAgent() {
     return anyAgent;
@@ -63,14 +72,14 @@ class Section {
    * @param relativaPath absolute path
    * @return <code>true</code> if has access
    */
-  public Access findAccess(String userAgant, String relativaPath) {
-    if (!matchUserAgant(userAgant)) {
+  public Access findAccess(String userAgent, String relativaPath) {
+    if (!matchUserAgent(userAgent)) {
       return null;
     }
     return accessList.findAccess(relativaPath);
   }
   
-  private boolean matchUserAgant(String userAgent) {
+  public boolean matchUserAgent(String userAgent) {
     return anyAgent || userAgents.contains(userAgent);
   }
   
@@ -91,6 +100,11 @@ class Section {
       }
       
       writer.println(accessList.toString());
+      
+      if (crawlDelay>0) {
+        writer.printf("Crawl-delay: %d", crawlDelay);
+        writer.println();
+      }
       
       writer.close();
       

@@ -31,8 +31,7 @@ class RobotsTxtImpl implements RobotsTxt {
   private final List<Section> sections = new ArrayList<Section>();
   
   private String host;
-  private String sitemap;
-  private int crawlDelay ;
+  private final List<String> sitemaps = new ArrayList<String>();
   
   private final String userAgent;
   
@@ -50,21 +49,26 @@ class RobotsTxtImpl implements RobotsTxt {
   }
 
   @Override
-  public String getSitemap() {
-    return sitemap;
-  }
-
-  public void setSitemap(String sitemap) {
-    this.sitemap = sitemap;
+  public List<String> getSitemaps() {
+    return sitemaps;
   }
 
   @Override
-  public int getCrawlDelay() {
-    return crawlDelay;
-  }
-
-  void setCrawlDelay(int crawlDelay) {
-    this.crawlDelay = crawlDelay;
+  public Integer getCrawlDelay() {
+    Section sec = findSectionByAgent(sections, userAgent);
+    if (sec!=null) {
+      Integer crawlDelay = sec.getCrawlDelay();
+      if (crawlDelay!=null) {
+        return crawlDelay;
+      }
+    }
+    if (defaultSection!=null) {
+      Integer crawlDelay = defaultSection.getCrawlDelay();
+      if (crawlDelay!=null) {
+        return crawlDelay;
+      }
+    }
+    return null;
   }
 
   /**
@@ -101,7 +105,8 @@ class RobotsTxtImpl implements RobotsTxt {
    * @return <code>true</code> if has access
    */
   boolean hasAccess(String userAgent, String relativePath) {
-    for (Section sec : sections) {
+    Section sec = findSectionByAgent(sections, userAgent);
+    if (sec!=null) {
       Access access = sec.findAccess(userAgent, relativePath);
       if (access!=null) {
         return access.hasAccess();
@@ -114,6 +119,15 @@ class RobotsTxtImpl implements RobotsTxt {
       }
     }
     return true;
+  }
+  
+  private Section findSectionByAgent(List<Section> sections, String userAgent) {
+    for (Section sec: sections) {
+      if (sec.matchUserAgent(userAgent)) {
+        return sec;
+      }
+    }
+    return null;
   }
   
   @Override
@@ -130,17 +144,12 @@ class RobotsTxtImpl implements RobotsTxt {
         writer.println(section.toString());
       }
       
-      if (crawlDelay>0) {
-        writer.printf("Crawl-delay: %d", crawlDelay);
-        writer.println();
-      }
-      
       if (host!=null) {
         writer.printf("Host: %s", host);
         writer.println();
       }
       
-      if (sitemap!=null) {
+      for (String sitemap: sitemaps) {
         writer.printf("Sitemap: %s", sitemap);
         writer.println();
       }

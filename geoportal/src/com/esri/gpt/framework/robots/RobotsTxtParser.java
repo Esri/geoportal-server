@@ -23,10 +23,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.PathMatcher;
-import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -171,20 +167,27 @@ public class RobotsTxtParser {
           startSection = true;
         } else if (currentSection != null && key.equalsIgnoreCase("Disallow")) {
           startSection = false;
-          currentSection.addAccess(new Access(new AccessPath(value), false));
+          if (currentSection!=null) {
+            currentSection.addAccess(new Access(new AccessPath(value), false));
+          }
         } else if (currentSection != null && key.equalsIgnoreCase("Allow")) {
           startSection = false;
-          currentSection.addAccess(new Access(new AccessPath(value), true));
-        } else if (key.equalsIgnoreCase("Crawl-delay")) {
-          if (robots == null) {
-            robots = newRobots();
+          if (currentSection!=null) {
+            currentSection.addAccess(new Access(new AccessPath(value), true));
           }
-          robots.setCrawlDelay(Val.chkInt(value, 0));
+        } else if (key.equalsIgnoreCase("Crawl-delay")) {
+          startSection = false;
+          if (currentSection!=null) {
+            try {
+              int crawlDelay = Integer.parseInt(value);
+              currentSection.setCrawlDelay(crawlDelay);
+            } catch (NumberFormatException ex) {}
+          }
         } else if (key.equalsIgnoreCase("Sitemap")) {
           if (robots == null) {
             robots = newRobots();
           }
-          robots.setSitemap(value);
+          robots.getSitemaps().add(value);
         } else if (key.equalsIgnoreCase("Host")) {
           if (robots == null) {
             robots = newRobots();

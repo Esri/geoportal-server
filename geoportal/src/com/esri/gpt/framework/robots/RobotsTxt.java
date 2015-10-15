@@ -14,6 +14,8 @@
  */
 package com.esri.gpt.framework.robots;
 
+import java.util.List;
+
 /**
  * Robots TXT.
  */
@@ -23,7 +25,7 @@ public interface RobotsTxt {
    * Gets crawl delay.
    * @return crawl delay in minutes or <code>0</code> if no delay
    */
-  int getCrawlDelay();
+  Integer getCrawlDelay();
 
   /**
    * Gets host.
@@ -32,10 +34,10 @@ public interface RobotsTxt {
   String getHost();
 
   /**
-   * Gets sitemap.
-   * @return sitemap or <code>null</code> if no any available
+   * Gets sitemaps.
+   * @return list of sitemap urls.
    */
-  String getSitemap();
+  List<String> getSitemaps();
 
   /**
    * Checks if absolute path has access for this section.
