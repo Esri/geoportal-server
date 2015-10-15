@@ -14,6 +14,11 @@
  */
 package com.esri.gpt.framework.robots;
 
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,12 +70,33 @@ class Section {
     return accessList.findAccess(relativaPath);
   }
   
-  @Override
-  public String toString() {
-    return String.format("Hosts: %s, Access: %s", userAgents, accessList);
-  }
-  
   private boolean matchUserAgant(String userAgent) {
     return anyAgent || userAgents.contains(userAgent);
+  }
+  
+  @Override
+  public String toString() {
+    try {
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(out, "UTF-8")));
+      
+      if (anyAgent) {
+        writer.printf("User-agent: %s", "*");
+        writer.println();
+      }
+      
+      for (String userAgent: userAgents) {
+        writer.printf("User-agent: %s", userAgent);
+        writer.println();
+      }
+      
+      writer.println(accessList.toString());
+      
+      writer.close();
+      
+      return out.toString("UTF-8");
+    } catch (IOException ex) {
+      return "";
+    }
   }
 }
