@@ -14,6 +14,8 @@
  */
 package com.esri.gpt.framework.robots;
 
+import com.esri.gpt.framework.context.ApplicationConfiguration;
+import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.http.ContentHandler;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.util.Val;
@@ -34,8 +36,26 @@ public class RobotsTxtParser {
   private static final Logger LOG = Logger.getLogger(RobotsTxtParser.class.getName());
 
   private static final String DEFAULT_USER_AGENT = "esri-geoportal";
+  private static final String USER_AGENT_PARAM_NAME = "robots.user.agent";
 
   private final String userAgent;
+  
+  private static RobotsTxtParser defaultInstance;
+  
+  /**
+   * Gets default instance.
+   * @return instance
+   */
+  public static RobotsTxtParser getDefaultInstance() {
+    if (defaultInstance!=null) {
+      ApplicationContext appCtx = ApplicationContext.getInstance();
+      ApplicationConfiguration appCfg = appCtx.getConfiguration();
+      String userAgent = Val.chkStr(appCfg.getCatalogConfiguration().getParameters().getValue(USER_AGENT_PARAM_NAME),DEFAULT_USER_AGENT);
+      LOG.info(String.format("Creating default RobotsTxtParser(\"%s\")", userAgent));
+      defaultInstance = new RobotsTxtParser(userAgent);
+    }
+    return defaultInstance;
+  }
   
   /**
    * Creates instance of the parser.
@@ -62,7 +82,7 @@ public class RobotsTxtParser {
       try {
         return parseRobotsTxt(new URL(serverUrl));
       } catch (MalformedURLException ex) {
-        LOG.log(Level.WARNING, "Invalid server url.", ex);
+        LOG.log(Level.WARNING, String.format("Invalid server url: %s", serverUrl), ex);
       }
     }
     return null;
@@ -75,6 +95,7 @@ public class RobotsTxtParser {
    */
   public RobotsTxt parseRobotsTxt(URL serverUrl) {
     if (serverUrl != null) {
+      LOG.log(Level.INFO, String.format("Accessing robots.txt for: %s", serverUrl.toExternalForm()));
       try {
         URL robotsTxtUrl = getRobotsTxtUrl(serverUrl);
         if (robotsTxtUrl != null) {
@@ -84,10 +105,16 @@ public class RobotsTxtParser {
           request.setUrl(robotsTxtUrl.toExternalForm());
           request.setContentHandler(handler);
           request.execute();
-          return handler.getRobots();
+          RobotsTxt robots = handler.getRobots();
+      
+          if (robots!=null) {
+            LOG.log(Level.INFO, String.format("Robotx.txt for: %s\n%s", serverUrl.toExternalForm(), robots.toString()));
+          }
+          
+          return robots;
         }
       } catch (IOException ex) {
-        LOG.log(Level.WARNING, "Unable to access robots.txt", ex);
+        LOG.log(Level.WARNING, String.format("Unable to access robots.txt for: %s", serverUrl.toExternalForm()), ex);
       }
     }
     return null;
@@ -173,6 +200,7 @@ public class RobotsTxtParser {
         }
         robots.addSection(currentSection);
       }
+      
       return robots;
     } catch (IOException ex) {
       LOG.log(Level.WARNING, "Unable to parse robots.txt", ex);
