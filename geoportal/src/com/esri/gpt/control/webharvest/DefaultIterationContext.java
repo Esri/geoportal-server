@@ -14,13 +14,11 @@
  */
 package com.esri.gpt.control.webharvest;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import com.esri.gpt.framework.util.StringBuilderWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
-import org.apache.commons.io.IOUtils;
 
 /**
  * Default iteration context.
@@ -36,26 +34,16 @@ public class DefaultIterationContext implements IterationContext {
 
   @Override
   public String toString() {
-    ByteArrayOutputStream output = null;
-    PrintWriter writer = null;
-    try {
-      output = new ByteArrayOutputStream();
-      
-      writer = new PrintWriter(output);
-      
-      for (ExceptionInfo ei: exceptionInfos) {
-        writer.println(ei.toString());
-      }
-      
-      writer.close();
-      
-      return output.toString("UTF-8");
-    } catch (IOException ex) {
-      return "";
-    } finally {
-      IOUtils.closeQuietly(writer);
-      IOUtils.closeQuietly(output);
+    StringBuilder sb = new StringBuilder();
+    PrintWriter writer = new PrintWriter(new StringBuilderWriter(sb));
+    
+    for (ExceptionInfo ei: exceptionInfos) {
+      writer.println(ei.toString());
     }
+    
+    // no need to close writer or catch any exception
+    
+    return sb.toString();
   }
   
   /**
