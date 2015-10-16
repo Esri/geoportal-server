@@ -32,6 +32,14 @@ public class StringBuilderWriter extends Writer {
   
   /**
    * Creates instance of the writer.
+   * @param capacity initial capacity
+   */
+  public StringBuilderWriter(int capacity) {
+    this(new StringBuilder(capacity));
+  }
+  
+  /**
+   * Creates instance of the writer.
    */
   public StringBuilderWriter() {
     this(new StringBuilder());
