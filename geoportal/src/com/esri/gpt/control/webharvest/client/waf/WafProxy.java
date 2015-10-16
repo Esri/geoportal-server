@@ -58,6 +58,7 @@ public WafProxy(WafInfo info, Criteria criteria, IterationContext context) {
 public Content readContent(String sourceUri) throws IOException {
   LOGGER.log(Level.FINER, "Reading metadata of source URI: \"{0}\" through proxy: {1}", new Object[]{sourceUri, this});
   sourceUri = Val.chkStr(sourceUri).replaceAll("\\{", "%7B").replaceAll("\\}", "%7D");
+  context.assertAccess(sourceUri);
   HttpClientRequest cr = context.newHttpClientRequest();
   cr.setBatchHttpClient(this.info.getBatchHttpClient());
   cr.setUrl(sourceUri);
@@ -74,6 +75,7 @@ public Content readContent(String sourceUri) throws IOException {
 public String read(String sourceUri) throws IOException {
   LOGGER.log(Level.FINER, "Reading metadata of source URI: \"{0}\" through proxy: {1}", new Object[]{sourceUri, this});
   sourceUri = Val.chkStr(sourceUri).replaceAll("\\{", "%7B").replaceAll("\\}", "%7D");
+  context.assertAccess(sourceUri);
   HttpClientRequest cr = context.newHttpClientRequest();
   cr.setBatchHttpClient(this.info.getBatchHttpClient());
   cr.setUrl(sourceUri);

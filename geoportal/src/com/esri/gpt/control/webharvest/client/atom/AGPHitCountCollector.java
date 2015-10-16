@@ -57,6 +57,7 @@ public class AGPHitCountCollector implements IHitCountCollector {
 					  url = url.replace(oldFParam, jsonFParam);
 				  }		
 			}
+            context.assertAccess(url);
 			HttpClientRequest cr = context.newHttpClientRequest();	
 		    cr.setUrl(url);
 		    String response = Val.chkStr(cr.readResponseAsCharacters());

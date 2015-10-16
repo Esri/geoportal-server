@@ -78,6 +78,7 @@ public class SimpleEntryProcessor implements IEntryProcessor{
 	private String read(BaseAtomInfo info, String sourceUri) throws IOException {
 	  try {
 	    sourceUri = Val.chkStr(sourceUri).replaceAll("\\{", "%7B").replaceAll("\\}", "%7D");
+        context.assertAccess(sourceUri);
 	    HttpClientRequest cr = context.newHttpClientRequest();
 	    cr.setUrl(info.newReadMetadataUrl(sourceUri));
 	    XmlHandler sh = new XmlHandler(false);

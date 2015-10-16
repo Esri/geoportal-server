@@ -99,6 +99,7 @@ public class AGPEntryProcessor2 extends AGPEntryProcessor{
 	 */
 	private String read(BaseAtomInfo info,String url) throws IOException {
 	  try {
+        context.assertAccess(url);
 	    HttpClientRequest cr = context.newHttpClientRequest();
 	    cr.setUrl(url);
 	    XmlHandler sh = new XmlHandler(false);

@@ -169,16 +169,20 @@ private NamespaceContext makeNamespaceContext() {
 private void advanceToNextRecords() throws IOException {
   LOGGER.finer("Advancing to the next group of records.");
   try {
+    String url = info.newUrl(startIndex, itemsPerPage);
+    context.assertAccess(url);
     HttpClientRequest cr = context.newHttpClientRequest();	
-    cr.setUrl(info.newUrl(startIndex, itemsPerPage));
+    cr.setUrl(url);
     XmlHandler sh = new XmlHandler(true);
     cr.setContentHandler(sh);
     cr.setCredentialProvider(info.newCredentialProvider());
     try{
     	cr.execute();
     }catch (HttpClientException hcex){
-    	if(hcex.getHttpStatusCode() == 404){    		
-    		cr.setUrl(info.newUrl(-1, -1));
+    	if(hcex.getHttpStatusCode() == 404){
+            url = info.newUrl(-1, -1);
+            context.assertAccess(url);
+    		cr.setUrl(url);
     	    sh = new XmlHandler(true);
     	    cr.setContentHandler(sh);
     	    cr.setCredentialProvider(info.newCredentialProvider());

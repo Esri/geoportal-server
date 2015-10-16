@@ -119,6 +119,7 @@ public String read(String sourceUri) throws IOException {
     if (url.length()==0) return "";
 
     url = Val.chkStr(url).replaceAll("\\{", "%7B").replaceAll("\\}", "%7D");
+    context.assertAccess(url);
     HttpClientRequest cr = context.newHttpClientRequest();
     cr.setUrl(url);
 

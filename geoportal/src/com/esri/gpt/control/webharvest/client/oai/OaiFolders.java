@@ -136,8 +136,10 @@ public Resource next() {
 private void advanceToNextRecords() throws IOException {
   LOGGER.finer("Advancing to the next group of records.");
   try {
+    String url = info.newListIdsUrl(resumptionToken, criteria.getFromDate(), criteria.getToDate());
+    context.assertAccess(url);
     HttpClientRequest cr = context.newHttpClientRequest();
-    cr.setUrl(info.newListIdsUrl(resumptionToken, criteria.getFromDate(), criteria.getToDate()));
+    cr.setUrl(url);
 
     XmlHandler sh = new XmlHandler(false);
     cr.setContentHandler(sh);

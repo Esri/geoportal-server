@@ -119,6 +119,7 @@ class TFolder implements DestroyableResource {
       try {
         LOGGER.log(Level.FINER, "Loading folder content of {0}", info.getUrl());
 
+        context.assertAccess(info.getUrl());
         HttpClientRequest cr = context.newHttpClientRequest();
         cr.setUrl(info.getUrl());
         XmlHandler sh = new XmlHandler(false);

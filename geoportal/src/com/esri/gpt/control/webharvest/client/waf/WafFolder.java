@@ -116,6 +116,7 @@ private void loadFolderContent() {
   try {
     LOGGER.log(Level.FINER, "Loading folder content of {0}", url);
     
+    context.assertAccess(url);
     HttpClientRequest cr = context.newHttpClientRequest();
     cr.setUrl(url);
     StringHandler sh = new StringHandler();

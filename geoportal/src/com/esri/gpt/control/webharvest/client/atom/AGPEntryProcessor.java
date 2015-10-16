@@ -132,6 +132,7 @@ public class AGPEntryProcessor implements IEntryProcessor {
       url = url.substring(0, url.indexOf("?"));
       String params = "?q=id:" + id + "&f=json";
       url = url + params;
+      context.assertAccess(url);
       HttpClientRequest cr = context.newHttpClientRequest();
       cr.setUrl(url);
       String response = Val.chkStr(cr.readResponseAsCharacters());

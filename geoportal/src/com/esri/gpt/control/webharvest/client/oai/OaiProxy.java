@@ -60,6 +60,7 @@ public String read(String sourceUri) throws IOException {
   LOGGER.finer("Reading metadata of source URI: \"" +sourceUri+ "\" through proxy: "+this);
   try {
     sourceUri = Val.chkStr(sourceUri).replaceAll("\\{", "%7B").replaceAll("\\}", "%7D");
+    context.assertAccess(sourceUri);
     HttpClientRequest cr = context.newHttpClientRequest();
     cr.setUrl(info.newReadMetadataUrl(sourceUri));
     XmlHandler sh = new XmlHandler(false);

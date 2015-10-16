@@ -63,6 +63,7 @@ class TProxy {
   public Content readContent(String sourceUri) throws IOException {
     LOGGER.log(Level.FINER, "Reading metadata of source URI: \"{0}\" through proxy: {1}", new Object[]{sourceUri, this});
     sourceUri = Val.chkStr(sourceUri).replaceAll("\\{", "%7B").replaceAll("\\}", "%7D");
+    context.assertAccess(sourceUri);
     HttpClientRequest cr = context.newHttpClientRequest();
     cr.setBatchHttpClient(this.info.getBatchHttpClient());
     cr.setUrl(sourceUri);
@@ -78,6 +79,7 @@ class TProxy {
   public String read(String sourceUri) throws IOException {
     LOGGER.log(Level.FINER, "Reading metadata of source URI: \"{0}\" through proxy: {1}", new Object[]{sourceUri, this});
     sourceUri = Val.chkStr(sourceUri).replaceAll("\\{", "%7B").replaceAll("\\}", "%7D");
+    context.assertAccess(sourceUri);
     HttpClientRequest cr = context.newHttpClientRequest();
     cr.setBatchHttpClient(this.info.getBatchHttpClient());
     cr.setUrl(sourceUri);
