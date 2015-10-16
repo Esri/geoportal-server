@@ -18,6 +18,7 @@ import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
 import com.esri.gpt.catalog.publication.PublicationRequest;
 import com.esri.gpt.catalog.schema.Schema;
 import com.esri.gpt.control.view.SelectablePublishers;
+import com.esri.gpt.control.webharvest.DefaultIterationContext;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
 import com.esri.gpt.framework.collection.StringAttributeMap;
@@ -55,30 +56,24 @@ public class HrCompleteUpdateRequest extends HrRequest {
    * @throws Exception if accessing resource fails
    */
   private Native createNativeResource(HrRecord repository) throws Exception {
-    // declare placeholder for any exception thrown by query builder
-    final ArrayList<Exception> exceptions = new ArrayList<Exception>();
     // create such an instance of the iteration context so it will store each
     // exception in the placeholder
-    IterationContext iterationContext = new IterationContext() {
-
-      public void onIterationException(Exception ex) {
-        exceptions.add(ex);
-      }
-    };
+    DefaultIterationContext iterationContext = new DefaultIterationContext();
     // create new query builder specific for the repository
     QueryBuilder queryBuilder = repository.newQueryBuilder(iterationContext);
     // get native resource; this may throw exception(s) stored later in the
     // placeholder
     Native nativeResource = queryBuilder.getNativeResource();
     // assure there are no exceptions; if there are any, throw the first one
-    if (exceptions.size() > 0) {
-      throw exceptions.get(0);
+    if (!iterationContext.getExceptionInfos().isEmpty()) {
+      throw iterationContext.getExceptionInfos().getFirst().getException();
     }
     return nativeResource;
   }
 
   /**
    * Executes request.
+   * @return <code>true</code> if created new record, <code>false</code> if existing record has been updated
    * @throws Exception if any error occurred
    */
   public boolean execute() throws Exception {

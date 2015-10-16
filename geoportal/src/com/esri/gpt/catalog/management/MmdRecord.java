@@ -16,6 +16,7 @@ package com.esri.gpt.catalog.management;
 
 import com.esri.gpt.catalog.harvest.repository.HrRecord.HarvestFrequency;
 import com.esri.gpt.catalog.harvest.repository.HrRecord.RecentJobStatus;
+import com.esri.gpt.control.webharvest.DefaultIterationContext;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.framework.context.ApplicationContext;
@@ -508,10 +509,7 @@ public class MmdRecord extends Record {
    */
   public QueryBuilder newQueryBuilder(IterationContext iterationContext) {
     if (iterationContext==null) {
-      iterationContext = new IterationContext() {
-          public void onIterationException(Exception ex) {
-          }
-      };
+      iterationContext = new DefaultIterationContext();
     }
     return getProtocol()!=null? getProtocol().newQueryBuilder(iterationContext, getHostUrl()): null;
   }

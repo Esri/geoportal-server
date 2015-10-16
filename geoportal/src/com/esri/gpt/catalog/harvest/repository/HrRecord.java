@@ -22,6 +22,7 @@ import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgs2Agp;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolNone;
 import com.esri.gpt.catalog.management.MmdEnums.ApprovalStatus;
+import com.esri.gpt.control.webharvest.DefaultIterationContext;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
@@ -540,11 +541,7 @@ public boolean getIsHarvestDue() {
  */
 public QueryBuilder newQueryBuilder(IterationContext iterationContext) {
   if (iterationContext==null) {
-    iterationContext = new IterationContext() {
-        @Override
-        public void onIterationException(Exception ex) {
-        }
-    };
+    iterationContext = new DefaultIterationContext();
   }
   return getProtocol() != null ? getProtocol().newQueryBuilder(iterationContext, getHostUrl()) : null;
 }
