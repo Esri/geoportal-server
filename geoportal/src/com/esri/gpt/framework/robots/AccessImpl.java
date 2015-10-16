@@ -68,7 +68,7 @@ class AccessImpl implements Access {
   
   @Override
   public String toString() {
-    return String.format("%s: %s", !accessAllowed? "Disallowed": "Allowed", accessPath);
+    return String.format("%s: %s", !accessAllowed? "Disallow": "Allow", accessPath);
   }
   
 }

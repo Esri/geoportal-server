@@ -93,7 +93,7 @@ class RobotsTxtImpl implements RobotsTxt {
 
   @Override
   public Access findAccess(String relativePath) {
-    return relativePath!=null? findAccess(userAgent, relativePath): null;
+    return relativePath!=null? findAccess(userAgent, relativePath): Access.ALLOW;
   }
   
   @Override
@@ -132,7 +132,7 @@ class RobotsTxtImpl implements RobotsTxt {
    * @return access information or <code>null</code> if no access information found
    */
   private Access findAccess(String userAgent, String relativePath) {
-    if (userAgent==null || relativePath==null) return null;
+    if (userAgent==null || relativePath==null) return Access.ALLOW;
     
     Section sec = findSectionByAgent(sections, userAgent);
     if (sec!=null) {
@@ -147,7 +147,7 @@ class RobotsTxtImpl implements RobotsTxt {
         return defaultAccess;
       }
     }
-    return null;
+    return Access.ALLOW;
   }
   
   private Section findSectionByAgent(List<Section> sections, String userAgent) {

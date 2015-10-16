@@ -47,7 +47,7 @@ public class RobotsTxtParser {
    * @return instance
    */
   public static RobotsTxtParser getDefaultInstance() {
-    if (defaultInstance!=null) {
+    if (defaultInstance==null) {
       ApplicationContext appCtx = ApplicationContext.getInstance();
       ApplicationConfiguration appCfg = appCtx.getConfiguration();
       String userAgent = Val.chkStr(appCfg.getCatalogConfiguration().getParameters().getValue(USER_AGENT_PARAM_NAME),DEFAULT_USER_AGENT);
