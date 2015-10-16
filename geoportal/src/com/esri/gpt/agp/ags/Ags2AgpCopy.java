@@ -42,6 +42,7 @@ import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.resource.adapters.FlatResourcesAdapter;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
+import com.esri.gpt.framework.robots.RobotsTxtParser;
 import com.esri.gpt.framework.util.Val;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -97,7 +98,7 @@ public class Ags2AgpCopy {
     RequestContext requestContext = RequestContext.extract(null);
     try {
 
-      ArcGISQueryBuilder qb = new ArcGISQueryBuilder(new DefaultIterationContext() {
+      ArcGISQueryBuilder qb = new ArcGISQueryBuilder(new DefaultIterationContext(RobotsTxtParser.getDefaultInstance().parseRobotsTxt(source.getRestUrl())) {
         @Override
         public void onIterationException(Exception ex) {
           LOGGER.log(Level.SEVERE, "Error iterating through AGS resources.", ex);

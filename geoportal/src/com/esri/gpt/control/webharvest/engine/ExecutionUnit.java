@@ -22,6 +22,7 @@ import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
+import com.esri.gpt.framework.robots.RobotsTxtParser;
 import com.esri.gpt.framework.security.principal.Publisher;
 import com.esri.gpt.framework.util.Val;
 import java.util.Arrays;
@@ -57,7 +58,7 @@ public ExecutionUnit(Task task) {
     throw new IllegalArgumentException("No task provided.");
   this.task = task;
   this.cleanup = ProtocolInvoker.getUpdateContent(task.getResource().getProtocol()) && task.getCriteria().getFromDate()==null;
-  this.queryBuilder = task.getResource().newQueryBuilder(new DefaultIterationContext() {
+  this.queryBuilder = task.getResource().newQueryBuilder(new DefaultIterationContext(RobotsTxtParser.getDefaultInstance().parseRobotsTxt(task.getResource().getHostUrl())) {
       @Override
       public void onIterationException(Exception ex) {
         ExecutionUnit.this.onIteratonException(ex);

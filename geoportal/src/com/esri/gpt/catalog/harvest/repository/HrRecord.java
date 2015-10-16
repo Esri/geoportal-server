@@ -32,6 +32,7 @@ import com.esri.gpt.framework.resource.api.SourceUri;
 import com.esri.gpt.framework.resource.common.CommonPublishable;
 import com.esri.gpt.framework.resource.common.UrlUri;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
+import com.esri.gpt.framework.robots.RobotsTxtParser;
 import com.esri.gpt.framework.util.LogUtil;
 import com.esri.gpt.framework.util.ResourceXml;
 import com.esri.gpt.framework.util.UuidUtil;
@@ -541,7 +542,7 @@ public boolean getIsHarvestDue() {
  */
 public QueryBuilder newQueryBuilder(IterationContext iterationContext) {
   if (iterationContext==null) {
-    iterationContext = new DefaultIterationContext();
+    iterationContext = new DefaultIterationContext(RobotsTxtParser.getDefaultInstance().parseRobotsTxt(getHostUrl()));
   }
   return getProtocol() != null ? getProtocol().newQueryBuilder(iterationContext, getHostUrl()) : null;
 }

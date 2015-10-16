@@ -33,17 +33,11 @@ public class DefaultIterationContext implements IterationContext {
   protected static SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
   protected final LinkedList<ExceptionInfo> exceptionInfos = new LinkedList<ExceptionInfo>();
   
-  protected RobotsTxt robotsTxt;
-
-  /**
-   * Creates instance without robots information.
-   */
-  public DefaultIterationContext() {
-  }
+  protected final RobotsTxt robotsTxt;
 
   /**
    * Creates instance with robots information.
-   * @param robotsTxt robots information
+   * @param robotsTxt robots information or <code>null</code> if no robots information available
    */
   public DefaultIterationContext(RobotsTxt robotsTxt) {
     this.robotsTxt = robotsTxt;

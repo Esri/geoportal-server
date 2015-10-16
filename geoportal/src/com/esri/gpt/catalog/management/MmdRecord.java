@@ -22,6 +22,7 @@ import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.request.Record;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
+import com.esri.gpt.framework.robots.RobotsTxtParser;
 import com.esri.gpt.framework.util.UuidUtil;
 import com.esri.gpt.framework.util.Val;
 import java.sql.Timestamp;
@@ -509,7 +510,7 @@ public class MmdRecord extends Record {
    */
   public QueryBuilder newQueryBuilder(IterationContext iterationContext) {
     if (iterationContext==null) {
-      iterationContext = new DefaultIterationContext();
+      iterationContext = new DefaultIterationContext(RobotsTxtParser.getDefaultInstance().parseRobotsTxt(getHostUrl()));
     }
     return getProtocol()!=null? getProtocol().newQueryBuilder(iterationContext, getHostUrl()): null;
   }
