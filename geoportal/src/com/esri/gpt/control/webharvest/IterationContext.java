@@ -15,7 +15,6 @@
 package com.esri.gpt.control.webharvest;
 
 import com.esri.gpt.framework.http.HttpClientRequest;
-import java.io.IOException;
 
 /**
  * Harvest context.

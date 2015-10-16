@@ -21,7 +21,6 @@ import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.NodeListAdapter;
 import com.esri.gpt.framework.xml.XmlIoUtil;
-import com.esri.gpt.server.csw.client.NullReferenceException;
 import java.io.IOException;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;

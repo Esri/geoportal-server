@@ -28,8 +28,6 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -48,9 +46,7 @@ import com.esri.gpt.framework.resource.common.StringUri;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.util.ReadOnlyIterator;
 import com.esri.gpt.framework.util.Val;
-import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.NodeListAdapter;
-import com.esri.gpt.framework.xml.XmlIoUtil;
 
 /**
  * Atom folders.

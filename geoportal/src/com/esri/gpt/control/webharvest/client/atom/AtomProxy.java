@@ -17,7 +17,6 @@ package com.esri.gpt.control.webharvest.client.atom;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
@@ -30,8 +29,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.esri.gpt.catalog.schema.NamespaceContextImpl;
-import com.esri.gpt.catalog.schema.Namespaces;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.XmlHandler;
