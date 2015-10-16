@@ -17,48 +17,18 @@ package com.esri.gpt.framework.robots;
 /**
  * Access.
  */
-class Access {
-  private final AccessPath accessPath;
-  private final boolean accessAllowed;
+public interface Access {
 
   /**
-   * Creates instance of the access.
-   * @param accessPath access path
-   * @param accessAllowed access to the path
+   * Gets path.
+   * @return path
    */
-  public Access(AccessPath accessPath, boolean accessAllowed) {
-    this.accessPath = accessPath;
-    this.accessAllowed = accessAllowed;
-  }
+  String getPath();
 
   /**
    * Check if this section gives an access
-   * @return 
+   * @return
    */
-  public boolean hasAccess() {
-    return accessAllowed;
-  }
-  
-  /**
-   * Gets length of the path.
-   * @return length of the path
-   */
-  public int getLenth() {
-    return accessPath.getLength();
-  }
-  
-  /**
-   * Checks if path matches access path
-   * @param path path to check
-   * @return <code>true</code> if path matches access path
-   */
-  public boolean matches(String path) {
-    return this.accessPath.match(path);
-  }
-  
-  @Override
-  public String toString() {
-    return String.format("%s: %s", !accessAllowed? "Disallowed": "Allowed", accessPath);
-  }
+  boolean hasAccess();
   
 }

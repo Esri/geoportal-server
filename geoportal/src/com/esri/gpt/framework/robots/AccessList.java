@@ -27,13 +27,13 @@ import java.util.List;
  * Access list.
  */
 class AccessList {
-  private final List<Access> accessList = new ArrayList<Access>();
+  private final List<AccessImpl> accessList = new ArrayList<AccessImpl>();
   
   /**
    * Adds access to the list.
    * @param access access
    */
-  public void addAccess(Access access) {
+  public void addAccess(AccessImpl access) {
     accessList.add(access);
   }
   
@@ -42,7 +42,7 @@ class AccessList {
     StringBuilder sb = new StringBuilder();
     PrintWriter writer = new PrintWriter(new StringBuilderWriter(sb));
     
-    for (Access access: accessList) {
+    for (AccessImpl access: accessList) {
       writer.println(access.toString());
     }
     
@@ -56,16 +56,16 @@ class AccessList {
    * @param relativePath relative path
    * @return <code>true</code> if path has access
    */
-  public Access findAccess(String relativePath) {
-    List<Access> allMatching = selectMatching(relativePath);
+  public AccessImpl findAccess(String relativePath) {
+    List<AccessImpl> allMatching = selectMatching(relativePath);
     int maxLength = findMaxLength(allMatching);
-    Access firstMatching = findFirstByLength(allMatching, maxLength);
+    AccessImpl firstMatching = findFirstByLength(allMatching, maxLength);
     
     return firstMatching;
   }
   
-  private Access findFirstByLength(List<Access> allMatching, int length) {
-    for (Access acc: allMatching) {
+  private AccessImpl findFirstByLength(List<AccessImpl> allMatching, int length) {
+    for (AccessImpl acc: allMatching) {
       if (acc.getLenth()==length) {
         return acc;
       }
@@ -73,9 +73,9 @@ class AccessList {
     return null;
   }
   
-  private int findMaxLength(List<Access> allMatching) {
+  private int findMaxLength(List<AccessImpl> allMatching) {
     int length = 0;
-    for (Access acc: allMatching) {
+    for (AccessImpl acc: allMatching) {
       if (acc.getLenth()>length) {
         length = acc.getLenth();
       }
@@ -83,9 +83,9 @@ class AccessList {
     return length;
   }
   
-  private List<Access> selectMatching(String relativePath) {
-    List<Access> allMatching = new ArrayList<Access>();
-    for (Access acc: accessList) {
+  private List<AccessImpl> selectMatching(String relativePath) {
+    List<AccessImpl> allMatching = new ArrayList<AccessImpl>();
+    for (AccessImpl acc: accessList) {
       if (acc.matches(relativePath)) {
         allMatching.add(acc);
       }

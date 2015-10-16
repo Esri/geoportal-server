@@ -15,10 +15,6 @@
 package com.esri.gpt.framework.robots;
 
 import com.esri.gpt.framework.util.StringBuilderWriter;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,15 +91,9 @@ class RobotsTxtImpl implements RobotsTxt {
     }
   }
 
-  /**
-   * Checks if absolute path has access for this section.
-   *
-   * @param relativePath absolute path
-   * @return <code>true</code> if has access
-   */
   @Override
-  public boolean hasAccess(String relativePath) {
-    return hasAccess(userAgent, relativePath);
+  public Access findAccess(String relativePath) {
+    return findAccess(userAgent, relativePath);
   }
   
   @Override
@@ -139,23 +129,23 @@ class RobotsTxtImpl implements RobotsTxt {
    *
    * @param userAgent user agent
    * @param relativePath absolute path
-   * @return <code>true</code> if has access
+   * @return access information or <code>null</code> if no access information found
    */
-  private boolean hasAccess(String userAgent, String relativePath) {
+  private Access findAccess(String userAgent, String relativePath) {
     Section sec = findSectionByAgent(sections, userAgent);
     if (sec!=null) {
-      Access access = sec.findAccess(userAgent, relativePath);
+      AccessImpl access = sec.findAccess(userAgent, relativePath);
       if (access!=null) {
-        return access.hasAccess();
+        return access;
       }
     }
     if (defaultSection!=null) {
-      Access defaultAccess = defaultSection.findAccess(userAgent, relativePath);
+      AccessImpl defaultAccess = defaultSection.findAccess(userAgent, relativePath);
       if (defaultAccess!=null) {
-        return defaultAccess.hasAccess();
+        return defaultAccess;
       }
     }
-    return true;
+    return null;
   }
   
   private Section findSectionByAgent(List<Section> sections, String userAgent) {

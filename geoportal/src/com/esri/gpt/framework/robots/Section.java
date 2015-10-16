@@ -72,7 +72,7 @@ class Section {
    * Adds access.
    * @param access access
    */
-  public void addAccess(Access access) {
+  public void addAccess(AccessImpl access) {
     this.accessList.addAccess(access);
   }
   
@@ -81,7 +81,7 @@ class Section {
    * @param relativaPath absolute path
    * @return <code>true</code> if has access
    */
-  public Access findAccess(String userAgent, String relativaPath) {
+  public AccessImpl findAccess(String userAgent, String relativaPath) {
     if (!matchUserAgent(userAgent)) {
       return null;
     }

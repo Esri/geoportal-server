@@ -34,6 +34,14 @@ class AccessPath {
   public AccessPath(String relativePath) {
     this.path = relativePath;
   }
+
+  /**
+   * Gets path.
+   * @return path
+   */
+  public String getPath() {
+    return path;
+  }
   
   /**
    * Gets length (number of names) of the path.

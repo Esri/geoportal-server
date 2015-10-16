@@ -142,10 +142,10 @@ public class RobotsTxtParser {
           startSection = true;
         } else if (currentSection != null && key.equalsIgnoreCase("Disallow")) {
           startSection = false;
-          currentSection.addAccess(new Access(new AccessPath(value), false));
+          currentSection.addAccess(new AccessImpl(new AccessPath(value), false));
         } else if (currentSection != null && key.equalsIgnoreCase("Allow")) {
           startSection = false;
-          currentSection.addAccess(new Access(new AccessPath(value), true));
+          currentSection.addAccess(new AccessImpl(new AccessPath(value), true));
         } else if (key.equalsIgnoreCase("Crawl-delay")) {
           startSection = false;
           if (currentSection!=null) {
