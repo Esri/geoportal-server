@@ -173,7 +173,7 @@ private NamespaceContext makeNamespaceContext() {
 private void advanceToNextRecords() throws IOException {
   LOGGER.finer("Advancing to the next group of records.");
   try {
-    HttpClientRequest cr = new HttpClientRequest();	
+    HttpClientRequest cr = context.newHttpClientRequest();	
     cr.setUrl(info.newUrl(startIndex, itemsPerPage));
     XmlHandler sh = new XmlHandler(true);
     cr.setContentHandler(sh);

@@ -14,6 +14,8 @@
  */
 package com.esri.gpt.control.webharvest;
 
+import com.esri.gpt.framework.http.HttpClientRequest;
+
 /**
  * Harvest context.
  */
@@ -26,4 +28,10 @@ public interface IterationContext {
    * @param ex
    */
   void onIterationException(Exception ex);
+  
+  /**
+   * Factory method to create instance of {@link HttpClientRequest}
+   * @return instance of HttpClientRequest
+   */
+  HttpClientRequest newHttpClientRequest();
 }

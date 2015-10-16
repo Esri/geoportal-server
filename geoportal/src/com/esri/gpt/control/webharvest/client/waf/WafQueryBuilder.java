@@ -59,7 +59,7 @@ public Capabilities getCapabilities() {
 
 @Override
 public Query newQuery(Criteria crt) {
-  WafProxy proxy = new WafProxy(info, crt);
+  WafProxy proxy = new WafProxy(info, crt, context);
   Query q = new WafQuery(context, info, proxy, crt);
   LOGGER.log(Level.FINER, "Query created: {0}", q);
   return q;

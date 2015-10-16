@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.control.webharvest.client.atom;
 
+import com.esri.gpt.control.webharvest.IterationContext;
 import java.io.IOException;
 
 import javax.xml.xpath.XPath;
@@ -51,6 +52,11 @@ public class AGPEntryProcessor implements IEntryProcessor {
     namespaces.put("xmlns:georss", "http://www.georss.org/georss");
   }
 
+  protected final IterationContext context;
+
+  public AGPEntryProcessor(IterationContext context) {
+    this.context = context;
+  }
   /**
    * Injects namespaces into the XML document.
    * @param mdDoc XML document
@@ -126,7 +132,7 @@ public class AGPEntryProcessor implements IEntryProcessor {
       url = url.substring(0, url.indexOf("?"));
       String params = "?q=id:" + id + "&f=json";
       url = url + params;
-      HttpClientRequest cr = new HttpClientRequest();
+      HttpClientRequest cr = context.newHttpClientRequest();
       cr.setUrl(url);
       String response = Val.chkStr(cr.readResponseAsCharacters());
       if (response.length() > 0) {

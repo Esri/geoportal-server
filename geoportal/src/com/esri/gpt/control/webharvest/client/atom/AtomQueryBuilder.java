@@ -31,92 +31,105 @@ import com.esri.gpt.framework.util.Val;
  */
 public class AtomQueryBuilder implements QueryBuilder {
 
-/** logger */
-private static final Logger LOGGER = Logger.getLogger(AtomQuery.class.getCanonicalName());
-/** capabilities */
-private static final Capabilities capabilities = new AtomCommonCapabilities();
-/** iteration context */
-private IterationContext context;
-/** service info */
-private BaseAtomInfo info;
+  /**
+   * logger
+   */
+  private static final Logger LOGGER = Logger.getLogger(AtomQuery.class.getCanonicalName());
+  /**
+   * capabilities
+   */
+  private static final Capabilities capabilities = new AtomCommonCapabilities();
+  /**
+   * iteration context
+   */
+  private IterationContext context;
+  /**
+   * service info
+   */
+  private BaseAtomInfo info;
 
-/**
- * Creates instance of the builder.
- * @param context iteration context
- * @param protocol harvest protocol
- * @param url url
- * @throws Exception 
- */
-public AtomQueryBuilder(IterationContext context, HarvestProtocolAtom protocol, String url) {
-  if (context == null)
-    throw new IllegalArgumentException("No context provided.");
+  /**
+   * Creates instance of the builder.
+   *
+   * @param context iteration context
+   * @param protocol harvest protocol
+   * @param url url
+   * @throws Exception
+   */
+  public AtomQueryBuilder(IterationContext context, HarvestProtocolAtom protocol, String url) {
+    if (context == null) {
+      throw new IllegalArgumentException("No context provided.");
+    }
     this.context = context;
-    try{
-    	String atomInfoProcessorClassName = protocol.getAtomType();
-    	if (atomInfoProcessorClassName.length() == 0) {
-		    String[] parts = url.split("atomInfoProcessorClassName=");			
-				if (parts != null && parts.length >= 2) {
-					atomInfoProcessorClassName = Val.chkStr(parts[1]);
-					int idx = atomInfoProcessorClassName.indexOf("&");
-					if (idx == -1) {
-						atomInfoProcessorClassName = atomInfoProcessorClassName.substring(0);
-					} else {
-						atomInfoProcessorClassName = atomInfoProcessorClassName.substring(0, idx);
-					}
-				}
-    	}
-			if (atomInfoProcessorClassName.length() == 0) {
-				atomInfoProcessorClassName = "com.esri.gpt.control.webharvest.client.atom.OpenSearchAtomInfoProcessor";
-			}
-			Class<?> clsAdapter;
-			clsAdapter = Class.forName(atomInfoProcessorClassName);
-			Object atomInfoProcessorObj = clsAdapter.newInstance();
-			if (atomInfoProcessorObj instanceof IAtomInfoProcessor) {
-				IAtomInfoProcessor atomInfoProcessor = ((IAtomInfoProcessor) atomInfoProcessorObj);
-				atomInfoProcessor.preInitialize();
-				this.info = atomInfoProcessor.initializeAtomInfo(protocol,url);				
-				atomInfoProcessor.postCreate(this.info);
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-}
+    try {
+      String atomInfoProcessorClassName = protocol.getAtomType();
+      if (atomInfoProcessorClassName.length() == 0) {
+        String[] parts = url.split("atomInfoProcessorClassName=");
+        if (parts != null && parts.length >= 2) {
+          atomInfoProcessorClassName = Val.chkStr(parts[1]);
+          int idx = atomInfoProcessorClassName.indexOf("&");
+          if (idx == -1) {
+            atomInfoProcessorClassName = atomInfoProcessorClassName.substring(0);
+          } else {
+            atomInfoProcessorClassName = atomInfoProcessorClassName.substring(0, idx);
+          }
+        }
+      }
+      if (atomInfoProcessorClassName.length() == 0) {
+        atomInfoProcessorClassName = "com.esri.gpt.control.webharvest.client.atom.OpenSearchAtomInfoProcessor";
+      }
+      Class<?> clsAdapter;
+      clsAdapter = Class.forName(atomInfoProcessorClassName);
+      Object atomInfoProcessorObj = clsAdapter.newInstance();
+      if (atomInfoProcessorObj instanceof IAtomInfoProcessor) {
+        IAtomInfoProcessor atomInfoProcessor = ((IAtomInfoProcessor) atomInfoProcessorObj);
+        atomInfoProcessor.preInitialize();
+        this.info = atomInfoProcessor.initializeAtomInfo(protocol, url);
+        atomInfoProcessor.postCreate(this.info);
+      }
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
 
-public Capabilities getCapabilities() {
-  return capabilities;
-}
+  @Override
+  public Capabilities getCapabilities() {
+    return capabilities;
+  }
 
-public Query newQuery(Criteria crt) {
-  AtomProxy proxy = new AtomProxy(info);
-  Query q = new AtomQuery(context, info, proxy, crt);
-  LOGGER.finer("Query created: " + Val.stripControls(q.toString()));
-  return q;
-}
+  @Override
+  public Query newQuery(Criteria crt) {
+    AtomProxy proxy = new AtomProxy(info, context);
+    Query q = new AtomQuery(context, info, proxy, crt);
+    LOGGER.finer("Query created: " + Val.stripControls(q.toString()));
+    return q;
+  }
 
-public Native getNativeResource() {
-   AtomProxy proxy = new AtomProxy(info);
-   return proxy.getNativeResource();
-}
+  @Override
+  public Native getNativeResource() {
+    AtomProxy proxy = new AtomProxy(info, context);
+    return proxy.getNativeResource();
+  }
 
-/**
- * Atom capabilities.
- */
-private static class AtomCommonCapabilities extends CommonCapabilities {
+  /**
+   * Atom capabilities.
+   */
+  private static class AtomCommonCapabilities extends CommonCapabilities {
 
-@Override
-public boolean canQueryFromDate() {
-  return true;
-}
+    @Override
+    public boolean canQueryFromDate() {
+      return true;
+    }
 
-@Override
-public boolean canQueryToDate() {
-  return true;
-}
+    @Override
+    public boolean canQueryToDate() {
+      return true;
+    }
 
-@Override
-public boolean canQueryMaxRecords() {
-  return true;
-}
-}
+    @Override
+    public boolean canQueryMaxRecords() {
+      return true;
+    }
+  }
 }

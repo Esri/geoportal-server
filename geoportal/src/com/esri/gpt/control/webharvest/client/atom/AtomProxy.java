@@ -32,6 +32,7 @@ import org.xml.sax.SAXException;
 
 import com.esri.gpt.catalog.schema.NamespaceContextImpl;
 import com.esri.gpt.catalog.schema.Namespaces;
+import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.XmlHandler;
 import com.esri.gpt.framework.resource.api.Native;
@@ -52,21 +53,26 @@ class AtomProxy {
 private static final Logger LOGGER = Logger.getLogger(AtomProxy.class.getCanonicalName());
 /** service info */
 private BaseAtomInfo info;
+/** iteration context */
+private IterationContext context;
 
 /**
  * Creates instance of the proxy.
  * @param info service info
+ * @param context iteration context
  */
-public AtomProxy(BaseAtomInfo info) {
+public AtomProxy(BaseAtomInfo info, IterationContext context) {
   if (info==null) throw new IllegalArgumentException("No info provided.");
+  if (context==null) throw new IllegalArgumentException("No context provided.");
   this.info = info;
+  this.context = context;
 }
 
 public String read(String sourceUri) throws IOException {
   LOGGER.finer("Reading metadata of source URI: \"" +sourceUri+ "\" through proxy: "+this);
   try {
     sourceUri = Val.chkStr(sourceUri).replaceAll("\\{", "%7B").replaceAll("\\}", "%7D");
-    HttpClientRequest cr = new HttpClientRequest();
+    HttpClientRequest cr = context.newHttpClientRequest();
     cr.setUrl(info.newReadMetadataUrl(sourceUri));
     XmlHandler sh = new XmlHandler(false);
     cr.setContentHandler(sh);

@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.control.webharvest;
 
+import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.util.StringBuilderWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -60,6 +61,11 @@ public class DefaultIterationContext implements IterationContext {
    */
   public void registerException(Exception ex) {
     exceptionInfos.addLast(new ExceptionInfo(ex));
+  }
+
+  @Override
+  public HttpClientRequest newHttpClientRequest() {
+    return new HttpClientRequest();
   }
   
   /**

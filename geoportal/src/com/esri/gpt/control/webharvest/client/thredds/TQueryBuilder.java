@@ -61,7 +61,7 @@ public class TQueryBuilder implements QueryBuilder {
 
   @Override
   public Query newQuery(Criteria crt) {
-    TProxy proxy = new TProxy(info, crt);
+    TProxy proxy = new TProxy(info, crt, context);
     Query q = new TQuery(context, info, proxy, crt);
     LOGGER.log(Level.FINER, "Query created: {0}", q);
     return q;

@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.control.webharvest.client.atom;
 
+import com.esri.gpt.control.webharvest.IterationContext;
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -41,6 +42,11 @@ import com.esri.gpt.framework.xml.XmlIoUtil;
  *
  */
 public class SimpleEntryProcessor implements IEntryProcessor{
+  private final IterationContext context;
+
+  public SimpleEntryProcessor(IterationContext context) {
+    this.context = context;
+  }
 
 	/**
 	 * Extracts xml of entry node and returns xml string.
@@ -72,7 +78,7 @@ public class SimpleEntryProcessor implements IEntryProcessor{
 	private String read(BaseAtomInfo info, String sourceUri) throws IOException {
 	  try {
 	    sourceUri = Val.chkStr(sourceUri).replaceAll("\\{", "%7B").replaceAll("\\}", "%7D");
-	    HttpClientRequest cr = new HttpClientRequest();
+	    HttpClientRequest cr = context.newHttpClientRequest();
 	    cr.setUrl(info.newReadMetadataUrl(sourceUri));
 	    XmlHandler sh = new XmlHandler(false);
 	    cr.setContentHandler(sh);
