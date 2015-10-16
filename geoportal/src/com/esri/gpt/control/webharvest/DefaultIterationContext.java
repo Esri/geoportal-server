@@ -18,6 +18,7 @@ import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.robots.Access;
 import com.esri.gpt.framework.robots.RobotsTxt;
 import com.esri.gpt.framework.util.StringBuilderWriter;
+import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
@@ -106,6 +107,8 @@ public class DefaultIterationContext implements IterationContext {
   }
   
   private String extractRelativeUrl(String url) throws IOException {
+    url = Val.chkStr(url);
+    if (url.isEmpty()) return null;
     URL URL = new URL(url);
     return String.format("%s%s%s", URL.getPath(), URL.getQuery()!=null? "?"+URL.getQuery(): "", URL.getRef()!=null? "#"+URL.getRef(): "");
   }

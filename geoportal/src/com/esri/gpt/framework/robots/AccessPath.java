@@ -57,6 +57,8 @@ class AccessPath {
    * @return <code>true</code> if path matches
    */
   public boolean match(String relativePath) {
+    if (relativePath==null) return false;
+    
     boolean reverse = false;
     String pattern = path;
     if (pattern.endsWith("$")) {

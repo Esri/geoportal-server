@@ -81,8 +81,8 @@ class Section {
    * @param relativaPath absolute path
    * @return <code>true</code> if has access
    */
-  public AccessImpl findAccess(String userAgent, String relativaPath) {
-    if (!matchUserAgent(userAgent)) {
+  public Access findAccess(String userAgent, String relativaPath) {
+    if (userAgent==null || relativaPath==null || !matchUserAgent(userAgent)) {
       return null;
     }
     return accessList.findAccess(relativaPath);

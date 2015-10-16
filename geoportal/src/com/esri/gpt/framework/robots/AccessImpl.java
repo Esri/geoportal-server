@@ -63,7 +63,7 @@ class AccessImpl implements Access {
    * @return <code>true</code> if path matches access path
    */
   public boolean matches(String path) {
-    return this.accessPath.match(path);
+    return path!=null && this.accessPath.match(path);
   }
   
   @Override

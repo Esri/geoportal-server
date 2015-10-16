@@ -15,10 +15,6 @@
 package com.esri.gpt.framework.robots;
 
 import com.esri.gpt.framework.util.StringBuilderWriter;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,9 +50,11 @@ class AccessList {
   /**
    * Checks if relative path has access.
    * @param relativePath relative path
-   * @return <code>true</code> if path has access
+   * @return Access implementation
    */
-  public AccessImpl findAccess(String relativePath) {
+  public Access findAccess(String relativePath) {
+    if (relativePath==null) return null;
+    
     List<AccessImpl> allMatching = selectMatching(relativePath);
     int maxLength = findMaxLength(allMatching);
     AccessImpl firstMatching = findFirstByLength(allMatching, maxLength);
@@ -85,9 +83,11 @@ class AccessList {
   
   private List<AccessImpl> selectMatching(String relativePath) {
     List<AccessImpl> allMatching = new ArrayList<AccessImpl>();
-    for (AccessImpl acc: accessList) {
-      if (acc.matches(relativePath)) {
-        allMatching.add(acc);
+    if (relativePath!=null) {
+      for (AccessImpl acc: accessList) {
+        if (acc.matches(relativePath)) {
+          allMatching.add(acc);
+        }
       }
     }
     return allMatching;

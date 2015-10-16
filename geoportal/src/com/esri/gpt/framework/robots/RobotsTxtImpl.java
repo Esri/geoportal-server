@@ -93,7 +93,7 @@ class RobotsTxtImpl implements RobotsTxt {
 
   @Override
   public Access findAccess(String relativePath) {
-    return findAccess(userAgent, relativePath);
+    return relativePath!=null? findAccess(userAgent, relativePath): null;
   }
   
   @Override
@@ -132,15 +132,17 @@ class RobotsTxtImpl implements RobotsTxt {
    * @return access information or <code>null</code> if no access information found
    */
   private Access findAccess(String userAgent, String relativePath) {
+    if (userAgent==null || relativePath==null) return null;
+    
     Section sec = findSectionByAgent(sections, userAgent);
     if (sec!=null) {
-      AccessImpl access = sec.findAccess(userAgent, relativePath);
+      Access access = sec.findAccess(userAgent, relativePath);
       if (access!=null) {
         return access;
       }
     }
     if (defaultSection!=null) {
-      AccessImpl defaultAccess = defaultSection.findAccess(userAgent, relativePath);
+      Access defaultAccess = defaultSection.findAccess(userAgent, relativePath);
       if (defaultAccess!=null) {
         return defaultAccess;
       }
