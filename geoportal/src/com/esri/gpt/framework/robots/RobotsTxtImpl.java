@@ -35,6 +35,10 @@ class RobotsTxtImpl implements RobotsTxt {
   
   private final String userAgent;
   
+  /**
+   * Creates instance of the RobotsTxt implementation
+   * @param userAgent 
+   */
   public RobotsTxtImpl(String userAgent) {
     this.userAgent = userAgent;
   }
@@ -44,6 +48,10 @@ class RobotsTxtImpl implements RobotsTxt {
     return host;
   }
 
+  /**
+   * Sets host.
+   * @param host host name
+   */
   public void setHost(String host) {
     this.host = host;
   }
@@ -96,6 +104,38 @@ class RobotsTxtImpl implements RobotsTxt {
   public boolean hasAccess(String relativePath) {
     return hasAccess(userAgent, relativePath);
   }
+  
+  @Override
+  public String toString() {
+    try {
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(out, "UTF-8")));
+      
+      if (defaultSection!=null) {
+        writer.println(defaultSection.toString());
+      }
+      
+      for (Section section: sections) {
+        writer.println(section.toString());
+      }
+      
+      if (host!=null) {
+        writer.printf("Host: %s", host);
+        writer.println();
+      }
+      
+      for (String sitemap: sitemaps) {
+        writer.printf("Sitemap: %s", sitemap);
+        writer.println();
+      }
+      
+      writer.close();
+      
+      return out.toString("UTF-8");
+    } catch (IOException ex) {
+      return "";
+    }
+  }
 
   /**
    * Checks if absolute path has access for this section.
@@ -128,37 +168,5 @@ class RobotsTxtImpl implements RobotsTxt {
       }
     }
     return null;
-  }
-  
-  @Override
-  public String toString() {
-    try {
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(out, "UTF-8")));
-      
-      if (defaultSection!=null) {
-        writer.println(defaultSection.toString());
-      }
-      
-      for (Section section: sections) {
-        writer.println(section.toString());
-      }
-      
-      if (host!=null) {
-        writer.printf("Host: %s", host);
-        writer.println();
-      }
-      
-      for (String sitemap: sitemaps) {
-        writer.printf("Sitemap: %s", sitemap);
-        writer.println();
-      }
-      
-      writer.close();
-      
-      return out.toString("UTF-8");
-    } catch (IOException ex) {
-      return "";
-    }
   }
 }

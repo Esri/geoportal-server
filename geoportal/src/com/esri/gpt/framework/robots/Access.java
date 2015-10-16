@@ -15,7 +15,7 @@
 package com.esri.gpt.framework.robots;
 
 /**
- * Access
+ * Access.
  */
 class Access {
   private final AccessPath accessPath;

@@ -36,25 +36,6 @@ public class RobotsTxtParser {
   private static final String DEFAULT_USER_AGENT = "esri-geoportal";
 
   private final String userAgent;
-
-  public static void main(String[] args) throws Exception {
-    /*
-    PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:"+"/*.php");
-    Path path = Paths.get("/alpha/beta/data.php");
-    boolean matches = pathMatcher.matches(path);
-    
-    System.out.println("Ready");
-    */
-    
-    RobotsTxt robotsTxt = new RobotsTxtParser().parseRobotsTxt("http://www.data.gov");
-    if (robotsTxt!=null) {
-      boolean cgibindata = robotsTxt.hasAccess("/cgi-bin/data");
-      boolean alapage = robotsTxt.hasAccess("/ala?page=10");
-      System.out.println("Done");
-    }
-    System.out.println("Ready");
-    
-  }
   
   /**
    * Creates instance of the parser.
@@ -65,13 +46,17 @@ public class RobotsTxtParser {
 
   /**
    * Creates instance of the parser.
-   *
    * @param userAgent user agent
    */
   public RobotsTxtParser(String userAgent) {
     this.userAgent = userAgent;
   }
 
+  /**
+   * Parses context of the Robots.txt file if available.
+   * @param serverUrl url of the server which is expected to have robots.txt present
+   * @return instance of {@link RobotsTxt} or <code>null</code> if unable to obtain robots.txt 
+   */
   public RobotsTxt parseRobotsTxt(String serverUrl) {
     if (serverUrl!=null) {
       try {
@@ -83,6 +68,11 @@ public class RobotsTxtParser {
     return null;
   }
   
+  /**
+   * Parses context of the Robots.txt file if available.
+   * @param serverUrl url of the server which is expected to have robots.txt present
+   * @return instance of {@link RobotsTxt} or <code>null</code> if unable to obtain robots.txt 
+   */
   public RobotsTxt parseRobotsTxt(URL serverUrl) {
     if (serverUrl != null) {
       try {
@@ -99,21 +89,6 @@ public class RobotsTxtParser {
       } catch (IOException ex) {
         LOG.log(Level.WARNING, "Unable to access robots.txt", ex);
       }
-    }
-    return null;
-  }
-
-  private URL getRobotsTxtUrl(URL baseUrl) {
-    try {
-      if (baseUrl != null) {
-        if (baseUrl.getPort() >= 0) {
-          return new URL(String.format("%s://%s:%d/robots.txt", baseUrl.getProtocol(), baseUrl.getHost(), baseUrl.getPort()));
-        } else {
-          return new URL(String.format("%s://%s/robots.txt", baseUrl.getProtocol(), baseUrl.getHost()));
-        }
-      }
-    } catch (MalformedURLException ex) {
-      LOG.log(Level.WARNING, "Invalid robots.txt url.", ex);
     }
     return null;
   }
@@ -167,14 +142,10 @@ public class RobotsTxtParser {
           startSection = true;
         } else if (currentSection != null && key.equalsIgnoreCase("Disallow")) {
           startSection = false;
-          if (currentSection!=null) {
-            currentSection.addAccess(new Access(new AccessPath(value), false));
-          }
+          currentSection.addAccess(new Access(new AccessPath(value), false));
         } else if (currentSection != null && key.equalsIgnoreCase("Allow")) {
           startSection = false;
-          if (currentSection!=null) {
-            currentSection.addAccess(new Access(new AccessPath(value), true));
-          }
+          currentSection.addAccess(new Access(new AccessPath(value), true));
         } else if (key.equalsIgnoreCase("Crawl-delay")) {
           startSection = false;
           if (currentSection!=null) {
@@ -214,6 +185,21 @@ public class RobotsTxtParser {
         }
       }
     }
+  }
+
+  private URL getRobotsTxtUrl(URL baseUrl) {
+    try {
+      if (baseUrl != null) {
+        if (baseUrl.getPort() >= 0) {
+          return new URL(String.format("%s://%s:%d/robots.txt", baseUrl.getProtocol(), baseUrl.getHost(), baseUrl.getPort()));
+        } else {
+          return new URL(String.format("%s://%s/robots.txt", baseUrl.getProtocol(), baseUrl.getHost()));
+        }
+      }
+    } catch (MalformedURLException ex) {
+      LOG.log(Level.WARNING, "Invalid robots.txt url.", ex);
+    }
+    return null;
   }
 
   private RobotsTxtImpl newRobots() {

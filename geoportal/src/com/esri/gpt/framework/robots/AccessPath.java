@@ -43,17 +43,6 @@ class AccessPath {
     return path.length();
   }
   
-  private List<String> split(String inputPath) {
-    List<String> elements = new ArrayList(Arrays.asList(inputPath.split("/")));
-    elements.removeIf(new Predicate<String>() {
-      @Override
-      public boolean test(String t) {
-        return t.isEmpty();
-      }
-    });
-    return elements;
-  }
-  
   /**
    * Checks if given path matches.
    * @param relativePath path to check
@@ -104,6 +93,17 @@ class AccessPath {
   @Override
   public String toString() {
     return path;
+  }
+  
+  private List<String> split(String inputPath) {
+    List<String> elements = new ArrayList(Arrays.asList(inputPath.split("/")));
+    elements.removeIf(new Predicate<String>() {
+      @Override
+      public boolean test(String t) {
+        return t.isEmpty();
+      }
+    });
+    return elements;
   }
   
   private boolean match(String patternWithWildcards, String text) {

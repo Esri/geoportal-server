@@ -31,20 +31,28 @@ class Section {
   private boolean anyAgent;
   private Integer crawlDelay;
 
+  /**
+   * Gets crawl delay.
+   * @return crawl delay in minutes or <code>null</code> if not set
+   */
   public Integer getCrawlDelay() {
     return crawlDelay;
   }
 
+  /**
+   * Sets crawl delay
+   * @param crawlDelay crawl delay in minutes
+   */
   public void setCrawlDelay(Integer crawlDelay) {
     this.crawlDelay = crawlDelay;
   }
 
+  /**
+   * Checks if is any agent.
+   * @return <code>true</code> if any agent
+   */
   public boolean isAnyAgent() {
     return anyAgent;
-  }
-
-  public void setAnyAgent(boolean anyAgent) {
-    this.anyAgent = anyAgent;
   }
   
   /**
@@ -79,6 +87,11 @@ class Section {
     return accessList.findAccess(relativaPath);
   }
   
+  /**
+   * Checks if the section is applicable for a given user agent.
+   * @param userAgent requested user agent
+   * @return <code>true</code> if the section is applicable for the requested user agent
+   */
   public boolean matchUserAgent(String userAgent) {
     return anyAgent || userAgents.contains(userAgent);
   }
