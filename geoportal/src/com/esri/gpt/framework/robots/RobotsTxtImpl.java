@@ -76,7 +76,7 @@ class RobotsTxtImpl implements RobotsTxt {
    *
    * @param section section
    */
-  void addSection(Section section) {
+  public void addSection(Section section) {
     if (section!=null) {
       if (section.isAnyAgent()) {
         this.defaultSection = section;
@@ -104,7 +104,7 @@ class RobotsTxtImpl implements RobotsTxt {
    * @param relativePath absolute path
    * @return <code>true</code> if has access
    */
-  boolean hasAccess(String userAgent, String relativePath) {
+  private boolean hasAccess(String userAgent, String relativePath) {
     Section sec = findSectionByAgent(sections, userAgent);
     if (sec!=null) {
       Access access = sec.findAccess(userAgent, relativePath);
