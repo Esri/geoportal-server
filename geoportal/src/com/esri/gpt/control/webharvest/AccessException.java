@@ -14,32 +14,43 @@
  */
 package com.esri.gpt.control.webharvest;
 
-import com.esri.gpt.framework.http.HttpClientRequest;
+import com.esri.gpt.framework.robots.Access;
 import java.io.IOException;
 
 /**
- * Harvest context.
+ * Access exception.
  */
-public interface IterationContext {
+public class AccessException extends IOException {
+  private Access access;
+
   /**
-   * Provides a way to capture exception which cannot be re-thrown. Both methods
-   * {@link java.util.Iterator#hasNext()} and {@link java.util.Iterator#next()}
-   * don't allow to throw any checked exception even if an implementation actually
-   * should throw it.
-   * @param ex
+   * Constructs an instance of <code>AccessException</code> with the specified
+   * detail message.
+   *
+   * @param msg the detail message.
+   * @param access access
    */
-  void onIterationException(Exception ex);
-  
+  public AccessException(String msg, Access access) {
+    super(msg);
+    this.access = access;
+  }
+
   /**
-   * Factory method to create instance of {@link HttpClientRequest}
-   * @return instance of HttpClientRequest
+   * Constructs an instance of <code>AccessException</code> with the specified
+   * detail message.
+   *
+   * @param msg the detail message.
+   * @param cause cause
    */
-  HttpClientRequest newHttpClientRequest();
-  
+  public AccessException(String msg, Throwable cause) {
+    super(msg, cause);
+  }
+
   /**
-   * Asserts access to the resource referenced by the url
-   * @param url url of the resource
-   * @throws AccessException if access denied
+   * Gets access.
+   * @return access or <code>null</code> if access information unavailable
    */
-  void assertAccess(String url) throws AccessException;
+  public Access getAccess() {
+    return access;
+  }
 }

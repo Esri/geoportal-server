@@ -15,8 +15,12 @@
 package com.esri.gpt.control.webharvest;
 
 import com.esri.gpt.framework.http.HttpClientRequest;
+import com.esri.gpt.framework.robots.Access;
+import com.esri.gpt.framework.robots.RobotsTxt;
 import com.esri.gpt.framework.util.StringBuilderWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -27,6 +31,22 @@ import java.util.LinkedList;
 public class DefaultIterationContext implements IterationContext {
   protected static SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
   protected final LinkedList<ExceptionInfo> exceptionInfos = new LinkedList<ExceptionInfo>();
+  
+  protected RobotsTxt robotsTxt;
+
+  /**
+   * Creates instance without robots information.
+   */
+  public DefaultIterationContext() {
+  }
+
+  /**
+   * Creates instance with robots information.
+   * @param robotsTxt robots information
+   */
+  public DefaultIterationContext(RobotsTxt robotsTxt) {
+    this.robotsTxt = robotsTxt;
+  }
 
   @Override
   public void onIterationException(Exception ex) {
@@ -66,6 +86,28 @@ public class DefaultIterationContext implements IterationContext {
   @Override
   public HttpClientRequest newHttpClientRequest() {
     return new HttpClientRequest();
+  }
+
+  @Override
+  public void assertAccess(String url) throws AccessException {
+    if (robotsTxt!=null) {
+      try {
+        String relativeUrl = extractRelativeUrl(url);
+        Access access = robotsTxt.findAccess(relativeUrl);
+        if (access!=null && !access.hasAccess()) {
+          throw new AccessException("Access denied by robots.txt", access);
+        }
+      } catch (AccessException ex) {
+        throw ex;
+      } catch (IOException ex) {
+        throw new AccessException("Unable to determine access", ex);
+      }
+    }
+  }
+  
+  private String extractRelativeUrl(String url) throws IOException {
+    URL URL = new URL(url);
+    return String.format("%s%s%s", URL.getPath(), URL.getQuery()!=null? "?"+URL.getQuery(): "", URL.getRef()!=null? "#"+URL.getRef(): "");
   }
   
   /**
