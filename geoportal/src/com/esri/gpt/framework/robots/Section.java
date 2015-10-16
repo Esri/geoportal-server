@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.framework.robots;
 
+import com.esri.gpt.framework.util.StringBuilderWriter;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -98,32 +99,28 @@ class Section {
   
   @Override
   public String toString() {
-    try {
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(out, "UTF-8")));
-      
-      if (anyAgent) {
-        writer.printf("User-agent: %s", "*");
-        writer.println();
-      }
-      
-      for (String userAgent: userAgents) {
-        writer.printf("User-agent: %s", userAgent);
-        writer.println();
-      }
-      
-      writer.println(accessList.toString());
-      
-      if (crawlDelay>0) {
-        writer.printf("Crawl-delay: %d", crawlDelay);
-        writer.println();
-      }
-      
-      writer.close();
-      
-      return out.toString("UTF-8");
-    } catch (IOException ex) {
-      return "";
+    StringBuilder sb = new StringBuilder();
+    PrintWriter writer = new PrintWriter(new StringBuilderWriter(sb));
+    
+    if (anyAgent) {
+      writer.printf("User-agent: %s", "*");
+      writer.println();
     }
+
+    for (String userAgent: userAgents) {
+      writer.printf("User-agent: %s", userAgent);
+      writer.println();
+    }
+
+    writer.println(accessList.toString());
+
+    if (crawlDelay>0) {
+      writer.printf("Crawl-delay: %d", crawlDelay);
+      writer.println();
+    }
+    
+    // no need to close writer or catch any exception
+    
+    return sb.toString();
   }
 }

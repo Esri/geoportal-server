@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.framework.robots;
 
+import com.esri.gpt.framework.util.StringBuilderWriter;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -38,20 +39,16 @@ class AccessList {
   
   @Override
   public String toString() {
-    try {
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(out, "UTF-8")));
-      
-      for (Access access: accessList) {
-        writer.println(access.toString());
-      }
-      
-      writer.close();
-      
-      return out.toString("UTF-8");
-    } catch (IOException ex) {
-      return "";
+    StringBuilder sb = new StringBuilder();
+    PrintWriter writer = new PrintWriter(new StringBuilderWriter(sb));
+    
+    for (Access access: accessList) {
+      writer.println(access.toString());
     }
+    
+    // no need to close writer or catch any exception
+    
+    return sb.toString();
   }
   
   /**

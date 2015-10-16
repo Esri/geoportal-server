@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.framework.robots;
 
+import com.esri.gpt.framework.util.StringBuilderWriter;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -107,34 +108,30 @@ class RobotsTxtImpl implements RobotsTxt {
   
   @Override
   public String toString() {
-    try {
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(out, "UTF-8")));
-      
-      if (defaultSection!=null) {
-        writer.println(defaultSection.toString());
-      }
-      
-      for (Section section: sections) {
-        writer.println(section.toString());
-      }
-      
-      if (host!=null) {
-        writer.printf("Host: %s", host);
-        writer.println();
-      }
-      
-      for (String sitemap: sitemaps) {
-        writer.printf("Sitemap: %s", sitemap);
-        writer.println();
-      }
-      
-      writer.close();
-      
-      return out.toString("UTF-8");
-    } catch (IOException ex) {
-      return "";
+    StringBuilder sb = new StringBuilder();
+    PrintWriter writer = new PrintWriter(new StringBuilderWriter(sb));
+    
+    if (defaultSection!=null) {
+      writer.println(defaultSection.toString());
     }
+      
+    for (Section section: sections) {
+      writer.println(section.toString());
+    }
+
+    if (host!=null) {
+      writer.printf("Host: %s", host);
+      writer.println();
+    }
+
+    for (String sitemap: sitemaps) {
+      writer.printf("Sitemap: %s", sitemap);
+      writer.println();
+    }
+    
+    // no need to close writer or catch any exception
+    
+    return sb.toString();
   }
 
   /**
