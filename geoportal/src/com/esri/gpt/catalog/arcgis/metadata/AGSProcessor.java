@@ -21,8 +21,10 @@ import com.esri.gpt.catalog.publication.ResourceProcessor;
 import com.esri.arcgisws.ServiceCatalogBindingStub;
 import com.esri.arcgisws.ServiceDescription;
 import com.esri.arcgisws.runtime.exception.ArcGISWebServiceException;
+import com.esri.gpt.control.webharvest.AccessException;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.common.CommonResult;
+import com.esri.gpt.framework.http.crawl.CrawlLocker;
 import com.esri.gpt.framework.resource.adapters.FlatResourcesAdapter;
 import com.esri.gpt.framework.resource.adapters.LimitedLengthResourcesAdapter;
 import com.esri.gpt.framework.resource.adapters.PublishablesAdapter;
@@ -32,6 +34,7 @@ import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
+import com.esri.gpt.framework.robots.RobotsTxt;
 import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
 import com.esri.gpt.framework.util.ReadOnlyIterator;
 import com.esri.gpt.framework.util.Val;
@@ -355,11 +358,24 @@ public class AGSProcessor extends ResourceProcessor {
 
   /**
    * Reads service descriptions.
+   * @param context iteration context
    * @return array of service descriptions
    * @throws ArcGISWebServiceException if accessing service descriptions 
    */
-  private ServiceDescription[] readServiceDescriptions() throws ArcGISWebServiceException {
+  private ServiceDescription[] readServiceDescriptions(IterationContext context) throws ArcGISWebServiceException {
     String soapUrl = extractRootUrl(getTarget().getSoapUrl());
+    if (context!=null) {
+      try {
+        context.assertAccess(soapUrl);
+      } catch (AccessException ex) {
+        context.onIterationException(ex);
+        return new ServiceDescription[0];
+      }
+      RobotsTxt robotsTxt = context.getRobotsTxt();
+      if (robotsTxt!=null) {
+        CrawlLocker.getInstance().enterServer(soapUrl, robotsTxt.getCrawlDelay());
+      }
+    }
     ServiceCatalogBindingStub stub = new ServiceCatalogBindingStub(soapUrl);
     ServiceDescription[] descriptors = stub.getServiceDescriptions();
     return descriptors;
@@ -372,7 +388,7 @@ public class AGSProcessor extends ResourceProcessor {
    */
   private ResourceFolders createResourceFolders(IterationContext context) {
     try {
-      ServiceDescription[] descriptors = readServiceDescriptions();
+      ServiceDescription[] descriptors = readServiceDescriptions(context);
       return new ResourceFolders(context, factory, descriptors);
     } catch (ArcGISWebServiceException ex) {
       context.onIterationException(ex);

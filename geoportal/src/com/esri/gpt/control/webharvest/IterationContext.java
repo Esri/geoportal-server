@@ -15,6 +15,7 @@
 package com.esri.gpt.control.webharvest;
 
 import com.esri.gpt.framework.http.HttpClientRequest;
+import com.esri.gpt.framework.robots.RobotsTxt;
 
 /**
  * Harvest context.
@@ -41,4 +42,10 @@ public interface IterationContext {
    * @throws AccessException if access denied
    */
   void assertAccess(String url) throws AccessException;
+  
+  /**
+   * Gets RobotsTxt if available.
+   * @return instance of robots txt or <code>null</code> if robots txt unavailable.
+   */
+  RobotsTxt getRobotsTxt();
 }

@@ -100,6 +100,11 @@ public class DefaultIterationContext implements IterationContext {
       }
     }
   }
+
+  @Override
+  public RobotsTxt getRobotsTxt() {
+    return robotsTxt;
+  }
   
   private String extractRelativeUrl(String url) throws IOException {
     url = Val.chkStr(url);
