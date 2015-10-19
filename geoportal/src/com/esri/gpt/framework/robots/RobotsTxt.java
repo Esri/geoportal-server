@@ -23,7 +23,7 @@ public interface RobotsTxt {
 
   /**
    * Gets crawl delay.
-   * @return crawl delay in minutes or <code>0</code> if no delay
+   * @return crawl delay in secconds or <code>0</code> if no delay
    */
   Integer getCrawlDelay();
 

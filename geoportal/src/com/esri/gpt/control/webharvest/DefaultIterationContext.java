@@ -15,6 +15,7 @@
 package com.esri.gpt.control.webharvest;
 
 import com.esri.gpt.framework.http.HttpClientRequest;
+import com.esri.gpt.framework.http.crawl.CrawlHttpClientRequest;
 import com.esri.gpt.framework.robots.Access;
 import com.esri.gpt.framework.robots.RobotsTxt;
 import com.esri.gpt.framework.util.StringBuilderWriter;
@@ -80,7 +81,7 @@ public class DefaultIterationContext implements IterationContext {
 
   @Override
   public HttpClientRequest newHttpClientRequest() {
-    return new HttpClientRequest();
+    return new CrawlHttpClientRequest(robotsTxt);
   }
 
   @Override
