@@ -185,7 +185,7 @@ public class AgpConnection {
    */
   public AgpClient ensureClient() {
     if (this.getClient() == null) {
-      this.setClient(new AgpClient());
+      this.setClient(newAgpClient());
     }
     return this.getClient();
   }
@@ -243,6 +243,14 @@ public class AgpConnection {
    */
   public String makeSharingUrl() {
     return this.makeBaseUrl("https")+"/sharing";
+  }
+
+  /**
+   * Create new instance of {@link AgpClient}
+   * @return new instance
+   */
+  protected AgpClient newAgpClient() {
+    return new AgpClient();
   }
   
 }
