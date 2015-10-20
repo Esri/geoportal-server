@@ -15,7 +15,13 @@
 package com.esri.gpt.framework.robots;
 
 import com.esri.gpt.framework.util.StringBuilderWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,8 +98,16 @@ class RobotsTxtImpl implements RobotsTxt {
   }
 
   @Override
-  public Access findAccess(String relativePath) {
-    return relativePath!=null? findAccess(userAgent, relativePath): Access.ALLOW;
+  public Access findAccess(String path) {
+    try {
+      path = URLDecoder.decode(path, "UTF-8");
+      String relativePath = assureRelative(path);
+      return relativePath!=null && !"/robots.txt".equalsIgnoreCase(relativePath)? findAccess(userAgent, relativePath): Access.ALLOW;
+    } catch (IOException ex) {
+      return Access.DISALLOW;
+    } catch (URISyntaxException ex) {
+      return Access.DISALLOW;
+    }
   }
   
   @Override
@@ -157,5 +171,14 @@ class RobotsTxtImpl implements RobotsTxt {
       }
     }
     return null;
+  }
+  
+  private String assureRelative(String path) throws URISyntaxException, MalformedURLException {
+    URI uri = new URI(path);
+    if (uri.isAbsolute()) {
+      URL url = uri.toURL();
+      return String.format("/%s%s%s", url.getPath(), url.getQuery()!=null? "#"+url.getQuery(): "", url.getRef()!=null? "#"+url.getRef(): "").replaceAll("/+", "/");
+    }
+    return path;
   }
 }

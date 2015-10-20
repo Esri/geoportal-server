@@ -42,9 +42,9 @@ public interface RobotsTxt {
   /**
    * Checks if absolute path has access for this section.
    *
-   * @param relativePath absolute path
+   * @param path path
    * @return access information (never <code>null</code>)
    */
-  Access findAccess(String relativePath);
+  Access findAccess(String path);
   
 }

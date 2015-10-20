@@ -23,8 +23,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -120,6 +122,25 @@ public class RobotsTxtParser {
     return null;
   }
 
+  private String [] parseLineToKVP(String line) throws UnsupportedEncodingException {
+    line = Val.chkStr(line);
+    if (line.startsWith("#")) {
+      return null;
+    }
+    int colonIndex = line.indexOf(":");
+    if (colonIndex < 0) {
+      return null;
+    }
+
+    String key = Val.chkStr(line.substring(0, colonIndex));
+    
+    String rest = line.substring(colonIndex + 1, line.length());
+    int hashIndex = rest.indexOf("#");
+    
+    String value = URLDecoder.decode(Val.chkStr(hashIndex >= 0 ? rest.substring(0, hashIndex) : rest), "UTF-8");
+    
+    return new String [] {key,value};
+  }
   /**
    * Parses robots TXT
    *
@@ -137,22 +158,10 @@ public class RobotsTxtParser {
       boolean startSection = false;
 
       for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-        line = Val.chkStr(line);
-        if (line.startsWith("#")) {
-          continue;
-        }
-        int colonIndex = line.indexOf(":");
-        if (colonIndex < 0) {
-          continue;
-        }
+        String [] kvp = parseLineToKVP(line);
+        if (kvp==null) continue;
 
-        String key = Val.chkStr(line.substring(0, colonIndex));
-        String rest = line.substring(colonIndex + 1, line.length());
-
-        int hashIndex = rest.indexOf("#");
-        String value = Val.chkStr(hashIndex >= 0 ? rest.substring(0, hashIndex) : rest);
-
-        if (key.equalsIgnoreCase("User-agent")) {
+        if (kvp[0].equalsIgnoreCase("User-agent")) {
           if (!startSection && currentSection != null) {
             if (robots == null) {
               robots = newRobots();
@@ -165,32 +174,32 @@ public class RobotsTxtParser {
             currentSection = new Section();
           }
 
-          currentSection.addUserAgent(value);
+          currentSection.addUserAgent(kvp[1]);
           startSection = true;
-        } else if (currentSection != null && key.equalsIgnoreCase("Disallow")) {
+        } else if (currentSection != null && kvp[0].equalsIgnoreCase("Disallow")) {
           startSection = false;
-          currentSection.addAccess(new AccessImpl(new AccessPath(value), false));
-        } else if (currentSection != null && key.equalsIgnoreCase("Allow")) {
+          currentSection.addAccess(new AccessImpl(new AccessPath(kvp[1]), false));
+        } else if (currentSection != null && kvp[0].equalsIgnoreCase("Allow")) {
           startSection = false;
-          currentSection.addAccess(new AccessImpl(new AccessPath(value), true));
-        } else if (key.equalsIgnoreCase("Crawl-delay")) {
+          currentSection.addAccess(new AccessImpl(new AccessPath(kvp[1]), true));
+        } else if (kvp[0].equalsIgnoreCase("Crawl-delay")) {
           startSection = false;
           if (currentSection!=null) {
             try {
-              int crawlDelay = Integer.parseInt(value);
+              int crawlDelay = Integer.parseInt(kvp[1]);
               currentSection.setCrawlDelay(crawlDelay);
             } catch (NumberFormatException ex) {}
           }
-        } else if (key.equalsIgnoreCase("Sitemap")) {
+        } else if (kvp[0].equalsIgnoreCase("Sitemap")) {
           if (robots == null) {
             robots = newRobots();
           }
-          robots.getSitemaps().add(value);
-        } else if (key.equalsIgnoreCase("Host")) {
+          robots.getSitemaps().add(kvp[1]);
+        } else if (kvp[0].equalsIgnoreCase("Host")) {
           if (robots == null) {
             robots = newRobots();
           }
-          robots.setHost(value);
+          robots.setHost(kvp[1]);
         }
       }
 
@@ -245,6 +254,5 @@ public class RobotsTxtParser {
     public RobotsTxt getRobots() {
       return robots;
     }
-    
   }
 }

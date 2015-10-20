@@ -55,41 +55,12 @@ class AccessList {
   public Access findAccess(String relativePath) {
     if (relativePath==null) return null;
     
-    List<AccessImpl> allMatching = selectMatching(relativePath);
-    int maxLength = findMaxLength(allMatching);
-    AccessImpl firstMatching = findFirstByLength(allMatching, maxLength);
+    for (AccessImpl acc: accessList) {
+      if (acc.matches(relativePath)) {
+        return !acc.getPath().isEmpty()? acc: !acc.hasAccess()? Access.ALLOW: Access.DISALLOW;
+      }
+    }
     
-    return firstMatching;
-  }
-  
-  private AccessImpl findFirstByLength(List<AccessImpl> allMatching, int length) {
-    for (AccessImpl acc: allMatching) {
-      if (acc.getLenth()==length) {
-        return acc;
-      }
-    }
     return null;
-  }
-  
-  private int findMaxLength(List<AccessImpl> allMatching) {
-    int length = 0;
-    for (AccessImpl acc: allMatching) {
-      if (acc.getLenth()>length) {
-        length = acc.getLenth();
-      }
-    }
-    return length;
-  }
-  
-  private List<AccessImpl> selectMatching(String relativePath) {
-    List<AccessImpl> allMatching = new ArrayList<AccessImpl>();
-    if (relativePath!=null) {
-      for (AccessImpl acc: accessList) {
-        if (acc.matches(relativePath)) {
-          allMatching.add(acc);
-        }
-      }
-    }
-    return allMatching;
   }
 }
