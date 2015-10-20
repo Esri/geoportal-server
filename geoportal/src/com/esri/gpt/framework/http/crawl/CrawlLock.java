@@ -30,12 +30,15 @@ class CrawlLock {
       startWaiting();
     }
     
-    if (delay != null) {
-      LOG.fine(String.format("Locking server for %d seconds", delay));
-      crawlDelay = delay;
+    crawlDelay = delay;
+    
+    LOG.fine(String.format("Locking server for %d seconds", delay));
+    if (crawlDelay!=null) {
       lockThenNotify();
-      LOG.fine(String.format("Server unlocked after %d seconds", delay));
+    } else {
+      notify();
     }
+    LOG.fine(String.format("Server unlocked after %d seconds", delay));
   }
 
   private synchronized void startWaiting() throws InterruptedException {
