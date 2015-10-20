@@ -18,6 +18,7 @@ package com.esri.gpt.framework.robots;
  * Access.
  */
 class AccessImpl implements Access {
+  private final boolean constant;
   private final AccessPath accessPath;
   private final boolean accessAllowed;
 
@@ -27,6 +28,16 @@ class AccessImpl implements Access {
    * @param accessAllowed access to the path
    */
   public AccessImpl(AccessPath accessPath, boolean accessAllowed) {
+    this(accessPath, accessAllowed, false);
+  }
+
+  /**
+   * Creates instance of the access.
+   * @param accessPath access path
+   * @param accessAllowed access to the path
+   */
+  AccessImpl(AccessPath accessPath, boolean accessAllowed, boolean constant) {
+    this.constant = constant;
     this.accessPath = accessPath;
     this.accessAllowed = accessAllowed;
   }
@@ -50,14 +61,6 @@ class AccessImpl implements Access {
   }
   
   /**
-   * Gets length of the path.
-   * @return length of the path
-   */
-  public int getLenth() {
-    return accessPath.getLength();
-  }
-  
-  /**
    * Checks if path matches access path
    * @param path path to check
    * @return <code>true</code> if path matches access path
@@ -68,7 +71,7 @@ class AccessImpl implements Access {
   
   @Override
   public String toString() {
-    return String.format("%s: %s", !accessAllowed? "Disallow": "Allow", accessPath);
+    return String.format("%s%s: %s", !accessAllowed? "Disallow": "Allow", constant? " (constant)": "",accessPath);
   }
   
 }

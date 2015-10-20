@@ -14,11 +14,8 @@
  */
 package com.esri.gpt.framework.robots;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Predicate;
+import java.net.URLDecoder;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -44,85 +41,27 @@ class AccessPath {
   }
   
   /**
-   * Gets length (number of names) of the path.
-   * @return length (number of names) of the path
-   */
-  public int getLength() {
-    return path.length();
-  }
-  
-  /**
    * Checks if given path matches.
    * @param relativePath path to check
    * @return <code>true</code> if path matches
    */
   public boolean match(String relativePath) {
     if (relativePath==null) return false;
-    if (path.isEmpty()) return false;
+    if (getPath().isEmpty()) return true;
     
-    boolean reverse = false;
-    String pattern = path;
-    if (pattern.endsWith("$")) {
-      pattern = pattern.replaceAll("\\$+$", "");
-      reverse = true;
+    try {
+      relativePath = URLDecoder.decode(relativePath,"UTF-8");
+      Pattern pattern = makePattern(path);
+      Matcher matcher = pattern.matcher(relativePath);
+      return matcher.find();
+    } catch (Exception ex) {
+      return false;
     }
-    List<String> chain = split(pattern);
-    List<String> input = split(relativePath);
-    if (reverse) {
-      Collections.reverse(chain);
-      Collections.reverse(input);
-    }
-    
-    while (!chain.isEmpty()) {
-      String current = chain.remove(0);
-      String next = !chain.isEmpty()? chain.get(0): null;
-      
-      if ("*".equals(current)) {
-        if (input.isEmpty()) return false;
-        input.remove(0);
-      } else if ("**".equals(current)) {
-        do {
-          if (input.isEmpty()) return false;
-          if (next!=null) {
-            String text = input.get(0);
-            if (match(next, text)) {
-              break;
-            }
-          }
-          input.remove(0);
-        } while (!input.isEmpty());
-      } else {
-        if (input.isEmpty()) return false;
-        if (!match(current,input.get(0))) return false;
-        input.remove(0);
-      }
-    }
-    
-    return true;
   }
   
   @Override
   public String toString() {
     return path;
-  }
-  
-  private List<String> split(String inputPath) {
-    List<String> elements = new ArrayList(Arrays.asList(inputPath.split("/")));
-    elements.removeIf(new Predicate<String>() {
-      @Override
-      public boolean test(String t) {
-        return t.isEmpty();
-      }
-    });
-    return elements;
-  }
-  
-  private boolean match(String patternWithWildcards, String text) {
-    try {
-      return makePattern(patternWithWildcards).matcher(text).matches();
-    } catch (Exception ex) {
-      return false;
-    }
   }
   
   private Pattern makePattern(String patternWithWildcards) {
@@ -131,7 +70,14 @@ class AccessPath {
       char c = patternWithWildcards.charAt(i);
       switch (c) {
         case '*':
-          sb.append(".*?");
+          sb.append(".*");
+          break;
+        case '$':
+          if (i==patternWithWildcards.length()-1) {
+            sb.append(c);
+          } else {
+            sb.append("[").append(c).append("]");
+          }
           break;
         case '[':
         case ']':
@@ -141,6 +87,6 @@ class AccessPath {
           sb.append("[").append(c).append("]");
       }
     }
-    return Pattern.compile(sb.toString());
+    return Pattern.compile(sb.toString(),Pattern.CASE_INSENSITIVE);
   }
 }

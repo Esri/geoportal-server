@@ -18,15 +18,15 @@ package com.esri.gpt.framework.robots;
  * Access.
  */
 public interface Access {
-  Access ALLOW = new AccessImpl(new AccessPath("/"), true);
-  Access DISALLOW = new AccessImpl(new AccessPath("/"), false);
+  Access ALLOW = new AccessImpl(new AccessPath("/"), true, true);
+  Access DISALLOW = new AccessImpl(new AccessPath("/"), false, true);
 
   /**
    * Gets path.
    * @return path
    */
   String getPath();
-
+  
   /**
    * Check if this section gives an access
    * @return
