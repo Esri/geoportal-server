@@ -41,18 +41,7 @@ public class HttpCrawlRequest extends HttpClientRequest {
 
   @Override
   public void execute() throws IOException {
-    if (robotsTxt != null) {
-      String url = getRelativePath();
-      LOG.info(String.format("Evaluating access to %s using robots.txt", url));
-      Access access = robotsTxt.findAccess(url);
-      if (access != null && !access.hasAccess()) {
-        LOG.info(String.format("Access to %s disallowed by robots.txt", url));
-        throw new HttpClientException(HttpServletResponse.SC_FORBIDDEN, String.format("Access to %s disallowed by robots.txt", url));
-      }
-      LOG.info(String.format("Access to %s allowed by robots.txt", url));
-      CrawlLocker.getInstance().enterServer(getProtocolHostPort(), robotsTxt.getCrawlDelay());
-    }
-
+    this.adviseRobotsTxt();
     super.execute();
   }
 
@@ -84,6 +73,20 @@ public class HttpCrawlRequest extends HttpClientRequest {
     return url;
   }
 
+  private void adviseRobotsTxt() throws IOException {
+    if (robotsTxt != null) {
+      String url = getRelativePath();
+      LOG.info(String.format("Evaluating access to %s using robots.txt", url));
+      Access access = robotsTxt.findAccess(url);
+      if (!access.hasAccess()) {
+        LOG.info(String.format("Access to %s disallowed by robots.txt", url));
+        throw new HttpClientException(HttpServletResponse.SC_FORBIDDEN, String.format("Access to %s disallowed by robots.txt", url));
+      }
+      LOG.info(String.format("Access to %s allowed by robots.txt", url));
+      CrawlLocker.getInstance().enterServer(getProtocolHostPort(), robotsTxt.getCrawlDelay());
+    }
+  }
+  
   private String getProtocolHostPort() throws MalformedURLException {
     URL u = new URL(getUrl());
     return String.format("%s://%s%s", u.getProtocol(), u.getHost(), u.getPort() >= 0 ? ":" + u.getPort() : "");

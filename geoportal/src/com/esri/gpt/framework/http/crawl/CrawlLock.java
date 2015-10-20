@@ -24,46 +24,56 @@ class CrawlLock {
   private static final Logger LOG = Logger.getLogger(CrawlLock.class.getName());
   private Integer crawlDelay;
   private volatile boolean status;
-
-  public CrawlLock(Integer crawlDelay) {
-    this.crawlDelay = crawlDelay;
-  }
-
-  public void enter(Integer delay) throws InterruptedException {
+  
+  public synchronized void enter(Integer delay) throws InterruptedException {
     if (status) {
-      synchronized (CrawlLock.this) {
-        LOG.fine("Waiting for notification...");
-        wait();
-        LOG.fine("Notified");
-      }
+      startWaiting();
     }
+    
     if (delay != null) {
       LOG.fine(String.format("Locking server for %d seconds", delay));
       crawlDelay = delay;
-      synchronized (CrawlLock.this) {
-        Thread thread = new Thread() {
-          @Override
-          public void run() {
-            status = true;
-            try {
-              LOG.fine(String.format("Extering sleep for %d seconds...", crawlDelay));
-              Thread.sleep(crawlDelay * 1000);
-              LOG.fine(String.format("Sleep ended after %d seconds...", crawlDelay));
-            } catch (InterruptedException ex) {
-              LOG.log(Level.SEVERE, "Interrupted.", ex);
-            } finally {
-              synchronized (CrawlLock.this) {
-                status = false;
-                LOG.fine("Notifying potential requests...");
-                CrawlLock.this.notifyAll();
-              }
-            }
+      lockThenNotify();
+      LOG.fine(String.format("Server unlocked after %d seconds", delay));
+    }
+  }
+
+  private synchronized void startWaiting() throws InterruptedException {
+    LOG.fine("Waiting for notification...");
+    wait();
+    LOG.fine("Notified");
+  }
+  
+  private void lockThenNotify() throws InterruptedException {
+    final Object semaphore = new Object();
+    Thread thread = new Thread() {
+      @Override
+      public void run() {
+        status = true;
+        try {
+          synchronized(semaphore) {
+            semaphore.notify();
           }
-        };
-        thread.setDaemon(true);
-        thread.start();
-        wait();
-        LOG.fine(String.format("Server unlocked after %d seconds", delay));
+          LOG.fine(String.format("Extering sleep for %d seconds...", crawlDelay));
+          Thread.sleep(crawlDelay * 1000);
+          LOG.fine(String.format("Sleep ended after %d seconds...", crawlDelay));
+        } catch (InterruptedException ex) {
+          LOG.log(Level.SEVERE, "Interrupted.", ex);
+        } finally {
+          synchronized (CrawlLock.this) {
+            status = false;
+            LOG.fine("Notifying potential requests...");
+            CrawlLock.this.notify();
+          }
+        }
+      }
+    };
+    thread.setDaemon(true);
+    thread.start();
+    
+    while (!status) {
+      synchronized (semaphore) {
+        semaphore.wait();
       }
     }
   }

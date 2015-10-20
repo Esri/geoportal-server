@@ -24,32 +24,32 @@ import java.util.logging.Logger;
 public class CrawlLocker {
   private static final Logger LOG = Logger.getLogger(CrawlLocker.class.getName());
   private static final WeakHashMap<String,CrawlLock> locks = new  WeakHashMap<String, CrawlLock>();
-  private static CrawlLocker crawlLocker;
+  private static CrawlLocker instance;
   
   public static CrawlLocker getInstance() {
-    if (crawlLocker==null) {
-      crawlLocker = new CrawlLocker();
+    if (instance==null) {
+      instance = new CrawlLocker();
     }
-    return crawlLocker;
+    return instance;
   }
   
-  public CrawlLocker() {}
+  private CrawlLocker() {}
   
   public void enterServer(String protocolHostPort, Integer crawlDelay) {
     try {
-      LOG.info(String.format("Entering server %s for %d seconds", protocolHostPort, crawlDelay));
-      CrawlLock lock = makeLock(protocolHostPort, crawlDelay);
+      LOG.fine(String.format("Entering server %s for %d seconds", protocolHostPort, crawlDelay));
+      CrawlLock lock = makeLock(protocolHostPort);
       lock.enter(crawlDelay);
-      LOG.info(String.format("Exiting server %s", protocolHostPort));
+      LOG.fine(String.format("Exiting server %s", protocolHostPort));
     } catch (InterruptedException ex) {
       LOG.log(Level.SEVERE, "Interrupted.", ex);
     }
   }
   
-  private synchronized CrawlLock makeLock(String protocolHostPort, Integer crawlDelay) {
+  private synchronized CrawlLock makeLock(String protocolHostPort) {
     CrawlLock crawlLock = locks.get(protocolHostPort);
     if (crawlLock==null) {
-      crawlLock = new CrawlLock(crawlDelay);
+      crawlLock = new CrawlLock();
       locks.put(protocolHostPort, crawlLock);
     }
     return crawlLock;
