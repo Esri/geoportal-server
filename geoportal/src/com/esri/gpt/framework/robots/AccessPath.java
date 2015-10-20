@@ -58,6 +58,7 @@ class AccessPath {
    */
   public boolean match(String relativePath) {
     if (relativePath==null) return false;
+    if (path.isEmpty()) return false;
     
     boolean reverse = false;
     String pattern = path;

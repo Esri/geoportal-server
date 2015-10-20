@@ -132,19 +132,19 @@ class RobotsTxtImpl implements RobotsTxt {
    * @return access information or <code>null</code> if no access information found
    */
   private Access findAccess(String userAgent, String relativePath) {
-    if (userAgent==null || relativePath==null) return Access.ALLOW;
-    
-    Section sec = findSectionByAgent(sections, userAgent);
-    if (sec!=null) {
-      Access access = sec.findAccess(userAgent, relativePath);
-      if (access!=null) {
-        return access;
+    if (!(userAgent==null || relativePath==null)) {
+      Section sec = findSectionByAgent(sections, userAgent);
+      if (sec!=null) {
+        Access access = sec.findAccess(userAgent, relativePath);
+        if (access!=null) {
+          return access;
+        }
       }
-    }
-    if (defaultSection!=null) {
-      Access defaultAccess = defaultSection.findAccess(userAgent, relativePath);
-      if (defaultAccess!=null) {
-        return defaultAccess;
+      if (defaultSection!=null) {
+        Access defaultAccess = defaultSection.findAccess(userAgent, relativePath);
+        if (defaultAccess!=null) {
+          return defaultAccess;
+        }
       }
     }
     return Access.ALLOW;

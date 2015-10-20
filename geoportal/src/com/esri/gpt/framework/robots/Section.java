@@ -15,10 +15,6 @@
 package com.esri.gpt.framework.robots;
 
 import com.esri.gpt.framework.util.StringBuilderWriter;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -114,7 +110,7 @@ class Section {
 
     writer.println(accessList.toString());
 
-    if (crawlDelay>0) {
+    if (crawlDelay!=null && crawlDelay>0) {
       writer.printf("Crawl-delay: %d", crawlDelay);
       writer.println();
     }
