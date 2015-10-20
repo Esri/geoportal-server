@@ -33,7 +33,7 @@ import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.http.HttpClientRequest;
-import com.esri.gpt.framework.http.crawl.CrawlHttpClientRequest;
+import com.esri.gpt.framework.http.crawl.HttpCrawlRequest;
 import com.esri.gpt.framework.resource.api.Native;
 import com.esri.gpt.framework.resource.query.Capabilities;
 import com.esri.gpt.framework.resource.query.Criteria;
@@ -284,7 +284,7 @@ public static Long getAgp2AgpMaxItems() {
       return new AgpClient() {
         @Override
         protected HttpClientRequest newHttpClientRequest() {
-          return new CrawlHttpClientRequest(robotsTxt);
+          return new HttpCrawlRequest(robotsTxt);
         }
       };
     }

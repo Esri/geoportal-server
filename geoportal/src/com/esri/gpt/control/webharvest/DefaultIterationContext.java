@@ -15,7 +15,7 @@
 package com.esri.gpt.control.webharvest;
 
 import com.esri.gpt.framework.http.HttpClientRequest;
-import com.esri.gpt.framework.http.crawl.CrawlHttpClientRequest;
+import com.esri.gpt.framework.http.crawl.HttpCrawlRequest;
 import com.esri.gpt.framework.robots.Access;
 import com.esri.gpt.framework.robots.RobotsTxt;
 import com.esri.gpt.framework.util.StringBuilderWriter;
@@ -26,11 +26,14 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Default iteration context.
  */
 public class DefaultIterationContext implements IterationContext {
+  private static final Logger LOG = Logger.getLogger(DefaultIterationContext.class.getName());
   protected static SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
   protected final LinkedList<ExceptionInfo> exceptionInfos = new LinkedList<ExceptionInfo>();
   
@@ -81,22 +84,26 @@ public class DefaultIterationContext implements IterationContext {
 
   @Override
   public HttpClientRequest newHttpClientRequest() {
-    return new CrawlHttpClientRequest(robotsTxt);
+    return new HttpCrawlRequest(robotsTxt);
   }
 
   @Override
   public void assertAccess(String url) throws AccessException {
     if (robotsTxt!=null) {
+      LOG.info(String.format("Evaluating access to %s using robots.txt", url));
       try {
         String relativeUrl = extractRelativeUrl(url);
         Access access = robotsTxt.findAccess(relativeUrl);
         if (access!=null && !access.hasAccess()) {
-          throw new AccessException("Access denied by robots.txt", access);
+          LOG.info(String.format("Access to %s disallowed by robots.txt", url));
+          throw new AccessException(String.format("Access to %s disallowed by robots.txt", url), access);
         }
+        LOG.info(String.format("Access to %s allowed by robots.txt", url));
       } catch (AccessException ex) {
         throw ex;
       } catch (IOException ex) {
-        throw new AccessException("Unable to determine access", ex);
+        LOG.log(Level.SEVERE,String.format("Unable to determine access to %s using robots.txt", url),ex);
+        throw new AccessException(String.format("Unable to determine access to %s using robots.txt", url), ex);
       }
     }
   }

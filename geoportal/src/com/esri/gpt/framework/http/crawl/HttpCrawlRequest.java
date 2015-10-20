@@ -28,25 +28,28 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Http client request for crawlers.
+ * Http crawl request.
  */
-public class CrawlHttpClientRequest extends HttpClientRequest {
+public class HttpCrawlRequest extends HttpClientRequest {
 
-  private static final Logger LOG = Logger.getLogger(CrawlHttpClientRequest.class.getName());
+  private static final Logger LOG = Logger.getLogger(HttpCrawlRequest.class.getName());
   private final RobotsTxt robotsTxt;
 
-  public CrawlHttpClientRequest(RobotsTxt robotsTxt) {
+  public HttpCrawlRequest(RobotsTxt robotsTxt) {
     this.robotsTxt = robotsTxt;
   }
 
   @Override
   public void execute() throws IOException {
     if (robotsTxt != null) {
-      Access access = robotsTxt.findAccess(getRelativePath());
+      String url = getRelativePath();
+      LOG.info(String.format("Evaluating access to %s using robots.txt", url));
+      Access access = robotsTxt.findAccess(url);
       if (access != null && !access.hasAccess()) {
-        throw new HttpClientException(HttpServletResponse.SC_FORBIDDEN, "Forbidden by robots.txt");
+        LOG.info(String.format("Access to %s disallowed by robots.txt", url));
+        throw new HttpClientException(HttpServletResponse.SC_FORBIDDEN, String.format("Access to %s disallowed by robots.txt", url));
       }
-
+      LOG.info(String.format("Access to %s allowed by robots.txt", url));
       CrawlLocker.getInstance().enterServer(getProtocolHostPort(), robotsTxt.getCrawlDelay());
     }
 
