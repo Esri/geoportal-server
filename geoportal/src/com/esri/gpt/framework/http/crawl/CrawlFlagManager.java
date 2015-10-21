@@ -15,11 +15,13 @@
 package com.esri.gpt.framework.http.crawl;
 
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 /**
  * Crawl flag manager.
  */
 class CrawlFlagManager {
+  private static final Logger LOG = Logger.getLogger(CrawlFlagManager.class.getName());
   private final LinkedList<CrawlFlag> crawlFlags = new LinkedList<CrawlFlag>();
   
   /**
@@ -27,6 +29,7 @@ class CrawlFlagManager {
    * @return flag
    */
   public synchronized CrawlFlag newFlag() {
+    LOG.finer(String.format("Creating crawl flag"));
     CrawlFlag flag = new CrawlFlag();
     crawlFlags.push(flag);
     return flag;
@@ -37,7 +40,10 @@ class CrawlFlagManager {
    */
   public synchronized void notifyLast() {
     if (!crawlFlags.isEmpty()) {
+      LOG.finer("Notifying last first flag");
       crawlFlags.pop().set();
+    } else {
+      LOG.finer(String.format("No crawl flag to notify"));
     }
   }
 }

@@ -34,9 +34,11 @@ class CrawlLock {
    * @throws InterruptedException 
    */
   public synchronized void enter(Integer delay) throws InterruptedException {
+    LOG.finer(String.format("Entering crawl lock with crawl-delay: %d", delay));
     CrawlFlag flag = flagManager.newFlag();
 
     if (status) {
+      LOG.finer(String.format("Holding on flag"));
       flag.hold();
     }
 
@@ -53,6 +55,13 @@ class CrawlLock {
     } else {
       flagManager.notifyLast();
     }
+    
+    LOG.finer(String.format("Exiting crawl lock"));
+  }
+  
+  @Override
+  public String toString() {
+    return String.format("CrawlLock :: crawlDelay: %d, status: %b", crawlDelay, status);
   }
 
   /**
@@ -66,16 +75,20 @@ class CrawlLock {
 
     @Override
     public void run() {
+      LOG.finer(String.format("Starting lock semaphore with crawl delay: %d", crawlDelay));
       status = true;
       synchronized (this) {
         notify();
       }
       try {
-        Thread.sleep(crawlDelay * 1000);
+        if (crawlDelay!=null) {
+          Thread.sleep(crawlDelay * 1000);
+        }
       } catch (InterruptedException ex) {
         LOG.log(Level.SEVERE, null, ex);
       } finally {
         flagManager.notifyLast();
+        LOG.finer(String.format("Lock semaphore ended"));
       }
     }
   }

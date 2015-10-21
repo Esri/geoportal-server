@@ -18,7 +18,6 @@ package com.esri.gpt.framework.http.crawl;
  * Crawl flag.
  */
 public class CrawlFlag {
-  private volatile boolean status;
   
   /**
    * Hold until notified.
@@ -32,7 +31,6 @@ public class CrawlFlag {
    * Set flag and notify.
    */
   public synchronized void set() {
-    status = true;
     notifyAll();
   }
 }

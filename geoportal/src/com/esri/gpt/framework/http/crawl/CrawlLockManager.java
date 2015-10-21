@@ -35,6 +35,7 @@ class CrawlLockManager {
       lock = new CrawlLock();
       locks.put(protocolHostPort, lock);
     }
+    LOG.finer(String.format("Getting crawl lock: %s", lock));
     return lock;
   }
 }
