@@ -48,27 +48,9 @@ public class HttpCrawlRequest extends HttpClientRequest {
   @Override
   public String getUrl() {
     String url = super.getUrl();
+    // if robots.txt available then "host" attribute if available to update url
     if (robotsTxt != null) {
-      String host = Val.chkStr(robotsTxt.getHost());
-      if (!host.isEmpty()) {
-        String[] h = host.split(":");
-        if (h.length > 0) {
-          try {
-            URI u = new URL(url).toURI();
-            url = new URI(
-                    u.getScheme(),
-                    u.getUserInfo(),
-                    h[0],
-                    h.length > 1 ? Integer.parseInt(h[1]) : u.getPort(),
-                    u.getPath(),
-                    u.getQuery(),
-                    u.getFragment()
-            ).toURL().toExternalForm();
-          } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Invalid url", ex);
-          }
-        }
-      }
+      url = robotsTxt.applyHostAttribute(url);
     }
     return url;
   }

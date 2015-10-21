@@ -365,13 +365,16 @@ public class AGSProcessor extends ResourceProcessor {
   private ServiceDescription[] readServiceDescriptions(IterationContext context) throws ArcGISWebServiceException {
     String soapUrl = extractRootUrl(getTarget().getSoapUrl());
     if (context!=null) {
+      RobotsTxt robotsTxt = context.getRobotsTxt();
+      if (robotsTxt!=null) {
+        soapUrl = robotsTxt.applyHostAttribute(soapUrl);
+      }
       try {
         context.assertAccess(soapUrl);
       } catch (AccessException ex) {
         context.onIterationException(ex);
         return new ServiceDescription[0];
       }
-      RobotsTxt robotsTxt = context.getRobotsTxt();
       if (robotsTxt!=null) {
         CrawlLocker.getInstance().enterServer(soapUrl, robotsTxt.getCrawlDelay());
       }

@@ -21,6 +21,8 @@ import java.util.List;
  */
 public interface RobotsTxt {
 
+// ===== properties ============================================================
+  
   /**
    * Gets crawl delay.
    * @return crawl delay in secconds or <code>0</code> if no delay
@@ -39,6 +41,8 @@ public interface RobotsTxt {
    */
   List<String> getSitemaps();
 
+// ===== utilities =============================================================
+  
   /**
    * Checks if absolute path has access for this section.
    *
@@ -47,4 +51,10 @@ public interface RobotsTxt {
    */
   Access findAccess(String path);
   
+  /**
+   * Apply host attribute to the given url.
+   * @param url url
+   * @return url with applied host attribute
+   */
+  String applyHostAttribute(String url);
 }

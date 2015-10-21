@@ -15,6 +15,7 @@
 package com.esri.gpt.framework.robots;
 
 import com.esri.gpt.framework.util.StringBuilderWriter;
+import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
@@ -24,11 +25,13 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Robots TXT implementation.
  */
 class RobotsTxtImpl implements RobotsTxt {
+  private static final Logger LOG = Logger.getLogger(RobotsTxtImpl.class.getName());
 
   private Section defaultSection;
   private final List<Section> sections = new ArrayList<Section>();
@@ -66,19 +69,15 @@ class RobotsTxtImpl implements RobotsTxt {
 
   @Override
   public Integer getCrawlDelay() {
+    Integer crawlDelay = null;
     Section sec = findSectionByAgent(sections, userAgent);
     if (sec!=null) {
-      Integer crawlDelay = sec.getCrawlDelay();
-      if (crawlDelay!=null) {
-        return crawlDelay;
-      }
+      crawlDelay = sec.getCrawlDelay();
     }
     if (defaultSection!=null) {
-      Integer crawlDelay = defaultSection.getCrawlDelay();
-      if (crawlDelay!=null) {
-        return crawlDelay;
-      }
+      crawlDelay = defaultSection.getCrawlDelay();
     }
+    LOG.fine(String.format("Crawl-delay: %d", crawlDelay));
     return null;
   }
 
@@ -102,13 +101,27 @@ class RobotsTxtImpl implements RobotsTxt {
     try {
       path = URLDecoder.decode(path, "UTF-8");
       String relativePath = assureRelative(path);
-      return relativePath!=null && !"/robots.txt".equalsIgnoreCase(relativePath)? findAccess(userAgent, relativePath): Access.ALLOW;
+      Access access = relativePath!=null && !"/robots.txt".equalsIgnoreCase(relativePath)? findAccess(userAgent, relativePath): Access.ALLOW;
+      LOG.fine(String.format("Access: %s", access));
+      return access;
     } catch (IOException ex) {
       return Access.DISALLOW;
     } catch (URISyntaxException ex) {
       return Access.DISALLOW;
     }
   }
+
+  @Override
+  public String applyHostAttribute(String url) {
+    String orgUrl = url;
+    ProtocolHostPort php = parseHostAttribute(getHost());
+    url = updateUrl(url, php);
+    if (!url.equals(orgUrl)) {
+      LOG.fine(String.format("Url updated from %s to %s", orgUrl, url));
+    }
+    return url;
+  }
+  
   
   @Override
   public String toString() {
@@ -180,5 +193,74 @@ class RobotsTxtImpl implements RobotsTxt {
       return String.format("/%s%s%s", url.getPath(), url.getQuery()!=null? "#"+url.getQuery(): "", url.getRef()!=null? "#"+url.getRef(): "").replaceAll("/+", "/");
     }
     return path;
+  }
+  
+  private String updateUrl(String url, ProtocolHostPort php) {
+    if (url!=null && php!=null) {
+      try {
+        URL u = new URL(url);
+        url = new URL(
+                // update protocol if requested protocol not null
+                php.protocol!=null? php.protocol: u.getProtocol(),
+                // update host if requested host not null
+                php.host!=null? php.host: u.getHost(),
+                // update port ONLY if requested HOST not null
+                php.host!=null? php.port!=null? php.port: -1: u.getPort(),
+                u.getPath()
+        ).toExternalForm();
+      } catch (MalformedURLException ex) {
+
+      }
+    }
+    return url;
+  }
+  
+  private ProtocolHostPort parseHostAttribute(String host) {
+    host = Val.chkStr(host);
+    if (!host.isEmpty()) {
+      // parse protocol
+      String protocolPart = null;
+      int protocolStopIdx = host.indexOf("://");
+      if (protocolStopIdx>=0) {
+        protocolPart = protocolStopIdx>0? host.substring(0,protocolStopIdx): null;
+        host = host.substring(protocolStopIdx+"://".length());
+      }
+      
+      // parse host:port
+      String hostPart = null;
+      Integer portPart = null;
+      if (!host.isEmpty()) {
+        int hostStopIdx = host.indexOf(":");
+        if (hostStopIdx<0) {
+          hostPart = host;
+        } else {
+          hostPart = hostStopIdx>0? host.substring(0, hostStopIdx): null;
+          try {
+            portPart = Integer.parseInt(host.substring(hostStopIdx+":".length()));
+          } catch (NumberFormatException ex) {
+            
+          }
+        }
+      }
+      
+      if (protocolPart!=null || hostPart!=null || portPart!=null) {
+        return new ProtocolHostPort(protocolPart, hostPart, portPart);
+      }
+    }
+    return null;
+  }
+  
+  private static class ProtocolHostPort {
+    String  protocol;
+    String  host;
+    Integer port;
+
+    public ProtocolHostPort(String protocol, String host, Integer port) {
+      this.protocol = protocol;
+      this.host = host;
+      this.port = port;
+    }
+    
+    
   }
 }
