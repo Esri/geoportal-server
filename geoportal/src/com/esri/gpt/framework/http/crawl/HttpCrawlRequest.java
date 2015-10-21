@@ -18,11 +18,13 @@ import com.esri.gpt.framework.http.HttpClientException;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.robots.Access;
 import com.esri.gpt.framework.robots.RobotsTxt;
+import com.esri.gpt.framework.robots.RobotsTxtParser;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.httpclient.HttpMethodBase;
 
 /**
  * Http crawl request.
@@ -44,6 +46,15 @@ public class HttpCrawlRequest extends HttpClientRequest {
   public void execute() throws IOException {
     this.adviseRobotsTxt();
     super.execute();
+  }
+
+  @Override
+  protected HttpMethodBase createMethod() throws IOException {
+    HttpMethodBase method = super.createMethod();
+    if (robotsTxt!=null) {
+      method.setRequestHeader("User-agent", RobotsTxtParser.getDefaultInstance().getUserAgent());
+    }
+    return method;
   }
 
   @Override

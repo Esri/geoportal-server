@@ -87,8 +87,16 @@ public class RobotsTxtParser {
    */
   private RobotsTxtParser(boolean enabled, boolean override, String userAgent) {
     this.enabled = enabled;
-    this.userAgent = userAgent;
     this.override = override;
+    this.userAgent = Val.chkStr(userAgent);
+  }
+
+  /**
+   * Gets user agent.
+   * @return user agent
+   */
+  public String getUserAgent() {
+    return userAgent;
   }
 
   /**

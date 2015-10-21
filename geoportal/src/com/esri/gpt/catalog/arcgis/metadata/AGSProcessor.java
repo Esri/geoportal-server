@@ -35,6 +35,7 @@ import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
 import com.esri.gpt.framework.robots.RobotsTxt;
+import com.esri.gpt.framework.robots.RobotsTxtParser;
 import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
 import com.esri.gpt.framework.util.ReadOnlyIterator;
 import com.esri.gpt.framework.util.Val;
@@ -43,8 +44,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -364,8 +367,9 @@ public class AGSProcessor extends ResourceProcessor {
    */
   private ServiceDescription[] readServiceDescriptions(IterationContext context) throws ArcGISWebServiceException {
     String soapUrl = extractRootUrl(getTarget().getSoapUrl());
+    RobotsTxt robotsTxt = null;
     if (context!=null) {
-      RobotsTxt robotsTxt = context.getRobotsTxt();
+      robotsTxt = context.getRobotsTxt();
       if (robotsTxt!=null) {
         soapUrl = robotsTxt.applyHostAttribute(soapUrl);
       }
@@ -379,6 +383,11 @@ public class AGSProcessor extends ResourceProcessor {
       }
     }
     ServiceCatalogBindingStub stub = new ServiceCatalogBindingStub(soapUrl);
+    if (robotsTxt!=null) {
+      HashMap<String,List<String>> headers = new HashMap<String, List<String>>();
+      headers.put("User-agent", Arrays.asList(new String[]{RobotsTxtParser.getDefaultInstance().getUserAgent()}));
+      stub.addHTTPRequestHeaders(headers);
+    }
     ServiceDescription[] descriptors = stub.getServiceDescriptions();
     return descriptors;
   }

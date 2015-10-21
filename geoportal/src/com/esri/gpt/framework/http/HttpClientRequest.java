@@ -446,7 +446,7 @@ public class HttpClientRequest {
    * the ContentProvider is null. Otherwise, a PostMethod will be created.
    * @return the HTTP method
    */
-  private HttpMethodBase createMethod() throws IOException {
+  protected HttpMethodBase createMethod() throws IOException {
     HttpMethodBase method = null;
     MethodName name = this.getMethodName();
 
