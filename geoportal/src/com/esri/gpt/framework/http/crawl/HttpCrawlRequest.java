@@ -32,6 +32,10 @@ public class HttpCrawlRequest extends HttpClientRequest {
   private static final Logger LOG = Logger.getLogger(HttpCrawlRequest.class.getName());
   private final RobotsTxt robotsTxt;
 
+  /**
+   * Creates instance of the request.
+   * @param robotsTxt robots.txt or <code>null</code> if robots not available
+   */
   public HttpCrawlRequest(RobotsTxt robotsTxt) {
     this.robotsTxt = robotsTxt;
   }
