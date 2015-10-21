@@ -372,8 +372,7 @@ public class AGSProcessor extends ResourceProcessor {
       try {
         context.assertAccess(soapUrl);
       } catch (AccessException ex) {
-        context.onIterationException(ex);
-        return new ServiceDescription[0];
+        throw new ArcGISWebServiceException(String.format("Access to: %s forbidden by robots.txt", getTarget().getSoapUrl()), ex);
       }
       if (robotsTxt!=null) {
         CrawlLocker.getInstance().enterServer(soapUrl, robotsTxt.getCrawlDelay());
