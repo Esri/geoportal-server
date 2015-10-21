@@ -21,64 +21,62 @@ import java.util.logging.Logger;
  * Crawl lock.
  */
 class CrawlLock {
+
   private static final Logger LOG = Logger.getLogger(CrawlLock.class.getName());
+  private final CrawlFlagManager flagManager = new CrawlFlagManager();
+
   private Integer crawlDelay;
   private volatile boolean status;
-  
-  public synchronized void enter(Integer delay) throws InterruptedException {
-    if (status) {
-      startWaiting();
-    }
-    
-    crawlDelay = delay;
-    
-    LOG.fine(String.format("Locking server for %d seconds", delay));
-    if (crawlDelay!=null) {
-      lockThenNotify();
-    } else {
-      notify();
-    }
-    LOG.fine(String.format("Server unlocked after %d seconds", delay));
-  }
 
-  private synchronized void startWaiting() throws InterruptedException {
-    LOG.fine("Waiting for notification...");
-    wait();
-    LOG.fine("Notified");
-  }
-  
-  private void lockThenNotify() throws InterruptedException {
-    final Object semaphore = new Object();
-    Thread thread = new Thread() {
-      @Override
-      public void run() {
-        status = true;
-        try {
-          synchronized(semaphore) {
-            semaphore.notify();
-          }
-          LOG.fine(String.format("Extering sleep for %d seconds...", crawlDelay));
-          Thread.sleep(crawlDelay * 1000);
-          LOG.fine(String.format("Sleep ended after %d seconds...", crawlDelay));
-        } catch (InterruptedException ex) {
-          LOG.log(Level.SEVERE, "Interrupted.", ex);
-        } finally {
-          synchronized (CrawlLock.this) {
-            status = false;
-            LOG.fine("Notifying potential requests...");
-            CrawlLock.this.notify();
+  /**
+   * Enters lock with crawl delay.
+   * @param delay crawl delay (<code>null</code> for no delay)
+   * @throws InterruptedException 
+   */
+  public synchronized void enter(Integer delay) throws InterruptedException {
+    CrawlFlag flag = flagManager.newFlag();
+
+    if (status) {
+      flag.hold();
+    }
+
+    crawlDelay = delay;
+    if (crawlDelay != null) {
+        Semaphore semaphore = new Semaphore();
+        semaphore.start();
+        
+        while (!status) {
+          synchronized (semaphore) {
+            semaphore.wait();
           }
         }
+    } else {
+      flagManager.notifyLast();
+    }
+  }
+
+  /**
+   * Semaphore for crawl lock.
+   */
+  private class Semaphore extends Thread {
+
+    public Semaphore() {
+      setDaemon(true);
+    }
+
+    @Override
+    public void run() {
+      status = true;
+      synchronized (this) {
+        notify();
       }
-    };
-    thread.setDaemon(true);
-    thread.start();
-    
-    while (!status) {
-      synchronized (semaphore) {
-        semaphore.wait();
+      try {
+        Thread.sleep(crawlDelay * 1000);
+      } catch (InterruptedException ex) {
+        LOG.log(Level.SEVERE, null, ex);
+      } finally {
+        flagManager.notifyLast();
       }
     }
   }
-  
 }

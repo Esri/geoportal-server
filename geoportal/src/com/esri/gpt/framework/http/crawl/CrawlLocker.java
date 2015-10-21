@@ -14,7 +14,6 @@
  */
 package com.esri.gpt.framework.http.crawl;
 
-import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,9 +22,13 @@ import java.util.logging.Logger;
  */
 public class CrawlLocker {
   private static final Logger LOG = Logger.getLogger(CrawlLocker.class.getName());
-  private static final WeakHashMap<String,CrawlLock> locks = new  WeakHashMap<String, CrawlLock>();
+  private static final CrawlLockManager lockManager = new CrawlLockManager();
   private static CrawlLocker instance;
   
+  /**
+   * Gets singleton instance.
+   * @return instance (never <code>null</code>)
+   */
   public static CrawlLocker getInstance() {
     if (instance==null) {
       instance = new CrawlLocker();
@@ -35,24 +38,20 @@ public class CrawlLocker {
   
   private CrawlLocker() {}
   
+  /**
+   * Enter server with crawl delay.
+   * @param protocolHostPort server protocol/host/port
+   * @param crawlDelay crawl delay (<code>null</code> for no delay)
+   */
   public void enterServer(String protocolHostPort, Integer crawlDelay) {
     try {
       LOG.fine(String.format("Entering server %s for %d seconds", protocolHostPort, crawlDelay));
-      CrawlLock lock = makeLock(protocolHostPort);
+      CrawlLock lock = lockManager.getLock(protocolHostPort);
       lock.enter(crawlDelay);
       LOG.fine(String.format("Exiting server %s", protocolHostPort));
     } catch (InterruptedException ex) {
       LOG.log(Level.SEVERE, "Interrupted.", ex);
     }
-  }
-  
-  private synchronized CrawlLock makeLock(String protocolHostPort) {
-    CrawlLock crawlLock = locks.get(protocolHostPort);
-    if (crawlLock==null) {
-      crawlLock = new CrawlLock();
-      locks.put(protocolHostPort, crawlLock);
-    }
-    return crawlLock;
   }
   
 }
