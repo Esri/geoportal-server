@@ -90,7 +90,7 @@ public class DefaultIterationContext implements IterationContext {
   @Override
   public void assertAccess(String url) throws AccessException {
     if (robotsTxt!=null) {
-      LOG.info(String.format("Evaluating access to %s using robots.txt", url));
+      LOG.fine(String.format("Evaluating access to %s using robots.txt", url));
       try {
         String relativeUrl = extractRelativeUrl(url);
         Access access = robotsTxt.findAccess(relativeUrl);
@@ -98,7 +98,7 @@ public class DefaultIterationContext implements IterationContext {
           LOG.info(String.format("Access to %s disallowed by robots.txt", url));
           throw new AccessException(String.format("Access to %s disallowed by robots.txt", url), access);
         }
-        LOG.info(String.format("Access to %s allowed by robots.txt", url));
+        LOG.fine(String.format("Access to %s allowed by robots.txt", url));
       } catch (AccessException ex) {
         throw ex;
       } catch (IOException ex) {
