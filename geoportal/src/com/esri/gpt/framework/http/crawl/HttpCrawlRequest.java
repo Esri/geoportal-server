@@ -18,12 +18,9 @@ import com.esri.gpt.framework.http.HttpClientException;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.robots.Access;
 import com.esri.gpt.framework.robots.RobotsTxt;
-import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
 
