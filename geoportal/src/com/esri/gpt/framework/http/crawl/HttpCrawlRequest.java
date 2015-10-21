@@ -59,13 +59,13 @@ public class HttpCrawlRequest extends HttpClientRequest {
   private void adviseRobotsTxt() throws IOException {
     if (robotsTxt != null) {
       String url = getRelativePath();
-      LOG.info(String.format("Evaluating access to %s using robots.txt", url));
+      LOG.fine(String.format("Evaluating access to %s using robots.txt", url));
       Access access = robotsTxt.findAccess(url);
       if (!access.hasAccess()) {
         LOG.info(String.format("Access to %s disallowed by robots.txt", url));
         throw new HttpClientException(HttpServletResponse.SC_FORBIDDEN, String.format("Access to %s disallowed by robots.txt", url));
       }
-      LOG.info(String.format("Access to %s allowed by robots.txt", url));
+      LOG.fine(String.format("Access to %s allowed by robots.txt", url));
       CrawlLocker.getInstance().enterServer(getProtocolHostPort(), robotsTxt.getCrawlDelay());
     }
   }
