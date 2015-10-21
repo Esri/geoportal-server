@@ -1415,6 +1415,16 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   <h:outputLabel styleClass="autoApprove syncOpt" for="autoApprove" value="#{gptMsg['catalog.harvest.manage.edit.protocol.autoApprove']}"/>
 </h:panelGroup>
 
+
+</h:panelGrid>
+
+<h:panelGrid  columns="2" summary="#{gptMsg['catalog.general.designOnly']}"  styleClass="formTable" columnClasses="formInputColumn," rendered="#{HarvestController.robotsTxtOverride}">
+  <h:outputLabel styleClass="robotsTxtMode syncOpt" for="robotsTxtMode" value="#{gptMsg['catalog.harvest.manage.edit.protocol.robots.mode.caption']}"/>
+  <h:selectOneMenu id="robotsTxtMode" styleClass="robotsTxtMode syncOpt" value="#{HarvestController.editor.robotsTxtMode}">
+    <f:selectItem id="inherit" itemLabel="#{gptMsg['catalog.harvest.manage.edit.protocol.robots.mode.inherit']}" itemValue="inherit" />
+    <f:selectItem id="always" itemLabel="#{gptMsg['catalog.harvest.manage.edit.protocol.robots.mode.always']}" itemValue="always" />
+    <f:selectItem id="never" itemLabel="#{gptMsg['catalog.harvest.manage.edit.protocol.robots.mode.never']}" itemValue="never" />
+  </h:selectOneMenu>
 </h:panelGrid>
 
 <f:verbatim><br/></f:verbatim>

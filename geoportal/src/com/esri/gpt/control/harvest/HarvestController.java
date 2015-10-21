@@ -57,6 +57,7 @@ import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.request.SortOption;
+import com.esri.gpt.framework.robots.RobotsTxtParser;
 import com.esri.gpt.framework.security.identity.NotAuthorizedException;
 import com.esri.gpt.framework.security.identity.local.LocalDao;
 import com.esri.gpt.framework.security.principal.Publisher;
@@ -998,6 +999,13 @@ public void setTimeCodes(String timeCodes) {
   getEditor().setTimeCodes(timeCodes);
 }
 
+/**
+ * Checks if robots.txt mode can be overridden.
+ * @return <code>true</code> if robots.txt mode can be overridden
+ */
+public boolean getRobotsTxtOverride() {
+  return RobotsTxtParser.getDefaultInstance().canOverride();
+}
   /**
    * Creates editor.
    *

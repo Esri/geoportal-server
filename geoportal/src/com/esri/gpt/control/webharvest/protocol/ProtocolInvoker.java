@@ -177,8 +177,9 @@ public class ProtocolInvoker {
     boolean lb = ((mode.ordinal() & 0x01) == 0x01);
     boolean hb = ((mode.ordinal()>>1 & 0x01) == 0x01);
     
-    setFlag(protocol.getFlags(),ROBOTS_MODE, lb);
-    setFlag(protocol.getFlags(),ROBOTS_MODE+1, lb);
+    
+    protocol.setFlags(setFlag(protocol.getFlags(),ROBOTS_MODE, lb));
+    protocol.setFlags(setFlag(protocol.getFlags(),ROBOTS_MODE+1, hb));
   }
   
   /**
