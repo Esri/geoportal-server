@@ -20,6 +20,7 @@ import com.esri.gpt.catalog.publication.ProcessingContext;
 import com.esri.gpt.catalog.publication.ResourceProcessor;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.common.CommonCapabilities;
+import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
@@ -53,7 +54,13 @@ public ArcGISQueryBuilder(IterationContext context, ArcGISProtocol protocol, Str
   if (context == null)
     throw new IllegalArgumentException("No context provided.");
   this.context = context;
-  this.info = new ArcGISInfo(restUrl, soapUrl, protocol.getUserName(), protocol.getUserPassword());
+  this.info = new ArcGISInfo(
+          restUrl, 
+          soapUrl, 
+          protocol.getUserName(), 
+          protocol.getUserPassword(), 
+          ProtocolInvoker.getRobotsTxtMode(protocol)
+  );
 }
 
 /**

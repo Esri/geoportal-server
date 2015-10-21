@@ -32,6 +32,7 @@ import com.esri.gpt.framework.resource.api.SourceUri;
 import com.esri.gpt.framework.resource.common.CommonPublishable;
 import com.esri.gpt.framework.resource.common.UrlUri;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
+import com.esri.gpt.framework.robots.RobotsTxtMode;
 import com.esri.gpt.framework.robots.RobotsTxtParser;
 import com.esri.gpt.framework.util.LogUtil;
 import com.esri.gpt.framework.util.ResourceXml;
@@ -542,10 +543,24 @@ public boolean getIsHarvestDue() {
  */
 public QueryBuilder newQueryBuilder(IterationContext iterationContext) {
   if (iterationContext==null) {
-    iterationContext = new DefaultIterationContext(RobotsTxtParser.getDefaultInstance().parseRobotsTxt(getHostUrl()));
+    iterationContext = new DefaultIterationContext(
+            RobotsTxtParser.getDefaultInstance().parseRobotsTxt(
+                    getRobotsTxtMode(),
+                    getHostUrl()
+            )
+    );
   }
   return getProtocol() != null ? getProtocol().newQueryBuilder(iterationContext, getHostUrl()) : null;
 }
+
+/**
+ * Gets robots.txt mode.
+ * @return robots.txt mode.
+ */
+public RobotsTxtMode getRobotsTxtMode() {
+  return ProtocolInvoker.getRobotsTxtMode(this.getProtocol());
+}
+
 // custom types ================================================================
 
 /**

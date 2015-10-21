@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.control.webharvest.protocol;
 
+import com.esri.gpt.framework.robots.RobotsTxtMode;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRConnectionException;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidProtocolException;
 import java.io.IOException;
@@ -31,6 +32,7 @@ public class ProtocolInvoker {
   private static final int XML_GENERATION_FLAG = 1;
   private static final int AUTO_APPROVE_FLAG = 2;
   private static final int LOCK_TITLE_FLAG = 3;
+  private static final int ROBOTS_MODE = 4;
 
   /**
    * Invokes ping on the protocol.
@@ -164,6 +166,41 @@ public class ProtocolInvoker {
     }
   }
 
+  /**
+   * Sets robots.txt mode.
+   * @param protocol protocol
+   * @param mode mode
+   */
+  public static void setRobotsTxtMode(Protocol protocol, RobotsTxtMode mode) {
+    mode = mode!=null? mode: RobotsTxtMode.getDefault();
+    
+    boolean lb = ((mode.ordinal() & 0x01) == 0x01);
+    boolean hb = ((mode.ordinal()>>1 & 0x01) == 0x01);
+    
+    setFlag(protocol.getFlags(),ROBOTS_MODE, lb);
+    setFlag(protocol.getFlags(),ROBOTS_MODE+1, lb);
+  }
+  
+  /**
+   * Gets robots.txt mode.
+   * @param protocol protocol
+   * @return mode
+   */
+  public static RobotsTxtMode getRobotsTxtMode(Protocol protocol) {
+    boolean lb = getFlag(protocol.getFlags(), ROBOTS_MODE);
+    boolean hb = getFlag(protocol.getFlags(), ROBOTS_MODE+1);
+    
+    int mode = 0;
+    mode = (mode<<1) | (hb? 0x01: 0x00);
+    mode = (mode<<1) | (lb? 0x01: 0x00);
+    
+    if (mode < RobotsTxtMode.values().length) {
+      return RobotsTxtMode.values()[mode];
+    }
+    
+    return RobotsTxtMode.getDefault();
+  }
+  
   /**
    * Gets state of the specific flag.
    * @param bits bits representing flag set

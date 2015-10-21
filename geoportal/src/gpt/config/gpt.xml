@@ -330,9 +330,11 @@
         
         <!-- Robot parameters.
             - bot.robotstxt.enabled: use of robots.txt during harvesting is enabled. Default: true
+            - bot.robotstxt.override:  allows user to override bot.robotstxt.enabled. Default: true;
             - bot.agent: name of the user agent for interpreting content of robots.txt. Default: "geoportalbot"
         -->
         <parameter key="bot.robotstxt.enabled" value=""/>
+        <parameter key="bot.robotstxt.override" value=""/>
         <parameter key="bot.agent" value=""/>
         
         <!-- Additional Parameters.

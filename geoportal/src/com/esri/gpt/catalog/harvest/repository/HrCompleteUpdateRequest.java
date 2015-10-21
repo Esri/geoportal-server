@@ -59,7 +59,12 @@ public class HrCompleteUpdateRequest extends HrRequest {
   private Native createNativeResource(HrRecord repository) throws Exception {
     // create such an instance of the iteration context so it will store each
     // exception in the placeholder
-    DefaultIterationContext iterationContext = new DefaultIterationContext(RobotsTxtParser.getDefaultInstance().parseRobotsTxt(repository.getHostUrl()));
+    DefaultIterationContext iterationContext = new DefaultIterationContext(
+            RobotsTxtParser.getDefaultInstance().parseRobotsTxt(
+                    repository.getRobotsTxtMode(),
+                    repository.getHostUrl()
+            )
+    );
     // create new query builder specific for the repository
     QueryBuilder queryBuilder = repository.newQueryBuilder(iterationContext);
     // get native resource; this may throw exception(s) stored later in the

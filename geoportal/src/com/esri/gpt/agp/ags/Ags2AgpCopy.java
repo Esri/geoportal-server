@@ -98,7 +98,12 @@ public class Ags2AgpCopy {
     RequestContext requestContext = RequestContext.extract(null);
     try {
 
-      ArcGISQueryBuilder qb = new ArcGISQueryBuilder(new DefaultIterationContext(RobotsTxtParser.getDefaultInstance().parseRobotsTxt(source.getRestUrl())) {
+      ArcGISQueryBuilder qb = new ArcGISQueryBuilder(new DefaultIterationContext(
+              RobotsTxtParser.getDefaultInstance().parseRobotsTxt(
+                      source.getRobotsTxtMode(),
+                      source.getRestUrl()
+              )
+      ) {
         @Override
         public void onIterationException(Exception ex) {
           LOGGER.log(Level.SEVERE, "Error iterating through AGS resources.", ex);

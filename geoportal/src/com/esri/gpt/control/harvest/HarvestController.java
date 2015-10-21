@@ -44,6 +44,7 @@ import com.esri.gpt.control.webharvest.engine.Statistics;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactories;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
+import com.esri.gpt.framework.robots.RobotsTxtMode;
 import com.esri.gpt.control.webharvest.protocol.factories.AgpProtocolFactory;
 import com.esri.gpt.control.webharvest.validator.IConnectionChecker;
 import com.esri.gpt.control.webharvest.validator.IValidator;
@@ -1044,6 +1045,7 @@ public void setTimeCodes(String timeCodes) {
         record.setFindable(true);
         record.setSearchable(true);
         record.setSynchronizable(true);
+        ProtocolInvoker.setRobotsTxtMode(record.getProtocol(), RobotsTxtMode.getDefault());
       }
     }
 

@@ -29,6 +29,7 @@ import com.esri.gpt.control.webharvest.engine.DataProcessor;
 import com.esri.gpt.control.webharvest.engine.ExecutionUnit;
 import com.esri.gpt.control.webharvest.engine.Executor;
 import com.esri.gpt.control.webharvest.engine.IWorker;
+import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
@@ -92,7 +93,10 @@ public class HarvestProtocolAgp2Agp extends AbstractHTTPHarvestProtocol {
     
     AgpSource source = new AgpSource();
     
-    RobotsTxt robotsTxt = RobotsTxtParser.getDefaultInstance().parseRobotsTxt(getSourceHost());
+    RobotsTxt robotsTxt = RobotsTxtParser.getDefaultInstance().parseRobotsTxt(
+            ProtocolInvoker.getRobotsTxtMode(this),
+            getSourceHost()
+    );
     AgpConnection con1 = new CrawlAgpConnection(robotsTxt);
     
     HostContextPair pair = HostContextPair.makeHostContextPair(getSourceHost());

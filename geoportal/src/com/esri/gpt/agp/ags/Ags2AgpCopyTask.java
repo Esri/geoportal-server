@@ -24,6 +24,7 @@ import com.esri.gpt.catalog.harvest.protocols.HostContextPair;
 import com.esri.gpt.control.webharvest.client.arcgis.ArcGISInfo;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.RequestContext;
+import com.esri.gpt.framework.robots.RobotsTxtMode;
 import com.esri.gpt.framework.scheduler.IScheduledTask;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -66,7 +67,9 @@ public class Ags2AgpCopyTask implements Runnable, IScheduledTask {
             parameters.getValue("ags.restUrl"),
             parameters.getValue("ags.soapUrl"),
             parameters.getValue("ags.userName"),
-            parameters.getValue("ags.userPassword"));
+            parameters.getValue("ags.userPassword"),
+            RobotsTxtMode.parseMode(parameters.getValue("ags.robotsTxtMode"))
+    );
     
   }
   

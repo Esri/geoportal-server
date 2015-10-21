@@ -38,12 +38,15 @@ public class RobotsTxtParser {
   private static final Logger LOG = Logger.getLogger(RobotsTxtParser.class.getName());
 
   private static final boolean DEFAULT_ENABLED = true;
+  private static final boolean DEFAULT_OVERRIDE = true;
   private static final String DEFAULT_AGENT = "geoportalbot";
 
-  private static final String BOT_ENABLED_PARAM = "bot.robotstxt.enabled"; // default: DEFAULT_ENABLED
-  private static final String BOT_AGENT_PARAM   = "bot.agent";             // default: DEFAULT_AGENT
+  private static final String BOT_ENABLED_PARAM = "bot.robotstxt.enabled";   // default: DEFAULT_ENABLED
+  private static final String BOT_OVERRIDE_PARAM = "bot.robotstxt.override"; // default: DEFAULT_OVERRIDE
+  private static final String BOT_AGENT_PARAM = "bot.agent";               // default: DEFAULT_AGENT
 
   private final boolean enabled;
+  private final boolean override;
   private final String userAgent;
 
   private static RobotsTxtParser defaultInstance;
@@ -59,11 +62,12 @@ public class RobotsTxtParser {
       ApplicationConfiguration appCfg = appCtx.getConfiguration();
 
       boolean enabled = Val.chkBool(appCfg.getCatalogConfiguration().getParameters().getValue(BOT_ENABLED_PARAM), DEFAULT_ENABLED);
+      boolean override = Val.chkBool(appCfg.getCatalogConfiguration().getParameters().getValue(BOT_OVERRIDE_PARAM), DEFAULT_OVERRIDE);
       String userAgent = Val.chkStr(appCfg.getCatalogConfiguration().getParameters().getValue(BOT_AGENT_PARAM), DEFAULT_AGENT);
 
-      LOG.info(String.format("Creating default RobotsTxtParser :: enabled: %b, user-agend: %s", enabled, userAgent));
+      LOG.info(String.format("Creating default RobotsTxtParser :: enabled: %b, override: %b, user-agend: %s", enabled, override, userAgent));
 
-      defaultInstance = new RobotsTxtParser(enabled, userAgent);
+      defaultInstance = new RobotsTxtParser(enabled, override, userAgent);
     }
     return defaultInstance;
   }
@@ -72,7 +76,7 @@ public class RobotsTxtParser {
    * Creates instance of the parser.
    */
   private RobotsTxtParser() {
-    this(DEFAULT_ENABLED, DEFAULT_AGENT);
+    this(DEFAULT_ENABLED, DEFAULT_OVERRIDE, DEFAULT_AGENT);
   }
 
   /**
@@ -81,23 +85,43 @@ public class RobotsTxtParser {
    * @param enabled <code>true</code> if robots.txt should be used
    * @param userAgent user agent
    */
-  private RobotsTxtParser(boolean enabled, String userAgent) {
+  private RobotsTxtParser(boolean enabled, boolean override, String userAgent) {
     this.enabled = enabled;
     this.userAgent = userAgent;
+    this.override = override;
+  }
+
+  /**
+   * Checks if using robots.txt is enabled.
+   *
+   * @return <code>true</code> if using robots.txt is enabled
+   */
+  public boolean isEnabled() {
+    return enabled;
+  }
+
+  /**
+   * Checks if robots.txt enabled flag can be overridden.
+   *
+   * @return <code>true</code> if robots.txt enabled flag can be overridden
+   */
+  public boolean canOverride() {
+    return override;
   }
 
   /**
    * Parses context of the Robots.txt file if available.
    *
+   * @param mode robots.txt mode
    * @param serverUrl url of the server which is expected to have robots.txt
    * present
    * @return instance of {@link RobotsTxt} or <code>null</code> if unable to
    * obtain robots.txt
    */
-  public RobotsTxt parseRobotsTxt(String serverUrl) {
-    if (enabled && serverUrl != null) {
+  public RobotsTxt parseRobotsTxt(RobotsTxtMode mode, String serverUrl) {
+    if (canParse(mode) && serverUrl != null) {
       try {
-        return parseRobotsTxt(new URL(serverUrl));
+        return parseRobotsTxt(mode, new URL(serverUrl));
       } catch (MalformedURLException ex) {
         LOG.log(Level.WARNING, String.format("Invalid server url: %s", serverUrl), ex);
       }
@@ -108,18 +132,19 @@ public class RobotsTxtParser {
   /**
    * Parses context of the Robots.txt file if available.
    *
+   * @param mode robots.txt mode
    * @param serverUrl url of the server which is expected to have robots.txt
    * present
    * @return instance of {@link RobotsTxt} or <code>null</code> if unable to
    * obtain robots.txt
    */
-  public RobotsTxt parseRobotsTxt(URL serverUrl) {
-    if (enabled && serverUrl != null) {
+  public RobotsTxt parseRobotsTxt(RobotsTxtMode mode, URL serverUrl) {
+    if (canParse(mode) && serverUrl != null) {
       LOG.log(Level.INFO, String.format("Accessing robots.txt for: %s", serverUrl.toExternalForm()));
       try {
         URL robotsTxtUrl = getRobotsTxtUrl(serverUrl);
         if (robotsTxtUrl != null) {
-          RobotsContentHandler handler = new RobotsContentHandler();
+          RobotsContentHandler handler = new RobotsContentHandler(mode);
           HttpClientRequest request = new HttpClientRequest();
           request.setRequestHeader("User-Agent", userAgent);
           request.setUrl(robotsTxtUrl.toExternalForm());
@@ -143,16 +168,18 @@ public class RobotsTxtParser {
   /**
    * Parses robots TXT
    *
+   * @param mode robots.txt mode
    * @param robotsTxt stream of data
    * @return instance or RobotsTxt or <code>null</code>
    */
-  public RobotsTxt parseRobotsTxt(InputStream robotsTxt) {
+  public RobotsTxt parseRobotsTxt(RobotsTxtMode mode, InputStream robotsTxt) {
     BufferedReader reader = null;
 
     try {
       RobotsTxtImpl robots = null;
+      
+      if (canParse(mode)) {
 
-      if (enabled) {
         reader = new BufferedReader(new InputStreamReader(robotsTxt, "UTF-8"));
         Section currentSection = null;
 
@@ -164,7 +191,7 @@ public class RobotsTxtParser {
             continue;
           }
 
-          // --------- User-agent ----------------------------------------------
+          // --------- User-agent ------------------------------------------------
           if (kvp[0].equalsIgnoreCase("User-agent")) {
             if (!startSection && currentSection != null) {
               if (robots == null) {
@@ -180,21 +207,18 @@ public class RobotsTxtParser {
 
             currentSection.addUserAgent(kvp[1]);
             startSection = true;
-            
-            
-          // --------- Disallow ------------------------------------------------
+
+            // --------- Disallow --------------------------------------------------
           } else if (currentSection != null && kvp[0].equalsIgnoreCase("Disallow")) {
             startSection = false;
             currentSection.addAccess(new AccessImpl(new AccessPath(kvp[1]), false));
-            
-            
-          // --------- Allow ---------------------------------------------------
+
+            // --------- Allow -----------------------------------------------------
           } else if (currentSection != null && kvp[0].equalsIgnoreCase("Allow")) {
             startSection = false;
             currentSection.addAccess(new AccessImpl(new AccessPath(kvp[1]), true));
-            
-            
-          // --------- Crawl-delay ---------------------------------------------
+
+            // --------- Crawl-delay -----------------------------------------------
           } else if (kvp[0].equalsIgnoreCase("Crawl-delay")) {
             startSection = false;
             if (currentSection != null) {
@@ -204,30 +228,28 @@ public class RobotsTxtParser {
               } catch (NumberFormatException ex) {
               }
             }
-            
-            
-          // --------- Sitemap -------------------------------------------------
+
+            // --------- Sitemap ---------------------------------------------------
           } else if (kvp[0].equalsIgnoreCase("Sitemap")) {
             if (robots == null) {
               robots = newRobots();
             }
             robots.getSitemaps().add(kvp[1]);
-            
-            
-          // --------- Host ----------------------------------------------------
+
+            // --------- Host ------------------------------------------------------
           } else if (kvp[0].equalsIgnoreCase("Host")) {
             if (robots == null) {
               robots = newRobots();
             }
             robots.setHost(kvp[1]);
           }
-        }
 
-        if (currentSection != null) {
-          if (robots == null) {
-            robots = newRobots();
+          if (currentSection != null) {
+            if (robots == null) {
+              robots = newRobots();
+            }
+            robots.addSection(currentSection);
           }
-          robots.addSection(currentSection);
         }
       }
 
@@ -243,6 +265,21 @@ public class RobotsTxtParser {
         }
       }
     }
+  }
+
+  private boolean canParse(RobotsTxtMode mode) {
+    mode = mode != null ? mode : RobotsTxtMode.getDefault();
+
+    switch (mode) {
+      case inherit:
+        return isEnabled();
+      case always:
+        return true;
+      case never:
+        return false;
+    }
+
+    return DEFAULT_ENABLED;
   }
 
   private String[] parseLineToKVP(String line) throws UnsupportedEncodingException {
@@ -286,11 +323,16 @@ public class RobotsTxtParser {
 
   private class RobotsContentHandler extends ContentHandler {
 
+    private final RobotsTxtMode mode;
     private RobotsTxt robots;
+
+    public RobotsContentHandler(RobotsTxtMode mode) {
+      this.mode = mode;
+    }
 
     @Override
     public void readResponse(HttpClientRequest request, InputStream responseStream) throws IOException {
-      robots = parseRobotsTxt(responseStream);
+      robots = parseRobotsTxt(mode, responseStream);
     }
 
     public RobotsTxt getRobots() {
