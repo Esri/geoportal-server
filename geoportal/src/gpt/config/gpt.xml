@@ -327,7 +327,14 @@
         <parameter key="webharvester.policy.class" value="com.esri.gpt.control.webharvest.engine.SimpleHarvestPolicy"/>
         <parameter key="webharvester.policy.simple.frequency" value="1"/>
         <parameter key="webharvester.agp2agp.maxItems" value="2000"/>
-
+        
+        <!-- Robot parameters.
+            - bot.robotstxt.enabled: use of robots.txt during harvesting is enabled. Default: true
+            - bot.agent: name of the user agent for interpreting content of robots.txt. Default: "geoportalbot"
+        -->
+        <parameter key="bot.robotstxt.enabled" value=""/>
+        <parameter key="bot.agent" value=""/>
+        
         <!-- Additional Parameters.
             - catalog.enableEditForAllPubMethods:
 				true if document editing should be enabled for all publication methods,
