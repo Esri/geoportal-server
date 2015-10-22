@@ -51,7 +51,10 @@ class AccessPath {
     
     try {
       relativePath = URLDecoder.decode(relativePath,"UTF-8");
-      Pattern pattern = makePattern(path);
+      Pattern pattern = makePattern(getPath());
+      if (getPath().endsWith("/") && !relativePath.endsWith("/")) {
+        relativePath += "/";
+      }
       Matcher matcher = pattern.matcher(relativePath);
       return matcher.find();
     } catch (Exception ex) {

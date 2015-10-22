@@ -17,7 +17,8 @@ package com.esri.gpt.control.webharvest;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.crawl.HttpCrawlRequest;
 import com.esri.gpt.framework.robots.Access;
-import com.esri.gpt.framework.robots.RobotsTxt;
+import com.esri.gpt.framework.robots.Bots;
+import static com.esri.gpt.framework.robots.BotsUtils.hasAccess;
 import com.esri.gpt.framework.util.StringBuilderWriter;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
@@ -37,13 +38,13 @@ public class DefaultIterationContext implements IterationContext {
   protected static SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
   protected final LinkedList<ExceptionInfo> exceptionInfos = new LinkedList<ExceptionInfo>();
   
-  protected final RobotsTxt robotsTxt;
+  protected final Bots robotsTxt;
 
   /**
    * Creates instance with robots information.
    * @param robotsTxt robots information or <code>null</code> if no robots information available
    */
-  public DefaultIterationContext(RobotsTxt robotsTxt) {
+  public DefaultIterationContext(Bots robotsTxt) {
     this.robotsTxt = robotsTxt;
   }
 
@@ -109,7 +110,7 @@ public class DefaultIterationContext implements IterationContext {
   }
 
   @Override
-  public RobotsTxt getRobotsTxt() {
+  public Bots getRobotsTxt() {
     return robotsTxt;
   }
   

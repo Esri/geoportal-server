@@ -17,8 +17,11 @@ package com.esri.gpt.framework.http.crawl;
 import com.esri.gpt.framework.http.HttpClientException;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.robots.Access;
-import com.esri.gpt.framework.robots.RobotsTxt;
-import com.esri.gpt.framework.robots.RobotsTxtParser;
+import com.esri.gpt.framework.robots.Bots;
+import com.esri.gpt.framework.robots.BotsParser;
+import static com.esri.gpt.framework.robots.BotsUtils.hasAccess;
+import static com.esri.gpt.framework.robots.BotsUtils.parser;
+import static com.esri.gpt.framework.robots.BotsUtils.transformUrl;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -32,14 +35,14 @@ import org.apache.commons.httpclient.HttpMethodBase;
 public class HttpCrawlRequest extends HttpClientRequest {
 
   private static final Logger LOG = Logger.getLogger(HttpCrawlRequest.class.getName());
-  private final RobotsTxt robotsTxt;
+  private final Bots bots;
 
   /**
    * Creates instance of the request.
    * @param robotsTxt robots.txt or <code>null</code> if robots not available
    */
-  public HttpCrawlRequest(RobotsTxt robotsTxt) {
-    this.robotsTxt = robotsTxt;
+  public HttpCrawlRequest(Bots robotsTxt) {
+    this.bots = robotsTxt;
   }
 
   @Override
@@ -51,8 +54,8 @@ public class HttpCrawlRequest extends HttpClientRequest {
   @Override
   protected HttpMethodBase createMethod() throws IOException {
     HttpMethodBase method = super.createMethod();
-    if (robotsTxt!=null && !RobotsTxtParser.getDefaultInstance().getUserAgent().isEmpty()) {
-      method.setRequestHeader("User-agent", RobotsTxtParser.getDefaultInstance().getUserAgent());
+    if (bots!=null && !parser().getUserAgent().isEmpty()) {
+      method.setRequestHeader("User-Agent", parser().getUserAgent());
     }
     return method;
   }
@@ -61,23 +64,19 @@ public class HttpCrawlRequest extends HttpClientRequest {
   public String getUrl() {
     String url = super.getUrl();
     // if robots.txt available then "host" attribute if available to update url
-    if (robotsTxt != null) {
-      url = robotsTxt.applyHostAttribute(url);
-    }
-    return url;
+    return transformUrl(bots,url);
   }
 
   private void adviseRobotsTxt() throws IOException {
-    if (robotsTxt != null) {
+    if (bots != null) {
       String url = getRelativePath();
       LOG.fine(String.format("Evaluating access to %s using robots.txt", getUrl()));
-      Access access = robotsTxt.findAccess(url);
-      if (!access.hasAccess()) {
+      if (!hasAccess(bots,url)) {
         LOG.info(String.format("Access to %s disallowed by robots.txt", getUrl()));
         throw new HttpClientException(HttpServletResponse.SC_FORBIDDEN, String.format("Access to %s disallowed by robots.txt", getUrl()));
       }
       LOG.fine(String.format("Access to %s allowed by robots.txt", getUrl()));
-      CrawlLocker.getInstance().enterServer(getProtocolHostPort(), robotsTxt.getCrawlDelay());
+      CrawlLocker.getInstance().enterServer(getProtocolHostPort(), bots.getCrawlDelay());
     }
   }
   

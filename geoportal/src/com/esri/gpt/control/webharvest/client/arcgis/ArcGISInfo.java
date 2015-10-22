@@ -15,7 +15,7 @@
 package com.esri.gpt.control.webharvest.client.arcgis;
 
 import com.esri.gpt.framework.http.CredentialProvider;
-import com.esri.gpt.framework.robots.RobotsTxtMode;
+import com.esri.gpt.framework.robots.BotsMode;
 import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
 import com.esri.gpt.framework.util.Val;
 
@@ -32,7 +32,7 @@ private final String userName;
 /** password */
 private final String password;
 /** robots mode */
-private final RobotsTxtMode robotsTxtMode;
+private final BotsMode robotsTxtMode;
 
 /**
  * Creates instance of the service info.
@@ -41,12 +41,12 @@ private final RobotsTxtMode robotsTxtMode;
  * @param userName user name
  * @param password password
  */
-public ArcGISInfo(String restUrl, String soapUrl, String userName, String password, RobotsTxtMode mode) {
+public ArcGISInfo(String restUrl, String soapUrl, String userName, String password, BotsMode mode) {
   this.restUrl = Val.chkStr(restUrl);
   this.soapUrl = Val.chkStr(soapUrl);
   this.userName = Val.chkStr(userName);
   this.password = Val.chkStr(password);
-  this.robotsTxtMode = mode!=null? mode: RobotsTxtMode.getDefault();
+  this.robotsTxtMode = mode!=null? mode: BotsMode.getDefault();
 }
 
 /**
@@ -93,7 +93,7 @@ public UsernamePasswordCredentials newCredentials() {
  * Gets robots.txt mode.
  * @return robots.txt mode
  */
-public RobotsTxtMode getRobotsTxtMode() {
+public BotsMode getRobotsTxtMode() {
   return robotsTxtMode;
 }
 

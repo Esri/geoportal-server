@@ -15,7 +15,7 @@
 package com.esri.gpt.control.webharvest;
 
 import com.esri.gpt.framework.http.HttpClientRequest;
-import com.esri.gpt.framework.robots.RobotsTxt;
+import com.esri.gpt.framework.robots.Bots;
 
 /**
  * Harvest context.
@@ -47,5 +47,5 @@ public interface IterationContext {
    * Gets RobotsTxt if available.
    * @return instance of robots txt or <code>null</code> if robots txt unavailable.
    */
-  RobotsTxt getRobotsTxt();
+  Bots getRobotsTxt();
 }

@@ -40,8 +40,8 @@ import com.esri.gpt.framework.resource.query.Capabilities;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
-import com.esri.gpt.framework.robots.RobotsTxt;
-import com.esri.gpt.framework.robots.RobotsTxtParser;
+import com.esri.gpt.framework.robots.Bots;
+import static com.esri.gpt.framework.robots.BotsUtils.readBots;
 import com.esri.gpt.framework.util.Val;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -93,7 +93,7 @@ public class HarvestProtocolAgp2Agp extends AbstractHTTPHarvestProtocol {
     
     AgpSource source = new AgpSource();
     
-    RobotsTxt robotsTxt = RobotsTxtParser.getDefaultInstance().parseRobotsTxt(
+    Bots robotsTxt = readBots(
             ProtocolInvoker.getRobotsTxtMode(this),
             getSourceHost()
     );
@@ -277,9 +277,9 @@ public static Long getAgp2AgpMaxItems() {
   }
   
   private static class CrawlAgpConnection extends AgpConnection {
-    private final RobotsTxt robotsTxt;
+    private final Bots robotsTxt;
 
-    public CrawlAgpConnection(RobotsTxt robotsTxt) {
+    public CrawlAgpConnection(Bots robotsTxt) {
       this.robotsTxt = robotsTxt;
     }
     

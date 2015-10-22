@@ -27,7 +27,7 @@ import com.esri.gpt.control.webharvest.client.arcgis.ArcGISProtocol;
 import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
-import com.esri.gpt.framework.robots.RobotsTxtMode;
+import com.esri.gpt.framework.robots.BotsMode;
 import com.esri.gpt.control.webharvest.validator.IValidator;
 import com.esri.gpt.control.webharvest.validator.MessageCollectorAdaptor;
 import com.esri.gpt.control.webharvest.validator.ValidatorFactory;
@@ -505,7 +505,7 @@ public String getRobotsTxtMode() {
  * @param robotsTxtMode robots.txt mode
  */
 public void setRobotsTxtMode(String robotsTxtMode) {
-  ProtocolInvoker.setRobotsTxtMode(_harvestRepository.getProtocol(), RobotsTxtMode.parseMode(robotsTxtMode));
+  ProtocolInvoker.setRobotsTxtMode(_harvestRepository.getProtocol(), BotsMode.parseMode(robotsTxtMode));
 }
 
 /**

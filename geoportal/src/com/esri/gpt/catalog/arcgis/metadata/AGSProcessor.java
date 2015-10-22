@@ -34,8 +34,10 @@ import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
-import com.esri.gpt.framework.robots.RobotsTxt;
-import com.esri.gpt.framework.robots.RobotsTxtParser;
+import com.esri.gpt.framework.robots.Bots;
+import com.esri.gpt.framework.robots.BotsParser;
+import static com.esri.gpt.framework.robots.BotsUtils.parser;
+import static com.esri.gpt.framework.robots.BotsUtils.transformUrl;
 import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
 import com.esri.gpt.framework.util.ReadOnlyIterator;
 import com.esri.gpt.framework.util.Val;
@@ -367,25 +369,23 @@ public class AGSProcessor extends ResourceProcessor {
    */
   private ServiceDescription[] readServiceDescriptions(IterationContext context) throws ArcGISWebServiceException {
     String soapUrl = extractRootUrl(getTarget().getSoapUrl());
-    RobotsTxt robotsTxt = null;
+    Bots bots = null;
     if (context!=null) {
-      robotsTxt = context.getRobotsTxt();
-      if (robotsTxt!=null) {
-        soapUrl = robotsTxt.applyHostAttribute(soapUrl);
-      }
+      bots = context.getRobotsTxt();
+      soapUrl = transformUrl(bots,soapUrl);
       try {
         context.assertAccess(soapUrl);
       } catch (AccessException ex) {
         throw new ArcGISWebServiceException(String.format("Access to: %s forbidden by robots.txt", getTarget().getSoapUrl()), ex);
       }
-      if (robotsTxt!=null) {
-        CrawlLocker.getInstance().enterServer(soapUrl, robotsTxt.getCrawlDelay());
+      if (bots!=null) {
+        CrawlLocker.getInstance().enterServer(soapUrl, bots.getCrawlDelay());
       }
     }
     ServiceCatalogBindingStub stub = new ServiceCatalogBindingStub(soapUrl);
-    if (robotsTxt!=null && !RobotsTxtParser.getDefaultInstance().getUserAgent().isEmpty()) {
+    if (bots!=null && !parser().getUserAgent().isEmpty()) {
       HashMap<String,List<String>> headers = new HashMap<String, List<String>>();
-      headers.put("User-agent", Arrays.asList(new String[]{RobotsTxtParser.getDefaultInstance().getUserAgent()}));
+      headers.put("User-Agent", Arrays.asList(new String[]{parser().getUserAgent()}));
       stub.addHTTPRequestHeaders(headers);
     }
     ServiceDescription[] descriptors = stub.getServiceDescriptions();

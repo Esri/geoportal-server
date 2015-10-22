@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Robots TXT.
  */
-public interface RobotsTxt {
+public interface Bots {
 
 // ===== properties ============================================================
   
@@ -50,11 +50,4 @@ public interface RobotsTxt {
    * @return access information (never <code>null</code>)
    */
   Access findAccess(String path);
-  
-  /**
-   * Apply host attribute to the given url.
-   * @param url url
-   * @return url with applied host attribute
-   */
-  String applyHostAttribute(String url);
 }

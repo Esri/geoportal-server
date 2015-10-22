@@ -14,7 +14,7 @@
  */
 package com.esri.gpt.control.webharvest.protocol;
 
-import com.esri.gpt.framework.robots.RobotsTxtMode;
+import com.esri.gpt.framework.robots.BotsMode;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRConnectionException;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidProtocolException;
 import java.io.IOException;
@@ -171,8 +171,8 @@ public class ProtocolInvoker {
    * @param protocol protocol
    * @param mode mode
    */
-  public static void setRobotsTxtMode(Protocol protocol, RobotsTxtMode mode) {
-    mode = mode!=null? mode: RobotsTxtMode.getDefault();
+  public static void setRobotsTxtMode(Protocol protocol, BotsMode mode) {
+    mode = mode!=null? mode: BotsMode.getDefault();
     
     boolean lb = ((mode.ordinal() & 0x01) == 0x01);
     boolean hb = ((mode.ordinal()>>1 & 0x01) == 0x01);
@@ -187,7 +187,7 @@ public class ProtocolInvoker {
    * @param protocol protocol
    * @return mode
    */
-  public static RobotsTxtMode getRobotsTxtMode(Protocol protocol) {
+  public static BotsMode getRobotsTxtMode(Protocol protocol) {
     boolean lb = getFlag(protocol.getFlags(), ROBOTS_MODE);
     boolean hb = getFlag(protocol.getFlags(), ROBOTS_MODE+1);
     
@@ -195,11 +195,11 @@ public class ProtocolInvoker {
     mode = (mode<<1) | (hb? 0x01: 0x00);
     mode = (mode<<1) | (lb? 0x01: 0x00);
     
-    if (mode < RobotsTxtMode.values().length) {
-      return RobotsTxtMode.values()[mode];
+    if (mode < BotsMode.values().length) {
+      return BotsMode.values()[mode];
     }
     
-    return RobotsTxtMode.getDefault();
+    return BotsMode.getDefault();
   }
   
   /**
