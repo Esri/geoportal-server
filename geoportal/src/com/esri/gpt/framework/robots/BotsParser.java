@@ -33,13 +33,13 @@ public class BotsParser {
 
   private static final Logger LOG = Logger.getLogger(BotsParser.class.getName());
 
-  private static final boolean DEFAULT_ENABLED = true;
+  private static final boolean DEFAULT_ENABLED  = true;
   private static final boolean DEFAULT_OVERRIDE = true;
-  private static final String DEFAULT_AGENT = "geoportalbot";
+  private static final String  DEFAULT_AGENT    = "GeoportalServer";
 
-  private static final String BOT_ENABLED_PARAM = "bot.robotstxt.enabled";   // default: DEFAULT_ENABLED
+  private static final String BOT_ENABLED_PARAM  = "bot.robotstxt.enabled";  // default: DEFAULT_ENABLED
   private static final String BOT_OVERRIDE_PARAM = "bot.robotstxt.override"; // default: DEFAULT_OVERRIDE
-  private static final String BOT_AGENT_PARAM = "bot.agent";                 // default: DEFAULT_AGENT
+  private static final String BOT_AGENT_PARAM    = "bot.agent";              // default: DEFAULT_AGENT
 
   private final boolean enabled;
   private final boolean override;
