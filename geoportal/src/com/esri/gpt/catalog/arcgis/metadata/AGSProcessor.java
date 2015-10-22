@@ -383,7 +383,7 @@ public class AGSProcessor extends ResourceProcessor {
       }
     }
     ServiceCatalogBindingStub stub = new ServiceCatalogBindingStub(soapUrl);
-    if (robotsTxt!=null) {
+    if (robotsTxt!=null && !RobotsTxtParser.getDefaultInstance().getUserAgent().isEmpty()) {
       HashMap<String,List<String>> headers = new HashMap<String, List<String>>();
       headers.put("User-agent", Arrays.asList(new String[]{RobotsTxtParser.getDefaultInstance().getUserAgent()}));
       stub.addHTTPRequestHeaders(headers);

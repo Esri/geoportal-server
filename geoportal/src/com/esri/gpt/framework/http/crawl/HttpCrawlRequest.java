@@ -51,7 +51,7 @@ public class HttpCrawlRequest extends HttpClientRequest {
   @Override
   protected HttpMethodBase createMethod() throws IOException {
     HttpMethodBase method = super.createMethod();
-    if (robotsTxt!=null) {
+    if (robotsTxt!=null && !RobotsTxtParser.getDefaultInstance().getUserAgent().isEmpty()) {
       method.setRequestHeader("User-agent", RobotsTxtParser.getDefaultInstance().getUserAgent());
     }
     return method;
