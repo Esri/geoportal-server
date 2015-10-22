@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.framework.robots;
 
+import static com.esri.gpt.framework.robots.BotsUtils.decode;
 import com.esri.gpt.framework.util.StringBuilderWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -98,7 +99,7 @@ class BotsImpl implements Bots {
   @Override
   public Access findAccess(String path) {
     try {
-      path = URLDecoder.decode(path, "UTF-8");
+      path = decode(path);
       String relativePath = assureRelative(path);
       Access access = relativePath!=null && !"/robots.txt".equalsIgnoreCase(relativePath)? findAccess(userAgent, relativePath): Access.ALLOW;
       LOG.fine(String.format("Access: %s", access));

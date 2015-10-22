@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.framework.robots;
 
+import static com.esri.gpt.framework.robots.BotsUtils.decode;
 import java.net.URLDecoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,7 +51,7 @@ class AccessPath {
     if (getPath().isEmpty()) return true;
     
     try {
-      relativePath = URLDecoder.decode(relativePath,"UTF-8");
+      relativePath = decode(relativePath);
       Pattern pattern = makePattern(getPath());
       if (getPath().endsWith("/") && !relativePath.endsWith("/")) {
         relativePath += "/";

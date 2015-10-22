@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.framework.robots;
 
+import static com.esri.gpt.framework.robots.BotsUtils.decode;
 import com.esri.gpt.framework.util.Val;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -165,7 +166,7 @@ public class BotsReader extends Reader {
 
     String value = Val.chkStr(hashIndex >= 0 ? rest.substring(0, hashIndex) : rest);
 
-    value = URLDecoder.decode(value, "UTF-8");
+    value = decode(value);
 
     return new Entry(dir, value);
   }

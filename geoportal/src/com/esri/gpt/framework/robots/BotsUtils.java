@@ -15,8 +15,10 @@
 package com.esri.gpt.framework.robots;
 
 import com.esri.gpt.framework.util.Val;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.logging.Logger;
 
 /**
@@ -83,6 +85,24 @@ public final class BotsUtils {
       }
     }
     return url;
+  }
+  
+  /**
+   * Decodes URL octets except %2f (i.e. / character)
+   * @param str string to encode
+   * @return encoded string
+   */
+  /*package*/ static String decode(String str) throws UnsupportedEncodingException {
+    if (str!=null) {
+      StringBuilder sb = new StringBuilder();
+      for (int idx = str.indexOf("%2f"); idx>=0; idx = str.indexOf("%2f")) {
+        sb.append(str.substring(0, idx)).append("%2f");
+        str = str.substring(idx+3);
+      }
+      sb.append(str);
+      str = sb.toString();
+    }
+    return str;
   }
   
   private static String updateUrl(String url, ProtocolHostPort php) {
