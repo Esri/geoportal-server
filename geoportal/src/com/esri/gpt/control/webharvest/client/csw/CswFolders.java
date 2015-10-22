@@ -122,7 +122,7 @@ private void advanceToNextRecords() throws IOException {
     cswCriteria.setSearchText(criteria!=null && criteria.getSearchText()!=null? criteria.getSearchText(): "");
     cswCriteria.setEnvelope(getEnvelope());
     CswSearchResponse cswResponse = new CswSearchResponse();
-    CswSearchRequest request = new CswSearchRequest();
+    CswSearchRequest request = new CswSearchRequest(context.getRobotsTxt());
     request.setCatalog(proxy.getCatalog());
     request.setCriteria(cswCriteria);
     request.setCswSearchResponse(cswResponse);

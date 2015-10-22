@@ -19,6 +19,8 @@ import com.esri.gpt.framework.http.CredentialProvider;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.HttpClientRequest.MethodName;
 import com.esri.gpt.framework.http.StringProvider;
+import com.esri.gpt.framework.http.crawl.HttpCrawlRequest;
+import com.esri.gpt.framework.robots.Bots;
 import com.esri.gpt.framework.util.Val;
 import java.io.*;
 import java.util.logging.Level;
@@ -55,6 +57,7 @@ private int connectTimeout = DEFAULT_REQUEST_TIMEOUT;
 private int readTimeOut = DEFAULT_REQUEST_TIMEOUT;
 
 // constructor =================================================================
+private final Bots bots;
 private HttpClient batchHttpClient;
 /**
  * use static variable to be thread safe 
@@ -65,8 +68,10 @@ private HttpClient batchHttpClient;
 //	private CredentialCache _credentialCache;
 /**
  * Constructor
+ * @param bots robots.txt or <code>null</code>
  */
-public CswClient() {
+public CswClient(Bots bots) {
+  this.bots = bots;
 }
 
 // properties ==================================================================
@@ -209,7 +214,7 @@ public InputStream submitHttpRequest(String method, String urlString,
   urlString = urlString.replaceAll("\\r", "");
   urlString = urlString.replaceAll(" ", "");
 
-  HttpClientRequest client = HttpClientRequest.newRequest();
+  HttpClientRequest client = newRequest();
   client.setBatchHttpClient(getBatchHttpClient());
   client.setUrl(urlString);
   client.setRetries(1);
@@ -325,4 +330,11 @@ public Element submitHttpRequestAndGetDom(String method, String urlString,
   return response;
 }
 
+/**
+ * Create new HTTP client request.
+ * @return client request
+ */
+private HttpClientRequest newRequest() {
+  return bots!=null? new HttpCrawlRequest(bots): new HttpClientRequest();
+}
 }

@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.server.csw.client;
 
+import com.esri.gpt.framework.robots.Bots;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.xml.parsers.ParserConfigurationException;
@@ -175,11 +176,11 @@ public void setResponseTimeoutMs(int requestTimeoutMs) {
  * @throws ParserConfigurationException the parser configuration exception
  * @return Csw Capabilities object
  */
-private CswCatalogCapabilities executeGetCapabilitiesWithSAX()
+private CswCatalogCapabilities executeGetCapabilitiesWithSAX(Bots bots)
     throws SAXException, IOException, ParserConfigurationException {
   CswCatalogCapabilities capabilities = new CswCatalogCapabilities();
 
-  CswClient client = new CswClient();
+  CswClient client = new CswClient(bots);
   client.setConnectTimeout(this.getConnectionTimeoutMs());
   client.setReadTimeout(this.getResponseTimeoutMs());
   client.setBatchHttpClient(getBatchHttpClient());
@@ -310,19 +311,23 @@ public void setUrl(String url) {
   this.url = url;
 }
 
+public boolean connect() throws SAXException, IOException, ParserConfigurationException {
+  return connect(null);
+}
 /**
  * To connect to a catalog service. The capabilties details are populated based
  * on the service.
  * 
+ * @param bots robots.txt or <code>null</code> if unavailable
  * @return true if connection can be made to the csw service
  * @throws ParserConfigurationException the parser configuration exception
  * @throws IOException Signals that an I/O exception has occurred.
  * @throws SAXException the sAX exception
  */
-public boolean connect() throws SAXException, IOException,
+public boolean connect(Bots bots) throws SAXException, IOException,
     ParserConfigurationException {
   // Execute getCapabilites and setup URLs for "GetRecords" and "GetRecordById"
-  CswCatalogCapabilities capabilities = executeGetCapabilitiesWithSAX();
+  CswCatalogCapabilities capabilities = executeGetCapabilitiesWithSAX(bots);
 
   this.isConnected = capabilities.isReady();
 

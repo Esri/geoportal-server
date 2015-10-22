@@ -96,20 +96,25 @@ public class BotsReader extends Reader {
         case Host:
           assureRobots();
           robots.setHost(entry.getValue());
+          startSection = false;
           break;
           
         case Sitemap:
           assureRobots();
           robots.getSitemaps().add(entry.getValue());
+          startSection = false;
+          break;
+          
+        default:
+          startSection = false;
           break;
       }
-      
-      if (currentSection != null) {
-        assureRobots();
-        robots.addSection(currentSection);
-      }
-      
     }
+      
+    if (currentSection != null) {
+      addSection(currentSection);
+    }
+    
     return robots;
   }
 

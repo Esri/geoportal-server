@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.server.csw.client;
 
+import com.esri.gpt.framework.robots.Bots;
 import java.io.*;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -39,20 +40,22 @@ private CswCatalog        catalog;
 private CswSearchCriteria criteria;
 private CswClient         cswClient;
 private CswSearchResponse response;
+private final Bots bots;
 
 
-public CswSearchRequest() {
-  this(null, null);
+public CswSearchRequest(Bots bots) {
+  this(null, null, bots);
 }
 
-public CswSearchRequest(CswCatalog catalog, String searchText) {
+public CswSearchRequest(CswCatalog catalog, String searchText, Bots bots) {
+  this.bots =bots;
   this.catalog = catalog;
   // Initialize the neccessary objects
   // create search criteria
   this.criteria = new CswSearchCriteria();
   this.criteria.setSearchText(searchText);
   // create csw client
-  this.cswClient = new CswClient();
+  this.cswClient = new CswClient(bots);
   this.response  = new CswSearchResponse();
 }
 
@@ -159,7 +162,7 @@ public CswRecord getRecordById(String requestURL, String DocID,
       DocID);
 
   if (cswClient == null) {
-    cswClient = new CswClient();
+    cswClient = new CswClient(bots);
     cswClient.setBatchHttpClient(catalog.getBatchHttpClient());
   }
 
@@ -267,7 +270,7 @@ public CswRecord getRecordById(String requestURL, String DocID,
       DocID);
 
   if (cswClient == null) {
-    cswClient = new CswClient();
+    cswClient = new CswClient(bots);
     cswClient.setBatchHttpClient(catalog.getBatchHttpClient());
   }
 
@@ -399,7 +402,7 @@ public void search() throws NullReferenceException, XPathExpressionException,
   // Generate getRecords query
   CswProfile profile = catalog.getProfile();
 
-  catalog.connect();
+  catalog.connect(bots);
   CswCatalogCapabilities capabilities = catalog.getCapabilities();
 
   String requestUrl = capabilities.get_getRecordsPostURL();

@@ -328,7 +328,7 @@ public void setGetRecordsUrl(String postRequestUrl) throws SearchException {
  */
 public CswClient getCswClient() {
   if(cswClient == null){
-    CswClient client = new CswClient();
+    CswClient client = new CswClient(null);
     client.setConnectTimeout(SearchConfig.getConfiguredInstance().getTimeOut());
     client.setReadTimeout(client.getConnectTimeout() * 10);
     this.setCswClient(client);
@@ -391,7 +391,7 @@ public void init() throws SearchException {
            readCswProfiles().getProfileById(this.getProfileId()));
        cswCatalog.setConnectionTimeoutMs(this.getConnectionTimeoutMs());
        cswCatalog.setResponseTimeoutMs(this.getResponseTimeoutMs());
-       cswCatalog.connect();
+       cswCatalog.connect(null);
        cap = cswCatalog.getCapabilities();
        this.setCapabilities(cap);
        //CAPABILITIES_CACHE.put(key, cap);
@@ -827,7 +827,7 @@ protected CswRecord getMetadata(String uuid) throws SearchException {
   Exception exc = null;
   try {
     CswProfile profile = getCswProfile();
-    CswSearchRequest request = new CswSearchRequest();
+    CswSearchRequest request = new CswSearchRequest(null);
     CswClient client = this.getCswClient();
     request.setCswClient(client);
     record = request.getRecordById(this.getConnectionUri().toString(), 

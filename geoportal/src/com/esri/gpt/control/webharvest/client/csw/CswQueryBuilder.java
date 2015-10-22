@@ -74,19 +74,22 @@ public CswQueryBuilder(IterationContext context, HarvestProtocolCsw protocol, St
   }
 }
 
+@Override
 public Capabilities getCapabilities() {
   return capabilities;
 }
 
+@Override
 public Query newQuery(Criteria crt) {
-  CswProxy proxy = new CswProxy(info, catalog);
+  CswProxy proxy = new CswProxy(context.getRobotsTxt(), info, catalog);
   Query q = new CswQuery(context, proxy, crt);
   LOGGER.finer("Query created: " + q);
   return q;
 }
 
+@Override
 public Native getNativeResource() {
-  CswProxy proxy = new CswProxy(info, catalog);
+  CswProxy proxy = new CswProxy(context.getRobotsTxt(), info, catalog);
   return proxy.getNativeResource();
 }
 

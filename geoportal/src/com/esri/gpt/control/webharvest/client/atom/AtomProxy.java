@@ -36,6 +36,7 @@ import com.esri.gpt.framework.resource.api.Native;
 import com.esri.gpt.framework.resource.api.SourceUri;
 import com.esri.gpt.framework.resource.common.CommonPublishable;
 import com.esri.gpt.framework.resource.common.UrlUri;
+import com.esri.gpt.framework.robots.Bots;
 import com.esri.gpt.framework.util.ResourceXml;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
