@@ -15,7 +15,6 @@
 package com.esri.gpt.framework.robots;
 
 import static com.esri.gpt.framework.robots.BotsUtils.decode;
-import java.net.URLDecoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

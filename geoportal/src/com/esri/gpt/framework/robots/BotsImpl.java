@@ -14,7 +14,6 @@
  */
 package com.esri.gpt.framework.robots;
 
-import static com.esri.gpt.framework.robots.BotsUtils.decode;
 import com.esri.gpt.framework.util.StringBuilderWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,7 +21,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
