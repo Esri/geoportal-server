@@ -63,4 +63,23 @@ class AccessList {
     
     return null;
   }
+  
+  /**
+   * Select any access matching input path.
+   * @param relativePath path to test
+   * @return list of matching elements
+   */
+  public List<Access> select(String relativePath) {
+    ArrayList<Access> allMatching = new ArrayList<Access>();
+    
+    if (relativePath!=null) {
+      for (AccessImpl acc: accessList) {
+        if (acc.matches(relativePath)) {
+          allMatching.add(acc);
+        }
+      }
+    }
+    
+    return allMatching;
+  }
 }
