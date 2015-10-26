@@ -18,6 +18,7 @@ import com.esri.gpt.framework.util.Val;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -66,10 +67,8 @@ public final class BotsUtils {
    */
   public static boolean hasAccess(Bots bots, String path) {
     if (bots!=null) {
-      Access access = bots.findAccess(path);
-      if (access!=null) {
-        return access.hasAccess();
-      }
+      List<Access> select = bots.select(path);
+      return !select.isEmpty()? select.get(0).hasAccess(): true;
     }
     return true;
   }

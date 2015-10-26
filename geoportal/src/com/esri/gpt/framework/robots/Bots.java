@@ -41,13 +41,12 @@ public interface Bots {
    */
   List<String> getSitemaps();
 
-// ===== utilities =============================================================
+// ===== methods ===============================================================
   
   /**
-   * Checks if absolute path has access for this section.
-   *
+   * Selects matching accesses.
    * @param path path
-   * @return access information (never <code>null</code>)
+   * @return list of matching accesses (newer <code>null</code>)
    */
-  Access findAccess(String path);
+  List<Access> select(String path);
 }

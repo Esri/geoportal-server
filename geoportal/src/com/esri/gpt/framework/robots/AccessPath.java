@@ -51,6 +51,9 @@ class AccessPath {
     
     try {
       relativePath = decode(relativePath);
+      if (getPath().endsWith("/") && !relativePath.endsWith("/")) {
+        relativePath += "/";
+      }
       Pattern pattern = makePattern(getPath());
       Matcher matcher = pattern.matcher(relativePath);
       return matcher.find() && matcher.start()==0;

@@ -18,7 +18,6 @@ import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.crawl.HttpCrawlRequest;
 import com.esri.gpt.framework.robots.Access;
 import com.esri.gpt.framework.robots.Bots;
-import static com.esri.gpt.framework.robots.BotsUtils.hasAccess;
 import com.esri.gpt.framework.util.StringBuilderWriter;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
@@ -27,6 +26,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -94,10 +94,10 @@ public class DefaultIterationContext implements IterationContext {
       LOG.fine(String.format("Evaluating access to %s using robots.txt", url));
       try {
         String relativeUrl = extractRelativeUrl(url);
-        Access access = robotsTxt.findAccess(relativeUrl);
-        if (access!=null && !access.hasAccess()) {
+        List<Access> selected = robotsTxt.select(relativeUrl);
+        if (!selected.isEmpty() && !selected.get(0).hasAccess()) {
           LOG.info(String.format("Access to %s disallowed by robots.txt", url));
-          throw new AccessException(String.format("Access to %s disallowed by robots.txt", url), access);
+          throw new AccessException(String.format("Access to %s disallowed by robots.txt", url), selected.get(0));
         }
         LOG.fine(String.format("Access to %s allowed by robots.txt", url));
       } catch (AccessException ex) {

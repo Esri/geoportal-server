@@ -17,6 +17,7 @@ package com.esri.gpt.framework.robots;
 import com.esri.gpt.framework.util.StringBuilderWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -73,19 +74,6 @@ class Section {
   }
   
   /**
-   * Checks if absolute path has access for this section.
-   * @param userAgen user agent
-   * @param relativaPath absolute path
-   * @return <code>true</code> if has access
-   */
-  public Access findAccess(String userAgent, String relativaPath) {
-    if (userAgent==null || relativaPath==null || !matchUserAgent(userAgent)) {
-      return null;
-    }
-    return accessList.findAccess(relativaPath);
-  }
-  
-  /**
    * Select any access matching input path.
    * @param userAgen user agent
    * @param relativePath path to test
@@ -93,7 +81,7 @@ class Section {
    */
   public List<Access> select(String userAgent, String relativaPath) {
     if (userAgent==null || relativaPath==null || !matchUserAgent(userAgent)) {
-      return null;
+      return Collections.EMPTY_LIST;
     }
     return accessList.select(relativaPath);
   }

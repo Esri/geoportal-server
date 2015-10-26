@@ -15,13 +15,11 @@
 package com.esri.gpt.framework.robots;
 
 import com.esri.gpt.framework.util.StringBuilderWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -29,19 +27,21 @@ import java.util.logging.Logger;
  * Robots TXT implementation.
  */
 class BotsImpl implements Bots {
+
   private static final Logger LOG = Logger.getLogger(BotsImpl.class.getName());
 
   private Section defaultSection;
   private final List<Section> sections = new ArrayList<Section>();
-  
+
   private String host;
   private final List<String> sitemaps = new ArrayList<String>();
-  
+
   private final String userAgent;
-  
+
   /**
    * Creates instance of the RobotsTxt implementation
-   * @param userAgent 
+   *
+   * @param userAgent
    */
   public BotsImpl(String userAgent) {
     this.userAgent = userAgent;
@@ -54,6 +54,7 @@ class BotsImpl implements Bots {
 
   /**
    * Sets host.
+   *
    * @param host host name
    */
   public void setHost(String host) {
@@ -69,10 +70,10 @@ class BotsImpl implements Bots {
   public Integer getCrawlDelay() {
     Integer crawlDelay = null;
     Section sec = findSectionByAgent(sections, userAgent);
-    if (sec!=null) {
+    if (sec != null) {
       crawlDelay = sec.getCrawlDelay();
     }
-    if (defaultSection!=null) {
+    if (defaultSection != null) {
       crawlDelay = defaultSection.getCrawlDelay();
     }
     LOG.fine(String.format("Crawl-delay: %d", crawlDelay));
@@ -85,7 +86,7 @@ class BotsImpl implements Bots {
    * @param section section
    */
   public void addSection(Section section) {
-    if (section!=null) {
+    if (section != null) {
       if (section.isAnyAgent()) {
         this.defaultSection = section;
       } else {
@@ -95,88 +96,76 @@ class BotsImpl implements Bots {
   }
 
   @Override
-  public Access findAccess(String path) {
-    try {
-      String relativePath = assureRelative(path);
-      Access access = relativePath!=null && !"/robots.txt".equalsIgnoreCase(relativePath)? findAccess(userAgent, relativePath): Access.ALLOW;
-      LOG.fine(String.format("Access: %s", access));
-      return access;
-    } catch (IOException ex) {
-      return Access.DISALLOW;
-    } catch (URISyntaxException ex) {
-      return Access.DISALLOW;
+  public List<Access> select(String path) {
+    String relativePath = assureRelative(path);
+
+    if (relativePath != null && !"/robots.txt".equalsIgnoreCase(relativePath)) {
+      return select(userAgent, relativePath);
+    } else {
+      return Collections.EMPTY_LIST;
     }
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     PrintWriter writer = new PrintWriter(new StringBuilderWriter(sb));
-    
-    if (defaultSection!=null) {
+
+    if (defaultSection != null) {
       writer.println(defaultSection.toString());
     }
-      
-    for (Section section: sections) {
+
+    for (Section section : sections) {
       writer.println(section.toString());
     }
 
-    if (host!=null) {
+    if (host != null) {
       writer.printf("Host: %s", host);
       writer.println();
     }
 
-    for (String sitemap: sitemaps) {
+    for (String sitemap : sitemaps) {
       writer.printf("Sitemap: %s", sitemap);
       writer.println();
     }
-    
+
     // no need to close writer or catch any exception
-    
     return sb.toString();
   }
 
-  /**
-   * Checks if absolute path has access for this section.
-   *
-   * @param userAgent user agent
-   * @param relativePath absolute path
-   * @return access information or <code>null</code> if no access information found
-   */
-  private Access findAccess(String userAgent, String relativePath) {
-    if (!(userAgent==null || relativePath==null)) {
+  private List<Access> select(String userAgent, String relativePath) {
+    ArrayList<Access> selected = new ArrayList<Access>();
+    if (!(userAgent == null || relativePath == null)) {
       Section sec = findSectionByAgent(sections, userAgent);
-      if (sec!=null) {
-        Access access = sec.findAccess(userAgent, relativePath);
-        if (access!=null) {
-          return access;
-        }
+      if (sec != null) {
+        selected.addAll(sec.select(userAgent, relativePath));
       }
-      if (defaultSection!=null) {
-        Access defaultAccess = defaultSection.findAccess(userAgent, relativePath);
-        if (defaultAccess!=null) {
-          return defaultAccess;
-        }
+      if (defaultSection != null) {
+        selected.addAll(defaultSection.select(userAgent, relativePath));
       }
     }
-    return Access.ALLOW;
+    return selected;
   }
-  
+
   private Section findSectionByAgent(List<Section> sections, String userAgent) {
-    for (Section sec: sections) {
+    for (Section sec : sections) {
       if (sec.matchUserAgent(userAgent)) {
         return sec;
       }
     }
     return null;
   }
-  
-  private String assureRelative(String path) throws URISyntaxException, MalformedURLException {
-    URI uri = new URI(path);
-    if (uri.isAbsolute()) {
-      URL url = uri.toURL();
-      return String.format("/%s%s%s", url.getPath(), url.getQuery()!=null? "#"+url.getQuery(): "", url.getRef()!=null? "#"+url.getRef(): "").replaceAll("/+", "/");
+
+  private String assureRelative(String path) {
+    try {
+      URI uri = new URI(path);
+      if (uri.isAbsolute()) {
+        URL url = uri.toURL();
+        path = String.format("/%s%s%s", url.getPath(), url.getQuery() != null ? "#" + url.getQuery() : "", url.getRef() != null ? "#" + url.getRef() : "").replaceAll("/+", "/");
+      }
+      return path;
+    } catch (Exception ex) {
+      return path;
     }
-    return path;
   }
 }

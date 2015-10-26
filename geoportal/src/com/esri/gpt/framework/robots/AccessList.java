@@ -48,23 +48,6 @@ class AccessList {
   }
   
   /**
-   * Checks if relative path has access.
-   * @param relativePath relative path
-   * @return Access implementation
-   */
-  public Access findAccess(String relativePath) {
-    if (relativePath==null) return null;
-    
-    for (AccessImpl acc: accessList) {
-      if (acc.matches(relativePath)) {
-        return !acc.getPath().isEmpty()? acc: !acc.hasAccess()? Access.ALLOW: Access.DISALLOW;
-      }
-    }
-    
-    return null;
-  }
-  
-  /**
    * Select any access matching input path.
    * @param relativePath path to test
    * @return list of matching elements
