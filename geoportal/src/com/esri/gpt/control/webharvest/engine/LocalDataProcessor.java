@@ -26,6 +26,7 @@ import com.esri.gpt.catalog.publication.DeleteSourceUrisRequest;
 import com.esri.gpt.catalog.publication.HarvesterRequest;
 import com.esri.gpt.catalog.schema.SchemaException;
 import com.esri.gpt.catalog.schema.ValidationException;
+import com.esri.gpt.control.webharvest.AccessException;
 import com.esri.gpt.control.webharvest.engine.Suspender.Expiration;
 import com.esri.gpt.control.webharvest.engine.Suspender.PeriodicExpiration;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
@@ -435,7 +436,7 @@ class LocalDataProcessor implements DataProcessor {
    */
   @Override
   public void onIterationException(ExecutionUnit unit, Exception ex) {
-    if (ex instanceof IOException) {
+    if (ex instanceof IOException && !(ex instanceof AccessException)) {
       suspend(unit.getRepository());
     }
     LOGGER.log(Level.SEVERE, "[SYNCHRONIZER] Iteration exception through: " + unit, ex);
