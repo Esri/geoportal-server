@@ -14,16 +14,22 @@
  */
 package com.esri.gpt.control.webharvest.client.waf;
 
+import com.esri.gpt.control.webharvest.AccessException;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.StringHandler;
 import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.query.Criteria;
+import com.esri.gpt.framework.robots.Access;
+import com.esri.gpt.framework.robots.Bots;
 import com.esri.gpt.framework.util.ReadOnlyIterator;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -128,6 +134,15 @@ private void loadFolderContent() {
     iterator = parseResonse(sh.getContent()).iterator();
 
     LOGGER.log(Level.FINER, "Loading folder content of {0} completed.", url);
+  } catch (AccessException ex) {
+    Bots bots = context.getRobotsTxt();
+    if (bots!=null) {
+      iterator = handleDisallowedFolder(bots,ex.getAccess()).iterator();
+    } else {
+      noMore = true;
+      iterator = null;
+      context.onIterationException(ex);
+    }
   } catch (Exception ex) {
     noMore = true;
     iterator = null;
@@ -135,4 +150,9 @@ private void loadFolderContent() {
   }
 }
 }
+
+protected Collection<Resource> handleDisallowedFolder(Bots bots, Access acc) {
+  return Collections.EMPTY_LIST;
+}
+
 }

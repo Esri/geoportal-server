@@ -77,13 +77,14 @@ class Section {
    * Select any access matching input path.
    * @param userAgen user agent
    * @param relativePath path to test
+   * @param matcher matcher
    * @return list of matching elements
    */
-  public List<Access> select(String userAgent, String relativaPath) {
+  public List<Access> select(String userAgent, String relativaPath, PathMatcher matcher) {
     if (userAgent==null || relativaPath==null || !matchUserAgent(userAgent)) {
       return Collections.EMPTY_LIST;
     }
-    return accessList.select(relativaPath);
+    return accessList.select(relativaPath, matcher);
   }
   
   /**

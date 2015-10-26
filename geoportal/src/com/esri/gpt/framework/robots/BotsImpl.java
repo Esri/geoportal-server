@@ -96,11 +96,11 @@ class BotsImpl implements Bots {
   }
 
   @Override
-  public List<Access> select(String path) {
+  public List<Access> select(String path, PathMatcher matcher) {
     String relativePath = assureRelative(path);
 
     if (relativePath != null && !"/robots.txt".equalsIgnoreCase(relativePath)) {
-      return select(userAgent, relativePath);
+      return select(userAgent, relativePath, matcher);
     } else {
       return Collections.EMPTY_LIST;
     }
@@ -133,15 +133,15 @@ class BotsImpl implements Bots {
     return sb.toString();
   }
 
-  private List<Access> select(String userAgent, String relativePath) {
+  private List<Access> select(String userAgent, String relativePath, PathMatcher matcher) {
     ArrayList<Access> selected = new ArrayList<Access>();
     if (!(userAgent == null || relativePath == null)) {
       Section sec = findSectionByAgent(sections, userAgent);
       if (sec != null) {
-        selected.addAll(sec.select(userAgent, relativePath));
+        selected.addAll(sec.select(userAgent, relativePath, matcher));
       }
       if (defaultSection != null) {
-        selected.addAll(defaultSection.select(userAgent, relativePath));
+        selected.addAll(defaultSection.select(userAgent, relativePath, matcher));
       }
     }
     return selected;

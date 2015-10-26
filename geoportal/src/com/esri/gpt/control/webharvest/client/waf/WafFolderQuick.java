@@ -17,12 +17,19 @@ package com.esri.gpt.control.webharvest.client.waf;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.query.Criteria;
+import com.esri.gpt.framework.robots.Access;
+import com.esri.gpt.framework.robots.Bots;
+import com.esri.gpt.framework.robots.PathMatcher;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -96,4 +103,69 @@ class WafFolderQuick extends WafFolder {
     }
     return directoryUrls;
   }
+
+  @Override
+  protected Collection<Resource> handleDisallowedFolder(Bots bots, Access acc) {
+    ArrayList<Resource> subResources = new ArrayList<Resource>();
+    if (acc!=null) {
+      List<Access> select = bots.select(acc.getPath(), new SubPathMatcher());
+      for (Access acs: select) {
+        if (acs.hasAccess() && acs!=acc) {
+          String server = getServer(url);
+          String stem = getStem(acs.getPath());
+          
+          String rest = acs.getPath().substring(stem.length()).replaceFirst("^/", "");
+          if (!rest.contains("/") && !rest.contains("*")) {
+            String relativePath = stem + "/" + rest;
+            String fullPath = server + (!relativePath.startsWith("/")? "/": "") + relativePath;
+            if (isFile(fullPath)) {
+              if (fullPath.toLowerCase().endsWith(".xml")) {
+                subResources.add(new WafFile(proxy, fullPath));
+              }
+            } else if (!rest.contains(".")) {
+              subResources.add(new WafFolderQuick(context, info, proxy, processedFolders, fullPath, criteria));
+              processedFolders.add(fullPath.toLowerCase());
+            }
+          }
+        }
+      }
+    }
+    return subResources;
+  }
+  
+  private String getServer(String path) {
+    try {
+      URL baseUrl = new URL(path);
+      if (baseUrl.getPort() >= 0) {
+        return String.format("%s://%s:%d", baseUrl.getProtocol(), baseUrl.getHost(), baseUrl.getPort());
+      } else {
+        return String.format("%s://%s", baseUrl.getProtocol(), baseUrl.getHost());
+      }
+    } catch (Exception ex) {
+      return path;
+    }
+  }
+  
+  private static String getStem(String s) {
+    String stem = s;
+    
+    stem = stem.lastIndexOf("*")>=0? stem.substring(0,stem.lastIndexOf("*")): stem;
+    stem = stem.lastIndexOf("/")>=0? stem.substring(0,stem.lastIndexOf("/")): stem;
+    
+    return stem;
+  }
+
+  private static boolean isFile(String path) {
+    if (path!=null) {
+      int lastSlashIdx = path.lastIndexOf("/");
+      if (lastSlashIdx>=0) {
+        path = path.substring(lastSlashIdx+1);
+      }
+      if (path!=null && path.contains(".")) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
 }

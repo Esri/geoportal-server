@@ -67,7 +67,7 @@ public final class BotsUtils {
    */
   public static boolean hasAccess(Bots bots, String path) {
     if (bots!=null) {
-      List<Access> select = bots.select(path);
+      List<Access> select = bots.select(path, PathMatcher.DEFAULT);
       return !select.isEmpty()? select.get(0).hasAccess(): true;
     }
     return true;

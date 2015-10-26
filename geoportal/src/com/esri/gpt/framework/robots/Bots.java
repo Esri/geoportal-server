@@ -46,7 +46,8 @@ public interface Bots {
   /**
    * Selects matching accesses.
    * @param path path
+   * @param matcher matcher
    * @return list of matching accesses (newer <code>null</code>)
    */
-  List<Access> select(String path);
+  List<Access> select(String path, PathMatcher matcher);
 }

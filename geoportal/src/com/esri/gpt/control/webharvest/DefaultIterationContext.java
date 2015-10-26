@@ -18,6 +18,7 @@ import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.crawl.HttpCrawlRequest;
 import com.esri.gpt.framework.robots.Access;
 import com.esri.gpt.framework.robots.Bots;
+import com.esri.gpt.framework.robots.PathMatcher;
 import com.esri.gpt.framework.util.StringBuilderWriter;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
@@ -94,7 +95,7 @@ public class DefaultIterationContext implements IterationContext {
       LOG.fine(String.format("Evaluating access to %s using robots.txt", url));
       try {
         String relativeUrl = extractRelativeUrl(url);
-        List<Access> selected = robotsTxt.select(relativeUrl);
+        List<Access> selected = robotsTxt.select(relativeUrl, PathMatcher.DEFAULT);
         if (!selected.isEmpty() && !selected.get(0).hasAccess()) {
           LOG.info(String.format("Access to %s disallowed by robots.txt", url));
           throw new AccessException(String.format("Access to %s disallowed by robots.txt", url), selected.get(0));
