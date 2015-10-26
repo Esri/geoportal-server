@@ -25,11 +25,9 @@ import com.esri.gpt.framework.robots.Bots;
 import com.esri.gpt.framework.util.ReadOnlyIterator;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,6 +44,7 @@ protected WafInfo info;
 protected WafProxy proxy;
 protected String url;
 protected Criteria criteria;
+private boolean preApproved;
 
 /**
  * Creates instance of the WAF folder.
@@ -76,6 +75,14 @@ public Iterable<Resource> getNodes() {
     return new WafFolderIterator();
   }
   };
+}
+
+public boolean isPreApproved() {
+  return preApproved;
+}
+
+public void setPreApproved(boolean approved) {
+  this.preApproved = approved;
 }
 
 /**
@@ -122,7 +129,9 @@ private void loadFolderContent() {
   try {
     LOGGER.log(Level.FINER, "Loading folder content of {0}", url);
     
-    context.assertAccess(url);
+    if (!isPreApproved()) {
+      context.assertAccess(url);
+    }
     HttpClientRequest cr = context.newHttpClientRequest();
     cr.setUrl(url);
     StringHandler sh = new StringHandler();
@@ -149,7 +158,7 @@ private void loadFolderContent() {
     context.onIterationException(ex);
   }
 }
-}
+  }
 
 protected Collection<Resource> handleDisallowedFolder(Bots bots, Access acc) {
   return Collections.EMPTY_LIST;

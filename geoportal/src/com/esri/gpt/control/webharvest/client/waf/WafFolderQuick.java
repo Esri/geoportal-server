@@ -19,17 +19,13 @@ import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.robots.Access;
 import com.esri.gpt.framework.robots.Bots;
-import com.esri.gpt.framework.robots.PathMatcher;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,7 +37,7 @@ class WafFolderQuick extends WafFolder {
   private static final Pattern A_PATTERN = Pattern.compile("[<]a[^>]*[>]", Pattern.CASE_INSENSITIVE);
   private static final Pattern HREF_PATTERN = Pattern.compile("href\\p{Space}*=\\p{Space}*(\"[^\"]*\"|\'[^\']*\')", Pattern.CASE_INSENSITIVE);
   private static final String  HREF_VALUE_PATTERN = "^[^\"]*\"|\"[^\"]*$|^[^\']*\'|\'[^\']*$";
-  private Set<String> processedFolders;
+  private final Set<String> processedFolders;
 
   /**
    * Creates instance of the WAF folder.
@@ -120,10 +116,14 @@ class WafFolderQuick extends WafFolder {
             String fullPath = server + (!relativePath.startsWith("/")? "/": "") + relativePath;
             if (isFile(fullPath)) {
               if (fullPath.toLowerCase().endsWith(".xml")) {
-                subResources.add(new WafFile(proxy, fullPath));
+                WafFile wafFile = new WafFile(proxy, fullPath);
+                wafFile.setPreApproved(true);
+                subResources.add(wafFile);
               }
             } else if (!rest.contains(".")) {
-              subResources.add(new WafFolderQuick(context, info, proxy, processedFolders, fullPath, criteria));
+              WafFolderQuick wafFolderQuick = new WafFolderQuick(context, info, proxy, processedFolders, fullPath, criteria);
+              wafFolderQuick.setPreApproved(true);
+              subResources.add(wafFolderQuick);
               processedFolders.add(fullPath.toLowerCase());
             }
           }
