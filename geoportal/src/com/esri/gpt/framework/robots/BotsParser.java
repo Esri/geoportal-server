@@ -71,7 +71,7 @@ public class BotsParser {
   /**
    * Creates instance of the parser.
    */
-  private BotsParser() {
+  /*package*/BotsParser() {
     this(DEFAULT_ENABLED, DEFAULT_OVERRIDE, DEFAULT_AGENT);
   }
 
@@ -81,7 +81,7 @@ public class BotsParser {
    * @param enabled <code>true</code> if robots.txt should be used
    * @param userAgent user agent
    */
-  private BotsParser(boolean enabled, boolean override, String userAgent) {
+  /*package*/BotsParser(boolean enabled, boolean override, String userAgent) {
     this.enabled = enabled;
     this.override = override;
     this.userAgent = Val.chkStr(userAgent);
