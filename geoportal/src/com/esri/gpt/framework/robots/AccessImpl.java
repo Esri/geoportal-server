@@ -17,7 +17,7 @@ package com.esri.gpt.framework.robots;
 /**
  * Access.
  */
-class AccessImpl implements Access {
+/*package*/class AccessImpl implements Access {
   private final boolean constant;
   private final AccessPath accessPath;
   private final boolean accessAllowed;

@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Reader of the robots.txt file.
  */
-public class BotsReader extends Reader {
+/*package*/class BotsReader extends Reader {
 
   private final String userAgent;
   private final BufferedReader reader;

@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * Robots txt utility class/shortcut methods
@@ -73,6 +74,12 @@ public final class BotsUtils {
     return true;
   }
   
+  /**
+   * Replaces host part in given url if "host" directive found in robots.txt
+   * @param bots robots.txt
+   * @param url url to transform
+   * @return transformed url
+   */
   public static String transformUrl(Bots bots, String url) {
     if (bots!=null) {
       String orgUrl = url;
@@ -83,6 +90,42 @@ public final class BotsUtils {
       }
     }
     return url;
+  }
+  
+  /**
+   * Compiles wildcard pattern into a regular expression.
+   * <p>
+   * Allowed wildcards:<br>
+   * <br>
+   * &nbsp;&nbsp;&nbsp;* - matches any sequence of characters<br>
+   * &nbsp;&nbsp;&nbsp;$ - matches end of sequence<br>
+   * @param patternWithWildcards pattern with wildcards
+   * @return compiled pattern
+   */
+  public static Pattern compileWildcardPattern(String patternWithWildcards) {
+    StringBuilder sb = new StringBuilder();
+    for (int i=0; i<patternWithWildcards.length(); i++) {
+      char c = patternWithWildcards.charAt(i);
+      switch (c) {
+        case '*':
+          sb.append(".*");
+          break;
+        case '$':
+          if (i==patternWithWildcards.length()-1) {
+            sb.append(c);
+          } else {
+            sb.append("[").append(c).append("]");
+          }
+          break;
+        case '[':
+        case ']':
+          sb.append("[").append("\\").append(c).append("]");
+          break;
+        default:
+          sb.append("[").append(c).append("]");
+      }
+    }
+    return Pattern.compile(sb.toString(),Pattern.CASE_INSENSITIVE);
   }
   
   /**

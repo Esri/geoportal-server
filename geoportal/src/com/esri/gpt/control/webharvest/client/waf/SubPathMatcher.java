@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.control.webharvest.client.waf;
 
+import static com.esri.gpt.framework.robots.BotsUtils.compileWildcardPattern;
 import com.esri.gpt.framework.robots.PathMatcher;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,7 +22,7 @@ import java.util.regex.Pattern;
 /**
  * Sub path matcher.
  */
-public class SubPathMatcher implements PathMatcher {
+/*package*/class SubPathMatcher implements PathMatcher {
 
   @Override
   public boolean matches(String pattern, String pathToTest) {
@@ -32,37 +33,11 @@ public class SubPathMatcher implements PathMatcher {
       if (!pathToTest.contains("*") && !pathToTest.endsWith("*")) {
         pathToTest += "*";
       }
-      Pattern pt = makePattern(pathToTest);
+      Pattern pt = compileWildcardPattern(pathToTest);
       Matcher matcher = pt.matcher(pattern);
       return matcher.find() && matcher.start()==0;
     } catch (Exception ex) {
       return false;
     }
-  }
-  
-  private Pattern makePattern(String patternWithWildcards) {
-    StringBuilder sb = new StringBuilder();
-    for (int i=0; i<patternWithWildcards.length(); i++) {
-      char c = patternWithWildcards.charAt(i);
-      switch (c) {
-        case '*':
-          sb.append(".*");
-          break;
-        case '$':
-          if (i==patternWithWildcards.length()-1) {
-            sb.append(c);
-          } else {
-            sb.append("[").append(c).append("]");
-          }
-          break;
-        case '[':
-        case ']':
-          sb.append("[").append("\\").append(c).append("]");
-          break;
-        default:
-          sb.append("[").append(c).append("]");
-      }
-    }
-    return Pattern.compile(sb.toString(),Pattern.CASE_INSENSITIVE);
   }
 }

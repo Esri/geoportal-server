@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Robots section.
  */
-class Section {
+/*package*/class Section {
   private final List<String> userAgents = new ArrayList<String>();
   private final AccessList accessList = new AccessList();
   private boolean anyAgent;

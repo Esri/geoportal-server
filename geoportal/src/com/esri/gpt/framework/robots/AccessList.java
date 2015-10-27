@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Access list.
  */
-class AccessList {
+/*package*/class AccessList {
   private final List<AccessImpl> accessList = new ArrayList<AccessImpl>();
   
   /**

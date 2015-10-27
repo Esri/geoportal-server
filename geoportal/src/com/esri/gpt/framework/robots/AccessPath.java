@@ -14,14 +14,10 @@
  */
 package com.esri.gpt.framework.robots;
 
-import static com.esri.gpt.framework.robots.BotsUtils.decode;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Path.
  */
-class AccessPath {
+/*package*/class AccessPath {
   private final String path;
 
   /**

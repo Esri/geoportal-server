@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 /**
  * Robots TXT implementation.
  */
-class BotsImpl implements Bots {
+/*package*/class BotsImpl implements Bots {
 
   private static final Logger LOG = Logger.getLogger(BotsImpl.class.getName());
 
