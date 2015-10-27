@@ -75,10 +75,10 @@ public final class BotsUtils {
       
       if (winningAllow!=null) {
         if (winningDisallow!=null) {
-          if (winningDisallow.getPath().length()>winningAllow.getPath().length()) {
-            return winningDisallow;
-          } else {
+          if (winningAllow.getPath().length()>=winningDisallow.getPath().length()) {
             return winningAllow;
+          } else {
+            return winningDisallow;
           }
         } else {
           return winningAllow;
