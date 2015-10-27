@@ -18,7 +18,7 @@ import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.crawl.HttpCrawlRequest;
 import com.esri.gpt.framework.robots.Access;
 import com.esri.gpt.framework.robots.Bots;
-import com.esri.gpt.framework.robots.PathMatcher;
+import static com.esri.gpt.framework.robots.BotsUtils.requestAccess;
 import com.esri.gpt.framework.util.StringBuilderWriter;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
@@ -27,7 +27,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,14 +38,14 @@ public class DefaultIterationContext implements IterationContext {
   protected static SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
   protected final LinkedList<ExceptionInfo> exceptionInfos = new LinkedList<ExceptionInfo>();
   
-  protected final Bots robotsTxt;
+  protected final Bots bots;
 
   /**
    * Creates instance with robots information.
    * @param robotsTxt robots information or <code>null</code> if no robots information available
    */
   public DefaultIterationContext(Bots robotsTxt) {
-    this.robotsTxt = robotsTxt;
+    this.bots = robotsTxt;
   }
 
   @Override
@@ -86,19 +85,19 @@ public class DefaultIterationContext implements IterationContext {
 
   @Override
   public HttpClientRequest newHttpClientRequest() {
-    return new HttpCrawlRequest(robotsTxt);
+    return new HttpCrawlRequest(bots);
   }
 
   @Override
   public void assertAccess(String url) throws AccessException {
-    if (robotsTxt!=null) {
+    if (bots!=null) {
       LOG.fine(String.format("Evaluating access to %s using robots.txt", url));
       try {
         String relativeUrl = extractRelativeUrl(url);
-        List<Access> selected = robotsTxt.select(relativeUrl, PathMatcher.DEFAULT);
-        if (!selected.isEmpty() && !selected.get(0).hasAccess()) {
+        Access access = requestAccess(bots, relativeUrl);
+        if (!access.hasAccess()) {
           LOG.info(String.format("Access to %s disallowed by robots.txt", url));
-          throw new AccessException(String.format("Access to %s disallowed by robots.txt", url), selected.get(0));
+          throw new AccessException(String.format("Access to %s disallowed by robots.txt", url), access);
         }
         LOG.fine(String.format("Access to %s allowed by robots.txt", url));
       } catch (AccessException ex) {
@@ -112,7 +111,7 @@ public class DefaultIterationContext implements IterationContext {
 
   @Override
   public Bots getRobotsTxt() {
-    return robotsTxt;
+    return bots;
   }
   
   private String extractRelativeUrl(String url) throws IOException {

@@ -18,9 +18,8 @@ import com.esri.gpt.framework.http.HttpClientException;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.robots.Access;
 import com.esri.gpt.framework.robots.Bots;
-import com.esri.gpt.framework.robots.BotsParser;
-import static com.esri.gpt.framework.robots.BotsUtils.hasAccess;
 import static com.esri.gpt.framework.robots.BotsUtils.parser;
+import static com.esri.gpt.framework.robots.BotsUtils.requestAccess;
 import static com.esri.gpt.framework.robots.BotsUtils.transformUrl;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -71,7 +70,8 @@ public class HttpCrawlRequest extends HttpClientRequest {
     if (bots != null) {
       String url = getRelativePath();
       LOG.fine(String.format("Evaluating access to %s using robots.txt", getUrl()));
-      if (!hasAccess(bots,url)) {
+      Access access = requestAccess(bots, url);
+      if (!access.hasAccess()) {
         LOG.info(String.format("Access to %s disallowed by robots.txt", getUrl()));
         throw new HttpClientException(HttpServletResponse.SC_FORBIDDEN, String.format("Access to %s disallowed by robots.txt", getUrl()));
       }

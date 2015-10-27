@@ -59,19 +59,35 @@ public final class BotsUtils {
   public static Bots readBots(BotsMode mode, URL serverUrl) {
     return parser().readRobotsTxt(mode, serverUrl);
   }
-
+  
   /**
-   * Check if access to the particular url is allowed.
-   * @param bots robots.txt
-   * @param path path
-   * @return <code>true</code> if access is allowed
+   * Request access to the resource.
+   * @param bots robots
+   * @param path relative path to the resource
+   * @return access (never <code>null</code>
    */
-  public static boolean hasAccess(Bots bots, String path) {
+  public static Access requestAccess(Bots bots, String path) {
     if (bots!=null) {
-      List<Access> select = bots.select(path, PathMatcher.DEFAULT);
-      return !select.isEmpty()? select.get(0).hasAccess(): true;
+      List<Access> matching = bots.select(path, PathMatcher.DEFAULT);
+      
+      Access winningDisallow = findWinningAccess(matching, false);
+      Access winningAllow = findWinningAccess(matching, true);
+      
+      if (winningAllow!=null) {
+        if (winningDisallow!=null) {
+          if (winningDisallow.getPath().length()>winningAllow.getPath().length()) {
+            return winningDisallow;
+          } else {
+            return winningAllow;
+          }
+        } else {
+          return winningAllow;
+        }
+      } else if (winningDisallow!=null) {
+        return winningDisallow;
+      }
     }
-    return true;
+    return Access.ALLOW;
   }
   
   /**
@@ -199,6 +215,17 @@ public final class BotsUtils {
       }
     }
     return null;
+  }
+
+  private static Access findWinningAccess(List<Access> list, boolean hasAccess) {
+    Access longest = null;
+    for (Access acc: list) {
+      if (acc.hasAccess()==hasAccess) continue;
+      if (longest==null || acc.getPath().length()>=longest.getPath().length()) {
+        longest = acc;
+      }
+    }
+    return longest;
   }
   
   private static class ProtocolHostPort {
