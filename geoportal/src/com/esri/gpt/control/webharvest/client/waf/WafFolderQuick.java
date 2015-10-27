@@ -19,6 +19,7 @@ import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.robots.Access;
 import com.esri.gpt.framework.robots.Bots;
+import static com.esri.gpt.framework.robots.BotsUtils.requestAccess;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -83,8 +84,8 @@ class WafFolderQuick extends WafFolder {
                   processedFolders.add(pathExternalForm.toLowerCase());
                 }
               }
-            } else if (documentUrl.toLowerCase().endsWith(".xml")) {
-              if (!processedFiles.contains(pathExternalForm.toLowerCase())) {
+            } else if (pathExternalForm.toLowerCase().endsWith(".xml")) {
+              if (!processedFiles.contains(pathExternalForm.toLowerCase()) && requestAccess(context.getRobotsTxt(),pathExternalForm).hasAccess()) {
                 directoryUrls.add(new WafFile(proxy, pathExternalForm));
                 processedFiles.add(pathExternalForm.toLowerCase());
               }
