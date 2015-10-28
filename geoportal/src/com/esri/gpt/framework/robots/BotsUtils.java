@@ -73,17 +73,11 @@ public final class BotsUtils {
       Access winningDisallow = findWinningAccess(matching, false);
       Access winningAllow = findWinningAccess(matching, true);
       
-      if (winningAllow!=null) {
-        if (winningDisallow!=null) {
-          if (winningAllow.getPath().length()>=winningDisallow.getPath().length()) {
-            return winningAllow;
-          } else {
-            return winningDisallow;
-          }
-        } else {
-          return winningAllow;
-        }
-      } else if (winningDisallow!=null) {
+      if (winningAllow!=null && winningAllow.getPath().length()>=(winningDisallow!=null? winningDisallow.getPath().length(): 0)) {
+        return winningAllow;
+      }
+      
+      if (winningDisallow!=null) {
         return winningDisallow;
       }
     }
