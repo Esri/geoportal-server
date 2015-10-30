@@ -16,6 +16,7 @@ package com.esri.gpt.control.webharvest.client.oai;
 
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolOai;
 import com.esri.gpt.control.webharvest.IterationContext;
+import com.esri.gpt.control.webharvest.client.MockIterationContext;
 import com.esri.gpt.control.webharvest.common.CommonCriteria;
 import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.query.Query;
@@ -37,10 +38,7 @@ public OaiQueryBuilderTest() {
 public static void setUpClass() throws Exception {
   HarvestProtocolOai protocol = new HarvestProtocolOai();
   protocol.setPrefix("oai_dc");
-  IterationContext context = new IterationContext() {
-    public void onIterationException(Exception ex) {
-    }
-  };
+    IterationContext context = new MockIterationContext();
   instance  = new OaiQueryBuilder(context, protocol, "http://alcme.oclc.org/oaicat/OAIHandler");
 }
 

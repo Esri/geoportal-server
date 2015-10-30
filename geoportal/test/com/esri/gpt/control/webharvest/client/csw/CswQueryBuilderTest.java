@@ -16,6 +16,7 @@ package com.esri.gpt.control.webharvest.client.csw;
 
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolCsw;
 import com.esri.gpt.control.webharvest.IterationContext;
+import com.esri.gpt.control.webharvest.client.MockIterationContext;
 import com.esri.gpt.control.webharvest.common.CommonCriteria;
 import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.query.Query;
@@ -37,10 +38,7 @@ public CswQueryBuilderTest() {
 public static void setUpClass() throws Exception {
   HarvestProtocolCsw protocol = new HarvestProtocolCsw();
   protocol.setProfile("urn:ogc:CSW:2.0.2:HTTP:OGCCORE:ESRI:GPT");
-  IterationContext context = new IterationContext() {
-    public void onIterationException(Exception ex) {
-    }
-  };
+    IterationContext context = new MockIterationContext();
   instance  = new CswQueryBuilder(context, protocol, "http://geoss.esri.com/geoportal/csw/discovery?service=CSW&request=getCapabilities");
 }
 

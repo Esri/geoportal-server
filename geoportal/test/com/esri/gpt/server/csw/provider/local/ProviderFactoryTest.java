@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.HashMap;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.NamedNodeMap;
 
@@ -48,7 +49,7 @@ public class ProviderFactoryTest implements CfgActionHandler {
    * Executes the test.
    * @throws Exception if a processing exception occurs
    */
-  @Test
+  @Test @Ignore
   public void executeTest() throws Exception {
    URL url = this.getClass().getResource("data/Config.xml");
    
