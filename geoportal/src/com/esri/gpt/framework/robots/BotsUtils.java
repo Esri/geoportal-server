@@ -215,7 +215,7 @@ public final class BotsUtils {
   private static Access findWinningAccess(List<Access> list, boolean hasAccess) {
     Access longest = null;
     for (Access acc: list) {
-      if (acc.hasAccess()==hasAccess) continue;
+      if (acc.hasAccess()!=hasAccess) continue;
       if (longest==null || acc.getPath().length()>=longest.getPath().length()) {
         longest = acc;
       }

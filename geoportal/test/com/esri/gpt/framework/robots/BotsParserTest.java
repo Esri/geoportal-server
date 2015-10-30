@@ -33,7 +33,6 @@ import org.junit.Before;
  */
 public class BotsParserTest {
   private String robotsTxt;
-  private BotsParser parser;
   
   @Before
   public void setUp() throws IOException {
@@ -44,18 +43,27 @@ public class BotsParserTest {
     IOUtils.closeQuietly(buffer);
     
     robotsTxt = buffer.toString("UTF-8");
-    parser = new BotsParser(true, true, "GeoportalServer");
   }
   
   @Test
-  public void testSomeMethod() throws IOException {
+  public void testGeoportalServerUserAgent() throws IOException {
+    BotsParser parser = new BotsParser(true, true, "GeoportalServer");
+    
     InputStream input = new ByteArrayInputStream(robotsTxt.getBytes("UTF-8"));
     Bots bots = parser.readRobotsTxt(BotsMode.always, input);
     assertNotNull(bots);
     
-    assertFalse(requestAccess(bots,"/private").hasAccess());
-    assertTrue(requestAccess(bots,"/private/shared").hasAccess());
-    assertTrue(requestAccess(bots,"/private/shared/metadata.xml").hasAccess());
+    assertTrue(!requestAccess(bots,"http://www.fict.org/").hasAccess());
+    assertTrue(!requestAccess(bots,"http://www.fict.org/index.html").hasAccess());
+    assertTrue(requestAccess(bots,"http://www.fict.org/robots.txt").hasAccess());
+    assertTrue(requestAccess(bots,"http://www.fict.org/server.html").hasAccess());
+    assertTrue(requestAccess(bots,"http://www.fict.org/services/fast.html").hasAccess());
+    assertTrue(requestAccess(bots,"http://www.fict.org/services/slow.html").hasAccess());
+    assertTrue(!requestAccess(bots,"http://www.fict.org/orgo.gif").hasAccess());
+    assertTrue(requestAccess(bots,"http://www.fict.org/org/about.html").hasAccess());
+    assertTrue(!requestAccess(bots,"http://www.fict.org/org/plans.html").hasAccess());
+    assertTrue(!requestAccess(bots,"http://www.fict.org/%7Ejim/jim.html").hasAccess());
+    assertTrue(requestAccess(bots,"http://www.fict.org/%7Emak/mak.html").hasAccess());
   }
   
 }

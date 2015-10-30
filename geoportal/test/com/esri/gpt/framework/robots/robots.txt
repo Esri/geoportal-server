@@ -1,3 +1,13 @@
-User-Agent: *
-Disallow: /private/
-Allow: /private/shared
+User-agent: unhipbot
+Disallow: /
+
+User-agent: webcrawler
+User-agent: excite
+Disallow: 
+
+User-agent: *
+Disallow: /org/plans.html
+Allow: /org/
+Allow: /serv
+Allow: /~mak
+Disallow: /
