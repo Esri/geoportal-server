@@ -93,7 +93,13 @@ import java.util.List;
    * @return <code>true</code> if the section is applicable for the requested user agent
    */
   public boolean matchUserAgent(String userAgent) {
-    return anyAgent || userAgents.contains(userAgent);
+    if (anyAgent) return true;
+    for (String agent: userAgents) {
+      if (agent.equalsIgnoreCase(userAgent)) {
+        return true;
+      }
+    }
+    return false;
   }
   
   @Override
