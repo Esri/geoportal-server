@@ -15,5 +15,18 @@
 
 /**
  * Provides support for reading and parsing robots.txt
+ * <p>
+ * Standard for Robots Exclusion is a mechanism allowing servers to communicate
+ * with web crawlers about it's access policy. This implementation follows
+ * recommendations found in the following sources:
+ * <p>
+ * {@linkplain <a href="http://www.robotstxt.org/orig.html">http://www.robotstxt.org/orig.html</a>}<br>
+ * {@linkplain <a href="http://www.robotstxt.org/norobots-rfc.txt">http://www.robotstxt.org/norobots-rfc.txt</a>}<br>
+ * {@linkplain <a href="https://en.wikipedia.org/wiki/Robots_exclusion_standard">https://en.wikipedia.org/wiki/Robots_exclusion_standard</a>}<br>
+ * {@linkplain <a href="https://developers.google.com/webmasters/control-crawl-index/docs/robots_txt">https://developers.google.com/webmasters/control-crawl-index/docs/robots_txt</a>}<br>
+ * 
+ * @see com.esri.gpt.framework.robots.Bots
+ * @see com.esri.gpt.framework.robots.BotsParser
+ * @see com.esri.gpt.framework.robots.BotsUtils
  */
 package com.esri.gpt.framework.robots;

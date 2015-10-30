@@ -18,6 +18,10 @@ import java.util.List;
 
 /**
  * Robots TXT.
+ * <p>
+ * Provides basic access to robots.txt information.
+ * @see Access
+ * @see BotsUtils
  */
 public interface Bots {
 
