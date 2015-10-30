@@ -20,9 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import org.apache.commons.io.IOUtils;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -50,7 +48,7 @@ public class BotsParserTest {
     BotsParser parser = new BotsParser(true, true, "GeoportalServer");
     
     InputStream input = new ByteArrayInputStream(robotsTxt.getBytes("UTF-8"));
-    Bots bots = parser.readRobotsTxt(BotsMode.always, input);
+    Bots bots = parser.readRobotsTxt(BotsMode.always, WinningStrategy.LONGEST_PATH, input);
     assertNotNull(bots);
     
     assertTrue(!requestAccess(bots,"http://www.fict.org/").hasAccess());

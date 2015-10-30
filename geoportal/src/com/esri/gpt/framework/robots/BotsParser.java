@@ -118,15 +118,16 @@ public class BotsParser {
    * Parses context of the Robots.txt file if available.
    *
    * @param mode robots.txt mode
+   * @param winningStrategy winning strategy
    * @param serverUrl url of the server which is expected to have robots.txt
    * present
    * @return instance of {@link Bots} or <code>null</code> if unable to
    * obtain robots.txt
    */
-  public Bots readRobotsTxt(BotsMode mode, String serverUrl) {
+  public Bots readRobotsTxt(BotsMode mode, WinningStrategy winningStrategy, String serverUrl) {
     if (canParse(mode) && serverUrl != null) {
       try {
-        return BotsParser.this.readRobotsTxt(mode, new URL(serverUrl));
+        return BotsParser.this.readRobotsTxt(mode, winningStrategy, new URL(serverUrl));
       } catch (MalformedURLException ex) {
         LOG.log(Level.WARNING, String.format("Invalid server url: %s", serverUrl), ex);
       }
@@ -138,18 +139,19 @@ public class BotsParser {
    * Parses context of the Robots.txt file if available.
    *
    * @param mode robots.txt mode
+   * @param winningStrategy winning strategy
    * @param serverUrl url of the server which is expected to have robots.txt
    * present
    * @return instance of {@link Bots} or <code>null</code> if unable to
    * obtain robots.txt
    */
-  public Bots readRobotsTxt(BotsMode mode, URL serverUrl) {
+  public Bots readRobotsTxt(BotsMode mode, WinningStrategy winningStrategy, URL serverUrl) {
     if (canParse(mode) && serverUrl != null) {
       LOG.log(Level.INFO, String.format("Accessing robots.txt for: %s", serverUrl.toExternalForm()));
       try {
         URL robotsTxtUrl = getRobotsTxtUrl(serverUrl);
         if (robotsTxtUrl != null) {
-          RobotsContentHandler handler = new RobotsContentHandler(mode);
+          RobotsContentHandler handler = new RobotsContentHandler(mode,winningStrategy);
           HttpClientRequest request = new HttpClientRequest();
           request.setRequestHeader(Directive.UserAgent.toString(), userAgent);
           request.setUrl(robotsTxtUrl.toExternalForm());
@@ -175,16 +177,17 @@ public class BotsParser {
    * Parses robots TXT
    *
    * @param mode robots.txt mode
+   * @param winningStrategy winning strategy
    * @param robotsTxt stream of data
    * @return instance or RobotsTxt or <code>null</code>
    */
-  public Bots readRobotsTxt(BotsMode mode, InputStream robotsTxt) {
+  public Bots readRobotsTxt(BotsMode mode, WinningStrategy winningStrategy, InputStream robotsTxt) {
     Bots robots = null;
     BotsReader reader = null;
 
     try {
       if (canParse(mode)) {
-        reader = new BotsReader(userAgent, robotsTxt);
+        reader = new BotsReader(userAgent, winningStrategy, robotsTxt);
         robots = reader.readRobotsTxt();
       }
     } catch (IOException ex) {
@@ -238,16 +241,18 @@ public class BotsParser {
   private class RobotsContentHandler extends ContentHandler {
 
     private final BotsMode mode;
+    private final WinningStrategy winningStrategy;
     private Bots robots;
 
-    public RobotsContentHandler(BotsMode mode) {
+    public RobotsContentHandler(BotsMode mode, WinningStrategy winningStrategy) {
       this.mode = mode;
+      this.winningStrategy = winningStrategy;
     }
 
     @Override
     public void readResponse(HttpClientRequest request, InputStream responseStream) throws IOException {
       try {
-        robots = BotsParser.this.readRobotsTxt(mode, responseStream);
+        robots = BotsParser.this.readRobotsTxt(mode, winningStrategy, responseStream);
       } finally {
         try {
           responseStream.close();

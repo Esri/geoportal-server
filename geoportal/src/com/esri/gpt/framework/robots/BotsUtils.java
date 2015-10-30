@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
  */
 public final class BotsUtils {
   private static final Logger LOG = Logger.getLogger(BotsUtils.class.getName());
+  private static final WinningStrategy DEFAULT_WINNIG_STRATEGY = WinningStrategy.LONGEST_PATH;
   
   /**
    * Gets default parser
@@ -40,13 +41,39 @@ public final class BotsUtils {
   /**
    * Reads robots.txt
    * @param mode robots.txt mode
+   * @param winningStrategy winning strategy
+   * @param serverUrl url of the server which is expected to have robots.txt
+   * present
+   * @return instance of {@link Bots} or <code>null</code> if unable to
+   * obtain robots.txt
+   */
+  public static Bots readBots(BotsMode mode, WinningStrategy winningStrategy, String serverUrl) {
+    return parser().readRobotsTxt(mode, winningStrategy, serverUrl);
+  }
+  
+  /**
+   * Reads robots.txt
+   * @param mode robots.txt mode
+   * @param winningStrategy winning strategy
+   * @param serverUrl url of the server which is expected to have robots.txt
+   * present
+   * @return instance of {@link Bots} or <code>null</code> if unable to
+   * obtain robots.txt
+   */
+  public static Bots readBots(BotsMode mode, WinningStrategy winningStrategy, URL serverUrl) {
+    return parser().readRobotsTxt(mode, winningStrategy, serverUrl);
+  }
+  
+  /**
+   * Reads robots.txt
+   * @param mode robots.txt mode
    * @param serverUrl url of the server which is expected to have robots.txt
    * present
    * @return instance of {@link Bots} or <code>null</code> if unable to
    * obtain robots.txt
    */
   public static Bots readBots(BotsMode mode, String serverUrl) {
-    return parser().readRobotsTxt(mode, serverUrl);
+    return parser().readRobotsTxt(mode, DEFAULT_WINNIG_STRATEGY, serverUrl);
   }
   
   /**
@@ -58,7 +85,7 @@ public final class BotsUtils {
    * obtain robots.txt
    */
   public static Bots readBots(BotsMode mode, URL serverUrl) {
-    return parser().readRobotsTxt(mode, serverUrl);
+    return parser().readRobotsTxt(mode, DEFAULT_WINNIG_STRATEGY, serverUrl);
   }
   
   /**
@@ -70,16 +97,9 @@ public final class BotsUtils {
   public static Access requestAccess(Bots bots, String path) {
     if (bots!=null) {
       List<Access> matching = bots.select(path, PathMatcher.DEFAULT);
-      
-      Access winningDisallow = findWinningAccess(matching, false);
-      Access winningAllow = findWinningAccess(matching, true);
-      
-      if (winningAllow!=null && winningAllow.getPath().length()>=(winningDisallow!=null? winningDisallow.getPath().length(): 0)) {
-        return winningAllow;
-      }
-      
-      if (winningDisallow!=null) {
-        return winningDisallow;
+      Access winner = bots.getWinningStrategy().selectWinner(matching);
+      if (winner!=null) {
+        return winner;
       }
     }
     return Access.ALLOW;
@@ -210,17 +230,6 @@ public final class BotsUtils {
       }
     }
     return null;
-  }
-
-  private static Access findWinningAccess(List<Access> list, boolean hasAccess) {
-    Access longest = null;
-    for (Access acc: list) {
-      if (acc.hasAccess()!=hasAccess) continue;
-      if (longest==null || acc.getPath().length()>=longest.getPath().length()) {
-        longest = acc;
-      }
-    }
-    return longest;
   }
   
   private static class ProtocolHostPort {

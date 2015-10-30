@@ -37,19 +37,27 @@ import java.util.logging.Logger;
   private final List<String> sitemaps = new ArrayList<String>();
 
   private final String userAgent;
+  private final WinningStrategy winningStrategy;
 
   /**
    * Creates instance of the RobotsTxt implementation
    *
-   * @param userAgent
+   * @param userAgent user agent
+   * @param winningStrategy winning strategy
    */
-  public BotsImpl(String userAgent) {
+  public BotsImpl(String userAgent, WinningStrategy winningStrategy) {
     this.userAgent = userAgent;
+    this.winningStrategy = winningStrategy;
   }
 
   @Override
   public String getHost() {
     return host;
+  }
+
+  @Override
+  public WinningStrategy getWinningStrategy() {
+    return winningStrategy;
   }
 
   /**

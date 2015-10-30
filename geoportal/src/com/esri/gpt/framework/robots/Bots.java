@@ -44,6 +44,12 @@ public interface Bots {
    * @return list of sitemap urls.
    */
   List<String> getSitemaps();
+  
+  /**
+   * Gets winning strategy.
+   * @return winning strategy (never {@code null})
+   */
+  WinningStrategy getWinningStrategy();
 
 // ===== methods ===============================================================
   
