@@ -18,6 +18,7 @@ import com.esri.gpt.framework.util.Val;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -146,11 +147,11 @@ public final class BotsUtils {
   /*package*/ static String decode(String str) throws UnsupportedEncodingException {
     if (str!=null) {
       StringBuilder sb = new StringBuilder();
-      for (int idx = str.indexOf("%2f"); idx>=0; idx = str.indexOf("%2f")) {
-        sb.append(str.substring(0, idx)).append("%2f");
+      for (int idx = str.toLowerCase().indexOf("%2f"); idx>=0; idx = str.toLowerCase().indexOf("%2f")) {
+        sb.append(URLDecoder.decode(str.substring(0, idx),"UTF-8")).append(str.substring(idx, idx+3));
         str = str.substring(idx+3);
       }
-      sb.append(str);
+      sb.append(URLDecoder.decode(str,"UTF-8"));
       str = sb.toString();
     }
     return str;
