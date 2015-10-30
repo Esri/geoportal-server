@@ -135,7 +135,7 @@ public final class BotsUtils {
           sb.append("[").append(c).append("]");
       }
     }
-    return Pattern.compile(sb.toString(),Pattern.CASE_INSENSITIVE);
+    return Pattern.compile(sb.toString());
   }
   
   /**
