@@ -72,14 +72,16 @@ import java.util.Map;
 
         case Disallow:
           if (currentSection != null) {
-            currentSection.addAccess(new AccessImpl(new AccessPath(entry.getValue()), false));
+            boolean access = !entry.getValue().isEmpty()? false: true;
+            currentSection.addAccess(new AccessImpl(new AccessPath(entry.getValue()), access));
             startSection = false;
           }
           break;
 
         case Allow:
           if (currentSection != null) {
-            currentSection.addAccess(new AccessImpl(new AccessPath(entry.getValue()), true));
+            boolean access = !entry.getValue().isEmpty()? true: false;
+            currentSection.addAccess(new AccessImpl(new AccessPath(entry.getValue()), access));
             startSection = false;
           }
           break;
