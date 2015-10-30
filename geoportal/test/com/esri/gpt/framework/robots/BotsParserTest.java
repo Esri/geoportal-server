@@ -64,4 +64,46 @@ public class BotsParserTest {
     assertTrue(requestAccess(bots,"http://www.fict.org/%7Emak/mak.html").hasAccess());
   }
   
+  @Test
+  public void testUnhipbotUserAgent() throws IOException {
+    BotsParser parser = new BotsParser(true, true, "Unhipbot");
+    
+    InputStream input = new ByteArrayInputStream(robotsTxt.getBytes("UTF-8"));
+    Bots bots = parser.readRobotsTxt(BotsMode.always, WinningStrategy.FIRST_MATCH, input);
+    assertNotNull(bots);
+    
+    assertTrue(!requestAccess(bots,"http://www.fict.org/").hasAccess());
+    assertTrue(!requestAccess(bots,"http://www.fict.org/index.html").hasAccess());
+    assertTrue(requestAccess(bots,"http://www.fict.org/robots.txt").hasAccess());
+    assertTrue(!requestAccess(bots,"http://www.fict.org/server.html").hasAccess());
+    assertTrue(!requestAccess(bots,"http://www.fict.org/services/fast.html").hasAccess());
+    assertTrue(!requestAccess(bots,"http://www.fict.org/services/slow.html").hasAccess());
+    assertTrue(!requestAccess(bots,"http://www.fict.org/orgo.gif").hasAccess());
+    assertTrue(!requestAccess(bots,"http://www.fict.org/org/about.html").hasAccess());
+    assertTrue(!requestAccess(bots,"http://www.fict.org/org/plans.html").hasAccess());
+    assertTrue(!requestAccess(bots,"http://www.fict.org/%7Ejim/jim.html").hasAccess());
+    assertTrue(!requestAccess(bots,"http://www.fict.org/%7Emak/mak.html").hasAccess());
+  }
+  
+  @Test
+  public void testWebcrawlerUserAgent() throws IOException {
+    BotsParser parser = new BotsParser(true, true, "Webcrawler");
+    
+    InputStream input = new ByteArrayInputStream(robotsTxt.getBytes("UTF-8"));
+    Bots bots = parser.readRobotsTxt(BotsMode.always, WinningStrategy.FIRST_MATCH, input);
+    assertNotNull(bots);
+    
+    assertTrue(requestAccess(bots,"http://www.fict.org/").hasAccess());
+    assertTrue(requestAccess(bots,"http://www.fict.org/index.html").hasAccess());
+    assertTrue(requestAccess(bots,"http://www.fict.org/robots.txt").hasAccess());
+    assertTrue(requestAccess(bots,"http://www.fict.org/server.html").hasAccess());
+    assertTrue(requestAccess(bots,"http://www.fict.org/services/fast.html").hasAccess());
+    assertTrue(requestAccess(bots,"http://www.fict.org/services/slow.html").hasAccess());
+    assertTrue(requestAccess(bots,"http://www.fict.org/orgo.gif").hasAccess());
+    assertTrue(requestAccess(bots,"http://www.fict.org/org/about.html").hasAccess());
+    assertTrue(requestAccess(bots,"http://www.fict.org/org/plans.html").hasAccess());
+    assertTrue(requestAccess(bots,"http://www.fict.org/%7Ejim/jim.html").hasAccess());
+    assertTrue(requestAccess(bots,"http://www.fict.org/%7Emak/mak.html").hasAccess());
+  }
+  
 }
