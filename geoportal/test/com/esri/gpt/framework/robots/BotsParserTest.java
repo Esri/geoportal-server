@@ -48,7 +48,7 @@ public class BotsParserTest {
     BotsParser parser = new BotsParser(true, true, "GeoportalServer");
     
     InputStream input = new ByteArrayInputStream(robotsTxt.getBytes("UTF-8"));
-    Bots bots = parser.readRobotsTxt(BotsMode.always, WinningStrategy.LONGEST_PATH, input);
+    Bots bots = parser.readRobotsTxt(BotsMode.always, MatchingStrategy.SIMPLE_PATTERN_STRATEGY, WinningStrategy.LONGEST_PATH_STRATEGY, input);
     assertNotNull(bots);
     
     assertTrue(!requestAccess(bots,"http://www.fict.org/").hasAccess());
@@ -69,7 +69,7 @@ public class BotsParserTest {
     BotsParser parser = new BotsParser(true, true, "Unhipbot");
     
     InputStream input = new ByteArrayInputStream(robotsTxt.getBytes("UTF-8"));
-    Bots bots = parser.readRobotsTxt(BotsMode.always, WinningStrategy.FIRST_MATCH, input);
+    Bots bots = parser.readRobotsTxt(BotsMode.always, MatchingStrategy.SIMPLE_PATTERN_STRATEGY, WinningStrategy.FIRST_MATCH_STRATEGY, input);
     assertNotNull(bots);
     
     assertTrue(!requestAccess(bots,"http://www.fict.org/").hasAccess());
@@ -90,7 +90,7 @@ public class BotsParserTest {
     BotsParser parser = new BotsParser(true, true, "Webcrawler");
     
     InputStream input = new ByteArrayInputStream(robotsTxt.getBytes("UTF-8"));
-    Bots bots = parser.readRobotsTxt(BotsMode.always, WinningStrategy.FIRST_MATCH, input);
+    Bots bots = parser.readRobotsTxt(BotsMode.always, MatchingStrategy.SIMPLE_PATTERN_STRATEGY, WinningStrategy.FIRST_MATCH_STRATEGY, input);
     assertNotNull(bots);
     
     assertTrue(requestAccess(bots,"http://www.fict.org/").hasAccess());

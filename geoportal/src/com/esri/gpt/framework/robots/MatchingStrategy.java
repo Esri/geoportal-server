@@ -14,28 +14,26 @@
  */
 package com.esri.gpt.framework.robots;
 
-import java.util.List;
-
 /**
- * Winning strategy.
+ * Matching strategy.
  * <p>
- * Determines how a winner will be selected.
- * @see MatchingStrategy
+ * It determines how and if path is matching a pattern.
+ * @see WinningStrategy
  */
-public interface WinningStrategy {
+public interface MatchingStrategy {
   /**
-   * This strategy always chooses first winner from the list.
+   * This strategy only checks if path starts with pattern (case-sensitive).
    */
-  WinningStrategy FIRST_MATCH_STRATEGY = new FirstMatchWinningStrategy();
+  MatchingStrategy PLAIN_STRING_STRATEGY = new PlainStringMatchingStrategy();
   /**
-   * This strategy chooses a winner with the longest path.
+   * This strategy recognizes (*) and ($) as wildcards.
    */
-  WinningStrategy LONGEST_PATH_STRATEGY = new LongestPathWinningStrategy();
-  
+  MatchingStrategy SIMPLE_PATTERN_STRATEGY = new SimplePatternMatchingStrategy();
   /**
-   * Selects a single winner amongst the candidates.
-   * @param candidates list of candidates
-   * @return a winner or {@code null} if no winner (for example: because empty list of candidates)
+   * Matches given path with a pattern.
+   * @param pattern pattern
+   * @param pathToTest path to test
+   * @return <code>true</code> if match
    */
-  Access selectWinner(List<Access> candidates);
+  boolean matches(String pattern, String pathToTest);
 }

@@ -17,9 +17,8 @@ package com.esri.gpt.framework.robots;
 import java.util.List;
 
 /**
- * Robots TXT.
+ * Represents access policy from a single "robots.txt" file.
  * <p>
- * Provides basic access to robots.txt information.
  * @see Access
  * @see BotsUtils
  */
@@ -46,7 +45,19 @@ public interface Bots {
   List<String> getSitemaps();
   
   /**
+   * Gets matching strategy.
+   * <p>
+   * Matching strategy defines how it is determined if a requested URL is 
+   * matching a pattern.
+   * @return matching strategy (never {@code null})
+   */
+  MatchingStrategy getMatchingStrategy();
+  
+  /**
    * Gets winning strategy.
+   * <p>
+   * Winning strategy defines how a single matching path is selected amongst
+   * a list of matching paths.
    * @return winning strategy (never {@code null})
    */
   WinningStrategy getWinningStrategy();
@@ -56,8 +67,8 @@ public interface Bots {
   /**
    * Selects matching accesses.
    * @param path path
-   * @param matcher matcher
+   * @param matchingStrategy matcher
    * @return list of matching accesses (newer <code>null</code>)
    */
-  List<Access> select(String path, PathMatcher matcher);
+  List<Access> select(String path, MatchingStrategy matchingStrategy);
 }

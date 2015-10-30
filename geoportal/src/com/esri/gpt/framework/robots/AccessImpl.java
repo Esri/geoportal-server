@@ -63,11 +63,11 @@ package com.esri.gpt.framework.robots;
   /**
    * Checks if path matches access path
    * @param path path to check
-   * @param matcher matcher
+   * @param matchingStrategy matcher
    * @return <code>true</code> if path matches access path
    */
-  public boolean matches(String path, PathMatcher matcher) {
-    return path!=null && this.accessPath.match(path, matcher);
+  public boolean matches(String path, MatchingStrategy matchingStrategy) {
+    return path!=null && this.accessPath.match(path, matchingStrategy);
   }
   
   @Override

@@ -18,11 +18,16 @@ package com.esri.gpt.framework.robots;
  * RobotsTxt mode.
  * <p>
  * Controls how robots.txt should be respected during harvesting.
+ * <p>
+ * {@link BotsMode#inherit} uses "bot.robotstxt.enabled" parameter from gpt.xml configuration file.
  */
 public enum BotsMode {
-  inherit,  // inherit from gpt.xml => bot.robotstxt.enabled
-  always,   // use robots.txt if available
-  never;    // don't use robots.txt even if available// don't use robots.txt even if available
+  /** inherit from gpt.xml => bot.robotstxt.enabled */
+  inherit,
+  /** force to use robots.txt if available robots.txt available, regardless default configuration */
+  always,
+  /** disable to use robots.txt if available robots.txt available, regardless default configuration */
+  never;
   
   /**
    * Gets default value.

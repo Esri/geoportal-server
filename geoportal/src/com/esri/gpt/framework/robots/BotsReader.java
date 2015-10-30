@@ -30,12 +30,14 @@ import java.util.Map;
 /*package*/class BotsReader extends Reader {
 
   private final String userAgent;
+  private final MatchingStrategy matchingStrategy;
   private final WinningStrategy winningStrategy;
   private final BufferedReader reader;
   private BotsImpl robots;
 
-  public BotsReader(String userAgent, WinningStrategy winningStrategy, InputStream inputStream) throws UnsupportedEncodingException {
+  public BotsReader(String userAgent, MatchingStrategy matchingStrategy, WinningStrategy winningStrategy, InputStream inputStream) throws UnsupportedEncodingException {
     this.userAgent = Val.chkStr(userAgent);
+    this.matchingStrategy = matchingStrategy;
     this.winningStrategy = winningStrategy;
     this.reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
   }
@@ -181,7 +183,7 @@ import java.util.Map;
 
   private void assureRobots() {
     if (robots == null) {
-      robots = new BotsImpl(userAgent,winningStrategy);
+      robots = new BotsImpl(userAgent,matchingStrategy,winningStrategy);
     }
   }
 

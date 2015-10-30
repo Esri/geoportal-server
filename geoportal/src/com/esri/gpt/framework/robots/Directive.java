@@ -20,11 +20,17 @@ import com.esri.gpt.framework.util.Val;
  * Robots.txt file directive.
  */
 public enum Directive {
+  /** User-Agent directive */
   UserAgent("User-Agent"),
+  /** Disallow directive */
   Disallow("Disallow"),
+  /** Allow directive */
   Allow("Allow"),
+  /** Crawl-Delay directive */
   CrawlDelay("Crawl-Delay"),
+  /** Host directive */
   Host("Host"),
+  /** Sitemap directive */
   Sitemap("Sitemap")
   ;
   private final String symbol;
@@ -33,6 +39,12 @@ public enum Directive {
     this.symbol = symbol;
   }
   
+  /**
+   * Gets symbol.
+   * <p>
+   * Symbol is a string which could be recognized within robots.txt file
+   * @return symbol
+   */
   public String symbol() {
     return this.symbol;
   }

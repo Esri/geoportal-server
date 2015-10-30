@@ -24,6 +24,14 @@
  * {@linkplain <a href="http://www.robotstxt.org/norobots-rfc.txt">http://www.robotstxt.org/norobots-rfc.txt</a>}<br>
  * {@linkplain <a href="https://en.wikipedia.org/wiki/Robots_exclusion_standard">https://en.wikipedia.org/wiki/Robots_exclusion_standard</a>}<br>
  * {@linkplain <a href="https://developers.google.com/webmasters/control-crawl-index/docs/robots_txt">https://developers.google.com/webmasters/control-crawl-index/docs/robots_txt</a>}<br>
+ * <p>
+ * Behavior of the "robots.txt" mechanism can be configured through the following 
+ * parameters in the gpt.xml configuration file:
+ * <p>
+ * <b>bot.robotstxt.enabled</b>: use of robots.txt during harvesting is enabled. Default: true<br>
+ * <b>bot.robotstxt.override</b>:  allows user to override bot.robotstxt.enabled. Default: true;<br>
+ * <b>bot.agent</b>: name of the user agent for interpreting content of robots.txt. Default: "GeoportalServer"<br>
+ * 
  * 
  * @see com.esri.gpt.framework.robots.Bots
  * @see com.esri.gpt.framework.robots.BotsParser

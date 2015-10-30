@@ -37,6 +37,7 @@ import java.util.logging.Logger;
   private final List<String> sitemaps = new ArrayList<String>();
 
   private final String userAgent;
+  private final MatchingStrategy matchingStrategy;
   private final WinningStrategy winningStrategy;
 
   /**
@@ -45,14 +46,20 @@ import java.util.logging.Logger;
    * @param userAgent user agent
    * @param winningStrategy winning strategy
    */
-  public BotsImpl(String userAgent, WinningStrategy winningStrategy) {
+  public BotsImpl(String userAgent, MatchingStrategy matchingStrategy, WinningStrategy winningStrategy) {
     this.userAgent = userAgent;
+    this.matchingStrategy = matchingStrategy;
     this.winningStrategy = winningStrategy;
   }
 
   @Override
   public String getHost() {
     return host;
+  }
+
+  @Override
+  public MatchingStrategy getMatchingStrategy() {
+    return matchingStrategy;
   }
 
   @Override
@@ -104,11 +111,11 @@ import java.util.logging.Logger;
   }
 
   @Override
-  public List<Access> select(String path, PathMatcher matcher) {
+  public List<Access> select(String path, MatchingStrategy matchingStrategy) {
     String relativePath = assureRelative(path);
 
     if (relativePath != null && !"/robots.txt".equalsIgnoreCase(relativePath)) {
-      return select(userAgent, relativePath, matcher);
+      return select(userAgent, relativePath, matchingStrategy);
     } else {
       return Collections.EMPTY_LIST;
     }
@@ -141,15 +148,15 @@ import java.util.logging.Logger;
     return sb.toString();
   }
 
-  private List<Access> select(String userAgent, String relativePath, PathMatcher matcher) {
+  private List<Access> select(String userAgent, String relativePath, MatchingStrategy matchingStrategy) {
     ArrayList<Access> selected = new ArrayList<Access>();
     if (!(userAgent == null || relativePath == null)) {
       Section sec = findSectionByAgent(sections, userAgent);
       if (sec != null) {
-        selected.addAll(sec.select(userAgent, relativePath, matcher));
+        selected.addAll(sec.select(userAgent, relativePath, matchingStrategy));
       }
       if (defaultSection != null) {
-        selected.addAll(defaultSection.select(userAgent, relativePath, matcher));
+        selected.addAll(defaultSection.select(userAgent, relativePath, matchingStrategy));
       }
     }
     return selected;

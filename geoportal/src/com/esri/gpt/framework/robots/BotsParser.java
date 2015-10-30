@@ -27,7 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Robots TXT parser.
+ * Parser of "robots.txt" file.
  */
 public class BotsParser {
 
@@ -118,16 +118,17 @@ public class BotsParser {
    * Parses context of the Robots.txt file if available.
    *
    * @param mode robots.txt mode
+   * @param matchingStrategy matching strategy
    * @param winningStrategy winning strategy
    * @param serverUrl url of the server which is expected to have robots.txt
    * present
    * @return instance of {@link Bots} or <code>null</code> if unable to
    * obtain robots.txt
    */
-  public Bots readRobotsTxt(BotsMode mode, WinningStrategy winningStrategy, String serverUrl) {
+  public Bots readRobotsTxt(BotsMode mode, MatchingStrategy matchingStrategy, WinningStrategy winningStrategy, String serverUrl) {
     if (canParse(mode) && serverUrl != null) {
       try {
-        return BotsParser.this.readRobotsTxt(mode, winningStrategy, new URL(serverUrl));
+        return BotsParser.this.readRobotsTxt(mode, matchingStrategy, winningStrategy, new URL(serverUrl));
       } catch (MalformedURLException ex) {
         LOG.log(Level.WARNING, String.format("Invalid server url: %s", serverUrl), ex);
       }
@@ -139,19 +140,20 @@ public class BotsParser {
    * Parses context of the Robots.txt file if available.
    *
    * @param mode robots.txt mode
+   * @param matchingStrategy matching strategy
    * @param winningStrategy winning strategy
    * @param serverUrl url of the server which is expected to have robots.txt
    * present
    * @return instance of {@link Bots} or <code>null</code> if unable to
    * obtain robots.txt
    */
-  public Bots readRobotsTxt(BotsMode mode, WinningStrategy winningStrategy, URL serverUrl) {
+  public Bots readRobotsTxt(BotsMode mode, MatchingStrategy matchingStrategy, WinningStrategy winningStrategy, URL serverUrl) {
     if (canParse(mode) && serverUrl != null) {
       LOG.log(Level.INFO, String.format("Accessing robots.txt for: %s", serverUrl.toExternalForm()));
       try {
         URL robotsTxtUrl = getRobotsTxtUrl(serverUrl);
         if (robotsTxtUrl != null) {
-          RobotsContentHandler handler = new RobotsContentHandler(mode,winningStrategy);
+          RobotsContentHandler handler = new RobotsContentHandler(mode,matchingStrategy, winningStrategy);
           HttpClientRequest request = new HttpClientRequest();
           request.setRequestHeader(Directive.UserAgent.toString(), userAgent);
           request.setUrl(robotsTxtUrl.toExternalForm());
@@ -177,17 +179,18 @@ public class BotsParser {
    * Parses robots TXT
    *
    * @param mode robots.txt mode
+   * @param matchingStrategy matching strategy
    * @param winningStrategy winning strategy
    * @param robotsTxt stream of data
    * @return instance or RobotsTxt or <code>null</code>
    */
-  public Bots readRobotsTxt(BotsMode mode, WinningStrategy winningStrategy, InputStream robotsTxt) {
+  public Bots readRobotsTxt(BotsMode mode, MatchingStrategy matchingStrategy, WinningStrategy winningStrategy, InputStream robotsTxt) {
     Bots robots = null;
     BotsReader reader = null;
 
     try {
       if (canParse(mode)) {
-        reader = new BotsReader(userAgent, winningStrategy, robotsTxt);
+        reader = new BotsReader(userAgent, matchingStrategy, winningStrategy, robotsTxt);
         robots = reader.readRobotsTxt();
       }
     } catch (IOException ex) {
@@ -241,18 +244,20 @@ public class BotsParser {
   private class RobotsContentHandler extends ContentHandler {
 
     private final BotsMode mode;
+    private final MatchingStrategy matchingStrategy;
     private final WinningStrategy winningStrategy;
     private Bots robots;
 
-    public RobotsContentHandler(BotsMode mode, WinningStrategy winningStrategy) {
+    public RobotsContentHandler(BotsMode mode, MatchingStrategy matchingStrategy, WinningStrategy winningStrategy) {
       this.mode = mode;
+      this.matchingStrategy = matchingStrategy;
       this.winningStrategy = winningStrategy;
     }
 
     @Override
     public void readResponse(HttpClientRequest request, InputStream responseStream) throws IOException {
       try {
-        robots = BotsParser.this.readRobotsTxt(mode, winningStrategy, responseStream);
+        robots = BotsParser.this.readRobotsTxt(mode, matchingStrategy, winningStrategy, responseStream);
       } finally {
         try {
           responseStream.close();

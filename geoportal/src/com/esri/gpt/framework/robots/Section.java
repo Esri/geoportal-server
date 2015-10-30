@@ -77,14 +77,14 @@ import java.util.List;
    * Select any access matching input path.
    * @param userAgen user agent
    * @param relativePath path to test
-   * @param matcher matcher
+   * @param matchingStrategy matcher
    * @return list of matching elements
    */
-  public List<Access> select(String userAgent, String relativaPath, PathMatcher matcher) {
+  public List<Access> select(String userAgent, String relativaPath, MatchingStrategy matchingStrategy) {
     if (userAgent==null || relativaPath==null || !matchUserAgent(userAgent)) {
       return Collections.EMPTY_LIST;
     }
-    return accessList.select(relativaPath, matcher);
+    return accessList.select(relativaPath, matchingStrategy);
   }
   
   /**

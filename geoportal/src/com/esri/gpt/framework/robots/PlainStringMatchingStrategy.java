@@ -14,16 +14,26 @@
  */
 package com.esri.gpt.framework.robots;
 
+import static com.esri.gpt.framework.robots.BotsUtils.decode;
+
 /**
- * Pattern match.
+ * Plain string matching strategy.
+ * <p>
+ * This strategy only checks if path starts with pattern (case-sensitive).
  */
-public interface PathMatcher {
-  PathMatcher DEFAULT = new PatternPathMatcher();
-  /**
-   * Matches given path with a pattern.
-   * @param pattern pattern
-   * @param pathToTest path to test
-   * @return <code>true</code> if match
-   */
-  boolean matches(String pattern, String pathToTest);
+/*package*/ class PlainStringMatchingStrategy implements MatchingStrategy {
+
+  @Override
+  public boolean matches(String pattern, String pathToTest) {
+    try {
+      String relativePath = decode(pathToTest);
+      if (pattern.endsWith("/") && !relativePath.endsWith("/")) {
+        relativePath += "/";
+      }
+      return relativePath.startsWith(pattern);
+    } catch (Exception ex) {
+      return false;
+    }
+  }
+  
 }

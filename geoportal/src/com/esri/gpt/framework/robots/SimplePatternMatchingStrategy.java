@@ -21,8 +21,10 @@ import java.util.regex.Pattern;
 
 /**
  * Pattern patch match.
+ * <p>
+ * This strategy recognizes (*) and ($) as wildcards.
  */
-/*package*/class PatternPathMatcher implements PathMatcher {
+/*package*/class SimplePatternMatchingStrategy implements MatchingStrategy {
 
   @Override
   public boolean matches(String pattern, String pathToTest) {

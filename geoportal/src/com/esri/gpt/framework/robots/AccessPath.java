@@ -41,8 +41,8 @@ package com.esri.gpt.framework.robots;
    * @param relativePath path to check
    * @return <code>true</code> if path matches
    */
-  public boolean match(String relativePath, PathMatcher matcher) {
-    return matcher.matches(getPath(), relativePath);
+  public boolean match(String relativePath, MatchingStrategy matchingStrategy) {
+    return matchingStrategy.matches(getPath(), relativePath);
   }
   
   @Override

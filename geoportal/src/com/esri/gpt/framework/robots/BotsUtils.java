@@ -28,7 +28,8 @@ import java.util.regex.Pattern;
  */
 public final class BotsUtils {
   private static final Logger LOG = Logger.getLogger(BotsUtils.class.getName());
-  private static final WinningStrategy DEFAULT_WINNIG_STRATEGY = WinningStrategy.LONGEST_PATH;
+  private static final MatchingStrategy DEFAULT_MATCHING_STRATEGY = MatchingStrategy.SIMPLE_PATTERN_STRATEGY;
+  private static final WinningStrategy DEFAULT_WINNIG_STRATEGY = WinningStrategy.LONGEST_PATH_STRATEGY;
   
   /**
    * Gets default parser
@@ -41,27 +42,29 @@ public final class BotsUtils {
   /**
    * Reads robots.txt
    * @param mode robots.txt mode
+   * @param matchingStrategy matching strategy
    * @param winningStrategy winning strategy
    * @param serverUrl url of the server which is expected to have robots.txt
    * present
    * @return instance of {@link Bots} or <code>null</code> if unable to
    * obtain robots.txt
    */
-  public static Bots readBots(BotsMode mode, WinningStrategy winningStrategy, String serverUrl) {
-    return parser().readRobotsTxt(mode, winningStrategy, serverUrl);
+  public static Bots readBots(BotsMode mode, MatchingStrategy matchingStrategy, WinningStrategy winningStrategy, String serverUrl) {
+    return parser().readRobotsTxt(mode, matchingStrategy, winningStrategy, serverUrl);
   }
   
   /**
    * Reads robots.txt
    * @param mode robots.txt mode
+   * @param matchingStrategy matching strategy
    * @param winningStrategy winning strategy
    * @param serverUrl url of the server which is expected to have robots.txt
    * present
    * @return instance of {@link Bots} or <code>null</code> if unable to
    * obtain robots.txt
    */
-  public static Bots readBots(BotsMode mode, WinningStrategy winningStrategy, URL serverUrl) {
-    return parser().readRobotsTxt(mode, winningStrategy, serverUrl);
+  public static Bots readBots(BotsMode mode, MatchingStrategy matchingStrategy, WinningStrategy winningStrategy, URL serverUrl) {
+    return parser().readRobotsTxt(mode, matchingStrategy, winningStrategy, serverUrl);
   }
   
   /**
@@ -73,7 +76,7 @@ public final class BotsUtils {
    * obtain robots.txt
    */
   public static Bots readBots(BotsMode mode, String serverUrl) {
-    return parser().readRobotsTxt(mode, DEFAULT_WINNIG_STRATEGY, serverUrl);
+    return parser().readRobotsTxt(mode, DEFAULT_MATCHING_STRATEGY, DEFAULT_WINNIG_STRATEGY, serverUrl);
   }
   
   /**
@@ -85,7 +88,7 @@ public final class BotsUtils {
    * obtain robots.txt
    */
   public static Bots readBots(BotsMode mode, URL serverUrl) {
-    return parser().readRobotsTxt(mode, DEFAULT_WINNIG_STRATEGY, serverUrl);
+    return parser().readRobotsTxt(mode, DEFAULT_MATCHING_STRATEGY, DEFAULT_WINNIG_STRATEGY, serverUrl);
   }
   
   /**
@@ -96,7 +99,7 @@ public final class BotsUtils {
    */
   public static Access requestAccess(Bots bots, String path) {
     if (bots!=null) {
-      List<Access> matching = bots.select(path, PathMatcher.DEFAULT);
+      List<Access> matching = bots.select(path, bots.getMatchingStrategy());
       Access winner = bots.getWinningStrategy().selectWinner(matching);
       if (winner!=null) {
         return winner;
