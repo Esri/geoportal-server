@@ -24,13 +24,21 @@ import java.util.List;
  */
 /*package*/class AccessList {
   private final List<AccessImpl> accessList = new ArrayList<AccessImpl>();
-  
+
   /**
    * Adds access to the list.
    * @param access access
    */
   public void addAccess(AccessImpl access) {
     accessList.add(access);
+  }
+  
+  /**
+   * Imports entire access list from another instance.
+   * @param ref another instance
+   */
+  public void importAccess(AccessList ref) {
+    accessList.addAll(ref.accessList);
   }
   
   @Override

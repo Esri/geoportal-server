@@ -27,23 +27,6 @@ import java.util.List;
   private final List<String> userAgents = new ArrayList<String>();
   private final AccessList accessList = new AccessList();
   private boolean anyAgent;
-  private Integer crawlDelay;
-
-  /**
-   * Gets crawl delay.
-   * @return crawl delay in minutes or <code>null</code> if not set
-   */
-  public Integer getCrawlDelay() {
-    return crawlDelay;
-  }
-
-  /**
-   * Sets crawl delay
-   * @param crawlDelay crawl delay in minutes
-   */
-  public void setCrawlDelay(Integer crawlDelay) {
-    this.crawlDelay = crawlDelay;
-  }
 
   /**
    * Checks if is any agent.
@@ -51,6 +34,31 @@ import java.util.List;
    */
   public boolean isAnyAgent() {
     return anyAgent;
+  }
+  
+  /**
+   * Checks if section is exact in terms of user agents.
+   * @param section section to compare
+   * @return {@code true} if sections are exact.
+   */
+  public boolean isExact(Section section) {
+    if (isAnyAgent() && section.isAnyAgent()) return true;
+    if ((isAnyAgent() && !section.isAnyAgent() || (!isAnyAgent() && section.isAnyAgent()))) return false;
+
+    for (String sectionUserAgent: section.userAgents) {
+      boolean hasAgent = false;
+      for (String thisUserAgent: userAgents) {
+        if (thisUserAgent.equalsIgnoreCase(sectionUserAgent)) {
+          hasAgent = true;
+          break;
+        }
+      }
+      if (!hasAgent) {
+        return false;
+      }
+    }
+    
+    return true;
   }
   
   /**
@@ -63,6 +71,14 @@ import java.util.List;
     } else {
       this.userAgents.add(userAgent);
     }
+  }
+
+  /**
+   * Gets access list.
+   * @return access list
+   */
+  public AccessList getAccessList() {
+    return accessList;
   }
   
   /**
@@ -118,11 +134,6 @@ import java.util.List;
     }
 
     writer.println(accessList.toString());
-
-    if (crawlDelay!=null && crawlDelay>0) {
-      writer.printf("Crawl-delay: %d", crawlDelay);
-      writer.println();
-    }
     
     // no need to close writer or catch any exception
     

@@ -33,6 +33,7 @@ import java.util.logging.Logger;
   private Section defaultSection;
   private final List<Section> sections = new ArrayList<Section>();
 
+  private Integer crawlDelay;
   private String host;
   private final List<String> sitemaps = new ArrayList<String>();
 
@@ -81,18 +82,17 @@ import java.util.logging.Logger;
     return sitemaps;
   }
 
+  /**
+   * Sets crawl delay.
+   * @param crawlDelay crawl delay. 
+   */
+  public void setCrawlDelay(Integer crawlDelay) {
+    this.crawlDelay = crawlDelay;
+  }
+
   @Override
   public Integer getCrawlDelay() {
-    Integer crawlDelay = null;
-    Section sec = findSectionByAgent(sections, userAgent);
-    if (sec != null) {
-      crawlDelay = sec.getCrawlDelay();
-    }
-    if (defaultSection != null) {
-      crawlDelay = defaultSection.getCrawlDelay();
-    }
-    LOG.fine(String.format("Crawl-delay: %d", crawlDelay));
-    return null;
+    return crawlDelay;
   }
 
   /**
@@ -103,9 +103,18 @@ import java.util.logging.Logger;
   public void addSection(Section section) {
     if (section != null) {
       if (section.isAnyAgent()) {
-        this.defaultSection = section;
+        if (this.defaultSection==null) {
+          this.defaultSection = section;
+        } else {
+          this.defaultSection.getAccessList().importAccess(section.getAccessList());
+        }
       } else {
-        sections.add(section);
+        Section exact = findExactSection(section);
+        if (exact==null) {
+          sections.add(section);
+        } else {
+          exact.getAccessList().importAccess(section.getAccessList());
+        }
       }
     }
   }
@@ -133,6 +142,11 @@ import java.util.logging.Logger;
     for (Section section : sections) {
       writer.println(section.toString());
     }
+    
+    if (crawlDelay!=null && crawlDelay>0) {
+      writer.printf("Crawl-delay: %d", crawlDelay);
+      writer.println();
+    }
 
     if (host != null) {
       writer.printf("Host: %s", host);
@@ -146,6 +160,20 @@ import java.util.logging.Logger;
 
     // no need to close writer or catch any exception
     return sb.toString();
+  }
+  
+  /**
+   * Finds exact section.
+   * @param section section to find exact
+   * @return exact section or {@code null} if no exact section found
+   */
+  private Section findExactSection(Section section) {
+    for (Section s: sections) {
+      if (s.isExact(section)) {
+        return s;
+      }
+    }
+    return null;
   }
 
   private List<Access> select(String userAgent, String relativePath, MatchingStrategy matchingStrategy) {

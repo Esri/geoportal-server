@@ -92,7 +92,7 @@ import java.util.Map;
           if (currentSection != null) {
             try {
               int crawlDelay = Integer.parseInt(entry.getValue());
-              currentSection.setCrawlDelay(crawlDelay);
+              robots.setCrawlDelay(crawlDelay);
             } catch (NumberFormatException ex) {
             }
             startSection = false;
