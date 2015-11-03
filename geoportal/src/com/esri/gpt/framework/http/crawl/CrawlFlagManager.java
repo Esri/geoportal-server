@@ -29,7 +29,7 @@ class CrawlFlagManager {
    * @return flag
    */
   public synchronized CrawlFlag newFlag() {
-    LOG.finer(String.format("Creating crawl flag"));
+    LOG.finer(String.format("Adding new flag to the end of the queue"));
     CrawlFlag flag = new CrawlFlag();
     crawlFlags.push(flag);
     return flag;
@@ -40,10 +40,10 @@ class CrawlFlagManager {
    */
   public synchronized void notifyLast() {
     if (!crawlFlags.isEmpty()) {
-      LOG.finer("Notifying last first flag");
+      LOG.finer("Removing first flag from the beginning of the queue");
       crawlFlags.pop().set();
     } else {
-      LOG.finer(String.format("No crawl flag to notify"));
+      LOG.finer(String.format("No more flags in the queue"));
     }
   }
 }

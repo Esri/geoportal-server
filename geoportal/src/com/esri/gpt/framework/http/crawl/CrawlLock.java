@@ -81,8 +81,8 @@ class CrawlLock {
         LOG.log(Level.SEVERE, null, ex);
       } finally {
         status = false;
-        flagManager.notifyLast();
         LOG.finer(String.format("Lock semaphore ended"));
+        flagManager.notifyLast();
       }
     }
   }
