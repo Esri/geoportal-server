@@ -18,19 +18,24 @@ package com.esri.gpt.framework.http.crawl;
  * Crawl flag.
  */
 public class CrawlFlag {
+  private volatile boolean flag;
   
   /**
    * Hold until notified.
+   * @param crawlDelay crawl delay in milliseconds
    * @throws InterruptedException if interrupted
    */
-  public synchronized void hold() throws InterruptedException {
-    wait();
+  public synchronized void hold(long crawlDelay) throws InterruptedException {
+    while (!flag) {
+      wait(crawlDelay);
+    }
   }
   
   /**
    * Set flag and notify.
    */
   public synchronized void set() {
+    flag = true;
     notifyAll();
   }
 }

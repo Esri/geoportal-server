@@ -47,7 +47,7 @@ public class CrawlLocker {
     try {
       LOG.fine(String.format("Entering server %s for %d seconds", protocolHostPort, crawlDelay));
       CrawlLock lock = lockManager.getLock(protocolHostPort);
-      lock.enter(crawlDelay);
+      lock.enter(crawlDelay!=null? 1000L*crawlDelay: null);
       LOG.fine(String.format("Exiting server %s", protocolHostPort));
     } catch (InterruptedException ex) {
       LOG.log(Level.SEVERE, "Interrupted.", ex);

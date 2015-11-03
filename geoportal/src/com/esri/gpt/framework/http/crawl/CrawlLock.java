@@ -25,7 +25,7 @@ class CrawlLock {
   private static final Logger LOG = Logger.getLogger(CrawlLock.class.getName());
   private final CrawlFlagManager flagManager = new CrawlFlagManager();
 
-  private Integer crawlDelay;
+  private Long crawlDelay;
   private volatile boolean status;
 
   /**
@@ -33,25 +33,22 @@ class CrawlLock {
    * @param delay crawl delay (<code>null</code> for no delay)
    * @throws InterruptedException 
    */
-  public synchronized void enter(Integer delay) throws InterruptedException {
+  public synchronized void enter(Long delay) throws InterruptedException {
     LOG.finer(String.format("Entering crawl lock with crawl-delay: %d", delay));
     CrawlFlag flag = flagManager.newFlag();
 
     if (status) {
-      LOG.finer(String.format("Holding on flag"));
-      flag.hold();
+      if (crawlDelay!=null) {
+        LOG.finer(String.format("Holding on flag"));
+        flag.hold(crawlDelay);
+      }
     }
 
     crawlDelay = delay;
     if (crawlDelay != null) {
+        status = true;
         Semaphore semaphore = new Semaphore();
         semaphore.start();
-        
-        while (!status) {
-          synchronized (semaphore) {
-            semaphore.wait();
-          }
-        }
     } else {
       flagManager.notifyLast();
     }
@@ -76,17 +73,14 @@ class CrawlLock {
     @Override
     public void run() {
       LOG.finer(String.format("Starting lock semaphore with crawl delay: %d", crawlDelay));
-      status = true;
-      synchronized (this) {
-        notify();
-      }
       try {
         if (crawlDelay!=null) {
-          Thread.sleep(crawlDelay * 1000);
+          Thread.sleep(crawlDelay);
         }
       } catch (InterruptedException ex) {
         LOG.log(Level.SEVERE, null, ex);
       } finally {
+        status = false;
         flagManager.notifyLast();
         LOG.finer(String.format("Lock semaphore ended"));
       }
