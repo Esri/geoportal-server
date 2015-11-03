@@ -135,7 +135,7 @@ private class NativeImpl extends CommonPublishable implements Native {
     @Override
   public String getContent() throws IOException, SAXException {
     ResourceXml resourceXml = new ResourceXml();
-    String feedXml = resourceXml.makeResourceXmlFromResponse(info.getUrl().replaceAll("\\{", "'").replaceAll("\\}","'"));
+    String feedXml = resourceXml.makeResourceXmlFromResponse(context.getRobotsTxt(), info.getUrl().replaceAll("\\{", "'").replaceAll("\\}","'"));
     Document fDom = null;
 	try {
 		fDom = DomUtil.makeDomFromString(feedXml, true);

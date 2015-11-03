@@ -129,7 +129,7 @@ private class NativeImpl extends CommonPublishable implements Native {
     @Override
   public String getContent() throws IOException {
     ResourceXml resourceXml = new ResourceXml();
-    return resourceXml.makeResourceXmlFromResponse(info.getUrl());
+    return resourceXml.makeResourceXmlFromResponse(bots,info.getUrl());
   }
 }
 }

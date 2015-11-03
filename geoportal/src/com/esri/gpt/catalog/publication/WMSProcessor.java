@@ -21,6 +21,7 @@ import com.esri.gpt.control.webharvest.common.CommonResult;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.StringHandler;
 import com.esri.gpt.framework.http.XmlHandler;
+import com.esri.gpt.framework.http.crawl.HttpCrawlRequest;
 import com.esri.gpt.framework.resource.api.Native;
 import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.api.SourceUri;
@@ -30,6 +31,9 @@ import com.esri.gpt.framework.resource.common.UrlUri;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
+import com.esri.gpt.framework.robots.Bots;
+import com.esri.gpt.framework.robots.BotsMode;
+import com.esri.gpt.framework.robots.BotsUtils;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.NodeListAdapter;
 import com.esri.gpt.server.csw.client.NullReferenceException;
@@ -71,17 +75,18 @@ public class WMSProcessor extends ResourceProcessor {
    */
   @Override
   public void process() throws Exception {
-    for (Publishable p: extractPublishables(new NativeImpl())) {
+    Bots bots = BotsUtils.readBots(BotsMode.inherit, getCapabilitiesUrl);
+    for (Publishable p: extractPublishables(new NativeImpl(bots))) {
       this.publishMetadata(p.getSourceUri().asString(), p.getContent());
     }
   }
 
   @Override
-  public Query createQuery(IterationContext context, Criteria criteria) {
+  public Query createQuery(final IterationContext context, Criteria criteria) {
     Query query = new Query() {
       @Override
       public Result execute() {
-        return new CommonResult(extractPublishables(new NativeImpl()));
+        return new CommonResult(extractPublishables(new NativeImpl(context.getRobotsTxt())));
       }
     };
     return query;
@@ -89,7 +94,7 @@ public class WMSProcessor extends ResourceProcessor {
 
   @Override
   public Native getNativeResource(IterationContext context) {
-    return new NativeImpl();
+    return new NativeImpl(context.getRobotsTxt());
   }
   
   /**
@@ -212,8 +217,7 @@ public class WMSProcessor extends ResourceProcessor {
    * @return XML string
    * @throws IOException if reading fails
    */
-  private String readXml() throws IOException {
-    HttpClientRequest cr = new HttpClientRequest();
+  private String readXml(HttpClientRequest cr) throws IOException {
     cr.setUrl(getCapabilitiesUrl);
     StringHandler sh = new StringHandler();
     cr.setContentHandler(sh);
@@ -227,8 +231,7 @@ public class WMSProcessor extends ResourceProcessor {
    * @return document
    * @throws IOException if reading document fails
    */
-  private Document readDoc() throws IOException {
-    HttpClientRequest cr = new HttpClientRequest();
+  private Document readDoc(HttpClientRequest cr) throws IOException {
     cr.setUrl(getCapabilitiesUrl);
     XmlHandler sh = new XmlHandler(false);
     cr.setContentHandler(sh);
@@ -241,7 +244,12 @@ public class WMSProcessor extends ResourceProcessor {
    * Native publishable representing WMS service.
    */
   private class NativeImpl extends CommonPublishable implements Native {
+    private final Bots bots;
     private final UrlUri uri = new UrlUri(getCapabilitiesUrl);
+
+    public NativeImpl(Bots bots) {
+      this.bots = bots;
+    }
 
     @Override
     public SourceUri getSourceUri() {
@@ -250,13 +258,16 @@ public class WMSProcessor extends ResourceProcessor {
 
     @Override
     public String getContent() throws IOException {
-       return readXml();
+       return readXml(newHttpClientRequest());
     }
     
     public Document getDocument() throws IOException {
-      return readDoc();
+      return readDoc(newHttpClientRequest());
     }
 
+    private HttpClientRequest newHttpClientRequest() {
+      return bots==null? new HttpClientRequest(): new HttpCrawlRequest(bots);
+    }
   };
   
   /**
