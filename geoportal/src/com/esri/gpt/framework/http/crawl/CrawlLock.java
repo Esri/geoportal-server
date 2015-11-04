@@ -25,7 +25,7 @@ class CrawlLock {
   private static final Logger LOG = Logger.getLogger(CrawlLock.class.getName());
   private final CrawlFlagManager flagManager = new CrawlFlagManager();
 
-  private Long crawlDelay;
+  private Long throttleDelay;
   private volatile boolean status;
 
   /**
@@ -34,18 +34,18 @@ class CrawlLock {
    * @throws InterruptedException 
    */
   public synchronized void enter(Long delay) throws InterruptedException {
-    LOG.finer(String.format("Entering crawl lock with crawl-delay: %d", delay));
+    LOG.finer(String.format("Entering crawl lock with delay: %d", delay));
     CrawlFlag flag = flagManager.newFlag();
 
     if (status) {
-      if (crawlDelay!=null) {
+      if (throttleDelay!=null) {
         LOG.finer(String.format("Holding on flag"));
-        flag.hold(crawlDelay);
+        flag.hold(throttleDelay);
       }
     }
 
-    crawlDelay = delay;
-    if (crawlDelay != null) {
+    throttleDelay = delay;
+    if (throttleDelay != null) {
         status = true;
         Semaphore semaphore = new Semaphore();
         semaphore.start();
@@ -58,7 +58,7 @@ class CrawlLock {
   
   @Override
   public String toString() {
-    return String.format("CrawlLock :: crawlDelay: %d, status: %b", crawlDelay, status);
+    return String.format("CrawlLock :: throttle delay: %d, status: %b", throttleDelay, status);
   }
 
   /**
@@ -72,10 +72,10 @@ class CrawlLock {
 
     @Override
     public void run() {
-      LOG.finer(String.format("Starting lock semaphore with crawl delay: %d", crawlDelay));
+      LOG.finer(String.format("Starting lock semaphore with crawl delay: %d", throttleDelay));
       try {
-        if (crawlDelay!=null) {
-          Thread.sleep(crawlDelay);
+        if (throttleDelay!=null) {
+          Thread.sleep(throttleDelay);
         }
       } catch (InterruptedException ex) {
         LOG.log(Level.SEVERE, null, ex);

@@ -41,13 +41,13 @@ public class CrawlLocker {
   /**
    * Enter server with crawl delay.
    * @param protocolHostPort server protocol/host/port
-   * @param crawlDelay crawl delay (<code>null</code> for no delay)
+   * @param throttleDelay throttle delay in milliseconds(<code>null</code> for no delay)
    */
-  public void enterServer(String protocolHostPort, Integer crawlDelay) {
+  public void enterServer(String protocolHostPort, Long throttleDelay) {
     try {
-      LOG.fine(String.format("Entering server %s for %d seconds", protocolHostPort, crawlDelay));
+      LOG.fine(String.format("Entering server %s for %d milliseconds", protocolHostPort, throttleDelay));
       CrawlLock lock = lockManager.getLock(protocolHostPort);
-      lock.enter(crawlDelay!=null? 1000L*crawlDelay: null);
+      lock.enter(throttleDelay);
       LOG.fine(String.format("Exiting server %s", protocolHostPort));
     } catch (InterruptedException ex) {
       LOG.log(Level.SEVERE, "Interrupted.", ex);
