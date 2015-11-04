@@ -48,7 +48,7 @@ public class CkanTest {
   public void ckanTest() throws Exception {
     //String baseUrl = "http://demo.ckan.org/api/3/action";
     //String baseUrl = "http://catalog.data.gov/api/3/action";
-    runTest("http://demo.ckan.org/api/3/action");
+    //runTest("http://demo.ckan.org/api/3/action");
   }
 
   public void runTest(String baseUrl) throws Exception {
