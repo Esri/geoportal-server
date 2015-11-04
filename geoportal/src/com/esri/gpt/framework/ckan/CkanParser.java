@@ -29,7 +29,7 @@ public class CkanParser {
    * @throws JSONException if error parsing JSON
    */
   public static CkanPackageList parsePackageList(String packageList) throws JSONException {
-    return new CkanPackageListAdaptor(new JSONObject(packageList));
+    return new CkanPackageListAdaptor(new JSONObject(packageList).getJSONArray("result"));
   }
   
   /**
@@ -39,6 +39,6 @@ public class CkanParser {
    * @throws JSONException if error parsing JSON
    */
   public static CkanPackage parsePackage(String pkg) throws JSONException {
-    return new CkanPackageAdaptor(new JSONObject(pkg));
+    return new CkanPackageAdaptor(new JSONObject(pkg).getJSONObject("result"));
   }
 }

@@ -22,35 +22,31 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * package list adaptor.
  */
 /*package*/class CkanPackageListAdaptor implements CkanPackageList {
   private static final Logger LOG = Logger.getLogger(CkanPackageListAdaptor.class.getName());
-  private final JSONObject packageListJson;
+  private final JSONArray packageListJson;
 
-  public CkanPackageListAdaptor(JSONObject packageListJson) {
+  public CkanPackageListAdaptor(JSONArray packageListJson) {
     this.packageListJson = packageListJson;
   }
 
   @Override
   public List<String> getPackagesIds() {
     ArrayList<String> packagesIds = new ArrayList<String>();
-    if (packageListJson.has("result")) {
       try {
-        JSONArray result = packageListJson.getJSONArray("result");
-        for (int i=0; i<result.length(); i++) {
-          if (result.isNull(i)) continue;
-          String id = Val.chkStr(result.getString(i));
+        for (int i=0; i<packageListJson.length(); i++) {
+          if (packageListJson.isNull(i)) continue;
+          String id = Val.chkStr(packageListJson.getString(i));
           if (id.isEmpty()) continue;
           packagesIds.add(id);
         }
       } catch (JSONException ex) {
         LOG.log(Level.WARNING,"Invalid package list format", ex);
       }
-    }
     return packagesIds;
   }
   
