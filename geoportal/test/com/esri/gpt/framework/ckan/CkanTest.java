@@ -48,21 +48,25 @@ public class CkanTest {
   public void ckanTest() throws Exception {
     //String baseUrl = "http://demo.ckan.org/api/3/action";
     //String baseUrl = "http://catalog.data.gov/api/3/action";
-    //runTest("http://demo.ckan.org/api/3/action");
+    runTest("http://demo.ckan.org/api/3/action", 20);
   }
 
-  public void runTest(String baseUrl) throws Exception {
+  public void runTest(String baseUrl, int max) throws Exception {
+    int counter = 0;
     JSONObject packageList = readJsonData(new URL(baseUrl + "/package_list"));
-    if (packageList.has("result")) {
+    if (packageList.has("result") && packageList.optBoolean("success", false)) {
       if (packageList.get("result") instanceof JSONArray) {
         // result of /package_list
         JSONArray idsArray = packageList.getJSONArray("result");
         for (int i = 0; i < idsArray.length(); i++) {
           String packageId = idsArray.getString(i);
           JSONObject pkgObject = readJsonData(new URL(baseUrl + "/package_show?id=" + packageId));
-          if (pkgObject.has("result") && pkgObject.get("result") instanceof JSONObject) {
+          if (pkgObject.has("result") && pkgObject.optBoolean("success", false) && pkgObject.get("result") instanceof JSONObject) {
             CkanPackage pkg = new CkanPackageAdaptor(pkgObject.getJSONObject("result"));
             onPackage(pkg);
+            if (max>0 && (++counter)>=max) {
+              return;
+            }
           }
         }
       } else if (packageList.get("result") instanceof JSONObject) {
@@ -77,6 +81,9 @@ public class CkanTest {
               JSONObject pkgObject = pkgs.getJSONObject(i);
               CkanPackage pkg = new CkanPackageAdaptor(pkgObject);
               onPackage(pkg);
+              if (max>0 && (++counter)>=max) {
+                return;
+              }
             }
             start = start + pkgs.length();
             if (start < count) {
