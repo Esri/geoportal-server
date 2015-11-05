@@ -26,7 +26,7 @@ import org.json.JSONObject;
 /**
  * Generic ckan object implementation.
  */
-public abstract class CkanObjectImpl implements CkanObject {
+/*package*/abstract class CkanObjectImpl implements CkanObject {
   protected static final IsoDateFormat ISO = new IsoDateFormat();
   protected final JSONObject json;
 
