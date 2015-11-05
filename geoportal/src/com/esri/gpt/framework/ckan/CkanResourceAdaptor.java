@@ -15,72 +15,42 @@
  */
 package com.esri.gpt.framework.ckan;
 
-import com.esri.gpt.framework.isodate.IsoDateFormat;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.Date;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * Resource adaptor.
  */
-/*package*/class CkanResourceAdaptor implements CkanResource {
-  private static final IsoDateFormat ISO = new IsoDateFormat();
-  private final JSONObject resourceJson;
+/*package*/class CkanResourceAdaptor extends CkanObjectImpl implements CkanResource {
 
   public CkanResourceAdaptor(JSONObject resourceJson) {
-    this.resourceJson = resourceJson;
+    super(resourceJson);
   }
 
   @Override
   public String getId() {
-    try {
-      return resourceJson.getString("id");
-    } catch (JSONException ex) {
-      return null;
-    }
+    return getString("id", null);
   }
 
   @Override
   public String getDescription() {
-    try {
-      return resourceJson.getString("description");
-    } catch (JSONException ex) {
-      return null;
-    }
+    return getString("description", null);
   }
 
   @Override
   public Date getUpdateDate() {
-    try {
-      return ISO.parseObject(resourceJson.getString("webstore_last_updated"));
-    } catch (JSONException ex) {
-      return null;
-    } catch (ParseException ex) {
-      return null;
-    }
+    return getDate("webstore_last_updated", null);
   }
 
   @Override
   public String getFormat() {
-    try {
-      return resourceJson.getString("format");
-    } catch (JSONException ex) {
-      return null;
-    }
+    return getString("format", null);
   }
 
   @Override
   public URL getUrl() {
-    try {
-      return new URL(resourceJson.getString("url"));
-    } catch (JSONException ex) {
-      return null;
-    } catch (MalformedURLException ex) {
-      return null;
-    }
+    return getUrl("url", null);
   }
   
   @Override

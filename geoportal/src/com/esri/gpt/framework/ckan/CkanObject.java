@@ -19,12 +19,16 @@ import java.net.URL;
 import java.util.Date;
 
 /**
- * Resource
+ * Generic ckan object implementation.
  */
-public interface CkanResource extends CkanObject {
-  String getId();
-  String getDescription();
-  Date getUpdateDate();
-  String getFormat();
-  URL getUrl();
+public interface CkanObject {
+
+  Boolean getBoolean(String attr, Boolean defaultValue);
+
+  Date getDate(String attr, Date defaultValue);
+
+  String getString(String attr, String defaultValue);
+
+  URL getUrl(String attr, URL defaultValue);
+  
 }

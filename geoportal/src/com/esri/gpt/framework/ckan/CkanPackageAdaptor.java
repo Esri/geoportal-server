@@ -15,8 +15,6 @@
  */
 package com.esri.gpt.framework.ckan;
 
-import com.esri.gpt.framework.isodate.IsoDateFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,79 +27,49 @@ import org.json.JSONObject;
 /**
  * Package adaptor.
  */
-/*package*/class CkanPackageAdaptor implements CkanPackage {
+/*package*/class CkanPackageAdaptor extends CkanObjectImpl implements CkanPackage, CkanObject {
   private static final Logger LOG = Logger.getLogger(CkanPackageAdaptor.class.getName());
-  private static final IsoDateFormat ISO = new IsoDateFormat();
-  private final JSONObject packageJson;
 
   public CkanPackageAdaptor(JSONObject packageJson) {
-    this.packageJson = packageJson;
+    super(packageJson);
   }
 
   @Override
   public String getId() {
-    try {
-      return packageJson.getString("id");
-    } catch (JSONException ex) {
-      return null;
-    }
+    return getString("id", null);
   }
 
   @Override
   public String getTitle() {
-    try {
-      return packageJson.getString("title");
-    } catch (JSONException ex) {
-      return null;
-    }
+    return getString("title", null);
   }
 
   @Override
   public Date getCreateDate() {
-    try {
-      return ISO.parseObject(packageJson.getString("metadata_created"));
-    } catch (JSONException ex) {
-      return null;
-    } catch (ParseException ex) {
-      return null;
-    }
+    return getDate("metadata_created", null);
   }
 
   @Override
   public Date getUpdateDate() {
-    try {
-      return ISO.parseObject(packageJson.getString("metadata_modified"));
-    } catch (JSONException ex) {
-      return null;
-    } catch (ParseException ex) {
-      return null;
-    }
+    return getDate("metadata_modified", null);
   }
 
   @Override
   public String getNotes() {
-    try {
-      return packageJson.getString("notes");
-    } catch (JSONException ex) {
-      return null;
-    }
+    return getString("notes", null);
   }
 
   @Override
   public String getAuthor() {
-    try {
-      return packageJson.getString("author");
-    } catch (JSONException ex) {
-      return null;
-    }
+    return getString("author", null);
   }
 
   @Override
   public List<CkanResource> getResources() {
     ArrayList<CkanResource> resources = new ArrayList<CkanResource>();
-    if (packageJson.has("resources")) {
+    if (json.has("resources")) {
       try {
-        JSONArray resArray = packageJson.getJSONArray("resources");
+        JSONArray resArray = json.getJSONArray("resources");
         for (int i=0; i<resArray.length(); i++) {
           JSONObject resObj = resArray.getJSONObject(i);
           resources.add(new CkanResourceAdaptor(resObj));
