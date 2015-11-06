@@ -161,7 +161,17 @@ import org.json.JSONObject;
   @Override
   public List<CkanGroup> getGroups() {
     ArrayList<CkanGroup> groups = new ArrayList<CkanGroup>();
-    // TODO implement
+    if (json.has("groups")) {
+      try {
+        JSONArray arr = json.getJSONArray("groups");
+        for (int i=0; i<arr.length(); i++) {
+          JSONObject obj = arr.getJSONObject(i);
+          groups.add(new CkanGroupAdaptor(obj));
+        }
+      } catch (JSONException ex) {
+        LOG.log(Level.WARNING,"Invalid groups list format", ex);
+      }
+    }
     return groups;
   }
 
@@ -200,9 +210,9 @@ import org.json.JSONObject;
     ArrayList<CkanExtra> extras = new ArrayList<CkanExtra>();
     if (json.has("extras")) {
       try {
-        JSONArray resArray = json.getJSONArray("extras");
-        for (int i=0; i<resArray.length(); i++) {
-          JSONObject obj = resArray.getJSONObject(i);
+        JSONArray arr = json.getJSONArray("extras");
+        for (int i=0; i<arr.length(); i++) {
+          JSONObject obj = arr.getJSONObject(i);
           extras.add(new CkanExtraAdaptor(obj));
         }
       } catch (JSONException ex) {
