@@ -15,36 +15,30 @@
  */
 package com.esri.gpt.framework.ckan;
 
-import java.net.URL;
 import org.json.JSONObject;
 
 /**
- * CKAN group implementation.
+ * CKAN tag implementation.
  */
-/*package*/class CkanGroupAdaptor extends CkanObjectImpl implements CkanGroup {
+/*package*/class CkanTagAdaptor extends CkanObjectImpl implements CkanTag {
 
-  public CkanGroupAdaptor(JSONObject json) {
+  public CkanTagAdaptor(JSONObject json) {
     super(json);
+  }
+
+  @Override
+  public String getVocabularyId() {
+    return getString("vocabulary_id", null);
+  }
+
+  @Override
+  public String getState() {
+    return getString("state", null);
   }
 
   @Override
   public String getDisplayName() {
     return getString("display_name", null);
-  }
-
-  @Override
-  public String getDescription() {
-    return getString("description", null);
-  }
-
-  @Override
-  public URL getImageDisplayUrl() {
-    return getUrl("image_display_url", null);
-  }
-
-  @Override
-  public String getTitle() {
-    return getString("title", null);
   }
 
   @Override
@@ -56,9 +50,10 @@ import org.json.JSONObject;
   public String getName() {
     return getString("name", null);
   }
-  
+
   @Override
   public String toString() {
-    return String.format("GROUP :: display name: %s, title: %s, image url: %s", getDisplayName(), getTitle(), getImageDisplayUrl());
+    return String.format("TAG :: display name: %s", getDisplayName());
   }
+  
 }

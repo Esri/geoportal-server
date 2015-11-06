@@ -154,7 +154,17 @@ import org.json.JSONObject;
   @Override
   public List<CkanTag> getTags() {
     ArrayList<CkanTag> tags = new ArrayList<CkanTag>();
-    // TODO implement
+    if (json.has("tags")) {
+      try {
+        JSONArray arr = json.getJSONArray("tags");
+        for (int i=0; i<arr.length(); i++) {
+          JSONObject obj = arr.getJSONObject(i);
+          tags.add(new CkanTagAdaptor(obj));
+        }
+      } catch (JSONException ex) {
+        LOG.log(Level.WARNING,"Invalid tags list format", ex);
+      }
+    }
     return tags;
   }
 
