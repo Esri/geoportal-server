@@ -56,4 +56,6 @@ public interface CkanPackage {
   String getRevisionId();
   
   CkanTrackingSummary getTrackingSummary();
+  URL getLicenseUrl();
+  Date getRevisionTimestamp();
 }

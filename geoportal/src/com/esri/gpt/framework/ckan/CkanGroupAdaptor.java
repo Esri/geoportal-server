@@ -92,6 +92,16 @@ import org.json.JSONObject;
   public String getApprovalStatus() {
     return getString("approval_status", null);
   }
+
+  @Override
+  public String getRevisionId() {
+    return getString("revision_id", null);
+  }
+
+  @Override
+  public Date getRevisionTimestamp() {
+    return getDate("revision_timestamp", null);
+  }
   
   @Override
   public String toString() {

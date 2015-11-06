@@ -268,6 +268,16 @@ import org.json.JSONObject;
       return null;
     }
   }
+
+  @Override
+  public URL getLicenseUrl() {
+    return getUrl("license_url", null);
+  }
+
+  @Override
+  public Date getRevisionTimestamp() {
+    return getDate("revision_timestamp", null);
+  }
   
   @Override
   public String toString() {

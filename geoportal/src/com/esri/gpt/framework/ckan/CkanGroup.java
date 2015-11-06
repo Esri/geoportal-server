@@ -35,5 +35,6 @@ public interface CkanGroup {
   String getRevision();
   String getType();
   String getApprovalStatus();
-  
+  String getRevisionId();
+  Date getRevisionTimestamp();
 }
