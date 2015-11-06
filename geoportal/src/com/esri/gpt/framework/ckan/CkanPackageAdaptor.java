@@ -28,7 +28,7 @@ import org.json.JSONObject;
 /**
  * Package adaptor.
  */
-/*package*/class CkanPackageAdaptor extends CkanObjectImpl implements CkanPackage, CkanObject {
+/*package*/final class CkanPackageAdaptor extends CkanObjectImpl implements CkanPackage {
   private static final Logger LOG = Logger.getLogger(CkanPackageAdaptor.class.getName());
 
   public CkanPackageAdaptor(JSONObject packageJson) {
@@ -81,7 +81,7 @@ import org.json.JSONObject;
     }
     return resources;
   }
-
+  
   @Override
   public String getLicenseTitle() {
     return getString("license_title", null);
@@ -259,6 +259,6 @@ import org.json.JSONObject;
   
   @Override
   public String toString() {
-    return String.format("PACKAGE :: title: %s | notes: %s | created: %s | by: %s", getTitle(), getNotes(), getCreateDate(), getAuthor());
+    return String.format("PACKAGE :: title: %s | created on: %s | by: %s | notes: %s", getTitle(), getNotes(), getCreateDate(), getAuthor());
   }
 }

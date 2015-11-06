@@ -15,7 +15,7 @@
  */
 package com.esri.gpt.framework.ckan;
 
-public interface CkanTag extends CkanObject {
+public interface CkanTag {
   String getVocabularyId();
   String getState();
   String getDisplayName();

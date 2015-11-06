@@ -54,4 +54,5 @@ public interface CkanPackage {
   String getOwnerOrg();
   List<CkanExtra> getExtras();
   String getRevisionId();
+  
 }

@@ -18,7 +18,7 @@ package com.esri.gpt.framework.ckan;
 /**
  * Relationship.
  */
-public interface CkanRelationship extends CkanObject {
+public interface CkanRelationship {
   String getSubject();
   String getObject();
   String getType();

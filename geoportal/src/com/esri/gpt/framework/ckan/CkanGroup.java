@@ -20,7 +20,7 @@ import java.net.URL;
 /**
  * CKAN group.
  */
-public interface CkanGroup extends CkanObject {
+public interface CkanGroup {
   String getDisplayName();
   String getDescription();
   URL getImageDisplayUrl();

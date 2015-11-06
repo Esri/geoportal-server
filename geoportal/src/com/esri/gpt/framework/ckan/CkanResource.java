@@ -21,7 +21,7 @@ import java.util.Date;
 /**
  * Resource
  */
-public interface CkanResource extends CkanObject {
+public interface CkanResource {
   String getId();
   String getDescription();
   Date getCreateDate();
