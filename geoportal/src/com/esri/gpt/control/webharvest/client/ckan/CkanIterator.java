@@ -27,6 +27,7 @@ import com.esri.gpt.framework.robots.BotsUtils;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -44,18 +45,24 @@ public class CkanIterator implements Iterable<CkanPackage> {
   private final String baseUrl;
   private final BotsMode mode;
   private final String defaultUserAgent;
+  private final String q;
 
   public CkanIterator(URL baseUrl, BotsMode mode, String defaultUserAgent) {
-    this.baseUrl = baseUrl.toExternalForm();
+    this(baseUrl, mode, defaultUserAgent, null);
+  }
+
+  public CkanIterator(URL baseUrl, BotsMode mode, String defaultUserAgent, String q) {
+    this.baseUrl = baseUrl.toExternalForm().replaceAll("/+$", "");
     this.mode = mode;
     this.defaultUserAgent = defaultUserAgent;
+    this.q = q;
   }
 
   @Override
   public Iterator<CkanPackage> iterator() {
     Bots bots = BotsUtils.readBots(mode, baseUrl);
     try {
-      JSONObject response = readJsonData(bots, baseUrl+"/package_list");
+      JSONObject response = readJsonData(bots, q!=null? makePackageSearchUrl(q, null): makePackageListUrl());
       if (response.has("result") && response.optBoolean("success", false)) {
         if (response.get("result") instanceof JSONArray) {
           CkanPackageList ckanPackageList = CkanParser.makePackageList(response.getJSONArray("result"));
@@ -123,6 +130,21 @@ public class CkanIterator implements Iterable<CkanPackage> {
     request.execute();
     return new JSONObject(handler.getContent());
   }
+  
+  protected String makePackageListUrl() {
+    return baseUrl+"/package_list";
+  }
+  
+  protected String makePackageShowUrl(String packageId) {
+    return baseUrl+"/package_show?id=" + packageId;
+  }
+  
+  protected String makePackageSearchUrl(String q, Long start) throws IOException {
+    StringBuilder query = new StringBuilder();
+    query.append(q!=null? "q="+URLEncoder.encode(q, "UTF-8"): "");
+    query.append(start!=null? (query.length()>0? "&": "") + "start="+start: "");
+    return baseUrl+"/package_search" + (query.length()>0? "?"+query: "");
+  }
 
   private class PackageSearchIterator implements Iterator<CkanPackage> {
 
@@ -163,7 +185,7 @@ public class CkanIterator implements Iterable<CkanPackage> {
       
       pkgIter = null;
       try {
-        JSONObject response = readJsonData(bots, baseUrl+"/package_search?start=" + start);
+        JSONObject response = readJsonData(bots, makePackageSearchUrl(null,start));
         if (response.has("result") && response.optBoolean("success", false) && response.get("result") instanceof JSONObject) {
           JSONObject result = response.getJSONObject("result");
           if (result.has("results") && result.get("results") instanceof JSONArray) {
@@ -231,7 +253,7 @@ public class CkanIterator implements Iterable<CkanPackage> {
 
       String packageId = idsIterator.next();
       try {
-        JSONObject pkgObject = readJsonData(bots, baseUrl+"/package_show?id=" + packageId);
+        JSONObject pkgObject = readJsonData(bots, makePackageShowUrl(packageId));
         if (pkgObject.has("result") && pkgObject.optBoolean("success", false) && pkgObject.get("result") instanceof JSONObject) {
           pkg = CkanParser.makePackage(pkgObject.getJSONObject("result"));
           return true;
