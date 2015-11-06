@@ -15,15 +15,16 @@
  */
 package com.esri.gpt.framework.ckan;
 
-import java.util.List;
+import java.net.URL;
 
 /**
- * Package list.
+ * CKAN group.
  */
-public interface CkanPackageList {
-  /**
-   * Gets a list of the packages ids;
-   * @return list of packages ids.
-   */
-  List<String> getPackagesIds();
+public interface CkanGroup extends CkanObject {
+  String getDisplayName();
+  String getDescription();
+  URL getImageDisplayUrl();
+  String getTitle();
+  String getId();
+  String getName();
 }

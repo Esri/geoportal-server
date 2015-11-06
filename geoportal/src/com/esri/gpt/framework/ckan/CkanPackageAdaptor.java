@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Esri.
+ * Copyright 2015 Esri.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.framework.ckan;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -79,6 +80,131 @@ import org.json.JSONObject;
       }
     }
     return resources;
+  }
+
+  @Override
+  public String getLicenseTitle() {
+    return getString("license_title", null);
+  }
+
+  @Override
+  public String getMaintainer() {
+    return getString("maintainer", null);
+  }
+
+  @Override
+  public List<CkanRelationship> getRelationshipsAsObject() {
+    ArrayList<CkanRelationship> relationships = new ArrayList<CkanRelationship>();
+    // TODO implement
+    return relationships;
+  }
+
+  @Override
+  public List<CkanRelationship> getRelationshipsAsSubject() {
+    ArrayList<CkanRelationship> relationships = new ArrayList<CkanRelationship>();
+    // TODO implement
+    return relationships;
+  }
+
+  @Override
+  public Boolean getPrivate() {
+    return getBoolean("private", null);
+  }
+
+  @Override
+  public String getMaintainerEmail() {
+    return getString("maintainer_email", null);
+  }
+
+  @Override
+  public Long getNumTags() {
+    return (long)getTags().size();
+  }
+
+  @Override
+  public String getAuthorEmail() {
+    return getString("author_email", null);
+  }
+
+  @Override
+  public String getState() {
+    return getString("state", null);
+  }
+
+  @Override
+  public String getVersion() {
+    return getString("version", null);
+  }
+
+  @Override
+  public String getCreatorUserId() {
+    return getString("creator_user_id", null);
+  }
+
+  @Override
+  public String getType() {
+    return getString("type", null);
+  }
+
+  @Override
+  public Long getNumResources() {
+    return (long)getResources().size();
+  }
+
+  @Override
+  public List<CkanTag> getTags() {
+    ArrayList<CkanTag> tags = new ArrayList<CkanTag>();
+    // TODO implement
+    return tags;
+  }
+
+  @Override
+  public List<CkanGroup> getGroups() {
+    ArrayList<CkanGroup> groups = new ArrayList<CkanGroup>();
+    // TODO implement
+    return groups;
+  }
+
+  @Override
+  public String getLicenseId() {
+    return getString("license_id", null);
+  }
+
+  @Override
+  public String getOrganization() {
+    return getString("organization", null);
+  }
+
+  @Override
+  public String getName() {
+    return getString("name", null);
+  }
+
+  @Override
+  public Boolean getIsOpen() {
+    return getBoolean("isopen", null);
+  }
+
+  @Override
+  public URL getUrl() {
+    return getUrl("url", null);
+  }
+
+  @Override
+  public String getOwnerOrg() {
+    return getString("owner_org", null);
+  }
+
+  @Override
+  public List<CkanExtra> getExtras() {
+    ArrayList<CkanExtra> extras = new ArrayList<CkanExtra>();
+    // TODO implement
+    return extras;
+  }
+
+  @Override
+  public String getRevisionId() {
+    return getString("revision_id", null);
   }
   
   @Override

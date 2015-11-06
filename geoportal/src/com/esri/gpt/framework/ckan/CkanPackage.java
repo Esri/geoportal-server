@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Esri.
+ * Copyright 2015 Esri.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.framework.ckan;
 
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
@@ -29,4 +30,28 @@ public interface CkanPackage {
   String getNotes();
   String getAuthor();
   List<CkanResource> getResources();
+  
+  String getLicenseTitle();
+  String getMaintainer();
+  List<CkanRelationship> getRelationshipsAsObject();
+  List<CkanRelationship> getRelationshipsAsSubject();
+  Boolean getPrivate();
+  String getMaintainerEmail();
+  Long getNumTags();
+  String getAuthorEmail();
+  String getState();
+  String getVersion();
+  String getCreatorUserId();
+  String getType();
+  Long getNumResources();
+  List<CkanTag> getTags();
+  List<CkanGroup> getGroups();
+  String getLicenseId();
+  String getOrganization();
+  String getName();
+  Boolean getIsOpen();
+  URL getUrl();
+  String getOwnerOrg();
+  List<CkanExtra> getExtras();
+  String getRevisionId();
 }
