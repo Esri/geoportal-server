@@ -15,6 +15,11 @@
  */
 package com.esri.gpt.framework.ckan;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,9 +51,30 @@ import org.json.JSONObject;
     } 
     return oldValue;
   }
+
+  public Object getAttribute(String name) {
+    return json.opt(name);
+  }
+  
+  public List<String> getAttributeNames() {
+    ArrayList<String> names = new ArrayList<String>();
+    JSONArray na = json.names();
+    for (int i=0; i<na.length(); i++) {
+      try {
+        names.add(na.getString(i));
+      } catch (JSONException ex) {
+      }
+    }
+    return names;
+  }
+  
+  @Override
+  public Boolean getDeleted() {
+    return getBoolean("deleted", null);
+  }
   
   @Override
   public String toString() {
-    return String.format("EXTRA :: key: %s, value: %s", getKey(), getValue());
+    return String.format("EXTRA :: key: %s, value: %s, deleted: %s", getKey(), getValue(), getDeleted());
   }
 }

@@ -15,10 +15,14 @@
  */
 package com.esri.gpt.framework.ckan;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  * CKAN extra.
  */
 public interface CkanExtra extends CkanObject, Map.Entry<String,String> {
+  Boolean getDeleted();
+  List<String> getAttributeNames();
+  Object getAttribute(String name);
 }
