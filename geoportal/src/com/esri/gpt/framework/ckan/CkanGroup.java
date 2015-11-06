@@ -16,6 +16,7 @@
 package com.esri.gpt.framework.ckan;
 
 import java.net.URL;
+import java.util.Date;
 
 /**
  * CKAN group.
@@ -24,7 +25,15 @@ public interface CkanGroup {
   String getDisplayName();
   String getDescription();
   URL getImageDisplayUrl();
+  URL getImageUrl();
   String getTitle();
   String getId();
   String getName();
+  String getCapacity();
+  Date getCreateDate();
+  Boolean getIsOrganization();
+  String getRevision();
+  String getType();
+  String getApprovalStatus();
+  
 }

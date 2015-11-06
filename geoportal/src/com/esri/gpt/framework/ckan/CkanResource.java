@@ -43,4 +43,6 @@ public interface CkanResource {
   Long getPosition();
   String getRevisionId();
   String getResourceType();
+  String getResourceGroupId();
+  String getPackageId();
 }

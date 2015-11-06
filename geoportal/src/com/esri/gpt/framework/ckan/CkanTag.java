@@ -15,10 +15,13 @@
  */
 package com.esri.gpt.framework.ckan;
 
+import java.util.Date;
+
 public interface CkanTag {
   String getVocabularyId();
   String getState();
   String getDisplayName();
   String getId();
   String getName();
+  Date getRevisionTimestamp();
 }

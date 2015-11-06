@@ -16,6 +16,7 @@
 package com.esri.gpt.framework.ckan;
 
 import java.net.URL;
+import java.util.Date;
 import org.json.JSONObject;
 
 /**
@@ -55,6 +56,41 @@ import org.json.JSONObject;
   @Override
   public String getName() {
     return getString("name", null);
+  }
+
+  @Override
+  public URL getImageUrl() {
+    return getUrl("image_url", null);
+  }
+
+  @Override
+  public String getCapacity() {
+    return getString("capacity", null);
+  }
+
+  @Override
+  public Date getCreateDate() {
+    return getDate("created", null);
+  }
+
+  @Override
+  public Boolean getIsOrganization() {
+    return getBoolean("is_organization", null);
+  }
+
+  @Override
+  public String getRevision() {
+    return getString("revision", null);
+  }
+
+  @Override
+  public String getType() {
+    return getString("type", null);
+  }
+
+  @Override
+  public String getApprovalStatus() {
+    return getString("approval_status", null);
   }
   
   @Override

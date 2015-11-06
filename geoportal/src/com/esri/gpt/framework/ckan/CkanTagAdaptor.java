@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.framework.ckan;
 
+import java.util.Date;
 import org.json.JSONObject;
 
 /**
@@ -49,6 +50,11 @@ import org.json.JSONObject;
   @Override
   public String getName() {
     return getString("name", null);
+  }
+
+  @Override
+  public Date getRevisionTimestamp() {
+    return getDate("revision_timestamp", null);
   }
 
   @Override
