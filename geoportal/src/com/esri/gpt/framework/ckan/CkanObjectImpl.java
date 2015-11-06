@@ -65,4 +65,13 @@ import org.json.JSONObject;
       return defaultValue;
     }
   }
+
+  @Override
+  public Long getLong(String attr, Long defaultValue) {
+    try {
+      return json.getLong(attr);
+    } catch (JSONException ex) {
+      return defaultValue;
+    }
+  }
 }

@@ -31,4 +31,6 @@ public interface CkanObject {
 
   URL getUrl(String attr, URL defaultValue);
   
+  Long getLong(String attr, Long defaultValue);
+  
 }
