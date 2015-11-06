@@ -24,7 +24,23 @@ import java.util.Date;
 public interface CkanResource extends CkanObject {
   String getId();
   String getDescription();
+  Date getCreateDate();
   Date getUpdateDate();
   String getFormat();
   URL getUrl();
+  
+  Date getCacheUpdateDate();
+  Date getWebStoreUpdateDate();
+  Boolean getDataStoreActive();
+  Long getSize();
+  String getState();
+  String getHash();
+  String getMimeTypeInner();
+  String getUrlType();
+  String getMimeType();
+  URL getCacheUrl();
+  String getWebStoreUrl();
+  Long getPosition();
+  String getRevisionId();
+  String getResourceType();
 }

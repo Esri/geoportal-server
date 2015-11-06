@@ -52,6 +52,81 @@ import org.json.JSONObject;
   public URL getUrl() {
     return getUrl("url", null);
   }
+
+  @Override
+  public Date getCreateDate() {
+    return getDate("created", null);
+  }
+
+  @Override
+  public Date getCacheUpdateDate() {
+    return getDate("cache_last_updated", null);
+  }
+
+  @Override
+  public Date getWebStoreUpdateDate() {
+    return getDate("webstore_last_updated", null);
+  }
+
+  @Override
+  public Boolean getDataStoreActive() {
+    return getBoolean("datastore_active", null);
+  }
+
+  @Override
+  public Long getSize() {
+    return getLong("size", null);
+  }
+
+  @Override
+  public String getState() {
+    return getString("state", null);
+  }
+
+  @Override
+  public String getHash() {
+    return getString("hash", null);
+  }
+
+  @Override
+  public String getMimeTypeInner() {
+    return getString("mimetype_inner", null);
+  }
+
+  @Override
+  public String getUrlType() {
+    return getString("url_type", null);
+  }
+
+  @Override
+  public String getMimeType() {
+    return getString("mimetype", null);
+  }
+
+  @Override
+  public URL getCacheUrl() {
+    return getUrl("cache_url", null);
+  }
+
+  @Override
+  public String getWebStoreUrl() {
+    return getString("webstore_url", null);
+  }
+
+  @Override
+  public Long getPosition() {
+    return getLong("position", null);
+  }
+
+  @Override
+  public String getRevisionId() {
+    return getString("revision_id", null);
+  }
+
+  @Override
+  public String getResourceType() {
+    return getString("resource_type", null);
+  }
   
   @Override
   public String toString() {
