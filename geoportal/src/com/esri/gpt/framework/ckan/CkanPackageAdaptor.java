@@ -198,7 +198,17 @@ import org.json.JSONObject;
   @Override
   public List<CkanExtra> getExtras() {
     ArrayList<CkanExtra> extras = new ArrayList<CkanExtra>();
-    // TODO implement
+    if (json.has("extras")) {
+      try {
+        JSONArray resArray = json.getJSONArray("extras");
+        for (int i=0; i<resArray.length(); i++) {
+          JSONObject obj = resArray.getJSONObject(i);
+          extras.add(new CkanExtraAdaptor(obj));
+        }
+      } catch (JSONException ex) {
+        LOG.log(Level.WARNING,"Invalid extras list format", ex);
+      }
+    }
     return extras;
   }
 
