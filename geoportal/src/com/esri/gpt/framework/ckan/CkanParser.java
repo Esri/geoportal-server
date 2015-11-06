@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.framework.ckan;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,7 +30,18 @@ public class CkanParser {
    * @throws JSONException if error parsing JSON
    */
   public static CkanPackageList parsePackageList(String packageList) throws JSONException {
-    return new CkanPackageListAdaptor(new JSONObject(packageList).getJSONArray("result"));
+    return makePackageList(new JSONObject(packageList).getJSONArray("result"));
+    //return new CkanPackageListAdaptor(new JSONObject(packageList).getJSONArray("result"));
+  }
+  
+  /**
+   * Parse package list.
+   * @param pkg package list as array
+   * @return package list
+   * @throws JSONException if error parsing JSON
+   */
+  public static CkanPackageList makePackageList(JSONArray pkg) throws JSONException {
+    return new CkanPackageListAdaptor(pkg);
   }
   
   /**
@@ -39,6 +51,16 @@ public class CkanParser {
    * @throws JSONException if error parsing JSON
    */
   public static CkanPackage parsePackage(String pkg) throws JSONException {
-    return new CkanPackageAdaptor(new JSONObject(pkg).getJSONObject("result"));
+    return makePackage(new JSONObject(pkg).getJSONObject("result"));
+  }
+  
+  /**
+   * Parse package.
+   * @param pkg package as object
+   * @return package
+   * @throws JSONException if error parsing JSON
+   */
+  public static CkanPackage makePackage(JSONObject pkg) throws JSONException {
+    return new CkanPackageAdaptor(pkg);
   }
 }

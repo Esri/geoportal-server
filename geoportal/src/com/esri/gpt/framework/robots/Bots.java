@@ -25,6 +25,11 @@ import java.util.List;
 public interface Bots {
 
 // ===== properties ============================================================
+  /**
+   * Gets user agent.
+   * @return user agent
+   */
+  String getUserAgent();
   
   /**
    * Gets crawl delay.
