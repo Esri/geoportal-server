@@ -257,6 +257,17 @@ import org.json.JSONObject;
   public String getRevisionId() {
     return getString("revision_id", null);
   }
+
+  @Override
+  public CkanTrackingSummary getTrackingSummary() {
+    try {
+      return json.has("tracking_summary") && json.get("tracking_summary") instanceof JSONObject?
+              new CkanTrackingSummaryAdaptor(json.getJSONObject("tracking_summary")):
+              null;
+    } catch (JSONException ex) {
+      return null;
+    }
+  }
   
   @Override
   public String toString() {

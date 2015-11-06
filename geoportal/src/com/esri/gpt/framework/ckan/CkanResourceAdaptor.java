@@ -17,6 +17,7 @@ package com.esri.gpt.framework.ckan;
 
 import java.net.URL;
 import java.util.Date;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -138,6 +139,17 @@ import org.json.JSONObject;
   @Override
   public String getPackageId() {
     return packageId;
+  }
+
+  @Override
+  public CkanTrackingSummary getTrackingSummary() {
+    try {
+      return json.has("tracking_summary") && json.get("tracking_summary") instanceof JSONObject?
+              new CkanTrackingSummaryAdaptor(json.getJSONObject("tracking_summary")):
+              null;
+    } catch (JSONException ex) {
+      return null;
+    }
   }
   
   @Override

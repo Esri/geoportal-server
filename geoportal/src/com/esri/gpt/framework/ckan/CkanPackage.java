@@ -55,4 +55,5 @@ public interface CkanPackage {
   List<CkanExtra> getExtras();
   String getRevisionId();
   
+  CkanTrackingSummary getTrackingSummary();
 }

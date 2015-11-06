@@ -45,4 +45,6 @@ public interface CkanResource {
   String getResourceType();
   String getResourceGroupId();
   String getPackageId();
+  
+  CkanTrackingSummary getTrackingSummary();
 }
