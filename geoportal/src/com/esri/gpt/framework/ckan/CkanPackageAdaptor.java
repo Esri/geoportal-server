@@ -95,14 +95,34 @@ import org.json.JSONObject;
   @Override
   public List<CkanRelationship> getRelationshipsAsObject() {
     ArrayList<CkanRelationship> relationships = new ArrayList<CkanRelationship>();
-    // TODO implement
+    if (json.has("relationships_as_object")) {
+      try {
+        JSONArray arr = json.getJSONArray("relationships_as_object");
+        for (int i=0; i<arr.length(); i++) {
+          JSONObject obj = arr.getJSONObject(i);
+          relationships.add(new CkanRelationshipAdaptor(obj));
+        }
+      } catch (JSONException ex) {
+        LOG.log(Level.WARNING,"Invalid tags list format", ex);
+      }
+    }
     return relationships;
   }
 
   @Override
   public List<CkanRelationship> getRelationshipsAsSubject() {
     ArrayList<CkanRelationship> relationships = new ArrayList<CkanRelationship>();
-    // TODO implement
+    if (json.has("relationships_as_subject")) {
+      try {
+        JSONArray arr = json.getJSONArray("relationships_as_subject");
+        for (int i=0; i<arr.length(); i++) {
+          JSONObject obj = arr.getJSONObject(i);
+          relationships.add(new CkanRelationshipAdaptor(obj));
+        }
+      } catch (JSONException ex) {
+        LOG.log(Level.WARNING,"Invalid tags list format", ex);
+      }
+    }
     return relationships;
   }
 
