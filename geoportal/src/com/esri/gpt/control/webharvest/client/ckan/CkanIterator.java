@@ -22,7 +22,6 @@ import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.StringHandler;
 import com.esri.gpt.framework.http.crawl.HttpCrawlRequest;
 import com.esri.gpt.framework.robots.Bots;
-import com.esri.gpt.framework.robots.BotsMode;
 import com.esri.gpt.framework.robots.BotsUtils;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
@@ -42,27 +41,25 @@ import org.json.JSONObject;
  */
 public class CkanIterator implements Iterable<CkanPackage> {
 
+  private final CkanConfig config;
   private final String baseUrl;
-  private final BotsMode mode;
-  private final String defaultUserAgent;
   private final String q;
 
-  public CkanIterator(URL baseUrl, BotsMode mode, String defaultUserAgent) {
-    this(baseUrl, mode, defaultUserAgent, null);
+  public CkanIterator(CkanConfig config, URL baseUrl) {
+    this(config, baseUrl, null);
   }
 
-  public CkanIterator(URL baseUrl, BotsMode mode, String defaultUserAgent, String q) {
+  public CkanIterator(CkanConfig config, URL baseUrl, String q) {
+    this.config = config;
     this.baseUrl = baseUrl.toExternalForm().replaceAll("/+$", "");
-    this.mode = mode;
-    this.defaultUserAgent = defaultUserAgent;
     this.q = q;
   }
 
   @Override
   public Iterator<CkanPackage> iterator() {
-    Bots bots = BotsUtils.readBots(mode, baseUrl);
+    Bots bots = BotsUtils.readBots(config.getMode(), baseUrl);
     try {
-      JSONObject response = readJsonData(bots, q!=null? makePackageSearchUrl(q, null): makePackageListUrl());
+      JSONObject response = readJsonData(bots, config.getSkipList() || q!=null? makePackageSearchUrl(q, null, config.getRows()): makePackageListUrl());
       if (response.has("result") && response.optBoolean("success", false)) {
         if (response.get("result") instanceof JSONArray) {
           CkanPackageList ckanPackageList = CkanParser.makePackageList(response.getJSONArray("result"));
@@ -100,7 +97,7 @@ public class CkanIterator implements Iterable<CkanPackage> {
         protected HttpMethodBase createMethod() throws IOException {
           HttpMethodBase method = super.createMethod();
           String userAgent = Val.chkStr(!Val.chkStr(bots.getUserAgent()).isEmpty()
-                  ? bots.getUserAgent() : defaultUserAgent);
+                  ? bots.getUserAgent() : config.getDefaultUserAgent());
           if (!userAgent.isEmpty()) {
             method.addRequestHeader("User-Agent", userAgent);
           }
@@ -112,7 +109,7 @@ public class CkanIterator implements Iterable<CkanPackage> {
         @Override
         protected HttpMethodBase createMethod() throws IOException {
           HttpMethodBase method = super.createMethod();
-          String userAgent = Val.chkStr(defaultUserAgent);
+          String userAgent = Val.chkStr(config.getDefaultUserAgent());
           if (!userAgent.isEmpty()) {
             method.addRequestHeader("User-Agent", userAgent);
           }
@@ -139,10 +136,11 @@ public class CkanIterator implements Iterable<CkanPackage> {
     return baseUrl+"/package_show?id=" + packageId;
   }
   
-  protected String makePackageSearchUrl(String q, Long start) throws IOException {
+  protected String makePackageSearchUrl(String q, Long start, Long rows) throws IOException {
     StringBuilder query = new StringBuilder();
     query.append(q!=null? "q="+URLEncoder.encode(q, "UTF-8"): "");
     query.append(start!=null? (query.length()>0? "&": "") + "start="+start: "");
+    query.append(rows!=null? (query.length()>0? "&": "") + "rows="+rows: "");
     return baseUrl+"/package_search" + (query.length()>0? "?"+query: "");
   }
 
@@ -185,7 +183,7 @@ public class CkanIterator implements Iterable<CkanPackage> {
       
       pkgIter = null;
       try {
-        JSONObject response = readJsonData(bots, makePackageSearchUrl(null,start));
+        JSONObject response = readJsonData(bots, makePackageSearchUrl(null,start, config.getRows()));
         if (response.has("result") && response.optBoolean("success", false) && response.get("result") instanceof JSONObject) {
           JSONObject result = response.getJSONObject("result");
           if (result.has("results") && result.get("results") instanceof JSONArray) {

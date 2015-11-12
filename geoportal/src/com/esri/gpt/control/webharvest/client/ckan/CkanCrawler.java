@@ -23,10 +23,10 @@ import java.net.URL;
  * CKAN crawler.
  */
 public class CkanCrawler {
-  private final String defaultUserAgent;
+  private final CkanConfig config;
 
-  public CkanCrawler(String defaultUserAgent) {
-    this.defaultUserAgent = defaultUserAgent;
+  public CkanCrawler(CkanConfig config) {
+    this.config = config;
   }
   
   /**
@@ -37,7 +37,7 @@ public class CkanCrawler {
    * @param callback callback
    */
   public void crawl(URL baseUrl, BotsMode mode, String query, Callback callback) {
-    for (CkanPackage pkg: new CkanIterator(baseUrl, mode, query, defaultUserAgent)) {
+    for (CkanPackage pkg: new CkanIterator(config, baseUrl, query)) {
       if (!callback.onPackage(pkg)) {
         break;
       }
@@ -52,7 +52,7 @@ public class CkanCrawler {
    * @param callback callback
    */
   public void crawl(URL baseUrl, BotsMode mode, Callback callback) {
-    for (CkanPackage pkg: new CkanIterator(baseUrl, mode, defaultUserAgent)) {
+    for (CkanPackage pkg: new CkanIterator(config, baseUrl)) {
       if (!callback.onPackage(pkg)) {
         break;
       }

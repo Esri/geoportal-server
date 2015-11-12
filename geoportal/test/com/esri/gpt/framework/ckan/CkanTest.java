@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.framework.ckan;
 
+import com.esri.gpt.control.webharvest.client.ckan.CkanConfig;
 import com.esri.gpt.control.webharvest.client.ckan.CkanCrawler;
 import com.esri.gpt.control.webharvest.client.ckan.CkanIterator;
 import com.esri.gpt.framework.robots.BotsMode;
@@ -90,14 +91,14 @@ public class CkanTest {
 
   private int crawl(String baseUrl, int max) throws Exception {
     CallbackImpl callback = new CallbackImpl(max);
-    CkanCrawler crawler = new CkanCrawler("GeoportalServer");
+    CkanCrawler crawler = new CkanCrawler(new CkanConfig(BotsMode.never, "GeoportalServer", null, false));
     crawler.crawl(new URL(baseUrl), BotsMode.never, callback);
     return callback.getCounter();
   }
   
   private int iterate(String baseUrl, int max) throws Exception {
     int counter = 0;
-    CkanIterator itr = new CkanIterator(new URL(baseUrl), BotsMode.never, "GeoportalServer");
+    CkanIterator itr = new CkanIterator(new CkanConfig(BotsMode.never, "GeoportalServer", null, false), new URL(baseUrl));
     for (CkanPackage pkg : itr) {
       if ((++counter) >= max) {
         break;
