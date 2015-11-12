@@ -74,7 +74,7 @@ import org.json.JSONObject;
         JSONArray resArray = json.getJSONArray("resources");
         for (int i=0; i<resArray.length(); i++) {
           JSONObject resObj = resArray.getJSONObject(i);
-          resources.add(new CkanResourceAdaptor(resObj,packageId));
+          resources.add(new CkanResourceAdaptor(this,resObj));
         }
       } catch (JSONException ex) {
         LOG.log(Level.WARNING,"Invalid resource list format", ex);

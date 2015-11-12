@@ -22,7 +22,10 @@ import java.util.Date;
  * Resource
  */
 public interface CkanResource {
+  CkanPackage getPackage();
+  
   String getId();
+  String getName();
   String getDescription();
   Date getCreateDate();
   Date getUpdateDate();

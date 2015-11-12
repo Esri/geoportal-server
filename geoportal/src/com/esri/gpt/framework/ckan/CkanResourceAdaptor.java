@@ -24,11 +24,16 @@ import org.json.JSONObject;
  * Resource adaptor.
  */
 /*package*/class CkanResourceAdaptor extends CkanObjectImpl implements CkanResource {
-  private final String packageId;
+  private final CkanPackage pkg;
 
-  public CkanResourceAdaptor(JSONObject json, String packageId) {
+  public CkanResourceAdaptor(CkanPackage pkg, JSONObject json) {
     super(json);
-    this.packageId = packageId;
+    this.pkg = pkg;
+  }
+
+  @Override
+  public CkanPackage getPackage() {
+    return pkg;
   }
 
   @Override
@@ -36,6 +41,11 @@ import org.json.JSONObject;
     return getString("id", null);
   }
 
+  @Override
+  public String getName() {
+    return getString("name", null);
+  }
+  
   @Override
   public String getDescription() {
     return getString("description", null);
@@ -138,7 +148,7 @@ import org.json.JSONObject;
 
   @Override
   public String getPackageId() {
-    return packageId;
+    return pkg.getId();
   }
 
   @Override
