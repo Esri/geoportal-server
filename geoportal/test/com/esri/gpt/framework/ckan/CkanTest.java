@@ -92,7 +92,7 @@ public class CkanTest {
   private int crawl(String baseUrl, int max) throws Exception {
     CallbackImpl callback = new CallbackImpl(max);
     CkanCrawler crawler = new CkanCrawler(new CkanConfig(BotsMode.never, "GeoportalServer", null, false));
-    crawler.crawl(new URL(baseUrl), BotsMode.never, callback);
+    crawler.crawl(new URL(baseUrl), callback);
     return callback.getCounter();
   }
   

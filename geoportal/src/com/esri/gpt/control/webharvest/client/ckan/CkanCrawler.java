@@ -32,11 +32,10 @@ public class CkanCrawler {
   /**
    * Crawl content of the CKAN
    * @param baseUrl base CKAN URL
-   * @param mode robots.txt mode
    * @param query query or {@code null}
    * @param callback callback
    */
-  public void crawl(URL baseUrl, BotsMode mode, String query, Callback callback) {
+  public void crawl(URL baseUrl, String query, Callback callback) {
     for (CkanPackage pkg: new CkanIterator(config, baseUrl, query)) {
       if (!callback.onPackage(pkg)) {
         break;
@@ -48,10 +47,9 @@ public class CkanCrawler {
   /**
    * Crawl content of the CKAN
    * @param baseUrl base CKAN URL
-   * @param mode robots.txt mode
    * @param callback callback
    */
-  public void crawl(URL baseUrl, BotsMode mode, Callback callback) {
+  public void crawl(URL baseUrl, Callback callback) {
     for (CkanPackage pkg: new CkanIterator(config, baseUrl)) {
       if (!callback.onPackage(pkg)) {
         break;
