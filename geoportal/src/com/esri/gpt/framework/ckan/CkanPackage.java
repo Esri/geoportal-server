@@ -18,11 +18,14 @@ package com.esri.gpt.framework.ckan;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
+import org.json.JSONObject;
 
 /**
  * Package.
  */
 public interface CkanPackage {
+  JSONObject getJson();
+  
   String getId();
   String getTitle();
   Date getCreateDate();

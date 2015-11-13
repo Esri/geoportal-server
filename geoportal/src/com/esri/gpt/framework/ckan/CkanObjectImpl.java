@@ -33,6 +33,10 @@ import org.json.JSONObject;
   public CkanObjectImpl(JSONObject json) {
     this.json = json;
   }
+
+  public JSONObject getJson() {
+    return json;
+  }
   
   @Override
   public String getString(String attr, String defaultValue) {
