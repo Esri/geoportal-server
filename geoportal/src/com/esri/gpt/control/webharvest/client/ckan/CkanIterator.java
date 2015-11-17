@@ -22,6 +22,7 @@ import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.StringHandler;
 import com.esri.gpt.framework.http.crawl.HttpCrawlRequest;
 import com.esri.gpt.framework.robots.Bots;
+import com.esri.gpt.framework.robots.BotsMode;
 import com.esri.gpt.framework.robots.BotsUtils;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
@@ -57,7 +58,7 @@ public class CkanIterator implements Iterable<CkanPackage> {
 
   @Override
   public Iterator<CkanPackage> iterator() {
-    Bots bots = BotsUtils.readBots(config.getMode(), baseUrl);
+    Bots bots = config.getMode()!=BotsMode.never? BotsUtils.readBots(config.getMode(), baseUrl): null;
     try {
       JSONObject response = readJsonData(bots, config.getSkipList() || q!=null? makePackageSearchUrl(q, null, config.getRows()): makePackageListUrl());
       if (response.has("result") && response.optBoolean("success", false)) {
