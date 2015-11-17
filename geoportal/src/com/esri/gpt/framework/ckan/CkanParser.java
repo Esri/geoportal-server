@@ -51,7 +51,7 @@ public class CkanParser {
    * @throws JSONException if error parsing JSON
    */
   public static CkanPackage parsePackage(String pkg) throws JSONException {
-    return makePackage(new JSONObject(pkg).getJSONObject("result"));
+    return makePackage(new JSONObject(pkg));
   }
   
   /**
