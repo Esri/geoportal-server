@@ -24,6 +24,7 @@ import com.esri.gpt.framework.http.crawl.HttpCrawlRequest;
 import com.esri.gpt.framework.robots.Bots;
 import com.esri.gpt.framework.robots.BotsMode;
 import com.esri.gpt.framework.robots.BotsUtils;
+import com.esri.gpt.framework.util.ReadOnlyIterator;
 import com.esri.gpt.framework.util.Val;
 import java.io.IOException;
 import java.net.URL;
@@ -145,7 +146,7 @@ public class CkanIterator implements Iterable<CkanPackage> {
     return baseUrl+"/package_search" + (query.length()>0? "?"+query: "");
   }
 
-  private class PackageSearchIterator implements Iterator<CkanPackage> {
+  private class PackageSearchIterator extends ReadOnlyIterator<CkanPackage> {
 
     private final Bots bots;
     private Iterator<CkanPackage> pkgIter;
@@ -216,7 +217,7 @@ public class CkanIterator implements Iterable<CkanPackage> {
 
   }
 
-  private class PackageListIterator implements Iterator<CkanPackage> {
+  private class PackageListIterator extends ReadOnlyIterator<CkanPackage> {
 
     private final Bots bots;
     private final Iterator<String> idsIterator;
