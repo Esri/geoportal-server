@@ -6,9 +6,9 @@
   <Image>Images\CswSearch.png</Image>
   <Author>ESRI</Author>
   <Company>ESRI</Company>
-  <Date>2/28/2014</Date>
+  <Date>11/19/2015</Date>
   <Targets>
-    <Target name="Desktop" version="10.3" />
+    <Target name="Desktop" version="10.4" />
   </Targets>
   <AddIn language="CLR4.5" library="CswSearch.dll" namespace="CswSearch">
     <ArcMap>
