@@ -69,8 +69,7 @@ static {
   InputStream is = null;
   try {
     ResourcePath resourcePath = new ResourcePath();
-    URL url = resourcePath
-        .makeUrl("com/esri/gpt/catalog/search/MapViewerFlex.jsnippet");
+    URL url = resourcePath.makeUrl("gpt/search/MapViewerFlex.jsnippet");
     is = url.openStream();
     JSCRIPT = ("javascript:" + IOUtils.toString(is)).replace("\n", "");
     
