@@ -148,7 +148,7 @@ public void load(ApplicationConfiguration appConfig) throws Exception {
   XPath xpath = XPathFactory.newInstance().newXPath();
 
   if (dom!=null) {
-    LOG.finest(XmlIoUtil.domToString(dom));
+    LOG.finer(XmlIoUtil.domToString(dom));
   }
 
   try {
