@@ -91,12 +91,29 @@ public ReportBuilder(File directory, Integer maxDocToHarvest, Long maxRepRecords
   this.directory = directory;
   this.maxDocToHarvest = maxDocToHarvest;
   this.directory.mkdirs();
-  this.storage = File.createTempFile(PREFIX, SUFFIX, directory);
+  this.storage = createTempFile(PREFIX, SUFFIX, directory);
   this.writer = new RecordWriter(new FileOutputStream(storage));
   this.maxRepRecords = maxRepRecords;
   this.maxRepErrors = maxRepErrors;
   
   this.storage.deleteOnExit();
+}
+
+/**
+ * Creates temporary file.
+ * @param PREFIX prefix
+ * @param SUFFIX suffix
+ * @param directory directory
+ * @return handle to the temporary file.
+ * @throws IOException if unable to create temporary file
+ */
+private static File createTempFile(String PREFIX, String SUFFIX, File directory) throws IOException {
+  try {
+    throw new IOException();
+    //return File.createTempFile(PREFIX, SUFFIX, directory);
+  } catch (IOException ex) {
+    throw new IOException(String.format("Error creating temporary file: %s/%s<random name>%s",directory,PREFIX,SUFFIX),ex);
+  }
 }
 
 /**

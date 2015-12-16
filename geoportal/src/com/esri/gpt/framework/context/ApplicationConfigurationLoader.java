@@ -86,6 +86,7 @@ import com.esri.gpt.framework.util.TimePeriod;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.NodeListAdapter;
+import com.esri.gpt.framework.xml.XmlIoUtil;
 
 /**
  * Application configuration loader.
@@ -96,6 +97,8 @@ import com.esri.gpt.framework.xml.NodeListAdapter;
  * @see ApplicationConfiguration
  */
 public class ApplicationConfigurationLoader {
+
+private static final Logger LOG = Logger.getLogger(ApplicationConfigurationLoader.class.getName());
 
   
 /** Main XML configuration file location. */
@@ -144,6 +147,9 @@ public void load(ApplicationConfiguration appConfig) throws Exception {
 	}
   XPath xpath = XPathFactory.newInstance().newXPath();
 
+  if (dom!=null) {
+    LOG.finest(XmlIoUtil.domToString(dom));
+  }
 
   try {
     Node root = (Node) xpath.evaluate("/gptConfig", dom, XPathConstants.NODE);
