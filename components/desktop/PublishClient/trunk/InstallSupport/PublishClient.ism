@@ -352,7 +352,7 @@
 		<row><td>ISRegistryComponent</td><td>{C82E63DB-2C9E-40AE-A8FA-592EFC1AABC5}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>InstallDirFiles</td><td>{ADD0B2F0-B0A3-4D23-8AC4-7EF86D92FBB8}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>LoggingFolderFiles</td><td>{E60E5F79-ED79-44F9-A6C9-3DCF60BC85D3}</td><td>LOGGINGFOLDER</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>MyDocsArcGISAddInsDesktop10Files</td><td>{D470B5F3-04DD-4402-96ED-DAD2F80394E0}</td><td>DESKTOP10.01</td><td>8</td><td>ALLUSERS &lt;&gt; 1</td><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>MyDocsArcGISAddInsDesktop10Files</td><td>{D470B5F3-04DD-4402-96ED-DAD2F80394E0}</td><td>DESKTOP10.4</td><td>8</td><td>ALLUSERS &lt;&gt; 1</td><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>PublishClient.chm</td><td>{A84C3D7C-62C1-4E85-A5FA-3606F0FD41C0}</td><td>BIN1</td><td>8</td><td/><td>publishclient.chm</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>PublishClient.dll</td><td>{003C06A3-5812-442B-9E4C-BE11B7A6E5FA}</td><td>BIN1</td><td>8</td><td/><td>publishclient.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
@@ -1202,6 +1202,7 @@
 		<row><td>DATABASEDIR</td><td>ISYourDataBaseDir</td><td>.</td><td/><td>0</td><td/></row>
 		<row><td>DESKTOP10.0</td><td>ARCGIS</td><td>DESKTO~1|Desktop10.0</td><td/><td>0</td><td/></row>
 		<row><td>DESKTOP10.01</td><td>ADDINS</td><td>DESKTO~1|Desktop10.0</td><td/><td>0</td><td/></row>
+		<row><td>DESKTOP10.4</td><td>ADDINS</td><td>DESKTO~1|Desktop10.4</td><td/><td>0</td><td/></row>
 		<row><td>DesktopFolder</td><td>TARGETDIR</td><td>.:Desktop</td><td/><td>3</td><td/></row>
 		<row><td>ESRI</td><td>ProgramFilesFolder</td><td>ESRI</td><td/><td>0</td><td/></row>
 		<row><td>ESRI1</td><td>CommonAppDataFolder</td><td>ESRI</td><td/><td>0</td><td/></row>
@@ -1928,7 +1929,7 @@
 		<col def="S255">ISComments</col>
 		<col def="S255">ISFeatureCabName</col>
 		<col def="S255">ISProFeatureName</col>
-		<row><td>GPT_Publish_Client_File</td><td/><td>##IDS_FEATURE_DISPLAY_NAME2##</td><td/><td>2</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
+		<row><td>GPT_Publish_Client_File</td><td/><td>##IDS_FEATURE_DISPLAY_NAME2##</td><td/><td>2</td><td>1</td><td>INSTALLDIR</td><td>8</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="FeatureComponents">
@@ -2572,8 +2573,8 @@
 		<row><td>ISProductFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectFolder</td><td/><td/><td>1</td></row>
-		<row><td>PATH_TO_BIN_FILES</td><td>C:\Builds\GeoportalServer\10.3.1_PublishClient\Binaries</td><td/><td>2</td></row>
-		<row><td>PATH_TO_PUBLISHCLIENT_FILE</td><td>C:\Builds\GeoportalServer\10.3.1_PublishClient\Sources\PublishClient\trunk\src</td><td/><td>2</td></row>
+		<row><td>PATH_TO_BIN_FILES</td><td>C:\Builds\GeoportalServer\10.4_PublishClient\Binaries</td><td/><td>2</td></row>
+		<row><td>PATH_TO_PUBLISHCLIENT_FILE</td><td>C:\Builds\GeoportalServer\10.4_PublishClient\Sources\PublishClient\trunk\src</td><td/><td>2</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
 		<row><td>WindowsFolder</td><td/><td/><td>1</td></row>
@@ -3988,7 +3989,7 @@
 		<row><td>ID_STRING15</td><td>1033</td><td>PUBLIS~1|Publish Client Developer Help</td><td>0</td><td/><td>1109306383</td></row>
 		<row><td>ID_STRING16</td><td>1033</td><td>PUBLIS~1|Publish Client</td><td>0</td><td/><td>975058256</td></row>
 		<row><td>ID_STRING2</td><td>1033</td><td>AllUsers</td><td>0</td><td/><td>-1575156306</td></row>
-		<row><td>ID_STRING3</td><td>1033</td><td>ArcGIS 10.3 or 10.3.1 for Desktop was not found. Please install ArcGIS 10.3 or 10.3.1 for Desktop and then restart this installation.</td><td>0</td><td/><td>841178735</td></row>
+		<row><td>ID_STRING3</td><td>1033</td><td>ArcGIS 10.4 for Desktop was not found. Please install ArcGIS 10.4 for Desktop and then restart this installation.</td><td>0</td><td/><td>-1910292082</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>CurrentUser</td><td>0</td><td/><td>-1575150162</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>&amp;Next &gt;</td><td>0</td><td/><td>-1575130835</td></row>
 		<row><td>ID_STRING6</td><td>1033</td><td>&lt; &amp;Back</td><td>0</td><td/><td>-1575130835</td></row>
@@ -4308,7 +4309,7 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 	<table name="LaunchCondition">
 		<col key="yes" def="s255">Condition</col>
 		<col def="l255">Description</col>
-		<row><td>ARCGISVERSION&lt;&lt;"10.3"</td><td>##ID_STRING3##</td></row>
+		<row><td>ARCGISVERSION&lt;&lt;"10.4"</td><td>##ID_STRING3##</td></row>
 	</table>
 
 	<table name="ListBox">
@@ -4685,8 +4686,8 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<col def="s255">Key</col>
 		<col def="S255">Name</col>
 		<col def="I2">Type</col>
-		<row><td>NewSignature12</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.3</td><td>RealVersion</td><td>2</td></row>
-		<row><td>NewSignature13</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.3</td><td>InstallDir</td><td>2</td></row>
+		<row><td>NewSignature12</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.4</td><td>RealVersion</td><td>2</td></row>
+		<row><td>NewSignature13</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.4</td><td>InstallDir</td><td>2</td></row>
 	</table>
 
 	<table name="Registry">

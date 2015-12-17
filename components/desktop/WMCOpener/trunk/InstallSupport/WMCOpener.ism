@@ -350,7 +350,7 @@
 		<row><td>ISRegistryComponent</td><td>{DC9AC8E5-68DB-4546-A1CD-B6ED496D2DF8}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>InstallDirFiles</td><td>{8B3319ED-032F-4F37-BE44-D76C663BCB87}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>LoggingFolderFiles</td><td>{1CE5A7B0-E40A-49F3-878A-153ADE816825}</td><td>LOGGINGFOLDER</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>MyDocumentsArcGISAddInsDesktop10Files</td><td>{B3A2AC63-A4D8-421F-9C5D-635417842B90}</td><td>DESKTOP10.0</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>MyDocumentsArcGISAddInsDesktop10Files</td><td>{B3A2AC63-A4D8-421F-9C5D-635417842B90}</td><td>DESKTOP10.4</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>WMC.chm</td><td>{A545F540-B269-4429-A615-6A9A1A2983BD}</td><td>BIN1</td><td>8</td><td/><td>wmc.chm</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>WMCOpener.dll</td><td>{8A9278BA-7310-4E58-AEB1-1E31E39B7143}</td><td>BIN1</td><td>8</td><td/><td>wmcopener.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
@@ -1180,6 +1180,7 @@
 		<row><td>CommonFilesFolder</td><td>TARGETDIR</td><td>.:Common</td><td/><td>0</td><td/></row>
 		<row><td>DATABASEDIR</td><td>ISYourDataBaseDir</td><td>.</td><td/><td>0</td><td/></row>
 		<row><td>DESKTOP10.0</td><td>ADDINS</td><td>DESKTO~1|Desktop10.0</td><td/><td>0</td><td/></row>
+		<row><td>DESKTOP10.4</td><td>ADDINS</td><td>DESKTO~1|Desktop10.4</td><td/><td>0</td><td/></row>
 		<row><td>DESKTOPHOME</td><td>TARGETDIR</td><td>DESKTO~1|DESKTOPHOME</td><td/><td>0</td><td/></row>
 		<row><td>DesktopFolder</td><td>TARGETDIR</td><td>.:Desktop</td><td/><td>3</td><td/></row>
 		<row><td>ESRI</td><td>ProgramFilesFolder</td><td>ESRI</td><td/><td>0</td><td/></row>
@@ -2549,8 +2550,8 @@
 		<row><td>ISProductFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectFolder</td><td/><td/><td>1</td></row>
-		<row><td>PATH_TO_BIN_FILES1</td><td>C:\Builds\GeoportalServer\10.3.1_WMCOpener\Binaries</td><td/><td>2</td></row>
-		<row><td>PATH_TO_SRC_FILES</td><td>C:\Builds\GeoportalServer\10.3.1_WMCOpener\Sources\WMCOpener\trunk\src</td><td/><td>2</td></row>
+		<row><td>PATH_TO_BIN_FILES1</td><td>C:\Builds\GeoportalServer\10.4_WMCOpener\Binaries</td><td/><td>2</td></row>
+		<row><td>PATH_TO_SRC_FILES</td><td>C:\Builds\GeoportalServer\10.4_WMCOpener\Sources\WMCOpener\trunk\src</td><td/><td>2</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
 		<row><td>WindowsFolder</td><td/><td/><td>1</td></row>
@@ -3974,7 +3975,7 @@
 		<row><td>ID_STRING3</td><td>1033</td><td>WMCOpener</td><td>0</td><td/><td>-1054953335</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>All Users</td><td>0</td><td/><td>-1054962295</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>Current Users</td><td>0</td><td/><td>-1054969047</td></row>
-		<row><td>ID_STRING6</td><td>1033</td><td>[ProductName] requires ArcGIS 10.3 or 10.3.1 for Desktop. Please install ArcGIS 10.3 or 10.3.1 for Desktop and restart this installation.</td><td>0</td><td/><td>841203311</td></row>
+		<row><td>ID_STRING6</td><td>1033</td><td>[ProductName] requires ArcGIS 10.4 for Desktop. Please install ArcGIS 10.4 for Desktop and restart this installation.</td><td>0</td><td/><td>-1910273330</td></row>
 		<row><td>ID_STRING7</td><td>1033</td><td>&lt; &amp;Back</td><td>0</td><td/><td>-1054990615</td></row>
 		<row><td>ID_STRING8</td><td>1033</td><td>Cancel</td><td>0</td><td/><td>-1054990615</td></row>
 		<row><td>ID_STRING9</td><td>1033</td><td>{&amp;MSSansBold8}[ProductName] Parameters</td><td>0</td><td/><td>1042189643</td></row>
@@ -4282,7 +4283,7 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 	<table name="LaunchCondition">
 		<col key="yes" def="s255">Condition</col>
 		<col def="l255">Description</col>
-		<row><td>DESKTOPVERSION&lt;&lt;"10.3"</td><td>##ID_STRING6##</td></row>
+		<row><td>DESKTOPVERSION&lt;&lt;"10.4"</td><td>##ID_STRING6##</td></row>
 	</table>
 
 	<table name="ListBox">
@@ -4600,7 +4601,7 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<row><td>ProductID</td><td>none</td><td/></row>
 		<row><td>ProductLanguage</td><td>1033</td><td/></row>
 		<row><td>ProductName</td><td>WMC Client for ArcGIS</td><td/></row>
-		<row><td>ProductVersion</td><td>10.0.0.200</td><td/></row>
+		<row><td>ProductVersion</td><td>10.4.0.0</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
@@ -4654,8 +4655,8 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<col def="s255">Key</col>
 		<col def="S255">Name</col>
 		<col def="I2">Type</col>
-		<row><td>NewSignature1</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.3</td><td>InstallDir</td><td>2</td></row>
-		<row><td>NewSignature11</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.3</td><td>RealVersion</td><td>2</td></row>
+		<row><td>NewSignature1</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.4</td><td>InstallDir</td><td>2</td></row>
+		<row><td>NewSignature11</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.4</td><td>RealVersion</td><td>2</td></row>
 	</table>
 
 	<table name="Registry">
