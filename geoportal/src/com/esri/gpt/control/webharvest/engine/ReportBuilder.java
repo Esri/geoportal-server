@@ -109,8 +109,7 @@ public ReportBuilder(File directory, Integer maxDocToHarvest, Long maxRepRecords
  */
 private static File createTempFile(String PREFIX, String SUFFIX, File directory) throws IOException {
   try {
-    throw new IOException();
-    //return File.createTempFile(PREFIX, SUFFIX, directory);
+    return File.createTempFile(PREFIX, SUFFIX, directory);
   } catch (IOException ex) {
     throw new IOException(String.format("Error creating temporary file: %s/%s<random name>%s",directory,PREFIX,SUFFIX),ex);
   }
