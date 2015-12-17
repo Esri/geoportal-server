@@ -68,8 +68,6 @@ private volatile long updated;
 private volatile long deleted;
 /** last excption */
 private Exception exception;
-/** directory */
-private File directory;
 /** storage file */
 private File storage;
 /** writer */
@@ -88,15 +86,17 @@ private volatile Date endTime;
  * @throws IOException if creating report failed
  */
 public ReportBuilder(File directory, Integer maxDocToHarvest, Long maxRepRecords, Long maxRepErrors) throws IOException {
-  this.directory = directory;
+  directory.mkdirs();
+  
   this.maxDocToHarvest = maxDocToHarvest;
-  this.directory.mkdirs();
-  this.storage = createTempFile(PREFIX, SUFFIX, directory);
-  this.writer = new RecordWriter(new FileOutputStream(storage));
   this.maxRepRecords = maxRepRecords;
   this.maxRepErrors = maxRepErrors;
   
-  this.storage.deleteOnExit();
+  this.storage = createTempFile(PREFIX, SUFFIX, directory);
+  if (this.storage!=null) {
+    this.storage.deleteOnExit();
+    this.writer = new RecordWriter(new FileOutputStream(storage));
+  }
 }
 
 /**
@@ -261,12 +261,14 @@ private long getReportRecordsLength(int maxBytes) throws IOException {
   try {
     long length = 0;
 
-    FileInputStream input = new FileInputStream(storage);
-    RecordReader reader = new RecordReader(input);
-    repo = new ReportRecordsInputStream(reader, maxBytes);
+    if (storage!=null) {
+      FileInputStream input = new FileInputStream(storage);
+      RecordReader reader = new RecordReader(input);
+      repo = new ReportRecordsInputStream(reader, maxBytes);
 
-    for (int ch = repo.read(); ch>-1; ch = repo.read()) {
-      length++;
+      for (int ch = repo.read(); ch>-1; ch = repo.read()) {
+        length++;
+      }
     }
 
     return length;
@@ -286,8 +288,7 @@ private long getReportRecordsLength(int maxBytes) throws IOException {
 public ReportStream createReportStream() throws IOException {
   close();
 
-  FileInputStream input = new FileInputStream(storage);
-  RecordReader reader = new RecordReader(input);
+  RecordReader reader = storage!=null? new RecordReader(new FileInputStream(storage)): null;
 
   String header = "<?xml version=\"1.0\"?><metadata>";
   String statictsics = getReportStats();
@@ -306,7 +307,7 @@ public ReportStream createReportStream() throws IOException {
     new ByteArrayInputStream(headerB),
     new ByteArrayInputStream(statictsicsB),
     new ByteArrayInputStream(detailsOpeningB),
-    new ReportRecordsInputStream(reader, maxBytes),
+    reader!=null? new ReportRecordsInputStream(reader, maxBytes): new ByteArrayInputStream(new byte[0]),
     new ByteArrayInputStream(detailsClosingB),
     new ByteArrayInputStream(footerB)
   };
