@@ -4086,6 +4086,7 @@
 		<row><td>ID_STRING24</td><td>1033</td><td>ArcGIS Explorer 1200 or 900 was not found. </td><td>0</td><td/><td>320741071</td></row>
 		<row><td>ID_STRING25</td><td>1033</td><td>Processing .eaz file</td><td>0</td><td/><td>-1197465969</td></row>
 		<row><td>ID_STRING26</td><td>1033</td><td>Updating property files</td><td>0</td><td/><td>-1029657046</td></row>
+		<row><td>ID_STRING27</td><td>1033</td><td>Environmental Systems Research Institute, Inc.</td><td>0</td><td/><td>-1776073624</td></row>
 		<row><td>ID_STRING3</td><td>1033</td><td>Could not verify ArcGIS 9.2 SP2 or greater is installed. Please install ArcGIS 9.2 SP2 or greater and restart the [ProductName] installation.</td><td>0</td><td/><td>1536937064</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>Microsoft .Net Framework 2.0 was not found on the system. Verify that Microsoft .Net Framework is installed and restart this installation.</td><td>0</td><td/><td>1922779695</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>CSW Clients</td><td>0</td><td/><td>371072624</td></row>
@@ -4708,7 +4709,7 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<row><td>LBLNODOTNETFOLDER</td><td>0</td><td/></row>
 		<row><td>LOGDIR</td><td/><td/></row>
 		<row><td>LOGDIRWITHENDBACKSLASH</td><td/><td/></row>
-		<row><td>Manufacturer</td><td>##COMPANY_NAME##</td><td/></row>
+		<row><td>Manufacturer</td><td>##ID_STRING27##</td><td/></row>
 		<row><td>NewProperty1</td><td>0</td><td/></row>
 		<row><td>NewProperty2</td><td>0</td><td/></row>
 		<row><td>NewProperty3</td><td>0</td><td/></row>

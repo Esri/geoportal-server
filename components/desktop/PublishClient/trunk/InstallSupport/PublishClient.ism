@@ -2889,7 +2889,7 @@
 		<col def="I2">Encoded</col>
 		<col def="S0">Comment</col>
 		<col def="I4">TimeStamp</col>
-		<row><td>COMPANY_NAME</td><td>1033</td><td>ESRI</td><td>0</td><td/><td>1528588973</td></row>
+		<row><td>COMPANY_NAME</td><td>1033</td><td>ESRI</td><td>0</td><td/><td>-1776073528</td></row>
 		<row><td>DN_AlwaysInstall</td><td>1033</td><td>Always Install</td><td>0</td><td/><td>-1969565269</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_COLOR</td><td>1033</td><td>The color settings of your system are not adequate for running [ProductName].</td><td>0</td><td/><td>-1969565269</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_OS</td><td>1033</td><td>The operating system is not adequate for running [ProductName].</td><td>0</td><td/><td>-1969565269</td></row>
@@ -3988,6 +3988,7 @@
 		<row><td>ID_STRING14</td><td>1033</td><td>PUBLIS~1|Publish Client</td><td>0</td><td/><td>975082608</td></row>
 		<row><td>ID_STRING15</td><td>1033</td><td>PUBLIS~1|Publish Client Developer Help</td><td>0</td><td/><td>1109306383</td></row>
 		<row><td>ID_STRING16</td><td>1033</td><td>PUBLIS~1|Publish Client</td><td>0</td><td/><td>975058256</td></row>
+		<row><td>ID_STRING17</td><td>1033</td><td>Environmental Systems Research Institute, Inc.</td><td>0</td><td/><td>-1776067384</td></row>
 		<row><td>ID_STRING2</td><td>1033</td><td>AllUsers</td><td>0</td><td/><td>-1575156306</td></row>
 		<row><td>ID_STRING3</td><td>1033</td><td>ArcGIS 10.4 for Desktop was not found. Please install ArcGIS 10.4 for Desktop and then restart this installation.</td><td>0</td><td/><td>-1910292082</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>CurrentUser</td><td>0</td><td/><td>-1575150162</td></row>
@@ -4594,7 +4595,7 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<row><td>InstallChoice</td><td>AR</td><td/></row>
 		<row><td>LOGDIR</td><td/><td/></row>
 		<row><td>LOGDIRWITHENDBACKSLASH</td><td/><td/></row>
-		<row><td>Manufacturer</td><td>##COMPANY_NAME##</td><td/></row>
+		<row><td>Manufacturer</td><td>##ID_STRING17##</td><td/></row>
 		<row><td>NewProperty1</td><td>0</td><td/></row>
 		<row><td>NewProperty2</td><td>0</td><td/></row>
 		<row><td>NewProperty3</td><td>0</td><td/></row>

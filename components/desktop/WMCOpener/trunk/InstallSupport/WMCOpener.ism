@@ -53,7 +53,7 @@
 		<codepage>1252</codepage>
 		<title>Installation Database</title>
 		<subject>##ID_STRING3##</subject>
-		<author>##COMPANY_NAME##</author>
+		<author>##ID_STRING16##</author>
 		<keywords>Installer,MSI,Database</keywords>
 		<comments>Contact:  Your local administrator</comments>
 		<template>Intel;1033</template>
@@ -3971,6 +3971,7 @@
 		<row><td>ID_STRING13</td><td>1033</td><td>GEOPOR~1|Geoportal Extension</td><td>0</td><td/><td>1780359339</td></row>
 		<row><td>ID_STRING14</td><td>1033</td><td>WMCOPE~1|WMC Opener</td><td>0</td><td/><td>1780385963</td></row>
 		<row><td>ID_STRING15</td><td>1033</td><td>WMCOPE~1|WMC Opener Developer Help</td><td>0</td><td/><td>1780351179</td></row>
+		<row><td>ID_STRING16</td><td>1033</td><td>Environmental Systems Research Institute, Inc.</td><td>0</td><td/><td>-1776089912</td></row>
 		<row><td>ID_STRING2</td><td>1033</td><td>&amp;Next &gt;</td><td>0</td><td/><td>-1054990615</td></row>
 		<row><td>ID_STRING3</td><td>1033</td><td>WMCOpener</td><td>0</td><td/><td>-1054953335</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>All Users</td><td>0</td><td/><td>-1054962295</td></row>
