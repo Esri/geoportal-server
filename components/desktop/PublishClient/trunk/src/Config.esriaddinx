@@ -6,9 +6,9 @@
   <Image>Images\PublishClient.png</Image>
   <Author>ESRI</Author>
   <Company>ESRI</Company>
-  <Date>9/22/2014</Date>
+  <Date>12/17/2015</Date>
   <Targets>
-    <Target name="Desktop" version="10.3" />
+    <Target name="Desktop" version="10.4" />
   </Targets>
   <AddIn language="CLR" library="PublishClient.dll" namespace="PublishClient">	  
     <ArcCatalog>
