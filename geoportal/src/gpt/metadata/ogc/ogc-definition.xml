@@ -19,6 +19,7 @@
  <!-- schema interrogation -->
 	<schema key="ogc-csw-wms-wfs-wcs-wps-sos-sps" editable="false">
 	  <namespace prefix="ows" uri="http://www.opengis.net/ows"/>
+	  <namespace prefix="ows2" uri="http://www.opengis.net/ows/2.0"/>
 	  <namespace prefix="wms" uri="http://www.opengis.net/wms"/>
 	  <namespace prefix="csw" uri="http://www.opengis.net/cat/csw/2.0.2"/>
 		<namespace prefix="wcs" uri="http://www.opengis.net/wcs" />
@@ -27,7 +28,8 @@
 		<namespace prefix="ows1" uri="http://www.opengis.net/ows/1.1"/>
 		<namespace prefix="kml" uri="http://www.opengis.net/kml/2.2"/>	
 	  <interrogation 
-	    count="count(//wfs:Service/wfs:Title) + count(//wms:Service/wms:Title) + count(//ows:ServiceIdentification/ows:Title) + 
+	    count="count(//wfs:Service/wfs:Title) + count(//wms:Service/wms:Title) + 
+                     count(//ows:ServiceIdentification/ows:Title) + count(//ows2:ServiceIdentification/ows2:Title) + 
 	    			 count(//wcs:Service/wcs:name) + count(/wms:WMT_MS_Capabilities/wms:Service/wms:Title) +
 	    			 count(//ows1:ServiceIdentification/ows1:Title) +  count(//wcs1:Service/wcs1:name) + count(/WMT_MS_Capabilities/Service/Title)"
 	    toKnownSchemaXslt="gpt/metadata/ogc/ogc-toDC.xslt"/>	    
