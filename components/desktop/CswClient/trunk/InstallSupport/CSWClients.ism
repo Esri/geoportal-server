@@ -983,7 +983,7 @@
 		<row><td>CustomSetupTips</td><td>OK</td><td>EndDialog</td><td>Return</td><td>1</td><td>1</td></row>
 		<row><td>CustomerInformation</td><td>Back</td><td>NewDialog</td><td>LicenseAgreement</td><td>1</td><td>1</td></row>
 		<row><td>CustomerInformation</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
-		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.3" And &amp;CSWArcMap = 3</td><td>7</td></row>
+		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.4" And &amp;CSWArcMap = 3</td><td>7</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>SetAllUsersDefaultLogLoc</td><td>ApplicationUsers = "AllUsers"</td><td>5</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>SetCurrentUserDefaultLogLoc</td><td>ApplicationUsers = "OnlyCurrentUser"</td><td>4</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>SetLogDirWithEndingBackslash</td><td>ApplicationUsers = "AllUsers"</td><td>6</td></row>
