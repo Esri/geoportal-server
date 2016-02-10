@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  
+    <parent>
+      <groupId>com.esri.gpt</groupId>
+      <artifactId>geoportal</artifactId>
+      <version>1.2.7-SNAPSHOT</version>
+    </parent>
+    
+    <modelVersion>4.0.0</modelVersion>
+    
+    <artifactId>geoportal-jar</artifactId>
+    <packaging>jar</packaging>
+    <name>Geoportal JAR</name>
+    
+    <properties>
+        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+    
+    <build>
+      <sourceDirectory>../../src</sourceDirectory>
+      <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <compilerArguments>
+                        <endorseddirs>${endorsed.dir}</endorseddirs>
+                    </compilerArguments>
+                    <excludes>
+                      <exclude>gpt/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+      </plugins>
+      <resources>
+        <resource>
+          <directory>../resources</directory>
+        </resource>
+      </resources>
+    </build>
+    
+    <dependencies>
+
+        <!-- J2EE -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+        
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.2</version>
+		</dependency>
+        
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>7.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>jsf-api</artifactId>
+			<version>2.0.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>jsf-impl</artifactId>
+			<version>2.0.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>1.0.6</version>
+		</dependency>
+        
+		<dependency>
+			<groupId>org.apache.struts</groupId>
+			<artifactId>struts-core</artifactId>
+			<version>1.3.10</version>
+		</dependency>
+        
+		<dependency>
+			<groupId>org.apache.struts</groupId>
+			<artifactId>struts-tiles</artifactId>
+			<version>1.3.10</version>
+		</dependency>
+        
+        <!-- Activation -->
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+			<version>1.1</version>
+		</dependency>
+                                
+        <!-- Apache Commons -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
+        </dependency>
+        
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.8.0</version>
+		</dependency>
+        
+		<dependency>
+			<groupId>commons-chain</groupId>
+			<artifactId>commons-chain</artifactId>
+			<version>1.2</version>
+		</dependency>
+        
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.3</version>
+		</dependency>
+        
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.2</version>
+		</dependency>
+        
+		<dependency>
+			<groupId>commons-digester</groupId>
+			<artifactId>commons-digester</artifactId>
+			<version>1.8</version>
+		</dependency>
+        
+		<dependency>
+			<groupId>commons-discovery</groupId>
+			<artifactId>commons-discovery</artifactId>
+			<version>0.4</version>
+		</dependency>
+        
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.2</version>
+		</dependency>
+        
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+		</dependency>
+        
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+        
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+        
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+        
+        <!-- Apache Lucene -->
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-core</artifactId>
+			<version>3.0.3</version>
+		</dependency>
+
+        <!-- XML support -->
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.1</version>
+		</dependency>
+        
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>2.1.9</version>
+		</dependency>
+        
+        <!-- JSON support -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20090211</version>
+		</dependency>
+        
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.2.4</version>
+        </dependency>
+        
+        <!-- OpenID -->
+		<dependency>
+			<groupId>org.expressme</groupId>
+			<artifactId>JOpenId</artifactId>
+			<version>1.08</version>
+		</dependency>
+        
+        <!-- WSDL support -->
+		<dependency>
+			<groupId>wsdl4j</groupId>
+			<artifactId>wsdl4j</artifactId>
+			<version>1.5.1</version>
+		</dependency>
+        
+        <!-- Graphics -->
+		<dependency>
+			<groupId>axis</groupId>
+			<artifactId>axis</artifactId>
+			<version>1.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>axis</groupId>
+			<artifactId>axis-saaj</artifactId>
+			<version>1.3</version>
+		</dependency>
+        
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>batik-codec</artifactId>
+			<version>1.7</version>
+		</dependency>
+        
+        <!-- Mail -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4</version>
+		</dependency>
+        
+        <!-- Twitter -->
+		<dependency>
+			<groupId>org.twitter4j</groupId>
+			<artifactId>twitter4j-core</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+                
+        <!-- Esri libraries -->
+        <dependency>
+			<groupId>com.esri.arcgis</groupId>
+			<artifactId>arcgis_ws_runtime</artifactId>
+			<version>10.0</version>
+        </dependency>
+
+		<dependency>
+			<groupId>com.esri.arcgis</groupId>
+			<artifactId>arcgis_agsws_stubs</artifactId>
+			<version>10.0</version>
+		</dependency>
+        
+        <!-- JUnit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+    </dependencies>
+    
+    <repositories>
+		<repository>
+			<id>lib</id>
+			<name>lib</name>
+			<url>file://${project.basedir}/../../lib</url>
+		</repository>
+	</repositories>
+</project>
