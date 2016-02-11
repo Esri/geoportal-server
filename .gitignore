@@ -161,3 +161,7 @@ pip-log.txt
 .DS_Store
 /components/gc/www/META-INF/context.xml
 /geoportal/www/META-INF/context.xml
+/geoportal/maven/geoportal-jar/target/
+/geoportal/maven/geoportal/target/
+/geoportal/maven/geoportal-war/target/
+/geoportal/maven/geoportal-war/nb-configuration.xml
