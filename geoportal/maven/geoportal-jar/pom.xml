@@ -33,9 +33,6 @@
                     <compilerArguments>
                         <endorseddirs>${endorsed.dir}</endorseddirs>
                     </compilerArguments>
-                    <excludes>
-                      <exclude>gpt/**</exclude>
-                    </excludes>
                 </configuration>
             </plugin>
       </plugins>
