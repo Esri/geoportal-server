@@ -160,6 +160,8 @@ pip-log.txt
 # Mac crap
 .DS_Store
 /components/gc/www/META-INF/context.xml
+
+# Maven related
 /geoportal/www/META-INF/context.xml
 /geoportal/maven/geoportal-jar/target/
 /geoportal/maven/geoportal/target/
