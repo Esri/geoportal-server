@@ -51,15 +51,6 @@ public class HttpCrawlRequest extends HttpClientRequest {
   }
 
   @Override
-  protected HttpMethodBase createMethod() throws IOException {
-    HttpMethodBase method = super.createMethod();
-    if (bots!=null && !parser().getUserAgent().isEmpty()) {
-      method.setRequestHeader("User-Agent", parser().getUserAgent());
-    }
-    return method;
-  }
-
-  @Override
   public String getUrl() {
     String url = super.getUrl();
     // if robots.txt available and "host" attribute available then update 
