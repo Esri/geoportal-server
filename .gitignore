@@ -167,3 +167,4 @@ pip-log.txt
 /geoportal/maven/geoportal/target/
 /geoportal/maven/geoportal-war/target/
 /geoportal/maven/geoportal-war/nb-configuration.xml
+/geoportal/maven/geoportal-jar/nb-configuration.xml
