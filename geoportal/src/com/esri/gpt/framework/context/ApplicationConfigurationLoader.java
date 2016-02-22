@@ -52,6 +52,7 @@ import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.webharvest.engine.DataProcessorFactory;
 import com.esri.gpt.control.webharvest.engine.HarvesterConfiguration;
 import com.esri.gpt.control.webharvest.engine.LocalDataProcessorFactory;
+import com.esri.gpt.control.webharvest.extensions.localfolder.LocalFolderDataProcessorFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactories;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInitializer;
