@@ -92,6 +92,7 @@ public class LocalFolderDataProcessor implements DataProcessor {
   public void onMetadata(ExecutionUnit unit, Publishable record) throws IOException, SQLException, CatalogIndexException, TransformerConfigurationException {
     if (destinationFolder!=null) {
       File f = generateFileName(record.getSourceUri());
+      f.getParentFile().mkdirs();
       FileOutputStream output = null;
       ByteArrayInputStream input = null;
       try {
