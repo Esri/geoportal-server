@@ -93,6 +93,9 @@ public class LocalFolderDataProcessor implements DataProcessor {
     if (destinationFolder!=null) {
       File f = generateFileName(record.getSourceUri());
       f.getParentFile().mkdirs();
+      if (!f.getName().contains(".")) {
+        f = f.getParentFile().toPath().resolve(f.getName()+".xml").toFile();
+      }
       FileOutputStream output = null;
       ByteArrayInputStream input = null;
       try {
