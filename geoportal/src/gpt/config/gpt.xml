@@ -454,6 +454,11 @@
         <parameter key="dcat.rights.writeAlways" value="false"/>
     </catalog>
     
+    <!-- costomization of web harvester -->
+    <!--webharvester>
+		<dataProcessorFactory enabled="true" className="com.esri.gpt.control.webharvest.extensions.localfolder.LocalFolderDataProcessorFactory" name="localfolder" rootFolder="c:\data"/>
+    </webharvester-->
+    
     <!-- Download data configuration.
         - taskUrl: geoprocessing task URL
         - mapServiceUrl: map service URL used by geoprocessing task

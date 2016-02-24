@@ -27,9 +27,14 @@ import java.util.List;
  */
 public class PathUtil {
   
+  /**
+   * Splits path by separator
+   * @param p path
+   * @return list of elements
+   */
   public static List<String> splitPath(String p) {
     ArrayList<String> path = new ArrayList<String>();
-    for (String t: p.split("/")) {
+    for (String t: p.split("/|\\\\")) {
       if (t!=null && !t.trim().isEmpty()) {
         path.add(sanitizeFileName(t.trim()));
       }
@@ -37,10 +42,20 @@ public class PathUtil {
     return path;
   }
   
+  /**
+   * Splits path by separator.
+   * @param u URL
+   * @return list of elements
+   */
   public static  List<String> splitPath(URL u) {
     return splitPath(u.getPath());
   }
   
+  /**
+   * Splits path by separator.
+   * @param f file
+   * @return list of elements
+   */
   public static List<String> splitPath(File f) {
     ArrayList<String> path = new ArrayList<String>();
     Iterator<Path> i = f.toPath().iterator();
@@ -50,6 +65,11 @@ public class PathUtil {
     return path;
   }
   
+  /**
+   * Sanitizes file name.
+   * @param name arbitrary file name
+   * @return safe file name
+   */
   public static String sanitizeFileName(String name) {
     return name.replaceAll("[^a-zA-Z0-9\\._]+", "_");
   }

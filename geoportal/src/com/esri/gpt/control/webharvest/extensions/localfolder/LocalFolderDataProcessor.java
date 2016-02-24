@@ -21,7 +21,6 @@ import com.esri.gpt.control.webharvest.engine.ExecutionUnit;
 import com.esri.gpt.control.webharvest.engine.Harvester;
 import com.esri.gpt.control.webharvest.engine.Suspender;
 import static com.esri.gpt.control.webharvest.extensions.localfolder.PathUtil.sanitizeFileName;
-import static com.esri.gpt.control.webharvest.extensions.localfolder.PathUtil.splitPath;
 import static com.esri.gpt.control.webharvest.extensions.localfolder.StringListUtil.head;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.resource.api.Publishable;
@@ -40,6 +39,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.transform.TransformerConfigurationException;
 import org.apache.commons.io.IOUtils;
+import static com.esri.gpt.control.webharvest.extensions.localfolder.PathUtil.splitPath;
 
 /**
  * Local folder data processor.
@@ -57,6 +57,15 @@ public class LocalFolderDataProcessor implements DataProcessor {
   private File destinationFolder;
   private List<String> subFolder;
 
+  /**
+   * Creates instance of the processor.
+   * @param name name of the processor
+   * @param rootFolder root folder
+   * @param messageBroker message broker
+   * @param baseContextPath base context path
+   * @param listener listener (optional)
+   * @param suspender suspender (optional)
+   */
   public LocalFolderDataProcessor(String name, File rootFolder, MessageBroker messageBroker, String baseContextPath, Harvester.Listener listener, Suspender suspender) {
     this.name = name;
     this.rootFolder = rootFolder;
@@ -64,15 +73,6 @@ public class LocalFolderDataProcessor implements DataProcessor {
     this.baseContextPath = baseContextPath;
     this.listener = listener;
     this.suspender = suspender;
-  }
-
-  private LocalFolderDataProcessor() {
-    this.name = null;
-    this.rootFolder = null;
-    this.messageBroker = null;
-    this.baseContextPath = null;
-    this.listener = null;
-    this.suspender = null;
   }
 
   @Override
@@ -135,7 +135,7 @@ public class LocalFolderDataProcessor implements DataProcessor {
       List<String> path = splitPath(u);
       if (path.size()>0) {
         if (path.size()>1) {
-          stock = StringListUtil.joinRest(subFolder,head(path, path.size()-1));
+          stock = StringListUtil.merge(subFolder,head(path, path.size()-1));
           stock.add(path.get(path.size()-1));
         } else {
           stock = Arrays.asList(new String[0]);
@@ -156,7 +156,7 @@ public class LocalFolderDataProcessor implements DataProcessor {
         return fileName;
       } else {
         File f = new File(sUri);
-        for (String t: StringListUtil.joinRest(subFolder,splitPath(f))) {
+        for (String t: StringListUtil.merge(subFolder,splitPath(f))) {
           fileName = fileName.toPath().resolve(t).toFile();
         }
         return fileName;

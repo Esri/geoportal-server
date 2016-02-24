@@ -31,8 +31,19 @@ import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Node;
 
 /**
- *
- * @author Esri, Inc.
+ * Local folder data processor factory.
+ * <p>
+ * It is used to collect harvested metadata into the local folder.
+ * <p>
+ * Usage in gpt.xml:
+ * <code><pre>
+    &lt;webharvester&gt;
+		&lt;dataProcessorFactory enabled="true" 
+                 className="com.esri.gpt.control.webharvest.extensions.localfolder.LocalFolderDataProcessorFactory" 
+                 name="localfolder" 
+                 rootFolder="c:\data"/&gt;
+    &lt;/webharvester&gt;
+ * </pre></code>
  */
 public class LocalFolderDataProcessorFactory implements DataProcessorFactory {
 

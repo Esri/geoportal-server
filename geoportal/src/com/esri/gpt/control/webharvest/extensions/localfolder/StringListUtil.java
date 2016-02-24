@@ -16,46 +16,47 @@
 package com.esri.gpt.control.webharvest.extensions.localfolder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
- *
+ * Utilities to handle list of strings
  * @author Esri, Inc.
  */
 public class StringListUtil {
-  public static String [] makeArray(String...values) {
-    return values;
-  }
-  public static List<String> makeList(String...values) {
-    return Arrays.asList(values);
-  }
-  public static String toString(List<String> lst) {
-    StringBuilder sb = new StringBuilder();
-    for (String s: lst) {
-      sb.append(sb.length()>0?",":"").append(s);
-    }
-    return "[" + sb + "]";
-  }
+  /**
+   * Gets head of the list.
+   * @param lst source list
+   * @param to end index
+   * @return head 
+   */
   public static List<String> head(List<String> lst, int to) {
     return lst.subList(0, Math.max(0,Math.min(to, lst.size())));
   }
+  /**
+   * Gets tail of the list
+   * @param lst source list
+   * @param from start index
+   * @return 
+   */
   public static List<String> tail(List<String> lst, int from) {
     return lst.subList(Math.max(0,Math.min(from, lst.size())), lst.size());
   }
-  public static List<String> last(List<String> lst, int length) {
-    return lst.subList(Math.max(0,Math.min(lst.size(),lst.size()-length)), lst.size());
-  }
   
-  public static boolean endsWith(List<String> root, List<String> suffix) {
-    int idx = root.size() - suffix.size();
+  /**
+   * Checks if list ends with the specific suffix
+   * @param lst source list 
+   * @param suffix suffix
+   * @return <code>true</code> if list ends with suffix
+   */
+  private static boolean endsWith(List<String> lst, List<String> suffix) {
+    int idx = lst.size() - suffix.size();
     
     if (idx<0) {
       return false;
     }
     
     for (int i=0; i<suffix.size(); i++) {
-      if (!root.get(idx+i).equals(suffix.get(i))) {
+      if (!lst.get(idx+i).equals(suffix.get(i))) {
         return false;
       }
     }
@@ -63,23 +64,30 @@ public class StringListUtil {
     return true;
   }
   
-  public static List<String> joinRest(List<String> root, List<String> suffix) {
-    int rootStart = root.size()>suffix.size()? root.size()-suffix.size(): 0;
-    int suffixEnd = suffix.size()>root.size()? root.size(): suffix.size();
+  /**
+   * Joins two lists in such a way that common end of the first list and common 
+   * start with the second list are merged.
+   * @param lst1 first list
+   * @param lst2 second list
+   * @return merged list
+   */
+  public static List<String> merge(List<String> lst1, List<String> lst2) {
+    int rootStart = lst1.size()>lst2.size()? lst1.size()-lst2.size(): 0;
+    int suffixEnd = lst2.size()>lst1.size()? lst1.size(): lst2.size();
     boolean ends = false;
     
-    while (rootStart<root.size() && suffixEnd>=0) {
-      ends = endsWith(root,head(suffix,suffixEnd));
+    while (rootStart<lst1.size() && suffixEnd>=0) {
+      ends = endsWith(lst1,head(lst2,suffixEnd));
       if (ends) break;
       rootStart++;
       suffixEnd--;
     }
     
-    ArrayList<String> acc = new ArrayList<String>(root);
+    ArrayList<String> acc = new ArrayList<String>(lst1);
     if (ends) {
-      acc.addAll(tail(suffix,suffixEnd));
+      acc.addAll(tail(lst2,suffixEnd));
     } else {
-      acc.addAll(suffix);
+      acc.addAll(lst2);
     }
     
     return acc;
