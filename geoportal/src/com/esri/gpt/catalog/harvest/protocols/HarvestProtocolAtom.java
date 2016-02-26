@@ -35,8 +35,16 @@ public class HarvestProtocolAtom extends AbstractHTTPHarvestProtocol {
  private String _atomType = DEFAULT_TYPE;
 
 // constructors ================================================================
-// properties ==================================================================
  
+  public HarvestProtocolAtom(HarvestEnvironment hEnv) {
+    super(hEnv);
+  }
+ 
+  public HarvestProtocolAtom() {
+    super(DefaultHarvestEnvironment.getInstance());
+  }
+
+// properties ==================================================================
   /**
    * Gets protocol type.
    * @return protocol type

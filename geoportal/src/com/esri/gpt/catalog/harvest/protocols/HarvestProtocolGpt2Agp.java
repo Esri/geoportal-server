@@ -44,7 +44,6 @@ import java.net.UnknownHostException;
 public class HarvestProtocolGpt2Agp extends AbstractHTTPHarvestProtocol {
   
   private StringAttributeMap attrMap = new StringAttributeMap();
-
   /**
    * name of the protocol
    */
@@ -53,6 +52,14 @@ public class HarvestProtocolGpt2Agp extends AbstractHTTPHarvestProtocol {
    * flags to carry over
    */
   private long flags;
+
+  public HarvestProtocolGpt2Agp(HarvestEnvironment hEnv) {
+    super(hEnv);
+  }
+
+  public HarvestProtocolGpt2Agp() {
+    super(DefaultHarvestEnvironment.getInstance());
+  }
 
   public GptSource getSource() {
     return new GptSource();

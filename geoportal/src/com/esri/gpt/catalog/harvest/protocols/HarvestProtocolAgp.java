@@ -34,15 +34,22 @@ public class HarvestProtocolAgp extends AbstractHTTPHarvestProtocol {
   
 // constructors ================================================================
 
-// properties ==================================================================
-
-/**
- * Gets protocol type.
- * @return protocol type
- */
-public final ProtocolType getType() {
-  return ProtocolType.AGP;
+public HarvestProtocolAgp(HarvestEnvironment hEnv) {
+    super(hEnv);
 }
+
+public HarvestProtocolAgp() {
+    super(DefaultHarvestEnvironment.getInstance());
+}
+
+// properties ==================================================================
+/**
+   * Gets protocol type.
+   * @return protocol type
+   */
+  public final ProtocolType getType() {
+    return ProtocolType.AGP;
+  }
 
 // methods =====================================================================
 

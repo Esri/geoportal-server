@@ -70,9 +70,20 @@ public class HarvestProtocolAgp2Agp extends AbstractHTTPHarvestProtocol {
   
   /**
    * Creates instance of the protocol
+   * @param hEnv harvest environment
+   * @param stopOnError <code>true</code> to stop harvesting on error
+   */
+  public HarvestProtocolAgp2Agp(HarvestEnvironment hEnv, boolean stopOnError) {
+    super(hEnv);
+    this.stopOnError = stopOnError;
+  }
+  
+  /**
+   * Creates instance of the protocol
    * @param stopOnError <code>true</code> to stop harvesting on error
    */
   public HarvestProtocolAgp2Agp(boolean stopOnError) {
+    super(DefaultHarvestEnvironment.getInstance());
     this.stopOnError = stopOnError;
   }
   

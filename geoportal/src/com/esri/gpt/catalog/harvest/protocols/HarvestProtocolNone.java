@@ -26,6 +26,15 @@ public class HarvestProtocolNone extends HarvestProtocol {
 // class variables =============================================================
 // instance variables ==========================================================
 // constructors ================================================================
+  
+  public HarvestProtocolNone(HarvestEnvironment hEnv) {
+    super(hEnv);
+  }
+  
+  public HarvestProtocolNone() {
+    super(DefaultHarvestEnvironment.getInstance());
+  }
+
 // properties ==================================================================
   /**
    * Gets protocol type.

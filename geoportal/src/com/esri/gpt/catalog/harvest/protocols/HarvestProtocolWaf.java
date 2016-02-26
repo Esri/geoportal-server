@@ -27,6 +27,15 @@ public class HarvestProtocolWaf extends AbstractHTTPHarvestProtocol {
 // class variables =============================================================
 // instance variables ==========================================================
 // constructors ================================================================
+  
+  public HarvestProtocolWaf(HarvestEnvironment hEnv) {
+    super(hEnv);
+  }
+  
+  public HarvestProtocolWaf() {
+    super(DefaultHarvestEnvironment.getInstance());
+  }
+
 // properties ==================================================================
   /**
    * Gets protocol type.

@@ -15,15 +15,11 @@
  */
 package com.esri.gpt.control.webharvest.client.dcat;
 
-import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolDCAT;
 import com.esri.gpt.framework.dcat.DcatParserAdaptor;
 import com.esri.gpt.framework.dcat.DcatVersion;
-import com.esri.gpt.framework.dcat.dcat.DcatDistribution;
-import com.esri.gpt.framework.dcat.dcat.DcatDistributionList;
 import com.esri.gpt.framework.dcat.dcat.DcatRecord;
 import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.util.ReadOnlyIterator;
-import com.esri.gpt.framework.util.Val;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
@@ -45,12 +41,12 @@ class DCATIteratorAdaptor implements Iterable<Publishable> {
    * @param format format;
    * @param adaptor parser adaptor
    */
-  public DCATIteratorAdaptor(String format, DcatParserAdaptor adaptor) {
+  public DCATIteratorAdaptor(String format, String defaultFormat, DcatParserAdaptor adaptor) {
     this.adaptor = adaptor;
     try {
       formatPattern = Pattern.compile(format, Pattern.CASE_INSENSITIVE);
     } catch (Exception ex) {
-      formatPattern = Pattern.compile(HarvestProtocolDCAT.FORMAT_PATTERN_DEFAULT_VALUE, Pattern.CASE_INSENSITIVE);
+      formatPattern = Pattern.compile(defaultFormat, Pattern.CASE_INSENSITIVE);
     }
   }
 

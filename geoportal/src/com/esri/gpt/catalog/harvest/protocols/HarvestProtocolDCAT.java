@@ -18,8 +18,6 @@ package com.esri.gpt.catalog.harvest.protocols;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.dcat.DCATQueryBuilder;
 import com.esri.gpt.framework.collection.StringAttributeMap;
-import com.esri.gpt.framework.context.ApplicationConfiguration;
-import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
 import com.esri.gpt.framework.util.Val;
 
@@ -27,17 +25,31 @@ import com.esri.gpt.framework.util.Val;
  * Harvest protocol DCAT.
  */
 public class HarvestProtocolDCAT extends AbstractHTTPHarvestProtocol {
-  private static final String FORMAT_PATTERN_KEY = "webharvest.dcat.formatPattern";
-  public static final String FORMAT_PATTERN_DEFAULT_VALUE;
-  private String  format = FORMAT_PATTERN_DEFAULT_VALUE;
+  public static final String FORMAT_PATTERN_KEY = "webharvest.dcat.formatPattern";
+  //public static final String FORMAT_PATTERN_DEFAULT_VALUE;
+  private String  format = getFormatPatternDefaultValue();
   
+  /*
   static {
     ApplicationContext appCtx = ApplicationContext.getInstance();
     ApplicationConfiguration appCfg = appCtx.getConfiguration();
     StringAttributeMap parameters = appCfg.getCatalogConfiguration().getParameters();
     FORMAT_PATTERN_DEFAULT_VALUE = Val.chkStr(parameters.getValue(FORMAT_PATTERN_KEY),"xml");
   }
+  */
 
+  public HarvestProtocolDCAT(HarvestEnvironment hEnv) {
+    super(hEnv);
+  }
+
+  public HarvestProtocolDCAT() {
+    super(DefaultHarvestEnvironment.getInstance());
+  }
+
+  public String getFormatPatternDefaultValue() {
+    return hEnv.getValue(DefaultHarvestEnvironment.WH_FORMAT_PATTERN);
+  }
+  
   @Override
   public ProtocolType getType() {
     return null;
@@ -60,7 +72,7 @@ public class HarvestProtocolDCAT extends AbstractHTTPHarvestProtocol {
   @Override
   public StringAttributeMap getAttributeMap() {
     StringAttributeMap properties = new StringAttributeMap();
-    properties.set("dcatFormat", Val.chkStr(getFormat(),FORMAT_PATTERN_DEFAULT_VALUE));
+    properties.set("dcatFormat", Val.chkStr(getFormat(),getFormatPatternDefaultValue()));
     return properties;
   }
 
@@ -70,7 +82,7 @@ public class HarvestProtocolDCAT extends AbstractHTTPHarvestProtocol {
    */
   @Override
   public void setAttributeMap(StringAttributeMap attributeMap) {
-  	setFormat(Val.chkStr(chckAttr(attributeMap.get("dcatFormat")),FORMAT_PATTERN_DEFAULT_VALUE));
+  	setFormat(Val.chkStr(chckAttr(attributeMap.get("dcatFormat")),getFormatPatternDefaultValue()));
   }
   
   /**

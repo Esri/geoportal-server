@@ -44,6 +44,14 @@ public class HarvestProtocolAgs2Agp extends AbstractHTTPHarvestProtocol {
   
   private StringAttributeMap attrMap = new StringAttributeMap();
 
+  public HarvestProtocolAgs2Agp(HarvestEnvironment hEnv) {
+    super(hEnv);
+  }
+
+  public HarvestProtocolAgs2Agp() {
+    super(DefaultHarvestEnvironment.getInstance());
+  }
+
   /**
    * name of the protocol
    */

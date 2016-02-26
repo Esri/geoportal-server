@@ -62,7 +62,7 @@ public class DCATQueryBuilder implements QueryBuilder {
       throw new IllegalArgumentException("No context provided.");
     }
     this.context = context;
-    this.info = new DCATInfo(url,protocol.getFormat());
+    this.info = new DCATInfo(url,protocol.getFormat(),protocol.getFormatPatternDefaultValue());
   }
 
   @Override
@@ -82,7 +82,7 @@ public class DCATQueryBuilder implements QueryBuilder {
     DCATIteratorAdaptor adaptor = null;
     try {
       URL url = new URL(info.getUrl());
-      adaptor = new DCATIteratorAdaptor(info.getFormat(), new DcatParserAdaptor(new DcatParser(url.openStream())));
+      adaptor = new DCATIteratorAdaptor(info.getFormat(), info.getDefaultFormat(), new DcatParserAdaptor(new DcatParser(url.openStream())));
       Iterator<Publishable> iterator = adaptor.iterator();
       if (iterator.hasNext() && adaptor.getDcatVersion().compareTo(DcatVersion.DV10)==0) {
         return new NativeImpl(iterator.next().getContent());

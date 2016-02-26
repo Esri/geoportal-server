@@ -25,6 +25,7 @@ class DCATInfo extends CommonInfo {
 
   private String url;
   private String format;
+  private String defaultFormat;
 
   /**
    * Creates instance of the info.
@@ -35,9 +36,10 @@ class DCATInfo extends CommonInfo {
    * @param url service URL
    * @param format format
    */
-  public DCATInfo(String url, String format) {
+  public DCATInfo(String url, String format, String defaultFormat) {
     this.url = Val.chkStr(url);
     this.format = Val.chkStr(format);
+    this.defaultFormat = Val.chkStr(defaultFormat);
   }
 
   /**
@@ -56,8 +58,12 @@ class DCATInfo extends CommonInfo {
     return format;
   }
 
+  public String getDefaultFormat() {
+    return defaultFormat;
+  }
+
   @Override
   public String toString() {
-    return "{type: dcat, url: \"" + getUrl() + "\", format: \"" +getFormat()+ "\"}";
+    return "{type: dcat, url: \"" + getUrl() + "\", format: \"" +getFormat()+ "\", defaultFormat: \"" +getDefaultFormat()+ "\"}";
   }
 }

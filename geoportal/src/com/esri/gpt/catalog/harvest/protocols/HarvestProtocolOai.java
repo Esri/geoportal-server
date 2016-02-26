@@ -33,6 +33,15 @@ public class HarvestProtocolOai extends AbstractHTTPHarvestProtocol {
   private String _prefix = "";
 
 // constructors ================================================================
+  
+  public HarvestProtocolOai(HarvestEnvironment hEnv) {
+    super(hEnv);
+  }
+  
+  public HarvestProtocolOai() {
+    super(DefaultHarvestEnvironment.getInstance());
+  }
+
 // properties ==================================================================
   /**
    * Gets set.

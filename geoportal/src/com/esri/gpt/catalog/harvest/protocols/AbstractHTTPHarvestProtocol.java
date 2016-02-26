@@ -32,6 +32,10 @@ public abstract class AbstractHTTPHarvestProtocol extends HarvestProtocol {
   private String _userPassword = "";
 // constructors ================================================================
 
+  public AbstractHTTPHarvestProtocol(HarvestEnvironment hEnv) {
+    super(hEnv);
+  }
+
 // properties ==================================================================
   
   /**

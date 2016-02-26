@@ -38,6 +38,15 @@ public static final int DEFAULT_PORT_NO = 80;
   private String _rootFolder = "";
 
 // constructors ================================================================
+  
+  public HarvestProtocolArcIms(HarvestEnvironment hEnv) {
+    super(hEnv);
+  }
+  
+  public HarvestProtocolArcIms() {
+    super(DefaultHarvestEnvironment.getInstance());
+  }
+
 // properties ==================================================================
   /**
    * Gets port number.

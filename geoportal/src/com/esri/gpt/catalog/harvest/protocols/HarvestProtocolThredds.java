@@ -24,6 +24,14 @@ import com.esri.gpt.framework.resource.query.QueryBuilder;
  */
 public class HarvestProtocolThredds extends AbstractHTTPHarvestProtocol {
 
+  public HarvestProtocolThredds(HarvestEnvironment hEnv) {
+    super(hEnv);
+  }
+
+  public HarvestProtocolThredds() {
+    super(DefaultHarvestEnvironment.getInstance());
+  }
+
   @Override
   public ProtocolType getType() {
     return null;
