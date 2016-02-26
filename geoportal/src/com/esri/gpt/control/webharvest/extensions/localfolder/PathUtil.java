@@ -58,6 +58,7 @@ public class PathUtil {
    */
   public static List<String> splitPath(File f) {
     ArrayList<String> path = new ArrayList<String>();
+    f = new File(f.getAbsolutePath().replaceAll(":", "_"));
     Iterator<Path> i = f.toPath().iterator();
     while (i.hasNext()) {
       path.add(sanitizeFileName(i.next().toString()));
