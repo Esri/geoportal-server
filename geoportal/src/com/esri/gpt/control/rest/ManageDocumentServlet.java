@@ -30,7 +30,6 @@ import com.esri.gpt.catalog.schema.MetadataDocument;
 import com.esri.gpt.catalog.schema.SchemaException;
 import com.esri.gpt.catalog.schema.ValidationException;
 import com.esri.gpt.control.webharvest.client.arcgis.ArcGISProtocol;
-import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
 import com.esri.gpt.framework.robots.BotsMode;
 import com.esri.gpt.framework.collection.StringAttribute;
@@ -60,6 +59,7 @@ import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.esri.gpt.control.webharvest.protocol.ProtocolFactoryExt;
 
 /**
  * Provides an HTTP REST interface for the management of an XML based metadata document.
@@ -635,7 +635,7 @@ public class ManageDocumentServlet extends BaseServlet {
         attributes.add(new StringAttribute(ArcGISProtocol.SOAP_URL,paramValue));
       }
       else if (paramName.equalsIgnoreCase("protocol")) {
-        ProtocolFactory factory = appCfg.getProtocolFactories().get(paramValue);
+        ProtocolFactoryExt factory = appCfg.getProtocolFactories().get(paramValue);
         if (factory!=null) {
           record.setProtocol(factory.newProtocol());
         }
@@ -673,7 +673,7 @@ public class ManageDocumentServlet extends BaseServlet {
     }
 
     if (record.getProtocol()==null || record.getProtocol().getKind().equalsIgnoreCase(ProtocolType.None.name())) {
-      ProtocolFactory factory = appCfg.getProtocolFactories().get(ProtocolType.RES.name());
+      ProtocolFactoryExt factory = appCfg.getProtocolFactories().get(ProtocolType.RES.name());
       if (factory!=null) {
         record.setProtocol(factory.newProtocol());
       }

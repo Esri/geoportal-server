@@ -32,7 +32,6 @@ import com.esri.gpt.catalog.management.MmdResult;
 import com.esri.gpt.control.view.PageCursorPanel;
 import com.esri.gpt.control.view.SelectablePublishers;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactories;
-import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.AgpProtocolFactory;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.collection.StringSet;
@@ -51,6 +50,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
+import com.esri.gpt.control.webharvest.protocol.ProtocolFactoryExt;
 
 /**
  * Handles actions related to metadata management.
@@ -596,7 +596,7 @@ public ArrayList<SelectItem> getProtocols() {
   ProtocolFactories protocolFactories = appCfg.getProtocolFactories();
   protocols.add(new SelectItem("", msgBroker.retrieveMessage("catalog.harvest.manage.edit.protocol.any")));
   for (String key: protocolFactories.getKeys()) {
-    ProtocolFactory pf = protocolFactories.get(key);
+    ProtocolFactoryExt pf = protocolFactories.get(key);
     if (pf instanceof AgpProtocolFactory && !AGSProcessorConfig.isAvailable()) continue;
     String resourceKey = protocolFactories.getResourceKey(key);
     SelectItem item = new SelectItem(key.toLowerCase(), msgBroker.retrieveMessage(resourceKey));

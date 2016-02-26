@@ -15,14 +15,15 @@
  */
 package com.esri.gpt.control.webharvest.protocol.factories;
 
+import com.esri.gpt.catalog.harvest.protocols.HarvestEnvironment;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolThredds;
 import com.esri.gpt.control.webharvest.protocol.Protocol;
-import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
+import com.esri.gpt.control.webharvest.protocol.ProtocolFactoryExt;
 
 /**
  * THREDDS protocol factory.
  */
-public class ThreddsProtocolFactory implements ProtocolFactory {
+public class ThreddsProtocolFactory implements ProtocolFactoryExt {
 
   @Override
   public String getName() {
@@ -32,6 +33,11 @@ public class ThreddsProtocolFactory implements ProtocolFactory {
   @Override
   public Protocol newProtocol() {
     return new HarvestProtocolThredds();
+  }
+
+  @Override
+  public Protocol newProtocol(HarvestEnvironment hEnv) {
+    return new HarvestProtocolThredds(hEnv);
   }
   
 }

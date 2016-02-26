@@ -15,14 +15,15 @@
  */
 package com.esri.gpt.control.webharvest.protocol.factories;
 
+import com.esri.gpt.catalog.harvest.protocols.HarvestEnvironment;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolDCAT;
 import com.esri.gpt.control.webharvest.protocol.Protocol;
-import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
+import com.esri.gpt.control.webharvest.protocol.ProtocolFactoryExt;
 
 /**
  * DCAT protocol factory.
  */
-public class DCATProtocolFactory implements ProtocolFactory {
+public class DCATProtocolFactory implements ProtocolFactoryExt {
 
   @Override
   public String getName() {
@@ -32,5 +33,10 @@ public class DCATProtocolFactory implements ProtocolFactory {
   @Override
   public Protocol newProtocol() {
     return new HarvestProtocolDCAT();
+  }
+
+  @Override
+  public Protocol newProtocol(HarvestEnvironment hEnv) {
+    return new HarvestProtocolDCAT(hEnv);
   }
 }

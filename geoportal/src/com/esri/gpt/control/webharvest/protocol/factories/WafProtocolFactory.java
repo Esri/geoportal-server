@@ -14,15 +14,16 @@
  */
 package com.esri.gpt.control.webharvest.protocol.factories;
 
+import com.esri.gpt.catalog.harvest.protocols.HarvestEnvironment;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocol.ProtocolType;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolWaf;
 import com.esri.gpt.control.webharvest.protocol.Protocol;
-import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
+import com.esri.gpt.control.webharvest.protocol.ProtocolFactoryExt;
 
 /**
  * WAF protocol factory.
  */
-public class WafProtocolFactory implements ProtocolFactory {
+public class WafProtocolFactory implements ProtocolFactoryExt {
 
   @Override
   public String getName() {
@@ -32,5 +33,10 @@ public class WafProtocolFactory implements ProtocolFactory {
   @Override
   public Protocol newProtocol() {
     return new HarvestProtocolWaf();
+  }
+
+  @Override
+  public Protocol newProtocol(HarvestEnvironment hEnv) {
+    return new HarvestProtocolWaf(hEnv);
   }
 }

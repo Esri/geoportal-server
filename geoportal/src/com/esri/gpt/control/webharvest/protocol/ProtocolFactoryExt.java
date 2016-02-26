@@ -12,31 +12,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.control.webharvest.protocol.factories;
+package com.esri.gpt.control.webharvest.protocol;
 
 import com.esri.gpt.catalog.harvest.protocols.HarvestEnvironment;
-import com.esri.gpt.catalog.harvest.protocols.HarvestProtocol.ProtocolType;
-import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolCsw;
-import com.esri.gpt.control.webharvest.protocol.Protocol;
-import com.esri.gpt.control.webharvest.protocol.ProtocolFactoryExt;
 
 /**
- * CSW protocol factory.
+ * Protocol factory.
  */
-public class CswProtocolFactory implements ProtocolFactoryExt {
-
-  @Override
-  public String getName() {
-    return ProtocolType.CSW.name();
-  }
-
-  @Override
-  public Protocol newProtocol() {
-    return new HarvestProtocolCsw();
-  }
-
-  @Override
-  public Protocol newProtocol(HarvestEnvironment hEnv) {
-    return new HarvestProtocolCsw(hEnv);
-  }
+public interface ProtocolFactoryExt extends ProtocolFactory {
+/**
+ * Creates new protocol
+ * @param hEnv harvest environment
+ * @return protocol
+ */
+Protocol newProtocol(HarvestEnvironment hEnv);
 }

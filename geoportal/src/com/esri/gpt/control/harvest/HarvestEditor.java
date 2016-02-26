@@ -25,7 +25,6 @@ import com.esri.gpt.catalog.harvest.repository.HrRecord;
 import com.esri.gpt.catalog.management.MmdEnums.ApprovalStatus;
 import com.esri.gpt.control.webharvest.client.arcgis.ArcGISProtocol;
 import com.esri.gpt.control.webharvest.protocol.Protocol;
-import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
 import com.esri.gpt.framework.robots.BotsMode;
 import com.esri.gpt.control.webharvest.validator.IValidator;
@@ -41,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.faces.model.SelectItem;
+import com.esri.gpt.control.webharvest.protocol.ProtocolFactoryExt;
 
 /**
  * Provides harvest repository editing functionality.
@@ -69,7 +69,7 @@ private TreeMap<String,Protocol> protocols = new TreeMap<String,Protocol>(String
 {
   ApplicationContext appCtx = ApplicationContext.getInstance();
   ApplicationConfiguration appCfg = appCtx.getConfiguration();
-  for (Map.Entry<String,ProtocolFactory> e : appCfg.getProtocolFactories().entrySet()) {
+  for (Map.Entry<String,ProtocolFactoryExt> e : appCfg.getProtocolFactories().entrySet()) {
     protocols.put(e.getKey(), e.getValue().newProtocol());
   }
 }

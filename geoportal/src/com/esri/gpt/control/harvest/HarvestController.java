@@ -42,7 +42,6 @@ import com.esri.gpt.control.view.SelectablePublishers;
 import com.esri.gpt.control.view.SortDirectionStyle;
 import com.esri.gpt.control.webharvest.engine.Statistics;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactories;
-import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
 import com.esri.gpt.framework.robots.BotsMode;
 import com.esri.gpt.control.webharvest.protocol.factories.AgpProtocolFactory;
@@ -78,6 +77,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
+import com.esri.gpt.control.webharvest.protocol.ProtocolFactoryExt;
 
 /**
  * Harvest controller. Provides functionality to support *.jsp pages to list,
@@ -925,7 +925,7 @@ public class HarvestController extends BaseHarvestController {
     ApplicationConfiguration appCfg = appCtx.getConfiguration();
     ProtocolFactories protocolFactories = appCfg.getProtocolFactories();
     for (String key : protocolFactories.getKeys()) {
-      ProtocolFactory pf = protocolFactories.get(key);
+      ProtocolFactoryExt pf = protocolFactories.get(key);
       if (pf instanceof AgpProtocolFactory && !AGSProcessorConfig.isAvailable()) {
         continue;
       }

@@ -88,6 +88,7 @@ import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.NodeListAdapter;
 import com.esri.gpt.framework.xml.XmlIoUtil;
+import com.esri.gpt.control.webharvest.protocol.ProtocolFactoryExt;
 
 /**
  * Application configuration loader.
@@ -1279,10 +1280,18 @@ private void loadProtocolFactories(ApplicationConfiguration appConfig, Document 
       String factoryClass = (String) xpath.evaluate("@factoryClass", ndProto, XPathConstants.STRING);
       try {
         Class fc = Class.forName(factoryClass);
-        ProtocolFactory factory = (ProtocolFactory) fc.newInstance();
-        ProtocolInitializer.init(factory, ndProto);
-        String resourceKey = Val.chkStr((String) xpath.evaluate("@resourceKey", ndProto, XPathConstants.STRING));
-        factories.put(factory.getName(), factory, resourceKey);
+        Object instance = fc.newInstance();
+        if (instance instanceof ProtocolFactoryExt) {
+          ProtocolFactoryExt factory = (ProtocolFactoryExt) fc.newInstance();
+          ProtocolInitializer.init(factory, ndProto);
+          String resourceKey = Val.chkStr((String) xpath.evaluate("@resourceKey", ndProto, XPathConstants.STRING));
+          factories.put(factory.getName(), factory, resourceKey);
+        } else {
+          ProtocolFactory factory = (ProtocolFactory) fc.newInstance();
+          ProtocolInitializer.init(factory, ndProto);
+          String resourceKey = Val.chkStr((String) xpath.evaluate("@resourceKey", ndProto, XPathConstants.STRING));
+          factories.put(factory.getName(), factory, resourceKey);
+        }
       } catch (Exception ex) {
         getLogger().log(Level.WARNING, "Error loading protocol: "+Val.stripControls(factoryClass), ex);
       }

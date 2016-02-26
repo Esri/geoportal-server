@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.control.webharvest.protocol;
 
+import com.esri.gpt.catalog.harvest.protocols.HarvestEnvironment;
 import com.esri.gpt.control.webharvest.protocol.factories.Agp2AgpProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.Ags2AgpProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.ArcGISProtocolFactory;
@@ -84,7 +85,7 @@ import org.xml.sax.SAXException;
  * 
  * @see com.esri.gpt.framework.context.ApplicationConfigurationLoader
  */
-public class ProtocolFactories extends TreeMap<String, ProtocolFactory> {
+public class ProtocolFactories extends TreeMap<String, ProtocolFactoryExt> {
 
 private ArrayList<String> keys = new ArrayList<String>();  
 private Map<String,String> resourceKeys = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
@@ -121,9 +122,14 @@ public void initDefault() {
 }
 
 @Override
-public ProtocolFactory put(String key, ProtocolFactory value) {
+public ProtocolFactoryExt put(String key, ProtocolFactoryExt value) {
   keys.add(key);
   return super.put(key, value);
+}
+
+public ProtocolFactoryExt put(String key, ProtocolFactory value) {
+  keys.add(key);
+  return super.put(key, new ProtocolFactoryWrapper(value));
 }
 
 
@@ -132,9 +138,16 @@ public ProtocolFactory put(String key, ProtocolFactory value) {
  * @param key protocol key
  * @param value protocol value
  * @param resourceKey resource key
+ * @return old protocol factory or <code>null</code>
  */
-public ProtocolFactory put(String key, ProtocolFactory value, String resourceKey) {
-  ProtocolFactory result = put(key,value);
+public ProtocolFactoryExt put(String key, ProtocolFactoryExt value, String resourceKey) {
+  ProtocolFactoryExt result = put(key,value);
+  resourceKeys.put(key, resourceKey);
+  return result;
+}
+
+public ProtocolFactoryExt put(String key, ProtocolFactory value, String resourceKey) {
+  ProtocolFactoryExt result = put(key,value);
   resourceKeys.put(key, resourceKey);
   return result;
 }
@@ -200,7 +213,7 @@ public Protocol parseProtocol(String xmlString) throws ProtocolParseException {
       }
     }
 
-    ProtocolFactory protocolFactory = get(protocolName);
+    ProtocolFactoryExt protocolFactory = get(protocolName);
     if (protocolFactory == null) {
       throw new ProtocolParseException("Unsupported protocol: " + protocolName);
     }
@@ -224,10 +237,35 @@ public Protocol parseProtocol(String xmlString) throws ProtocolParseException {
 @Override
 public String toString() {
   StringBuilder sb = new StringBuilder(getClass().getName()).append(" (\r\n");
-  for (Map.Entry<String, ProtocolFactory> e : this.entrySet()) {
+  for (Map.Entry<String, ProtocolFactoryExt> e : this.entrySet()) {
     sb.append("protocol: name=\"").append(e.getKey()).append("\", factoryClass=\"").append(e.getValue().getClass().getCanonicalName()).append("\"\r\n");
   }
   sb.append(") ===== end ").append(getClass().getName());
   return sb.toString();
 }
+
+private static class ProtocolFactoryWrapper implements ProtocolFactoryExt {
+  private final ProtocolFactory pf;
+
+  public ProtocolFactoryWrapper(ProtocolFactory pf) {
+    this.pf = pf;
+  }
+
+  @Override
+  public Protocol newProtocol(HarvestEnvironment hEnv) {
+    return pf.newProtocol();
+  }
+
+  @Override
+  public String getName() {
+    return pf.getName();
+  }
+
+  @Override
+  public Protocol newProtocol() {
+    return pf.newProtocol();
+  }
+  
+  }
+
 }
