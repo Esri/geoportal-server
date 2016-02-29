@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.catalog.harvest.protocols;
 
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
@@ -27,7 +28,7 @@ public class HarvestProtocolNone extends HarvestProtocol {
 // instance variables ==========================================================
 // constructors ================================================================
   
-  public HarvestProtocolNone(HarvestEnvironment hEnv) {
+  public HarvestProtocolNone(AppEnv hEnv) {
     super(hEnv);
   }
   

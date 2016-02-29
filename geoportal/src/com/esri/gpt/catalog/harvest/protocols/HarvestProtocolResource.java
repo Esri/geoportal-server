@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.catalog.harvest.protocols;
 
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.catalog.harvest.clients.HRArcGisClient;
 import com.esri.gpt.catalog.harvest.clients.HRClient;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidProtocolException;
@@ -26,7 +27,7 @@ import com.esri.gpt.framework.resource.query.QueryBuilder;
  */
 public class HarvestProtocolResource extends AbstractHTTPHarvestProtocol {
 
-public HarvestProtocolResource(HarvestEnvironment hEnv) {
+public HarvestProtocolResource(AppEnv hEnv) {
   super(hEnv);
 }
 

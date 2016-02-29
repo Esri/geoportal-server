@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.catalog.harvest.protocols;
 
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.oai.OaiQueryBuilder;
 import com.esri.gpt.framework.collection.StringAttributeMap;
@@ -34,7 +35,7 @@ public class HarvestProtocolOai extends AbstractHTTPHarvestProtocol {
 
 // constructors ================================================================
   
-  public HarvestProtocolOai(HarvestEnvironment hEnv) {
+  public HarvestProtocolOai(AppEnv hEnv) {
     super(hEnv);
   }
   

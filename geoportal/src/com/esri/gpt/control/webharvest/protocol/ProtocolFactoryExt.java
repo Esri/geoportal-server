@@ -14,7 +14,7 @@
  */
 package com.esri.gpt.control.webharvest.protocol;
 
-import com.esri.gpt.catalog.harvest.protocols.HarvestEnvironment;
+import com.esri.gpt.framework.context.AppEnv;
 
 /**
  * Protocol factory.
@@ -25,5 +25,5 @@ public interface ProtocolFactoryExt extends ProtocolFactory {
  * @param hEnv harvest environment
  * @return protocol
  */
-Protocol newProtocol(HarvestEnvironment hEnv);
+Protocol newProtocol(AppEnv hEnv);
 }

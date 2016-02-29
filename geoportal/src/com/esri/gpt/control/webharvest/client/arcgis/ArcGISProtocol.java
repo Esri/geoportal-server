@@ -16,12 +16,12 @@ package com.esri.gpt.control.webharvest.client.arcgis;
 
 import com.esri.gpt.catalog.harvest.protocols.AbstractHTTPHarvestProtocol;
 import com.esri.gpt.catalog.harvest.protocols.DefaultHarvestEnvironment;
-import com.esri.gpt.catalog.harvest.protocols.HarvestEnvironment;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.framework.collection.StringAttribute;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
 import com.esri.gpt.framework.util.Val;
+import com.esri.gpt.framework.context.AppEnv;
 
 /**
  * ArcGIS server protocol.
@@ -38,7 +38,7 @@ public class ArcGISProtocol extends AbstractHTTPHarvestProtocol {
   /** SOAP url */
   private String soapUrl = "";
 
-  public ArcGISProtocol(HarvestEnvironment hEnv) {
+  public ArcGISProtocol(AppEnv hEnv) {
     super(hEnv);
   }
 

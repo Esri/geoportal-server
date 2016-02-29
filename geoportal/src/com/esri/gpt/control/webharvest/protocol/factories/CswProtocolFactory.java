@@ -14,11 +14,11 @@
  */
 package com.esri.gpt.control.webharvest.protocol.factories;
 
-import com.esri.gpt.catalog.harvest.protocols.HarvestEnvironment;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocol.ProtocolType;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolCsw;
 import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactoryExt;
+import com.esri.gpt.framework.context.AppEnv;
 
 /**
  * CSW protocol factory.
@@ -36,7 +36,7 @@ public class CswProtocolFactory implements ProtocolFactoryExt {
   }
 
   @Override
-  public Protocol newProtocol(HarvestEnvironment hEnv) {
+  public Protocol newProtocol(AppEnv hEnv) {
     return new HarvestProtocolCsw(hEnv);
   }
 }

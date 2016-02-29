@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.catalog.harvest.protocols;
 
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.catalog.harvest.clients.HRClient;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRConnectionException;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidProtocolException;
@@ -49,10 +50,10 @@ public abstract class HarvestProtocol implements Protocol, Serializable {
   /** ad-hoc */
   private String addHoc = "";
   /** harvest environment */
-  protected final HarvestEnvironment hEnv;
+  protected final AppEnv hEnv;
 
   // constructors ================================================================
-  public HarvestProtocol(HarvestEnvironment hEnv) {
+  public HarvestProtocol(AppEnv hEnv) {
     this.hEnv = hEnv;
   }
   

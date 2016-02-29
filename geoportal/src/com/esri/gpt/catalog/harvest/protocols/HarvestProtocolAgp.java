@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.catalog.harvest.protocols;
 
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.catalog.harvest.clients.HRAgpClient;
 import com.esri.gpt.catalog.harvest.clients.HRClient;
 import com.esri.gpt.control.webharvest.IterationContext;
@@ -34,7 +35,7 @@ public class HarvestProtocolAgp extends AbstractHTTPHarvestProtocol {
   
 // constructors ================================================================
 
-public HarvestProtocolAgp(HarvestEnvironment hEnv) {
+public HarvestProtocolAgp(AppEnv hEnv) {
     super(hEnv);
 }
 

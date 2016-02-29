@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.catalog.harvest.protocols;
 
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.agp.client.AgpConnection;
 import com.esri.gpt.agp.client.AgpCredentials;
 import com.esri.gpt.agp.client.AgpTokenCriteria;
@@ -53,7 +54,7 @@ public class HarvestProtocolGpt2Agp extends AbstractHTTPHarvestProtocol {
    */
   private long flags;
 
-  public HarvestProtocolGpt2Agp(HarvestEnvironment hEnv) {
+  public HarvestProtocolGpt2Agp(AppEnv hEnv) {
     super(hEnv);
   }
 

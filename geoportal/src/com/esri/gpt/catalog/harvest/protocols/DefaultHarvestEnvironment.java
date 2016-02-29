@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.catalog.harvest.protocols;
 
+import com.esri.gpt.framework.context.AppEnv;
 import static com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp.DEFAULT_MAX_ITEMS_AGP2AGP_KEY;
 import static com.esri.gpt.catalog.harvest.protocols.HarvestProtocolDCAT.FORMAT_PATTERN_KEY;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
@@ -23,7 +24,7 @@ import com.esri.gpt.framework.context.ApplicationContext;
 /**
  * Default harvest environment.
  */
-public class DefaultHarvestEnvironment implements HarvestEnvironment {
+public class DefaultHarvestEnvironment implements AppEnv {
   public final static String WH_ENC_KEY = "webharvest.enckey";
   public final static String WH_MAX_ITEMS_AGP2AGP =  DEFAULT_MAX_ITEMS_AGP2AGP_KEY;
   public final static String WH_CSW_PROFILE = "webharvest.cswprofile";
@@ -35,7 +36,7 @@ public class DefaultHarvestEnvironment implements HarvestEnvironment {
    * Gets instance of the default environment.
    * @return instance
    */
-  public static HarvestEnvironment getInstance() {
+  public static AppEnv getInstance() {
     return new DefaultHarvestEnvironment(ApplicationContext.getInstance().getConfiguration());
   }
 

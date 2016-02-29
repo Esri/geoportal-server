@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.catalog.harvest.protocols;
 
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.thredds.TQueryBuilder;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
@@ -24,7 +25,7 @@ import com.esri.gpt.framework.resource.query.QueryBuilder;
  */
 public class HarvestProtocolThredds extends AbstractHTTPHarvestProtocol {
 
-  public HarvestProtocolThredds(HarvestEnvironment hEnv) {
+  public HarvestProtocolThredds(AppEnv hEnv) {
     super(hEnv);
   }
 

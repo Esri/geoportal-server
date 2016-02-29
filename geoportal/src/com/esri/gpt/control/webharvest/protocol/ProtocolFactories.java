@@ -14,7 +14,6 @@
  */
 package com.esri.gpt.control.webharvest.protocol;
 
-import com.esri.gpt.catalog.harvest.protocols.HarvestEnvironment;
 import com.esri.gpt.control.webharvest.protocol.factories.Agp2AgpProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.Ags2AgpProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.factories.ArcGISProtocolFactory;
@@ -42,6 +41,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import com.esri.gpt.framework.context.AppEnv;
 
 /**
  * Collection of protocol factories.
@@ -252,7 +252,7 @@ private static class ProtocolFactoryWrapper implements ProtocolFactoryExt {
   }
 
   @Override
-  public Protocol newProtocol(HarvestEnvironment hEnv) {
+  public Protocol newProtocol(AppEnv hEnv) {
     return pf.newProtocol();
   }
 

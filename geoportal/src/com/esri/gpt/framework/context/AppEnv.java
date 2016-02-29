@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.esri.gpt.catalog.harvest.protocols;
+package com.esri.gpt.framework.context;
 
 /**
  * Harvest environment.
  */
-public interface HarvestEnvironment {
+public interface AppEnv {
   /**
    * Gets attribute value.
    * @param attributeName attribute name

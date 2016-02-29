@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.catalog.harvest.protocols;
 
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.framework.http.CredentialProvider;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.StringHandler;
@@ -32,7 +33,7 @@ public abstract class AbstractHTTPHarvestProtocol extends HarvestProtocol {
   private String _userPassword = "";
 // constructors ================================================================
 
-  public AbstractHTTPHarvestProtocol(HarvestEnvironment hEnv) {
+  public AbstractHTTPHarvestProtocol(AppEnv hEnv) {
     super(hEnv);
   }
 

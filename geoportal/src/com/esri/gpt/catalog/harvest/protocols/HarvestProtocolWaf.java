@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.catalog.harvest.protocols;
 
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.waf.WafQueryBuilder;
 import com.esri.gpt.framework.collection.StringAttributeMap;
@@ -28,7 +29,7 @@ public class HarvestProtocolWaf extends AbstractHTTPHarvestProtocol {
 // instance variables ==========================================================
 // constructors ================================================================
   
-  public HarvestProtocolWaf(HarvestEnvironment hEnv) {
+  public HarvestProtocolWaf(AppEnv hEnv) {
     super(hEnv);
   }
   

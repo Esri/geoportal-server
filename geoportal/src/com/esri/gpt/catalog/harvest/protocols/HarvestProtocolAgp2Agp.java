@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.catalog.harvest.protocols;
 
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.agp.client.AgpClient;
 import com.esri.gpt.agp.client.AgpConnection;
 import com.esri.gpt.agp.client.AgpCredentials;
@@ -45,6 +46,7 @@ import static com.esri.gpt.framework.robots.BotsUtils.readBots;
 import com.esri.gpt.framework.util.Val;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import static com.esri.gpt.framework.robots.BotsUtils.readBots;
 
 /**
  * Agp2Agp protocol
@@ -73,7 +75,7 @@ public class HarvestProtocolAgp2Agp extends AbstractHTTPHarvestProtocol {
    * @param hEnv harvest environment
    * @param stopOnError <code>true</code> to stop harvesting on error
    */
-  public HarvestProtocolAgp2Agp(HarvestEnvironment hEnv, boolean stopOnError) {
+  public HarvestProtocolAgp2Agp(AppEnv hEnv, boolean stopOnError) {
     super(hEnv);
     this.stopOnError = stopOnError;
   }

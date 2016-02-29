@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.catalog.harvest.protocols;
 
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.arcims.ArcImsQueryBuilder;
 import com.esri.gpt.framework.collection.StringAttributeMap;
@@ -39,7 +40,7 @@ public static final int DEFAULT_PORT_NO = 80;
 
 // constructors ================================================================
   
-  public HarvestProtocolArcIms(HarvestEnvironment hEnv) {
+  public HarvestProtocolArcIms(AppEnv hEnv) {
     super(hEnv);
   }
   
