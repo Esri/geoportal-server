@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.framework.robots;
 
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.framework.util.Val;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -37,6 +38,15 @@ public final class BotsUtils {
    */
   public static BotsParser parser() {
     return BotsParser.getDefaultInstance();
+  }
+  
+  /**
+   * Gets default parser
+   * @param appEnv application environment
+   * @return default parser (never <code>null</code>)
+   */
+  public static BotsParser parser(AppEnv appEnv) {
+    return BotsParser.getInstance(appEnv);
   }
   
   /**
@@ -89,6 +99,33 @@ public final class BotsUtils {
    */
   public static Bots readBots(BotsMode mode, URL serverUrl) {
     return parser().readRobotsTxt(mode, DEFAULT_MATCHING_STRATEGY, DEFAULT_WINNIG_STRATEGY, serverUrl);
+  }
+
+  
+  /**
+   * Reads robots.txt
+   * @param appEnv application environment
+   * @param mode robots.txt mode
+   * @param serverUrl url of the server which is expected to have robots.txt
+   * present
+   * @return instance of {@link Bots} or <code>null</code> if unable to
+   * obtain robots.txt
+   */
+  public static Bots readBots(AppEnv appEnv, BotsMode mode, String serverUrl) {
+    return parser(appEnv).readRobotsTxt(mode, DEFAULT_MATCHING_STRATEGY, DEFAULT_WINNIG_STRATEGY, serverUrl);
+  }
+  
+  /**
+   * Reads robots.txt
+   * @param appEnv application environment
+   * @param mode robots.txt mode
+   * @param serverUrl url of the server which is expected to have robots.txt
+   * present
+   * @return instance of {@link Bots} or <code>null</code> if unable to
+   * obtain robots.txt
+   */
+  public static Bots readBots(AppEnv appEnv, BotsMode mode, URL serverUrl) {
+    return parser(appEnv).readRobotsTxt(mode, DEFAULT_MATCHING_STRATEGY, DEFAULT_WINNIG_STRATEGY, serverUrl);
   }
   
   /**

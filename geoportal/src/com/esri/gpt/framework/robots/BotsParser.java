@@ -14,6 +14,8 @@
  */
 package com.esri.gpt.framework.robots;
 
+import com.esri.gpt.framework.context.AppEnv;
+import com.esri.gpt.framework.context.AppEnvWrapper;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.http.ContentHandler;
@@ -50,20 +52,29 @@ public class BotsParser {
   /**
    * Gets default instance.
    *
+   * @param appEnv application environment
+   * @return instance
+   */
+  public static BotsParser getInstance(AppEnv appEnv) {
+      boolean enabled = Val.chkBool(appEnv.getValue(BOT_ENABLED_PARAM), DEFAULT_ENABLED);
+      boolean override = Val.chkBool(appEnv.getValue(BOT_OVERRIDE_PARAM), DEFAULT_OVERRIDE);
+      String userAgent = Val.chkStr(appEnv.getValue(BOT_AGENT_PARAM), DEFAULT_AGENT);
+
+      LOG.info(String.format("Creating default RobotsTxtParser :: enabled: %b, override: %b, user-agend: %s", enabled, override, userAgent));
+
+      return new BotsParser(enabled, override, userAgent);
+  }
+
+  /**
+   * Gets default instance.
+   *
    * @return instance
    */
   public static BotsParser getDefaultInstance() {
     if (defaultInstance == null) {
       ApplicationContext appCtx = ApplicationContext.getInstance();
       ApplicationConfiguration appCfg = appCtx.getConfiguration();
-
-      boolean enabled = Val.chkBool(appCfg.getCatalogConfiguration().getParameters().getValue(BOT_ENABLED_PARAM), DEFAULT_ENABLED);
-      boolean override = Val.chkBool(appCfg.getCatalogConfiguration().getParameters().getValue(BOT_OVERRIDE_PARAM), DEFAULT_OVERRIDE);
-      String userAgent = Val.chkStr(appCfg.getCatalogConfiguration().getParameters().getValue(BOT_AGENT_PARAM), DEFAULT_AGENT);
-
-      LOG.info(String.format("Creating default RobotsTxtParser :: enabled: %b, override: %b, user-agend: %s", enabled, override, userAgent));
-
-      defaultInstance = new BotsParser(enabled, override, userAgent);
+      defaultInstance = getInstance(new AppEnvWrapper(appCfg));
     }
     return defaultInstance;
   }
