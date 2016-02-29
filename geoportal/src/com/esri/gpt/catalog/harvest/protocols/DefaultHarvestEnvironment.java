@@ -18,14 +18,14 @@ package com.esri.gpt.catalog.harvest.protocols;
 import com.esri.gpt.framework.context.AppEnv;
 import static com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp.DEFAULT_MAX_ITEMS_AGP2AGP_KEY;
 import static com.esri.gpt.catalog.harvest.protocols.HarvestProtocolDCAT.FORMAT_PATTERN_KEY;
-import com.esri.gpt.framework.context.AppEnvWrapper;
+import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 
 /**
  * Default harvest environment.
  */
-public class DefaultHarvestEnvironment extends AppEnvWrapper {
+public class DefaultHarvestEnvironment extends AppEnvAppCfgAdaptor {
   public final static String WH_ENC_KEY = "webharvest.enckey";
   public final static String WH_MAX_ITEMS_AGP2AGP =  DEFAULT_MAX_ITEMS_AGP2AGP_KEY;
   public final static String WH_CSW_PROFILE = "webharvest.cswprofile";

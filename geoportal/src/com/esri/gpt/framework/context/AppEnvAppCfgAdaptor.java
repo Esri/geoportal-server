@@ -15,26 +15,19 @@
  */
 package com.esri.gpt.framework.context;
 
-import java.util.Map;
-
 /**
  * AppEnv wrapper.
  */
-public class AppEnvWrapper implements AppEnv {
-  private final Map<String,String> map;
+public class AppEnvAppCfgAdaptor implements AppEnv {
+  protected final ApplicationConfiguration appCfg;
 
-  public AppEnvWrapper() {
-    this.map = null;
-  }
-
-  public AppEnvWrapper(Map<String, String> map) {
-    this.map = map;
+  public AppEnvAppCfgAdaptor(ApplicationConfiguration appCfg) {
+    this.appCfg = appCfg;
   }
 
   @Override
   public String getValue(String attributeName) {
-    return map!=null? map.get(attributeName): null;
+    return appCfg.getCatalogConfiguration().getParameters().getValue(attributeName);
   }
-  
   
 }

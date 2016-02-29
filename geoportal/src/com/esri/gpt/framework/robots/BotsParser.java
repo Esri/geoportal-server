@@ -15,7 +15,7 @@
 package com.esri.gpt.framework.robots;
 
 import com.esri.gpt.framework.context.AppEnv;
-import com.esri.gpt.framework.context.AppEnvWrapper;
+import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.http.ContentHandler;
@@ -74,7 +74,7 @@ public class BotsParser {
     if (defaultInstance == null) {
       ApplicationContext appCtx = ApplicationContext.getInstance();
       ApplicationConfiguration appCfg = appCtx.getConfiguration();
-      defaultInstance = getInstance(new AppEnvWrapper(appCfg));
+      defaultInstance = getInstance(new AppEnvAppCfgAdaptor(appCfg));
     }
     return defaultInstance;
   }
