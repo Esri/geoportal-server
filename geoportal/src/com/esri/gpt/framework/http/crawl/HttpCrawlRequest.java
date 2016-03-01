@@ -14,11 +14,11 @@
  */
 package com.esri.gpt.framework.http.crawl;
 
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.framework.http.HttpClientException;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.robots.Access;
 import com.esri.gpt.framework.robots.Bots;
-import static com.esri.gpt.framework.robots.BotsUtils.parser;
 import static com.esri.gpt.framework.robots.BotsUtils.requestAccess;
 import static com.esri.gpt.framework.robots.BotsUtils.transformUrl;
 import java.io.IOException;
@@ -26,7 +26,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.httpclient.HttpMethodBase;
 
 /**
  * Http crawl request.
@@ -35,6 +34,16 @@ public class HttpCrawlRequest extends HttpClientRequest {
 
   private static final Logger LOG = Logger.getLogger(HttpCrawlRequest.class.getName());
   private final Bots bots;
+
+  /**
+   * Creates instance of the request.
+   * @param appEnv application environment
+   * @param robotsTxt robots.txt or <code>null</code> if robots not available
+   */
+  public HttpCrawlRequest(AppEnv appEnv, Bots robotsTxt) {
+    super(appEnv);
+    this.bots = robotsTxt;
+  }
 
   /**
    * Creates instance of the request.

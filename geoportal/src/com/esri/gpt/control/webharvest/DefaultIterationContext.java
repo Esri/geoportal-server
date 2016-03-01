@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.control.webharvest;
 
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.crawl.HttpCrawlRequest;
 import com.esri.gpt.framework.robots.Access;
@@ -39,6 +40,7 @@ public class DefaultIterationContext implements IterationContext {
   protected final LinkedList<ExceptionInfo> exceptionInfos = new LinkedList<ExceptionInfo>();
   
   protected final Bots bots;
+  protected final AppEnv appEnv;
 
   /**
    * Creates instance with robots information.
@@ -46,6 +48,17 @@ public class DefaultIterationContext implements IterationContext {
    */
   public DefaultIterationContext(Bots robotsTxt) {
     this.bots = robotsTxt;
+    this.appEnv = null;
+  }
+
+  /**
+   * Creates instance with robots information.
+   * @param robotsTxt robots information or <code>null</code> if no robots information available
+   * @param appEnv application environment
+   */
+  public DefaultIterationContext(AppEnv appEnv, Bots robotsTxt) {
+    this.bots = robotsTxt;
+    this.appEnv = appEnv;
   }
 
   @Override
@@ -85,7 +98,7 @@ public class DefaultIterationContext implements IterationContext {
 
   @Override
   public HttpClientRequest newHttpClientRequest() {
-    return new HttpCrawlRequest(bots);
+    return appEnv!=null? new HttpCrawlRequest(appEnv,bots): new HttpCrawlRequest(bots);
   }
 
   @Override
