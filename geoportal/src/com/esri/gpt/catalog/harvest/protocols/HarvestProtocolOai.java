@@ -18,6 +18,7 @@ import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.oai.OaiQueryBuilder;
 import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
 import com.esri.gpt.framework.util.Val;
 
@@ -40,7 +41,7 @@ public class HarvestProtocolOai extends AbstractHTTPHarvestProtocol {
   }
   
   public HarvestProtocolOai() {
-    super(DefaultHarvestEnvironment.getInstance());
+    super(AppEnvAppCfgAdaptor.newInstance());
   }
 
 // properties ==================================================================

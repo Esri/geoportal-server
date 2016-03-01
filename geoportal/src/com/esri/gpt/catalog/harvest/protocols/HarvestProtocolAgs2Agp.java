@@ -30,6 +30,7 @@ import com.esri.gpt.control.webharvest.engine.Executor;
 import com.esri.gpt.control.webharvest.engine.IWorker;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
 import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
 import com.esri.gpt.framework.resource.api.Native;
 import com.esri.gpt.framework.resource.query.Capabilities;
 import com.esri.gpt.framework.resource.query.Criteria;
@@ -50,7 +51,7 @@ public class HarvestProtocolAgs2Agp extends AbstractHTTPHarvestProtocol {
   }
 
   public HarvestProtocolAgs2Agp() {
-    super(DefaultHarvestEnvironment.getInstance());
+    super(AppEnvAppCfgAdaptor.newInstance());
   }
 
   /**

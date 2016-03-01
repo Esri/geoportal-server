@@ -18,6 +18,7 @@ import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.waf.WafQueryBuilder;
 import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
 
 /**
@@ -34,7 +35,7 @@ public class HarvestProtocolWaf extends AbstractHTTPHarvestProtocol {
   }
   
   public HarvestProtocolWaf() {
-    super(DefaultHarvestEnvironment.getInstance());
+    super(AppEnvAppCfgAdaptor.newInstance());
   }
 
 // properties ==================================================================

@@ -19,6 +19,7 @@ import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.dcat.DCATQueryBuilder;
 import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
 import com.esri.gpt.framework.util.Val;
 
@@ -34,11 +35,11 @@ public class HarvestProtocolDCAT extends AbstractHTTPHarvestProtocol {
   }
 
   public HarvestProtocolDCAT() {
-    super(DefaultHarvestEnvironment.getInstance());
+    super(AppEnvAppCfgAdaptor.newInstance());
   }
 
   public String getFormatPatternDefaultValue() {
-    return hEnv.getValue(DefaultHarvestEnvironment.WH_FORMAT_PATTERN);
+    return hEnv.getValue(AppEnvAppCfgAdaptor.X_WEBHARVEST_FORMAT_PATTERN);
   }
   
   @Override

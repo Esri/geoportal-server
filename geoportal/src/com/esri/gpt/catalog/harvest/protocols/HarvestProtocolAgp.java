@@ -20,6 +20,7 @@ import com.esri.gpt.catalog.harvest.clients.HRAgpClient;
 import com.esri.gpt.catalog.harvest.clients.HRClient;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.agportal.AgpQueryBuilder;
+import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
 import com.esri.gpt.framework.util.Val;
 
@@ -40,7 +41,7 @@ public HarvestProtocolAgp(AppEnv hEnv) {
 }
 
 public HarvestProtocolAgp() {
-    super(DefaultHarvestEnvironment.getInstance());
+    super(AppEnvAppCfgAdaptor.newInstance());
 }
 
 // properties ==================================================================

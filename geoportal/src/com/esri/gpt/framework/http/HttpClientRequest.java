@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 package com.esri.gpt.framework.http;
-import com.esri.gpt.catalog.context.CatalogConfiguration;
+import com.esri.gpt.framework.context.AppEnv;
+import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.http.multipart.MultiPartContentProvider;
 import com.esri.gpt.framework.http.multipart.PartWriter;
-import static com.esri.gpt.framework.robots.BotsUtils.parser;
 import com.esri.gpt.framework.util.Val;
 import java.io.File;
 import java.io.IOException;
@@ -97,14 +97,22 @@ public class HttpClientRequest {
   private int                connectionTimeOut = DEFAULT_CONNECTION_TIMEOUT;
   private int                responseTimeOut   = DEFAULT_RESPONSE_TIMEOUT;              
   private int                retries = -1;
+  private boolean            alwaysClose;
+  private String             userAgent = "";
   
   /** constructors ============================================================ */
   
+  public HttpClientRequest(AppEnv appEnv) {
+    this.setCredentialProvider(CredentialProvider.getThreadLocalInstance());
+    this.setConnectionTimeMs( Val.chkInt(appEnv.getValue(AppEnvAppCfgAdaptor.X_HTTP_CONNECTION_TIMEOUT), DEFAULT_CONNECTION_TIMEOUT));
+    this.setResponseTimeOutMs(Val.chkInt(appEnv.getValue(AppEnvAppCfgAdaptor.X_HTTP_RESPONSE_TIMEOUT),   DEFAULT_RESPONSE_TIMEOUT));
+    this.setAlwaysClose(Val.chkBool(Val.chkStr(appEnv.getValue(AppEnvAppCfgAdaptor.X_HTTP_ALWAYS_CLOSE)), false));
+    this.setUserAgent(Val.chkStr(appEnv.getValue(AppEnvAppCfgAdaptor.X_BOT_AGENT_PARAM)));
+  }
+  
   /** Default constructor. */
   public HttpClientRequest() {
-    this.setCredentialProvider(CredentialProvider.getThreadLocalInstance());
-    this.setConnectionTimeMs(getCatalogConfiguration().getConnectionTimeOutMs());
-    this.setResponseTimeOutMs(getCatalogConfiguration().getResponseTimeOutMs());
+    this(new AppEnvAppCfgAdaptor(ApplicationContext.getInstance().getConfiguration()).WithExtras);
   }
   
   /** properties **************************************************************/
@@ -495,8 +503,8 @@ public class HttpClientRequest {
 
       // declare possible gzip handling
       method.setRequestHeader("Accept-Encoding", "gzip");
-      if (!parser().getUserAgent().isEmpty()) {
-        method.setRequestHeader("User-Agent", parser().getUserAgent());
+      if (!getUserAgent().isEmpty()) {
+        method.setRequestHeader("User-Agent", getUserAgent());
       }
     }
     
@@ -549,8 +557,7 @@ public class HttpClientRequest {
       HttpClient client = this.batchHttpClient;
       if (client == null) {
         client = new HttpClient();
-        boolean alwaysClose = Val.chkBool(Val.chkStr(ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getParameters().getValue("httpClient.alwaysClose")), false); 
-        if (alwaysClose) {
+        if (getAlwaysClose()) {
           client.setHttpConnectionManager(new SimpleHttpConnectionManager(true));
         }
       }
@@ -720,12 +727,20 @@ public class HttpClientRequest {
     return Val.removeBOM(handler.getContent());
   }
 
-  /**
-   * Gets catalog configuration.
-   * @return catalog configuration
-   */
-  private CatalogConfiguration getCatalogConfiguration() {
-    return ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration();
+  public boolean getAlwaysClose() {
+    return alwaysClose;
+  }
+
+  public void setAlwaysClose(boolean alwaysClose) {
+    this.alwaysClose = alwaysClose;
+  }
+
+  public String getUserAgent() {
+    return userAgent;
+  }
+
+  public void setUserAgent(String userAgent) {
+    this.userAgent = Val.chkStr(userAgent);
   }
   /** inner classes =========================================================== */
  

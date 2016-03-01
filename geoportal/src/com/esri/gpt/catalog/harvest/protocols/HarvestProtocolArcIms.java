@@ -18,6 +18,7 @@ import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.arcims.ArcImsQueryBuilder;
 import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
 import com.esri.gpt.framework.util.Val;
 
@@ -45,7 +46,7 @@ public static final int DEFAULT_PORT_NO = 80;
   }
   
   public HarvestProtocolArcIms() {
-    super(DefaultHarvestEnvironment.getInstance());
+    super(AppEnvAppCfgAdaptor.newInstance());
   }
 
 // properties ==================================================================

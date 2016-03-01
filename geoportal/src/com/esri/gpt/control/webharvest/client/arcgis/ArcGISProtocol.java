@@ -15,13 +15,13 @@
 package com.esri.gpt.control.webharvest.client.arcgis;
 
 import com.esri.gpt.catalog.harvest.protocols.AbstractHTTPHarvestProtocol;
-import com.esri.gpt.catalog.harvest.protocols.DefaultHarvestEnvironment;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.framework.collection.StringAttribute;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.context.AppEnv;
+import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
 
 /**
  * ArcGIS server protocol.
@@ -43,7 +43,7 @@ public class ArcGISProtocol extends AbstractHTTPHarvestProtocol {
   }
 
   public ArcGISProtocol() {
-    super(DefaultHarvestEnvironment.getInstance());
+    super(AppEnvAppCfgAdaptor.newInstance());
   }
 
   @Override

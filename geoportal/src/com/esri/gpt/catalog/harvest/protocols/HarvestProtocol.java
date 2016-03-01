@@ -26,6 +26,7 @@ import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.control.webharvest.protocol.ProtocolSerializer;
 import com.esri.gpt.framework.collection.StringAttribute;
 import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
 import com.esri.gpt.framework.security.codec.PC1_Encryptor;
 import com.esri.gpt.framework.util.LogUtil;
 import com.esri.gpt.framework.util.Val;
@@ -266,7 +267,7 @@ public abstract class HarvestProtocol implements Protocol, Serializable {
    * @return encryption key
    */
   private String getEncKey() {
-    return hEnv.getValue(DefaultHarvestEnvironment.WH_ENC_KEY);
+    return hEnv.getValue(AppEnvAppCfgAdaptor.X_WEBHARVEST_ENC_KEY);
   }
 
 // custom types ================================================================

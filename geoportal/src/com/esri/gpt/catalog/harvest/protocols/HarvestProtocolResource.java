@@ -20,6 +20,7 @@ import com.esri.gpt.catalog.harvest.clients.HRClient;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidProtocolException;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.res.ResourceQueryBuilder;
+import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
 
 /**
@@ -32,7 +33,7 @@ public HarvestProtocolResource(AppEnv hEnv) {
 }
 
 public HarvestProtocolResource() {
-  super(DefaultHarvestEnvironment.getInstance());
+  super(AppEnvAppCfgAdaptor.newInstance());
 }
 
 @Override
@@ -45,6 +46,7 @@ public HRClient getClient(String hostUrl) throws HRInvalidProtocolException {
   return new HRArcGisClient(hostUrl);
 }
 
+@Override
 public QueryBuilder newQueryBuilder(IterationContext context, String url) {
   return new ResourceQueryBuilder(context, this, url);
 }

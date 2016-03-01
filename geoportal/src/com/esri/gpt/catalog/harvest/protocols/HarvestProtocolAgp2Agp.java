@@ -32,6 +32,7 @@ import com.esri.gpt.control.webharvest.engine.Executor;
 import com.esri.gpt.control.webharvest.engine.IWorker;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
 import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.http.HttpClientRequest;
@@ -85,7 +86,7 @@ public class HarvestProtocolAgp2Agp extends AbstractHTTPHarvestProtocol {
    * @param stopOnError <code>true</code> to stop harvesting on error
    */
   public HarvestProtocolAgp2Agp(boolean stopOnError) {
-    super(DefaultHarvestEnvironment.getInstance());
+    super(AppEnvAppCfgAdaptor.newInstance());
     this.stopOnError = stopOnError;
   }
   

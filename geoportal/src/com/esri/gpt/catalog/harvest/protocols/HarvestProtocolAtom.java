@@ -18,8 +18,8 @@ import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.atom.AtomQueryBuilder;
 import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
-import com.esri.gpt.framework.util.Val;
 
 /**
  * Atom protocol.
@@ -42,7 +42,7 @@ public class HarvestProtocolAtom extends AbstractHTTPHarvestProtocol {
   }
  
   public HarvestProtocolAtom() {
-    super(DefaultHarvestEnvironment.getInstance());
+    super(AppEnvAppCfgAdaptor.newInstance());
   }
 
 // properties ==================================================================

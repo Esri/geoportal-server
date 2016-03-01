@@ -16,6 +16,7 @@ package com.esri.gpt.framework.robots;
 
 import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
+import com.esri.gpt.framework.context.AppEnvWrapper;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.http.ContentHandler;
@@ -25,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,15 +41,17 @@ public class BotsParser {
   private static final boolean DEFAULT_ENABLED  = true;
   private static final boolean DEFAULT_OVERRIDE = true;
   private static final String  DEFAULT_AGENT    = "GeoportalServer";
+  
+  private static final Map<String,String> DEFAULT_ENV_MAPPING = new HashMap<String,String>();
+  static {
+    DEFAULT_ENV_MAPPING.put(AppEnvAppCfgAdaptor.X_BOT_ENABLED_PARAM, Boolean.toString(DEFAULT_ENABLED));
+    DEFAULT_ENV_MAPPING.put(AppEnvAppCfgAdaptor.X_BOT_OVERRIDE_PARAM, Boolean.toString(DEFAULT_OVERRIDE));
+    DEFAULT_ENV_MAPPING.put(AppEnvAppCfgAdaptor.X_BOT_AGENT_PARAM, DEFAULT_AGENT);
+  }
+  
 
-  private static final String BOT_ENABLED_PARAM  = "bot.robotstxt.enabled";  // default: DEFAULT_ENABLED
-  private static final String BOT_OVERRIDE_PARAM = "bot.robotstxt.override"; // default: DEFAULT_OVERRIDE
-  private static final String BOT_AGENT_PARAM    = "bot.agent";              // default: DEFAULT_AGENT
-
-  private final boolean enabled;
-  private final boolean override;
-  private final String userAgent;
-
+  private AppEnv appEnv;
+  
   private static BotsParser defaultInstance;
 
   /**
@@ -56,13 +61,13 @@ public class BotsParser {
    * @return instance
    */
   public static BotsParser getInstance(AppEnv appEnv) {
-      boolean enabled = Val.chkBool(appEnv.getValue(BOT_ENABLED_PARAM), DEFAULT_ENABLED);
-      boolean override = Val.chkBool(appEnv.getValue(BOT_OVERRIDE_PARAM), DEFAULT_OVERRIDE);
-      String userAgent = Val.chkStr(appEnv.getValue(BOT_AGENT_PARAM), DEFAULT_AGENT);
+      boolean enabled = Val.chkBool(appEnv.getValue(AppEnvAppCfgAdaptor.X_BOT_ENABLED_PARAM), DEFAULT_ENABLED);
+      boolean override = Val.chkBool(appEnv.getValue(AppEnvAppCfgAdaptor.X_BOT_OVERRIDE_PARAM), DEFAULT_OVERRIDE);
+      String userAgent = Val.chkStr(appEnv.getValue(AppEnvAppCfgAdaptor.X_BOT_AGENT_PARAM), DEFAULT_AGENT);
 
       LOG.info(String.format("Creating default RobotsTxtParser :: enabled: %b, override: %b, user-agend: %s", enabled, override, userAgent));
 
-      return new BotsParser(enabled, override, userAgent);
+      return new BotsParser(appEnv);
   }
 
   /**
@@ -74,7 +79,7 @@ public class BotsParser {
     if (defaultInstance == null) {
       ApplicationContext appCtx = ApplicationContext.getInstance();
       ApplicationConfiguration appCfg = appCtx.getConfiguration();
-      defaultInstance = getInstance(new AppEnvAppCfgAdaptor(appCfg));
+      defaultInstance = getInstance(new AppEnvAppCfgAdaptor(appCfg).WithExtras);
     }
     return defaultInstance;
   }
@@ -83,19 +88,15 @@ public class BotsParser {
    * Creates instance of the parser.
    */
   /*package*/BotsParser() {
-    this(DEFAULT_ENABLED, DEFAULT_OVERRIDE, DEFAULT_AGENT);
+    this(new AppEnvWrapper(DEFAULT_ENV_MAPPING));
   }
 
   /**
    * Creates instance of the parser.
    *
-   * @param enabled <code>true</code> if robots.txt should be used
-   * @param userAgent user agent
    */
-  /*package*/BotsParser(boolean enabled, boolean override, String userAgent) {
-    this.enabled = enabled;
-    this.override = override;
-    this.userAgent = Val.chkStr(userAgent);
+  /*package*/BotsParser(AppEnv appEnv) {
+    this.appEnv = appEnv;
   }
 
   /**
@@ -104,7 +105,7 @@ public class BotsParser {
    * @return user agent
    */
   public String getUserAgent() {
-    return userAgent;
+    return Val.chkStr(appEnv.getValue(AppEnvAppCfgAdaptor.X_BOT_AGENT_PARAM), DEFAULT_AGENT);
   }
 
   /**
@@ -113,7 +114,7 @@ public class BotsParser {
    * @return <code>true</code> if using robots.txt is enabled
    */
   public boolean isEnabled() {
-    return enabled;
+    return Val.chkBool(appEnv.getValue(AppEnvAppCfgAdaptor.X_BOT_ENABLED_PARAM), DEFAULT_ENABLED);
   }
 
   /**
@@ -122,7 +123,7 @@ public class BotsParser {
    * @return <code>true</code> if robots.txt enabled flag can be overridden
    */
   public boolean canOverride() {
-    return override;
+    return Val.chkBool(appEnv.getValue(AppEnvAppCfgAdaptor.X_BOT_OVERRIDE_PARAM), DEFAULT_OVERRIDE);
   }
 
   /**
@@ -165,8 +166,8 @@ public class BotsParser {
         URL robotsTxtUrl = getRobotsTxtUrl(serverUrl);
         if (robotsTxtUrl != null) {
           RobotsContentHandler handler = new RobotsContentHandler(mode,matchingStrategy, winningStrategy);
-          HttpClientRequest request = new HttpClientRequest();
-          request.setRequestHeader(Directive.UserAgent.toString(), userAgent);
+          HttpClientRequest request = new HttpClientRequest(appEnv);
+          request.setRequestHeader(Directive.UserAgent.toString(), getUserAgent());
           request.setUrl(robotsTxtUrl.toExternalForm());
           request.setContentHandler(handler);
           request.execute();
@@ -202,7 +203,7 @@ public class BotsParser {
 
     try {
       if (canParse(mode)) {
-        reader = new BotsReader(userAgent, matchingStrategy, winningStrategy, robotsTxt);
+        reader = new BotsReader(getUserAgent(), matchingStrategy, winningStrategy, robotsTxt);
         robots = reader.readRobotsTxt();
       }
     } catch (IOException ex) {

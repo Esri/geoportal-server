@@ -21,7 +21,6 @@ import com.esri.gpt.agp.client.AgpCredentials;
 import com.esri.gpt.agp.client.AgpTokenCriteria;
 import com.esri.gpt.agp.sync.AgpDestination;
 import com.esri.gpt.agp.sync.GptSource;
-import static com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgs2Agp.NAME;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.common.CommonCapabilities;
 import com.esri.gpt.control.webharvest.engine.DataProcessor;
@@ -30,6 +29,7 @@ import com.esri.gpt.control.webharvest.engine.Executor;
 import com.esri.gpt.control.webharvest.engine.Gpt2AgpExecutor;
 import com.esri.gpt.control.webharvest.engine.IWorker;
 import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
 import com.esri.gpt.framework.resource.api.Native;
 import com.esri.gpt.framework.resource.query.Capabilities;
 import com.esri.gpt.framework.resource.query.Criteria;
@@ -59,7 +59,7 @@ public class HarvestProtocolGpt2Agp extends AbstractHTTPHarvestProtocol {
   }
 
   public HarvestProtocolGpt2Agp() {
-    super(DefaultHarvestEnvironment.getInstance());
+    super(AppEnvAppCfgAdaptor.newInstance());
   }
 
   public GptSource getSource() {

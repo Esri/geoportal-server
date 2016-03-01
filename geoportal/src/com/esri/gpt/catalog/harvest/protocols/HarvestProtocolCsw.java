@@ -18,6 +18,7 @@ import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.client.csw.CswQueryBuilder;
 import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
 import com.esri.gpt.framework.util.Val;
 
@@ -35,11 +36,11 @@ public class HarvestProtocolCsw extends AbstractHTTPHarvestProtocol {
   
   public HarvestProtocolCsw(AppEnv hEnv) {
     super(hEnv);
-    _profile = hEnv.getValue(DefaultHarvestEnvironment.WH_CSW_PROFILE);
+    _profile = hEnv.getValue(AppEnvAppCfgAdaptor.X_WEBHARVEST_CSW_PROFILE);
   }
   
   public HarvestProtocolCsw() {
-    super(DefaultHarvestEnvironment.getInstance());
+    super(AppEnvAppCfgAdaptor.newInstance());
   }
 
 // properties ==================================================================

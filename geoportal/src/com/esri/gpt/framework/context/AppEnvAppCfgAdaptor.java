@@ -15,11 +15,30 @@
  */
 package com.esri.gpt.framework.context;
 
+import static com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp.DEFAULT_MAX_ITEMS_AGP2AGP_KEY;
+import static com.esri.gpt.catalog.harvest.protocols.HarvestProtocolDCAT.FORMAT_PATTERN_KEY;
+import com.esri.gpt.framework.collection.StringAttributeMap;
+
 /**
  * AppEnv wrapper.
  */
 public class AppEnvAppCfgAdaptor implements AppEnv {
+  public static final String X_HTTP_CONNECTION_TIMEOUT = "http.connection.timeout";
+  public static final String X_HTTP_RESPONSE_TIMEOUT = "http.response.timeout";
+  public static final String X_HTTP_ALWAYS_CLOSE = "httpClient.alwaysClose";
+  public final static String X_WEBHARVEST_ENC_KEY = "webharvest.enckey";
+  public final static String X_WEBHARVEST_MAX_ITEMS_AGP2AGP =  DEFAULT_MAX_ITEMS_AGP2AGP_KEY;
+  public final static String X_WEBHARVEST_CSW_PROFILE = "webharvest.cswprofile";
+  public final static String X_WEBHARVEST_FORMAT_PATTERN = FORMAT_PATTERN_KEY;
+  public static final String X_BOT_ENABLED_PARAM  = "bot.robotstxt.enabled";
+  public static final String X_BOT_OVERRIDE_PARAM = "bot.robotstxt.override";
+  public static final String X_BOT_AGENT_PARAM    = "bot.agent";
+  
   protected final ApplicationConfiguration appCfg;
+  
+  public static AppEnv newInstance() {
+    return new AppEnvAppCfgAdaptor(ApplicationContext.getInstance().getConfiguration()).WithExtras;
+  }
 
   public AppEnvAppCfgAdaptor(ApplicationConfiguration appCfg) {
     this.appCfg = appCfg;
@@ -27,7 +46,33 @@ public class AppEnvAppCfgAdaptor implements AppEnv {
 
   @Override
   public String getValue(String attributeName) {
-    return appCfg.getCatalogConfiguration().getParameters().getValue(attributeName);
+    return getParameters().getValue(attributeName);
   }
   
+  protected StringAttributeMap getParameters() {
+    return appCfg!=null? appCfg.getCatalogConfiguration().getParameters(): new StringAttributeMap();
+  }
+  
+  public final AppEnv WithExtras = new WithExtras();
+  
+  public class WithExtras implements AppEnv {
+
+    @Override
+    public String getValue(String attributeName) {
+      if (X_HTTP_CONNECTION_TIMEOUT.equals(attributeName)) {
+        return Integer.toString(appCfg.getCatalogConfiguration().getConnectionTimeOutMs());
+      }
+      if (X_HTTP_RESPONSE_TIMEOUT.equals(attributeName)) {
+        return Integer.toString(appCfg.getCatalogConfiguration().getResponseTimeOutMs());
+      }
+      if (X_WEBHARVEST_ENC_KEY.equals(attributeName)) {
+        return appCfg.getIdentityConfiguration().getEncKey();
+      }
+      if (X_WEBHARVEST_CSW_PROFILE.equals(attributeName)) {
+        return appCfg.getCatalogConfiguration().getSearchConfig().getCswProfile();
+      }
+      return AppEnvAppCfgAdaptor.this.getValue(attributeName);
+    }
+    
+  }
 }
