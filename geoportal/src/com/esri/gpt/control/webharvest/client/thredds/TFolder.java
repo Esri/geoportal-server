@@ -122,7 +122,7 @@ class TFolder implements DestroyableResource {
         context.assertAccess(info.getUrl());
         HttpClientRequest cr = context.newHttpClientRequest();
         cr.setUrl(info.getUrl());
-        XmlHandler sh = new XmlHandler(false);
+        XmlHandler sh = new XmlHandler(context.getAppEnv(),false);
         cr.setContentHandler(sh);
         cr.setBatchHttpClient(info.getBatchHttpClient());
         cr.execute();

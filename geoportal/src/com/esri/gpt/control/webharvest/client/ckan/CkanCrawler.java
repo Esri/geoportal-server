@@ -16,7 +16,6 @@
 package com.esri.gpt.control.webharvest.client.ckan;
 
 import com.esri.gpt.framework.ckan.CkanPackage;
-import com.esri.gpt.framework.robots.BotsMode;
 import java.net.URL;
 
 /**

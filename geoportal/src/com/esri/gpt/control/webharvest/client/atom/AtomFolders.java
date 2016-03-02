@@ -173,7 +173,7 @@ private void advanceToNextRecords() throws IOException {
     context.assertAccess(url);
     HttpClientRequest cr = context.newHttpClientRequest();	
     cr.setUrl(url);
-    XmlHandler sh = new XmlHandler(true);
+    XmlHandler sh = new XmlHandler(context.getAppEnv(),true);
     cr.setContentHandler(sh);
     cr.setCredentialProvider(info.newCredentialProvider());
     try{
@@ -183,7 +183,7 @@ private void advanceToNextRecords() throws IOException {
             url = info.newUrl(-1, -1);
             context.assertAccess(url);
     		cr.setUrl(url);
-    	    sh = new XmlHandler(true);
+    	    sh = new XmlHandler(context.getAppEnv(),true);
     	    cr.setContentHandler(sh);
     	    cr.setCredentialProvider(info.newCredentialProvider());
     	    cr.execute();

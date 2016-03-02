@@ -68,7 +68,7 @@ class TProxy {
     HttpClientRequest cr = context.newHttpClientRequest();
     cr.setBatchHttpClient(this.info.getBatchHttpClient());
     cr.setUrl(sourceUri);
-    BreakableStringHandler sh = new BreakableStringHandler(criteria != null ? criteria.getFromDate() : null);
+    BreakableStringHandler sh = new BreakableStringHandler(context.getAppEnv(),criteria != null ? criteria.getFromDate() : null);
     cr.setContentHandler(sh);
     cr.execute();
     String mdText = sh.getContent();
@@ -84,7 +84,7 @@ class TProxy {
     HttpClientRequest cr = context.newHttpClientRequest();
     cr.setBatchHttpClient(this.info.getBatchHttpClient());
     cr.setUrl(sourceUri);
-    StringHandler sh = new StringHandler();
+    StringHandler sh = new StringHandler(context.getAppEnv());
     cr.setContentHandler(sh);
     cr.execute();
     String mdText = sh.getContent();

@@ -43,7 +43,7 @@ public class CharacterHandler extends ContentHandler {
    */
   public CharacterHandler(AppEnv appEnv, Writer writer) {
     super();
-    this.appEnv = appEnv;
+    this.appEnv = appEnv!=null? appEnv: AppEnvAppCfgAdaptor.newInstance();
     this.setWriter(writer);
   }
   
@@ -89,8 +89,7 @@ public class CharacterHandler extends ContentHandler {
   }
   
   private boolean readAllowPeekForXmlEncoding() {
-    StringAttributeMap params = ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getParameters();
-    String param = params.getValue("HttpClientRequest.allowPeekForXmlEncoding");
+    String param = appEnv.getValue(AppEnvAppCfgAdaptor.X_HTTP_ALWAYS_PEEK);
     return !Val.chkStr(param).equalsIgnoreCase("false");
   }
   

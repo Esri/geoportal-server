@@ -59,7 +59,7 @@ public class CkanIterator implements Iterable<CkanPackage> {
 
   @Override
   public Iterator<CkanPackage> iterator() {
-    Bots bots = config.getMode()!=BotsMode.never? BotsUtils.readBots(config.getMode(), baseUrl): null;
+    Bots bots = config.getMode()!=BotsMode.never? BotsUtils.readBots(config.getAppEnv(), config.getMode(), baseUrl): null;
     try {
       JSONObject response = readJsonData(bots, config.getSkipList() || q!=null? makePackageSearchUrl(q, null, config.getRows()): makePackageListUrl());
       if (response.has("result") && response.optBoolean("success", false)) {

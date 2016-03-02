@@ -141,7 +141,7 @@ private void advanceToNextRecords() throws IOException {
     HttpClientRequest cr = context.newHttpClientRequest();
     cr.setUrl(url);
 
-    XmlHandler sh = new XmlHandler(false);
+    XmlHandler sh = new XmlHandler(context.getAppEnv(),false);
     cr.setContentHandler(sh);
     cr.setCredentialProvider(info.newCredentialProvider());
     cr.execute();

@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.control.webharvest;
 
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.framework.http.HttpClientRequestFactory;
 import com.esri.gpt.framework.robots.Bots;
 
@@ -42,4 +43,10 @@ public interface IterationContext extends HttpClientRequestFactory {
    * @return instance of robots txt or <code>null</code> if robots txt unavailable.
    */
   Bots getRobotsTxt();
+  
+  /**
+   * Gets application environment.
+   * @return application environment
+   */
+  AppEnv getAppEnv();
 }

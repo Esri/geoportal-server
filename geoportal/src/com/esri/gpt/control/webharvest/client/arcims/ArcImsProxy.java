@@ -123,7 +123,7 @@ public String read(String sourceUri) throws IOException {
     HttpClientRequest cr = context.newHttpClientRequest();
     cr.setUrl(url);
 
-    StringHandler sh = new StringHandler();
+    StringHandler sh = new StringHandler(context.getAppEnv());
     cr.setContentHandler(sh);
 
     cr.execute();

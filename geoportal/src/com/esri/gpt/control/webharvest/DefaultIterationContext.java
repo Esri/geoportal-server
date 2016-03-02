@@ -61,6 +61,10 @@ public class DefaultIterationContext implements IterationContext {
     this.appEnv = appEnv;
   }
 
+  public AppEnv getAppEnv() {
+    return appEnv;
+  }
+
   @Override
   public void onIterationException(Exception ex) {
     registerException(ex);

@@ -15,6 +15,8 @@
  */
 package com.esri.gpt.control.webharvest.client.ckan;
 
+import com.esri.gpt.framework.context.AppEnv;
+import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
 import com.esri.gpt.framework.robots.BotsMode;
 
 /**
@@ -23,20 +25,22 @@ import com.esri.gpt.framework.robots.BotsMode;
  * It determines various aspects of ckan crawling.
  */
 public class CkanConfig {
+  private final AppEnv appEnv;
   private BotsMode mode;
   private String defaultUserAgent;
   private Long rows;
   private boolean skipList;
-
-  public CkanConfig () {
-    
-  }
   
-  public CkanConfig(BotsMode mode, String defaultUserAgent, Long rows, boolean skipList) {
+  public CkanConfig(AppEnv appEnv, BotsMode mode, String defaultUserAgent, Long rows, boolean skipList) {
+    this.appEnv = appEnv!=null? appEnv: AppEnvAppCfgAdaptor.newInstance();
     this.mode = mode;
     this.defaultUserAgent = defaultUserAgent;
     this.rows = rows;
     this.skipList = skipList;
+  }
+
+  public AppEnv getAppEnv() {
+    return appEnv;
   }
   
   public BotsMode getMode() {

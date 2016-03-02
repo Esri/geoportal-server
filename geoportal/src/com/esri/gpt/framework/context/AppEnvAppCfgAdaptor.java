@@ -26,6 +26,7 @@ public class AppEnvAppCfgAdaptor implements AppEnv {
   public static final String X_HTTP_CONNECTION_TIMEOUT = "http.connection.timeout";
   public static final String X_HTTP_RESPONSE_TIMEOUT = "http.response.timeout";
   public static final String X_HTTP_ALWAYS_CLOSE = "httpClient.alwaysClose";
+  public static final String X_HTTP_ALWAYS_PEEK = "HttpClientRequest.allowPeekForXmlEncoding";
   public final static String X_WEBHARVEST_ENC_KEY = "webharvest.enckey";
   public final static String X_WEBHARVEST_MAX_ITEMS_AGP2AGP =  DEFAULT_MAX_ITEMS_AGP2AGP_KEY;
   public final static String X_WEBHARVEST_CSW_PROFILE = "webharvest.cswprofile";

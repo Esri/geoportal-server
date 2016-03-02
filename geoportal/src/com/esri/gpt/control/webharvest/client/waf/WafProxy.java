@@ -65,7 +65,7 @@ public Content readContent(String sourceUri, boolean preApproved) throws IOExcep
   HttpClientRequest cr = context.newHttpClientRequest();
   cr.setBatchHttpClient(this.info.getBatchHttpClient());
   cr.setUrl(sourceUri);
-  BreakableStringHandler sh = new BreakableStringHandler(criteria!=null? criteria.getFromDate(): null);
+  BreakableStringHandler sh = new BreakableStringHandler(context.getAppEnv(), criteria!=null? criteria.getFromDate(): null);
   cr.setContentHandler(sh);
   cr.setCredentialProvider(info.newCredentialProvider());
   cr.execute();
@@ -82,7 +82,7 @@ public String read(String sourceUri) throws IOException {
   HttpClientRequest cr = context.newHttpClientRequest();
   cr.setBatchHttpClient(this.info.getBatchHttpClient());
   cr.setUrl(sourceUri);
-  StringHandler sh = new StringHandler();
+  StringHandler sh = new StringHandler(context.getAppEnv());
   cr.setContentHandler(sh);
   cr.setCredentialProvider(info.newCredentialProvider());
   cr.execute();
