@@ -36,6 +36,8 @@ public class AppEnvAppCfgAdaptor implements AppEnv {
   
   protected final ApplicationConfiguration appCfg;
   
+  public final AppEnv WithExtras = new WithExtras();
+  
   public static AppEnv newInstance() {
     return new AppEnvAppCfgAdaptor(ApplicationContext.getInstance().getConfiguration()).WithExtras;
   }
@@ -53,9 +55,7 @@ public class AppEnvAppCfgAdaptor implements AppEnv {
     return appCfg!=null? appCfg.getCatalogConfiguration().getParameters(): new StringAttributeMap();
   }
   
-  public final AppEnv WithExtras = new WithExtras();
-  
-  public class WithExtras implements AppEnv {
+  private class WithExtras implements AppEnv {
 
     @Override
     public String getValue(String attributeName) {
