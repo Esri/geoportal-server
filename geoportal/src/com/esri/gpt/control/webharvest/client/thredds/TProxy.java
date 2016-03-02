@@ -16,6 +16,7 @@
 package com.esri.gpt.control.webharvest.client.thredds;
 
 import com.esri.gpt.control.webharvest.IterationContext;
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.ResponseInfo;
 import com.esri.gpt.framework.http.StringHandler;
@@ -153,6 +154,11 @@ class TProxy {
 
     private Date fromDate;
     private Date lastModifiedDate;
+
+    public BreakableStringHandler(AppEnv appEnv, Date fromDate) {
+      super(appEnv);
+      this.fromDate = fromDate;
+    }
 
     public BreakableStringHandler(Date fromDate) {
       this.fromDate = fromDate;

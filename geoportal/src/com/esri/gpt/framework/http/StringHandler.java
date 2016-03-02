@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 package com.esri.gpt.framework.http;
+import com.esri.gpt.framework.context.AppEnv;
 import java.io.StringWriter;
 
 /**
@@ -21,6 +22,13 @@ import java.io.StringWriter;
 public class StringHandler extends CharacterHandler {
     
   /** constructors ============================================================ */
+  
+  /** Default constructor.
+   * @param appEnv application environment
+   */
+  public StringHandler(AppEnv appEnv) {
+    super(appEnv, new StringWriter());
+  }
   
   /** Default constructor. */
   public StringHandler() {

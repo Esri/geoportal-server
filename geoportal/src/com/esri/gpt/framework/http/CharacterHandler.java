@@ -14,6 +14,8 @@
  */
 package com.esri.gpt.framework.http;
 import com.esri.gpt.framework.collection.StringAttributeMap;
+import com.esri.gpt.framework.context.AppEnv;
+import com.esri.gpt.framework.context.AppEnvAppCfgAdaptor;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.util.KmlUtil;
 import com.esri.gpt.framework.util.Val;
@@ -29,17 +31,28 @@ import java.io.Writer;
 public class CharacterHandler extends ContentHandler {
     
   /** instance variables ====================================================== */  
+  private AppEnv appEnv;
   private Writer writer;
   
   /** constructors ============================================================ */
   
   /**
    * Constructs with a supplied character writer.
+   * @param appEnv application environment
+   * @param writer the character writer
+   */
+  public CharacterHandler(AppEnv appEnv, Writer writer) {
+    super();
+    this.appEnv = appEnv;
+    this.setWriter(writer);
+  }
+  
+  /**
+   * Constructs with a supplied character writer.
    * @param writer the character writer
    */
   public CharacterHandler(Writer writer) {
-    super();
-    this.setWriter(writer);
+    this(AppEnvAppCfgAdaptor.newInstance(), writer);
   }
   
   /** properties  ============================================================= */
@@ -75,6 +88,12 @@ public class CharacterHandler extends ContentHandler {
     return encoding;
   }
   
+  private boolean readAllowPeekForXmlEncoding() {
+    StringAttributeMap params = ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getParameters();
+    String param = params.getValue("HttpClientRequest.allowPeekForXmlEncoding");
+    return !Val.chkStr(param).equalsIgnoreCase("false");
+  }
+  
   /**
    * Handle the content associated with an HTTP response body.
    * @param request the HTTP request that was executed
@@ -101,10 +120,8 @@ public class CharacterHandler extends ContentHandler {
       String encoding = request.getResponseInfo().getContentEncoding();
       if ((encoding == null) || (encoding.length() == 0)) {
         String lct = Val.chkStr(ct).toLowerCase();
-        if (lct.endsWith("/xml") || lct.endsWith("+xml")) {          
-          StringAttributeMap params = ApplicationContext.getInstance().getConfiguration().getCatalogConfiguration().getParameters();
-          String param = params.getValue("HttpClientRequest.allowPeekForXmlEncoding");
-          peekForXmlEncoding = !Val.chkStr(param).equalsIgnoreCase("false");
+        if (lct.endsWith("/xml") || lct.endsWith("+xml")) {       
+          peekForXmlEncoding = readAllowPeekForXmlEncoding();
         }
       }
       

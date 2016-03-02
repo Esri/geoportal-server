@@ -14,13 +14,13 @@
  */
 package com.esri.gpt.control.webharvest;
 
-import com.esri.gpt.framework.http.HttpClientRequest;
+import com.esri.gpt.framework.http.HttpClientRequestFactory;
 import com.esri.gpt.framework.robots.Bots;
 
 /**
  * Harvest context.
  */
-public interface IterationContext {
+public interface IterationContext extends HttpClientRequestFactory {
   /**
    * Provides a way to capture exception which cannot be re-thrown. Both methods
    * {@link java.util.Iterator#hasNext()} and {@link java.util.Iterator#next()}
@@ -29,12 +29,6 @@ public interface IterationContext {
    * @param ex
    */
   void onIterationException(Exception ex);
-  
-  /**
-   * Factory method to create instance of {@link HttpClientRequest}
-   * @return instance of HttpClientRequest
-   */
-  HttpClientRequest newHttpClientRequest();
   
   /**
    * Asserts access to the resource referenced by the url

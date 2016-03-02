@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.control.webharvest.validator;
 
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.framework.http.CredentialProvider;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.StringHandler;
@@ -66,6 +67,13 @@ abstract class GenericValidator implements IValidator {
   }
   
   private static class ValidatorHandler extends StringHandler {
+
+    public ValidatorHandler(AppEnv appEnv) {
+      super(appEnv);
+    }
+
+    public ValidatorHandler() {
+    }
 
     @Override
     public boolean onBeforeReadResponse(HttpClientRequest request) {

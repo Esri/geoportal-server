@@ -132,7 +132,7 @@ abstract class WafFolder implements DestroyableResource {
         if (!isPreApproved()) {
           context.assertAccess(url);
         }
-        HttpClientRequest cr = new HttpClientRequest();
+        HttpClientRequest cr = context.newHttpClientRequest();
         cr.setUrl(url);
         StringHandler sh = new StringHandler();
         cr.setContentHandler(sh);

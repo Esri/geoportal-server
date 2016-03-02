@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.framework.http;
 
+import com.esri.gpt.framework.context.AppEnv;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +38,11 @@ public class XmlHandler extends CharacterHandler {
 
   private boolean namespaceAware;
   private Document document;
+
+  public XmlHandler(AppEnv appEnv, boolean namespaceAware) {
+    super(appEnv, new StringWriter());
+    this.namespaceAware = namespaceAware;
+  }
 
   public XmlHandler(boolean namespaceAware) {
     super(new StringWriter());
