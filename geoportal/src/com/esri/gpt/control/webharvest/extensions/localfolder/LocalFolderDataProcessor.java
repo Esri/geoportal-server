@@ -54,8 +54,9 @@ public class LocalFolderDataProcessor implements DataProcessor {
   private final Harvester.Listener listener;
   private final Suspender suspender;
   
-  private File destinationFolder;
-  private List<String> subFolder;
+  //private File destinationFolder;
+  //private List<String> subFolder;
+  private LocalFolder localFolder;
 
   /**
    * Creates instance of the processor.
@@ -90,6 +91,16 @@ public class LocalFolderDataProcessor implements DataProcessor {
 
   @Override
   public void onMetadata(ExecutionUnit unit, Publishable record) throws IOException, SQLException, CatalogIndexException, TransformerConfigurationException {
+    if (localFolder!=null) {
+      try {
+        localFolder.storeData(record.getSourceUri(), record.getContent());
+      } catch (IOException ex) {
+        throw ex;
+      } catch (Exception ex) {
+        throw new IOException("Error reading content.", ex);
+      }
+    }
+    /*
     if (destinationFolder!=null) {
       File f = generateFileName(record.getSourceUri());
       f.getParentFile().mkdirs();
@@ -114,19 +125,24 @@ public class LocalFolderDataProcessor implements DataProcessor {
         }
       }
     }
+    */
   }
 
   @Override
   public void onStart(ExecutionUnit unit) {
     try {
       URL hostUrl = new URL(unit.getRepository().getHostUrl());
+      localFolder = rootFolder!=null? new LocalFolder(rootFolder, hostUrl): null;
+      /*
       destinationFolder = rootFolder!=null? rootFolder.toPath().resolve(hostUrl.getHost()).toFile(): null;
       subFolder = splitPath(hostUrl.getPath());
+      */
     } catch (MalformedURLException ex) {
       LOG.log(Level.SEVERE, "Error starting harvesting", ex);
     }
   }
   
+  /*
   private File generateFileName(SourceUri uri) {
     String sUri = uri.asString();
     
@@ -166,4 +182,5 @@ public class LocalFolderDataProcessor implements DataProcessor {
       }
     }
   }
+  */
 }
