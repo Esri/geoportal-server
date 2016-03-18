@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.server.csw.client;
 
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.framework.robots.Bots;
 import java.io.*;
 import java.util.Iterator;
@@ -40,14 +41,20 @@ private CswCatalog        catalog;
 private CswSearchCriteria criteria;
 private CswClient         cswClient;
 private CswSearchResponse response;
+private final AppEnv appEnv;
 private final Bots bots;
 
 
-public CswSearchRequest(Bots bots) {
-  this(null, null, bots);
+public CswSearchRequest() {
+  this(null,null);
 }
 
-public CswSearchRequest(CswCatalog catalog, String searchText, Bots bots) {
+public CswSearchRequest(AppEnv appEnv, Bots bots) {
+  this(null, null, appEnv, bots);
+}
+
+public CswSearchRequest(CswCatalog catalog, String searchText, AppEnv appEnv, Bots bots) {
+  this.appEnv = appEnv;
   this.bots =bots;
   this.catalog = catalog;
   // Initialize the neccessary objects
@@ -55,7 +62,7 @@ public CswSearchRequest(CswCatalog catalog, String searchText, Bots bots) {
   this.criteria = new CswSearchCriteria();
   this.criteria.setSearchText(searchText);
   // create csw client
-  this.cswClient = new CswClient(bots);
+  this.cswClient = new CswClient(appEnv,bots);
   this.response  = new CswSearchResponse();
 }
 
@@ -162,7 +169,7 @@ public CswRecord getRecordById(String requestURL, String DocID,
       DocID);
 
   if (cswClient == null) {
-    cswClient = new CswClient(bots);
+    cswClient = new CswClient(appEnv,bots);
     cswClient.setBatchHttpClient(catalog.getBatchHttpClient());
   }
 
@@ -270,7 +277,7 @@ public CswRecord getRecordById(String requestURL, String DocID,
       DocID);
 
   if (cswClient == null) {
-    cswClient = new CswClient(bots);
+    cswClient = new CswClient(appEnv,bots);
     cswClient.setBatchHttpClient(catalog.getBatchHttpClient());
   }
 
@@ -402,7 +409,7 @@ public void search() throws NullReferenceException, XPathExpressionException,
   // Generate getRecords query
   CswProfile profile = catalog.getProfile();
 
-  catalog.connect(bots);
+  catalog.connect(appEnv,bots);
   CswCatalogCapabilities capabilities = catalog.getCapabilities();
 
   String requestUrl = capabilities.get_getRecordsPostURL();

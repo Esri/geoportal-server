@@ -53,7 +53,7 @@ public CswProxy(Bots bots, CswInfo info, CswCatalog catalog) {
   this.bots = bots;
   this.info = info;
   this.catalog = catalog;
-  this.request = new CswSearchRequest(bots);
+  this.request = new CswSearchRequest(null,bots);
   
   CswSearchCriteria cswCriteria = new CswSearchCriteria();
   cswCriteria.setSearchText("");

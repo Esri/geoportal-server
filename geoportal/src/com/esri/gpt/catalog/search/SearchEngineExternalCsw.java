@@ -207,7 +207,7 @@ protected CswRecord getMetadata(String uuid) throws SearchException {
   Exception exc = null;
   try {
     CswProfile profile = getCswProfile();
-    CswSearchRequest request = new CswSearchRequest(null);
+    CswSearchRequest request = new CswSearchRequest(null,null);
     CswClient client = this.getCswClient();
     //client.setReadTimeout(SearchConfig.getConfiguredInstance().getTimeOut());
     request.setCswClient(client);

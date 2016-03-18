@@ -99,10 +99,12 @@ public class HttpClientRequest {
   private int                retries = -1;
   private boolean            alwaysClose;
   private String             userAgent = "";
+  protected final AppEnv     appEnv;
   
   /** constructors ============================================================ */
   
   public HttpClientRequest(AppEnv appEnv) {
+    this.appEnv = appEnv;
     this.setCredentialProvider(CredentialProvider.getThreadLocalInstance());
     this.setConnectionTimeMs( Val.chkInt(appEnv.getValue(AppEnvAppCfgAdaptor.X_HTTP_CONNECTION_TIMEOUT), DEFAULT_CONNECTION_TIMEOUT));
     this.setResponseTimeOutMs(Val.chkInt(appEnv.getValue(AppEnvAppCfgAdaptor.X_HTTP_RESPONSE_TIMEOUT),   DEFAULT_RESPONSE_TIMEOUT));
@@ -721,7 +723,7 @@ public class HttpClientRequest {
    * @throws IOException if an i/o exception occurs 
    */
   public String readResponseAsCharacters() throws IOException {
-    StringHandler handler = new StringHandler();
+    StringHandler handler = new StringHandler(appEnv);
     this.setContentHandler(handler);
     this.execute();
     return Val.removeBOM(handler.getContent());

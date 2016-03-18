@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.server.csw.client;
 
+import com.esri.gpt.framework.context.AppEnv;
 import com.esri.gpt.framework.http.ContentProvider;
 import com.esri.gpt.framework.http.CredentialProvider;
 import com.esri.gpt.framework.http.HttpClientRequest;
@@ -57,6 +58,7 @@ private int connectTimeout = DEFAULT_REQUEST_TIMEOUT;
 private int readTimeOut = DEFAULT_REQUEST_TIMEOUT;
 
 // constructor =================================================================
+private final AppEnv appEnv;
 private final Bots bots;
 private HttpClient batchHttpClient;
 /**
@@ -70,9 +72,12 @@ private HttpClient batchHttpClient;
  * Constructor
  * @param bots robots.txt or <code>null</code>
  */
-public CswClient(Bots bots) {
+public CswClient(AppEnv appEnv, Bots bots) {
+  this.appEnv = appEnv;
   this.bots = bots;
 }
+
+
 
 // properties ==================================================================
 
@@ -335,6 +340,14 @@ public Element submitHttpRequestAndGetDom(String method, String urlString,
  * @return client request
  */
 private HttpClientRequest newRequest() {
-  return bots!=null? new HttpCrawlRequest(bots): new HttpClientRequest();
+  return bots!=null? newCrawlRequest(bots): newClientRequest();
+}
+
+private HttpClientRequest newCrawlRequest(Bots bots) {
+  return appEnv!=null? new HttpCrawlRequest(appEnv, bots): new HttpCrawlRequest(bots);
+}
+
+private HttpClientRequest newClientRequest() {
+  return appEnv!=null? new HttpClientRequest(appEnv): new HttpClientRequest();
 }
 }
