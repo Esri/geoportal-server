@@ -158,7 +158,7 @@ public class LocalFolderDataProcessor implements DataProcessor {
         fileName = fileName.toPath().resolve(sanitizeFileName(sUri)+".xml").toFile();
         return fileName;
       } else {
-        File f = new File(sUri);
+        File f = new File(sanitizeFileName(sUri)+".xml");
         for (String t: StringListUtil.merge(subFolder,splitPath(f))) {
           fileName = fileName.toPath().resolve(t).toFile();
         }
