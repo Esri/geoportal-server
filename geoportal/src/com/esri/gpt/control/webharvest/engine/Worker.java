@@ -103,15 +103,12 @@ class Worker extends WorkerBase {
 
   @Override
   protected void execute() {
-    int attempt = 0;
     do {
       dropped = false;
 
       try {
         // get next available task
         ExecutionUnit nextUnit = !suspended ? next() : null;
-        // clear atempts counter
-        attempt = 0;
         if (nextUnit != null) {
           if (ApprovalStatus.isPubliclyVisible(nextUnit.getRepository().getApprovalStatus().name())
                   && nextUnit.getRepository().getSynchronizable()
@@ -142,18 +139,7 @@ class Worker extends WorkerBase {
           }
         }
       } catch (SQLException ex) {
-        attempt++;
-        if (attempt<=getMaxAttempts()) {
-          Logger.getLogger(Worker.class.getCanonicalName()).log(Level.SEVERE, "[SYNCHRONIZER] Internal worker error.", ex);
-        } else {
-          // wait for another task
-          synchronized (taskQueue) {
-            try {
-              taskQueue.wait(60000); // wait a minute and try again
-            } catch (InterruptedException ex1) {
-            }
-          }
-        }
+        onSqlException(ex);
       } finally {
         if (executor != null && !shutdown) {
           ExecutionUnit unit = executor.getExecutionUnit();
@@ -167,6 +153,15 @@ class Worker extends WorkerBase {
     } while (!shutdown && !ended);
   }
 
+  /**
+   * Called upon an SQLException.
+   * @param ex exception
+   */
+  protected void onSqlException(SQLException ex) {
+    LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Error accessing database.", ex);
+    LOGGER.severe("[SYNCHRONIZER] Task queue will be shut down due to database access error.\r\nRestart the server after correcting database configuration.");
+  }
+  
   /**
    * Creates new executor.
    *
