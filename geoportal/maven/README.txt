@@ -20,7 +20,8 @@ USING ECLIPSE
 3. Click "Browse" button beside "Root Directory" and navigate to the geoportal/maven folder
 4. Once list of projects appear on the "Projects" list, make sure at least parent project is selected, 
    then click "Finish" button
-5. Select "Project -> Build All" from main menu
+5. Expand geoportal project node in "Project Explorer"
+6. Right click on the top level pom.xml and select "Run As -> Maven Clean" then "Run As -> Maven Install"
 
 CUSTOM BUILDS
 
