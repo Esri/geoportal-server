@@ -94,7 +94,7 @@ public class LocalFolderDataProcessor implements DataProcessor {
       File f = generateFileName(record.getSourceUri());
       f.getParentFile().mkdirs();
       if (!f.getName().contains(".")) {
-        f = f.getParentFile().toPath().resolve(f.getName()+".xml").toFile();
+        f = new File(f.getParentFile(),f.getName()+".xml");
       }
       FileOutputStream output = null;
       ByteArrayInputStream input = null;
@@ -120,7 +120,7 @@ public class LocalFolderDataProcessor implements DataProcessor {
   public void onStart(ExecutionUnit unit) {
     try {
       URL hostUrl = new URL(unit.getRepository().getHostUrl());
-      destinationFolder = rootFolder!=null? rootFolder.toPath().resolve(hostUrl.getHost()).toFile(): null;
+      destinationFolder = rootFolder!=null? new File(rootFolder,hostUrl.getHost()): null;
       subFolder = splitPath(hostUrl.getPath());
     } catch (MalformedURLException ex) {
       LOG.log(Level.SEVERE, "Error starting harvesting", ex);
@@ -150,17 +150,17 @@ public class LocalFolderDataProcessor implements DataProcessor {
       }
       
       for (String t: stock) {
-        fileName = fileName.toPath().resolve(t).toFile();
+        fileName = new File(fileName,t);
       }
       return fileName;
     } catch (MalformedURLException ex) {
       if (UuidUtil.isUuid(sUri)) {
-        fileName = fileName.toPath().resolve(sanitizeFileName(sUri)+".xml").toFile();
+        fileName = new File(fileName,sanitizeFileName(sUri)+".xml");
         return fileName;
       } else {
         File f = new File(sanitizeFileName(sUri)+".xml");
         for (String t: StringListUtil.merge(subFolder,splitPath(f))) {
-          fileName = fileName.toPath().resolve(t).toFile();
+          fileName = new File(fileName,t);
         }
         return fileName;
       }

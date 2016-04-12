@@ -17,9 +17,8 @@ package com.esri.gpt.control.webharvest.extensions.localfolder;
 
 import java.io.File;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -57,10 +56,11 @@ public class PathUtil {
    * @return list of elements
    */
   public static List<String> splitPath(File f) {
-    ArrayList<String> path = new ArrayList<String>();
-    Iterator<Path> i = f.toPath().iterator();
-    while (i.hasNext()) {
-      path.add(sanitizeFileName(i.next().toString()));
+    LinkedList<String> path = new LinkedList<String>();
+    while (f!=null) {
+      String name = f.getParentFile()!=null? f.getName(): f.getPath();
+      path.push(name);
+      f = f.getParentFile();
     }
     return path;
   }
