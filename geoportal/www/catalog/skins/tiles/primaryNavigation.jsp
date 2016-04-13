@@ -15,8 +15,8 @@
 --%>
 <%@taglib prefix="f" uri="http://java.sun.com/jsf/core"%>
 <%@taglib prefix="h" uri="http://java.sun.com/jsf/html"%>
-<%@taglib prefix="tiles" uri="http://struts.apache.org/tags-tiles"  %>
 
+<%@taglib prefix="tiles" uri="http://struts.apache.org/tags-tiles"  %>
 <h:form id="frmBanner">	
 	<h:outputLink 
 	  rendered="#{not empty PageContext.applicationConfiguration.catalogConfiguration.searchConfig.mapViewerUrl}"
@@ -33,25 +33,54 @@
   </h:outputLink>
 </h:form>
 
+<%--Modified to handle the AllowOnlyAuthenticatedUser parameter. If set to true (default is false), then login is required for all users --%>
 <h:form id="frmPrimaryNavigation">
 	<h:commandLink
         id="mainHome" 
         action="catalog.main.home"
         value="#{gptMsg['catalog.main.home.menuCaption']}"
         styleClass="#{PageContext.tabStyleMap['catalog.main.home']}"/>
-	<h:commandLink 
-        id="searchHome" 
-        action="catalog.search.home" 
-        value="#{gptMsg['catalog.search.home.menuCaption']}"
-        styleClass="#{PageContext.tabStyleMap['catalog.search.home']}"/>                 
 
-  <h:commandLink 
-        id="browse"
-        action="catalog.browse" 
-        styleClass="#{PageContext.tabStyleMap['catalog.browse']}"
-        value="#{gptMsg['catalog.browse.menuCaption']}"
-        rendered="#{PageContext.tocsByKey['browseCatalog']}" />
- 
+	<%
+	com.esri.gpt.framework.context.RequestContext rcx = com.esri.gpt.framework.context.RequestContext.extract(request);
+	String sAllowOnlyAuthenticatedUser=rcx.getApplicationConfiguration().getCatalogConfiguration().getParameters().getValue("AllowOnlyAuthenticatedUser");
+	if(sAllowOnlyAuthenticatedUser.equals("true"))
+	{
+	%>        
+		<h:commandLink 
+	        id="searchHome"
+	        rendered="#{PageContext.roleMap['gptRegisteredUser']}"
+	        action="catalog.search.home" 
+	        value="#{gptMsg['catalog.search.home.menuCaption']}"
+	        styleClass="#{PageContext.tabStyleMap['catalog.search.home']}"/>                 
+
+		<h:commandLink 
+		id="browse"
+		action="catalog.browse" 
+		styleClass="#{PageContext.tabStyleMap['catalog.browse']}"
+		value="#{gptMsg['catalog.browse.menuCaption']}"
+        	rendered="#{PageContext.tocsByKey['browseCatalog'] and PageContext.roleMap['gptRegisteredUser']}" />			
+	<%
+	}
+	else
+	{
+	%>
+		<h:commandLink 
+	        id="searchHome" 
+	        action="catalog.search.home" 
+	        value="#{gptMsg['catalog.search.home.menuCaption']}"
+	        styleClass="#{PageContext.tabStyleMap['catalog.search.home']}"/>                 
+
+		<h:commandLink 
+		id="browse"
+		action="catalog.browse" 
+		styleClass="#{PageContext.tabStyleMap['catalog.browse']}"
+		value="#{gptMsg['catalog.browse.menuCaption']}"
+		rendered="#{PageContext.tocsByKey['browseCatalog']}" />
+	<%
+	}
+	%>
+	
   <h:commandLink 
         id="publicationManageMetadata"
         action="catalog.publication.manageMetadata" 
