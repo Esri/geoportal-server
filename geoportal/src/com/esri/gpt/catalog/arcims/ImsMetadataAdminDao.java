@@ -1515,6 +1515,42 @@ public void deleteIndex(PublicationRecord record)
 }
 
 /**
+ * Makes the selected records editable, changing the
+ * publication method in "editor"
+ * 
+ * @param publisher the publisher executing this request
+ * @param uuids the set of uuids to update
+ */
+public int setEditable(Publisher publisher, 
+        StringSet uuids)
+throws SQLException, CatalogIndexException {
+
+// update the database publication method
+PreparedStatement st = null;
+int nRows = 0;
+Connection con = returnConnection().getJdbcConnection();
+StringBuffer sbSql = new StringBuffer();
+try {
+	String sUuids = uuidsToInClause(uuids);
+	if (sUuids.length() > 0) {   
+		// execute the update, don't update documents in 'draft' mode
+		sbSql = new StringBuffer();     
+		sbSql.append("UPDATE ").append(getResourceTableName());
+		sbSql.append(" SET PUBMETHOD='editor'");
+		sbSql.append(" WHERE DOCUUID IN (").append(sUuids).append(")");
+		logExpression(sbSql.toString());
+		LogUtil.getLogger().log(Level.INFO,sbSql.toString()+" "+sUuids);
+		st = con.prepareStatement(sbSql.toString());
+		nRows = st.executeUpdate();
+	}
+} finally {
+closeStatement(st);
+}
+
+return nRows;
+}
+
+/**
  * Updates the synchronization status code for a collection of records.
  * @param status the synchronization status code
  * @param where the where clause indicating the recouds to update

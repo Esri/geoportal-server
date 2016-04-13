@@ -119,6 +119,11 @@ public void execute() throws Exception {
   } else if (sAction.equalsIgnoreCase("setReviewed")) {
     nRows = adminDao.updateApprovalStatus(getPublisher(),uuids,MmdEnums.ApprovalStatus.reviewed);
   }
+  /** Action: "SetEditable" **/
+  else if (sAction.equalsIgnoreCase("setEditable")) {
+		nRows = adminDao.setEditable(getPublisher(),uuids);
+  }
+
   getActionResult().setNumberOfRecordsModified(nRows);
   this.hadUnalteredDraftDocuments = adminDao.hadUnalteredDraftDocuments();
 
