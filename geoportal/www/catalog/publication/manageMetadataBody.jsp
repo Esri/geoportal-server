@@ -114,6 +114,9 @@ function mmdOnActionButtonClicked() {
                      ).retrieveMessage("catalog.publication.manageMetadata.action.delete.confirm")%>";
   var sMsgApplyToAll = "<%=com.esri.gpt.framework.jsf.PageContext.extractMessageBroker(
                      ).retrieveMessage("catalog.publication.manageMetadata.action.applyToAll.confirm")%>";
+  // Error message fired when more than 1 record is selected for duplicating
+  var sMsgTooManyRecords = "<%=com.esri.gpt.framework.jsf.PageContext.extractMessageBroker(
+                     ).retrieveMessage("catalog.publication.manageMetadata.action.Duplicate.err.tooManyRecords")%>";
 
   var bContinue = false;
   var elForm = mmdFindForm();
@@ -157,6 +160,11 @@ function mmdOnActionButtonClicked() {
             if (sAction == "delete") {
               bContinue = confirm(sMsgDel);
             }
+		// Duplicate record: only one can be selected 
+		if((sAction=='duplicate')&&(sUuids.split(",").length > 1))
+		{	alert(sMsgTooManyRecords);
+			bContinue=false;
+		}            
           }
         }
     }
@@ -622,6 +630,10 @@ function mmdClearAclSelection(){
        itemValue="assignAcl"
        itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.acl']}" 
        itemDisabled="#{ManageMetadataController.metadataAccessPolicyConfig.policyUnrestricted}"/>
+    <%// Duplicate command %>
+    <f:selectItem
+      itemValue="Duplicate"
+      itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.Duplicate']}"/>       
   </h:selectOneMenu>
 
   <% // action to perform - administrator %>
@@ -653,6 +665,10 @@ function mmdClearAclSelection(){
     <f:selectItem
       itemValue="setEditable"
       itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.setEditable']}"/>
+    <%// Duplicate command %>
+    <f:selectItem
+      itemValue="Duplicate"
+      itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.Duplicate']}"/>            
     <f:selectItem
       itemValue="delete"
       itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.delete']}"/>
