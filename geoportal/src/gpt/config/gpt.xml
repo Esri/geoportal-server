@@ -378,6 +378,8 @@
 				Default: false.                  
         -->  
         <parameter key="catalog.enableEditForAllPubMethods" value="false"/>
+	<!-- This flag allows an administrator to modify metadata records even if he's not the owner -->
+	<parameter key="catalog.enableEditForAdministrator" value="true"/>
         <parameter key="catalog.admin.allowApplyToAll" value="true"/>
         <parameter key="catalog.useCollections" value="false"/>
         <parameter key="database.isCaseSensitive" value="true"/>
@@ -390,7 +392,10 @@
         <parameter key="httpClientRequest.connectionTimeout" value="2[MINUTE]"/>
         <parameter key="httpClientRequest.responseTimeout" value="2[MINUTE]"/>
         <parameter key="httpClient.alwaysClose" value="false"/>
-  
+        <!-- If set to true it allows the registration of web resources with same URL --> 
+ 	<parameter key="AllowDuplicateResourceURL" value="true"/>	  
+	<!-- Setting AllowonlyAuthenticatedUser to true denies access to anonymous users. -->
+	<parameter key="AllowOnlyAuthenticatedUser" value="true"/>	  
         
 		    <!-- Resource Link Builder
 			      - resourceLinkBuilder.preview.filter: regular expression disabling ‘preview’ link on search result 
