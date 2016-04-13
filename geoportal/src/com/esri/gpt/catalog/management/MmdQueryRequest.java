@@ -66,7 +66,8 @@ private boolean                 enableEditForAllPubMethods = false;
 private boolean                 isGptAdministrator;
 private String                  tblImsUser;
 private HashMap<String, String> hmEditablePublishers = new HashMap<String, String>();
-
+// Flag to allow metadata to be modified by administrator even if he's not the owner
+private boolean isAdminEnabledtoEdit;
 
 // constructors ================================================================
 /**
@@ -107,6 +108,13 @@ public void execute() throws SQLException, IdentityException, NamingException,
 
   adminDao = new ImsMetadataAdminDao(getRequestContext());
   tblImsUser = getRequestContext().getCatalogConfiguration().getUserTableName();
+
+  /*if "catalog.enableEditForAdministrator" exists and is "true", then isAdminEnabledtoEdit is true, else isAdminEnabledtoEdit is false*/
+  if(getRequestContext().getCatalogConfiguration().getParameters().containsKey("catalog.enableEditForAdministrator"))
+	  isAdminEnabledtoEdit = getRequestContext().getCatalogConfiguration().getParameters().getValue("catalog.enableEditForAdministrator").equals("true");
+  else
+	  isAdminEnabledtoEdit=false;
+  
   Users editablePublishers = Publisher.buildSelectablePublishers(getRequestContext(), false);
   for (User u : editablePublishers.values()) {
     if (u.getName().length() > 0) {
@@ -495,9 +503,16 @@ private void readRecord(ResultSet rs, MmdRecord record, String ownername) throws
 
   boolean isProtocol = record.getProtocol()!=null;
   boolean isOwner = hmEditablePublishers.containsKey(record.getOwnerName().toLowerCase());
+  // If isAdminEnabledtoEdit is true and it's an Administrator than it can edit even if not owner
+  /**
   record.setCanEdit(
     (this.enableEditForAllPubMethods || isEditor || isSEditor || isProtocol) &&
     (isOwner || (isProtocol && isGptAdministrator))
+  );
+  **/
+  record.setCanEdit(
+    (this.enableEditForAllPubMethods || isEditor || isSEditor || isProtocol) &&
+    (isOwner || (isProtocol && isGptAdministrator)  || (isAdminEnabledtoEdit && isGptAdministrator)) 
   );
 
   // TODO remove as this is a temporary fix
