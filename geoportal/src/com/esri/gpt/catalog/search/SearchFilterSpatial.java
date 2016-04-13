@@ -18,6 +18,20 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/* Imports added to handle Bookmarks list */
+import java.util.ArrayList;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import com.esri.gpt.framework.collection.StringAttribute;
+import com.esri.gpt.framework.xml.DomUtil;
+import com.esri.gpt.framework.xml.NodeListAdapter;
+import javax.faces.model.SelectItem;
+import com.esri.gpt.framework.util.LogUtil;
+
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.util.Val;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -70,6 +84,11 @@ private String _selectedBounds = OptionsBounds.anywhere.name();
 /** The envelope. */
 transient private Envelope _visibleEnvelope = new EnvelopeWrapper(new Envelope());
 
+/** Configuration for Bookmarks (predefined extents) **/
+private String _extent=new String();
+private ArrayList _predefinedExtents=new ArrayList();
+private static final String PREDEFINED_EXTENTS_FILE="gpt/config/extents.xml"; // NAME OF FILE IS HARDCODED
+
 // constructor =================================================================
 /**
  * Instantiates a new search filter spatial.
@@ -77,6 +96,59 @@ transient private Envelope _visibleEnvelope = new EnvelopeWrapper(new Envelope()
 public SearchFilterSpatial() { 
   super();
   reset();
+  
+// Load a fioel with predefined extents (bookmarks)
+  Document domFe;
+  XPath xpathFe;
+  try{
+	  String sPredefinedExtents = PREDEFINED_EXTENTS_FILE;
+	  LogUtil.getLogger().log(Level.FINE, "Loading Predefined extents file: {0}", sPredefinedExtents);
+	  domFe = DomUtil.makeDomFromResourcePath(sPredefinedExtents, false);
+	  xpathFe = XPathFactory.newInstance().newXPath();
+  }
+  catch(Exception e)
+  {
+	  LogUtil.getLogger().log(Level.FINE, "No predefined extents file");
+	  domFe=null;
+	  xpathFe=null;
+  }
+  // predefined extent file root
+  Node rootFe=null;
+  try{
+  if(domFe!=null)
+  	rootFe= (Node) xpathFe.evaluate("/extents", domFe, XPathConstants.NODE);
+  }
+  catch(Exception e)
+	{
+	  rootFe=null;
+	  LogUtil.getLogger().log(Level.FINE, "Xpath problem for predefined extents file");
+	}
+  /**
+   * Reads Bookmarks and load an array
+   */
+  NodeList extents;
+  ArrayList extentsList= new ArrayList();
+  if(rootFe!=null)
+  { try{
+	  extents=(NodeList)xpathFe.evaluate("extent", rootFe, XPathConstants.NODESET);
+	  for (Node extent : new NodeListAdapter(extents)) {
+		  String extPlace=(String) xpathFe.evaluate("@place", extent, XPathConstants.STRING);
+		  String extValue=(String) xpathFe.evaluate("@ext", extent, XPathConstants.STRING);
+		  LogUtil.getLogger().log(Level.FINE,"Element added:"+extPlace+","+extValue);
+		  SelectItem extElement=new SelectItem(extValue,extPlace);
+		  extentsList.add(extElement);
+	  }
+  	}
+	catch(Exception e)
+	{
+		extentsList=null;
+		LogUtil.getLogger().log(Level.FINE, "Xpath problem for predefined extents file");
+	}
+  }
+  else
+	  extentsList=null;
+  
+  this._predefinedExtents=extentsList;
 }
 
 // properties ==================================================================
@@ -492,5 +564,34 @@ private static class EnvelopeWrapper extends Envelope {
     }
   
     
+}
+
+/* Added functions to handle predefined extents
+/**
+ * @param _extent the extent to set
+ */
+public void setExtent(String extent) {
+	this._extent = extent;
+}
+
+/**
+ * @return the _extent
+ */
+public String getExtent() {
+	return _extent;
+}
+
+/**
+ * @param _predefinedExtents the _predefinedExtents to set
+*/ 
+public void setPredefinedExtents(ArrayList predefinedExtents) {
+	this._predefinedExtents = _predefinedExtents;
+}
+
+/**
+ * @return the _predefinedExtents
+ */
+public ArrayList getPredefinedExtents() {
+	return _predefinedExtents;
 }
 }
