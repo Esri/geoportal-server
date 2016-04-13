@@ -100,7 +100,7 @@ function hpSubmitForm(event, form) {
 				   <%// Handle the AllowOnlyAutheticatedUser parameter: if set to true authentication is mandatory
 				   com.esri.gpt.framework.context.RequestContext rcx = com.esri.gpt.framework.context.RequestContext.extract(request);
 				   String sAllowOnlyAuthenticatedUser=rcx.getApplicationConfiguration().getCatalogConfiguration().getParameters().getValue("AllowOnlyAuthenticatedUser");
-				   if (!sAllowOnlyAuthenticatedUser.equals("true") || (rcx.getUser().getAuthenticationStatus().getWasAuthenticated())) {%>
+				   if (!"true".equals(sAllowOnlyAuthenticatedUser) || (rcx.getUser().getAuthenticationStatus().getWasAuthenticated())) {%>
 				
 					<h:form id="hpFrmSearch" onkeypress="javascript: hpSubmitForm(event, this);">
 					<h:inputText id="itxFilterKeywordText" 
