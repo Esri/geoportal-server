@@ -54,6 +54,11 @@ import java.util.logging.Logger;
   }
 
   @Override
+  public String getUserAgent() {
+    return userAgent;
+  }
+
+  @Override
   public String getHost() {
     return host;
   }

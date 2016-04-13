@@ -71,7 +71,6 @@ private HrRecords filterSuspended(HrRecords records) {
 public void run() {
   workerThread = Thread.currentThread();
   LOGGER.info("[SYNCHRONIZER] AutoSelector activated.");
-  int attempt = 0;
   
   do {
     long duration = autoSelectFrequency;
@@ -104,15 +103,9 @@ public void run() {
           duration = autoSelectFrequency;
           LOGGER.log(Level.INFO,"[SYNCHRONIZER] Next synchronization time couldn't been determined at this time.");
         }
-        
-        // clear attempt counter
-        attempt = 0;
       } catch (SQLException ex) {
-        LOGGER.log(Level.SEVERE, "[SYNCHRONIZER] Error selecting harvesting sites for harvest.", ex);
-        attempt++;
-        if (attempt<=getMaxAttempts()) {
-          LOGGER.log(Level.SEVERE, "[SYNCHRONIZER] Error selecting harvesting sites for harvest.", ex);
-        }
+        LOGGER.severe("[SYNCHRONIZER] Auto-selector will be shut down due to database access error.\r\nRestart the server after correcting database configuration.");
+        LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Error accessing database.", ex);
       }
     }
 

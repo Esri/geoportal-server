@@ -34,6 +34,7 @@ import com.esri.gpt.framework.security.principal.User;
 import com.esri.gpt.framework.security.principal.Users;
 
 import java.net.InetAddress;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
@@ -291,6 +292,8 @@ public class PortalIdentityAdapter extends IdentityAdapter {
     user.reset();
 		try {
 			String referer = null;
+			//Decode username from response
+		    username = URLDecoder.decode(username,"UTF-8");
 			executeGetUser(user,token,username,referer);
 		} catch (Throwable t) {
 			t.printStackTrace();

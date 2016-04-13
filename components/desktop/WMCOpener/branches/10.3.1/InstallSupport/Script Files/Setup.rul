@@ -1,0 +1,293 @@
+
+// Include Ifx.h for built-in InstallScript function prototypes.
+#include "Ifx.h"   
+// Include header file for MSI API functions and constants
+#include "iswi.h"  
+
+prototype _FileDelete_N_AddLine (STRING, STRING, STRING, HWND);    
+prototype FolderBrowse(BYREF STRING, STRING, HWND); 
+ 
+ 
+// Function finds and replaces text in multiple files
+ export prototype Fn_FindReplace(HWND);  
+ 
+ function Fn_FindReplace(hMSI)
+    STRING  fileArray(1), fromArray(1), toArray(1);
+    STRING  INSTALLPATH, LOGGINGDIR, TARGET_FILE, properties;
+    NUMBER  i, nvSize;
+	LIST   listID;    	 
+ 	 	
+ begin   
+ 
+ 	// Get properties for function from CustomActionData
+ 	nvSize = 256;		
+     if (MsiGetProperty(hMSI, "CustomActionData", properties, nvSize) != ERROR_SUCCESS) then
+     	MessageBox("Error getting properties for ArcGIS Connection", SEVERE);
+     	abort;
+     endif;
+     
+     // Initialize list    
+     listID = ListCreate (STRINGLIST);
+     
+     // Get each property into the list.
+     if (StrGetTokens (listID, properties, ";") > 0) then
+     	// Report the error.
+      	MessageBox ("StrGetTokens failed.", SEVERE);
+      	abort;
+     endif;
+     
+     // Populate local property values
+     ListGetFirstString ( listID, INSTALLPATH );
+     ListGetNextString ( listID, LOGGINGDIR );
+                            
+     // Remove the list from memory.
+     ListDestroy (listID);
+     
+     // Add files to patch to fileArray.
+ 	 fileArray(0) = INSTALLPATH^"WMCConfig.properties";
+              
+     // Set the 'from' string for each file
+     fromArray(0) = "logFilePath="; 
+     
+     
+     // Set the 'to' string for each file
+     toArray(0) = "logFilePath=" + LOGGINGDIR; 
+          
+     i=0;         
+ 	while (i < SizeOf(fileArray))	
+ 	    TARGET_FILE = fileArray(i);
+ 	    //MessageBox("File: " + TARGET_FILE + "  From string: " + fromArray(i) + "  To string: " + toArray(i), 0); 
+ 		_FileDelete_N_AddLine( TARGET_FILE, fromArray(i), toArray(i), hMSI);
+        i = i + 1;
+    endwhile;     
+ 
+end;
+
+
+// Function creates LoggingDir
+ export prototype Fn_CreateLoggingDir(HWND);  
+ 
+ function Fn_CreateLoggingDir(hMSI)
+    STRING  INSTALLPATH, LOGGINGDIR, properties;
+    NUMBER  nError, nvSize;
+	LIST   listID;    	 
+ 	 	
+ begin   
+ 
+ 	// Get properties for function from CustomActionData
+ 	nvSize = 256;		
+     if (MsiGetProperty(hMSI, "CustomActionData", properties, nvSize) != ERROR_SUCCESS) then
+     	MessageBox("Error getting properties for ArcGIS Connection", SEVERE);
+     	abort;
+     endif;
+     
+     // Initialize list    
+     listID = ListCreate (STRINGLIST);
+     
+     // Get each property into the list.
+     if (StrGetTokens (listID, properties, ";") > 0) then
+     	// Report the error.
+      	MessageBox ("StrGetTokens failed.", SEVERE);
+      	abort;
+     endif;
+     
+     // Populate local property values
+     ListGetFirstString ( listID, INSTALLPATH );
+     ListGetNextString ( listID, LOGGINGDIR );
+                            
+     // Remove the list from memory.
+     ListDestroy (listID); 
+     
+     //Create LOGGINGDIR
+     nError = CreateDir ( LOGGINGDIR );
+     if nError < 0 then   
+     	MessageBox("Error creating logging directory " + LOGGINGDIR + ".\n" + 
+     				"Error: " + FormatMessage(nError), WARNING);
+     endif;
+
+end;
+
+
+
+// Function deletes LoggingDir
+ export prototype Fn_DeleteLoggingDir(HWND);  
+ 
+ function Fn_DeleteLoggingDir(hMSI)
+    STRING  INSTALLPATH, LOGGINGFOLDER, LOGGINGDIR, properties, TARGET_FILE, szSearchStr, svReturnLine, svString, szProgram, szCmdLine;
+    NUMBER  nError, nvSize, nvLineNumber, nStart, nLength, nLocation, nvResult;
+	LIST   listID;    	 
+ 	 	
+ begin   
+    
+    if AskYesNo("Do you want to delete the logging directory?", YES) = YES then
+ 	// Get properties for function from CustomActionData
+ 	nvSize = 256;		
+    if (MsiGetProperty(hMSI, "CustomActionData", properties, nvSize) != ERROR_SUCCESS) then
+     	MessageBox("Error getting properties for ArcGIS Connection", SEVERE);
+    	abort;
+    endif;
+     
+    // Initialize list    
+    listID = ListCreate (STRINGLIST);
+     
+    // Get each property into the list.
+    if (StrGetTokens (listID, properties, ";") > 0) then
+     	// Report the error.
+     	MessageBox ("StrGetTokens failed.", SEVERE);
+    	abort;
+    endif;
+     
+    // Populate local property values
+    ListGetFirstString ( listID, INSTALLPATH );
+    ListGetNextString ( listID, LOGGINGFOLDER );
+                            
+    // Remove the list from memory.
+    ListDestroy (listID);
+    
+    // Remove initial logging directory
+    if ExistsDir(LOGGINGFOLDER) = 0 then 
+		//MessageBox("LoggingDir: " + LOGGINGDIR, 0);
+		szProgram = "cmd.exe";
+		szCmdLine = "/c ATTRIB -R \"" + LOGGINGFOLDER^"*.*\"";
+		LaunchAppAndWait ( szProgram, szCmdLine, LAAW_OPTION_WAIT | LAAW_OPTION_HIDDEN); 
+		nError = DeleteDir(LOGGINGFOLDER, ALLCONTENTS);
+		if nError < 0 then
+			MessageBox("Error deleting logging directory " + LOGGINGFOLDER + ".\n" +
+		   					"Error: " + FormatMessage(nError), WARNING);		        			        	
+		endif;
+	endif; 
+     
+    // Get Logging Directory Path from properties file 
+    TARGET_FILE = INSTALLPATH^"bin\\WMCOpener.properties";
+    szSearchStr = "logFilePath=";
+     
+    // Find the search string in the source file
+	nvResult = FileGrep (TARGET_FILE, szSearchStr, svReturnLine, nvLineNumber, RESTART);
+
+	switch(nvResult)
+    	case FILE_NOT_FOUND:
+        	// Report error; then abort.     
+        	MessageBox(TARGET_FILE + " not found.", WARNING);
+        	abort;
+    	case FILE_LINE_LENGTH:
+        	// Report error; then abort.
+        	MessageBox (TARGET_FILE + "lines too long.", WARNING);
+        	abort;
+    	case OTHER_FAILURE:
+        	// Report error; then abort.
+        	MessageBox (TARGET_FILE + "Unknown failure on call to FileGrep.",
+                   		WARNING);
+        	abort;
+		case 0:
+		    // Parse the line with the search string.
+		    if StrLength(svReturnLine) > 0 then 
+		    	nStart = StrFind(svReturnLine, szSearchStr) + StrLength(szSearchStr);
+		    	nLength = StrLength(svReturnLine) - StrLength(szSearchStr);
+		        StrSub ( LOGGINGDIR, svReturnLine, nStart, nLength );
+		        if ExistsDir(LOGGINGDIR) = 0 then 
+		        	//MessageBox("LoggingDir: " + LOGGINGDIR, 0);
+		        	szProgram = "cmd.exe";
+		        	szCmdLine = "/c ATTRIB -R \"" + LOGGINGDIR^"*.*\"";
+		        	LaunchAppAndWait ( szProgram, szCmdLine, LAAW_OPTION_WAIT | LAAW_OPTION_HIDDEN); 
+		        	nError = DeleteDir(LOGGINGDIR, ALLCONTENTS);
+		        	if nError < 0 then
+		        		MessageBox("Error deleting logging directory " + LOGGINGDIR + ".\n" +
+		        					"Error: " + FormatMessage(nError), WARNING);		        			        	
+		        	endif;
+		        endif;
+		    else
+		    	MessageBox("Error deleting logging directory. Could not retrieve path from properties file.", WARNING);
+		    endif; 
+		    
+    endswitch;      
+    
+    endif;
+    
+end;
+
+
+
+export prototype FolderBrowseLoggingDir(HWND); 
+function FolderBrowseLoggingDir(hMSI)
+
+STRING svFolder;
+
+begin 
+
+	FolderBrowse(svFolder, "Select Logging Directory", hMSI);
+
+    //MessageBox("Selected folder:\n\n" + svFolder, 0);
+    if (StrLength(svFolder) > 0) then
+    	MsiSetProperty(hMSI,"LOGGINGDIR",svFolder);
+    endif;
+     
+end;  
+
+//************************************************************************
+//INTERNAL FUNCTIONS
+//************************************************************************
+
+function  _FileDelete_N_AddLine(TARGET_FILE,szSearchStr,szNewString,hMSI)
+          
+STRING svReturnLine,szMsg,szLocation,svNumString,svReturnString;
+NUMBER nvResult, nvLineNumber,iCount,nvSize; 
+
+begin	
+	
+	// Find the search string in the source file
+	nvResult = FileGrep (TARGET_FILE, szSearchStr, svReturnLine,nvLineNumber, RESTART);
+
+	NumToStr(svNumString, nvLineNumber );
+       // MessageBox ("Found file. " + TARGET_FILE + " line :"+svNumString, WARNING);
+
+	switch(nvResult)
+    	case FILE_NOT_FOUND:
+        	// Report error; then abort.     
+        	MessageBox( TARGET_FILE + " not found.", WARNING);
+        	abort;
+    	case FILE_LINE_LENGTH:
+        	// Report error; then abort.
+        	MessageBox (TARGET_FILE + "lines too long.", WARNING);
+        	abort;
+    	case OTHER_FAILURE:
+        	// Report error; then abort.
+        	MessageBox (TARGET_FILE + "Unknown failure on call to FileGrep.",
+                   		WARNING);
+        	abort;
+		case 0:
+		    // Delete the line with the search string.
+		    if (FileDeleteLine (TARGET_FILE, nvLineNumber, nvLineNumber) < 0) then
+				MessageBox ("Failed on call to FileDeleteLine.", SEVERE);
+				abort;
+        	endif;
+			 // Insert the new string.
+	    	if (FileInsertLine (TARGET_FILE, szNewString, nvLineNumber, BEFORE) < 0) then
+	        	// Report an error.
+	        	MessageBox ("Failed on call to FileInsertLine.", SEVERE);
+    		endif;
+    endswitch;    	
+    	   
+end;
+
+
+
+function FolderBrowse(svFolder, svDesc, hMSI)
+	STRING szSupportDir, szProductName, szWindowTitle;
+	NUMBER nLength;
+	OBJECT dotNetDll;
+begin
+   
+  	nLength = MAX_PATH + 1;
+	MsiGetProperty(hMSI, "SUPPORTDIR", szSupportDir, nLength);
+	MsiGetProperty(hMSI, "ProductName", szProductName, nLength);
+
+	szWindowTitle = szProductName + " - Installshield Wizard";
+	//MessageBox("Support Dir: " + szSupportDir + "\nProduct name: " + szProductName, INFORMATION); 
+
+	set dotNetDll = CoCreateObjectDotNet(szSupportDir ^ "InstallUtils.dll", "InstallUtils.Dialogs");   
+	dotNetDll.WindowTitle = szWindowTitle;
+	// BrowseForFolder(string desc, string initDir)
+	svFolder = dotNetDll.BrowseForFolder("Select folder");
+	//MessageBox("Folder = " + svFolder, INFORMATION);
+end; 
+

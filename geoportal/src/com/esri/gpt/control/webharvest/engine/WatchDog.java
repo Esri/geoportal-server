@@ -63,7 +63,6 @@ public WatchDog(long watchDogFrequency) {
 public void run() {
   workerThread = Thread.currentThread();
   LOGGER.info("[SYNCHRONIZER] Watch-dog activated.");
-  int attempt = 0;
   do {
     if (!suspended) {
       LOGGER.finer("[SYNCHRONIZER] Watch-dog entered run mode.");
@@ -94,14 +93,12 @@ public void run() {
         if (canceledUuids.length > 0) {
           withdrawAll(canceledUuids);
         }
-        
-        // clear attempt counter
-        attempt = 0;
       } catch (SQLException ex) {
-        attempt++;
-        if (attempt<=getMaxAttempts()) {
-          LOGGER.log(Level.SEVERE, "[SYNCHRONIZER] Error loading tasks for Watch-dog.", ex);
+        if (!shutdown) {
+          LOGGER.severe("[SYNCHRONIZER] Watch-dog will be shut down due to database access error.\r\nRestart the server after correcting database configuration.");
+          LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Error accessing database.", ex);
         }
+        shutdown();
       }
     }
 
@@ -208,12 +205,5 @@ private boolean isSuspendedWithAck() {
     LOGGER.info("[SYNCHRONIZER] Watch-Dog acknowledged suspension");
   }
   return suspended;
-}
-  
-private int getMaxAttempts() {
-  ApplicationContext appCtx = ApplicationContext.getInstance();
-  ApplicationConfiguration appCfg = appCtx.getConfiguration();
-  StringAttributeMap parameters = appCfg.getCatalogConfiguration().getParameters();
-  return Val.chkInt(parameters.getValue("webharvester.maxAttempts"),DEFAULT_MAX_ATTEMPTS);
 }
 }

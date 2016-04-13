@@ -169,7 +169,8 @@ public class BotsParser {
           return robots;
         }
       } catch (IOException ex) {
-        LOG.log(Level.INFO, String.format("Unable to access robots.txt for: %s", serverUrl.toExternalForm()), ex);
+        LOG.log(Level.FINE, String.format("Unable to access robots.txt for: %s", serverUrl.toExternalForm()));
+        LOG.log(Level.FINEST,"",ex);
       }
     }
     return null;

@@ -51,19 +51,23 @@ public class HttpCrawlRequest extends HttpClientRequest {
   }
 
   @Override
-  protected HttpMethodBase createMethod() throws IOException {
-    HttpMethodBase method = super.createMethod();
-    if (bots!=null && !parser().getUserAgent().isEmpty()) {
-      method.setRequestHeader("User-Agent", parser().getUserAgent());
-    }
-    return method;
-  }
-
-  @Override
   public String getUrl() {
     String url = super.getUrl();
-    // if robots.txt available then "host" attribute if available to update url
+    // if robots.txt available and "host" attribute available then update 
+    // url to redicrect to a different end-point
     return transformUrl(bots,url);
+  }
+  
+  /**
+   * Gets throttle delay.
+   * <p>
+   * Throttle delay might be a result of "Crawl-Delay" value read from robots.txt
+   * or it might be override to implement custom throttle policy.
+   * @param bots robots.txt or {@code null} if robots.txt unavailable
+   * @return throttle delay in milliseconds or {@code null} if no throttling required.
+   */
+  protected Long resolveThrottleDelay(Bots bots) {
+    return bots!=null && bots.getCrawlDelay()!=null? 1000L*bots.getCrawlDelay(): null;
   }
 
   private void adviseRobotsTxt() throws IOException {
@@ -76,7 +80,7 @@ public class HttpCrawlRequest extends HttpClientRequest {
         throw new HttpClientException(HttpServletResponse.SC_FORBIDDEN, String.format("Access to %s disallowed by robots.txt", getUrl()));
       }
       LOG.fine(String.format("Access to %s allowed by robots.txt", getUrl()));
-      CrawlLocker.getInstance().enterServer(getProtocolHostPort(), bots.getCrawlDelay());
+      CrawlLocker.getInstance().enterServer(getProtocolHostPort(), resolveThrottleDelay(bots));
     }
   }
   

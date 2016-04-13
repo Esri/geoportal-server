@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  */
 abstract class WorkerBase implements Runnable, IWorker {
 /** logger */
-private static final Logger LOGGER = Logger.getLogger(WorkerBase.class.getCanonicalName());
+protected static final Logger LOGGER = Logger.getLogger(WorkerBase.class.getCanonicalName());
 /** data processor */
 protected final DataProcessor dataProcessor;
 /** executor */

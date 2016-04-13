@@ -14,7 +14,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<gptConfig version="1.2.6">
+<gptConfig version="1.2.7">
 
     <databaseReference name="gpt" jndiName="jdbc/gpt"/>
     
@@ -453,6 +453,11 @@
         <!-- DCAT "rights" attribute printed out regardless of the "accessLevel" value-->
         <parameter key="dcat.rights.writeAlways" value="false"/>
     </catalog>
+    
+    <!-- costomization of web harvester -->
+    <!--webharvester>
+		<dataProcessorFactory enabled="true" className="com.esri.gpt.control.webharvest.extensions.localfolder.LocalFolderDataProcessorFactory" name="localfolder" rootFolder="c:\data"/>
+    </webharvester-->
     
     <!-- Download data configuration.
         - taskUrl: geoprocessing task URL

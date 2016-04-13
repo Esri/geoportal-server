@@ -1014,7 +1014,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   <verbatim>
     <div class="hint res" style="display: none;">
       <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
-      <span class="hint-example">http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer</span>
+      <span class="hint-example">http://server.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer/WMTS/1.0.0/WMTSCapabilities.xml</span>
     </div>
     <div class="hint arcgis" style="display: none;">
       <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>

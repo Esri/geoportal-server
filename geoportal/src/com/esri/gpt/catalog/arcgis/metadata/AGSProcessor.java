@@ -35,7 +35,6 @@ import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
 import com.esri.gpt.framework.robots.Bots;
-import com.esri.gpt.framework.robots.BotsParser;
 import static com.esri.gpt.framework.robots.BotsUtils.parser;
 import static com.esri.gpt.framework.robots.BotsUtils.transformUrl;
 import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
@@ -69,6 +68,7 @@ public class AGSProcessor extends ResourceProcessor {
   private ServiceHandlerFactory factory = new ServiceHandlerFactory();
   private AGSTarget             target = new AGSTarget();
   private UsernamePasswordCredentials credentials;
+  private Long throttleDelay;
 
   /** constructors ============================================================ */
 
@@ -117,6 +117,26 @@ public class AGSProcessor extends ResourceProcessor {
    */
   public void setCredentials(UsernamePasswordCredentials credentials) {
     this.credentials = credentials;
+  }
+
+  /**
+   * Gets throttle delay.
+   * <p>
+   * If set it will override "Crawl-Delay" from robots.txt if robots.txt present.
+   * @return throttle delay in milliseconds or {@code null} if no throttling required
+   */
+  public Long getThrottleDelay() {
+    return throttleDelay;
+  }
+
+  /**
+   * Sets throttle delay.
+   * <p>
+   * If set it will override "Crawl-Delay" from robots.txt if robots.txt present.
+   * @param throttleDelay throttle delay in milliseconds or {@code null} if no throttling required
+   */
+  public void setThrottleDelay(Long throttleDelay) {
+    this.throttleDelay = throttleDelay;
   }
   
   /** methods ================================================================= */
@@ -317,6 +337,19 @@ public class AGSProcessor extends ResourceProcessor {
   }
 
   /**
+   * Resolves throttle delay.
+   * @param bots robots.txt or {@code null} if robots.txt unavailable
+   * @return throttle delay in milliseconds or {@code null} if no throttling required
+   */
+  protected Long resolveThrottleDelay(Bots bots) {
+    return getThrottleDelay()!=null? 
+            getThrottleDelay(): 
+            bots!=null && bots.getCrawlDelay()!=null?  
+              1000L*bots.getCrawlDelay(): 
+              null;
+  }
+  
+  /**
    * Normalizes URL by removing 'wsdl'.
    * @param url URL
    * @return normalized URL
@@ -379,7 +412,7 @@ public class AGSProcessor extends ResourceProcessor {
         throw new ArcGISWebServiceException(String.format("Access to: %s forbidden by robots.txt", getTarget().getSoapUrl()), ex);
       }
       if (bots!=null) {
-        CrawlLocker.getInstance().enterServer(soapUrl, bots.getCrawlDelay());
+        CrawlLocker.getInstance().enterServer(soapUrl, resolveThrottleDelay(bots));
       }
     }
     ServiceCatalogBindingStub stub = new ServiceCatalogBindingStub(soapUrl);
