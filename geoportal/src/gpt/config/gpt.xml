@@ -394,6 +394,8 @@
         <parameter key="httpClient.alwaysClose" value="false"/>
         <!-- If set to true it allows the registration of web resources with same URL --> 
  	<parameter key="AllowDuplicateResourceURL" value="true"/>	  
+	<!-- Setting AllowonlyAuthenticatedUser to true denies access to anonymous users. -->
+	<parameter key="AllowOnlyAuthenticatedUser" value="true"/>	  
         
 		    <!-- Resource Link Builder
 			      - resourceLinkBuilder.preview.filter: regular expression disabling ‘preview’ link on search result 
