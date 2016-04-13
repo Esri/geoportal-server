@@ -390,7 +390,8 @@
         <parameter key="httpClientRequest.connectionTimeout" value="2[MINUTE]"/>
         <parameter key="httpClientRequest.responseTimeout" value="2[MINUTE]"/>
         <parameter key="httpClient.alwaysClose" value="false"/>
-  
+	<!-- Setting AllowonlyAuthenticatedUser to true denies access to anonymous users. -->
+	<parameter key="AllowOnlyAuthenticatedUser" value="true"/>	  
         
 		    <!-- Resource Link Builder
 			      - resourceLinkBuilder.preview.filter: regular expression disabling ‘preview’ link on search result 

@@ -97,6 +97,10 @@ function hpSubmitForm(event, form) {
 
 			<h:panelGrid columns="1" summary="#{gptMsg['catalog.general.designOnly']}" width="90%" styleClass="homeTableCol">
 				<h:panelGrid columns="2" id="_pnlKeyword" cellpadding="0" cellspacing="0">
+				   <%// Handle the AllowOnlyAutheticatedUser parameter: if set to true authentication is mandatory
+				   com.esri.gpt.framework.context.RequestContext rcx = com.esri.gpt.framework.context.RequestContext.extract(request);
+				   String sAllowOnlyAuthenticatedUser=rcx.getApplicationConfiguration().getCatalogConfiguration().getParameters().getValue("AllowOnlyAuthenticatedUser");
+				   if (!sAllowOnlyAuthenticatedUser.equals("true") || (rcx.getUser().getAuthenticationStatus().getWasAuthenticated())) {%>
 				
 					<h:form id="hpFrmSearch" onkeypress="javascript: hpSubmitForm(event, this);">
 					<h:inputText id="itxFilterKeywordText" 
@@ -112,7 +116,7 @@ function hpSubmitForm(event, form) {
 					    value="#{SearchController.searchEvent.eventExecuteSearch}" />
 					</h:commandButton>
 					</h:form>
-					
+				   <%}%>			
 				</h:panelGrid>
 
 				<h:outputText value="#{gptMsg['catalog.main.home.topic.findData.searchData']}"/>
