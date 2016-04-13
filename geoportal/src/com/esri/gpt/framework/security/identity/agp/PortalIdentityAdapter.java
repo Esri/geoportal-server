@@ -292,8 +292,8 @@ public class PortalIdentityAdapter extends IdentityAdapter {
     user.reset();
 		try {
 			String referer = null;
-			//Decode username from response
-		    username = URLDecoder.decode(username,"UTF-8");
+			//Decode username from response, not-required change was made to oauthResponse.jsp
+		  //username = URLDecoder.decode(username,"UTF-8");
 			executeGetUser(user,token,username,referer);
 		} catch (Throwable t) {
 			t.printStackTrace();
