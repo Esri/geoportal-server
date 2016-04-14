@@ -17,13 +17,27 @@
 <%@ taglib prefix="f" uri="http://java.sun.com/jsf/core" %>
 <%@ taglib prefix="h" uri="http://java.sun.com/jsf/html" %>
 <%@taglib uri="http://www.esri.com/tags-gpt" prefix="gpt" %>
+<%@page import="com.esri.gpt.framework.context.*" %>
+<%@page import="com.esri.gpt.framework.util.Val" %>
+
 
 <f:verbatim>
-
 <style type="text/css">
 .actionColumnStyle {
   min-width: 10em;
 }
+<%
+  ApplicationContext appCtx = ApplicationContext.getInstance();
+  ApplicationConfiguration appCfg = appCtx.getConfiguration();
+  boolean duplicateEnabled = Val.chkBool(appCfg.getCatalogConfiguration().getParameters().getValue("catalog.enableDuplicate"),true);
+  if (!duplicateEnabled) {
+%>
+option[value='Duplicate'] {
+  display: none;
+}
+<%
+  }
+%>
 </style>
 <script type="text/javascript" language="Javascript">
 
@@ -668,7 +682,8 @@ function mmdClearAclSelection(){
     <%// Duplicate command %>
     <f:selectItem
       itemValue="Duplicate"
-      itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.Duplicate']}"/>            
+      itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.Duplicate']}"
+      noSelectionOption="true"/>            
     <f:selectItem
       itemValue="delete"
       itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.delete']}"/>
