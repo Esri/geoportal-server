@@ -27,81 +27,81 @@
         <xsl:attribute namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#" name="about">
           <xsl:value-of select="$sourceUrl"/>
         </xsl:attribute>
-        <xsl:if test="/oai_dc:dc/dc:contributor">
+        <xsl:for-each select="/oai_dc:dc/dc:contributor">
           <dc:contributor>
-            <xsl:value-of select="/oai_dc:dc/dc:contributor"/>
+            <xsl:value-of select="."/>
           </dc:contributor>
-        </xsl:if>
-        <xsl:if test="/oai_dc:dc/dc:coverage">
+        </xsl:for-each>
+        <xsl:for-each select="/oai_dc:dc/dc:coverage">
           <dc:coverage>
-            <xsl:value-of select="/oai_dc:dc/dc:coverage"/>
+            <xsl:value-of select="."/>
           </dc:coverage>
-        </xsl:if>
-        <xsl:if test="/oai_dc:dc/dc:creator">
+        </xsl:for-each>
+        <xsl:for-each select="/oai_dc:dc/dc:creator">
           <dc:creator>
-            <xsl:value-of select="/oai_dc:dc/dc:creator"/>
+            <xsl:value-of select="."/>
           </dc:creator>
-        </xsl:if>
-        <xsl:if test="/oai_dc:dc/dc:date">
+        </xsl:for-each>
+        <xsl:for-each select="/oai_dc:dc/dc:date">
           <dc:date>
-            <xsl:value-of select="/oai_dc:dc/dc:date"/>
+            <xsl:value-of select="."/>
           </dc:date>
-        </xsl:if>
-        <xsl:if test="/oai_dc:dc/dc:description">
+        </xsl:for-each>
+        <xsl:for-each select="/oai_dc:dc/dc:description">
           <dc:description>
-            <xsl:value-of select="/oai_dc:dc/dc:description"/>
+            <xsl:value-of select="."/>
           </dc:description>
-        </xsl:if>
-        <xsl:if test="/oai_dc:dc/dc:format">
+        </xsl:for-each>
+        <xsl:for-each select="/oai_dc:dc/dc:format">
           <dc:format>
-            <xsl:value-of select="/oai_dc:dc/dc:format"/>
+            <xsl:value-of select="."/>
           </dc:format>
-        </xsl:if>
-        <xsl:if test="/oai_dc:dc/dc:identifier">
+        </xsl:for-each>
+        <xsl:for-each select="/oai_dc:dc/dc:identifier">
           <dc:identifier>
-            <xsl:value-of select="/oai_dc:dc/dc:identifier"/>
+            <xsl:value-of select="."/>
           </dc:identifier>
-        </xsl:if>
-        <xsl:if test="/oai_dc:dc/dc:language">
+        </xsl:for-each>
+        <xsl:for-each select="/oai_dc:dc/dc:language">
           <dc:language>
-            <xsl:value-of select="/oai_dc:dc/dc:language"/>
+            <xsl:value-of select="."/>
           </dc:language>
-        </xsl:if>
-        <xsl:if test="/oai_dc:dc/dc:publisher">
+        </xsl:for-each>
+        <xsl:for-each select="/oai_dc:dc/dc:publisher">
           <dc:publisher>
-            <xsl:value-of select="/oai_dc:dc/dc:publisher"/>
+            <xsl:value-of select="."/>
           </dc:publisher>
-        </xsl:if>
-        <xsl:if test="/oai_dc:dc/dc:relation">
+        </xsl:for-each>
+        <xsl:for-each select="/oai_dc:dc/dc:relation">
           <dc:relation>
-            <xsl:value-of select="/oai_dc:dc/dc:relation"/>
+            <xsl:value-of select="."/>
           </dc:relation>
-        </xsl:if>
-        <xsl:if test="/oai_dc:dc/dc:rights">
+        </xsl:for-each>
+        <xsl:for-each select="/oai_dc:dc/dc:rights">
           <dc:rights>
-            <xsl:value-of select="/oai_dc:dc/dc:rights"/>
+            <xsl:value-of select="."/>
           </dc:rights>
-        </xsl:if>
-        <xsl:if test="/oai_dc:dc/dc:source">
+        </xsl:for-each>
+        <xsl:for-each select="/oai_dc:dc/dc:source">
           <dc:source>
-            <xsl:value-of select="/oai_dc:dc/dc:source"/>
+            <xsl:value-of select="."/>
           </dc:source>
-        </xsl:if>
-        <xsl:if test="/oai_dc:dc/dc:subject">
+        </xsl:for-each>
+        <xsl:for-each select="/oai_dc:dc/dc:subject">
           <dc:subject>
-            <xsl:value-of select="/oai_dc:dc/dc:subject"/>
+            <xsl:value-of select="."/>
           </dc:subject>
-        </xsl:if>
-        <xsl:if test="/oai_dc:dc/dc:title">
+        </xsl:for-each>
+        <xsl:for-each select="/oai_dc:dc/dc:title">
           <dc:title>
-            <xsl:value-of select="/oai_dc:dc/dc:title"/>
+            <xsl:value-of select="."/>
           </dc:title>
-        </xsl:if>
-        <xsl:if test="/oai_dc:dc/dc:type">
+        </xsl:for-each>
+        <xsl:for-each select="/oai_dc:dc/dc:type">
           <dc:type>
-            <xsl:value-of select="/oai_dc:dc/dc:type"/>
+            <xsl:value-of select="."/>
           </dc:type>
-        </xsl:if>
+        </xsl:for-each>
       </rdf:Description>
     </rdf:RDF>
   </xsl:template>
