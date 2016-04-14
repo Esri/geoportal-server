@@ -380,6 +380,7 @@
         <parameter key="catalog.enableEditForAllPubMethods" value="false"/>
         <!-- This flag allows an administrator to modify metadata records even if he's not the owner -->
         <parameter key="catalog.enableEditForAdministrator" value="false"/>
+        <!-- This flag allows user to duplicate metadata records -->
         <parameter key="catalog.enableDuplicate" value="true"/>
         <parameter key="catalog.admin.allowApplyToAll" value="true"/>
         <parameter key="catalog.useCollections" value="false"/>
