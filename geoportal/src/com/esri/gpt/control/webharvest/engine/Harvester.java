@@ -351,8 +351,7 @@ public class Harvester implements HarvesterMBean {
         taskQueue.notifyChange();
       }
     } catch (SQLException ex) {
-      LOGGER.log(Level.SEVERE, "[SYNCHRONIZER] Error recovering from the previous failout.");
-      LOGGER.log(Level.FINEST,"[SYNCHRONIZER] Error accessing database.",ex);
+      LOGGER.log(Level.SEVERE, "[SYNCHRONIZER] Error recovering from the previous failout", ex);
     } finally {
       context.onExecutionPhaseCompleted();
     }

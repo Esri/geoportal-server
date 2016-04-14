@@ -31,14 +31,13 @@ import java.util.logging.Logger;
 
 /**
  * Queue of tasks. Allows to add new taskDescriptor to the end of the queue and pick
- * a next taskDescriptor from the beginning of the queue. Only one taskDescriptor of associated with
+ * a next taskDescriptor from the begining of the queue. Only one taskDescriptor of associated with
  * given repository can exist in the queue.
  */
 class TaskQueue {
 
 /** logger */
 private static final Logger LOGGER = Logger.getLogger(TaskQueue.class.getCanonicalName());
-private volatile boolean active = true;
 
 /**
  * Adds new harvesting task to the queue.
@@ -81,14 +80,9 @@ public synchronized void notifyChange() {
  */
 public boolean cancel(RequestContext context, String uuid) {
   try {
-    if (active) {
-      HjCancelRequest request = new HjCancelRequest(context, uuid);
-      return request.execute();
-    } else {
-      return false;
-    }
+    HjCancelRequest request = new HjCancelRequest(context, uuid);
+    return request.execute();
   } catch (SQLException ex) {
-    active = false;
     LOGGER.log(Level.WARNING, "[SYNCHRONIZER] Error canceling task", ex);
     return false;
   }
@@ -102,14 +96,9 @@ public boolean cancel(RequestContext context, String uuid) {
  */
 public boolean complete(RequestContext context, String uuid) {
   try {
-    if (active) {
-      HjCompleteRequest request = new HjCompleteRequest(context, uuid);
-      return request.execute();
-    } else {
-      return false;
-    }
+    HjCompleteRequest request = new HjCompleteRequest(context, uuid);
+    return request.execute();
   } catch (SQLException ex) {
-    active = false;
     LOGGER.log(Level.WARNING, "[SYNCHRONIZER] Error completing task", ex);
     return false;
   }
@@ -122,22 +111,13 @@ public boolean complete(RequestContext context, String uuid) {
  * @throws SQLException if accessing database fails
  */
 public Task next(RequestContext context) throws SQLException {
-  try {
-    if (active) {
-      HjGetNextRequest request = new HjGetNextRequest(context);
-      request.execute();
-      HjRecords records = request.getQueryResult().getRecords();
-      if (records.size() != 1) {
-        return null;
-      }
-      return new Task(records.get(0));
-    } else {
-      return null;
-    }
-  } catch (SQLException ex) {
-    active = false;
-    throw ex;
+  HjGetNextRequest request = new HjGetNextRequest(context);
+  request.execute();
+  HjRecords records = request.getQueryResult().getRecords();
+  if (records.size() != 1) {
+    return null;
   }
+  return new Task(records.get(0));
 }
 
 /**
@@ -147,19 +127,14 @@ public Task next(RequestContext context) throws SQLException {
  */
 public Task[] all(RequestContext context) {
   try {
-    if (active) {
-      HjLoadAllRequest request = new HjLoadAllRequest(context);
-      request.execute();
-      ArrayList<Task> tasks = new ArrayList<Task>();
-      for (HjRecord record : request.getQueryResult().getRecords()) {
-        tasks.add(new Task(record));
-      }
-      return tasks.toArray(new Task[tasks.size()]);
-    } else {
-      return new Task[]{};
+    HjLoadAllRequest request = new HjLoadAllRequest(context);
+    request.execute();
+    ArrayList<Task> tasks = new ArrayList<Task>();
+    for (HjRecord record : request.getQueryResult().getRecords()) {
+      tasks.add(new Task(record));
     }
+    return tasks.toArray(new Task[tasks.size()]);
   } catch (SQLException ex) {
-    active = false;
     LOGGER.log(Level.WARNING, "[SYNCHRONIZER] Error getting all tasks", ex);
     return new Task[]{};
   }

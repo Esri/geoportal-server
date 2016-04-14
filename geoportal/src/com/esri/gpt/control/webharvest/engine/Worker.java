@@ -22,6 +22,8 @@ import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.util.Val;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -139,7 +141,19 @@ class Worker extends WorkerBase {
           }
         }
       } catch (SQLException ex) {
-        onSqlException(ex);
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.HOUR, -1);
+        if (getLastErrorLogDate()==null || getLastErrorLogDate().before(now.getTime())) {
+          Logger.getLogger(Worker.class.getCanonicalName()).log(Level.SEVERE, "[SYNCHRONIZER] Internal worker error.", ex);
+          setLastErrorLogDate(new Date());
+        }
+        // wait for another task
+        synchronized (taskQueue) {
+          try {
+            taskQueue.wait(60000); // wait a minute and try again
+          } catch (InterruptedException ex1) {
+          }
+        }
       } finally {
         if (executor != null && !shutdown) {
           ExecutionUnit unit = executor.getExecutionUnit();
@@ -153,15 +167,6 @@ class Worker extends WorkerBase {
     } while (!shutdown && !ended);
   }
 
-  /**
-   * Called upon an SQLException.
-   * @param ex exception
-   */
-  protected void onSqlException(SQLException ex) {
-    LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Error accessing database.", ex);
-    LOGGER.severe("[SYNCHRONIZER] Task queue will be shut down due to database access error.\r\nRestart the server after correcting database configuration.");
-  }
-  
   /**
    * Creates new executor.
    *
