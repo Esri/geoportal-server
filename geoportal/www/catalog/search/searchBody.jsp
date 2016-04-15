@@ -175,12 +175,14 @@ dojo.declare("SearchMap", null, {
 
   onMapLoaded: function() {
     if (this._gptMap!=null) {
-	// Set the map extent based on the bookmark
-    	var extent= document.getElementById("frmSearchCriteria:scSel").value;
-	if((extent!=null)&&(extent!=""))
-		setTimeout(dojo.hitch(this,"setMapExtent",true),1000);
-	else
-      		setTimeout(dojo.hitch(this,"zoomToInitExtent",true),1000);
+      // Set the map extent based on the bookmark
+      var scSel = document.getElementById("frmSearchCriteria:scSel");
+      var extent= scSel!=null? scSel.value: null;
+      if((extent!=null)&&(extent!=""))
+        setTimeout(dojo.hitch(this,"setMapExtent",true),1000);
+      else
+        setTimeout(dojo.hitch(this,"zoomToInitExtent",true),1000);
+
       this.drawFootPrints();
       var agsMap = this._gptMap.getAgsMap();
       if (agsMap != null) {
