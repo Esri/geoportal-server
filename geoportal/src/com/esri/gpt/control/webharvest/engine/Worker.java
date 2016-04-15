@@ -22,6 +22,8 @@ import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.util.Val;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -103,15 +105,12 @@ class Worker extends WorkerBase {
 
   @Override
   protected void execute() {
-    int attempt = 0;
     do {
       dropped = false;
 
       try {
         // get next available task
         ExecutionUnit nextUnit = !suspended ? next() : null;
-        // clear atempts counter
-        attempt = 0;
         if (nextUnit != null) {
           if (ApprovalStatus.isPubliclyVisible(nextUnit.getRepository().getApprovalStatus().name())
                   && nextUnit.getRepository().getSynchronizable()
@@ -142,16 +141,17 @@ class Worker extends WorkerBase {
           }
         }
       } catch (SQLException ex) {
-        attempt++;
-        if (attempt<=getMaxAttempts()) {
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.HOUR, -1);
+        if (getLastErrorLogDate()==null || getLastErrorLogDate().before(now.getTime())) {
           Logger.getLogger(Worker.class.getCanonicalName()).log(Level.SEVERE, "[SYNCHRONIZER] Internal worker error.", ex);
-        } else {
-          // wait for another task
-          synchronized (taskQueue) {
-            try {
-              taskQueue.wait(60000); // wait a minute and try again
-            } catch (InterruptedException ex1) {
-            }
+          setLastErrorLogDate(new Date());
+        }
+        // wait for another task
+        synchronized (taskQueue) {
+          try {
+            taskQueue.wait(60000); // wait a minute and try again
+          } catch (InterruptedException ex1) {
           }
         }
       } finally {

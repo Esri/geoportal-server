@@ -341,6 +341,11 @@
             - catalog.enableEditForAllPubMethods:
 				true if document editing should be enabled for all publication methods,
 				false if only documents created by the editor should be editable
+            - catalog.enableEditForAdministrator: 
+                true if document editing should be enabled for administrator even
+                if he is not an owner of the metadata
+            - catalog.enableDuplicate:
+                true to enable "Duplicate" operation on metadata
             - catalog.admin.allowApplyToAll:
 				true if an administrator should be able to apply an action to 
 				all matching records
@@ -375,9 +380,17 @@
 					[MINUTE] – number of minutes
 					[HOUR] – number of hours
             - httpClient.alwaysClose: forces to always close socket connection for requests to the remote endpoints using Apache HTTP client. 
-				Default: false.                  
+				Default: false.   
+            - AllowDuplicateResourceURL: 
+                true to allow registration of web resources with the URL which 
+                already has been registered
+            - AllowonlyAuthenticatedUser:
+                true to disable access to the search and browse pages for users
+                which ahs not been authenticated
         -->  
         <parameter key="catalog.enableEditForAllPubMethods" value="false"/>
+        <parameter key="catalog.enableEditForAdministrator" value="false"/>
+        <parameter key="catalog.enableDuplicate" value="true"/>
         <parameter key="catalog.admin.allowApplyToAll" value="true"/>
         <parameter key="catalog.useCollections" value="false"/>
         <parameter key="database.isCaseSensitive" value="true"/>
@@ -390,7 +403,8 @@
         <parameter key="httpClientRequest.connectionTimeout" value="2[MINUTE]"/>
         <parameter key="httpClientRequest.responseTimeout" value="2[MINUTE]"/>
         <parameter key="httpClient.alwaysClose" value="false"/>
-  
+        <parameter key="AllowDuplicateResourceURL" value="false"/>	  
+        <parameter key="AllowOnlyAuthenticatedUser" value="false"/>	  
         
 		    <!-- Resource Link Builder
 			      - resourceLinkBuilder.preview.filter: regular expression disabling ‘preview’ link on search result 

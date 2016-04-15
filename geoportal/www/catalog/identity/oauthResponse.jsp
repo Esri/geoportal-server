@@ -59,8 +59,11 @@
 		 if (console && console.error) console.error("[OAuth Error]:",params.error," - ",params.error_description);
 		 window.location = href+"catalog/main/home.page";
 	 } else if ((params.access_token !== null) && (params.username != null)) {
-		 q = "?t="+encodeURIComponent(params.access_token);
-		 q += "&u="+encodeURIComponent(params.username);
+	   // no need ro re-encode
+		 //q = "?t="+encodeURIComponent(params.access_token);
+		 //q += "&u="+encodeURIComponent(params.username);
+		 q = "?t="+params.access_token;
+     q += "&u="+params.username;
 		 window.location = href+"catalog/identity/oauthResponse.jsp"+q;
 	 } else {
 		 if (console && console.error) console.error("[OAuth Error]:", "Invalid Response");

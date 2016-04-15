@@ -20,13 +20,22 @@ import com.esri.gpt.control.webharvest.engine.DataProcessor;
 import com.esri.gpt.control.webharvest.engine.ExecutionUnit;
 import com.esri.gpt.control.webharvest.engine.Harvester;
 import com.esri.gpt.control.webharvest.engine.Suspender;
+import static com.esri.gpt.control.webharvest.extensions.localfolder.PathUtil.sanitizeFileName;
+import static com.esri.gpt.control.webharvest.extensions.localfolder.PathUtil.splitPath;
+import static com.esri.gpt.control.webharvest.extensions.localfolder.StringListUtil.head;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.resource.api.Publishable;
+import com.esri.gpt.framework.resource.api.SourceUri;
+import com.esri.gpt.framework.util.UuidUtil;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.transform.TransformerConfigurationException;
@@ -44,8 +53,8 @@ public class LocalFolderDataProcessor implements DataProcessor {
   private final Harvester.Listener listener;
   private final Suspender suspender;
   
-  //private File destinationFolder;
-  //private List<String> subFolder;
+  private File destinationFolder;
+  private List<String> subFolder;
   private LocalFolder localFolder;
 
   /**
@@ -81,7 +90,14 @@ public class LocalFolderDataProcessor implements DataProcessor {
 
   @Override
   public void onMetadata(ExecutionUnit unit, Publishable record) throws IOException, SQLException, CatalogIndexException, TransformerConfigurationException {
-    if (localFolder!=null) {
+    if (destinationFolder!=null) {
+      File f = generateFileName(record.getSourceUri());
+      f.getParentFile().mkdirs();
+      if (!f.getName().contains(".")) {
+        f = new File(f.getParentFile(),f.getName()+".xml");
+      }
+      FileOutputStream output = null;
+      ByteArrayInputStream input = null;
       try {
         localFolder.storeData(record.getSourceUri(), record.getContent());
       } catch (IOException ex) {
@@ -96,9 +112,50 @@ public class LocalFolderDataProcessor implements DataProcessor {
   public void onStart(ExecutionUnit unit) {
     try {
       URL hostUrl = new URL(unit.getRepository().getHostUrl());
-      localFolder = rootFolder!=null? new LocalFolder(rootFolder, hostUrl): null;
+      destinationFolder = rootFolder!=null? new File(rootFolder,hostUrl.getHost()): null;
+      subFolder = splitPath(hostUrl.getPath());
     } catch (MalformedURLException ex) {
       LOG.log(Level.SEVERE, "Error starting harvesting", ex);
+    }
+  }
+  
+  private File generateFileName(SourceUri uri) {
+    String sUri = uri.asString();
+    
+    File fileName = destinationFolder;
+    try {
+      List<String> stock;
+      
+      URL u = new URL(sUri);
+      List<String> path = splitPath(u);
+      if (path.size()>0) {
+        if (path.size()>1) {
+          stock = StringListUtil.merge(subFolder,head(path, path.size()-1));
+          stock.add(path.get(path.size()-1));
+        } else {
+          stock = Arrays.asList(new String[0]);
+          stock.addAll(subFolder);
+          stock.addAll(path);
+        }
+      } else {
+        stock = subFolder;
+      }
+      
+      for (String t: stock) {
+        fileName = new File(fileName,t);
+      }
+      return fileName;
+    } catch (MalformedURLException ex) {
+      if (UuidUtil.isUuid(sUri)) {
+        fileName = new File(fileName,sanitizeFileName(sUri)+".xml");
+        return fileName;
+      } else {
+        File f = new File(sanitizeFileName(sUri)+".xml");
+        for (String t: StringListUtil.merge(subFolder,splitPath(f))) {
+          fileName = new File(fileName,t);
+        }
+        return fileName;
+      }
     }
   }
 }

@@ -74,7 +74,12 @@ public class HrAssertUrlRequest extends HrRequest {
 
       rs = st.executeQuery();
 
-      return rs.next();
+       /* if "AllowDuplicateResourceURL" exists and is "true", then it is possibile to register web resources with same url */
+      if ((getRequestContext().getCatalogConfiguration().getParameters().containsKey("AllowDuplicateResourceURL")) &&
+	          (getRequestContext().getCatalogConfiguration().getParameters().getValue("AllowDuplicateResourceURL").equals("true")) )
+          return(false); 
+      else
+	        return rs.next();
 
     } finally {
       closeResultSet(rs);

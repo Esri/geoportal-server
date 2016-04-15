@@ -1515,6 +1515,42 @@ public void deleteIndex(PublicationRecord record)
 }
 
 /**
+ * Makes the selected records editable, changing the
+ * publication method in "editor"
+ * 
+ * @param publisher the publisher executing this request
+ * @param uuids the set of uuids to update
+ */
+public int setEditable(Publisher publisher, 
+        StringSet uuids)
+throws SQLException, CatalogIndexException {
+
+// update the database publication method
+PreparedStatement st = null;
+int nRows = 0;
+Connection con = returnConnection().getJdbcConnection();
+StringBuffer sbSql = new StringBuffer();
+try {
+	String sUuids = uuidsToInClause(uuids);
+	if (sUuids.length() > 0) {   
+		// execute the update, don't update documents in 'draft' mode
+		sbSql = new StringBuffer();     
+		sbSql.append("UPDATE ").append(getResourceTableName());
+		sbSql.append(" SET PUBMETHOD='editor'");
+		sbSql.append(" WHERE DOCUUID IN (").append(sUuids).append(")");
+		logExpression(sbSql.toString());
+		LogUtil.getLogger().log(Level.INFO,sbSql.toString()+" "+sUuids);
+		st = con.prepareStatement(sbSql.toString());
+		nRows = st.executeUpdate();
+	}
+} finally {
+closeStatement(st);
+}
+
+return nRows;
+}
+
+/**
  * Updates the synchronization status code for a collection of records.
  * @param status the synchronization status code
  * @param where the where clause indicating the recouds to update
@@ -1562,6 +1598,123 @@ private String generateQMarks(int size) {
     sb.append(sb.length()>0?",":"").append("?");
   }
   return sb.toString();
+}
+
+/**
+ * Duplicate a record 
+ * 
+ * @param publisher the publisher executing this request
+ * @param uuids the set of uuids to update
+ * 
+ * The new record with following rules:
+ * - new UUID is random
+ * - new DOCUUID is random
+ * - new Title is Old Title + a timestamp
+ * - Same Owner
+ * - Status is set to draft
+ * - PubMethod is "editor"
+ */
+public int duplicateRecord(Publisher publisher, 
+        StringSet uuids) 
+throws SQLException, CatalogIndexException {
+
+	// update the database approval status
+	PreparedStatement st = null;
+	PreparedStatement insRes = null;
+	PreparedStatement newIDst = null;
+	PreparedStatement insResData = null;
+	int nRows = 0;
+	Connection con = returnConnection().getJdbcConnection();
+	StringBuffer sbSql = new StringBuffer();
+	StringBuffer newDataID = new StringBuffer();
+	StringBuffer newResource = new StringBuffer();
+	StringBuffer newResourceData = new StringBuffer();
+
+	try {
+		String sUuids = uuidsToInClause(uuids);
+		if (sUuids.length() > 0) {   
+			// take the xml string of the selected record to duplicate from resource table
+			sbSql.append("SELECT XML,FILEIDENTIFIER,TITLE FROM "+this.getResourceDataTableName()+","+this.getResourceTableName());
+			sbSql.append(" WHERE "+this.getResourceDataTableName()+".DOCUUID="+this.getResourceTableName()+".DOCUUID AND "+this.getResourceDataTableName()+".DOCUUID IN (").append(sUuids).append(")");
+			logExpression(sbSql.toString());
+			LogUtil.getLogger().log(Level.INFO,sbSql.toString()+" "+sUuids);
+			st = con.prepareStatement(sbSql.toString());
+			ResultSet rs = st.executeQuery();
+			rs.next();
+			String xml=rs.getString(1);
+
+			String oldFileID=rs.getString(2);
+			String oldTitle=rs.getString(3);
+			closeStatement(st);
+
+			//create new resource record
+			java.util.Date d= new java.util.Date();
+			Timestamp t=new Timestamp(d.getTime());
+			
+			String newFileID="";
+			if((!oldFileID.equals(""))&&(!oldFileID.equals(" ")))
+				newFileID="{"+java.util.UUID.randomUUID().toString().toUpperCase()+"}";
+			LogUtil.getLogger().log(Level.INFO,oldFileID+";"+newFileID);
+			
+			String newTitle="";
+			if(oldTitle.contains(";-;"))
+				newTitle=oldTitle.substring(0,oldTitle.indexOf(";-;"))+";-;"+t;
+			else
+				newTitle=oldTitle+";-;"+t;
+			
+			String uuid = java.util.UUID.randomUUID().toString().toUpperCase();
+			newResource.append("INSERT INTO "+this.getResourceTableName()+" (DOCUUID,TITLE,OWNER,APPROVALSTATUS,PUBMETHOD,FILEIDENTIFIER) ");
+			newResource.append("VALUES (?,?,?,?,?,?)");
+			logExpression(newResource.toString());
+			LogUtil.getLogger().log(Level.INFO,newResource.toString()+" "+t+" "+uuid);
+			insRes=con.prepareStatement(newResource.toString());
+			insRes.setString(1, "{"+uuid+"}");
+			insRes.setString(2, newTitle);
+			insRes.setInt(3, publisher.getLocalID());
+			insRes.setString(4, "draft");
+			insRes.setString(5, "editor");
+			insRes.setString(6, newFileID);
+			nRows=insRes.executeUpdate();
+			closeStatement(insRes);
+
+			//take the ID just created for the new record
+			newDataID.append("SELECT ID FROM "+this.getResourceTableName());
+			newDataID.append(" WHERE DOCUUID IN (?)");
+			logExpression(newDataID.toString());
+			LogUtil.getLogger().log(Level.INFO,newDataID.toString()+" "+uuid);
+			newIDst = con.prepareStatement(newDataID.toString());
+			newIDst.setString(1, "{"+uuid+"}");
+			ResultSet IDset = newIDst.executeQuery();
+			IDset.next();
+			long ID=IDset.getLong(1);
+			closeStatement(newIDst);
+			
+			//insert the  new resource data record
+			String newXml="";
+			if(newFileID!="")
+				newXml=xml.replace(oldFileID,newFileID).replace(">"+oldTitle+"<",">"+newTitle+"<");//new fileID and title
+			else
+				newXml=xml.replace(">"+oldTitle+"<",">"+newTitle+"<");//new title
+			newResourceData.append("INSERT INTO "+this.getResourceDataTableName());
+			newResourceData.append(" (DOCUUID,ID,XML)");
+			newResourceData.append(" VALUES(?,?,?)");
+			logExpression(newResourceData.toString());
+			LogUtil.getLogger().log(Level.INFO,newResourceData.toString()+" "+uuid);
+			insResData=con.prepareStatement(newResourceData.toString());
+			insResData.setString(1, "{"+uuid+"}");
+			insResData.setLong(2, ID);
+			insResData.setString(3, newXml);
+			nRows=insResData.executeUpdate();
+			closeStatement(insResData);
+		}
+	} finally {
+	closeStatement(st);
+	closeStatement(insRes);
+	closeStatement(newIDst);
+	closeStatement(insResData);
+	}
+
+	return nRows;
 }
 
 }
