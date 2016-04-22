@@ -574,6 +574,7 @@ public class GetRecordsProvider implements IOperationProvider {
     // initialize
     LOGGER.finer("Handling csw:GetRecords request XML...");
     QueryOptions qOptions = context.getRequestOptions().getQueryOptions();
+    qOptions.setMaxRecordsThreshold(getMaxRecordsThreshold());
     ServiceProperties svcProps = context.getServiceProperties();
     ParseHelper pHelper = new ParseHelper();
     ValidationHelper vHelper = new ValidationHelper();
