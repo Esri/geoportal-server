@@ -288,13 +288,13 @@
       <inspire_common:TemporalReference>
         <!-- one temporal reference is mandatory -->
 
-        <inspire_common:DateOfCreation>YYYY-MM-DD</inspire_common:DateOfCreation>        
-        <inspire_common:DateOfLastRevision>YYYY-MM-DD</inspire_common:DateOfLastRevision>
-        <inspire_common:DateOfPublication>YYYY-MM-DD</inspire_common:DateOfPublication>
+        <inspire_common:DateOfCreation>1900-01-01</inspire_common:DateOfCreation>        
+        <inspire_common:DateOfLastRevision>1900-01-01</inspire_common:DateOfLastRevision>
+        <inspire_common:DateOfPublication>1900-01-01</inspire_common:DateOfPublication>
         <inspire_common:TemporalExtent>
           <inspire_common:IntervalOfDates>
-            <inspire_common:StartingDate>YYYY-MM-DD</inspire_common:StartingDate>
-            <inspire_common:EndDate>YYYY-MM-DD</inspire_common:EndDate>
+            <inspire_common:StartingDate>1900-01-01</inspire_common:StartingDate>
+            <inspire_common:EndDate>1900-01-01</inspire_common:EndDate>
           </inspire_common:IntervalOfDates>
         </inspire_common:TemporalExtent>
         <!-- end of temporal reference elements -->
@@ -333,7 +333,7 @@
         <inspire_common:OrganisationName>organization name</inspire_common:OrganisationName>
         <inspire_common:EmailAddress>email address like example@email.com</inspire_common:EmailAddress>
       </inspire_common:MetadataPointOfContact>
-      <inspire_common:MetadataDate>YYYY-MM-DD</inspire_common:MetadataDate>
+      <inspire_common:MetadataDate>1900-01-01</inspire_common:MetadataDate>
       <inspire_common:SpatialDataServiceType>discovery</inspire_common:SpatialDataServiceType>
       <inspire_common:MandatoryKeyword xsi:type="inspire_common:classificationOfSpatialDataService">
         <inspire_common:KeywordValue>infoCatalogueService</inspire_common:KeywordValue>
