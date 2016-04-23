@@ -63,7 +63,7 @@
       <ows:IndividualName>name</ows:IndividualName>
       <ows:PositionName>position</ows:PositionName>
       <ows:ContactInfo>
-        <ows:Phone>
+		<ows:Phone>
           <ows:Voice>voice</ows:Voice>
           <ows:Facsimile>fax</ows:Facsimile>
         </ows:Phone>
@@ -76,9 +76,9 @@
           <ows:Country>country</ows:Country>
           <ows:ElectronicMailAddress>email</ows:ElectronicMailAddress>
         </ows:Address>
-        <ows:OnlineResource xlink:href=""/>
-      </ows:ContactInfo>
-	  <ows:Role codeSpace="ISOTC211/19115">pointOfContact</ows:Role>
+        <ows:OnlineResource xlink:href="http://gptogc.esri.com/geoportal/csw"/>
+		</ows:ContactInfo>
+		<ows:Role codeSpace="ISOTC211/19115">pointOfContact</ows:Role>
     </ows:ServiceContact>
   </ows:ServiceProvider>
   <ows:OperationsMetadata>
@@ -140,7 +140,7 @@
               <ows:Value>XML</ows:Value>
               <ows:Value>SOAP</ows:Value>
             </ows:Constraint>
-          </ows:Post>
+			</ows:Post>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="typeNames">
@@ -280,21 +280,25 @@
     <ows:Constraint name="PostEncoding">
       <ows:Value>XML</ows:Value>
     </ows:Constraint>
+    <ows:Constraint name="IsoProfiles">
+      <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
+    </ows:Constraint>
+	
     <inspire_ds:ExtendedCapabilities>
       <inspire_common:ResourceLocator>
-        <inspire_common:URL></inspire_common:URL>
+        <inspire_common:URL>http://mygeoportaldomain/geoportal/csw</inspire_common:URL>
       </inspire_common:ResourceLocator> 
       <inspire_common:ResourceType>service</inspire_common:ResourceType>
       <inspire_common:TemporalReference>
         <!-- one temporal reference is mandatory -->
 
-        <inspire_common:DateOfCreation>1900-01-01</inspire_common:DateOfCreation>        
-        <inspire_common:DateOfLastRevision>1900-01-01</inspire_common:DateOfLastRevision>
-        <inspire_common:DateOfPublication>1900-01-01</inspire_common:DateOfPublication>
+        <inspire_common:DateOfCreation>1900-01-30</inspire_common:DateOfCreation>        
+        <inspire_common:DateOfLastRevision>1900-01-30</inspire_common:DateOfLastRevision>
+        <inspire_common:DateOfPublication>1900-01-30</inspire_common:DateOfPublication>
         <inspire_common:TemporalExtent>
           <inspire_common:IntervalOfDates>
-            <inspire_common:StartingDate>1900-01-01</inspire_common:StartingDate>
-            <inspire_common:EndDate>1900-01-01</inspire_common:EndDate>
+            <inspire_common:StartingDate>1900-01-30</inspire_common:StartingDate>
+            <inspire_common:EndDate>1900-01-30</inspire_common:EndDate>
           </inspire_common:IntervalOfDates>
         </inspire_common:TemporalExtent>
         <!-- end of temporal reference elements -->
@@ -331,9 +335,9 @@
 
       <inspire_common:MetadataPointOfContact>
         <inspire_common:OrganisationName>organization name</inspire_common:OrganisationName>
-        <inspire_common:EmailAddress>email address like example@email.com</inspire_common:EmailAddress>
+        <inspire_common:EmailAddress>email</inspire_common:EmailAddress>
       </inspire_common:MetadataPointOfContact>
-      <inspire_common:MetadataDate>1900-01-01</inspire_common:MetadataDate>
+      <inspire_common:MetadataDate>1900-01-30</inspire_common:MetadataDate>
       <inspire_common:SpatialDataServiceType>discovery</inspire_common:SpatialDataServiceType>
       <inspire_common:MandatoryKeyword xsi:type="inspire_common:classificationOfSpatialDataService">
         <inspire_common:KeywordValue>infoCatalogueService</inspire_common:KeywordValue>
