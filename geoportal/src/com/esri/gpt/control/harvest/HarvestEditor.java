@@ -237,6 +237,24 @@ public void setAutoApprove(boolean enabled) {
 }
 
 /**
+ * Checks if another attempt to publish as "draft" should be made if first attempt failed validation.
+ * first attempt failed.
+ * @return <code>true</code> if another attempt should be made
+ */
+public boolean getRetryAsDraft() {
+  return ProtocolInvoker.getRetryAsDraft(_harvestRepository.getProtocol());
+}
+
+
+/**
+ * Allows to make another attempt to publish as a draft if first attempt failed validation.
+ * @param retryAsDraft <code>true</code> if another attempt should be made
+ */
+public void setRetryAsDraft(boolean retryAsDraft) {
+  ProtocolInvoker.setRetryAsDraft(_harvestRepository.getProtocol(), retryAsDraft);
+}
+
+/**
  * Checks if 'lock-title' is enabled.
  * If a flag is set, it means a title is locked and synchronizer is not allowed
  * to update it, although all the rest of information is allowed to be updated.
