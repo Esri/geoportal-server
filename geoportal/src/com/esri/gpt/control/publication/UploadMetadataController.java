@@ -55,6 +55,7 @@ public class UploadMetadataController extends BaseActionListener {
   private String               explicitPath = "";
   private UploadOptions        options;
   private SelectablePublishers selectablePublishers;
+  private boolean              asDraft;
  
   /** constructors ============================================================ */
   
@@ -150,6 +151,14 @@ public class UploadMetadataController extends BaseActionListener {
     } else {
       return "display: none;";
     }
+  }
+
+  public boolean getAsDraft() {
+    return asDraft;
+  }
+
+  public void setAsDraft(boolean asDraft) {
+    this.asDraft = asDraft;
   }
   
   /** methods ================================================================= */
@@ -305,6 +314,7 @@ public class UploadMetadataController extends BaseActionListener {
         } else {
           Publisher publisher = getSelectablePublishers().selectedAsPublisher(context,false);
           UploadRequest request = new UploadRequest(context,publisher,sFileName,sXml);
+          request.setRetryAsDraft(getAsDraft());
           request.publish();
           if (request.getPublicationRecord().getWasDocumentUnchanged()) {
             msgBroker.addSuccessMessage("publication.success.unchanged");

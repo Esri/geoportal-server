@@ -107,6 +107,11 @@ function uploadOnSpecMethodClicked() {
    </h:commandButton>
   </h:panelGroup>
   
+  <h:panelGroup>
+    <h:selectBooleanCheckbox value="#{UploadMetadataController.asDraft}" id="asDraft"/>
+    <h:outputLabel for="asDraft" value="#{gptMsg['catalog.publication.uploadMetadata.button.asDraft']}"/>
+  </h:panelGroup>
+  
 </h:panelGrid>
 
 <% // required fields note %>
