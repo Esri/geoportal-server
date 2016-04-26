@@ -124,12 +124,10 @@
               <warName>geoportal-${project.version}</warName>
               <failOnMissingWebXml>false</failOnMissingWebXml>
               <webResources>
-                      
                 <resource>
                   <directory>${gpt.endorsed.dir}</directory>
                   <targetPath>.</targetPath>
                 </resource>
-                      
                 <resource>
                   <directory>${project.basedir}/../../src</directory>
                   <targetPath>WEB-INF/classes</targetPath>
