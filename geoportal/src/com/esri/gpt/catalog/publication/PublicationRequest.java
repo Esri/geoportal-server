@@ -24,6 +24,7 @@ import com.esri.gpt.catalog.schema.MetadataDocument;
 import com.esri.gpt.catalog.schema.Schema;
 import com.esri.gpt.catalog.schema.SchemaException;
 import com.esri.gpt.catalog.schema.Schemas;
+import com.esri.gpt.catalog.schema.ValidationException;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.security.principal.Publisher;
@@ -50,6 +51,7 @@ private Publisher         _publisher;
 private PublicationRecord _record = new PublicationRecord();
 private RequestContext    _requestContext;
 private boolean           _updateIndex = true;
+private boolean           _retryAsDraft = false;
 
 // constructors ================================================================
   
@@ -133,6 +135,22 @@ public RequestContext getRequestContext() {
  */
 private void setRequestContext(RequestContext requestContext) {
   _requestContext = requestContext;
+}
+
+/**
+ * Checks if another attempt to publish as "draft" should be made if first attempt failed validation.
+ * @return <code>true</code> if another attempt should be made
+ */
+public boolean getRetryAsDraft() {
+  return _retryAsDraft;
+}
+
+/**
+ * Allows to make another attempt to publish as a draft if first attempt failed validation.
+ * @param _retryAsDraft <code>true</code> if another attempt should be made
+ */
+public void setRetryAsDraft(boolean _retryAsDraft) {
+  this._retryAsDraft = _retryAsDraft;
 }
 
 // methods =====================================================================
@@ -341,8 +359,18 @@ public void publish(Schema schema)
 public void publish() 
   throws SchemaException, ImsServiceException, SQLException, CatalogIndexException {
 
-  Schema schema = prepareForPublication();
-  publish(schema);
+  try {
+    Schema schema = prepareForPublication();
+    publish(schema);
+  } catch (ValidationException ex) {
+    if (getRetryAsDraft()) {
+      getPublicationRecord().setApprovalStatus(ApprovalStatus.draft.name());
+      Schema schema = prepareForPublication();
+      publish(schema);
+    } else {
+      throw ex;
+    }
+  }
 }
 
 /**

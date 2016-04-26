@@ -174,6 +174,20 @@ function setAutoApprove(checked) {
 }
 
 /**
+ * Checks if 'retry as draft' is selected
+ */
+function getAsDraft() {
+  return isChecked(dojo.byId("harvestCreate:asDraft"));
+}
+
+/**
+ * Checks/unckecks 'retry as draft'
+ */
+function setAsDraft(checked) {
+  setChecked(dojo.byId("harvestCreate:asDraft"),checked);
+}
+
+/**
  * Gest synchronization frequency
  */
 function getFrequency() {
@@ -206,6 +220,7 @@ function setSendNotification(send) {
 var lastUpdateContent = false;
 var lastUpdateDefinition = false;
 var lastAutoApprove = false;
+var lastAsDraft = false;
 var lastFrequency = "skip";
 var lastSendNotification = false;
 
@@ -216,6 +231,7 @@ function storeHarvestingOptions() {
   lastUpdateContent = getUpdateContent();
   lastUpdateDefinition = getUpdateDefinition();
   lastAutoApprove = getAutoApprove();
+  lastAsDraft = getAsDraft();
   lastFrequency = getFrequency();
   lastSendNotification = getSendNotification();
 }
@@ -227,6 +243,7 @@ function restoreHarvestingOptions() {
    setUpdateContent(lastUpdateContent);
    setUpdateDefinition(lastUpdateDefinition);
    setAutoApprove(lastAutoApprove);
+   setAsDraft(lastAsDraft);
    setFrequency(lastFrequency);
    setSendNotification(lastSendNotification);
 }
@@ -238,6 +255,7 @@ function clearHarvestingOptions() {
    setUpdateContent(false);
    setUpdateDefinition(false);
    setAutoApprove(false);
+   setAsDraft(false);
    setFrequency("skip");
    setSendNotification(false);
 }
@@ -254,6 +272,7 @@ function enableSyncOpt(enable) {
     dojo.query("#harvestCreate .syncOptSpec").attr("disabled",!enable);
     dojo.query("#harvestCreate .syncOptSpec input").attr("disabled",!enable);
     dojo.query("#harvestCreate .autoApprove").attr("disabled",false);
+    dojo.query("#harvestCreate .asDraft").attr("disabled",false);
   } else {
     storeHarvestingOptions();
     clearHarvestingOptions();
@@ -262,6 +281,7 @@ function enableSyncOpt(enable) {
     dojo.query("#harvestCreate .syncOptSpec").attr("disabled",true);
     dojo.query("#harvestCreate .syncOptSpec input").attr("disabled",true);
     dojo.query("#harvestCreate .autoApprove").attr("disabled",true);
+    dojo.query("#harvestCreate .asDraft").attr("disabled",true);
   }
 }
 
@@ -277,6 +297,8 @@ dojo.addOnLoad(function() {
       lastUpdateDefinition = true;
       lastAutoApprove = true;
       lastAutoApproveEnabled = true;
+      lastAsDraft = false;
+      lastAsDraftEnabled = true;
     }
     enableSyncOpt(node.target.checked);
     synchronizableClicked = true;
@@ -459,6 +481,23 @@ function adjustAutoApprove() {
   lastAutoApproveEnabled = enabled;
 }
 
+var lastAsDraftValue = false;
+var lastAsDraftEnabled = true;
+
+function adjustAsDraft() {
+  var enabled = getUpdateContent();
+  dojo.query("#harvestCreate .asDraft").attr("disabled",!enabled);
+  if (!enabled) {
+    if (lastAsDraftEnabled) {
+      lastAsDraftValue = getAsDraft();
+      setAsDraft(false);
+    }
+  } else if (!lastAsDraftEnabled) {
+    setAsDraft(lastAsDraftValue);
+  }
+  lastAsDraftEnabled = enabled;
+}
+
 /**
  * Checks if info is enabled
  */
@@ -487,8 +526,10 @@ dojo.addOnLoad(function() {
   });
   dojo.query("#harvestCreate\\:updateContent").onchange(function(node){
     adjustAutoApprove();
+    adjustAsDraft();
   });
   adjustAutoApprove();
+  adjustAsDraft();
   dojo.query("#harvestCreate\\:syncInfo").forEach(function(node, index, arr){
     node.style.display = (getInfoEnabled()? "": "none");
   }, null);
@@ -1415,6 +1456,12 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   <h:outputLabel styleClass="autoApprove syncOpt" for="autoApprove" value="#{gptMsg['catalog.harvest.manage.edit.protocol.autoApprove']}"/>
 </h:panelGroup>
 
+<%-- Publish as draft --%>
+<h:outputText/>
+<h:panelGroup>
+  <h:selectBooleanCheckbox styleClass="asDraft syncOpt" value="#{HarvestController.editor.retryAsDraft}" id="asDraft"/>
+  <h:outputLabel styleClass="asDraft syncOpt" for="asDraft" value="#{gptMsg['catalog.harvest.manage.edit.protocol.asDraft']}"/>
+</h:panelGroup>
 
 </h:panelGrid>
 

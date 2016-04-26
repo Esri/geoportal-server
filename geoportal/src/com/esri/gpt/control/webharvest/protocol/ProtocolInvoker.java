@@ -33,6 +33,7 @@ public class ProtocolInvoker {
   private static final int AUTO_APPROVE_FLAG = 2;
   private static final int LOCK_TITLE_FLAG = 3;
   private static final int ROBOTS_MODE = 4;
+  private static final int RETRY_AS_DRAFT_FLAG = 6;
 
   /**
    * Invokes ping on the protocol.
@@ -135,6 +136,25 @@ public class ProtocolInvoker {
    */
   public static void setLockTitle(Protocol protocol, boolean lockTitle) {
     protocol.setFlags(setFlag(protocol.getFlags(), LOCK_TITLE_FLAG, lockTitle));
+  }
+  
+  /**
+   * Checks if another attempt to publish as "draft" should be made if first attempt failed validation.
+   * first attempt failed.
+   * @param protocol protocol
+   * @return <code>true</code> if another attempt should be made
+   */
+  public static boolean getRetryAsDraft(Protocol protocol) {
+    return getFlag(protocol.getFlags(), RETRY_AS_DRAFT_FLAG);
+  }
+  
+  /**
+   * Allows to make another attempt to publish as a draft if first attempt failed validation.
+   * @param protocol protocol
+   * @param retryAsDraft <code>true</code> if another attempt should be made
+   */
+  public static void setRetryAsDraft(Protocol protocol, boolean retryAsDraft) {
+    protocol.setFlags(setFlag(protocol.getFlags(), RETRY_AS_DRAFT_FLAG, retryAsDraft));
   }
   
   /**
