@@ -555,6 +555,9 @@ push-working.jsp
     } else if (sType.equalsIgnoreCase("Code Attachment")) {
       // don't publish Code Attachments now, publish within processRelatedItems
       return false;
+    } else if (sType.equalsIgnoreCase("Web Mapping Application")) {
+      // don't publish Web Mapping Application
+      return false;
     }
     
     // TODO sync items within the same portal
