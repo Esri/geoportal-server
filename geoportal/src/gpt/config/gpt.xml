@@ -50,7 +50,8 @@
            Example: "['name1','name2','name3','name4']"
         - geometryServiceUrl: REST URL to an ArcGIS Server GeometryServer service.
         - locatorUrl: REST URL to an ArcGIS Server GeocodeServer service, e.g. locatorUrl="http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Locators/ESRI_Geocode_USA/GeocodeServer"
-        - locatorSingleFieldParameter: field for the GeocodeServer service upon which locations can be searched 
+        - locatorSingleFieldParameter: field for the GeocodeServer service upon which locations can be searched
+        - the urls start with "//" without the protocol (http: or https:). 
     -->
     
     <interactiveMap
