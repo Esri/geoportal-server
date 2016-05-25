@@ -40,6 +40,7 @@ import java.util.logging.Logger;
 import javax.xml.transform.TransformerConfigurationException;
 import org.apache.commons.io.IOUtils;
 import static com.esri.gpt.control.webharvest.extensions.localfolder.PathUtil.splitPath;
+import java.util.ArrayList;
 
 /**
  * Local folder data processor.
@@ -141,7 +142,7 @@ public class LocalFolderDataProcessor implements DataProcessor {
           stock = StringListUtil.merge(subFolder,head(path, path.size()-1));
           stock.add(path.get(path.size()-1));
         } else {
-          stock = Arrays.asList(new String[0]);
+          stock = new ArrayList<String>();
           stock.addAll(subFolder);
           stock.addAll(path);
         }
