@@ -46,6 +46,7 @@ public class PublicationRequest {
 // class variables =============================================================
 
 // instance variables ==========================================================
+private boolean           _allowFileIdForUuid = false;
 private boolean           _hasMetadataServer = false;
 private Publisher         _publisher;
 private PublicationRecord _record = new PublicationRecord();
@@ -77,6 +78,10 @@ public PublicationRequest(RequestContext requestContext,
     String sAuto = Val.chkStr(params.getValue("publicationRequest.autoApprove"));
     if (sAuto.toLowerCase().equals("true")) {
       this.getPublicationRecord().setAutoApprove(true);
+    }
+    String sAllowFileId = Val.chkStr(params.getValue("publicationRequest.allowFileIdForUuid"));
+    if (sAllowFileId.toLowerCase().equals("true")) {
+      this._allowFileIdForUuid = true;
     }
   }
 }
@@ -200,6 +205,13 @@ protected void determineUuid(Schema schema) throws SQLException {
       rec.setUuid(sEsriDocID);
     }
   }
+  
+  if (_allowFileIdForUuid && rec.getUuid().length() == 0) {
+    String sFileId = rec.getFileIdentifier();
+    if (UuidUtil.isUuid(sFileId)) {
+      rec.setUuid(sFileId);
+    }
+  }  
   
   if (rec.getUuid().length() == 0) {
     if (imsDao == null) imsDao = new ImsMetadataAdminDao(getRequestContext());

@@ -356,6 +356,8 @@
 				true if the database is case sensitive (set this to false for MySQL)
             - publicationRequest.autoApprove:
 				true if newly published documents should be approved by default
+            - publicationRequest.allowFileIdForUuid
+        true if an xml's internal file identifier should used as the document uuid
             - spatialRelevance.ranking.maxDoc:
 				turn spatial relevance ranking off when the catalog exceeds the supplied maximum document number
             - rssProviderUrl:
@@ -396,6 +398,7 @@
         <parameter key="catalog.useCollections" value="false"/>
         <parameter key="database.isCaseSensitive" value="true"/>
         <parameter key="publicationRequest.autoApprove" value="false"/>
+        <parameter key="publicationRequest.allowFileIdForUuid" value="false"/>
         <parameter key="spatialRelevance.ranking.maxDoc" value="1000000"/>
         <parameter key="rssProviderUrl" value=""/>
         <parameter key="reverseProxy.baseContextPath" value=""/>
