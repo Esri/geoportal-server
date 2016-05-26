@@ -91,6 +91,7 @@ import java.util.Map;
         case CrawlDelay:
           if (currentSection != null) {
             try {
+              assureRobots();
               int crawlDelay = Integer.parseInt(entry.getValue());
               robots.setCrawlDelay(crawlDelay);
             } catch (NumberFormatException ex) {
