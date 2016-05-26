@@ -575,8 +575,8 @@ public class Gpt2AgpPush {
         			} catch (Exception ejson) {
         				jsoItem = null;
         				this.numWithXsltError++;
-        				LOGGER.log(Level.WARNING,"JSON failed to load for "+uuid+", json="+result);
-        				LOGGER.log(Level.WARNING,"JSON failed with exception: ",ejson);
+        				LOGGER.log(Level.FINER,"JSON failed to load for "+uuid+", json="+result);
+        				LOGGER.log(Level.FINER,"JSON failed with exception: ",ejson);
         			}
         			if (jsoItem != null) {
         				try {
