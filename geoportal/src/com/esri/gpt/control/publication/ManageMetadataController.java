@@ -147,7 +147,14 @@ public boolean getAllowApplyToAll() {
   RequestContext context = this.getContextBroker().extractRequestContext();
   StringAttributeMap params = context.getCatalogConfiguration().getParameters();
   String s = Val.chkStr(params.getValue("catalog.admin.allowApplyToAll"));
-  return !s.equalsIgnoreCase("false");
+  boolean b = !s.equalsIgnoreCase("false");
+  if (b) {
+  	try {
+  		String v = Val.chkStr(getQueryCriteria().getCollectionUuid());
+  		if (v.length() > 0) b = false;
+  	} catch (Exception e) {}
+  }
+  return b;
 }
 
 /**
