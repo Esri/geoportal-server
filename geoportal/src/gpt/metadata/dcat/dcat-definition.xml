@@ -16,7 +16,8 @@
 -->
 <schema key="dcat" 
         cswOutputSchema="http://www.w3.org/ns/dcat#" 
-        toEsriItemInfoXslt="">
+        toEsriItemInfoXslt=""
+        editable="false">
         
   <!-- schema label -->
   <label resourceKey="catalog.mdParam.schema.dcat"/>
