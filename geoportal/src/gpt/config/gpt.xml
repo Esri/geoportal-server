@@ -299,7 +299,7 @@
             - webharvester.poolsize: pool size of the Threads. Default: 4
             - webharvester.autoSelectFrequency: Resources auto-selection frequency. Default: 1[HOUR]
             - webharvester.autoSelectSuspendPeriod: period for how long can repository be suspended from 
-                                                    harvesting after unsucessful harvest. Default: 1[Day]
+                                                    harvesting after unsuccessful harvest. Default: 1[Day]
             - webharvester.watchDogFrequency: Watch-dog activation frequency. Default: 1[MINUTE]
             - webharvester.baseContextPath: Base context path used inside email notifications. Default: none (no report link in the notification)
             - webharvester.maxRepRecords: Maximum number of records to report. Default: 10000. -1 to remove limit.
@@ -389,7 +389,7 @@
                 already has been registered
             - AllowonlyAuthenticatedUser:
                 true to disable access to the search and browse pages for users
-                which ahs not been authenticated
+                which has not been authenticated
         -->  
         <parameter key="catalog.enableEditForAllPubMethods" value="false"/>
         <parameter key="catalog.enableEditForAdministrator" value="false"/>
@@ -472,7 +472,7 @@
         <parameter key="dcat.rights.writeAlways" value="false"/>
     </catalog>
     
-    <!-- costomization of web harvester -->
+    <!-- customization of web harvester -->
     <!--webharvester>
 		<dataProcessorFactory enabled="true" className="com.esri.gpt.control.webharvest.extensions.localfolder.LocalFolderDataProcessorFactory" name="localfolder" rootFolder="c:\data"/>
     </webharvester-->
