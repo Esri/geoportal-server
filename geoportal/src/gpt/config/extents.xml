@@ -4,7 +4,7 @@
   Enable section below and/or define custom extends to turn functionality on
   -->
   <!--
-	<extent place="Africa"  ext="-117.11;-73.06;166.14;62.48"/>
+	<extent place="Africa"  ext="-54.5;-41;91.5;44.5"/>
 	<extent place="Asia"  ext="29.08;9.56;170.7;77.33"/>
 	<extent place="Australia"  ext="102.15;-43.69;172.98;-9.81"/>
 	<extent place="Europe"  ext="-14.51;35.87;56.30;69.75"/>
