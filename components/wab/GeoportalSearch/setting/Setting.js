@@ -103,7 +103,7 @@ define([
 
       _addUrl: function(tr,isConfig){       
           var instance = this;   
-          var td = dojo.query('.simple-table-td',tr)[1];
+          var td = dojo.query('.simple-table-cell',tr)[1];
           html.setStyle(td,"verticalAlign","middle");
           var urlTextBox = new ValidationTextBox({style:{
                       width:"100%",
@@ -120,7 +120,7 @@ define([
       },
 
       _addTitle: function(tr){          
-          var td = dojo.query('.simple-table-td',tr)[0];
+          var td = dojo.query('.simple-table-cell',tr)[0];
           html.setStyle(td,"verticalAlign","middle");
           var titleTextBox = new ValidationTextBox({style:{
             width:"100%",
