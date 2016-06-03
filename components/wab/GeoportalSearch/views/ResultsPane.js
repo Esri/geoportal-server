@@ -102,7 +102,7 @@ define([
                                   container:this.pagination,
                                   results:this.results,
                                   query:this.query,
-                                  nItemsPerPage:this.config.nItemsPerPage,
+                                  nItemsPerPage: Number(this.config.recordsPerPage),
                                   nls:this.nls
                                 });
     }
