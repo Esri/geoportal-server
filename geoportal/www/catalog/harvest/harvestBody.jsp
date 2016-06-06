@@ -1592,13 +1592,13 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
     <label for="timeSpecDate"><fmt:message key="catalog.harvest.manage.timeDialog.timeSpecDate.label"/></label>
     <div id="timeSpecDateDiv" style="display: none;">
       <div>
-        <input type="button" data-dojo-type="dijit.form.RadioButton" id="dateRadio" name="dateStyle"/><label for="dateRadio"><fmt:message key="catalog.harvest.manage.timeDialog.dateStyle.date.label"/></label>
+        <input type="radio" data-dojo-type="dijit.form.RadioButton" id="dateRadio" name="dateStyle"/><label for="dateRadio"><fmt:message key="catalog.harvest.manage.timeDialog.dateStyle.date.label"/></label>
         <div>
           <input type="text" id="dateInput" data-dojo-type="dijit.form.DateTextBox"/>
         </div>
       </div>
       <div>
-        <input type="button" data-dojo-type="dijit.form.RadioButton" id="patternRadio" name="dateStyle"/><label for="patternRadio"><fmt:message key="catalog.harvest.manage.timeDialog.dateStyle.pattern.label"/></label>
+        <input type="radio" data-dojo-type="dijit.form.RadioButton" id="patternRadio" name="dateStyle"/><label for="patternRadio"><fmt:message key="catalog.harvest.manage.timeDialog.dateStyle.pattern.label"/></label>
         <div>
           <input type="text" id="dayOfTheMonthInput" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props="constraints:{min:0}"/>
           <select id="dayOfTheWeekInput" data-dojo-type="dijit.form.Select">
