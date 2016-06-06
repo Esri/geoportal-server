@@ -1,11 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <operations>
   <fileoperations>
-    <operation>
-      <copyfile>
-        <source>C:\Users\pscmbldusr\AppData\Roaming\ESRI\ArcGIS Explorer\AddIns\CSWSearchDockWindow.eaz</source>
-        <destination>C:\Builds\GeoportalServer\10.4_CSWClients\Binaries\CSWSearchDockWindow.eaz</destination>
-      </copyfile>      
-    </operation>
+    <replaceword>
+      <file> Config.esriaddinx </file>
+      <path> $SOURCES$\CswClient\trunk\arcmap </path>
+      <fromword regex="false">&lt;Version&gt;1.0</fromword>
+      <toword>&lt;Version&gt;$BUILDNUM$</toword>
+      <replaceline>false</replaceline>
+    </replaceword>
+    <replaceword>
+      <file> Config.esriaddinx </file>
+      <path> $SOURCES$\CswClient\trunk\arcmap </path>
+      <fromword regex="false">&lt;Date&gt;11/19/2015&lt;/Date&gt;</fromword>
+      <toword>&lt;Date&gt;$DATE$&lt;/Date&gt;</toword>
+      <replaceline>false</replaceline>
+    </replaceword>
   </fileoperations>
 </operations>
