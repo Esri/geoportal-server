@@ -52,17 +52,18 @@ define([
         elHdr.removeChild(this.elPageControl);
       }
       this.elPageControl = document.createElement("div");
-      this.elPageControl.className = "nav";
+      this.elPageControl.className = "jimu-r-row nav";
       
       var sPageSummary = this.nls.pageSummaryPattern;
       sPageSummary = sPageSummary.replace("{0}",nStartIndex);
       sPageSummary = sPageSummary.replace("{1}",nEndIndex);
-      var elPageSummary = document.createElement("span");
-      elPageSummary.className = "result";
+      var elPageSummary = document.createElement("div");
+      elPageSummary.className = "col-1-5 result";
       elPageSummary.appendChild(document.createTextNode(sPageSummary));
       this.elPageControl.appendChild(elPageSummary);
       
-      var elPageNumbers = document.createElement("span");
+      var elPageNumbers = document.createElement("div");
+      elPageNumbers.className = "col-4-5";
       this.elPageControl.appendChild(elPageNumbers);
       if (iFrom > 1) {
         var elPage = document.createElement("a");

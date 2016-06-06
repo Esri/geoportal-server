@@ -188,13 +188,18 @@ define([
     var elementId = element.id;
     var elParts = elementId.split("_addToMap");
     var recordId = "";
+    var isAddToMapLink = false;
     if(elParts && elParts.length==2){
       recordId = elParts[0];
+      isAddToMapLink = true;
     }
 
     var link = dojo.byId(recordId + "_open");
     if(!link) {
       link = dojo.byId(elementId);
+      if(!link || !link.dataset.href) {
+        link = dojo.byId(elementId + "_open");
+      }
     }
 
   //  var addToMapLink = dojo.byId(element.id);// + "_addToMap");
@@ -212,8 +217,8 @@ define([
 
       linkType = link.dataset.linktype;
 
-      if (linkType == "mapserver" || linkType == "featureserver" || linkType == "imageserver" 
-        || linkType == "kml" || linkType == "wms") {
+      if (isAddToMapLink && (linkType == "mapserver" || linkType == "featureserver" || linkType == "imageserver" 
+        || linkType == "kml" || linkType == "wms")) {
         
         LayerFactory.createLayer(href,linkType).then(lang.hitch(this,function(layer){
             this.map.addLayer(layer);
