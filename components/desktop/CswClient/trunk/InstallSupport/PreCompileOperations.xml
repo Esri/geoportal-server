@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <operations>
   <fileoperations>
-    <operations>
+    <operation>
       <replaceword>
         <file> Config.esriaddinx </file>
         <path> $SOURCES$\CswClient\trunk\arcmap </path>
@@ -16,6 +16,6 @@
         <toword>&lt;Date&gt;$DATE$&lt;/Date&gt;</toword>
         <replaceline>false</replaceline>
       </replaceword>
-    </operations>
+    </operation>
   </fileoperations>
 </operations>
