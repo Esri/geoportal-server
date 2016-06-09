@@ -354,7 +354,7 @@ function selectSection(section) {
   enableSection("dcat", section=="dcat");
   
   dojo.query(".onBehalfOf").style("display",section!="agp2agp" && section!="ags2agp" && section!="gpt2agp"? "block": "none");
-  dojo.query(".hostUrlClass").style("display",section!="gpt2agp"? "block": "none");
+  dojo.query(".hostUrlClass").style("display",section!="agp2agp" && section!="ags2agp" && section!="gpt2agp"? "block": "none");
   
   if (section=="gpt2agp") {
     dojo.query("#harvestCreate\\:nameLabel").addClass("requiredField");
