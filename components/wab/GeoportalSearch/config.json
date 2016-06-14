@@ -9,5 +9,6 @@
         "url": "http://portal.gis.ca.gov/geoportal/rest/find/document"
       }
   ],
-  "recordsPerPage": 10
+  "recordsPerPage": 10,
+  "showAllAddedLayers": true
 }
