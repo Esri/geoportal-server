@@ -142,7 +142,7 @@ define([
       var id = loader._generateLayerId();
       var self = this, layer = null;
       
-      if (type === "ArcGIS") {
+      if (type === "ArcGIS" || type === "ags") {
         if (lc.indexOf("/featureserver") > 0 || lc.indexOf("/mapserver") > 0) {   
           loader._readRestInfo(url).then(function(info){
             //console.warn("restInfo",info);
