@@ -37,13 +37,13 @@ https://github.com/Esri/geoportal-server/wiki/Geoportal-Publish-Client
 Required tools for project compilation and testing:
 
 1. Dotnet platform:
-   - version 3.5 or above
+   - version 4.5 or above
 
 2. ArcGIS Desktop and ArcGIS Desktop Dotnet SDK:
-   - version 10.3.1	
+   - version 10.4.1	
 
 3. IDE (developed on):
-   - Microsoft Visual Studio 2012
+   - Microsoft Visual Studio 2013 or 2015
 
 =====================================================
    
@@ -51,7 +51,7 @@ Quick start:
 
 1. Get source code 
    
-2. Open solution file(.sln) with Microsoft Visual Studio 2012
+2. Open solution file(.sln) with Microsoft Visual Studio 2013 or 2015
 
 3. Get source code and add reference to AppLoger project
 
