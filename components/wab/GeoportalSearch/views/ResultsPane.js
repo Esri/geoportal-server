@@ -222,6 +222,9 @@ define([
         
         if(this.showAllAddedLayers){
           var def = new Deferred();
+		  if(linkType == "mapserver" || linkType == "featureserver" || linkType == "imageserver"){
+			linkType = "ags";
+		  }
           LayerFactory.addLayer(this.map,def,linkType,href);
         }else{
            LayerFactory.createLayer(linkType,href).then(lang.hitch(this,function(layer){

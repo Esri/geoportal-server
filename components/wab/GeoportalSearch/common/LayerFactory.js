@@ -1,6 +1,7 @@
 define([
   'dojo/Deferred',
   'dojo/topic',
+  'dojo/_base/array',
   "dojo/promise/all",
   "esri/layers/ArcGISDynamicMapServiceLayer",
   "esri/layers/ArcGISImageServiceLayer",
@@ -20,7 +21,7 @@ define([
   'esri/request',
   './LayerLoader'
 ],function(Deferred,
-          topic,all,
+          topic,array, all,
   ArcGISDynamicMapServiceLayer, ArcGISImageServiceLayer, ArcGISTiledMapServiceLayer, CSVLayer, 
   FeatureLayer, GeoRSSLayer, KMLLayer, StreamLayer, VectorTileLayer, WFSLayer, WMSLayer, WMTSLayer, 
   InfoTemplate, vectorTile,
