@@ -37,10 +37,10 @@ https://github.com/Esri/geoportal-server/wiki/Geoportal-CSW-Clients
 Required tools for project compilation and testing:
 
 1. Dotnet platform:
-   - version 3.5 or above
+   - version 4.5 or above
 
 2. IDE (developed on):
-   - Microsoft Visual Studio 2012
+   - Microsoft Visual Studio 2013 or 2015
 
 =====================================================
    
@@ -48,7 +48,7 @@ Quick start:
 
 1. Get source code 
    
-2. Open solution file(.sln) with Microsoft Visual Studio 2012
+2. Open solution file(.sln) with Microsoft Visual Studio 2013
 
 3. Get source code and add reference to AppLoger project
 

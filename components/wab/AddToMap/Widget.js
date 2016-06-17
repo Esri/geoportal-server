@@ -23,14 +23,11 @@ define([
   "esri/InfoTemplate",
   "esri/layers/vector-tile",
   'jimu/dijit/Message',
-  './LinksProcessor',
-  './LayerFactory',
-  './LayerLoader',
-  './WebmapProcessor'],
+  './LayerLoader'],
 function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidget, topic,Deferred, all,
   ArcGISDynamicMapServiceLayer, ArcGISImageServiceLayer, ArcGISTiledMapServiceLayer, CSVLayer, 
   FeatureLayer, GeoRSSLayer, KMLLayer, StreamLayer, VectorTileLayer, WFSLayer, WMSLayer, WMTSLayer, 
-  InfoTemplate, vectorTile, Message, LinksProcessor, LayerFactory, LayerLoader, WebmapProcessor) {
+  InfoTemplate, vectorTile, Message, LayerLoader) {
   
   return declare([BaseWidget, _WidgetsInTemplateMixin], {    
 
@@ -39,20 +36,7 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidget, topic,De
 
     postCreate: function(){
       this.inherited(arguments);
-      //console.warn("AddToMap.postCreate...");
-
-      if (!window.addToMapListener){
-        window.addToMapListener = lang.hitch(this,function(params){
-          //console.warn("addToMapListener",params);
-          this._addLayer(params.type,params.url);
-        });
-      }
-      
       topic.subscribe("mapLoaded", lang.hitch(this, this._checkWindowUrl));
-      //topic.subscribe("appConfigLoaded", lang.hitch(this, this._checkWindowUrl));
-      //topic.subscribe("appConfigChanged", lang.hitch(this, this._checkWindowUrl));
-	  
-
       this._checkWindowUrl();
     },
     
@@ -64,7 +48,7 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidget, topic,De
       var id = loader._generateLayerId();
       var self = this, layer = null;
       
-      if (type === "ArcGIS") {
+      if (type === "ArcGIS" || type === "ags") {
         if (lc.indexOf("/featureserver") > 0 || lc.indexOf("/mapserver") > 0) {   
           loader._readRestInfo(url).then(function(info){
             //console.warn("restInfo",info);
@@ -137,22 +121,22 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidget, topic,De
         } else {
           dfd.reject("Unsupported");
         }
-      } else if (type === "WMS") {
+      } else if (type.toUpperCase() === "WMS") {
         layer = new WMSLayer(url,{id:id});
         this._waitThenAdd(dfd,map,type,loader,layer);
-      } else if (type === "WMTS") { 
+      } else if (type.toUpperCase() === "WMTS") { 
         layer = new WMTSLayer(url,{id:id});
-      } else if (type === "WFS") {
+      } else if (type.toUpperCase() === "WFS") {
         layer = new WFSLayer({id:id,url:url,infoTemplate:new InfoTemplate()});
         this._waitThenAdd(dfd,map,type,loader,layer);
         console.warn("WFSLayer",layer);
-      } else if (type === "KML") {
+      } else if (type.toUpperCase() === "KML") {
         layer = new KMLLayer(url,{id:id});
         this._waitThenAdd(dfd,map,type,loader,layer);
       } else if (type === "GeoRSS") {
         layer = new GeoRSSLayer(url,{id:id});
         this._waitThenAdd(dfd,map,type,loader,layer);
-      } else if (type === "CSV") {
+      } else if (type.toUpperCase() === "CSV") {
         layer = new CSVLayer(url,{id:id});
         layer.setInfoTemplate(loader._newInfoTemplate());
         this._waitThenAdd(dfd,map,type,loader,layer);
@@ -164,7 +148,7 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidget, topic,De
       loader._waitForLayer(layer).then(function(lyr){
         //console.warn("_waitThenAdd.ok",lyr);
         var templates = null;
-        if (type === "WMS") {
+        if (type.toUpperCase() === "WMS") {
           loader._setWMSVisibleLayers(lyr);
         } else if (lyr &&
           (lyr.declaredClass === "esri.layers.ArcGISDynamicMapServiceLayer" ||
@@ -279,8 +263,6 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidget, topic,De
           href += parts[i]; 
         }
         if (href.length === 0)return;
-
-        //this._addLayer(linkType,href);
 
         var dfd = new Deferred();
         this._handleAdd(dfd,linkType,href);
