@@ -556,7 +556,7 @@ public class RestQueryServlet extends BaseServlet {
               messageBroker, printWriter, query.getRssProviderUrl(), query.getRssSourceUrl());
       rssWriter.setTarget(target);
       String responseGeometry = query.getResponseGeometry();
-      rssWriter.setGeometry(GeorssFeedWriter.Geometry.checkValueOf(responseGeometry));
+      rssWriter.setGeometry(GeorssFeedWriter.Geometry.checkValueOf(responseGeometry,GeorssFeedWriter.Geometry.esriGeometryPolygon));
       return rssWriter;
     }
 
