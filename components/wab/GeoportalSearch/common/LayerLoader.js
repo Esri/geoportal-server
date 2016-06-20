@@ -4,7 +4,7 @@ define(["dojo/_base/declare",
         "dojo/promise/all",
         "dojo/Deferred",
         "dojo/json",
-        "dojo/i18n!widgets/AddToMap/nls/strings",
+        "dojo/i18n!widgets/GeoportalSearch/nls/strings",
         "esri/lang",
         "esri/request",
         "esri/arcgis/utils",
@@ -20,23 +20,23 @@ define(["dojo/_base/declare",
         'esri/layers/WMSLayer',
         "esri/dijit/PopupTemplate",
         "esri/InfoTemplate",
-        "esri/renderers/jsonUtils"], 
+        "esri/renderers/jsonUtils"],
 function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriRequest, agsUtils,
-  ArcGISDynamicMapServiceLayer, ArcGISImageServiceLayer, ArcGISTiledMapServiceLayer, FeatureLayer, 
+  ArcGISDynamicMapServiceLayer, ArcGISImageServiceLayer, ArcGISTiledMapServiceLayer, FeatureLayer,
   ImageServiceParameters, KMLLayer, MosaicRule, RasterFunction, VectorTileLayer, WMSLayer,
   PopupTemplate, InfoTemplate, jsonRendererUtils) {
-  
+
   return declare(null, {
-    
+
     item: null,
     itemUrl: null,
     map: null,
     serviceUrl: null,
-    
+
     constructor: function(args) {
       lang.mixin(this,args);
     },
-    
+
     addItem: function(item,map) {
       // TODO layer position, titles, timeouts, feedback
       //console.warn("addItem",item);
@@ -45,7 +45,7 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
       this.item = item;
       this.itemUrl = this._checkMixedContent(item.itemUrl);
       this.serviceUrl = this._checkMixedContent(item.url);
-      
+
       if (item.type === "Feature Service") {
         return this._addFeatureService();
       } else if (item.type === "Image Service") {
@@ -65,13 +65,13 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
       }
       return dfd;
     },
-    
+
     _addFeatureService: function() {
       var self = this, dfd = new Deferred();
       var serviceUrl = this.serviceUrl;
       var item = this.item, itemData = {};
       var layerIds = null, layerDfds = [], featureLayers = [];
-      
+
       self._readItemJsonData().then(function(result){
         //console.warn("_addFeatureService.jsonData",result);
         itemData = result || {};
@@ -84,7 +84,7 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
           });
         }
         return self._readRestInfo(serviceUrl);
-        
+
       }).then(function(result){
         //console.warn("_addFeatureService.serviceInfo",result);
         if (result && typeof result.type === "string" && result.type === "Feature Layer") {
@@ -112,15 +112,15 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
           });
         }
         return all(layerDfds);
-        
+
       }).then(function(results){
         //console.warn("_addFeatureService.layerDfds",results);
         array.forEach(results,function(result){
           featureLayers.push(result);
         });
-        featureLayers.reverse(); 
+        featureLayers.reverse();
         return featureLayers;
-        
+
       }).then(function(){
         array.forEach(featureLayers,function(layer){
           var opLayer = self._processFeatureLayer(layer,item,itemData);
@@ -136,7 +136,7 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
       });
       return dfd;
     },
-    
+
     _addImageService: function() {
       var self = this, dfd = new Deferred();
       self._readItemJsonData().then(function(result){
@@ -150,7 +150,7 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
       });
       return dfd;
     },
-    
+
     _addKML: function() {
       var self = this, dfd = new Deferred();
       self._newKMLLayer().then(function(layer){
@@ -162,7 +162,7 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
       });
       return dfd;
     },
-    
+
     _addMapService: function() {
       var self = this, dfd = new Deferred();
       self._readItemJsonData().then(function(result){
@@ -176,7 +176,7 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
       });
       return dfd;
     },
-    
+
     _addVectorTileService: function() {
       var self = this, dfd = new Deferred();
       self._newVectorTileLayer().then(function(layer){
@@ -187,7 +187,7 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
       });
       return dfd;
     },
-    
+
     _addWMS: function() {
       var self = this, dfd = new Deferred();
       self._readItemJsonData().then(function(result){
@@ -202,7 +202,7 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
       });
       return dfd;
     },
-    
+
     _addLayer: function(layer) {
       //console.warn("_addLayer",layer);
       //console.warn("map",this.map);
@@ -218,12 +218,12 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
       }
     },
 
-    
+
     _checkUrl: function(url) {
       return agsUtils._checkUrl(url);
     },
-    
-        
+
+
     _checkVectorTileUrl: function(url,operationalLayer) {
       var dfd = new Deferred();
       var endsWith = function(sv,sfx) {
@@ -233,7 +233,7 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
         operationalLayer.styleUrl = url;
         dfd.resolve(url);
         return dfd;
-      } 
+      }
       var params = {url:null,content:{},handleAs:"json",callbackParamName:"callback"};
       if (this.itemUrl) {
         params.url = this.itemUrl+"/resources/styles/root.json";
@@ -262,11 +262,11 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
       }
       return dfd;
     },
-    
+
     _generateLayerId: function() {
       return this._generateLayerIds(1)[0];
     },
-    
+
     _generateLayerIds: function(count) {
       var i, ids = [];
       for (i=0;i<count;i++) {
@@ -274,7 +274,7 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
       }
       return ids;
     },
-    
+
     _generateRandomId: function() {
       var t = null;
       if (typeof Date.now === "function") t = Date.now();
@@ -282,14 +282,14 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
       var r = (""+Math.random()).replace("0.","r");
       return (t+""+r).replace(/-/g,"");
     },
-    
+
     _makeFeatureLayerTitle: function(pattern,serviceName,layerName) {
       var n,s,regexp;
       try {
         if (serviceName && layerName && (serviceName === layerName)) {
           return serviceName;
         } else if (serviceName && layerName) {
-          // try to remove a timestamp suffix 
+          // try to remove a timestamp suffix
           n = layerName.indexOf(serviceName);
           if (n === 0) {
             s = layerName.substring(n+serviceName.length+1);
@@ -299,7 +299,7 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
                 return serviceName;
               }
             }
-          }         
+          }
         }
       } catch(ex) {}
       return pattern.replace("{serviceName}",serviceName).replace("{layerName}",layerName);
@@ -318,7 +318,7 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
         opacity: 1.0,
         visibility: true
       };
-      
+
       if (esriLang.isDefined(itemData.visibility) && itemData.visibility === false) {
         layerObject.visibility = false; // TODO?
       }
@@ -359,8 +359,8 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
          (!esriLang.isDefined(layerObject.layerDefinition) || !esriLang.isDefined(layerObject.layerDefinition.definitionExpression))) {
         layerObject.layerDefinition = layerObject.layerDefinition || {};
         layerObject.layerDefinition.definitionExpression = itemData.layerDefinition.definitionExpression;
-      }   
-      
+      }
+
       var imageServiceParameters = new ImageServiceParameters();
       //imageServiceParameters.bandIds = layerObject.bandIds;
       if (layerObject.bandIds !== null) {
@@ -389,9 +389,9 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
       if (esriLang.isDefined(layerObject.interpolation)) {
         imageServiceParameters.interpolation = layerObject.interpolation;
       }
-      
+
       var props = {
-        imageServiceParameters: imageServiceParameters, 
+        imageServiceParameters: imageServiceParameters,
         opacity: layerObject.opacity,
         visible: layerObject.visibility
       };
@@ -409,8 +409,8 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
       }
       if (esriLang.isDefined(layerObject.resourceInfo)) {
         props.resourceInfo = layerObject.resourceInfo;
-      }     
-      
+      }
+
       var finish = function(layer) {
         //console.warn("finish",layer);
         if (layerObject.layerDefinition && layerObject.layerDefinition.definitionExpression) {
@@ -434,10 +434,10 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
         function(layer){finish(layer);},
         function(error){dfd.reject(error);}
       );
-      
+
       return dfd;
     },
-    
+
     _newInfoTemplate: function(popupInfo,title) {
       if (popupInfo) {
         try {
@@ -457,17 +457,17 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
       if (esriLang.isDefined(title)) infoTemplate.setTitle(title);
       return infoTemplate;
     },
-    
+
     _newKMLLayer: function() {
       var options = {id: this._generateLayerId()};
       var lyr = new KMLLayer(this.serviceUrl,options);
       return this._waitForLayer(lyr);
     },
-    
+
     _newMapServiceLayer: function(itemData) {
       var self = this, dfd = new Deferred();
       var serviceUrl = this.serviceUrl;
-      var mapLayerId = this._generateLayerId(); 
+      var mapLayerId = this._generateLayerId();
       var content = {f: "json"};
       esriRequest({url:serviceUrl,content:content,handleAs:"json",callbackParamName:"callback"},{}).then(
         function(response) {
@@ -503,20 +503,20 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
               if (layer.infoTemplates === null) {
                 if (templates) layer.infoTemplates = templates;
               }
-              dfd.resolve(layer); 
+              dfd.resolve(layer);
             },
             function(error2) {dfd.reject(error2);}
           );
-        }, 
+        },
         function(error){dfd.reject(error);}
       );
       return dfd;
     },
-    
+
     _newVectorTileLayer: function() {
       var self = this, dfd = new Deferred(), opLayer = {};
       var serviceUrl = this.serviceUrl;
-      var mapLayerId = this._generateLayerId(); 
+      var mapLayerId = this._generateLayerId();
       if ((typeof serviceUrl === "string") && (serviceUrl.length > 0)) {
         this._checkVectorTileUrl(serviceUrl,opLayer).then(
           function(url){
@@ -545,7 +545,7 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
       }
       return dfd;
     },
-    
+
     _newWMSLayer: function() {
       var options = {id: this._generateLayerId()};
       var lyr = new WMSLayer(this.serviceUrl,options);
@@ -564,7 +564,7 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
       }
       return uri;
     },
-    
+
     _processFeatureLayer: function(featureLayer,item,itemData) {
       var self = this, dlPattern = i18n.search.featureLayerTitlePattern;
       var opLayer = null;
@@ -654,22 +654,22 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
         return opLayer;
       }
     },
-    
+
     _readItemJsonData: function() {
       var u = this.itemUrl+"/data";
       var content = {f:"json"}, options = {};
       return esriRequest({url:u,content:content,handleAs:"json"},options);
     },
-    
+
     _readRestInfo: function(url) {
       return esriRequest({url:url,content:{f:"json"},handleAs:"json",callbackParamName:"callback"},{});
     },
-    
+
     _setFeatureLayerInfoTemplate: function(featureLayer,popupInfo,title) {
       var template = this._newInfoTemplate(popupInfo,title);
       featureLayer.setInfoTemplate(template);
     },
-    
+
     _setWMSVisibleLayers: function(layer) {
       var maxLayers = 10, lyrNames = [];
       if (layer) {
@@ -689,7 +689,7 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
         }
       }
     },
-    
+
     _waitForLayer: function(layer) {
       var dfd = new Deferred(), handles = [];
       if (layer.loaded) {
@@ -727,7 +727,7 @@ function(declare, lang, array, all, Deferred, djJson, i18n, esriLang, esriReques
       }));
       return dfd;
     }
-    
+
   });
-  
+
 });
