@@ -92,12 +92,14 @@ public class TemporalField extends BaseDcatField {
     
     for (Object v: valueList) {
       try {
-        Date date = readValueAsDate(attr);
+        Date date = readValueAsDate((IFeedAttribute) v);
         if (date!=null) {
           dates.add(date); 
         }
       } catch (NumberFormatException ex) {
 
+      } catch (ClassCastException ex) {
+        
       }
     }
       
