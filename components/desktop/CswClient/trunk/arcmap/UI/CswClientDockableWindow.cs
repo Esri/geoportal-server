@@ -763,6 +763,18 @@ namespace com.esri.gpt.csw
             }
         }
 
+        /// <summary>
+        /// checks for numberic value
+        /// </summary>
+        public static bool IsNumeric(string str) {
+            int num = 0;
+            if (Int32.TryParse(str, out num)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
        
 
         /// <summary>
@@ -807,9 +819,22 @@ namespace com.esri.gpt.csw
                     {
                         if (_mapServerUrl.ToLower().Contains("arcgis/rest"))
                         {
-                            _mapServerUrl = _mapServerUrl + "?f=lyr";
-                            CswClient client = new CswClient();
-                            AddAGSService(client.SubmitHttpRequest("DOWNLOAD", _mapServerUrl, ""));
+                            var urlparts = _mapServerUrl.Split('/');
+                            if (urlparts != null && urlparts.Length > 0)
+                            {
+                                var lastPartOfUrl = urlparts[urlparts.Length - 1];
+                                if (lastPartOfUrl.Length > 0 && IsNumeric(lastPartOfUrl))
+                                {
+                                   // CswClient client = new CswClient();
+                                    AddAGSService( _mapServerUrl);
+                                }
+                                else
+                                {
+                                    _mapServerUrl = _mapServerUrl + "?f=lyr";
+                                    CswClient client = new CswClient();
+                                    AddAGSService(client.SubmitHttpRequest("DOWNLOAD", _mapServerUrl, ""));
+                                }
+                            }
                         }
                         else
                         {
@@ -1445,26 +1470,71 @@ namespace com.esri.gpt.csw
                     {
                        
                         IGxFile pGxFile;
-                       
+
                         if (fileName.ToLower().EndsWith(".tif"))
                         {
-                            IRasterLayer pGxLayer = (IRasterLayer) new RasterLayer();
-                            pGxLayer.CreateFromFilePath(fileName);                          
+                            IRasterLayer pGxLayer = (IRasterLayer)new RasterLayer();
+                            pGxLayer.CreateFromFilePath(fileName);
                             if (pGxLayer.Valid)
                             {
-                                map.AddLayer((ILayer) pGxLayer);
+                                map.AddLayer((ILayer)pGxLayer);
                             }
                         }
                         else
                         {
-                            IGxLayer pGxLayer = new GxLayer();
-                            pGxFile = (GxFile)pGxLayer;
-                            pGxFile.Path = fileName;
-                        
-                            if (pGxLayer.Layer != null)
+                            if (fileName.ToLower().Contains("http") && fileName.ToLower().Contains("arcgis/rest"))
                             {
-                                map.AddLayer(pGxLayer.Layer);
+                                String[] s = fileName.ToLower().Split(new String[] { "/rest" }, StringSplitOptions.RemoveEmptyEntries);
+
+                                IPropertySet propertySet = new PropertySetClass();
+                                propertySet.SetProperty("URL", s[0] + "/services"); // fileName
+
+                                IMapServer mapServer = null;
+
+                                IAGSServerConnectionFactory pAGSServerConFactory = new AGSServerConnectionFactory();
+                                IAGSServerConnection agsCon = pAGSServerConFactory.Open(propertySet, 0);
+                                IAGSEnumServerObjectName pAGSSObjs = agsCon.ServerObjectNames;
+                                IAGSServerObjectName pAGSSObj = pAGSSObjs.Next();
+
+                                String[] parts = s[1].ToLower().Split(new String[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
+                                while (pAGSSObj != null)
+                                {
+                                    if (pAGSSObj.Type == "MapServer" && pAGSSObj.Name.ToLower() == parts[1])
+                                    {
+                                        break;
+                                    }
+                                    pAGSSObj = pAGSSObjs.Next();
+                                }
+
+
+                                IName pName = (IName)pAGSSObj;
+                                IAGSServerObject pAGSO = (IAGSServerObject)pName.Open();
+                                mapServer = (IMapServer)pAGSO;
+
+
+                                IPropertySet prop = new PropertySetClass();
+                                prop.SetProperty("URL", fileName);
+                                prop.SetProperty("Name", pAGSSObj.Name);
+
+
+                                IMapServerLayer layer = new MapServerLayerClass();
+                                layer.ServerConnect(pAGSSObj, mapServer.get_MapName(0));
+
+
+                                mxDoc.AddLayer((ILayer)layer);
                             }
+                            else
+                            {
+                                IGxLayer pGxLayer = new GxLayer();
+                                pGxFile = (GxFile)pGxLayer;
+                                pGxFile.Path = fileName;
+
+                                if (pGxLayer.Layer != null)
+                                {
+                                    map.AddLayer(pGxLayer.Layer);
+                                }
+                            }
+                        
                         }
 
                     }
