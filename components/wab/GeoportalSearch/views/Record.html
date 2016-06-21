@@ -1,8 +1,11 @@
 <div>
-	<div class="jimu-r-row snippet">
-	   <div id="${record.id}" class="jimu-r-row title"> <span data-dojo-attach-point="contentType"></span> ${record.title}</div>
-       <div class='jimu-r-row abstract'>${record.summary}</div>
-       <div class='jimu-r-row links'>
+	<div class="snippet">
+	   <div id="${record.id}" class="title">
+         <span data-dojo-attach-point="contentType" class="gp-search__record-title-img"></span>
+         <span class="gp-search__record-title-text">${record.title}</span>
+       </div>
+       <div class='abstract'>${record.summary}</div>
+       <div class='links'>
       	 <div data-dojo-attach-point="links"></div>
    	   </div>
 	</div>
