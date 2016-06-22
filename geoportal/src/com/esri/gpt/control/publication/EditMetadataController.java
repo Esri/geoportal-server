@@ -372,8 +372,11 @@ private void executeOpen(ActionEvent event, RequestContext context)
     
   // prepare the publisher
   getSelectablePublishers().setSelectedKey(getOnBehalfOf());
-  Publisher publisher = getSelectablePublishers().selectedAsPublisher(context,false);
-  
+
+  // Modified by Esri Italy: set to true to overcome control on owner/publisher useful for enableEditForAdministrator flag
+  // Publisher publisher = getSelectablePublishers().selectedAsPublisher(context,false);
+  Publisher publisher = getSelectablePublishers().selectedAsPublisher(context,true);
+
   // prepare the schema for edit
   MetadataDocument document = new MetadataDocument();
   Schema schema = document.prepareForEdit(context,publisher,sOpenDocumentUuid);
@@ -523,8 +526,9 @@ private void executeSave(ActionEvent event,
   
   // prepare the publisher
   getSelectablePublishers().setSelectedKey(getOnBehalfOf());
-  Publisher publisher = getSelectablePublishers().selectedAsPublisher(context,false);
-
+  // Modified by Esri Italy: set to true to overcome control on owner/publisher useful for enableEditForAdministrator flag
+  // Publisher publisher = getSelectablePublishers().selectedAsPublisher(context,false);
+  Publisher publisher = getSelectablePublishers().selectedAsPublisher(context,true);
   //  the document
   
   if (validateOnly) {

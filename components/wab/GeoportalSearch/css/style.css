@@ -30,7 +30,6 @@
 
 .geoportal-search-widget .result-div{
   font-size:14px;
-  padding-left:10px;
   padding-bottom:5px;
 }
 
@@ -57,17 +56,21 @@
 
 
 .snippet {
-  margin: 4px 0px 4px 0px;
-  border: 1px solid #CCC;
+  margin: 4px 0px 10px 0px;
+  border-bottom: 1px solid #CCC;
   background: #FFF;
 }
 .snippet .title {
-	font-size: 1em;
+  font-size: 1em;
   font-weight: bold;
   padding: 1px;
-  color: #AE4F0C;
-  cursor: hand; cursor: pointer;
+  color: #0079C1;
 }
+.snippet .title:hover {
+  color: #04649b;
+  cursor: pointer;
+}
+
 .snippet .title img {
   margin-right: 0.5em;
   padding: 1px;
@@ -85,25 +88,22 @@
   margin: 4px 0px 4px 12px;
 }
 
-.snippet .links a:link, .snippet .links a:visited {
-	margin: 0 3px;
-	font-size: 0.9em;
+.snippet .links a {
+  margin: 0 3px;
+  font-size: 0.9em;
   font-weight: bold;
-  border-bottom: 1px dotted;
-  color: #AE4F0C;
   text-decoration: none;
+  color: #0079C1;
 }
 
-.snippet .links a:hover, .snippet .links a:focus {
-	margin: 0 3px;
-	font-size:0.9em;
-  font-weight: bold;
-  border-bottom-style: solid;
-  color: #D03900;
+.snippet .links a:hover,
+.snippet .links a:focus {
+  color: #04649b;
 }
 
 .pagination{
   min-height: 21px;
+  border-bottom: 1px solid #d9dde0;
 }
 
 .nav a, .nav a:visited, .nav a:active {
@@ -122,11 +122,72 @@ a:visited {
   color: #333333;
 }
 a:link, a:visited {
-  border-bottom: 1px dotted;
+  /*border-bottom: 1px dotted;*/
 }
 
 .nav {
   margin: 5px 0;
   line-height: 2em;
   font-size: 0.9em;
+}
+
+.gp-search__nav {
+
+}
+
+.gp-search__clear-btn,
+.gp-search__hide-btn {
+  float: right;
+  text-decoration: none;
+  padding: 3px;
+  border: 1px solid #d9dde0;
+  border-radius: 2px;
+}
+
+.gp-search__clear-btn:hover,
+.gp-search__hide-btn:hover {
+  background: #d9dde0;
+}
+
+.gp-search__clear-btn {
+
+}
+
+.gp-search__hide-btn {
+  margin-right: 10px;
+}
+
+.gp-search__result {
+  margin-bottom: 5px;
+}
+
+.gp-search__page-numbers {
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.gp-search__page-numbers a {
+  padding: 0 5px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 2px;
+}
+
+.gp-search__page-numbers a:hover {
+  background: rgb(217, 221, 224);
+}
+
+.gp-search__page-numbers a.current {
+  background: rgb(217, 221, 224);
+}
+
+.geoportal-search-recordContentType {
+  display: inline-block;
+}
+
+.gp-search__record-title-text {
+}
+
+.gp-search__record-title-img {
+  float: left;
 }

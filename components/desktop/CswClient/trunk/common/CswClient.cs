@@ -167,15 +167,23 @@ namespace com.esri.gpt.csw
             }
                 catch (WebException we)
             {
-               /* if (we is CryptographicException)
+                /* if (we is CryptographicException)
+                 {
+                     // handle client certificate
+                     ClientCertRequest.handleClientCert(request, URL);
+                     response = (HttpWebResponse)request.GetResponse();
+                     retryAttempt = false;
+                 }*/
+                if (we.Status == WebExceptionStatus.ProtocolError)
                 {
-                    // handle client certificate
-                    ClientCertRequest.handleClientCert(request, URL);
-                    response = (HttpWebResponse)request.GetResponse();
-                    retryAttempt = false;
-                }*/
-                
-                if (retryAttempt)
+                    HttpStatusCode statusCode = ((HttpWebResponse)we.Response).StatusCode;
+                    if (statusCode == HttpStatusCode.BadRequest)
+                    {
+                        retryAttempt = false;
+                        throw we;
+                    }
+                }
+                    if (retryAttempt)
                 {
                     PromptCredentials pc = new PromptCredentials();
                     pc.ShowDialog();

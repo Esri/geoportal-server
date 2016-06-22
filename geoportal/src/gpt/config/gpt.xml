@@ -50,7 +50,8 @@
            Example: "['name1','name2','name3','name4']"
         - geometryServiceUrl: REST URL to an ArcGIS Server GeometryServer service.
         - locatorUrl: REST URL to an ArcGIS Server GeocodeServer service, e.g. locatorUrl="http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Locators/ESRI_Geocode_USA/GeocodeServer"
-        - locatorSingleFieldParameter: field for the GeocodeServer service upon which locations can be searched 
+        - locatorSingleFieldParameter: field for the GeocodeServer service upon which locations can be searched
+        - the urls start with "//" without the protocol (http: or https:). 
     -->
     
     <interactiveMap
@@ -298,7 +299,7 @@
             - webharvester.poolsize: pool size of the Threads. Default: 4
             - webharvester.autoSelectFrequency: Resources auto-selection frequency. Default: 1[HOUR]
             - webharvester.autoSelectSuspendPeriod: period for how long can repository be suspended from 
-                                                    harvesting after unsucessful harvest. Default: 1[Day]
+                                                    harvesting after unsuccessful harvest. Default: 1[Day]
             - webharvester.watchDogFrequency: Watch-dog activation frequency. Default: 1[MINUTE]
             - webharvester.baseContextPath: Base context path used inside email notifications. Default: none (no report link in the notification)
             - webharvester.maxRepRecords: Maximum number of records to report. Default: 10000. -1 to remove limit.
@@ -341,6 +342,11 @@
             - catalog.enableEditForAllPubMethods:
 				true if document editing should be enabled for all publication methods,
 				false if only documents created by the editor should be editable
+            - catalog.enableEditForAdministrator: 
+                true if document editing should be enabled for administrator even
+                if he is not an owner of the metadata
+            - catalog.enableDuplicate:
+                true to enable "Duplicate" operation on metadata
             - catalog.admin.allowApplyToAll:
 				true if an administrator should be able to apply an action to 
 				all matching records
@@ -350,6 +356,8 @@
 				true if the database is case sensitive (set this to false for MySQL)
             - publicationRequest.autoApprove:
 				true if newly published documents should be approved by default
+            - publicationRequest.allowFileIdForUuid
+        true if an xml's internal file identifier should used as the document uuid
             - spatialRelevance.ranking.maxDoc:
 				turn spatial relevance ranking off when the catalog exceeds the supplied maximum document number
             - rssProviderUrl:
@@ -375,13 +383,22 @@
 					[MINUTE] – number of minutes
 					[HOUR] – number of hours
             - httpClient.alwaysClose: forces to always close socket connection for requests to the remote endpoints using Apache HTTP client. 
-				Default: false.                  
+				Default: false.   
+            - AllowDuplicateResourceURL: 
+                true to allow registration of web resources with the URL which 
+                already has been registered
+            - AllowonlyAuthenticatedUser:
+                true to disable access to the search and browse pages for users
+                which has not been authenticated
         -->  
         <parameter key="catalog.enableEditForAllPubMethods" value="false"/>
+        <parameter key="catalog.enableEditForAdministrator" value="false"/>
+        <parameter key="catalog.enableDuplicate" value="true"/>
         <parameter key="catalog.admin.allowApplyToAll" value="true"/>
         <parameter key="catalog.useCollections" value="false"/>
         <parameter key="database.isCaseSensitive" value="true"/>
         <parameter key="publicationRequest.autoApprove" value="false"/>
+        <parameter key="publicationRequest.allowFileIdForUuid" value="false"/>
         <parameter key="spatialRelevance.ranking.maxDoc" value="1000000"/>
         <parameter key="rssProviderUrl" value=""/>
         <parameter key="reverseProxy.baseContextPath" value=""/>
@@ -390,8 +407,8 @@
         <parameter key="httpClientRequest.connectionTimeout" value="2[MINUTE]"/>
         <parameter key="httpClientRequest.responseTimeout" value="2[MINUTE]"/>
         <parameter key="httpClient.alwaysClose" value="false"/>
-	<!-- Setting AllowonlyAuthenticatedUser to true denies access to anonymous users. -->
-	<parameter key="AllowOnlyAuthenticatedUser" value="true"/>	  
+        <parameter key="AllowDuplicateResourceURL" value="false"/>	  
+        <parameter key="AllowOnlyAuthenticatedUser" value="false"/>	  
         
 		    <!-- Resource Link Builder
 			      - resourceLinkBuilder.preview.filter: regular expression disabling ‘preview’ link on search result 
@@ -429,7 +446,7 @@
             - catalog.cart.maxItems: maximum number of items in the cart. Default: 10
             - catalog.cart.processor: the Java class used to process items Default: none
             - catalog.cart.processor.whitelist: comma-separated list of processors allowed to pass as an argument
-            - catalog.cart.xslt.whitelist: comma-separated list of xslt allowed to apss as an argument
+            - catalog.cart.xslt.whitelist: comma-separated list of xslt allowed to pass as an argument
             - catalog.cart.tryhandler.class: class name of the "/try" handler
         -->
         <parameter key="catalog.cart.enabled" value="false"/>
@@ -455,7 +472,7 @@
         <parameter key="dcat.rights.writeAlways" value="false"/>
     </catalog>
     
-    <!-- costomization of web harvester -->
+    <!-- customization of web harvester -->
     <!--webharvester>
 		<dataProcessorFactory enabled="true" className="com.esri.gpt.control.webharvest.extensions.localfolder.LocalFolderDataProcessorFactory" name="localfolder" rootFolder="c:\data"/>
     </webharvester-->

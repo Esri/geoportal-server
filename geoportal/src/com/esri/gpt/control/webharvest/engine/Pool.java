@@ -17,9 +17,7 @@ package com.esri.gpt.control.webharvest.engine;
 import com.esri.gpt.catalog.harvest.repository.HrRecord;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.resource.query.Criteria;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -67,13 +65,7 @@ public synchronized void resize(int size) {
   if (size > workers.size()) {
     int missing = size - workers.size();
     for (int i = 0; i < missing; i++) {
-      Worker worker = new Worker(dataProcessor, taskQueue) {
-        @Override
-        protected void onSqlException(SQLException ex) {
-          super.onSqlException(ex);
-          shutdown();
-        }
-      };
+      Worker worker = new Worker(dataProcessor, taskQueue);
       Thread thread = new Thread(worker, "harvester");
       workers.add(worker);
       thread.start();

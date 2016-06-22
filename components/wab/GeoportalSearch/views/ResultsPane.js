@@ -5,6 +5,7 @@ define([
   'dojo/dom-construct',
   'dojo/dom-class',
   'dojo/_base/html',
+  'dojo/Deferred',
   'dijit/_WidgetBase',
   'dijit/_TemplatedMixin',
   'dijit/_WidgetsInTemplateMixin',
@@ -30,7 +31,7 @@ define([
   'dijit/form/Select',  
   'dojo/store/Memory',
   'dojo/data/ObjectStore'
-],function(declare,lang,array,domConstruct,domClass,html,
+],function(declare,lang,array,domConstruct,domClass,html,Deferred,
            _WidgetBase,_TemplatedMixin,_WidgetsInTemplateMixin, template, nls, 
            Record, util, List, Query, QueryTask,Paginator, LayerFactory,
            WebmapProcessor,FootprintsGenerator,
@@ -50,6 +51,7 @@ define([
        this._initList();
        this.attachTopics();
        this.nItemsPerPage = this.config.recordsPerPage;
+       this.showAllAddedLayers = this.config.showAllAddedLayers;
      },
 
 
@@ -102,7 +104,7 @@ define([
                                   container:this.pagination,
                                   results:this.results,
                                   query:this.query,
-                                  nItemsPerPage:this.config.nItemsPerPage,
+                                  nItemsPerPage: Number(this.config.recordsPerPage),
                                   nls:this.nls
                                 });
     }
@@ -188,13 +190,18 @@ define([
     var elementId = element.id;
     var elParts = elementId.split("_addToMap");
     var recordId = "";
+    var isAddToMapLink = false;
     if(elParts && elParts.length==2){
       recordId = elParts[0];
+      isAddToMapLink = true;
     }
 
     var link = dojo.byId(recordId + "_open");
     if(!link) {
       link = dojo.byId(elementId);
+      if(!link || !link.dataset.href) {
+        link = dojo.byId(elementId + "_open");
+      }
     }
 
   //  var addToMapLink = dojo.byId(element.id);// + "_addToMap");
@@ -205,19 +212,25 @@ define([
     var linkType = "unknown";
          
     console.log('_selectResultItem=' + element.id + ", linktype=" + linkType);
-    
-    //var infoTemplate = new InfoTemplate("Attributes", "${*}");
   
     if (link) {
 
       linkType = link.dataset.linktype;
 
-      if (linkType == "mapserver" || linkType == "featureserver" || linkType == "imageserver" 
-        || linkType == "kml" || linkType == "wms") {
+      if (isAddToMapLink && (linkType == "mapserver" || linkType == "featureserver" || linkType == "imageserver" 
+        || linkType == "kml" || linkType == "wms")) {
         
-        LayerFactory.createLayer(href,linkType).then(lang.hitch(this,function(layer){
-            this.map.addLayer(layer);
-        }));
+        if(this.showAllAddedLayers){
+          var def = new Deferred();
+		  if(linkType == "mapserver" || linkType == "featureserver" || linkType == "imageserver"){
+			linkType = "ags";
+		  }
+          LayerFactory.addLayer(this.map,def,linkType,href);
+        }else{
+           LayerFactory.createLayer(linkType,href).then(lang.hitch(this,function(layer){
+                this.map.addLayer(layer);
+            }));
+        }
                
       } else if (linkType == "webmap") {        
           var wmProcessor = new WebMapProcessor();

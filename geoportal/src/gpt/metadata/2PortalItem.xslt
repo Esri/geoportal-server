@@ -12,10 +12,12 @@
   <xsl:strip-space elements="*"/>
   
   <xsl:template match="/gmd:MD_Metadata | /gmi:MI_Metadata | /metadata">
-  <xsl:text>{</xsl:text>
-    <xsl:call-template name="writeInfo"/>
-  <xsl:text>&#10;}</xsl:text>   
+    <xsl:text>{</xsl:text>
+      <xsl:call-template name="writeInfo"/>
+    <xsl:text>&#10;}</xsl:text>   
   </xsl:template>
+  
+  <xsl:template match="*" /> <!-- catch-all: override built-in templates -->
   
   <xsl:template name="writeInfo">
     

@@ -44,7 +44,7 @@
 	<%
 	com.esri.gpt.framework.context.RequestContext rcx = com.esri.gpt.framework.context.RequestContext.extract(request);
 	String sAllowOnlyAuthenticatedUser=rcx.getApplicationConfiguration().getCatalogConfiguration().getParameters().getValue("AllowOnlyAuthenticatedUser");
-	if(sAllowOnlyAuthenticatedUser.equals("true"))
+	if("true".equals(sAllowOnlyAuthenticatedUser))
 	{
 	%>        
 		<h:commandLink 

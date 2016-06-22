@@ -24,6 +24,7 @@ import com.esri.gpt.catalog.schema.MetadataDocument;
 import com.esri.gpt.catalog.schema.Schema;
 import com.esri.gpt.catalog.schema.SchemaException;
 import com.esri.gpt.catalog.schema.Schemas;
+import com.esri.gpt.catalog.schema.ValidationException;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.security.principal.Publisher;
@@ -45,11 +46,13 @@ public class PublicationRequest {
 // class variables =============================================================
 
 // instance variables ==========================================================
+private boolean           _allowFileIdForUuid = false;
 private boolean           _hasMetadataServer = false;
 private Publisher         _publisher;
 private PublicationRecord _record = new PublicationRecord();
 private RequestContext    _requestContext;
 private boolean           _updateIndex = true;
+private boolean           _retryAsDraft = false;
 
 // constructors ================================================================
   
@@ -75,6 +78,10 @@ public PublicationRequest(RequestContext requestContext,
     String sAuto = Val.chkStr(params.getValue("publicationRequest.autoApprove"));
     if (sAuto.toLowerCase().equals("true")) {
       this.getPublicationRecord().setAutoApprove(true);
+    }
+    String sAllowFileId = Val.chkStr(params.getValue("publicationRequest.allowFileIdForUuid"));
+    if (sAllowFileId.toLowerCase().equals("true")) {
+      this._allowFileIdForUuid = true;
     }
   }
 }
@@ -135,6 +142,22 @@ private void setRequestContext(RequestContext requestContext) {
   _requestContext = requestContext;
 }
 
+/**
+ * Checks if another attempt to publish as "draft" should be made if first attempt failed validation.
+ * @return <code>true</code> if another attempt should be made
+ */
+public boolean getRetryAsDraft() {
+  return _retryAsDraft;
+}
+
+/**
+ * Allows to make another attempt to publish as a draft if first attempt failed validation.
+ * @param _retryAsDraft <code>true</code> if another attempt should be made
+ */
+public void setRetryAsDraft(boolean _retryAsDraft) {
+  this._retryAsDraft = _retryAsDraft;
+}
+
 // methods =====================================================================
 
 /**
@@ -182,6 +205,13 @@ protected void determineUuid(Schema schema) throws SQLException {
       rec.setUuid(sEsriDocID);
     }
   }
+  
+  if (_allowFileIdForUuid && rec.getUuid().length() == 0) {
+    String sFileId = rec.getFileIdentifier();
+    if (UuidUtil.isUuid(sFileId)) {
+      rec.setUuid(sFileId);
+    }
+  }  
   
   if (rec.getUuid().length() == 0) {
     if (imsDao == null) imsDao = new ImsMetadataAdminDao(getRequestContext());
@@ -341,8 +371,18 @@ public void publish(Schema schema)
 public void publish() 
   throws SchemaException, ImsServiceException, SQLException, CatalogIndexException {
 
-  Schema schema = prepareForPublication();
-  publish(schema);
+  try {
+    Schema schema = prepareForPublication();
+    publish(schema);
+  } catch (ValidationException ex) {
+    if (getRetryAsDraft()) {
+      getPublicationRecord().setApprovalStatus(ApprovalStatus.draft.name());
+      Schema schema = prepareForPublication();
+      publish(schema);
+    } else {
+      throw ex;
+    }
+  }
 }
 
 /**

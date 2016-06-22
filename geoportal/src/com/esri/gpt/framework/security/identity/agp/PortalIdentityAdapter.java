@@ -292,8 +292,8 @@ public class PortalIdentityAdapter extends IdentityAdapter {
     user.reset();
 		try {
 			String referer = null;
-			//Decode username from response
-		    username = URLDecoder.decode(username,"UTF-8");
+			//Decode username from response, not-required change was made to oauthResponse.jsp
+		  //username = URLDecoder.decode(username,"UTF-8");
 			executeGetUser(user,token,username,referer);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -347,7 +347,8 @@ public class PortalIdentityAdapter extends IdentityAdapter {
 		boolean hasOrgUserRole = false;
 		
     String restBaseUrl = this.getRestBaseUrl();
-    String url = restBaseUrl+"community/users/"+URLEncoder.encode(username,"UTF-8");
+    //String url = restBaseUrl+"community/users/"+URLEncoder.encode(username,"UTF-8");
+    String url = restBaseUrl+"community/self/";
     url += "?f=json&token="+URLEncoder.encode(token,"UTF-8");
     
 		//System.err.println("userUrl="+url);
@@ -364,6 +365,8 @@ public class PortalIdentityAdapter extends IdentityAdapter {
 		//System.err.println(handler.getContent());
     
     String sResponse = handler.getContent();
+    //System.err.println("username="+username);
+    //System.err.println("response="+sResponse);
     JSONObject jsoResponse = new JSONObject(sResponse);
     if (jsoResponse.has("error") && (!jsoResponse.isNull("error"))) {
     	LOGGER.warning(sResponse);
@@ -372,6 +375,8 @@ public class PortalIdentityAdapter extends IdentityAdapter {
     if (!jsoResponse.has("username") || (jsoResponse.isNull("username"))) {
     	LOGGER.warning("No username. "+sResponse);
     	return;
+    } else {
+    	username = jsoResponse.getString("username");
     }
     
     user.setDistinguishedName(username);
@@ -383,9 +388,9 @@ public class PortalIdentityAdapter extends IdentityAdapter {
   	if (jsoResponse.has("role") && (!jsoResponse.isNull("role"))) {
   	  // "role": "org_admin"  "org_publisher" or "org_user"
   		String role = jsoResponse.getString("role");
-  		if (role.equals("org_admin")) hasOrgAdminRole = true;
-  		if (role.equals("org_publisher")) hasOrgPubRole = true;
-  		if (role.equals("org_user")) hasOrgUserRole = true;
+      if (role.equals("org_admin") || role.equals("account_admin")) hasOrgAdminRole = true;
+      if (role.equals("org_publisher") || role.equals("account_publisher")) hasOrgPubRole = true;
+      if (role.equals("org_user") || role.equals("account_user")) hasOrgUserRole = true;
   	}
   	if (jsoResponse.has("email") && (!jsoResponse.isNull("email"))) {
   		user.getProfile().setEmailAddress(jsoResponse.getString("email"));
@@ -440,8 +445,11 @@ public class PortalIdentityAdapter extends IdentityAdapter {
 	
 	private String getRestBaseUrl() {
     String authorizeUrl = this.getAuthorizeUrl();
-    String restBaseUrl = authorizeUrl.substring(0,authorizeUrl.indexOf("/oauth2/"))+"/rest/";
-    return restBaseUrl;
+    //String restBaseUrl = authorizeUrl.substring(0,authorizeUrl.indexOf("/oauth2/"))+"/rest/";
+    if (authorizeUrl.indexOf("/sharing/oauth2/") > 0) {
+      return authorizeUrl.substring(0,authorizeUrl.indexOf("/sharing/oauth2/"))+"/sharing/rest/";
+    }
+    return authorizeUrl.substring(0,authorizeUrl.indexOf("/sharing/rest/oauth2/"))+"/sharing/rest/";
 	}
 	
 	private String getThisReferer() {

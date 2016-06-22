@@ -15,6 +15,7 @@
 package com.esri.gpt.control.webharvest.engine;
 
 import com.esri.gpt.framework.util.UuidUtil;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,8 +23,12 @@ import java.util.logging.Logger;
  * Worker base.
  */
 abstract class WorkerBase implements Runnable, IWorker {
+/**
+ * last error log date
+ */
+private static Date lastErrorLogDate = null;
 /** logger */
-protected static final Logger LOGGER = Logger.getLogger(WorkerBase.class.getCanonicalName());
+private static final Logger LOGGER = Logger.getLogger(WorkerBase.class.getCanonicalName());
 /** data processor */
 protected final DataProcessor dataProcessor;
 /** executor */
@@ -34,6 +39,14 @@ protected volatile boolean shutdown;
 protected Thread workerThread;
 /** suspended */
 protected volatile boolean suspended;
+
+protected synchronized static Date getLastErrorLogDate() {
+  return lastErrorLogDate;
+}
+
+protected synchronized static void setLastErrorLogDate(Date lastErrorLogDate) {
+  WorkerBase.lastErrorLogDate = lastErrorLogDate;
+}
 
 /**
  * Creates instance of the worker.

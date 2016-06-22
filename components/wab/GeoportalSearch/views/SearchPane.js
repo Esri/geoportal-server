@@ -9,8 +9,9 @@ define([
   'widgets/GeoportalSearch/common/Util',
   'widgets/GeoportalSearch/common/Query',
   'widgets/GeoportalSearch/common/QueryTask',
+  "esri/geometry/webMercatorUtils",
   'esri/layers/GraphicsLayer',
-  
+
   'esri/arcgis/utils',
   'dojo/json',
   'dojo/_base/lang',
@@ -32,7 +33,7 @@ define([
   'dijit/form/CheckBox',
   'dijit/form/Select'
 ],function(declare, lang, _WidgetBase,_TemplatedMixin,_WidgetsInTemplateMixin, template, nls, util,
-    Query, QueryTask,
+    Query, QueryTask,webMercatorUtils,
     GraphicsLayer, arcgisUtils,JSON,
     lang, html, array,
     mouse, on, Memory,ObjectStore,
@@ -42,7 +43,7 @@ define([
     templateString: template,
     nls: nls,
     portal: null,
-    
+
      postCreate: function() {
        this.inherited(arguments);
         this._initUI();
@@ -66,13 +67,13 @@ define([
         });
         this.inputQueryCatalog.setStore(catalogsStore);
     },
-     
+
      onKeyDown: function(evt) {
        if (evt.keyCode==13 ){ // && !this._searchButton.get('disabled')) {
          this.onSearch();
        }
      },
-     
+
      onTextChanged: function(evt) {
        //this._searchButton.setDisabled(this.getText().length==0);
      },
@@ -81,7 +82,7 @@ define([
        this._searchText.setDisabled(disabled);
        this._searchButton.setDisabled(disabled);
      },
-     
+
      getText: function() {
        return this._searchText.get('value');
      },
@@ -94,7 +95,7 @@ define([
 
     _search: function() {
         topic.publish("/widgets/GeoportalSearch/action/switchTab", null, { tab: this.nls.results });
-        
+
         var query = new Query();
         query.queryUrl = this.inputQueryCatalog.value;
         query.start=1;
@@ -106,7 +107,7 @@ define([
         }
         var extent = this.map.extent;
         var geom = extent;
-        if (this.map.spatialReference.wkid == 10200) {
+        if (this.map.spatialReference.wkid == 102100) {
           geom = webMercatorUtils.webMercatorToGeographic(extent);
         }
         console.log(geom);
@@ -115,7 +116,7 @@ define([
         if(this.inputExtentIntersecting.checked){
            query.spatialRel ='esriSpatialRelOverlaps';
            query.bbox = bbox;
-        }else if(this.inputExtentFullyWithin.checked){      
+        }else if(this.inputExtentFullyWithin.checked){
            query.spatialRel ='esriSpatialRelWithin';
            query.bbox = bbox;
         }

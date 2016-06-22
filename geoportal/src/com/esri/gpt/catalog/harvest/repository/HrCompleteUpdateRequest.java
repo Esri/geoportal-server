@@ -29,6 +29,7 @@ import com.esri.gpt.framework.security.principal.Publisher;
 import com.esri.gpt.framework.security.principal.RoleSet;
 import com.esri.gpt.framework.util.UuidUtil;
 import java.util.Date;
+import static com.esri.gpt.framework.robots.BotsUtils.readBots;
 
 /**
  * Complete update request.

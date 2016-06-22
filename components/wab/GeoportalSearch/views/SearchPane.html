@@ -1,22 +1,28 @@
   <div>
-     <div style="margin:0 0 20px 0;">
+     <div class="jimu-r-row">
         <label data-dojo-attach-point="labelQueryName">${nls.searchText}</label>
         <br>
-        <input type="text" style="width:100%;margin-top:10px;" data-dojo-type="dijit/form/TextBox" 
-            data-dojo-attach-point="inputQueryName" data-dojo-props="trim:true" data-dojo-attach-event="keydown:onKeyDown"/>
+        <div class="jimu-r-row">
+          <input type="text" style="width:100%;margin-top:10px;" data-dojo-type="dijit/form/TextBox" 
+              data-dojo-attach-point="inputQueryName" data-dojo-props="trim:true" data-dojo-attach-event="keydown:onKeyDown"/>       </div>
       </div>
-      <div style="margin:0 0 20px 0;">
+      <br/>
+      <div class="jimu-r-row">
         <label data-dojo-attach-point="labelCatalog">${nls.labelCatalog}</label>
         <br>
-        <div style="width:100%;margin-top:10px;" data-dojo-attach-point="inputQueryCatalog" data-dojo-type="dijit/form/Select"
-          data-dojo-props="labelAttr: 'Name'">
-				</div>
+        <div class="jimu-r-row">
+          <div style="width:100%;margin-top:10px;" data-dojo-attach-point="inputQueryCatalog" data-dojo-type="dijit/form/Select"
+            data-dojo-props="labelAttr: 'Name'">
+  				</div>          
+        </div>
       </div>
-      <div style="margin:0 0 20px 0;">        
-        <span  data-dojo-attach-point="inputQueryLiveDataFilter" data-dojo-type="dijit/form/CheckBox"></span>
-        <label data-dojo-attach-point="labelIsLiveData">${nls.liveData}</label>
+      <br/>
+      <div class="jimu-r-row">        
+        <span  data-dojo-attach-point="inputQueryLiveDataFilter" data-dojo-type="dijit/form/CheckBox"></span>        
+        <label data-dojo-attach-point="labelIsLiveData">${nls.liveData}</label>        
       </div>
-      <div style="margin:0 0 20px 0;">                          
+      <br/>
+      <div class="jimu-r-row">                          
           <span  data-dojo-attach-point="inputExtentAnywhere" data-dojo-type="dijit/form/RadioButton"
                  data-dojo-props="value:'anywhere'"></span>
           <label data-dojo-attach-point="labelExtentAnywhere">${nls.anywhere}</label>                   

@@ -61,7 +61,7 @@ public class BotsParser {
       boolean override = Val.chkBool(appCfg.getCatalogConfiguration().getParameters().getValue(BOT_OVERRIDE_PARAM), DEFAULT_OVERRIDE);
       String userAgent = Val.chkStr(appCfg.getCatalogConfiguration().getParameters().getValue(BOT_AGENT_PARAM), DEFAULT_AGENT);
 
-      LOG.info(String.format("Creating default RobotsTxtParser :: enabled: %b, override: %b, user-agend: %s", enabled, override, userAgent));
+      LOG.info(String.format("Creating default RobotsTxtParser :: enabled: %b, override: %b, user-agent: %s", enabled, override, userAgent));
 
       defaultInstance = new BotsParser(enabled, override, userAgent);
     }

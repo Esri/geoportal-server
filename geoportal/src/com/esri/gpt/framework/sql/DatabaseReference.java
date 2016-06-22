@@ -312,8 +312,7 @@ protected void testConnection() {
   try {
     con = openConnection();
   } catch (Throwable t) {
-    LogUtil.getLogger().log(Level.SEVERE,"Connection test failed.");
-    LogUtil.getLogger().log(Level.FINEST,"Error accessing database.",t);
+    LogUtil.getLogger().log(Level.SEVERE,"Connection test failed.",t);
   } finally {
     closeConnection(con);
   }

@@ -429,13 +429,24 @@ spatial;
  * geometry not recognized
  */
 public static Geometry checkValueOf(String value) {
+  return checkValueOf(value,esriGeometryEnvelope);
+}
+
+/**
+ * Checks value given as string.
+ * @param value value given as string
+ * @param defaultGeometry  default geometry
+ * @return geometry represented by the string or default geometry
+ * geometry not recognized
+ */
+public static Geometry checkValueOf(String value, Geometry defaultGeometry) {
   value = Val.chkStr(value);
   for (Geometry g : values()) {
     if (g.name().equalsIgnoreCase(value)) {
       return g;
     }
   }
-  return esriGeometryEnvelope;
+  return defaultGeometry;
 }
-  }
+}
 }

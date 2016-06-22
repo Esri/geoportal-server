@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.esri.gpt.framework.util.Val;
+import java.util.regex.Pattern;
 
 /**
  * The Class MapViewerAgsPortal.
@@ -16,7 +17,7 @@ public class MapViewerAgsPortal extends IAMapViewer {
 /** The LOG. */
 private static Logger LOG = Logger.getLogger(MapViewerAgsPortal.class
                               .getCanonicalName());
-
+private static final Pattern layerUrlPattern = Pattern.compile("mapserver/\\p{Digit}+$",Pattern.CASE_INSENSITIVE);
 // methods =====================================================================
 /**
  * Checks whether resource can be handled by this map viewer
@@ -51,6 +52,9 @@ public boolean canHandleResource() {
     String tmp = this.getResourceUri().toLowerCase();
     if (tmp.endsWith("mapserver") || tmp.contains("imageserver")
         || tmp.contains("featureserver")) {
+      return true;
+    }
+    if (layerUrlPattern.matcher(tmp).find()) {
       return true;
     }
     LOG.finer("Could handle resrouceuri " + this.getResourceUri());

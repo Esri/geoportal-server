@@ -24,6 +24,7 @@ import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.util.TimePeriod;
 import com.esri.gpt.framework.util.Val;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -71,6 +72,7 @@ private HrRecords filterSuspended(HrRecords records) {
 public void run() {
   workerThread = Thread.currentThread();
   LOGGER.info("[SYNCHRONIZER] AutoSelector activated.");
+  Date lastErrorLogDate = null;
   
   do {
     long duration = autoSelectFrequency;
@@ -104,8 +106,13 @@ public void run() {
           LOGGER.log(Level.INFO,"[SYNCHRONIZER] Next synchronization time couldn't been determined at this time.");
         }
       } catch (SQLException ex) {
-        LOGGER.severe("[SYNCHRONIZER] Auto-selector will be shut down due to database access error.\r\nRestart the server after correcting database configuration.");
-        LOGGER.log(Level.FINEST, "[SYNCHRONIZER] Error accessing database.", ex);
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.HOUR, -1);
+        if (lastErrorLogDate==null || lastErrorLogDate.before(now.getTime())) {
+          LOGGER.log(Level.SEVERE, "[SYNCHRONIZER] Error selecting harvesting sites for harvest.", ex);
+          lastErrorLogDate = new Date();
+        }
+        
       }
     }
 

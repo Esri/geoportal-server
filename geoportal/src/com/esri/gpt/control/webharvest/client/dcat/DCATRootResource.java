@@ -23,18 +23,24 @@ import com.esri.gpt.framework.dcat.DcatVersion;
 import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.util.ReadOnlyIterator;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import org.apache.commons.io.IOUtils;
 
 /**
  * DCAT iterable adaptor.
  */
 class DCATRootResource implements DestroyableResource {
-  private IterationContext context;
-  private DCATInfo info;
+  private final IterationContext context;
+  private final DCATInfo info;
   private DCATIteratorAdaptor adaptor;
 
   /**
@@ -69,7 +75,7 @@ class DCATRootResource implements DestroyableResource {
    * Resource iterator.
    */
   private class ResourceIterator extends ReadOnlyIterator<Resource> {
-    private boolean paginated = isPaginated();
+    private final boolean paginated = isPaginated();
     private Iterator<Publishable> iterator;
     private Resource resource;
     private boolean noMore;
@@ -104,7 +110,65 @@ class DCATRootResource implements DestroyableResource {
       }
       return false;
     }
-
+    
+    /**
+     * Open stream.
+     * @return stream
+     * @throws IOException if opening stream fails
+     */
+    private InputStream openStream(URL url) throws IOException {
+      
+      // create temporary file
+      final File tempFile = File.createTempFile("dcat_", Long.toString(System.nanoTime()));
+      
+      InputStream in = null;
+      OutputStream out = null;
+      
+      try {
+        
+        // copy URL stream into temporary file
+        in = url.openStream();
+        out = new FileOutputStream(tempFile);
+        IOUtils.copy(in, out);
+        
+      } catch (IOException ex) {
+        
+        // close temporary file stream and delete file
+        IOUtils.closeQuietly(out);
+        out = null;
+        tempFile.delete();
+        
+        // rethrow exception
+        throw ex;
+        
+      } catch (RuntimeException ex) {
+        
+        // close temporary file stream and delete file
+        IOUtils.closeQuietly(out);
+        out = null;
+        tempFile.delete();
+        
+        // rethrow exception
+        throw ex;
+        
+      } finally {
+        
+        // close all quietly
+        IOUtils.closeQuietly(out);
+        IOUtils.closeQuietly(in);
+        
+      }
+      
+      return new FileInputStream(tempFile) {
+        @Override
+        public void close() throws IOException {
+          super.close();
+          // delete temporary file
+          tempFile.delete();
+        }
+      };
+    }
+    
     @Override
     public boolean hasNext() {
       // absolutly no more data
@@ -119,8 +183,7 @@ class DCATRootResource implements DestroyableResource {
       if (adaptor==null) {
         try {
           passCount = 0;
-          URL url = getNextUrl();
-          adaptor = new DCATIteratorAdaptor(info.getFormat(), new DcatParserAdaptor(new DcatParser(url.openStream())));
+          adaptor = new DCATIteratorAdaptor(info.getFormat(), new DcatParserAdaptor(new DcatParser(openStream(getNextUrl()))));
           iterator = adaptor.iterator();
         } catch (IOException ex) {
           context.onIterationException(ex);

@@ -1776,11 +1776,12 @@
     <h:panelGroup id="mapToolbar" styleClass="mapToolbar" style="display:none">
       <% // List of predefined extents %>
       <h:selectOneMenu id="scSel"
+                     rendered="#{not empty SearchController.searchCriteria.searchFilterSpatial.predefinedExtents}"
                      value="#{SearchController.searchCriteria.searchFilterSpatial.extent}"
                      onchange="javascript: setMapExtent();"
                      >
-	  <f:selectItem itemValue="" itemLabel="#{gptMsg['catalog.search.filterSpatial.extents']}"/>
-	  <f:selectItem itemValue="default" itemLabel="#{gptMsg['catalog.search.filterSpatial.extents.default']}"/>
+          <f:selectItem itemValue="" itemLabel="#{gptMsg['catalog.search.filterSpatial.extents']}"/>
+          <f:selectItem itemValue="default" itemLabel="#{gptMsg['catalog.search.filterSpatial.extents.default']}"/>
           <f:selectItems value="#{SearchController.searchCriteria.searchFilterSpatial.predefinedExtents}"/>
       </h:selectOneMenu>
       <h:outputText id="brksc" escape="false" value="<br/>"/>

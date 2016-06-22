@@ -1,0 +1,19 @@
+{
+  "name": "AddToMap",
+  "label": "Add To Map",
+  "platform": "HTML",
+  "version": "2.0.1",
+  "wabVersion": "2.0.1",
+  "author": "Esri Redlands",
+  "description": "",
+  "copyright": "",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0",
+  "properties": {
+    "inPanel": false,
+    "hasUIFile": false,
+    "hasConfig": false,
+    "keepConfigAfterMapSwitched": false,
+    "supportMultiInstance": false,
+    "hasVersionManager": false
+  }
+}

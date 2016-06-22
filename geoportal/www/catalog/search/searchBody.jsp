@@ -40,18 +40,17 @@
   var _frmDjSearchCriteria = null;
   
    	// Set the extent based on the bookmark selected. WARNING: the WKID is hardcoded to 4326.
-    	function setMapExtent()
-	{	var extent= document.getElementById("frmSearchCriteria:scSel").value;
-	    	if((extent!=null)&&(extent!=""))
-		{
-			if(extent=="default")
-				selectedExtent= eval("new esri.geometry.Extent({"+gptMapConfig.mapInitialExtent+"})");
-			else
-				var selectedExtent = new esri.geometry.Extent(Number(extent.split(";")[0]),Number(extent.split(";")[1]),Number(extent.split(";")[2]),Number(extent.split(";")[3]),(new esri.SpatialReference({wkid:4326})));
-
-			scMap._gptMap.zoom(selectedExtent);
-		}
-	}
+    function setMapExtent()	{	
+      var scEl = document.getElementById("frmSearchCriteria:scSel");
+      var extent= scEl!=null? scEl.value: null;
+      if((extent!=null)&&(extent!=""))	{
+        var selectedExtent = eval("new esri.geometry.Extent({"+gptMapConfig.mapInitialExtent+"})");
+        if(extent!=="default") {
+          selectedExtent = new esri.geometry.Extent(Number(extent.split(";")[0]),Number(extent.split(";")[1]),Number(extent.split(";")[2]),Number(extent.split(";")[3]),(new esri.SpatialReference({wkid:4326})));
+        } 
+        scMap._gptMap.zoom(selectedExtent);
+      }
+    }
 	
   function serilizeFormToCookie() {
     //dojo.cookie(_cookieLabel, dojo.formToJson("frmSearchCriteria"));
@@ -176,12 +175,14 @@ dojo.declare("SearchMap", null, {
 
   onMapLoaded: function() {
     if (this._gptMap!=null) {
-	// Set the map extent based on the bookmark
-    	var extent= document.getElementById("frmSearchCriteria:scSel").value;
-	if((extent!=null)&&(extent!=""))
-		setTimeout(dojo.hitch(this,"setMapExtent",true),1000);
-	else
-      		setTimeout(dojo.hitch(this,"zoomToInitExtent",true),1000);
+      // Set the map extent based on the bookmark
+      var scSel = document.getElementById("frmSearchCriteria:scSel");
+      var extent= scSel!=null? scSel.value: null;
+      if((extent!=null)&&(extent!=""))
+        setTimeout(dojo.hitch(this,"setMapExtent",true),1000);
+      else
+        setTimeout(dojo.hitch(this,"zoomToInitExtent",true),1000);
+
       this.drawFootPrints();
       var agsMap = this._gptMap.getAgsMap();
       if (agsMap != null) {

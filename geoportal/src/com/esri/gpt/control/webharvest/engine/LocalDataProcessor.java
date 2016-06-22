@@ -333,6 +333,7 @@ class LocalDataProcessor implements DataProcessor {
           HarvesterRequest publicationRequest =
             new HarvesterRequest(context, unit.getPublisher(), unit.getRepository().getUuid(), sourceUri.asString(), metadata);
           publicationRequest.getPublicationRecord().setAutoApprove(ProtocolInvoker.getAutoApprove(unit.getRepository().getProtocol()));
+          publicationRequest.setRetryAsDraft(ProtocolInvoker.getAutoApprove(unit.getRepository().getProtocol()));
 
           // if this is a repository descriptor, update repository record
           if (record instanceof Native && isRepositorySourceUri(sourceUri, unit.getRepository())) {

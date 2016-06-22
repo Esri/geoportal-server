@@ -27,7 +27,7 @@ define([
       this.nls = params.nls;
       var container = params.container;
 
-      if(params.nItemsPerPage){      
+      if(params.nItemsPerPage){
        this.nItemsPerPage = params.nItemsPerPage;
       }
 
@@ -52,17 +52,18 @@ define([
         elHdr.removeChild(this.elPageControl);
       }
       this.elPageControl = document.createElement("div");
-      this.elPageControl.className = "nav";
-      
+      this.elPageControl.className = "gp-search__nav";
+
       var sPageSummary = this.nls.pageSummaryPattern;
       sPageSummary = sPageSummary.replace("{0}",nStartIndex);
       sPageSummary = sPageSummary.replace("{1}",nEndIndex);
-      var elPageSummary = document.createElement("span");
-      elPageSummary.className = "result";
+      var elPageSummary = document.createElement("div");
+      elPageSummary.className = "gp-search__result";
       elPageSummary.appendChild(document.createTextNode(sPageSummary));
       this.elPageControl.appendChild(elPageSummary);
-      
-      var elPageNumbers = document.createElement("span");
+
+      var elPageNumbers = document.createElement("div");
+      elPageNumbers.className = "gp-search__page-numbers";
       this.elPageControl.appendChild(elPageNumbers);
       if (iFrom > 1) {
         var elPage = document.createElement("a");
@@ -80,21 +81,21 @@ define([
          dojo.connect(elPage,"onclick",this,"_onPageClicked");
       }
       if (iTo > 1) {
-        for (var i=iFrom; i<=iTo; i++) {          
+        for (var i=iFrom; i<=iTo; i++) {
           var elPage = document.createElement("a");
           elPage.setAttribute("href","javascript:void(0);");
-          elPage.pageNumber = i;       
-          elPage.appendChild(document.createTextNode(""+i));        
+          elPage.pageNumber = i;
+          elPage.appendChild(document.createTextNode(""+i));
           if (i == currentPageNumber) {
             elPage.className = "current";
           }
           elPageNumbers.appendChild(elPage);
           dojo.connect(elPage,"onclick",this,"_onPageClicked");
-      
-        }      
+
+        }
       }
 
-      if (iTo < nOfPages) {  
+      if (iTo < nOfPages) {
         var elPage = document.createElement("a");
         elPage.setAttribute("href","javascript:void(0);");
         elPage.pageNumber = iTo;
