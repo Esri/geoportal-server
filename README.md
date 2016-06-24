@@ -30,7 +30,7 @@ Please click [here](http://www.esri.com/software/arcgis/geoportal/key-features) 
 
 ## Requirements
 
-Please refer to [here](https://github.com/Esri/geoportal-server/wiki/Preinstallation-1.2.5) for system requirements.
+Please refer to [here](https://github.com/Esri/geoportal-server/wiki/Preinstallation) for system requirements.
 
 ## Resources
 
