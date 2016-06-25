@@ -24,6 +24,9 @@ Want to learn more? Try our [sandbox site](http://gptogc.esri.com)!
 
 Want to get started right away? Download the [compiled distribution and installation files] (https://github.com/Esri/geoportal-server/archive/geoportal-1.2.7.zip).
 
+## Releases and Downloads
+- 1.2.7 - Released June 24, 2016, click [here](https://github.com/Esri/geoportal-server/wiki) for release information and downloads.
+
 ## Features
 
 Please click [here](http://www.esri.com/software/arcgis/geoportal/key-features) for key features of Geoportal Server.
