@@ -4,7 +4,7 @@
     <operation>
       <copyfile>
         <source>C:\Users\pscmbldusr\AppData\Roaming\ESRI\ArcGIS Explorer\AddIns\CSWSearchDockWindow.eaz</source>
-        <destination>C:\Builds\GeoportalServer\10.4.1_CSWClients\Binaries\CSWSearchDockWindow.eaz</destination>
+        <destination>C:\Builds\GeoportalServer\10.5_CSWClients\Binaries\CSWSearchDockWindow.eaz</destination>
       </copyfile>      
     </operation>
   </fileoperations>
