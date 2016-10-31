@@ -622,7 +622,7 @@
 		<row><td>Parameters1</td><td>DlgTitle</td><td>Text</td><td>13</td><td>6</td><td>292</td><td>25</td><td>65539</td><td/><td>##ID_STRING9##</td><td/><td/><td>0</td><td>0</td><td/><td/></row>
 		<row><td>Parameters1</td><td>Next</td><td>PushButton</td><td>230</td><td>243</td><td>66</td><td>17</td><td>3</td><td/><td>##ID_STRING2##</td><td>Back</td><td/><td>0</td><td/><td/><td/></row>
 		<row><td>Parameters1</td><td>PathEdit1</td><td>PathEdit</td><td>19</td><td>79</td><td>315</td><td>16</td><td>3</td><td>LOGGINGDIR</td><td/><td>PushButtonFolderBrowse</td><td/><td/><td/><td/><td/></row>
-		<row><td>Parameters1</td><td>PushButtonFolderBrowse</td><td>PushButton</td><td>337</td><td>79</td><td>18</td><td>16</td><td>8388611</td><td/><td>##NEW_STRING2##</td><td>Next</td><td/><td/><td/><td/><td/></row>
+		<row><td>Parameters1</td><td>PushButtonFolderBrowse</td><td>PushButton</td><td>337</td><td>79</td><td>18</td><td>16</td><td>3</td><td/><td>##NEW_STRING2##</td><td>Next</td><td/><td/><td/><td/><td/></row>
 		<row><td>Parameters1</td><td>Text1</td><td>Text</td><td>19</td><td>64</td><td>67</td><td>13</td><td>65539</td><td>NewProperty1</td><td>##NEW_STRING1##</td><td>txtAllUserWriteAccess</td><td/><td/><td/><td/><td/></row>
 		<row><td>Parameters1</td><td>txtAllUserWriteAccess</td><td>Text</td><td>19</td><td>100</td><td>205</td><td>13</td><td>65539</td><td>NewProperty3</td><td>##NEW_STRING4##</td><td>PathEdit1</td><td/><td/><td/><td/><td/></row>
 		<row><td>Parameters1A</td><td>Back</td><td>PushButton</td><td>164</td><td>243</td><td>66</td><td>17</td><td>3</td><td/><td>##ID_STRING7##</td><td>Cancel</td><td/><td>0</td><td/><td/><td/></row>
@@ -636,7 +636,7 @@
 		<row><td>Parameters1A</td><td>DlgTitle</td><td>Text</td><td>13</td><td>6</td><td>292</td><td>25</td><td>65539</td><td/><td>##ID_STRING9##</td><td/><td/><td>0</td><td>0</td><td/><td/></row>
 		<row><td>Parameters1A</td><td>Next</td><td>PushButton</td><td>230</td><td>243</td><td>66</td><td>17</td><td>3</td><td/><td>##ID_STRING2##</td><td>Back</td><td/><td>0</td><td/><td/><td/></row>
 		<row><td>Parameters1A</td><td>PathEdit1</td><td>PathEdit</td><td>19</td><td>79</td><td>315</td><td>16</td><td>3</td><td>LOGGINGDIR</td><td/><td>PushButtonFolderBrowse</td><td/><td/><td/><td/><td/></row>
-		<row><td>Parameters1A</td><td>PushButtonFolderBrowse</td><td>PushButton</td><td>337</td><td>79</td><td>18</td><td>16</td><td>8388611</td><td/><td>##NEW_STRING2##</td><td>Next</td><td/><td/><td/><td/><td/></row>
+		<row><td>Parameters1A</td><td>PushButtonFolderBrowse</td><td>PushButton</td><td>337</td><td>79</td><td>18</td><td>16</td><td>3</td><td/><td>##NEW_STRING2##</td><td>Next</td><td/><td/><td/><td/><td/></row>
 		<row><td>Parameters1A</td><td>Text1</td><td>Text</td><td>19</td><td>64</td><td>67</td><td>13</td><td>65539</td><td>NewProperty1</td><td>##NEW_STRING1##</td><td>txtAllUserWriteAccess</td><td/><td/><td/><td/><td/></row>
 		<row><td>Parameters1A</td><td>txtAllUserWriteAccess</td><td>Text</td><td>19</td><td>100</td><td>205</td><td>13</td><td>65539</td><td>NewProperty2</td><td>##NEW_STRING3##</td><td>PathEdit1</td><td/><td/><td/><td/><td/></row>
 		<row><td>PatchWelcome</td><td>Back</td><td>PushButton</td><td>164</td><td>243</td><td>66</td><td>17</td><td>1</td><td/><td>##IDS_BACK##</td><td>Next</td><td/><td>0</td><td/><td/><td/></row>
@@ -1103,8 +1103,8 @@
 		<row><td>PassTo_FindReplace</td><td>51</td><td>FindReplace</td><td>[INSTALLDIR];[LOGGINGDIR]</td><td/><td/></row>
 		<row><td>SetARPINSTALLLOCATION</td><td>51</td><td>ARPINSTALLLOCATION</td><td>[INSTALLDIR]</td><td/><td/></row>
 		<row><td>SetAllUsersProfileNT</td><td>51</td><td>ALLUSERSPROFILE</td><td>[%SystemRoot]\Profiles\All Users</td><td/><td/></row>
-		<row><td>SetInitialAllUsersLoggingDir</td><td>51</td><td>LOGGINGDIR</td><td>[CommonAppDataFolder]ESRI\Geoportal\Logs\</td><td/><td/></row>
-		<row><td>SetInitialCurrentUserLoggingDir</td><td>51</td><td>LOGGINGDIR</td><td>[AppDataFolder]ESRI\Geoportal\Logs\</td><td/><td/></row>
+		<row><td>SetInitialAllUsersLoggingDir</td><td>51</td><td>LOGGINGDIR</td><td>[CommonAppDataFolder]ESRI\Geoportal\WMC Client\</td><td/><td/></row>
+		<row><td>SetInitialCurrentUserLoggingDir</td><td>51</td><td>LOGGINGDIR</td><td>[AppDataFolder]ESRI\Geoportal\WMC Client\</td><td/><td/></row>
 		<row><td>SetLogDirWithEndingBackslash</td><td>51</td><td>LOGDIRWITHENDBACKSLASH</td><td>[LOGGINGDIR]\</td><td/><td/></row>
 		<row><td>ShowMsiLog</td><td>226</td><td>SystemFolder</td><td>[SystemFolder]notepad.exe "[MsiLogFileLocation]"</td><td/><td>Shows Property-driven MSI Log</td></row>
 		<row><td>setAllUsersProfile2K</td><td>51</td><td>ALLUSERSPROFILE</td><td>[%ALLUSERSPROFILE]</td><td/><td/></row>
@@ -4124,6 +4124,7 @@
 		<row><td>CurrentMedia</td><td dt:dt="bin.base64" md5="b491486f2ea923dc16dc8132d9c8c265">
 UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8AbgAgADEA
 			</td></row>
+		<row><td>EnableSwidtag</td><td>0</td></row>
 		<row><td>ISCompilerOption_CompileBeforeBuild</td><td>1</td></row>
 		<row><td>ISCompilerOption_Debug</td><td>0</td></row>
 		<row><td>ISCompilerOption_IncludePath</td><td/></row>
