@@ -8,7 +8,7 @@
   <Company>ESRI</Company>
   <Date>12/17/2015</Date>
   <Targets>
-    <Target name="Desktop" version="10.4" />
+    <Target name="Desktop" version="10.5" />
   </Targets>
   <AddIn language="CLR" library="PublishClient.dll" namespace="PublishClient">	  
     <ArcCatalog>
