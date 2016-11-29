@@ -210,10 +210,19 @@ public class TemporalField extends BaseDcatField {
 
       stringValue = new ArrayList<String>();
       for (Date date: dateValue) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        if (cal.get(Calendar.YEAR)>9999) {
+          LOGGER.log(Level.FINE, "Invalid date format");
+          stringValue = null;
+          break;
+        }
         try {
           stringValue.add(DF.format(date));
         } catch (IllegalArgumentException ex) {
           LOGGER.log(Level.FINE, "Invalid date format", ex);
+          stringValue = null;
+          break;
         }
       }
     }
