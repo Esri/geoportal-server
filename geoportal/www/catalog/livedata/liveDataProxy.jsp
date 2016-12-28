@@ -17,7 +17,7 @@
   request.getContextPath(),
   "/proxy",
   "/catalog/livedata/kmzBridge.jsp");
-String url = request.getParameter("url");
+String url = org.apache.commons.lang3.StringEscapeUtils.escapeHtml4(com.esri.gpt.framework.util.Val.chkStr(request.getParameter("url")));
 CredentialProvider cp = extractCredentialProvider(request);
 if (cp != null) {
   CredentialsMap cm = CredentialsMap.extract(request);
