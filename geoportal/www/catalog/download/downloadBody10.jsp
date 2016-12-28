@@ -25,9 +25,9 @@
       com.esri.gpt.control.download.DownloadConfiguration dloadConfig =
           context.getApplicationConfiguration().getDownloadDataConfiguration();
       String mapServiceUrl =
-          com.esri.gpt.framework.util.Val.chkStr(request.getParameter("mapServiceUrl"));
+          org.apache.commons.lang3.StringEscapeUtils.escapeHtml4(com.esri.gpt.framework.util.Val.chkStr(request.getParameter("mapServiceUrl")));
       String mapServiceType =
-          com.esri.gpt.framework.util.Val.chkStr(request.getParameter("mapServiceType"));
+          org.apache.commons.lang3.StringEscapeUtils.escapeHtml4(com.esri.gpt.framework.util.Val.chkStr(request.getParameter("mapServiceType")));
       if (mapServiceUrl.length() == 0) {
         mapServiceUrl = dloadConfig.getMapServiceUrl();
       }

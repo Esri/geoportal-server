@@ -19,8 +19,8 @@
 <%@ taglib prefix="gpt" uri="http://www.esri.com/tags-gpt"%>
 
 <%
-  String vmdUuid = request.getParameter("uuid");
-  String asnErr = com.esri.gpt.framework.util.Val.chkStr(request.getParameter("err"));
+  String vmdUuid = org.apache.commons.lang3.StringEscapeUtils.escapeHtml4(com.esri.gpt.framework.util.Val.chkStr(request.getParameter("uuid")));
+  String asnErr  = org.apache.commons.lang3.StringEscapeUtils.escapeHtml4(com.esri.gpt.framework.util.Val.chkStr(request.getParameter("err")));
   asnErr = com.esri.gpt.framework.util.Val.escapeSingleQuotes(asnErr);
   com.esri.gpt.server.assertion.AsnFactory asnFactory = 
     com.esri.gpt.server.assertion.AsnFactory.newFactory(null);
