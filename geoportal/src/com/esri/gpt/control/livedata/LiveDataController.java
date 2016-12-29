@@ -85,7 +85,11 @@ public class LiveDataController extends BaseActionListener implements ILiveDataP
    */
   public String getEmbededSnippet() {
     HttpServletRequest request = getServletRequest();
-    return "<iframe src=\"" + getBaseContextPath(request) + getEmbededUrl() + "\" style=\"" + getFrameStyle() + "\" frameborder=\"0\" scrolling=\"no\"></iframe>";
+    String embededRoot = getEmbededUrl();
+    if (embededRoot.startsWith(request.getContextPath())) {
+      embededRoot = embededRoot.substring(request.getContextPath().length());
+    }
+    return "<iframe src=\"" + getBaseContextPath(request) + embededRoot + "\" style=\"" + getFrameStyle() + "\" frameborder=\"0\" scrolling=\"no\"></iframe>";
   }
 
   /**
