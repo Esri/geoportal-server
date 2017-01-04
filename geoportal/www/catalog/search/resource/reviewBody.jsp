@@ -17,10 +17,12 @@
 <%@ taglib prefix="f" uri="http://java.sun.com/jsf/core" %>
 <%@ taglib prefix="h" uri="http://java.sun.com/jsf/html" %>
 <%@ taglib prefix="gpt" uri="http://www.esri.com/tags-gpt"%>
+<%@page import="org.apache.commons.lang3.StringEscapeUtils" %>
+<%@page import="org.apache.commons.lang3.StringUtils" %>
 
 <%
-  String vmdUuid = org.apache.commons.lang3.StringEscapeUtils.escapeHtml4(com.esri.gpt.framework.util.Val.chkStr(request.getParameter("uuid")));
-  String asnErr  = org.apache.commons.lang3.StringEscapeUtils.escapeHtml4(com.esri.gpt.framework.util.Val.chkStr(request.getParameter("err")));
+  String vmdUuid = StringEscapeUtils.escapeHtml4(StringUtils.trimToEmpty(request.getParameter("uuid")));
+  String asnErr  = StringEscapeUtils.escapeHtml4(StringUtils.trimToEmpty(request.getParameter("err")));
   asnErr = com.esri.gpt.framework.util.Val.escapeSingleQuotes(asnErr);
   com.esri.gpt.server.assertion.AsnFactory asnFactory = 
     com.esri.gpt.server.assertion.AsnFactory.newFactory(null);

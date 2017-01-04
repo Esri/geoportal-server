@@ -16,6 +16,8 @@
 <% // downloadBody.jsp - Download extract page (JSF body) %>
 <%@taglib prefix="f" uri="http://java.sun.com/jsf/core"%>
 <%@taglib prefix="h" uri="http://java.sun.com/jsf/html"%>
+<%@page import="org.apache.commons.lang3.StringEscapeUtils" %>
+<%@page import="org.apache.commons.lang3.StringUtils" %>
 
 <%
       com.esri.gpt.framework.context.RequestContext context =
@@ -25,9 +27,9 @@
       com.esri.gpt.control.download.DownloadConfiguration dloadConfig =
           context.getApplicationConfiguration().getDownloadDataConfiguration();
       String mapServiceUrl =
-          org.apache.commons.lang3.StringEscapeUtils.escapeHtml4(com.esri.gpt.framework.util.Val.chkStr(request.getParameter("mapServiceUrl")));
+          StringEscapeUtils.escapeHtml4(StringUtils.trimToEmpty(request.getParameter("mapServiceUrl")));
       String mapServiceType =
-          org.apache.commons.lang3.StringEscapeUtils.escapeHtml4(com.esri.gpt.framework.util.Val.chkStr(request.getParameter("mapServiceType")));
+          StringEscapeUtils.escapeHtml4(StringUtils.trimToEmpty(request.getParameter("mapServiceType")));
       if (mapServiceUrl.length() == 0) {
         mapServiceUrl = dloadConfig.getMapServiceUrl();
       }
