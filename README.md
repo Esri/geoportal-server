@@ -75,5 +75,4 @@ limitations under the License.
 
 A copy of the license is available in the repository's [license.txt]( https://raw.github.com/Esri/geoportal-server/master/LICENSE.txt) file.
 
-[](Esri Tags: Esri Geoportal Server JavaScript Flex Silverlight C-Sharp Java)
-[](Esri Language: Java)
+
