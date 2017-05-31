@@ -8,9 +8,9 @@
   <Company>ESRI</Company>
   <Date>11/19/2015</Date>
   <Targets>
-    <Target name="Desktop" version="10.4" />
+    <Target name="Desktop" version="10.5" />
   </Targets>
-  <AddIn language="CLR4.5" library="CswSearch.dll" namespace="CswSearch">
+  <AddIn language="CLR" library="CswSearch.dll" namespace="CswSearch">
     <ArcMap>
       <Commands>
         <Button id="ESRI_CswSearch_CswClientButton" class="com.esri.gpt.csw.CswClientButton" message="Addin to search CSW interfaces" caption="CSW Client" tip="Search CSW interfaces" category="Geoportal" image="Images\CswClientButton.png" />

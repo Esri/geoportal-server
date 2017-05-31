@@ -16,16 +16,15 @@ define([
   "esri/layers/WMSLayer",
   "esri/layers/WMTSLayer",
   "esri/InfoTemplate",
-  "esri/layers/vector-tile",
   'esri/InfoTemplate',
   'esri/request',
   './LayerLoader'
 ],function(Deferred,
           topic,array, all,
-  ArcGISDynamicMapServiceLayer, ArcGISImageServiceLayer, ArcGISTiledMapServiceLayer, CSVLayer, 
-  FeatureLayer, GeoRSSLayer, KMLLayer, StreamLayer, VectorTileLayer, WFSLayer, WMSLayer, WMTSLayer, 
-  InfoTemplate, vectorTile,
-          InfoTemplate, 
+  ArcGISDynamicMapServiceLayer, ArcGISImageServiceLayer, ArcGISTiledMapServiceLayer, CSVLayer,
+  FeatureLayer, GeoRSSLayer, KMLLayer, StreamLayer, VectorTileLayer, WFSLayer, WMSLayer, WMTSLayer,
+  InfoTemplate,
+          InfoTemplate,
           esriRequest,LayerLoader){
   return {
 
@@ -36,9 +35,9 @@ define([
 
       return "";
     },
-    
+
     createLayer: function(type,url) {
-       
+
        var deferred = new Deferred();
        var layer = null;
 
@@ -77,7 +76,7 @@ define([
            layer = new ArcGISImageServiceVectorLayer(url);
            deferred.resolve(layer);
            break;
-        
+
          case "featureserver":
          case "featurelayer":
            var infoTemplate = new InfoTemplate("Attributes", "${*}");
@@ -142,9 +141,9 @@ define([
       var loader = new LayerLoader();
       var id = loader._generateLayerId();
       var self = this, layer = null;
-      
+
       if (type === "ArcGIS" || type === "ags") {
-        if (lc.indexOf("/featureserver") > 0 || lc.indexOf("/mapserver") > 0) {   
+        if (lc.indexOf("/featureserver") > 0 || lc.indexOf("/mapserver") > 0) {
           loader._readRestInfo(url).then(function(info){
             //console.warn("restInfo",info);
             if (info && typeof info.type === "string" && info.type === "Feature Layer") {
@@ -155,7 +154,7 @@ define([
               });
               self._waitThenAdd(dfd,map,type,loader,layer);
             } else {
-              
+
               if (lc.indexOf("/featureserver") > 0) {
                 var dfds = [];
                 array.forEach(info.layers,function(li){
@@ -183,18 +182,18 @@ define([
                   layer = new ArcGISDynamicMapServiceLayer(url,{id:id});
                 }
                 self._waitThenAdd(dfd,map,type,loader,layer);
-              } 
+              }
             }
           }).otherwise(function(error){
             dfd.reject(error);
           });
-          
-        } else if (lc.indexOf("/imageserver") > 0) { 
+
+        } else if (lc.indexOf("/imageserver") > 0) {
           layer = new ArcGISImageServiceLayer(url,{id:id});
           this._waitThenAdd(dfd,map,type,loader,layer);
-          
-        } else if (lc.indexOf("/vectortileserver") > 0 || lc.indexOf("/resources/styles/root.json") > 0) { 
-          if (!vectorTile.supported()) {
+
+        } else if (lc.indexOf("/vectortileserver") > 0 || lc.indexOf("/resources/styles/root.json") > 0) {
+          if (!VectorTileLayer || !VectorTileLayer.supported()) {
             dfd.reject("Unsupported");
           } else {
             loader._checkVectorTileUrl(url,{}).then(function(vturl){
@@ -219,7 +218,7 @@ define([
       } else if (type.toUpperCase() === "WMS") {
         layer = new WMSLayer(url,{id:id});
         this._waitThenAdd(dfd,map,type,loader,layer);
-      } else if (type.toUpperCase() === "WMTS") { 
+      } else if (type.toUpperCase() === "WMTS") {
         layer = new WMTSLayer(url,{id:id});
       } else if (type.toUpperCase() === "WFS") {
         layer = new WFSLayer({id:id,url:url,infoTemplate:new InfoTemplate()});
@@ -272,6 +271,6 @@ define([
       }
       return uri;
     }
-    
+
   }
 });

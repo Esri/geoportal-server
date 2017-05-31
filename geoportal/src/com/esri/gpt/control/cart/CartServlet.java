@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * Servlet end-point for a simple implementation of an item cart based 
@@ -93,6 +94,9 @@ public class CartServlet extends BaseServlet {
         bGenerateInfo = false;
         
         String [] sKeys = Val.chkStr(request.getParameter("keys")).split(",");
+        for (int i=0; i<sKeys.length; i++) {
+          sKeys[i] = StringEscapeUtils.escapeHtml4(Val.chkStr(sKeys[i]));
+        }
         ArrayList<String> nonEmptyKeyList = new ArrayList<String>();
         for (String key: Arrays.asList(sKeys)) {
           if (!key.isEmpty()) {

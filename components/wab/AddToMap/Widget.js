@@ -21,15 +21,14 @@ define([
   "esri/layers/WMSLayer",
   "esri/layers/WMTSLayer",
   "esri/InfoTemplate",
-  "esri/layers/vector-tile",
   'jimu/dijit/Message',
   './LayerLoader'],
 function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidget, topic,Deferred, all,
-  ArcGISDynamicMapServiceLayer, ArcGISImageServiceLayer, ArcGISTiledMapServiceLayer, CSVLayer, 
-  FeatureLayer, GeoRSSLayer, KMLLayer, StreamLayer, VectorTileLayer, WFSLayer, WMSLayer, WMTSLayer, 
-  InfoTemplate, vectorTile, Message, LayerLoader) {
-  
-  return declare([BaseWidget, _WidgetsInTemplateMixin], {    
+  ArcGISDynamicMapServiceLayer, ArcGISImageServiceLayer, ArcGISTiledMapServiceLayer, CSVLayer,
+  FeatureLayer, GeoRSSLayer, KMLLayer, StreamLayer, VectorTileLayer, WFSLayer, WMSLayer, WMTSLayer,
+  InfoTemplate, Message, LayerLoader) {
+
+  return declare([BaseWidget, _WidgetsInTemplateMixin], {
 
     name: 'AddToMap',
     baseClass: 'geoportal-addToMap',
@@ -39,7 +38,7 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidget, topic,De
       topic.subscribe("mapLoaded", lang.hitch(this, this._checkWindowUrl));
       this._checkWindowUrl();
     },
-    
+
 	 _handleAdd: function(dfd,type,url) {
       var map = this.map;
       url = this._checkMixedContent(url);
@@ -47,9 +46,9 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidget, topic,De
       var loader = new LayerLoader();
       var id = loader._generateLayerId();
       var self = this, layer = null;
-      
+
       if (type === "ArcGIS" || type === "ags") {
-        if (lc.indexOf("/featureserver") > 0 || lc.indexOf("/mapserver") > 0) {   
+        if (lc.indexOf("/featureserver") > 0 || lc.indexOf("/mapserver") > 0) {
           loader._readRestInfo(url).then(function(info){
             //console.warn("restInfo",info);
             if (info && typeof info.type === "string" && info.type === "Feature Layer") {
@@ -60,7 +59,7 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidget, topic,De
               });
               self._waitThenAdd(dfd,map,type,loader,layer);
             } else {
-              
+
               if (lc.indexOf("/featureserver") > 0) {
                 var dfds = [];
                 array.forEach(info.layers,function(li){
@@ -88,18 +87,18 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidget, topic,De
                   layer = new ArcGISDynamicMapServiceLayer(url,{id:id});
                 }
                 self._waitThenAdd(dfd,map,type,loader,layer);
-              } 
+              }
             }
           }).otherwise(function(error){
             dfd.reject(error);
           });
-          
-        } else if (lc.indexOf("/imageserver") > 0) { 
+
+        } else if (lc.indexOf("/imageserver") > 0) {
           layer = new ArcGISImageServiceLayer(url,{id:id});
           this._waitThenAdd(dfd,map,type,loader,layer);
-          
-        } else if (lc.indexOf("/vectortileserver") > 0 || lc.indexOf("/resources/styles/root.json") > 0) { 
-          if (!vectorTile.supported()) {
+
+        } else if (lc.indexOf("/vectortileserver") > 0 || lc.indexOf("/resources/styles/root.json") > 0) {
+          if (!VectorTileLayer || !VectorTileLayer.supported()) {
             dfd.reject("Unsupported");
           } else {
             loader._checkVectorTileUrl(url,{}).then(function(vturl){
@@ -124,7 +123,7 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidget, topic,De
       } else if (type.toUpperCase() === "WMS") {
         layer = new WMSLayer(url,{id:id});
         this._waitThenAdd(dfd,map,type,loader,layer);
-      } else if (type.toUpperCase() === "WMTS") { 
+      } else if (type.toUpperCase() === "WMTS") {
         layer = new WMTSLayer(url,{id:id});
       } else if (type.toUpperCase() === "WFS") {
         layer = new WFSLayer({id:id,url:url,infoTemplate:new InfoTemplate()});
@@ -177,12 +176,12 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidget, topic,De
       }
       return uri;
     },
-	
+
 
     _addLayer: function(linkType,href){
       //console.warn("AddToMap._addLayer...",linkType,href);
       linkType = linkType.toLowerCase();
-      if (linkType == "mapserver" || linkType == "featureserver" || linkType == "imageserver" || 
+      if (linkType == "mapserver" || linkType == "featureserver" || linkType == "imageserver" ||
           linkType == "kml" || linkType == "wms") {
 
         LayerFactory.createLayer(href,linkType).then(lang.hitch(this,function(layer){
@@ -219,22 +218,22 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidget, topic,De
           }));
         }));
 
-      } else if (linkType == "agsrest" || linkType == "ags") { 
+      } else if (linkType == "agsrest" || linkType == "ags") {
 
         var linksProcessor = new LinksProcessor();
         linkType = linksProcessor.getServiceType(href);
 
-        LayerFactory.createLayer(href,linkType).then(lang.hitch(this,function(layer){              
+        LayerFactory.createLayer(href,linkType).then(lang.hitch(this,function(layer){
           this.map.addLayer(layer);
           //console.log("layer added to map.");
         }));
 
-      } else if (linkType == "webmap") { 
+      } else if (linkType == "webmap") {
         //console.log("webmap processing...");
         var wmProcessor = new WebMapProcessor();
         wmProcessor.process(href,this.map);
         //console.log("webmap operational layers added to map.");
-      } 
+      }
       //console.groupEnd();
     },
 
@@ -242,8 +241,8 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidget, topic,De
       //console.warn("AddToMap._checkWindowUrl...");
       var queryObject = this._parseParameters();  // window.queryObject; env.js // <-- did not work well, so using above function
       if(queryObject.resource){
-        var resource = queryObject.resource; 
-        //console.warn("Add to map parameters => " + resource);        
+        var resource = queryObject.resource;
+        //console.warn("Add to map parameters => " + resource);
         var title = "";
         if(queryObject.title){
           title = decodeURIComponent(queryObject.title);
@@ -260,7 +259,7 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidget, topic,De
           if(href.length > 0){
             href += ":";
           }
-          href += parts[i]; 
+          href += parts[i];
         }
         if (href.length === 0)return;
 
@@ -277,7 +276,7 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidget, topic,De
         });
       }
     },
-    
+
     _parseParameters: function(){
       var query = window.location.search;
       if (query.indexOf('?') > -1) {
@@ -293,7 +292,7 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidget, topic,De
           if(parameterValue.length > 0){
             parameterValue += "=";
           }
-          parameterValue += splits[j]; 
+          parameterValue += splits[j];
         }
         queryObject[splits[0]] = parameterValue;
       }
