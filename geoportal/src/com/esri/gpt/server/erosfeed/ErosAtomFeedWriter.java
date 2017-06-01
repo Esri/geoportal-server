@@ -106,7 +106,8 @@ public class ErosAtomFeedWriter extends AtomFeedWriter {
   }
 
   private String findEmailAddress(IFeedRecord record) {
-    return emailFinder.findEmail(record.getUuid());
+  	if (emailFinder != null) return emailFinder.findEmail(record.getUuid());
+    return "";
   }
 
   private String findServiceType(IFeedRecord record) {
