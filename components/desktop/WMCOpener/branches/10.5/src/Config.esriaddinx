@@ -1,0 +1,20 @@
+﻿<ESRI.Configuration xmlns="http://schemas.esri.com/Desktop/AddIns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>WMCOpener</Name>
+  <AddInID>{f3ceae20-c14e-4e67-8d15-a471e4a6b983}</AddInID>
+  <Description>Type in a description for this Add-in.</Description>
+  <Version>1.0</Version>
+  <Image>Images\WMCOpener.png</Image>
+  <Author>prat5814</Author>
+  <Company>ESRI</Company>
+  <Date>12/18/2015</Date>
+  <Targets>
+    <Target name="Desktop" version="10.5" />
+  </Targets>
+  <AddIn language="CLR" library="WMCOpener.dll" namespace="WMCOpener">
+    <ArcMap>
+      <Commands>
+        <Button id="ESRI_WMCOpener_WMCTool" class="com.esri.gpt.wmc.WMCTool" message="Tool to open WMC files." caption="WMC Client for ArcGIS" tip="Opens WMC files" category="Geoportal" image="Images\WMCOpener.png" />
+      </Commands>
+    </ArcMap>
+  </AddIn>
+</ESRI.Configuration>
