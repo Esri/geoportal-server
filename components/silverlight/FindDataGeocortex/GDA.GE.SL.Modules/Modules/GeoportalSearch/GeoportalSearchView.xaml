@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="GDA.GE.SL.Modules.Modules.GeoportalSearch.GeoportalSearchView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="510" d:DesignWidth="350"
+    xmlns:local="clr-namespace:GeoportalWidget;assembly=GeoportalWidget">
+    
+    <Grid x:Name="LayoutRoot" Background="White" Height="505" Width="352" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <local:GeoPortalMain HorizontalAlignment="Left" Name="SearchWidget" VerticalAlignment="Top" Height="487" Width="350" Loaded="SearchWidget_Loaded" Margin="-1,0,0,0" AddToMapEvent="SearchWidget_AddToMapEvent" />
+    </Grid>
+</UserControl>

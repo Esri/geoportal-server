@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDA.GE.SL.Modules", "GDA.GE.SL.Modules\GDA.GE.SL.Modules.csproj", "{764FA6B6-B3ED-4361-BF6D-0487B7F81916}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoportalWidget", "GeoportalWidget\GeoportalWidget.csproj", "{A11FD565-AA41-43E3-A3B3-F7C6A89B91A4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{764FA6B6-B3ED-4361-BF6D-0487B7F81916}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{764FA6B6-B3ED-4361-BF6D-0487B7F81916}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{764FA6B6-B3ED-4361-BF6D-0487B7F81916}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{764FA6B6-B3ED-4361-BF6D-0487B7F81916}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A11FD565-AA41-43E3-A3B3-F7C6A89B91A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A11FD565-AA41-43E3-A3B3-F7C6A89B91A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A11FD565-AA41-43E3-A3B3-F7C6A89B91A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A11FD565-AA41-43E3-A3B3-F7C6A89B91A4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
