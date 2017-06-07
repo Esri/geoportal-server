@@ -181,6 +181,38 @@ public class CollectionDao extends BaseDao {
     return nBatch;
   }
   
+  public int addMembers(Publisher publisher, MmdQueryCriteria criteria, String colUuid) 
+      throws SQLException, CatalogIndexException {
+  	PreparedStatement st = null;
+  	int nRows = 0;
+  	try {
+	    StringBuilder sbWhere = new StringBuilder();
+	    Map<String,Object> args = criteria.appendWherePhrase(null, sbWhere, publisher);
+	    StringBuilder sbData = new StringBuilder();
+
+      sbData.append("INSERT INTO ").append(getCollectionMemberTableName());
+      sbData.append(" (DOCUUID,COLUUID)");
+      sbData.append(" SELECT DOCUUID,? FROM ").append(getResourceTableName());
+      sbData.append(" WHERE ").append(sbWhere.toString());
+      sbData.append(" AND (DOCUUID NOT IN (");
+      sbData.append(" SELECT DOCUUID FROM ").append(getCollectionMemberTableName());
+      sbData.append(" WHERE COLUUID=?");
+      sbData.append(" ))");
+      
+      Connection con = this.returnConnection().getJdbcConnection();
+      st = con.prepareStatement(sbData.toString());
+      st.setString(1, colUuid);
+      int n = criteria.applyArgs(st,2,args);
+      st.setString(n,colUuid);
+      logExpression(sbData.toString());
+      nRows = st.executeUpdate();
+      if (nRows > 0) reindex(publisher,criteria); // TODO reindex?
+    } finally {
+      CollectionDao.closeStatement(st);
+    }
+  	return nRows;
+  }
+  
   /**
    * Queries named collections.
    * @return the list {colUuid,shortName}
@@ -241,7 +273,36 @@ public class CollectionDao extends BaseDao {
         indexAdapter.publishDocument(uuid,publisher);
       }
     }
-    
+  }
+  
+  private void reindex (Publisher publisher, MmdQueryCriteria criteria) 
+      throws SQLException, CatalogIndexException {
+  	PreparedStatement st = null;
+  	StringSet uuids = new StringSet();
+  	try {
+	    StringBuilder sbWhere = new StringBuilder();
+	    Map<String,Object> args = criteria.appendWherePhrase(null, sbWhere, publisher);
+	    StringBuilder sbSql = new StringBuilder();
+	    sbSql.append("SELECT DISTINCT DOCUUID FROM ").append(getResourceTableName());
+	    sbSql.append(" WHERE ").append(sbWhere.toString());
+	    sbSql.append(" AND ((APPROVALSTATUS = 'approved') OR (APPROVALSTATUS = 'reviewed'))");
+
+      Connection con = this.returnConnection().getJdbcConnection();
+      st = con.prepareStatement(sbSql.toString());
+      criteria.applyArgs(st,1,args);
+      logExpression(sbSql.toString());
+      
+      ResultSet rs = st.executeQuery();
+      while (rs.next()) {
+        if (Thread.currentThread().isInterrupted()) return;
+        String uuid = Val.chkStr(rs.getString(1));
+        uuids.add(uuid);
+      }
+      CollectionDao.closeStatement(st);
+      reindex(publisher,uuids);
+    } finally {
+      CollectionDao.closeStatement(st);
+    }
   }
   
   /**
@@ -313,6 +374,34 @@ public class CollectionDao extends BaseDao {
       this.reindex(publisher,indexableUuids);
     }
     return nBatch;
+  }
+  
+  public int removeMembers(Publisher publisher, MmdQueryCriteria criteria, String colUuid) 
+      throws SQLException, CatalogIndexException {
+  	PreparedStatement st = null;
+  	int nRows = 0;
+  	try {
+	    StringBuilder sbWhere = new StringBuilder();
+	    Map<String,Object> args = criteria.appendWherePhrase(null, sbWhere, publisher);
+	    StringBuilder sbData = new StringBuilder();
+
+      sbData.append(" DELETE FROM ").append(getCollectionMemberTableName());
+      sbData.append(" WHERE COLUUID=? AND (DOCUUID IN (");
+      sbData.append(" SELECT DOCUUID FROM ").append(getResourceTableName());
+      sbData.append(" WHERE ").append(sbWhere.toString());
+      sbData.append(" ))");
+      
+      Connection con = this.returnConnection().getJdbcConnection();
+      st = con.prepareStatement(sbData.toString());
+      st.setString(1, colUuid);
+      criteria.applyArgs(st,2,args);
+      logExpression(sbData.toString());
+      nRows = st.executeUpdate();
+      if (nRows > 0) reindex(publisher,criteria); // TODO reindex?
+    } finally {
+      CollectionDao.closeStatement(st);
+    }
+  	return nRows;
   }
 
 }

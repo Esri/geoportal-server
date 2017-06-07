@@ -145,6 +145,8 @@ function mmdOnActionButtonClicked() {
           var elTransfer = document.getElementById(elExecuteActionToAll.id+":mmdTransfer");
           var elAcl = document.getElementById(elExecuteActionToAll.id+":mmdAcl");
           var elAclToggle = document.getElementById(elExecuteActionToAll.id+":mmdAclToggle");
+          var elColUuid = document.getElementById(elExecuteActionToAll.id+":mmdSharingCollectionUuid");
+          console.warn("elColUuid",elColUuid);
           if ((elLaunch != null) && (elTransfer!=null) && (elAcl!=null) && (elAclToggle!=null)) {
             var action = dojo.byId("mmdForm:mmdAction");
             if (action==null) {
@@ -155,6 +157,9 @@ function mmdOnActionButtonClicked() {
               elTransfer.value   = dojo.query("#mmdForm\\:mmdTransfer").attr("value").join(",");
               elAcl.value        = dojo.query("#mmdForm\\:mmdAcl input:checked").attr("value").join("0x1E");
               elAclToggle.value  = dojo.query("#mmdForm\\:mmdAcclToggle").attr("value").join(",");
+              if (elColUuid != null) {
+                elColUuid.value = dojo.query("#mmdForm\\:mmdSharingCollectionUuid").attr("value").join(",");
+              }
               elLaunch.click();
             }
           }
@@ -1091,6 +1096,7 @@ $(document).ready(function(){
     <h:inputHidden id="mmdTransfer"  value="#{ManageMetadataController.actionCriteria.transferToOwner}"/>
     <h:inputHidden id="mmdAcl"       value="#{ManageMetadataController.actionCriteria.metadataAccessPolicyString}"/>
     <h:inputHidden id="mmdAclToggle" value="#{ManageMetadataController.actionCriteria.toggleMetadataAccessPolicy}"/>
+    <h:inputHidden id="mmdSharingCollectionUuid" value="#{ManageMetadataController.actionCriteria.sharingCollectionUuid}"/>
     <h:inputHidden id="criteria"     value="#{ManageMetadataController.queryCriteriaAsEncrypedString}"/>
 </h:form>
 
