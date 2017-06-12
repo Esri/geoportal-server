@@ -275,13 +275,13 @@ function mmdOnActionIconClicked(sAction,sUuid,sPublicationMethod) {
         elActionButton.click();
       } else if (sAction == "view") {
         var sUrl = "<%=request.getContextPath()+"/catalog/publication/downloadMetadata.jsp"%>";
-        sUrl += "?uuid="+sUuid+"&option=view";
+        sUrl += "?uuid="+encodeURIComponent(sUuid)+"&option=view";
         window.open(sUrl);
       } else if (sAction == "download") {
         var elFrame = document.getElementById("mmdDownloadFrame");
         if (elFrame != null) {
           var sUrl = "<%=request.getContextPath()+"/catalog/publication/downloadMetadata.jsp"%>";
-          sUrl += "?uuid="+sUuid;
+          sUrl += "?uuid="+encodeURIComponent(sUuid);
           elFrame.src = sUrl;
         }
 
