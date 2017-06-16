@@ -58,6 +58,7 @@ import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 
 /**
@@ -165,7 +166,7 @@ private void putSavedSearches(HttpServletRequest request,
   
   String name = "";
   String criteria = "";
-  name = paramMap.get("name");
+  name = StringEscapeUtils.escapeHtml4(Val.stripControls(paramMap.get("name")));
   if("".equals(Val.chkStr(name))) {
     MessageBroker messageBroker = 
       new FacesContextBroker(request,response).extractMessageBroker();
