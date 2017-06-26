@@ -37,7 +37,7 @@ String VER124 = "v1.2.4";
 <link rel="shortcut icon" type="image/x-icon" href="<%=request.getContextPath()%>/catalog/images/favicon.ico" />
 
 <script type="text/javascript">
-  djConfig = {parseOnLoad: true, locale: 'en'};
+  djConfig = {parseOnLoad: true, locale: '<%=request.getLocale().getLanguage()%>'};
 </script>
 <script type="text/javascript" src="<%=com.esri.gpt.framework.context.RequestContext.extract(request).getApplicationConfiguration().getInteractiveMap().getJsapiUrl()%>"></script>
 <script type="text/javascript">

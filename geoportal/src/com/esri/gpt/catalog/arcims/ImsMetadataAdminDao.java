@@ -1137,7 +1137,6 @@ public int updateApprovalStatus(Publisher publisher,
       // re-build the index uuid set if 'draft' documents were not updated
       if (this.hadUnalteredDraftDocuments || (nRows != uuids.size())) {
         closeStatement(st);
-        uuids.clear();
         sbSql = new StringBuffer();
         sbSql.append("SELECT DOCUUID FROM ").append(getResourceTableName());
         sbSql.append(" WHERE DOCUUID IN (").append(generateQMarks(uuids.size())).append(")");
@@ -1153,6 +1152,7 @@ public int updateApprovalStatus(Publisher publisher,
         }
         st.setString(++argIndex,MmdEnums.ApprovalStatus.draft.toString());
         ResultSet rs2 = st.executeQuery();
+        uuids.clear();        
         while (rs2.next()) {
           uuids.add(rs2.getString(1));
         }

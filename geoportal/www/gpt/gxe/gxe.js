@@ -5876,6 +5876,7 @@ dojo.declare("gxe.control.Map",gxe.control.Control,{
     
     var config = this.context.gptMapConfig;
     if (config == null) return;
+    config = this._mapcfg = dojo.clone(this.context.gptMapConfig);  // fix for multiple maps
     config.mapElementId = idPfx+"interactiveMap";
     config.mapToolName = "drawInputEnvelope";
     config.mapToolbarId = idPfx+"mapToolbar";
@@ -5984,6 +5985,7 @@ dojo.declare("gxe.control.Map",gxe.control.Control,{
     
     this.htmlElement.style.display = "block";
     var config = this.context.gptMapConfig;
+    config = this._mapcfg; // fix for multiple maps
     
     this.gptMap = new GptMap();
     dojo.connect(this.gptMap,"onMapLoaded",this,"onMapLoaded");

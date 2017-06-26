@@ -49,6 +49,7 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * REST servlet.
@@ -234,7 +235,11 @@ private Format extractFormat(HttpServletRequest request) {
  * @return array of styles URL's
  */
 private String[] extractStyle(HttpServletRequest request) {
-  return getParameterByKey(request,STYLE_KEY).split(",");
+  String [] styles =  getParameterByKey(request,STYLE_KEY).split(",");
+  for (int i=0; i<styles.length; i++) {
+    styles[i] = StringEscapeUtils.escapeHtml4(Val.chkStr(styles[i])).replaceAll("^javascript:", "");
+  }
+  return styles;
 }
 
 /**

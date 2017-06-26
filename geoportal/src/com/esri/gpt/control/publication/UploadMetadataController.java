@@ -244,6 +244,20 @@ public class UploadMetadataController extends BaseActionListener {
   private String extractItemXml(FileItem item) throws UnsupportedEncodingException {
     String xml = null;
     if (item != null) {
+    	
+    	try {
+        String chk16 = Val.chkStr(item.getString("UTF-16"));
+        if (chk16 != null && chk16.startsWith("<?xml version=\"1.0\" encoding=\"utf-16\"?>")) {
+        	chk16 = chk16.replaceFirst("utf-16","UTF-8");
+        	return chk16;
+        }
+        if (chk16 != null && chk16.startsWith("<?xml version=\"1.0\" encoding=\"UTF-16\"?>")) {
+        	chk16 = chk16.replaceFirst("UTF-16","UTF-8");
+        	return chk16;
+        }
+    	} catch(UnsupportedEncodingException ex) {
+    	}
+    	
       xml = Val.chkStr(Val.removeBOM(item.getString("UTF-8")));
     }
     return xml;

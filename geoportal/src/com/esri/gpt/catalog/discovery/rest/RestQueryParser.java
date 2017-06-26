@@ -18,6 +18,7 @@ import com.esri.gpt.catalog.discovery.*;
 import com.esri.gpt.framework.context.ConfigurationException;
 import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.util.Val;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -579,7 +580,7 @@ public class RestQueryParser {
    * @param restKey the URL key for the parameter
    */
   public void parseResponseStyle(String restKey) {
-    getQuery().setResponseStyle(getRequestParameter(restKey));
+    getQuery().setResponseStyle(StringEscapeUtils.escapeHtml4(getRequestParameter(restKey)).replaceAll("^javascript:", ""));
   }
   
   /**
