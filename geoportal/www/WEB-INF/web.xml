@@ -457,6 +457,22 @@
         <url-pattern>/Eros</url-pattern>
     </servlet-mapping>
     <servlet>
+        <servlet-name>ErosPublicQueryServlet</servlet-name>
+        <servlet-class>com.esri.gpt.server.erosfeed.ErosPublicQueryServlet</servlet-class>
+        <init-param>
+            <param-name>bundleBaseName</param-name>
+            <param-value>gpt.resources.gpt</param-value>
+        </init-param>
+        <init-param>
+            <param-name>defaultQuery</param-name>
+            <param-value>f=atom&amp;contentType=liveData&amp;searchText=resource.url:http*</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ErosPublicQueryServlet</servlet-name>
+        <url-pattern>/ErosPublic</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>CartServlet</servlet-name>
         <servlet-class>com.esri.gpt.control.cart.CartServlet</servlet-class>
     </servlet>

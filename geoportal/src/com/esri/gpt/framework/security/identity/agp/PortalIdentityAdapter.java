@@ -27,6 +27,8 @@ import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
 import com.esri.gpt.framework.security.identity.IdentityAdapter;
 import com.esri.gpt.framework.security.identity.IdentityException;
 import com.esri.gpt.framework.security.identity.local.LocalDao;
+import com.esri.gpt.framework.security.principal.Group;
+import com.esri.gpt.framework.security.principal.Groups;
 import com.esri.gpt.framework.security.principal.Role;
 import com.esri.gpt.framework.security.principal.RoleSet;
 import com.esri.gpt.framework.security.principal.Roles;
@@ -223,7 +225,12 @@ public class PortalIdentityAdapter extends IdentityAdapter {
 	@Override
 	public void readUserGroups(User user)
 	  throws IdentityException, NamingException, SQLException {
-	  // Not implemented.
+		// TODO if admin read all groups?
+	  if (user.getDistinguishedName() == "*" && this.getRequestContext() != null) {
+	  	if (this.getRequestContext().getUser() != null) {
+	  		user.setGroups(this.getRequestContext().getUser().getGroups());
+	  	}
+	  }
 	}
 	
 	/**
@@ -384,6 +391,7 @@ public class PortalIdentityAdapter extends IdentityAdapter {
     user.setName(username);
     user.getProfile().setUsername(username);
     user.getAuthenticationStatus().setWasAuthenticated(true);
+    user.setGroups(new Groups());
 
   	if (jsoResponse.has("role") && (!jsoResponse.isNull("role"))) {
   	  // "role": "org_admin"  "org_publisher" or "org_user"
@@ -399,7 +407,7 @@ public class PortalIdentityAdapter extends IdentityAdapter {
   		JSONArray jsoGroups = jsoResponse.getJSONArray("groups");
       for (int i=0;i<jsoGroups.length();i++) {
       	JSONObject jsoGroup = jsoGroups.getJSONObject(i);
-        String groupId = jsoGroup.getString("id");
+      	String groupId = jsoGroup.getString("id");
         if ((adminGroupId != null) && (adminGroupId.length() > 0) && adminGroupId.equals(groupId)) {
         	isInAdminGroup = true;
         }
@@ -407,6 +415,15 @@ public class PortalIdentityAdapter extends IdentityAdapter {
         	isInPubGroup = true;
         }
         //System.err.println("groupId="+groupId); 
+        if (jsoGroup.has("title") && (!jsoGroup.isNull("title"))) {
+        	String groupName = jsoGroup.getString("title");
+        	//System.err.println("groupName="+groupName); 
+        	Group group = new Group();
+        	group.setKey(groupId);
+        	group.setDistinguishedName(group.getKey());
+        	group.setName(groupName);
+        	user.getGroups().add(group);
+        }
       }
   	}
     	
@@ -426,6 +443,8 @@ public class PortalIdentityAdapter extends IdentityAdapter {
     } else {
     	if (hasOrgPubRole) isPublisher = true;
     }
+    
+    //System.err.println("isAdmin="+isAdmin);
     
     RoleSet authRoles = user.getAuthenticationStatus().getAuthenticatedRoles();
     Roles cfgRoles = getApplicationConfiguration().getIdentityConfiguration().getConfiguredRoles();

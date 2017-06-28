@@ -56,13 +56,19 @@ public class ErosQueryServlet extends RestQueryServlet {
     defaultQuery = Val.chkStr(config.getInitParameter("defaultQuery"),"");
     defaultParameters = parseParameters(defaultQuery);
   }
-
+  
   @Override
   protected void execute(HttpServletRequest request, HttpServletResponse response, RequestContext context) throws Exception {
-    RoleSet roleSet = new RoleSet();
-    roleSet.add("gptAdministrator");
-    context.getUser().getAuthenticationStatus().authorizeAction(roleSet);
+  	if (!isPublic()) {
+      RoleSet roleSet = new RoleSet();
+      roleSet.add("gptAdministrator");
+      context.getUser().getAuthenticationStatus().authorizeAction(roleSet);
+  	}
     super.execute(request, response, context);
+  }
+  
+  protected boolean isPublic() {
+  	return false;
   }
   
   @Override
@@ -263,7 +269,11 @@ public class ErosQueryServlet extends RestQueryServlet {
     if (format.equals(ResponseFormat.atom)){
       ResourceIdentifier resourceIdentifier = ResourceIdentifier.newIdentifier(context);
       IdentityAdapter idAdapter =  context.newIdentityAdapter();
-      ErosEmailFinder emailFinder = new ErosEmailFinder(context, idAdapter);
+      ErosEmailFinder emailFinder = null;
+      
+      if (!isPublic()) {
+      	emailFinder = new ErosEmailFinder(context, idAdapter);
+      }
       
       String sTarget = query.getResponseTarget();
       RecordSnippetWriter.Target target = RecordSnippetWriter.Target.checkValueOf(sTarget);

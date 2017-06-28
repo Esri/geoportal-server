@@ -209,16 +209,25 @@ public class TemporalField extends BaseDcatField {
       SimpleDateFormat DF = new SimpleDateFormat(dateFormat);
 
       stringValue = new ArrayList<String>();
-      for (Date date: dateValue) {
-        try {
-          stringValue.add(DF.format(date));
-        } catch (IllegalArgumentException ex) {
-          LOGGER.log(Level.FINE, "Invalid date format", ex);
-        }
-      }
-    }
+      for (Date date: dateValue) { 
+    	    Calendar cal = Calendar.getInstance();
+    	           cal.setTime(date);
+    	           if (cal.get(Calendar.YEAR)>9999) {
+    	             LOGGER.log(Level.FINE, "Invalid date format");
+    	             stringValue.add(DF.format(new Date()));
+    	             continue;
+    	           }
     
-    if (stringValue==null || stringValue.isEmpty()) return;
+    	           try {
+    	               stringValue.add(DF.format(date));
+    	               } catch (IllegalArgumentException ex) {
+    	               LOGGER.log(Level.FINE, "Invalid date format", ex);
+    	              stringValue = null;
+    	              break;
+    	             }
+    	           }
+    	         }
+if (stringValue==null || stringValue.isEmpty()) return;
     
     String temporal = Val.join(stringValue.toArray(new String[stringValue.size()]), field.getDelimiter());
     
