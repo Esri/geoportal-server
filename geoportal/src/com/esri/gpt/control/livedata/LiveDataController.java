@@ -84,7 +84,12 @@ public class LiveDataController extends BaseActionListener implements ILiveDataP
    * @return definition of the embeded snippet
    */
   public String getEmbededSnippet() {
-    return "<iframe src=\"" + getEmbededUrl() + "\" style=\"" + getFrameStyle() + "\" frameborder=\"0\" scrolling=\"no\"></iframe>";
+    HttpServletRequest request = getServletRequest();
+    String embededRoot = getEmbededUrl();
+    if (embededRoot.startsWith(request.getContextPath())) {
+      embededRoot = embededRoot.substring(request.getContextPath().length());
+    }
+    return "<iframe src=\"" + getBaseContextPath(request) + embededRoot + "\" style=\"" + getFrameStyle() + "\" frameborder=\"0\" scrolling=\"no\"></iframe>";
   }
 
   /**
@@ -203,6 +208,15 @@ public class LiveDataController extends BaseActionListener implements ILiveDataP
    * @return context root
    */
   private static String getContextRoot(HttpServletRequest request) {
+    String baseContextPath = getBaseContextPath(request);
+    int contextIdx = baseContextPath.indexOf(request.getContextPath());
+    if (contextIdx>=0) {
+      baseContextPath = baseContextPath.substring(contextIdx);
+    }
+    return baseContextPath;
+  }
+  
+  private static String getBaseContextPath(HttpServletRequest request) {
     return RequestContext.resolveBaseContextPath(request);
   }
 }

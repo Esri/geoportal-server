@@ -305,7 +305,7 @@ public class QueryFilterParser extends DiscoveryAdapter implements IFilterParser
 
       // non-range clauses
     } else {
-      Node ndLiteral = (Node)xpath.evaluate("ogc:Literal", parent,XPathConstants.NODE);
+      Node ndLiteral = (Node)xpath.evaluate("fes:Literal", parent,XPathConstants.NODE);
       if (ndLiteral == null) {
         String msg = sErr+" - an ogc:Literal was not found.";
         throw new OwsException(OwsException.OWSCODE_MissingParameterValue,"Literal",msg);
@@ -314,7 +314,7 @@ public class QueryFilterParser extends DiscoveryAdapter implements IFilterParser
       propertyClause.setLiteral(sLiteral);
       // TODO validate content
       if ((sLiteral == null) || (sLiteral.length() == 0)) {
-        String msg = sErr+".ogc:Literal - the supplied literal was empty.";
+        String msg = sErr+".fes:Literal - the supplied literal was empty.";
         throw new OwsException(OwsException.OWSCODE_InvalidParameterValue,"Literal",msg);
       }
 

@@ -53,4 +53,8 @@
   <schema fileName="gpt/metadata/ogc/cswRecord-definition.xml"/>
   <schema fileName="gpt/metadata/other/georss-definition.xml"/> 
   <schema fileName="gpt/metadata/other/opensearch-definition.xml"/>
+  <schema fileName="gpt/metadata/other/oaidc-definition.xml"/> 
+  
+  <!-- DCAT -->
+  <schema fileName="gpt/metadata/dcat/dcat-definition.xml"/>
 </schemas>

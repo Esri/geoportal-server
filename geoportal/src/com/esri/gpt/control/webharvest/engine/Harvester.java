@@ -538,7 +538,10 @@ public class Harvester implements HarvesterMBean {
   private List<DataProcessor> createDataProcessors(MessageBroker messageBroker, String baseContextPath, Harvester.Listener listener, Suspender suspender) {
     List<DataProcessor> processors = new ArrayList<DataProcessor>();
     for (DataProcessorFactory factory : cfg.getDataProcessorFactories()) {
-      processors.add(factory.newProcessor(messageBroker, baseContextPath, listener, suspender));
+      DataProcessor prc = factory.newProcessor(messageBroker, baseContextPath, listener, suspender);
+      if (prc!=null) {
+        processors.add(prc);
+      }
     }
     return processors;
   }

@@ -119,7 +119,8 @@ class TFolder implements DestroyableResource {
       try {
         LOGGER.log(Level.FINER, "Loading folder content of {0}", info.getUrl());
 
-        HttpClientRequest cr = new HttpClientRequest();
+        context.assertAccess(info.getUrl());
+        HttpClientRequest cr = context.newHttpClientRequest();
         cr.setUrl(info.getUrl());
         XmlHandler sh = new XmlHandler(false);
         cr.setContentHandler(sh);
@@ -179,7 +180,7 @@ class TFolder implements DestroyableResource {
       if (!processedFolders.contains(catalogUrlExternal)) {
         processedFolders.add(catalogUrlExternal);
         TInfo catalogInfo = new TInfo(catalogUrl.toExternalForm());
-        TProxy catalogProxy = new TProxy(catalogInfo, criteria);
+        TProxy catalogProxy = new TProxy(catalogInfo, criteria, context);
         TFolder catalogFolder = new TFolder(context, catalogInfo, catalogProxy, criteria, processedFolders);
         resources.add(catalogFolder);
       }

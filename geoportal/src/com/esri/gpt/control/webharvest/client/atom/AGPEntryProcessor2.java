@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.control.webharvest.client.atom;
 
+import com.esri.gpt.control.webharvest.IterationContext;
 import java.io.IOException;
 
 import javax.xml.transform.TransformerException;
@@ -33,6 +34,10 @@ import com.esri.gpt.framework.xml.XmlIoUtil;
  * and extract metadata xml.
  */
 public class AGPEntryProcessor2 extends AGPEntryProcessor{
+
+  public AGPEntryProcessor2(IterationContext context) {
+    super(context);
+  }
 
 	/**
 	 * Extract xml of entry node and returns xml string.
@@ -94,7 +99,8 @@ public class AGPEntryProcessor2 extends AGPEntryProcessor{
 	 */
 	private String read(BaseAtomInfo info,String url) throws IOException {
 	  try {
-	    HttpClientRequest cr = new HttpClientRequest();
+        context.assertAccess(url);
+	    HttpClientRequest cr = context.newHttpClientRequest();
 	    cr.setUrl(url);
 	    XmlHandler sh = new XmlHandler(false);
 	    cr.setContentHandler(sh);

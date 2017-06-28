@@ -17,6 +17,8 @@ package com.esri.gpt.framework.util;
 import java.io.IOException;
 
 import com.esri.gpt.framework.http.HttpClientRequest;
+import com.esri.gpt.framework.http.crawl.HttpCrawlRequest;
+import com.esri.gpt.framework.robots.Bots;
 import java.net.HttpURLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,7 +35,11 @@ public class ResourceXml {
  * @throws IOException
  */
 public String makeResourceXmlFromResponse(String resourceUrl) throws IOException {
-  HttpClientRequest client = new HttpClientRequest();
+  return makeResourceXmlFromResponse(null, resourceUrl);
+}
+
+public String makeResourceXmlFromResponse(Bots bots, String resourceUrl) throws IOException {
+  HttpClientRequest client = bots!=null? new HttpCrawlRequest(bots): new HttpClientRequest();
   client.setUrl(resourceUrl);
   String response = Val.chkStr(client.readResponseAsCharacters());
   if (client.getResponseInfo().getResponseCode()!=HttpURLConnection.HTTP_OK) {

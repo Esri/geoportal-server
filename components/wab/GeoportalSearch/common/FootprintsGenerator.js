@@ -49,8 +49,9 @@ define([
           case "polygon":
            if(feature.bbox){
             var bbox = feature.bbox;
-            geometry = Extent(bbox[0],bbox[1],bbox[2],bbox[3], new SpatialReference(4326)); 
-            centerpoint = geometry.getCenter();
+            geometry = new Polygon([[bbox[0],bbox[1]],[bbox[2],bbox[1]],[bbox[2],bbox[3]],[bbox[0],bbox[3]],[bbox[0],bbox[1]]]);
+            geometry.setSpatialReference(new SpatialReference(4326));            
+            centerpoint = geometry.getCentroid();
            }
             break;
           default:

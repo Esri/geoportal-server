@@ -41,10 +41,12 @@ public CswPublishableAdapter(CswProxy proxy, com.esri.gpt.server.csw.client.CswR
   this.updateDate = Val.chkStr(record.getModifiedDate());
 }
 
+@Override
 public SourceUri getSourceUri() {
   return sourceUri;
 }
 
+@Override
 public String getContent() throws IOException, NullReferenceException {
   return proxy.read(sourceUri.asString());
 }

@@ -174,6 +174,20 @@ function setAutoApprove(checked) {
 }
 
 /**
+ * Checks if 'retry as draft' is selected
+ */
+function getAsDraft() {
+  return isChecked(dojo.byId("harvestCreate:asDraft"));
+}
+
+/**
+ * Checks/unckecks 'retry as draft'
+ */
+function setAsDraft(checked) {
+  setChecked(dojo.byId("harvestCreate:asDraft"),checked);
+}
+
+/**
  * Gest synchronization frequency
  */
 function getFrequency() {
@@ -206,6 +220,7 @@ function setSendNotification(send) {
 var lastUpdateContent = false;
 var lastUpdateDefinition = false;
 var lastAutoApprove = false;
+var lastAsDraft = false;
 var lastFrequency = "skip";
 var lastSendNotification = false;
 
@@ -216,6 +231,7 @@ function storeHarvestingOptions() {
   lastUpdateContent = getUpdateContent();
   lastUpdateDefinition = getUpdateDefinition();
   lastAutoApprove = getAutoApprove();
+  lastAsDraft = getAsDraft();
   lastFrequency = getFrequency();
   lastSendNotification = getSendNotification();
 }
@@ -227,6 +243,7 @@ function restoreHarvestingOptions() {
    setUpdateContent(lastUpdateContent);
    setUpdateDefinition(lastUpdateDefinition);
    setAutoApprove(lastAutoApprove);
+   setAsDraft(lastAsDraft);
    setFrequency(lastFrequency);
    setSendNotification(lastSendNotification);
 }
@@ -238,6 +255,7 @@ function clearHarvestingOptions() {
    setUpdateContent(false);
    setUpdateDefinition(false);
    setAutoApprove(false);
+   setAsDraft(false);
    setFrequency("skip");
    setSendNotification(false);
 }
@@ -254,6 +272,7 @@ function enableSyncOpt(enable) {
     dojo.query("#harvestCreate .syncOptSpec").attr("disabled",!enable);
     dojo.query("#harvestCreate .syncOptSpec input").attr("disabled",!enable);
     dojo.query("#harvestCreate .autoApprove").attr("disabled",false);
+    dojo.query("#harvestCreate .asDraft").attr("disabled",false);
   } else {
     storeHarvestingOptions();
     clearHarvestingOptions();
@@ -262,6 +281,7 @@ function enableSyncOpt(enable) {
     dojo.query("#harvestCreate .syncOptSpec").attr("disabled",true);
     dojo.query("#harvestCreate .syncOptSpec input").attr("disabled",true);
     dojo.query("#harvestCreate .autoApprove").attr("disabled",true);
+    dojo.query("#harvestCreate .asDraft").attr("disabled",true);
   }
 }
 
@@ -277,6 +297,8 @@ dojo.addOnLoad(function() {
       lastUpdateDefinition = true;
       lastAutoApprove = true;
       lastAutoApproveEnabled = true;
+      lastAsDraft = false;
+      lastAsDraftEnabled = true;
     }
     enableSyncOpt(node.target.checked);
     synchronizableClicked = true;
@@ -328,9 +350,17 @@ function selectSection(section) {
   
   enableSection("agp2agp", section=="agp2agp");
   enableSection("ags2agp", section=="ags2agp");
+  enableSection("gpt2agp", section=="gpt2agp");
   enableSection("dcat", section=="dcat");
   
-  dojo.query(".onBehalfOf").style("display",section!="agp2agp" && section!="ags2agp"? "block": "none");
+  dojo.query(".onBehalfOf").style("display",section!="agp2agp" && section!="ags2agp" && section!="gpt2agp"? "block": "none");
+  dojo.query(".hostUrlClass").style("display",section!="agp2agp" && section!="ags2agp" && section!="gpt2agp"? "block": "none");
+  
+  if (section=="gpt2agp") {
+    dojo.query("#harvestCreate\\:nameLabel").addClass("requiredField");
+  } else {
+    dojo.query("#harvestCreate\\:nameLabel").removeClass("requiredField");
+  }
 
   adjustSearchable(section);
   adjustFindable(section);
@@ -451,6 +481,23 @@ function adjustAutoApprove() {
   lastAutoApproveEnabled = enabled;
 }
 
+var lastAsDraftValue = false;
+var lastAsDraftEnabled = true;
+
+function adjustAsDraft() {
+  var enabled = getUpdateContent();
+  dojo.query("#harvestCreate .asDraft").attr("disabled",!enabled);
+  if (!enabled) {
+    if (lastAsDraftEnabled) {
+      lastAsDraftValue = getAsDraft();
+      setAsDraft(false);
+    }
+  } else if (!lastAsDraftEnabled) {
+    setAsDraft(lastAsDraftValue);
+  }
+  lastAsDraftEnabled = enabled;
+}
+
 /**
  * Checks if info is enabled
  */
@@ -479,8 +526,10 @@ dojo.addOnLoad(function() {
   });
   dojo.query("#harvestCreate\\:updateContent").onchange(function(node){
     adjustAutoApprove();
+    adjustAsDraft();
   });
   adjustAutoApprove();
+  adjustAsDraft();
   dojo.query("#harvestCreate\\:syncInfo").forEach(function(node, index, arr){
     node.style.display = (getInfoEnabled()? "": "none");
   }, null);
@@ -500,7 +549,9 @@ dojo.addOnLoad(function() {
   var fetchOwners = dojo.byId("fetchOwners");
   var fetchFolders = dojo.byId("fetchFolders");
   var fetchAgs2AgpOwners = dojo.byId("ags2agp-fetchOwners");
+  var fetchGpt2AgpOwners = dojo.byId("gpt2agp-fetchOwners");
   var fetchAgs2AgpFolders = dojo.byId("ags2agp-fetchFolders");
+  var fetchGpt2AgpFolders = dojo.byId("gpt2agp-fetchFolders");
   
   var closeFoldersDialog = dojo.byId("closeFoldersDialog");
   var foldersDiv = dojo.byId("foldersDiv");
@@ -528,6 +579,10 @@ dojo.addOnLoad(function() {
     fetchOwnersFun("ags2agp");
   });
   
+  dojo.connect(fetchGpt2AgpOwners,"onclick",function(evt){
+    fetchOwnersFun("gpt2agp");
+  });
+  
   var fetchFoldersFun = function(protocolType) {
     var foldersDialog = dijit.byId("foldersDialog");
     dojo.empty(foldersDiv);
@@ -546,6 +601,10 @@ dojo.addOnLoad(function() {
   
   dojo.connect(fetchAgs2AgpFolders,"onclick",function(evt){
     fetchFoldersFun("ags2agp");
+  });
+  
+  dojo.connect(fetchGpt2AgpFolders,"onclick",function(evt){
+    fetchFoldersFun("gpt2agp");
   });
 
   dojo.connect(closeFoldersDialog,"onclick",function(evt){
@@ -603,12 +662,26 @@ function getAgs2AgpDestination() {
   return destination;
 };
 
+function getGpt2AgpDestination() {
+  var destination = {
+    h: dojo.trim(dojo.attr("harvestCreate:gpt-dest-h","value")),
+    u: dojo.trim(dojo.attr("harvestCreate:gpt-dest-u","value")),
+    p: dojo.trim(dojo.attr("harvestCreate:gpt-dest-p","value")),
+    o: dojo.trim(dojo.attr("harvestCreate:gpt-dest-o","value")),
+    f: dojo.trim(dojo.attr("harvestCreate:gpt-dest-f","value"))
+  };
+  return destination;
+};
+
 function getDestination(protocolType) {
   if (protocolType=="agp2agp") {
     return getAgp2AgpDestination();
   }
   if (protocolType=="ags2agp") {
     return getAgs2AgpDestination();
+  }
+  if (protocolType=="gpt2agp") {
+    return getGpt2AgpDestination();
   }
   return null;
 }
@@ -620,6 +693,9 @@ function setDestinationOwner(protocolType,owner) {
   if (protocolType=="ags2agp") {
     dojo.attr("harvestCreate:ags-dest-o","value",owner);
   }
+  if (protocolType=="gpt2agp") {
+    dojo.attr("harvestCreate:gpt-dest-o","value",owner);
+  }
 }
 
 function setDestinationFolder(protocolType,folder) {
@@ -628,6 +704,9 @@ function setDestinationFolder(protocolType,folder) {
   }
   if (protocolType=="ags2agp") {
     dojo.attr("harvestCreate:ags-dest-f","value",folder);
+  }
+  if (protocolType=="gpt2agp") {
+    dojo.attr("harvestCreate:gpt-dest-f","value",folder);
   }
 }
 
@@ -944,8 +1023,8 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <h:outputText escape="false" value="<hr align=\"center\"/>"/>
 
 <%-- General repository info -------------------------------------------------%>  
-<h:panelGrid id="repositoryMain"  columns="2" summary="#{gptMsg['catalog.general.designOnly']}"
-  styleClass="formTable" columnClasses="formLabelColumn harvestExtra,formInputColumn">
+<h:panelGrid id="repositoryHeader"  columns="1" summary="#{gptMsg['catalog.general.designOnly']}"
+             styleClass="formTable" columnClasses="formInputColumn harvestExtra" style="width: 100%">
 
 <%-- Protocol Type --%>
 <h:outputText value="#{gptMsg['catalog.harvest.manage.edit.protocolType']}"/>
@@ -953,11 +1032,16 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 <h:selectOneRadio value="#{HarvestController.editor.type}" id="protocolType">
   <f:selectItems value="#{HarvestController.protocols}"/>
 </h:selectOneRadio>
+  
+</h:panelGrid>
+
+<h:panelGrid id="repositoryMain"  columns="2" summary="#{gptMsg['catalog.general.designOnly']}"
+  styleClass="formTable" columnClasses="formLabelColumn harvestExtra,formInputColumn">
 
 <%-- Host Url --%>
-<h:outputLabel id="hostUrlLabel" for="hostUrl" styleClass="requiredField" value=""/>
+<h:outputLabel id="hostUrlLabel" for="hostUrl" styleClass="requiredField hostUrlClass" value=""/>
 
-<h:panelGroup>
+<h:panelGroup styleClass="hostUrlClass">
   <h:inputText size="50" value="#{HarvestController.editor.hostUrl}" id="hostUrl"/>
   <h:outputText value="&nbsp;" escape="false"/>
   <h:commandButton 
@@ -971,7 +1055,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   <verbatim>
     <div class="hint res" style="display: none;">
       <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
-      <span class="hint-example">http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer</span>
+      <span class="hint-example">http://server.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer/WMTS/1.0.0/WMTSCapabilities.xml</span>
     </div>
     <div class="hint arcgis" style="display: none;">
       <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
@@ -1026,7 +1110,7 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   </verbatim>
 </h:panelGroup>
 <%-- Repository Name --%>
-<h:outputLabel for="name" styleClass="" value="#{gptMsg['catalog.harvest.manage.edit.name']}"/>
+<h:outputLabel id="nameLabel" for="name" styleClass="" value="#{gptMsg['catalog.harvest.manage.edit.name']}"/>
 <h:inputText size="50" value="#{HarvestController.editor.name}" id="name"/>
 
 <%-- ArcIMS specific properties ----------------------------------------------%>
@@ -1262,6 +1346,57 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
 </f:verbatim>
 </h:panelGroup>
 
+
+<%-- GPT-TO-AGP specific properties ------------------------------------------%>
+
+<h:outputText styleClass="gpt2agp agp2agpCaption" value=""/>
+<h:outputText styleClass="gpt2agp agp2agpCaption" value="#{gptMsg['catalog.harvest.manage.edit.dest.caption']}"/>
+
+<%-- dest host --%>
+<h:outputLabel styleClass="requiredField gpt2agp" for="gpt-dest-h" value="#{gptMsg['catalog.harvest.manage.edit.dest.h']}"/>
+<h:inputText   styleClass="gpt2agp" size="30" value="#{HarvestController.editor.attrs['gpt-dest-h']}" id="gpt-dest-h"/>
+<h:panelGroup></h:panelGroup>
+<h:panelGroup>
+  <verbatim>
+    <div class="hint gpt2agp" style="display: none;">
+      <span class="hint-text"><fmt:message key="catalog.harvest.manage.edit.example"/></span>
+      <span class="hint-example">my.host.com/portal</span>
+    </div>
+  </verbatim>
+</h:panelGroup>
+
+<%-- dest user name --%>
+<h:outputLabel styleClass="requiredField gpt2agp" for="gpt-dest-u" value="#{gptMsg['catalog.harvest.manage.edit.dest.u']}"/>
+<h:inputText   styleClass="gpt2agp" size="30" value="#{HarvestController.editor.attrs['gpt-dest-u']}" id="gpt-dest-u"/>
+
+<%-- dest password --%>
+<h:outputLabel styleClass="requiredField gpt2agp" for="gpt-dest-p" value="#{gptMsg['catalog.harvest.manage.edit.dest.p']}"/>
+<h:panelGroup>
+<h:inputSecret redisplay="true" styleClass="gpt2agp" size="30" value="#{HarvestController.editor.attrs['gpt-dest-p']}" id="gpt-dest-p"/>
+<h:commandButton 
+  id="gpt2agp-testClient"
+  value="#{gptMsg['catalog.harvest.manage.test.msg.agp2agp.button.testClient']}" 
+  actionListener="#{HarvestController.handleTestAgpDestination}" />
+</h:panelGroup>
+
+<%-- dest owner --%>
+<h:outputLabel styleClass="requiredField gpt2agp" for="gpt-dest-o" value="#{gptMsg['catalog.harvest.manage.edit.dest.o']}"/>
+<h:panelGroup>
+<h:inputText styleClass="gpt2agp" size="30" value="#{HarvestController.editor.attrs['gpt-dest-o']}" id="gpt-dest-o"/>
+<f:verbatim>
+  <input type="button" style="left: -4px;" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.button.fetchOwners"/>" id="gpt2agp-fetchOwners"/>
+</f:verbatim>
+</h:panelGroup>
+
+<%-- dest folder ID --%>
+<h:outputLabel styleClass="requiredField gpt2agp" for="gpt-dest-f" value="#{gptMsg['catalog.harvest.manage.edit.dest.f']}"/>
+<h:panelGroup>
+<h:inputText   styleClass="gpt2agp" size="40" value="#{HarvestController.editor.attrs['gpt-dest-f']}" id="gpt-dest-f"/>
+<f:verbatim>
+  <input type="button" style="left: -4px;" value="<fmt:message key="catalog.harvest.manage.test.msg.agp2agp.button.fetchFolders"/>" id="gpt2agp-fetchFolders"/>
+</f:verbatim>
+</h:panelGroup>
+  
 <%-- DCAT Portal specific properties -----------------------------------------%>
 <h:outputLabel styleClass="requiredField dcat" for="dcat-format" value="#{gptMsg['catalog.harvest.manage.edit.dcat.format']}"/>
 <h:inputText styleClass="dcat" size="30" value="#{HarvestController.editor.attrs['dcatFormat']}" id="dcat-format"/>
@@ -1321,6 +1456,22 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
   <h:outputLabel styleClass="autoApprove syncOpt" for="autoApprove" value="#{gptMsg['catalog.harvest.manage.edit.protocol.autoApprove']}"/>
 </h:panelGroup>
 
+<%-- Publish as draft --%>
+<h:outputText/>
+<h:panelGroup>
+  <h:selectBooleanCheckbox styleClass="asDraft syncOpt" value="#{HarvestController.editor.retryAsDraft}" id="asDraft"/>
+  <h:outputLabel styleClass="asDraft syncOpt" for="asDraft" value="#{gptMsg['catalog.harvest.manage.edit.protocol.asDraft']}"/>
+</h:panelGroup>
+
+</h:panelGrid>
+
+<h:panelGrid  columns="2" summary="#{gptMsg['catalog.general.designOnly']}"  styleClass="formTable" columnClasses="formInputColumn," rendered="#{HarvestController.robotsTxtOverride}">
+  <h:outputLabel styleClass="robotsTxtMode syncOpt" for="robotsTxtMode" value="#{gptMsg['catalog.harvest.manage.edit.protocol.robots.mode.caption']}"/>
+  <h:selectOneMenu id="robotsTxtMode" styleClass="robotsTxtMode syncOpt" value="#{HarvestController.editor.robotsTxtMode}">
+    <f:selectItem id="inherit" itemLabel="#{gptMsg['catalog.harvest.manage.edit.protocol.robots.mode.inherit']}" itemValue="inherit" />
+    <f:selectItem id="always" itemLabel="#{gptMsg['catalog.harvest.manage.edit.protocol.robots.mode.always']}" itemValue="always" />
+    <f:selectItem id="never" itemLabel="#{gptMsg['catalog.harvest.manage.edit.protocol.robots.mode.never']}" itemValue="never" />
+  </h:selectOneMenu>
 </h:panelGrid>
 
 <f:verbatim><br/></f:verbatim>
@@ -1441,13 +1592,13 @@ value="#{not empty HarvestController.editor.repository.uuid? HarvestController.e
     <label for="timeSpecDate"><fmt:message key="catalog.harvest.manage.timeDialog.timeSpecDate.label"/></label>
     <div id="timeSpecDateDiv" style="display: none;">
       <div>
-        <input type="button" data-dojo-type="dijit.form.RadioButton" id="dateRadio" name="dateStyle"/><label for="dateRadio"><fmt:message key="catalog.harvest.manage.timeDialog.dateStyle.date.label"/></label>
+        <input type="radio" data-dojo-type="dijit.form.RadioButton" id="dateRadio" name="dateStyle"/><label for="dateRadio"><fmt:message key="catalog.harvest.manage.timeDialog.dateStyle.date.label"/></label>
         <div>
           <input type="text" id="dateInput" data-dojo-type="dijit.form.DateTextBox"/>
         </div>
       </div>
       <div>
-        <input type="button" data-dojo-type="dijit.form.RadioButton" id="patternRadio" name="dateStyle"/><label for="patternRadio"><fmt:message key="catalog.harvest.manage.timeDialog.dateStyle.pattern.label"/></label>
+        <input type="radio" data-dojo-type="dijit.form.RadioButton" id="patternRadio" name="dateStyle"/><label for="patternRadio"><fmt:message key="catalog.harvest.manage.timeDialog.dateStyle.pattern.label"/></label>
         <div>
           <input type="text" id="dayOfTheMonthInput" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props="constraints:{min:0}"/>
           <select id="dayOfTheWeekInput" data-dojo-type="dijit.form.Select">

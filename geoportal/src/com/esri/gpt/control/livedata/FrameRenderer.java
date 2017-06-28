@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.control.livedata;
 
+import static com.esri.gpt.framework.util.Val.stripHttpProtocol;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -54,7 +55,7 @@ import java.io.Writer;
       "       }" +
       "    }" +
       "    style = styles.join(\";\");" +
-      "    node.innerHTML = \"<iframe style=\\\"\" + style + \"\\\" src=\\\"" +getUrl()+ "\\\" scrolling=\\\"auto\\\"/>\";" +
+      "    node.innerHTML = \"<iframe style=\\\"\" + style + \"\\\" src=\\\"" +stripHttpProtocol(getUrl())+ "\\\" scrolling=\\\"auto\\\"/>\";" +
       "} }");
   }
 

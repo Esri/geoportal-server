@@ -18,6 +18,7 @@ import com.esri.gpt.framework.resource.api.Native;
 import com.esri.gpt.framework.resource.api.SourceUri;
 import com.esri.gpt.framework.resource.common.CommonPublishable;
 import com.esri.gpt.framework.resource.common.UrlUri;
+import com.esri.gpt.framework.robots.Bots;
 import com.esri.gpt.framework.util.ResourceXml;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.server.csw.client.*;
@@ -32,6 +33,8 @@ import javax.xml.transform.TransformerException;
 class CswProxy {
 /** logger */
 private static final Logger LOGGER = Logger.getLogger(CswProxy.class.getCanonicalName());
+/** robots.txt */
+private final Bots bots;
 /** service info */
 private CswInfo info;
 /** CSW catalog */
@@ -44,12 +47,13 @@ private CswSearchRequest request;
  * @param info service info
  * @param catalog CSW catalog
  */
-public CswProxy(CswInfo info, CswCatalog catalog) {
+public CswProxy(Bots bots, CswInfo info, CswCatalog catalog) {
   if (info==null) throw new IllegalArgumentException("No info provided.");
   if (catalog==null) throw new IllegalArgumentException("No catalog provided.");
+  this.bots = bots;
   this.info = info;
   this.catalog = catalog;
-  this.request = new CswSearchRequest();
+  this.request = new CswSearchRequest(bots);
   
   CswSearchCriteria cswCriteria = new CswSearchCriteria();
   cswCriteria.setSearchText("");
@@ -125,7 +129,7 @@ private class NativeImpl extends CommonPublishable implements Native {
     @Override
   public String getContent() throws IOException {
     ResourceXml resourceXml = new ResourceXml();
-    return resourceXml.makeResourceXmlFromResponse(info.getUrl());
+    return resourceXml.makeResourceXmlFromResponse(bots,info.getUrl());
   }
 }
 }

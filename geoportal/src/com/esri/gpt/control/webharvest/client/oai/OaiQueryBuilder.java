@@ -51,17 +51,20 @@ public OaiQueryBuilder(IterationContext context, HarvestProtocolOai protocol, St
   this.info = new OaiInfo(url, protocol.getPrefix(), protocol.getSet(), protocol.getUserName(), protocol.getUserPassword());
 }
 
+@Override
 public Capabilities getCapabilities() {
   return capabilities;
 }
 
+@Override
 public Query newQuery(Criteria crt) {
-  OaiProxy proxy = new OaiProxy(info);
+  OaiProxy proxy = new OaiProxy(info,context);
   Query q = new OaiQuery(context, info, proxy, crt);
   LOGGER.finer("Query created: " + q);
   return q;
 }
 
+@Override
 public Native getNativeResource() {
   return null;
 }

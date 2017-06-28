@@ -43,7 +43,7 @@
 	  <field name="accessURL" index="dcat.accessUrl" required="true"/>
 	  <field name="downloadURL" index="dcat.downloadUrl" required="true"/>
 	  <field name="spatial" index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" required="true"/>
-	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" required="true" delimiter="/"/>
+	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" dateFormat="yyyy-MM-dd" required="true" delimiter="/"/>
 	</fields>
 	<fields schema="others">
 	  <field name="title" index="title" type="string" required="true"/>  
@@ -73,7 +73,68 @@
 	  <field name="accessURL" index="dcat.accessUrl" required="false"/>
 	  <field name="downloadURL" index="dcat.downloadUrl" required="true"/>
 	  <field name="spatial" index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" required="true"/>
-	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" required="true" delimiter="/"/>
+	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" dateFormat="yyyy-MM-dd" required="true" delimiter="/"/>
+	</fields>
+	<fields schema="dcat">
+	  <field name="title" index="title" type="string" required="true"/>  
+	  <field name="description" index="abstract" type="string" required="true"/>
+	  <field name="keyword" index="keywords" type="array" required="true"/>
+	  <field name="modified" index="dcat.modified" isDate="true" dateFormat="yyyy-MM-dd" type="date" delimiter="/" required="true"/>
+      <field name="issued" index="dcat.issued"  isDate="true" type="date" dateFormat="yyyy-MM-dd" required="false"/>	
+	  <field name="publisher" index="publisher" required="true"/>
+	  <field name="contactPoint" index="dcat.person" required="true"/>
+	  <field name="mbox"	index="dcat.mbox" required="true"/>
+	  <field name="identifier" required="true"/>  
+	  <field name="accessLevel" index="dcat.accessLevel" required="true">
+        <map from="High Confidentiality|Non-public|Secret|Top Secret" to="non-public"/>
+        <map from="Medium Confidentiality|Restricted|Confidential|Sensitive" to="restricted public"/>
+        <map from="No Confidentiality|Unclassified" to="public"/>
+        <map from=".*" to="public"/>
+      </field>
+	  <field name="accessLevelComment" index="dcat.accessLevelComment" maxChars="255" required="false"/>
+	  <field name="bureauCode" index="dcat.bureauCode" type="array" required="true"/>
+	  <field name="programCode" index="dcat.programCode" type="array" required="true"/>
+	  <field name="dataDictionary" index="dcat.dataDictionary"  />
+	  <field name="webService" index="resource.url" required="false"/> 
+	  <field name="format" index="dcat.format" required="false"/>
+	  <field name="license" index="dcat.license" required="false"/>
+	  <field name="accessURL" index="dcat.accessUrl" required="false"/>
+	  <field name="downloadURL" index="dcat.downloadUrl" required="true"/>
+	  <field name="spatial" index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" required="true"/>
+	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" dateFormat="yyyy-MM-dd" required="true" delimiter="/"/>
+      <field name="theme" index="dataTheme" required="false" />
+      <field name="accrualPeriodicity" index="dcat.accrualPeriodicity"  required="false">
+        <map from="Decennial" to="R/P10Y"/>
+        <map from="Quadrennial" to="R/P4Y"/>
+        <map from="Annual|annually" to="R/P1Y"/>
+        <map from="Bimonthly" to="R/P2M"/>
+        <map from="Semiweekly" to="R/P3.5D"/>
+        <map from="Daily|daily" to="R/P1D"/>
+        <map from="Biweekly" to="R/P2W"/>
+        <map from="Semiannual" to="R/P6M"/>
+        <map from="Biennial|biannually" to="R/P2Y"/>
+        <map from="Triennial" to="R/P3Y"/>
+        <map from="Three times a week" to="R/P0.33W"/>
+        <map from="Three times a month" to="R/P0.33M"/>
+        <map from="Continuously updated|continual|Continually" to="R/PT1S"/>
+        <map from="Monthly|monthly" to="R/P1M"/>
+        <map from="Quarterly|quarterly" to="R/P3M"/>
+        <map from="Semimonthly|fortnightly" to="R/P0.5M"/>
+        <map from="Three times a year" to="R/P4M"/>
+        <map from="Weekly|weekly" to="R/P1W"/>
+        <map from="^R/P[^DWMYS]*[DWMYS]$" to="*"/>
+        <map from="asNeeded|notPlanned|unknown" to="irregular"/>
+        <map from=".*" to="irregular"/>
+      </field>
+      <field name="isPartOf" index="sys.parentid"  required="false"/>
+      <field name="primaryITInvestmentUII" index="dcat.primaryITInvestmentUII"  required="false"/>
+      <field name="dataQuality" index="dcat.dataQuality"  required="false"/>
+      <field name="describedBy" index="dcat.describedBy"  required="false"/>
+      <field name="describedByType" index="dcat.describedByType"  required="false"/>
+      <field name="language" index="dcat.language" type="array" required="false" />
+      <field name="references" index="dcat.references" type="array" required="false"/>
+      <field name="accessLevelComment" index="dcat.accessLevelComment" maxChars="255" required="false"/>
+      <field name="landingPage" index="dcat.landingPage"  required="false"/>
 	</fields>
 	<fields schema="fgdc">
 	  <field name="title" index="title" required="true"/>  
@@ -91,7 +152,7 @@
         <map from=".*" to="public"/>
       </field>
 	  <field name="accessLevelComment" index="dcat.accessLevelComment" maxChars="255" required="false"/>
-	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
+	  <field name="bureauCode" index="dcat.bureauCode" type="array" required="true"/>
 	  <field name="programCode" index="dcat.programCode" type="array" required="true"/>
 	  <field name="dataDictionary" index="dcat.dataDictionary" />
       <!--
@@ -106,7 +167,7 @@
 	  <field name="format" index="dcat.format" required="false"/>
 	  <field name="license" index="dcat.license" required="false"/>
 	  <field name="spatial" index="envelope.minx,envelope.miny,envelope.maxx,envelope.maxy" required="true"/>
-	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" required="true" delimiter="/"/>
+	  <field name="temporal" index="timeperiod.l.0,timeperiod.u.0" isDate="true" type="date" dateFormat="yyyy-MM-dd" required="true" delimiter="/"/>
       <field name="references" index="dcat.references" type="array" required="false"/>
       <field name="landingPage" index="dcat.landingPage"  required="false"/>
       <field name="theme" index="dataTheme" required="false" />
@@ -133,6 +194,7 @@
         <map from="asNeeded|notPlanned|unknown" to="irregular"/>
         <map from=".*" to="irregular"/>
       </field>
+      <field name="isPartOf" index="sys.parentid"  required="false"/>
 	</fields>
 	<fields schema="iso-19115,iso-19119,iso19115-2,gemini-iso-19115,gemini-iso-19119,inspire-iso-19115,inspire-iso-19119"> 
 	  <field name="title" index="title"  required="true"/>  
@@ -150,7 +212,7 @@
         <map from=".*" to="public"/>
       </field>
 	  <field name="accessLevelComment" index="apiso.AccessConstraints;dcat.accessLevelComment" maxChars="255" required="false"/>
-	  <field name="bureauCode" index="bureauCode" type="array" required="true"/>
+	  <field name="bureauCode" index="dcat.bureauCode" type="array" required="true"/>
 	  <field name="programCode" index="dcat.programCode" type="array" required="true"/>
 	  <field name="dataDictionary" index="dcat.dataDictionary" />
       <!--
@@ -204,5 +266,6 @@
       <field name="references" index="dcat.references" type="array" required="false"/>
       <field name="size" index="dcat.size"  required="false"/>
       <field name="landingPage" index="dcat.landingPage"  required="false"/>
-	  </fields>
+      <field name="isPartOf" index="sys.parentid"  required="false"/>
+	</fields>
 </dcat>

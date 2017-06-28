@@ -196,17 +196,18 @@ public class AgpItemHelper {
     }
     
     // TODO: need to specify the host?
-    String sAlphaNumeric = "[^a-zA-Z0-9]+";
-    String sSrcHost = source.getConnection().getHost().toLowerCase();
-    sSrcHost = sSrcHost.replace(".","DOT");
-    sSrcHost = sSrcHost.replaceAll(sAlphaNumeric,"R");
-    String sFullTag = sSyncKey;
-    sFullTag += "srcmodified"+sModified;
-    sFullTag += "srchost"+sSrcHost;
     aTypeKeywords.add("gptsync");
     aTypeKeywords.add(sSyncKey);
-    aTypeKeywords.add(sFullTag);
-  
+    if (source != null) {
+    	String sAlphaNumeric = "[^a-zA-Z0-9]+";
+      String sFullTag = sSyncKey;
+      sFullTag += "srcmodified"+sModified;
+      String sSrcHost = source.getConnection().getHost().toLowerCase();
+      sSrcHost = sSrcHost.replace(".","DOT");
+      sSrcHost = sSrcHost.replaceAll(sAlphaNumeric,"R");
+      sFullTag += "srchost"+sSrcHost;
+      aTypeKeywords.add(sFullTag);
+    }
     
     for (String sTypeKeyword: aTypeKeywords) {
       if (sbTypeKeywords.length() > 0) sbTypeKeywords.append(",");

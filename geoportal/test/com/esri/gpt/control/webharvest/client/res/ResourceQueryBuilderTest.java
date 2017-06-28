@@ -16,6 +16,7 @@ package com.esri.gpt.control.webharvest.client.res;
 
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolResource;
 import com.esri.gpt.control.webharvest.IterationContext;
+import com.esri.gpt.control.webharvest.client.MockIterationContext;
 import com.esri.gpt.control.webharvest.common.CommonCriteria;
 import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.query.Query;
@@ -36,10 +37,7 @@ public ResourceQueryBuilderTest() {
 @BeforeClass
 public static void setUpClass() throws Exception {
   HarvestProtocolResource protocol = new HarvestProtocolResource();
-  IterationContext context = new IterationContext() {
-    public void onIterationException(Exception ex) {
-    }
-  };
+  IterationContext context = new MockIterationContext();
   instance  = new ResourceQueryBuilder(context, protocol, "http://server.arcgisonline.com/ArcGIS/rest/services");
 }
 

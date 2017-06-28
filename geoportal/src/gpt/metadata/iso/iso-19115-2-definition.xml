@@ -93,7 +93,7 @@
       <content useSelectForUpdate="true"
                select="/gmi:MI_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
     </parameter>
-    
+    <!--  
     <parameter key="identification.publicationDate"> 
       <label resourceKey="catalog.mdParam.identification.datasetPublicationDate"/>
       <input type="text" size="20" maxlength="10" 
@@ -104,7 +104,7 @@
                select="/gmi:MI_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date | gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:DateTime"
                update="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date"/>
     </parameter>
-    
+    -->
         <parameter key="identification.datasetInfo.datasetLanguage"> 
       <label resourceKey="catalog.mdParam.datasetInfo.datasetLanguage"/>
       <input type="text" size="20" maxlength="10" defaultValue="en"/>

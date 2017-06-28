@@ -140,7 +140,7 @@ public class AgpClient {
                              ContentProvider contentProvider, 
                              ContentHandler contentHandler) 
     throws Exception {
-    HttpClientRequest http = new HttpClientRequest();
+    HttpClientRequest http = newHttpClientRequest();
     http.setRetries(-1);
     http.setBatchHttpClient(this.batchHttpClient);
     http.setUrl(url);
@@ -165,7 +165,7 @@ public class AgpClient {
           if (url.endsWith("/data") && location.contains("ago-item-storage")) {
             location = location.replaceAll("^https:", "http:");
             doThrow = false;
-            HttpClientRequest http2 = new HttpClientRequest();
+            HttpClientRequest http2 = newHttpClientRequest();
             http2.setUrl(location);
             http2.setRetries(-1);
             http2.setContentHandler(contentHandler);
@@ -179,4 +179,7 @@ public class AgpClient {
     }
   }
   
+  protected HttpClientRequest newHttpClientRequest() {
+    return new HttpClientRequest();
+  }
 }

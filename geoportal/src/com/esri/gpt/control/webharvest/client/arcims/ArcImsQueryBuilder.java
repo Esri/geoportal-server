@@ -56,7 +56,7 @@ public ArcImsQueryBuilder(IterationContext context, HarvestProtocolArcIms protoc
   }
   this.context = context;
   this.info = new ArcImsInfo(url, protocol.getServiceName(), protocol.getRootFolder(), protocol.getUserName(), protocol.getUserPassword());
-  this.proxy = new ArcImsProxy(info);
+  this.proxy = new ArcImsProxy(info,context);
 }
 
 @Override

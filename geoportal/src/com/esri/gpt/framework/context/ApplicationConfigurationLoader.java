@@ -52,6 +52,7 @@ import com.esri.gpt.control.georss.DcatSchemas;
 import com.esri.gpt.control.webharvest.engine.DataProcessorFactory;
 import com.esri.gpt.control.webharvest.engine.HarvesterConfiguration;
 import com.esri.gpt.control.webharvest.engine.LocalDataProcessorFactory;
+import com.esri.gpt.control.webharvest.extensions.localfolder.LocalFolderDataProcessorFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactories;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInitializer;
@@ -86,6 +87,7 @@ import com.esri.gpt.framework.util.TimePeriod;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.NodeListAdapter;
+import com.esri.gpt.framework.xml.XmlIoUtil;
 
 /**
  * Application configuration loader.
@@ -96,6 +98,8 @@ import com.esri.gpt.framework.xml.NodeListAdapter;
  * @see ApplicationConfiguration
  */
 public class ApplicationConfigurationLoader {
+
+private static final Logger LOG = Logger.getLogger(ApplicationConfigurationLoader.class.getName());
 
   
 /** Main XML configuration file location. */
@@ -144,6 +148,9 @@ public void load(ApplicationConfiguration appConfig) throws Exception {
 	}
   XPath xpath = XPathFactory.newInstance().newXPath();
 
+  if (dom!=null) {
+    LOG.finer(XmlIoUtil.domToString(dom));
+  }
 
   try {
     Node root = (Node) xpath.evaluate("/gptConfig", dom, XPathConstants.NODE);

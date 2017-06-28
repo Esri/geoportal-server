@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.control.webharvest.client.atom;
 
+import com.esri.gpt.control.webharvest.IterationContext;
 import org.json.JSONObject;
 
 import com.esri.gpt.framework.http.HttpClientRequest;
@@ -25,6 +26,11 @@ import com.esri.gpt.framework.util.Val;
  *
  */
 public class AGPHitCountCollector implements IHitCountCollector {
+    private final IterationContext context;
+
+  public AGPHitCountCollector(IterationContext context) {
+    this.context = context;
+  }
 
 	/* (non-Javadoc)
 	 * @see com.esri.gpt.control.webharvest.client.atom.IHitCountCollector#collectHitCount(java.lang.Object)
@@ -51,7 +57,8 @@ public class AGPHitCountCollector implements IHitCountCollector {
 					  url = url.replace(oldFParam, jsonFParam);
 				  }		
 			}
-			HttpClientRequest cr = new HttpClientRequest();	
+            context.assertAccess(url);
+			HttpClientRequest cr = context.newHttpClientRequest();	
 		    cr.setUrl(url);
 		    String response = Val.chkStr(cr.readResponseAsCharacters());
 		    if(response.length() > 0){

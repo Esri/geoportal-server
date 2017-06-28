@@ -33,7 +33,7 @@ import com.esri.gpt.catalog.arcgis.metadata.IServiceInfoProvider;
 import com.esri.gpt.catalog.arcgis.metadata.ServiceInfo;
 import com.esri.gpt.catalog.arcgis.metadata.ServiceInfoProviderAdapter;
 import com.esri.gpt.control.georss.GeometryService;
-import com.esri.gpt.control.webharvest.IterationContext;
+import com.esri.gpt.control.webharvest.DefaultIterationContext;
 import com.esri.gpt.control.webharvest.client.arcgis.ArcGISInfo;
 import com.esri.gpt.control.webharvest.client.arcgis.ArcGISQueryBuilder;
 import com.esri.gpt.control.webharvest.common.CommonCriteria;
@@ -42,6 +42,7 @@ import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.resource.adapters.FlatResourcesAdapter;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
+import static com.esri.gpt.framework.robots.BotsUtils.readBots;
 import com.esri.gpt.framework.util.Val;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -97,7 +98,10 @@ public class Ags2AgpCopy {
     RequestContext requestContext = RequestContext.extract(null);
     try {
 
-      ArcGISQueryBuilder qb = new ArcGISQueryBuilder(new IterationContext() {
+      ArcGISQueryBuilder qb = new ArcGISQueryBuilder(new DefaultIterationContext(readBots(
+                      source.getRobotsTxtMode(),
+                      source.getRestUrl()
+      )) {
         @Override
         public void onIterationException(Exception ex) {
           LOGGER.log(Level.SEVERE, "Error iterating through AGS resources.", ex);

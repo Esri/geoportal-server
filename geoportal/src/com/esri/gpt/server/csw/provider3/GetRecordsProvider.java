@@ -434,6 +434,7 @@ public class GetRecordsProvider implements IOperationProvider {
     if ((parsed != null) && (parsed.length) > 0) {
       if (parsed[0].equalsIgnoreCase("unlimited")) {
         qOptions.setMaxRecords(getMaxRecordsThreshold());
+        qOptions.setUnlimited(true);
       } else {
         qOptions.setMaxRecords(Val.chkInt(parsed[0],10));
       }
@@ -573,6 +574,7 @@ public class GetRecordsProvider implements IOperationProvider {
     // initialize
     LOGGER.finer("Handling csw:GetRecords request XML...");
     QueryOptions qOptions = context.getRequestOptions().getQueryOptions();
+    qOptions.setMaxRecordsThreshold(getMaxRecordsThreshold());
     ServiceProperties svcProps = context.getServiceProperties();
     ParseHelper pHelper = new ParseHelper();
     ValidationHelper vHelper = new ValidationHelper();

@@ -76,6 +76,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
     String sDescription = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.description"));
     String sKeyword = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.keyword"));
     String sModified = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.modified"));
+    String sIssued = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.issued"));
     String sPublisher = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.publisher"));
     String sPerson = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.contactPoint"));
     String sMbox = normalizeResource(messageBroker.retrieveMessage("catalog.json.dcat.mbox"));
@@ -97,6 +98,7 @@ public class DcatJsonFeedWriter extends ExtJsonFeedWriter {
 
     properties.setProperty("keyword", sKeyword);
     properties.setProperty("modified", sModified);
+    properties.setProperty("issued", sIssued);
 
     properties.setProperty("publisher", sPublisher);
     properties.setProperty("contactPoint", sPerson);

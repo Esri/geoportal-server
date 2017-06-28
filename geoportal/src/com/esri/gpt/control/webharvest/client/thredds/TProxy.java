@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.control.webharvest.client.thredds;
 
+import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.ResponseInfo;
 import com.esri.gpt.framework.http.StringHandler;
@@ -39,24 +40,31 @@ class TProxy {
   private TInfo info;
   /** criteria */
   private Criteria criteria;
+  /** iteration context */
+  private IterationContext context;
 
   /**
    * Creates instance of the proxy.
    * @param info service info
    * @param criteria criteria
    */
-  public TProxy(TInfo info, Criteria criteria) {
+  public TProxy(TInfo info, Criteria criteria, IterationContext context) {
     if (info == null) {
       throw new IllegalArgumentException("No info provided.");
     }
+    if (context == null) {
+      throw new IllegalArgumentException("No context provided.");
+    }
     this.info = info;
     this.criteria = criteria;
+    this.context = context;
   }
 
   public Content readContent(String sourceUri) throws IOException {
     LOGGER.log(Level.FINER, "Reading metadata of source URI: \"{0}\" through proxy: {1}", new Object[]{sourceUri, this});
     sourceUri = Val.chkStr(sourceUri).replaceAll("\\{", "%7B").replaceAll("\\}", "%7D");
-    HttpClientRequest cr = new HttpClientRequest();
+    context.assertAccess(sourceUri);
+    HttpClientRequest cr = context.newHttpClientRequest();
     cr.setBatchHttpClient(this.info.getBatchHttpClient());
     cr.setUrl(sourceUri);
     BreakableStringHandler sh = new BreakableStringHandler(criteria != null ? criteria.getFromDate() : null);
@@ -71,7 +79,8 @@ class TProxy {
   public String read(String sourceUri) throws IOException {
     LOGGER.log(Level.FINER, "Reading metadata of source URI: \"{0}\" through proxy: {1}", new Object[]{sourceUri, this});
     sourceUri = Val.chkStr(sourceUri).replaceAll("\\{", "%7B").replaceAll("\\}", "%7D");
-    HttpClientRequest cr = new HttpClientRequest();
+    context.assertAccess(sourceUri);
+    HttpClientRequest cr = context.newHttpClientRequest();
     cr.setBatchHttpClient(this.info.getBatchHttpClient());
     cr.setUrl(sourceUri);
     StringHandler sh = new StringHandler();

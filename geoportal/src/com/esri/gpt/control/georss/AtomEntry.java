@@ -367,27 +367,27 @@ public class AtomEntry {
         
         if (getLinks() != null) {
             for (ResourceLink lnk : getLinks()) {
-                Element elLink = parent.createElementNS(atomns, "link");
-                elLink.setAttribute("href", lnk.getUrl());
-                boolean recognized = false;
+                String [] rels = null;
                 if (ResourceLink.TAG_DETAILS.equals(lnk.getTag())) {
-                  elLink.setAttribute("rel", "describedBy");
-                  recognized = true;
+                  rels = new String[]{"describedBy", "alternate"};
                 }
                 if (ResourceLink.TAG_METADATA.equals(lnk.getTag())) {
-                  elLink.setAttribute("rel", "via");
-                  recognized = true;
+                  rels = new String[]{"via"};
                 }
                 if (ResourceLink.TAG_OPEN.equals(lnk.getTag())) {
-                  elLink.setAttribute("rel", "enclosure");
-                  recognized = true;
+                  rels = new String[]{"enclosure"};
                 }
                 if (ResourceLink.TAG_THUMBNAIL.equals(lnk.getTag())) {
-                  elLink.setAttribute("rel", "icon");
-                  recognized = true;
+                  rels = new String[]{"icon"};
                 }
-                if (recognized) {
-                  elEntry.appendChild(elLink);
+                
+                if (rels!=null) {
+                  for (String rel: rels) {
+                    Element elLink = parent.createElementNS(atomns, "link");
+                    elLink.setAttribute("href", lnk.getUrl());
+                    elLink.setAttribute("rel", rel);
+                    elEntry.appendChild(elLink);
+                  }
                 }
             }
         }
@@ -425,22 +425,24 @@ public class AtomEntry {
             if (getLinks() != null) {
                 for (ResourceLink lnk : getLinks()) {
                     try {
-                        String rel = "";
+                        String [] rels = null;
                         if (ResourceLink.TAG_DETAILS.equals(lnk.getTag())) {
-                          rel = " rel=\"describedBy\"";
+                          rels = new String[]{" rel=\"describedBy\"", " rel=\"alternate\""};
                         }
                         if (ResourceLink.TAG_METADATA.equals(lnk.getTag())) {
-                          rel = " rel=\"via\"";
+                          rels = new String[]{" rel=\"via\""};
                         }
                         if (ResourceLink.TAG_OPEN.equals(lnk.getTag())) {
-                          rel = " rel=\"enclosure\"";
+                          rels = new String[]{" rel=\"enclosure\""};
                         }
                         if (ResourceLink.TAG_THUMBNAIL.equals(lnk.getTag())) {
-                          rel = " rel=\"icon\"";
+                          rels = new String[]{" rel=\"icon\""};
                         }
-                        if (!rel.isEmpty()) {
-                          data = LINK_TAG.replace("?", Val.escapeXml(lnk.getUrl())).replace("{rel}", rel);
-                          writer.append("\t" + data + lineSeparator);
+                        if (rels!=null) {
+                          for (String rel: rels) {
+                            data = LINK_TAG.replace("?", Val.escapeXml(lnk.getUrl())).replace("{rel}", rel);
+                            writer.append("\t" + data + lineSeparator);
+                          }
                         }
                     } catch (Exception e) {
                         LOGGER.log(Level.WARNING, "", e);

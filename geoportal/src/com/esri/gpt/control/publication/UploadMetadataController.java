@@ -55,6 +55,7 @@ public class UploadMetadataController extends BaseActionListener {
   private String               explicitPath = "";
   private UploadOptions        options;
   private SelectablePublishers selectablePublishers;
+  private boolean              asDraft;
  
   /** constructors ============================================================ */
   
@@ -151,6 +152,14 @@ public class UploadMetadataController extends BaseActionListener {
       return "display: none;";
     }
   }
+
+  public boolean getAsDraft() {
+    return asDraft;
+  }
+
+  public void setAsDraft(boolean asDraft) {
+    this.asDraft = asDraft;
+  }
   
   /** methods ================================================================= */
   
@@ -235,6 +244,20 @@ public class UploadMetadataController extends BaseActionListener {
   private String extractItemXml(FileItem item) throws UnsupportedEncodingException {
     String xml = null;
     if (item != null) {
+    	
+    	try {
+        String chk16 = Val.chkStr(item.getString("UTF-16"));
+        if (chk16 != null && chk16.startsWith("<?xml version=\"1.0\" encoding=\"utf-16\"?>")) {
+        	chk16 = chk16.replaceFirst("utf-16","UTF-8");
+        	return chk16;
+        }
+        if (chk16 != null && chk16.startsWith("<?xml version=\"1.0\" encoding=\"UTF-16\"?>")) {
+        	chk16 = chk16.replaceFirst("UTF-16","UTF-8");
+        	return chk16;
+        }
+    	} catch(UnsupportedEncodingException ex) {
+    	}
+    	
       xml = Val.chkStr(Val.removeBOM(item.getString("UTF-8")));
     }
     return xml;
@@ -305,6 +328,7 @@ public class UploadMetadataController extends BaseActionListener {
         } else {
           Publisher publisher = getSelectablePublishers().selectedAsPublisher(context,false);
           UploadRequest request = new UploadRequest(context,publisher,sFileName,sXml);
+          request.setRetryAsDraft(getAsDraft());
           request.publish();
           if (request.getPublicationRecord().getWasDocumentUnchanged()) {
             msgBroker.addSuccessMessage("publication.success.unchanged");

@@ -14,6 +14,8 @@
  */
 package com.esri.gpt.control.livedata;
 
+import static com.esri.gpt.framework.util.Val.stripHttpProtocol;
+
 /**
  * ArcIMS renderer.
  */
@@ -24,7 +26,7 @@ package com.esri.gpt.control.livedata;
 
   @Override
   protected String newLayerDeclaration() {
-    return "new esri.gpt.layers.ArcIMSLayer(\"" +getUrl()+ "\",\"" +getProxyUrl()+ "\",widget.getGeometryServiceUrl())";
+    return "new esri.gpt.layers.ArcIMSLayer(\"" +getUrl()+ "\",\"" +stripHttpProtocol(getProxyUrl())+ "\",widget.getGeometryServiceUrl())";
   }
 
   @Override

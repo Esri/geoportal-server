@@ -15,13 +15,14 @@
 package com.esri.gpt.control.webharvest.engine;
 
 import com.esri.gpt.catalog.harvest.repository.HrRecord;
-import com.esri.gpt.control.webharvest.IterationContext;
+import com.esri.gpt.control.webharvest.DefaultIterationContext;
 import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
 import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
+import static com.esri.gpt.framework.robots.BotsUtils.readBots;
 import com.esri.gpt.framework.security.principal.Publisher;
 import com.esri.gpt.framework.util.Val;
 import java.util.Arrays;
@@ -57,10 +58,14 @@ public ExecutionUnit(Task task) {
     throw new IllegalArgumentException("No task provided.");
   this.task = task;
   this.cleanup = ProtocolInvoker.getUpdateContent(task.getResource().getProtocol()) && task.getCriteria().getFromDate()==null;
-  this.queryBuilder = task.getResource().newQueryBuilder(new IterationContext() {
+  this.queryBuilder = task.getResource().newQueryBuilder(new DefaultIterationContext(readBots(
+                  task.getResource().getRobotsTxtMode(),
+                  task.getResource().getHostUrl()
+  )) {
       @Override
       public void onIterationException(Exception ex) {
         ExecutionUnit.this.onIteratonException(ex);
+        super.onIterationException(ex);
       }
   });
   if (this.queryBuilder == null) {

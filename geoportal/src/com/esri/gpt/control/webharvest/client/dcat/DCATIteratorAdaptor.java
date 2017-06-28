@@ -17,6 +17,7 @@ package com.esri.gpt.control.webharvest.client.dcat;
 
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolDCAT;
 import com.esri.gpt.framework.dcat.DcatParserAdaptor;
+import com.esri.gpt.framework.dcat.DcatVersion;
 import com.esri.gpt.framework.dcat.dcat.DcatDistribution;
 import com.esri.gpt.framework.dcat.dcat.DcatDistributionList;
 import com.esri.gpt.framework.dcat.dcat.DcatRecord;
@@ -53,6 +54,15 @@ class DCATIteratorAdaptor implements Iterable<Publishable> {
     }
   }
 
+
+  /**
+   * Gets parsed DCAT version.
+   * @return version
+   */
+  public DcatVersion getDcatVersion() {
+    return adaptor.getDcatVersion();
+  }
+  
   /**
    * Closes adaptor.
    * <p>

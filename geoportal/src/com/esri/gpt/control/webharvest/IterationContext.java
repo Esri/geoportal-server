@@ -14,6 +14,9 @@
  */
 package com.esri.gpt.control.webharvest;
 
+import com.esri.gpt.framework.http.HttpClientRequest;
+import com.esri.gpt.framework.robots.Bots;
+
 /**
  * Harvest context.
  */
@@ -26,4 +29,23 @@ public interface IterationContext {
    * @param ex
    */
   void onIterationException(Exception ex);
+  
+  /**
+   * Factory method to create instance of {@link HttpClientRequest}
+   * @return instance of HttpClientRequest
+   */
+  HttpClientRequest newHttpClientRequest();
+  
+  /**
+   * Asserts access to the resource referenced by the url
+   * @param url url of the resource
+   * @throws AccessException if access denied
+   */
+  void assertAccess(String url) throws AccessException;
+  
+  /**
+   * Gets RobotsTxt if available.
+   * @return instance of robots txt or <code>null</code> if robots txt unavailable.
+   */
+  Bots getRobotsTxt();
 }

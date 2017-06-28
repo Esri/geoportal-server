@@ -17,13 +17,27 @@
 <%@ taglib prefix="f" uri="http://java.sun.com/jsf/core" %>
 <%@ taglib prefix="h" uri="http://java.sun.com/jsf/html" %>
 <%@taglib uri="http://www.esri.com/tags-gpt" prefix="gpt" %>
+<%@page import="com.esri.gpt.framework.context.*" %>
+<%@page import="com.esri.gpt.framework.util.Val" %>
+
 
 <f:verbatim>
-
 <style type="text/css">
 .actionColumnStyle {
   min-width: 10em;
 }
+<%
+  ApplicationContext appCtx = ApplicationContext.getInstance();
+  ApplicationConfiguration appCfg = appCtx.getConfiguration();
+  boolean duplicateEnabled = Val.chkBool(appCfg.getCatalogConfiguration().getParameters().getValue("catalog.enableDuplicate"),true);
+  if (!duplicateEnabled) {
+%>
+option[value='Duplicate'] {
+  display: none;
+}
+<%
+  }
+%>
 </style>
 <script type="text/javascript" language="Javascript">
 
@@ -114,6 +128,9 @@ function mmdOnActionButtonClicked() {
                      ).retrieveMessage("catalog.publication.manageMetadata.action.delete.confirm")%>";
   var sMsgApplyToAll = "<%=com.esri.gpt.framework.jsf.PageContext.extractMessageBroker(
                      ).retrieveMessage("catalog.publication.manageMetadata.action.applyToAll.confirm")%>";
+  // Error message fired when more than 1 record is selected for duplicating
+  var sMsgTooManyRecords = "<%=com.esri.gpt.framework.jsf.PageContext.extractMessageBroker(
+                     ).retrieveMessage("catalog.publication.manageMetadata.action.Duplicate.err.tooManyRecords")%>";
 
   var bContinue = false;
   var elForm = mmdFindForm();
@@ -128,6 +145,8 @@ function mmdOnActionButtonClicked() {
           var elTransfer = document.getElementById(elExecuteActionToAll.id+":mmdTransfer");
           var elAcl = document.getElementById(elExecuteActionToAll.id+":mmdAcl");
           var elAclToggle = document.getElementById(elExecuteActionToAll.id+":mmdAclToggle");
+          var elColUuid = document.getElementById(elExecuteActionToAll.id+":mmdSharingCollectionUuid");
+          console.warn("elColUuid",elColUuid);
           if ((elLaunch != null) && (elTransfer!=null) && (elAcl!=null) && (elAclToggle!=null)) {
             var action = dojo.byId("mmdForm:mmdAction");
             if (action==null) {
@@ -138,6 +157,9 @@ function mmdOnActionButtonClicked() {
               elTransfer.value   = dojo.query("#mmdForm\\:mmdTransfer").attr("value").join(",");
               elAcl.value        = dojo.query("#mmdForm\\:mmdAcl input:checked").attr("value").join("0x1E");
               elAclToggle.value  = dojo.query("#mmdForm\\:mmdAcclToggle").attr("value").join(",");
+              if (elColUuid != null) {
+                elColUuid.value = dojo.query("#mmdForm\\:mmdSharingCollectionUuid").attr("value").join(",");
+              }
               elLaunch.click();
             }
           }
@@ -157,6 +179,11 @@ function mmdOnActionButtonClicked() {
             if (sAction == "delete") {
               bContinue = confirm(sMsgDel);
             }
+		// Duplicate record: only one can be selected 
+		if((sAction=='duplicate')&&(sUuids.split(",").length > 1))
+		{	alert(sMsgTooManyRecords);
+			bContinue=false;
+		}            
           }
         }
     }
@@ -248,13 +275,13 @@ function mmdOnActionIconClicked(sAction,sUuid,sPublicationMethod) {
         elActionButton.click();
       } else if (sAction == "view") {
         var sUrl = "<%=request.getContextPath()+"/catalog/publication/downloadMetadata.jsp"%>";
-        sUrl += "?uuid="+sUuid+"&option=view";
+        sUrl += "?uuid="+encodeURIComponent(sUuid)+"&option=view";
         window.open(sUrl);
       } else if (sAction == "download") {
         var elFrame = document.getElementById("mmdDownloadFrame");
         if (elFrame != null) {
           var sUrl = "<%=request.getContextPath()+"/catalog/publication/downloadMetadata.jsp"%>";
-          sUrl += "?uuid="+sUuid;
+          sUrl += "?uuid="+encodeURIComponent(sUuid);
           elFrame.src = sUrl;
         }
 
@@ -622,6 +649,10 @@ function mmdClearAclSelection(){
        itemValue="assignAcl"
        itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.acl']}" 
        itemDisabled="#{ManageMetadataController.metadataAccessPolicyConfig.policyUnrestricted}"/>
+    <%// Duplicate command %>
+    <f:selectItem
+      itemValue="Duplicate"
+      itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.Duplicate']}"/>       
   </h:selectOneMenu>
 
   <% // action to perform - administrator %>
@@ -649,6 +680,15 @@ function mmdClearAclSelection(){
     <f:selectItem
       itemValue="transfer"
       itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.transfer']}"/>
+    <%// SetEditable commands%>
+    <f:selectItem
+      itemValue="setEditable"
+      itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.setEditable']}"/>
+    <%// Duplicate command %>
+    <f:selectItem
+      itemValue="Duplicate"
+      itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.Duplicate']}"
+      noSelectionOption="true"/>            
     <f:selectItem
       itemValue="delete"
       itemLabel="#{gptMsg['catalog.publication.manageMetadata.action.delete']}"/>
@@ -1056,6 +1096,7 @@ $(document).ready(function(){
     <h:inputHidden id="mmdTransfer"  value="#{ManageMetadataController.actionCriteria.transferToOwner}"/>
     <h:inputHidden id="mmdAcl"       value="#{ManageMetadataController.actionCriteria.metadataAccessPolicyString}"/>
     <h:inputHidden id="mmdAclToggle" value="#{ManageMetadataController.actionCriteria.toggleMetadataAccessPolicy}"/>
+    <h:inputHidden id="mmdSharingCollectionUuid" value="#{ManageMetadataController.actionCriteria.sharingCollectionUuid}"/>
     <h:inputHidden id="criteria"     value="#{ManageMetadataController.queryCriteriaAsEncrypedString}"/>
 </h:form>
 

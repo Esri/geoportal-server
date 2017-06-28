@@ -14,7 +14,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:ows="http://www.opengis.net/ows" xmlns:ows11="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:csw="http://www.opengis.net/cat/csw" xmlns:csw202="http://www.opengis.net/cat/csw/2.0.2" xmlns:wcs="http://www.opengis.net/wcs" xmlns:wcs11="http://www.opengis.net/wcs/1.1" xmlns:wcs111="http://www.opengis.net/wcs/1.1.1" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wms="http://www.opengis.net/wms" xmlns:wps100="http://www.opengis.net/wps/1.0.0" xmlns:sos10="http://www.opengis.net/sos/1.0" xmlns:sps="http://www.opengis.net/sps" xmlns:tml="http://www.opengis.net/tml" xmlns:sml="http://www.opengis.net/sensorML/1.0.1" xmlns:myorg="http://www.myorg.org/features" xmlns:swe="http://www.opengis.net/swe/1.0.1" xmlns:exslt="http://exslt.org/common">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:ows="http://www.opengis.net/ows" xmlns:ows11="http://www.opengis.net/ows/1.1" xmlns:ows20="http://www.opengis.net/ows/2.0" xmlns:gml="http://www.opengis.net/gml" xmlns:csw="http://www.opengis.net/cat/csw" xmlns:csw202="http://www.opengis.net/cat/csw/2.0.2" xmlns:csw300="http://www.opengis.net/cat/csw/3.0" xmlns:wcs="http://www.opengis.net/wcs" xmlns:wcs11="http://www.opengis.net/wcs/1.1" xmlns:wcs111="http://www.opengis.net/wcs/1.1.1" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wms="http://www.opengis.net/wms" xmlns:wps100="http://www.opengis.net/wps/1.0.0" xmlns:sos10="http://www.opengis.net/sos/1.0" xmlns:sps="http://www.opengis.net/sps" xmlns:tml="http://www.opengis.net/tml" xmlns:sml="http://www.opengis.net/sensorML/1.0.1" xmlns:myorg="http://www.myorg.org/features" xmlns:swe="http://www.opengis.net/swe/1.0.1" xmlns:exslt="http://exslt.org/common">
 	<xsl:param name="sourceUrl"/>
 	<xsl:param name="serviceType"/>
 	<xsl:output omit-xml-declaration="no" method="xml" indent="yes" encoding="UTF-8"/>
@@ -22,7 +22,7 @@
 		<xsl:call-template name="main"/>
 	</xsl:template>
 	<xsl:template name="main">
-		<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:dcmiBox="http://dublincore.org/documents/2000/07/11/dcmi-box/" xsl:exclude-result-prefixes="ows ows11 wms wps100 swe myorg tml sml sps sos10 wfs wcs wcs11 wcs111 csw csw202 gml">
+		<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:dcmiBox="http://dublincore.org/documents/2000/07/11/dcmi-box/" xsl:exclude-result-prefixes="ows ows11 wms wps100 swe myorg tml sml sps sos10 wfs wcs wcs11 wcs111 csw csw202 csw300 gml">
 			<rdf:Description>
 			  <xsl:attribute namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#" name="about">
 			    <xsl:value-of select="$sourceUrl"/>
@@ -30,6 +30,7 @@
 				<xsl:if test="							
 								//ows:ServiceIdentification/ows:Title | 		
 								//ows11:ServiceIdentification/ows11:Title | 
+								//ows20:ServiceIdentification/ows20:Title | 
 								/WMT_MS_Capabilities/Service/Title |
 								//wms:Service/wms:Title  |
 								//wfs:Service/wfs:Title | 
@@ -45,6 +46,7 @@
 					<dc:title>
 						<xsl:value-of select="//ows:ServiceIdentification/ows:Title | 		
 								//ows11:ServiceIdentification/ows11:Title | 
+								//ows20:ServiceIdentification/ows20:Title | 
 								/WMT_MS_Capabilities/Service/Title |
 								//wms:Service/wms:Title  |
 								//wfs:Service/wfs:Title | 
@@ -62,6 +64,7 @@
 								//Service/Abstract | 								 
 								//ows:ServiceIdentification/ows:Abstract | 
 								//ows11:ServiceIdentification/ows11:Abstract |
+								//ows20:ServiceIdentification/ows20:Abstract |
 								//Service/Abstract | 
 								//wfs:Service/wfs:Abstract |
 								//wms:Service/wms:Abstract | 
@@ -73,6 +76,7 @@
 						<xsl:value-of select="//Service/Abstract | 								 
 								//ows:ServiceIdentification/ows:Abstract | 
 								//ows11:ServiceIdentification/ows11:Abstract |
+								//ows20:ServiceIdentification/ows20:Abstract |
 								//Service/Abstract | 
 								//wfs:Service/wfs:Abstract |
 								//wms:Service/wms:Abstract | 
@@ -99,6 +103,7 @@
 				<xsl:for-each select="
 								//ows:ServiceProvider/ows:ProviderName | 
 								//ows11:ServiceProvider/ows11:ProviderName | 	
+								//ows20:ServiceProvider/ows20:ProviderName | 	
 								/WMT_MS_Capabilities/Service/ContactInformation/ContactPersonPrimary/ContactPerson |					 	       				                      //wcs:Service/wcs:responsibleParty/wcs:individualName |
 								//wcs11:Service/wcs11:responsibleParty/wcs11:individualName | 
 								//wcs111:Service/wcs111:responsibleParty/wcs111:individualName | 
@@ -121,7 +126,8 @@
 					<xsl:otherwise>
 						<xsl:for-each select="							
 									//ows:ServiceIdentification/ows:ServiceType | 
-									//ows11:ServiceIdentification/ows11:ServiceType">
+									//ows11:ServiceIdentification/ows11:ServiceType |
+                                    //ows20:ServiceIdentification/ows20:ServiceType">
 							<dc:type>
 								<xsl:value-of select="text()"/>
 							</dc:type>
@@ -131,6 +137,7 @@
 				<xsl:for-each select="							
 					            //ows:ServiceProvider/ows:ServiceContact/ows:IndividualName | 
 								//ows11:ServiceProvider/ows11:ServiceContact/ows11:IndividualName |
+								//ows20:ServiceProvider/ows20:ServiceContact/ows20:IndividualName |
 								//wms:Service//wms:ContactInformation/wms:ContactPersonPrimary/wms:ContactPerson">
 					<dc:creator>
 						<xsl:value-of select="text()"/>
@@ -144,6 +151,7 @@
 				<xsl:for-each select="			
 							//ows:ServiceIdentification/ows:Keywords/ows:Keyword |
 							//ows11:ServiceIdentification/ows11:Keywords/ows11:Keyword |
+							//ows20:ServiceIdentification/ows20:Keywords/ows20:Keyword |
 							/WMT_MS_Capabilities/Service/KeywordList/Keyword	|
 							//wms:Service/wms:KeywordList/wms:Keyword | 
 							//wcs:Service/wcs:keywords/wcs:keyword | 
@@ -162,6 +170,8 @@
 							//ows:Operation[@name='GetCapabilities']/ows:DCP/ows:HTTP/ows:Post/@xlink:href |
 							//ows11:Operation[@name='GetCapabilities']/ows11:DCP/ows11:HTTP/ows11:Get/@xlink:href |
 							//ows11:Operation[@name='GetCapabilities']/ows11:DCP/ows11:HTTP/ows11:Post/@xlink:href |
+							//ows20:Operation[@name='GetCapabilities']/ows20:DCP/ows20:HTTP/ows20:Get/@xlink:href |
+							//ows20:Operation[@name='GetCapabilities']/ows20:DCP/ows20:HTTP/ows20:Post/@xlink:href |
 							//wms:GetCapabilities/wms:DCPType/wms:HTTP/wms:Get/wms:OnlineResource/@xlink:href | 	
 							//wms:GetCapabilities/wms:DCPType/wms:HTTP/wms:Post/wms:OnlineResource/@xlink:href | 					           
 //wcs:Capability/wcs:Request/wcs:GetCapabilities/wcs:DCPType/wcs:HTTP/wcs:Get/wcs:OnlineResource/@xlink:href | 
@@ -188,7 +198,7 @@
 					</xsl:when>			
 				
 				<!-- WCS / WFS / SPS bounding box -->
-					<xsl:when test=" //ows:LowerCorner | //ows11:LowerCorner | //gml:LowerCorner | //gml:pos[1] | //gml:coord[1] | //gml:lowerCorner | //gml:Envelope[@srsName='EPSG:4326'] ">
+					<xsl:when test=" //ows:LowerCorner | //ows11:LowerCorner | //ows20:LowerCorner | //gml:LowerCorner | //gml:pos[1] | //gml:coord[1] | //gml:lowerCorner | //gml:Envelope[@srsName='EPSG:4326'] ">
 						<xsl:call-template name="OWS_WGS84BoundingBox"/>					
 					</xsl:when>
 				</xsl:choose>			
@@ -198,7 +208,7 @@
 			
 	<!-- OWS Bounding Box -->
 	<xsl:template name="OWS_WGS84BoundingBox">
-		<ows:WGS84BoundingBox xsl:exclude-result-prefixes="wms wps100 swe myorg tml sml sps sos10 wfs wcs wcs11 wcs111 csw csw202 gml">		
+		<ows:WGS84BoundingBox xsl:exclude-result-prefixes="wms wps100 swe myorg tml sml sps sos10 wfs wcs wcs11 wcs111 csw csw202 csw300 gml">		
 		<xsl:choose>	
 		<xsl:when test="/wms:WMS_Capabilities/@version = '1.3.0' or /WMS_Capabilities/@version = '1.3.0' or /wms:WMT_MS_Capabilities/@version = '1.3.0' or /WMT_MS_Capabilities/@version = '1.3.0' " >
 			<ows:LowerCorner>
@@ -286,7 +296,7 @@
 <!-- WMS Bounding Box -->
 	<xsl:template name="WMS_SummaryBoundingBox">
 		<xsl:param name="box"/>
-		<ows:WGS84BoundingBox xsl:exclude-result-prefixes="wps100 swe myorg tml sml sps sos10 wfs wcs wcs11 wcs111 csw csw202 gml">
+		<ows:WGS84BoundingBox xsl:exclude-result-prefixes="wps100 swe myorg tml sml sps sos10 wfs wcs wcs11 wcs111 csw csw202 csw300 gml">
 		<xsl:choose>	
 		<xsl:when test="/wms:WMS_Capabilities/@version = '1.3.0' or /WMS_Capabilities/@version = '1.3.0' or /wms:WMT_MS_Capabilities/@version = '1.3.0' or /WMT_MS_Capabilities/@version = '1.3.0' " >
 				<ows:LowerCorner>
@@ -316,7 +326,7 @@
 		</ows:WGS84BoundingBox>
 	</xsl:template>
 	<xsl:template name="WMS_BoundingBox">
-		<ows:WGS84BoundingBox xsl:exclude-result-prefixes="wps100 swe myorg tml sml sps sos10 wfs wcs wcs11 wcs111 csw csw202 gml">
+		<ows:WGS84BoundingBox xsl:exclude-result-prefixes="wps100 swe myorg tml sml sps sos10 wfs wcs wcs11 wcs111 csw csw202 csw300 gml">
 		<xsl:choose>	
 		<xsl:when test="/wms:WMS_Capabilities/@version = '1.3.0' or /WMS_Capabilities/@version = '1.3.0' or /wms:WMT_MS_Capabilities/@version = '1.3.0' or /WMT_MS_Capabilities/@version = '1.3.0' " >
 			<ows:LowerCorner>		
@@ -346,7 +356,7 @@
 		</ows:WGS84BoundingBox>
 	</xsl:template>
 	<xsl:template name="WMS_EX_GeographicBoundingBox">
-		<ows:WGS84BoundingBox xsl:exclude-result-prefixes="wps100 swe myorg tml sml sps sos10 wfs wcs wcs11 wcs111 csw csw202 gml">		
+		<ows:WGS84BoundingBox xsl:exclude-result-prefixes="wps100 swe myorg tml sml sps sos10 wfs wcs wcs11 wcs111 csw csw202 csw300 gml">		
 		 <ows:LowerCorner>
 				<xsl:call-template name="getWestBound"/>
 				<xsl:value-of select="' '"/>

@@ -128,6 +128,22 @@ class IsoDateTimeParser {
           cal.set(Calendar.SECOND, Integer.parseInt(r.read(2)));
           parseTimeZone(cal, timeZoneFlag, strDateTime, r);
         }
+        
+        if (r.peek(1).length()==1 && r.peek(1).equals(".")) {
+          r.read(1);
+          StringBuilder sb = new StringBuilder();
+          while (r.hasMore() && Character.isDigit(r.peek(1).charAt(0))) {
+            sb.append(r.read(1));
+          }
+          if (sb.length()>0) {
+            try {
+              double fraction = Double.parseDouble("0."+sb);
+              if (fraction>0) {
+                cal.set(Calendar.MILLISECOND, new Double(1000*fraction).intValue());
+              }
+            } catch (NumberFormatException ex) {}
+          }
+        }
       }
 
       if (r.hasMore()) {

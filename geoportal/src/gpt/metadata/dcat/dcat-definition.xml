@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<schema key="dcat" 
+        cswOutputSchema="http://www.w3.org/ns/dcat#" 
+        toEsriItemInfoXslt=""
+        editable="false">
+        
+  <!-- schema label -->
+  <label resourceKey="catalog.mdParam.schema.dcat"/>
+ 
+  <!-- schema namespaces -->
+  <namespace prefix="rdf" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+  <namespace prefix="dc" uri="http://purl.org/dc/elements/1.1/"/>
+  <namespace prefix="dct" uri="http://purl.org/dc/terms/"/>
+  <namespace prefix="pod" uri="http://project-open-data.cio.gov/v1.1/schema" />
+  <namespace prefix="dcat" uri="http://www.w3.org/ns/dcat#" />
+  <namespace prefix="dctype" uri="http://purl.org/dc/dcmitype/" />
+  <namespace prefix="foaf" uri="http://xmlns.com/foaf/0.1/" />
+  <namespace prefix="org" uri="http://www.w3.org/ns/org#" />
+  <namespace prefix="ows" uri="http://www.opengis.net/ows" />
+  <namespace prefix="rdfs" uri="http://www.w3.org/2000/01/rdf-schema#" />
+  <namespace prefix="skos" uri="http://www.w3.org/2004/02/skos/core#" />
+  <namespace prefix="vcard" uri="http://www.w3.org/2006/vcard/ns#" />
+
+  <!-- schema interrogation -->
+  <interrogation count="count(/rdf:RDF/dcat:dataset)"/>
+  
+  <!-- indexables -->
+  <indexables fileName="gpt/metadata/dcat/dcat-indexables.xml"/>
+  
+  <!-- Geoportal XML editor -->
+  <!--editor fileName="gpt/metadata/dcat/gxe/dcat-editor.xml"/--> 
+  
+  <!-- identification section -->
+  <section key="identification">
+    <label resourceKey="catalog.mdParam.identification.caption"/>
+    
+    <parameter key="identification.fileIdentifier">
+      <label resourceKey="catalog.mdParam.general.fileIdentifier"/>
+      <input type="text" size="50" maxlength="50" editable="false" 
+               defaultValue="#{EditMetadataController.newUuid}"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true"
+                 select="/rdf:RDF/dcat:dataset/dct:identifier"/> 
+    </parameter>
+
+    <parameter key="identification.title"> 
+      <label resourceKey="catalog.mdParam.identification.title"/>
+      <input type="text" maxlength="4000"/>
+      <validation required="true"/>
+      <content useSelectForUpdate="true"
+               select="/rdf:RDF/dcat:dataset/dct:title"/>
+    </parameter>
+    
+    <parameter key="description.abstract">
+      <label resourceKey="catalog.mdParam.description.abstract"/>
+      <input type="textArea"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/rdf:RDF/dcat:dataset/dct:description"/>
+    </parameter>
+    
+    <parameter key="identification.resourceURL">
+      <label resourceKey="catalog.mdParam.identification.service.connectPoint"/>
+      <input type="text" size="50" maxlength="4000" testResourceKey="catalog.publication.editMetadata.button.test.service"/>
+      <validation required="false" valueType="string"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/rdf:RDF/dcat:dataset/dcat:distribution/dcat:downloadURL" />
+    </parameter> 
+    
+    <parameter key="identification.resourceURL">
+      <label resourceKey="catalog.mdParam.identification.service.connectPoint"/>
+      <input type="text" size="50" maxlength="4000" testResourceKey="catalog.publication.editMetadata.button.test.service"/>
+      <validation required="false" valueType="string"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/rdf:RDF/dcat:dataset/dcat:distribution/dcat:accessURL" />
+    </parameter> 
+    
+    <!-- Originator  1:N  origin-->
+    <parameter key="identification.originator"> 
+      <label resourceKey="catalog.mdParam.citation.originator"/>
+      <input type="text" maxlength="255" defaultValue="#{EditMetadataController.userProfile['firstName'].value} #{EditMetadataController.userProfile['lastName'].value}"/>
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/rdf:RDF/dcat:dataset/dct:publisher/foaf:name"/>
+    </parameter>
+  
+    <!-- Publication Date pubdate -->
+    <parameter key="identification.publicationDate"> 
+      <label resourceKey="catalog.mdParam.citation.publicationDate"/>
+      <input type="text" size="20" maxlength="10" 
+             hintResourceKey="catalog.general.inputDateFormat"
+             defaultValue="#{EditMetadataController.now}"/>
+      <validation required="false" valueType="date"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/rdf:RDF/dcat:dataset/dct:modified"/>
+    </parameter> 
+           
+    <parameter key="metadata.language">
+      <label resourceKey="catalog.mdParam.general.metadataLanguage"/>
+      <input type="selectOneMenu" defaultValue="eng" />
+      <validation required="false"/>
+      <content useSelectForUpdate="true" deleteIfEmpty="true"
+                     select="/rdf:RDF/dcat:dataset/dct:language">
+        <codes>
+          <code key="ger" resourceKey="catalog.mdCode.language.iso639_2.ger"/>
+          <code key="dut" resourceKey="catalog.mdCode.language.iso639_2.dut"/>
+          <code key="eng" resourceKey="catalog.mdCode.language.iso639_2.eng"/>
+          <code key="fre" resourceKey="catalog.mdCode.language.iso639_2.fre"/>
+          <code key="ita" resourceKey="catalog.mdCode.language.iso639_2.ita"/>
+          <code key="kor" resourceKey="catalog.mdCode.language.iso639_2.kor"/>
+          <code key="lit" resourceKey="catalog.mdCode.language.iso639_2.lit"/>
+          <code key="nor" resourceKey="catalog.mdCode.language.iso639_2.nor"/>
+          <code key="pol" resourceKey="catalog.mdCode.language.iso639_2.pol"/>
+          <code key="por" resourceKey="catalog.mdCode.language.iso639_2.por"/>
+          <code key="rus" resourceKey="catalog.mdCode.language.iso639_2.rus"/>
+          <code key="spa" resourceKey="catalog.mdCode.language.iso639_2.spa"/>
+          <code key="swe" resourceKey="catalog.mdCode.language.iso639_2.swe"/>
+          <code key="tur" resourceKey="catalog.mdCode.language.iso639_2.tur"/>
+          <code key="chi" resourceKey="catalog.mdCode.language.iso639_2.chi"/>
+        </codes>
+      </content>
+    </parameter>			
+  </section>
+
+  <!-- theme section -->
+  <section key="theme">
+    <label resourceKey="catalog.mdParam.theme.caption"/>
+
+    <parameter key="theme.topics">
+      <label resourceKey="catalog.mdParam.theme.topics"/>
+      <input type="selectManyCheckbox"/>
+      <validation required="false"/>
+      <content nodeType="list" useSelectForUpdate="true" deleteIfEmpty="true"
+               select="/rdf:RDF/dcat:dataset/dcat:theme">
+        <codes>
+          <code key="boundaries"                       
+                resourceKey="catalog.mdCode.topic.boundaries"/>
+          <code key="farming"                          
+                resourceKey="catalog.mdCode.topic.farming"/>
+          <code key="climatologyMeteorologyAtmosphere" 
+                resourceKey="catalog.mdCode.topic.climatologyMeteorologyAtmosphere"/>
+          <code key="biota"                            
+                resourceKey="catalog.mdCode.topic.biota"/>
+          <code key="economy"                          
+                resourceKey="catalog.mdCode.topic.economy"/>
+          <code key="planningCadastre"                 
+                resourceKey="catalog.mdCode.topic.planningCadastre"/>
+          <code key="society"                          
+                resourceKey="catalog.mdCode.topic.society"/>
+          <code key="elevation"                        
+                resourceKey="catalog.mdCode.topic.elevation"/>
+          <code key="environment"                      
+                resourceKey="catalog.mdCode.topic.environment"/>
+          <code key="structure"                        
+                resourceKey="catalog.mdCode.topic.structure"/>
+          <code key="geoscientificInformation"         
+                resourceKey="catalog.mdCode.topic.geoscientificInformation"/>
+          <code key="health"                           
+                resourceKey="catalog.mdCode.topic.health"/>
+          <code key="imageryBaseMapsEarthCover"        
+                resourceKey="catalog.mdCode.topic.imageryBaseMapsEarthCover"/>
+          <code key="inlandWaters"                     
+                resourceKey="catalog.mdCode.topic.inlandWaters"/>
+          <code key="location"                         
+                resourceKey="catalog.mdCode.topic.location"/>
+          <code key="intelligenceMilitary"             
+                resourceKey="catalog.mdCode.topic.intelligenceMilitary"/>
+          <code key="oceans"                           
+                resourceKey="catalog.mdCode.topic.oceans"/>
+          <code key="transportation"                   
+                resourceKey="catalog.mdCode.topic.transportation"/>
+          <code key="utilitiesCommunication"           
+                resourceKey="catalog.mdCode.topic.utilitiesCommunication"/>
+        </codes>
+      </content>
+    </parameter> 
+        
+  </section>  
+ 
+  <!-- envelope section -->
+  <section key="envelope">
+    <label resourceKey="catalog.mdParam.envelope.caption"/> 
+    
+    <parameter key="envelope.west" meaning="envelope.west"> 
+      <label resourceKey="catalog.mdParam.envelope.west"/>
+      <input type="text" size="24" maxlength="24" defaultValue="-180"
+             hintResourceKey="catalog.general.inputLongitudeFormat"/>
+      <validation required="false" valueType="double"/>
+      <content nodeType="pairLeftValue"
+               select="concat(/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/westbc ,  substring-before(/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/ows:LowerCorner, ' '))"
+               update="/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/ows:LowerCorner"/> 
+    </parameter>
+    
+    <parameter key="envelope.east" meaning="envelope.east"> 
+      <label resourceKey="catalog.mdParam.envelope.east"/>
+      <input type="text" size="24" maxlength="24" defaultValue="180"
+             hintResourceKey="catalog.general.inputLongitudeFormat"/>
+      <validation required="false" valueType="double"/>
+      <content nodeType="pairLeftValue"
+               select="concat(/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/eastbc ,  substring-before(/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/ows:UpperCorner, ' '))"
+               update="/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/ows:UpperCorner"/> 
+    </parameter>
+    
+    <parameter key="envelope.north" meaning="envelope.north"> 
+      <label resourceKey="catalog.mdParam.envelope.north"/>
+      <input type="text" size="24" maxlength="24" defaultValue="90"
+             hintResourceKey="catalog.general.inputLatitudeFormat"/>
+      <validation required="false" valueType="double"/>
+      <content nodeType="pairRightValue"
+               select="concat(/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/northbc , substring-after(/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/ows:UpperCorner,' '))"
+               update="/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/ows:UpperCorner"/> 
+    </parameter>
+
+    <parameter key="envelope.south" meaning="envelope.south"> 
+      <label resourceKey="catalog.mdParam.envelope.south"/>
+      <input type="text" size="24" maxlength="24" defaultValue="-90"
+             hintResourceKey="catalog.general.inputLatitudeFormat"/>
+      <validation required="false" valueType="double" />
+      <content nodeType="pairRightValue"
+               select="concat(/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/southbc, substring-after(/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/ows:LowerCorner,' '))"
+               update="/rdf:RDF/rdf:Description/ows:WGS84BoundingBox/ows:LowerCorner"/>  
+    </parameter>
+    
+    <!--  interactive map -->
+    <section key="envelope.map.container">
+      <parameter key="envelope.map"> 
+        <input type="map"/>
+      </parameter>
+    </section>
+
+  </section>
+</schema>

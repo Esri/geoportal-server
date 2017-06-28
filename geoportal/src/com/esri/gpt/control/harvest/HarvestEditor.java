@@ -27,6 +27,7 @@ import com.esri.gpt.control.webharvest.client.arcgis.ArcGISProtocol;
 import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
+import com.esri.gpt.framework.robots.BotsMode;
 import com.esri.gpt.control.webharvest.validator.IValidator;
 import com.esri.gpt.control.webharvest.validator.MessageCollectorAdaptor;
 import com.esri.gpt.control.webharvest.validator.ValidatorFactory;
@@ -233,6 +234,24 @@ public boolean getAutoApprove() {
  */
 public void setAutoApprove(boolean enabled) {
   ProtocolInvoker.setAutoApprove(_harvestRepository.getProtocol(), enabled);
+}
+
+/**
+ * Checks if another attempt to publish as "draft" should be made if first attempt failed validation.
+ * first attempt failed.
+ * @return <code>true</code> if another attempt should be made
+ */
+public boolean getRetryAsDraft() {
+  return ProtocolInvoker.getRetryAsDraft(_harvestRepository.getProtocol());
+}
+
+
+/**
+ * Allows to make another attempt to publish as a draft if first attempt failed validation.
+ * @param retryAsDraft <code>true</code> if another attempt should be made
+ */
+public void setRetryAsDraft(boolean retryAsDraft) {
+  ProtocolInvoker.setRetryAsDraft(_harvestRepository.getProtocol(), retryAsDraft);
 }
 
 /**
@@ -489,6 +508,22 @@ public String getTimeCodes() {
  */
 public void setTimeCodes(String timeCodes) {
   _harvestRepository.getProtocol().setAdHoc(timeCodes);
+}
+
+/**
+ * Gets robots.txt mode.
+ * @return robots.txt mode.
+ */
+public String getRobotsTxtMode() {
+  return ProtocolInvoker.getRobotsTxtMode(_harvestRepository.getProtocol()).name();
+}
+
+/**
+ * Sets robots.txt mode.
+ * @param robotsTxtMode robots.txt mode
+ */
+public void setRobotsTxtMode(String robotsTxtMode) {
+  ProtocolInvoker.setRobotsTxtMode(_harvestRepository.getProtocol(), BotsMode.parseMode(robotsTxtMode));
 }
 
 /**

@@ -495,5 +495,14 @@ public class Val {
         }
         return sb.toString();
     }
+    
+    public static String stripHttpProtocol(String url, String replacement) {
+      url = chkStr(url);
+      return url.replaceAll("^[hH][tT][tT][pP]?:", replacement);
+    }
+    
+    public static String stripHttpProtocol(String url) {
+      return stripHttpProtocol(url, "");
+    }
 
 }

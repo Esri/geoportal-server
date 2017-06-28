@@ -14,13 +14,13 @@
  */
 package com.esri.gpt.control.webharvest.client.oai;
 
+import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.XmlHandler;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.NodeListAdapter;
 import com.esri.gpt.framework.xml.XmlIoUtil;
-import com.esri.gpt.server.csw.client.NullReferenceException;
 import java.io.IOException;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
@@ -41,21 +41,27 @@ class OaiProxy {
 private static final Logger LOGGER = Logger.getLogger(OaiProxy.class.getCanonicalName());
 /** service info */
 private OaiInfo info;
+/** iteration context */
+private IterationContext context;
 
 /**
  * Creates instance of the proxy.
  * @param info service info
+ * @param context iteration context
  */
-public OaiProxy(OaiInfo info) {
+public OaiProxy(OaiInfo info, IterationContext context) {
   if (info==null) throw new IllegalArgumentException("No info provided.");
+  if (context==null) throw new IllegalArgumentException("No context provided.");
   this.info = info;
+  this.context = context;
 }
 
 public String read(String sourceUri) throws IOException {
   LOGGER.finer("Reading metadata of source URI: \"" +sourceUri+ "\" through proxy: "+this);
   try {
     sourceUri = Val.chkStr(sourceUri).replaceAll("\\{", "%7B").replaceAll("\\}", "%7D");
-    HttpClientRequest cr = new HttpClientRequest();
+    context.assertAccess(sourceUri);
+    HttpClientRequest cr = context.newHttpClientRequest();
     cr.setUrl(info.newReadMetadataUrl(sourceUri));
     XmlHandler sh = new XmlHandler(false);
     cr.setContentHandler(sh);

@@ -15,6 +15,7 @@
  */
 package com.esri.gpt.catalog.harvest.protocols;
 
+import com.esri.gpt.agp.client.AgpClient;
 import com.esri.gpt.agp.client.AgpConnection;
 import com.esri.gpt.agp.client.AgpCredentials;
 import com.esri.gpt.agp.client.AgpSearchCriteria;
@@ -28,14 +29,19 @@ import com.esri.gpt.control.webharvest.engine.DataProcessor;
 import com.esri.gpt.control.webharvest.engine.ExecutionUnit;
 import com.esri.gpt.control.webharvest.engine.Executor;
 import com.esri.gpt.control.webharvest.engine.IWorker;
+import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
+import com.esri.gpt.framework.http.HttpClientRequest;
+import com.esri.gpt.framework.http.crawl.HttpCrawlRequest;
 import com.esri.gpt.framework.resource.api.Native;
 import com.esri.gpt.framework.resource.query.Capabilities;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
+import com.esri.gpt.framework.robots.Bots;
+import static com.esri.gpt.framework.robots.BotsUtils.readBots;
 import com.esri.gpt.framework.util.Val;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -84,9 +90,15 @@ public class HarvestProtocolAgp2Agp extends AbstractHTTPHarvestProtocol {
    */
   public AgpSource getSource() {
     StringAttributeMap attrs = getAttributeMap();
-
+    
     AgpSource source = new AgpSource();
-    AgpConnection con1 = new AgpConnection();
+    
+    Bots robotsTxt = readBots(
+            ProtocolInvoker.getRobotsTxtMode(this),
+            getSourceHost()
+    );
+    AgpConnection con1 = new CrawlAgpConnection(robotsTxt);
+    
     HostContextPair pair = HostContextPair.makeHostContextPair(getSourceHost());
     con1.setHost(pair.getHost());
     con1.setWebContext(pair.getContext());
@@ -262,6 +274,25 @@ public static Long getAgp2AgpMaxItems() {
     protected boolean isSuspended() {
       return worker.isSuspended();
     }
+  }
+  
+  private static class CrawlAgpConnection extends AgpConnection {
+    private final Bots robotsTxt;
+
+    public CrawlAgpConnection(Bots robotsTxt) {
+      this.robotsTxt = robotsTxt;
+    }
+    
+    @Override
+    protected AgpClient newAgpClient() {
+      return new AgpClient() {
+        @Override
+        protected HttpClientRequest newHttpClientRequest() {
+          return new HttpCrawlRequest(robotsTxt);
+        }
+      };
+    }
+    
   }
 
 }

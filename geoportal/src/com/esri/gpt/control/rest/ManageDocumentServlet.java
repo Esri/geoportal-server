@@ -32,6 +32,7 @@ import com.esri.gpt.catalog.schema.ValidationException;
 import com.esri.gpt.control.webharvest.client.arcgis.ArcGISProtocol;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
+import com.esri.gpt.framework.robots.BotsMode;
 import com.esri.gpt.framework.collection.StringAttribute;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.context.ApplicationConfiguration;
@@ -617,6 +618,7 @@ public class ManageDocumentServlet extends BaseServlet {
     boolean updateContent = true;
     boolean updateDefinition = true;
     boolean autoApprove = true;
+    BotsMode robotsTxtMode = BotsMode.getDefault();
 
     for (String paramName : new EnumerationAdapter<String>(request.getParameterNames())) {
       String paramValue = request.getParameter(paramName);
@@ -662,6 +664,9 @@ public class ManageDocumentServlet extends BaseServlet {
       else if (paramName.equalsIgnoreCase("synchronizable")) {
         record.setSynchronizable(Val.chkBool(paramValue, true));
       }
+      else if (paramName.equalsIgnoreCase("robotstxtmode")) {
+        robotsTxtMode = BotsMode.parseMode(paramValue);
+      }
       else {
         attributes.add(new StringAttribute(paramName,paramValue));
       }
@@ -679,6 +684,7 @@ public class ManageDocumentServlet extends BaseServlet {
       ProtocolInvoker.setUpdateDefinition(record.getProtocol(), updateDefinition);
       ProtocolInvoker.setUpdateContent(record.getProtocol(), updateContent);
       ProtocolInvoker.setAutoApprove(record.getProtocol(), autoApprove);
+      ProtocolInvoker.setRobotsTxtMode(record.getProtocol(), robotsTxtMode);
     }
 
     record = record.getName().length()>0 && record.getHostUrl().length()>0 && record.getProtocol()!=null? record: null;

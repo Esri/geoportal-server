@@ -42,6 +42,12 @@ public interface DcatRecord {
    */
   List<String> getKeywords();
   /**
+   * Gets themes
+   * @return list of themes
+   */
+  List<String> getThemes();
+  
+  /**
    * Gets modified date.
    * @return modified date
    */
@@ -50,7 +56,9 @@ public interface DcatRecord {
    * Gets publisher.
    * @return publisher
    */
-  String getPublisher();
+//  String getPublisher();
+  DcatPublisher getPublisher();
+  
   /**
    * Gets contact point.
    * @return contact point
@@ -67,15 +75,15 @@ public interface DcatRecord {
    */
   String getAccessLevel();
   /**
-   * Gets bureau code.
-   * @return bureau code
+   * Gets bureau codes.
+   * @return bureau codes
    */
-  String getBureauCode();
+  List<String> getBureauCodes();
   /**
-   * Gets program code.
-   * @return program code
+   * Gets program codes.
+   * @return program codes
    */
-  String getProgramCode();
+  List<String> getProgramCodes();
   /**
    * Gets license.
    * @return license
@@ -125,7 +133,7 @@ public interface DcatRecord {
    * Gets described by type.
    * @return described by type
    */
-  String getdescribedByType();
+  String getDescribedByType();
   /**
    * Gets collection of which record is a subset.
    * @return collection of which record is a subset
@@ -140,7 +148,7 @@ public interface DcatRecord {
    * Gets language.
    * @return language
    */
-  String getLanguage();
+  List<String> getLanguages();
   /**
    * Gets landing page.
    * @return landing page
@@ -166,6 +174,11 @@ public interface DcatRecord {
    * @return theme
    */
   String getTheme();
+  /**
+   * Gets isPartOf.
+   * @return isPartOf
+   */
+  String getIsPartOf();
  
 
   /**

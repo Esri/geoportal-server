@@ -14,6 +14,7 @@
  */
 package com.esri.gpt.control.webharvest.protocol;
 
+import com.esri.gpt.framework.robots.BotsMode;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRConnectionException;
 import com.esri.gpt.catalog.harvest.clients.exceptions.HRInvalidProtocolException;
 import java.io.IOException;
@@ -31,6 +32,8 @@ public class ProtocolInvoker {
   private static final int XML_GENERATION_FLAG = 1;
   private static final int AUTO_APPROVE_FLAG = 2;
   private static final int LOCK_TITLE_FLAG = 3;
+  private static final int ROBOTS_MODE = 4;
+  private static final int RETRY_AS_DRAFT_FLAG = 6;
 
   /**
    * Invokes ping on the protocol.
@@ -136,6 +139,25 @@ public class ProtocolInvoker {
   }
   
   /**
+   * Checks if another attempt to publish as "draft" should be made if first attempt failed validation.
+   * first attempt failed.
+   * @param protocol protocol
+   * @return <code>true</code> if another attempt should be made
+   */
+  public static boolean getRetryAsDraft(Protocol protocol) {
+    return getFlag(protocol.getFlags(), RETRY_AS_DRAFT_FLAG);
+  }
+  
+  /**
+   * Allows to make another attempt to publish as a draft if first attempt failed validation.
+   * @param protocol protocol
+   * @param retryAsDraft <code>true</code> if another attempt should be made
+   */
+  public static void setRetryAsDraft(Protocol protocol, boolean retryAsDraft) {
+    protocol.setFlags(setFlag(protocol.getFlags(), RETRY_AS_DRAFT_FLAG, retryAsDraft));
+  }
+  
+  /**
    * Gets protocol destinations.
    * @param protocol protocol
    * @return list of protocol destinations or <code>null</code>
@@ -164,6 +186,42 @@ public class ProtocolInvoker {
     }
   }
 
+  /**
+   * Sets robots.txt mode.
+   * @param protocol protocol
+   * @param mode mode
+   */
+  public static void setRobotsTxtMode(Protocol protocol, BotsMode mode) {
+    mode = mode!=null? mode: BotsMode.getDefault();
+    
+    boolean lb = ((mode.ordinal() & 0x01) == 0x01);
+    boolean hb = ((mode.ordinal()>>1 & 0x01) == 0x01);
+    
+    
+    protocol.setFlags(setFlag(protocol.getFlags(),ROBOTS_MODE, lb));
+    protocol.setFlags(setFlag(protocol.getFlags(),ROBOTS_MODE+1, hb));
+  }
+  
+  /**
+   * Gets robots.txt mode.
+   * @param protocol protocol
+   * @return mode
+   */
+  public static BotsMode getRobotsTxtMode(Protocol protocol) {
+    boolean lb = getFlag(protocol.getFlags(), ROBOTS_MODE);
+    boolean hb = getFlag(protocol.getFlags(), ROBOTS_MODE+1);
+    
+    int mode = 0;
+    mode = (mode<<1) | (hb? 0x01: 0x00);
+    mode = (mode<<1) | (lb? 0x01: 0x00);
+    
+    if (mode < BotsMode.values().length) {
+      return BotsMode.values()[mode];
+    }
+    
+    return BotsMode.getDefault();
+  }
+  
   /**
    * Gets state of the specific flag.
    * @param bits bits representing flag set

@@ -17,7 +17,6 @@ package com.esri.gpt.control.webharvest.client.atom;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
@@ -30,14 +29,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.esri.gpt.catalog.schema.NamespaceContextImpl;
-import com.esri.gpt.catalog.schema.Namespaces;
+import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.XmlHandler;
 import com.esri.gpt.framework.resource.api.Native;
 import com.esri.gpt.framework.resource.api.SourceUri;
 import com.esri.gpt.framework.resource.common.CommonPublishable;
 import com.esri.gpt.framework.resource.common.UrlUri;
+import com.esri.gpt.framework.robots.Bots;
 import com.esri.gpt.framework.util.ResourceXml;
 import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
@@ -52,21 +51,27 @@ class AtomProxy {
 private static final Logger LOGGER = Logger.getLogger(AtomProxy.class.getCanonicalName());
 /** service info */
 private BaseAtomInfo info;
+/** iteration context */
+private IterationContext context;
 
 /**
  * Creates instance of the proxy.
  * @param info service info
+ * @param context iteration context
  */
-public AtomProxy(BaseAtomInfo info) {
+public AtomProxy(BaseAtomInfo info, IterationContext context) {
   if (info==null) throw new IllegalArgumentException("No info provided.");
+  if (context==null) throw new IllegalArgumentException("No context provided.");
   this.info = info;
+  this.context = context;
 }
 
 public String read(String sourceUri) throws IOException {
   LOGGER.finer("Reading metadata of source URI: \"" +sourceUri+ "\" through proxy: "+this);
   try {
     sourceUri = Val.chkStr(sourceUri).replaceAll("\\{", "%7B").replaceAll("\\}", "%7D");
-    HttpClientRequest cr = new HttpClientRequest();
+    context.assertAccess(sourceUri);
+    HttpClientRequest cr = context.newHttpClientRequest();
     cr.setUrl(info.newReadMetadataUrl(sourceUri));
     XmlHandler sh = new XmlHandler(false);
     cr.setContentHandler(sh);
@@ -130,7 +135,7 @@ private class NativeImpl extends CommonPublishable implements Native {
     @Override
   public String getContent() throws IOException, SAXException {
     ResourceXml resourceXml = new ResourceXml();
-    String feedXml = resourceXml.makeResourceXmlFromResponse(info.getUrl().replaceAll("\\{", "'").replaceAll("\\}","'"));
+    String feedXml = resourceXml.makeResourceXmlFromResponse(context.getRobotsTxt(), info.getUrl().replaceAll("\\{", "'").replaceAll("\\}","'"));
     Document fDom = null;
 	try {
 		fDom = DomUtil.makeDomFromString(feedXml, true);

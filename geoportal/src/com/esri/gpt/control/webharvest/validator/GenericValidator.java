@@ -47,7 +47,7 @@ abstract class GenericValidator implements IValidator {
       HttpClientRequest httpRequest = new HttpClientRequest();
       httpRequest.setUrl(url);
       httpRequest.setCredentialProvider(getCredentialProvider());
-      httpRequest.setContentHandler(new StringHandler());
+      httpRequest.setContentHandler(new ValidatorHandler());
       httpRequest.execute();
       return true;
     } catch (IOException ex) {
@@ -65,4 +65,12 @@ abstract class GenericValidator implements IValidator {
     return null;
   }
   
+  private static class ValidatorHandler extends StringHandler {
+
+    @Override
+    public boolean onBeforeReadResponse(HttpClientRequest request) {
+      return false;
+    }
+    
+  }
 }

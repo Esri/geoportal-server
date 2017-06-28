@@ -27,6 +27,7 @@ import com.esri.gpt.control.webharvest.engine.DataProcessor;
 import com.esri.gpt.control.webharvest.engine.ExecutionUnit;
 import com.esri.gpt.control.webharvest.engine.Executor;
 import com.esri.gpt.control.webharvest.engine.IWorker;
+import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.resource.api.Native;
 import com.esri.gpt.framework.resource.query.Capabilities;
@@ -58,7 +59,9 @@ public class HarvestProtocolAgs2Agp extends AbstractHTTPHarvestProtocol {
             attrs.getValue("ags-src-restUrl"),
             attrs.getValue("ags-src-soapUrl"),
             attrs.getValue("ags-src-userName"),
-            attrs.getValue("ags-src-userPassword"));
+            attrs.getValue("ags-src-userPassword"), 
+            ProtocolInvoker.getRobotsTxtMode(this)
+    );
   }
   
   /**

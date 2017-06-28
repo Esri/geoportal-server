@@ -27,6 +27,8 @@ import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
 import com.esri.gpt.framework.security.identity.IdentityAdapter;
 import com.esri.gpt.framework.security.identity.IdentityException;
 import com.esri.gpt.framework.security.identity.local.LocalDao;
+import com.esri.gpt.framework.security.principal.Group;
+import com.esri.gpt.framework.security.principal.Groups;
 import com.esri.gpt.framework.security.principal.Role;
 import com.esri.gpt.framework.security.principal.RoleSet;
 import com.esri.gpt.framework.security.principal.Roles;
@@ -34,6 +36,7 @@ import com.esri.gpt.framework.security.principal.User;
 import com.esri.gpt.framework.security.principal.Users;
 
 import java.net.InetAddress;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
@@ -222,7 +225,12 @@ public class PortalIdentityAdapter extends IdentityAdapter {
 	@Override
 	public void readUserGroups(User user)
 	  throws IdentityException, NamingException, SQLException {
-	  // Not implemented.
+		// TODO if admin read all groups?
+	  if (user.getDistinguishedName() == "*" && this.getRequestContext() != null) {
+	  	if (this.getRequestContext().getUser() != null) {
+	  		user.setGroups(this.getRequestContext().getUser().getGroups());
+	  	}
+	  }
 	}
 	
 	/**
@@ -291,6 +299,8 @@ public class PortalIdentityAdapter extends IdentityAdapter {
     user.reset();
 		try {
 			String referer = null;
+			//Decode username from response, not-required change was made to oauthResponse.jsp
+		  //username = URLDecoder.decode(username,"UTF-8");
 			executeGetUser(user,token,username,referer);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -344,7 +354,8 @@ public class PortalIdentityAdapter extends IdentityAdapter {
 		boolean hasOrgUserRole = false;
 		
     String restBaseUrl = this.getRestBaseUrl();
-    String url = restBaseUrl+"community/users/"+URLEncoder.encode(username,"UTF-8");
+    //String url = restBaseUrl+"community/users/"+URLEncoder.encode(username,"UTF-8");
+    String url = restBaseUrl+"community/self/";
     url += "?f=json&token="+URLEncoder.encode(token,"UTF-8");
     
 		//System.err.println("userUrl="+url);
@@ -361,6 +372,8 @@ public class PortalIdentityAdapter extends IdentityAdapter {
 		//System.err.println(handler.getContent());
     
     String sResponse = handler.getContent();
+    //System.err.println("username="+username);
+    //System.err.println("response="+sResponse);
     JSONObject jsoResponse = new JSONObject(sResponse);
     if (jsoResponse.has("error") && (!jsoResponse.isNull("error"))) {
     	LOGGER.warning(sResponse);
@@ -369,6 +382,8 @@ public class PortalIdentityAdapter extends IdentityAdapter {
     if (!jsoResponse.has("username") || (jsoResponse.isNull("username"))) {
     	LOGGER.warning("No username. "+sResponse);
     	return;
+    } else {
+    	username = jsoResponse.getString("username");
     }
     
     user.setDistinguishedName(username);
@@ -376,13 +391,14 @@ public class PortalIdentityAdapter extends IdentityAdapter {
     user.setName(username);
     user.getProfile().setUsername(username);
     user.getAuthenticationStatus().setWasAuthenticated(true);
+    user.setGroups(new Groups());
 
   	if (jsoResponse.has("role") && (!jsoResponse.isNull("role"))) {
   	  // "role": "org_admin"  "org_publisher" or "org_user"
   		String role = jsoResponse.getString("role");
-  		if (role.equals("org_admin")) hasOrgAdminRole = true;
-  		if (role.equals("org_publisher")) hasOrgPubRole = true;
-  		if (role.equals("org_user")) hasOrgUserRole = true;
+      if (role.equals("org_admin") || role.equals("account_admin")) hasOrgAdminRole = true;
+      if (role.equals("org_publisher") || role.equals("account_publisher")) hasOrgPubRole = true;
+      if (role.equals("org_user") || role.equals("account_user")) hasOrgUserRole = true;
   	}
   	if (jsoResponse.has("email") && (!jsoResponse.isNull("email"))) {
   		user.getProfile().setEmailAddress(jsoResponse.getString("email"));
@@ -391,7 +407,7 @@ public class PortalIdentityAdapter extends IdentityAdapter {
   		JSONArray jsoGroups = jsoResponse.getJSONArray("groups");
       for (int i=0;i<jsoGroups.length();i++) {
       	JSONObject jsoGroup = jsoGroups.getJSONObject(i);
-        String groupId = jsoGroup.getString("id");
+      	String groupId = jsoGroup.getString("id");
         if ((adminGroupId != null) && (adminGroupId.length() > 0) && adminGroupId.equals(groupId)) {
         	isInAdminGroup = true;
         }
@@ -399,6 +415,15 @@ public class PortalIdentityAdapter extends IdentityAdapter {
         	isInPubGroup = true;
         }
         //System.err.println("groupId="+groupId); 
+        if (jsoGroup.has("title") && (!jsoGroup.isNull("title"))) {
+        	String groupName = jsoGroup.getString("title");
+        	//System.err.println("groupName="+groupName); 
+        	Group group = new Group();
+        	group.setKey(groupId);
+        	group.setDistinguishedName(group.getKey());
+        	group.setName(groupName);
+        	user.getGroups().add(group);
+        }
       }
   	}
     	
@@ -419,6 +444,8 @@ public class PortalIdentityAdapter extends IdentityAdapter {
     	if (hasOrgPubRole) isPublisher = true;
     }
     
+    //System.err.println("isAdmin="+isAdmin);
+    
     RoleSet authRoles = user.getAuthenticationStatus().getAuthenticatedRoles();
     Roles cfgRoles = getApplicationConfiguration().getIdentityConfiguration().getConfiguredRoles();
     for (Role role: cfgRoles.values()) {
@@ -437,8 +464,11 @@ public class PortalIdentityAdapter extends IdentityAdapter {
 	
 	private String getRestBaseUrl() {
     String authorizeUrl = this.getAuthorizeUrl();
-    String restBaseUrl = authorizeUrl.substring(0,authorizeUrl.indexOf("/oauth2/"))+"/rest/";
-    return restBaseUrl;
+    //String restBaseUrl = authorizeUrl.substring(0,authorizeUrl.indexOf("/oauth2/"))+"/rest/";
+    if (authorizeUrl.indexOf("/sharing/oauth2/") > 0) {
+      return authorizeUrl.substring(0,authorizeUrl.indexOf("/sharing/oauth2/"))+"/sharing/rest/";
+    }
+    return authorizeUrl.substring(0,authorizeUrl.indexOf("/sharing/rest/oauth2/"))+"/sharing/rest/";
 	}
 	
 	private String getThisReferer() {

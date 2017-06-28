@@ -22,10 +22,10 @@ import com.esri.gpt.control.georss.IFeedAttribute;
 import com.esri.gpt.control.georss.IFeedAttribute.FeedList;
 import com.esri.gpt.control.georss.IFeedRecord;
 import static com.esri.gpt.control.georss.dcatdef.DcatFieldDefinition.OBLIGATORY;
-import com.esri.gpt.framework.isodate.IsoDateFormat;
 import com.esri.gpt.framework.util.Val;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -40,7 +40,7 @@ import java.util.logging.Logger;
  */
 public class TemporalField extends BaseDcatField {
   private static final Logger LOGGER = Logger.getLogger(TemporalField.class.getCanonicalName());
-  protected static final IsoDateFormat ISODF = new IsoDateFormat();
+  private static final String DATE_FORMAT = "yyyy-MM-dd";
 
   /**
    * Creates instance of the class.
@@ -84,28 +84,76 @@ public class TemporalField extends BaseDcatField {
   /**
    * Reads value.
    * @param attr attribute
-   * @param field field
    * @return value
    */
-  protected List<Date> readValue(IFeedAttribute attr,DcatField field) {
+  protected List<Date> readValuesAsDate(IFeedAttribute attr) {
     ArrayList<Date> dates = new ArrayList<Date>();
     List valueList = (List)attr.getValue();
     
-    try {
-      for (Object v: valueList) {
-        String value = ((IFeedAttribute)v).simplify().getValue().toString();
-        long lValue = Long.parseLong(value);
-        if (lValue>=0) {
-          Date date = new Date(lValue);
-          dates.add(date);
+    for (Object v: valueList) {
+      try {
+        Date date = readValueAsDate((IFeedAttribute) v);
+        if (date!=null) {
+          dates.add(date); 
         }
+      } catch (NumberFormatException ex) {
+
+      } catch (ClassCastException ex) {
+        
       }
-    } catch (NumberFormatException ex) {
-      
     }
+      
     return dates.size()==2? dates: null;
   }
   
+  /**
+   * Reads value.
+   * @param attr attribute
+   * @return value
+   */
+  protected List<String> readValuesAsString(IFeedAttribute attr) {
+    ArrayList<String> dates = new ArrayList<String>();
+    List valueList = (List)attr.getValue();
+    
+    for (Object v: valueList) {
+      try {
+        String date = readValueAsString(attr);
+        if (date!=null) {
+          dates.add(date); 
+        }
+      } catch (NumberFormatException ex) {
+
+      }
+    }
+      
+    return dates.size()==2? dates: null;
+  }
+    
+  /**
+   * Reads date as date.
+   *
+   * @param attr attribute
+   * @return date
+   */
+  protected Date readValueAsDate(IFeedAttribute attr) {
+    try {
+      String value = readValueAsString(attr);
+      return new Date(Long.parseLong(value));
+    } catch (NumberFormatException ex) {
+      return null;
+    }
+  }
+  
+  /**
+   * Reads date as string.
+   *
+   * @param attr attribute
+   * @return date
+   */
+  protected String readValueAsString(IFeedAttribute attr) {
+    return attr.simplify().getValue().toString();
+  }
+
   /**
    * Reads default value.
    * @param properties properties
@@ -139,31 +187,49 @@ public class TemporalField extends BaseDcatField {
     }
     IFeedAttribute attr = getFeedAttribute(index, field);
     
-    List<Date> value;
+    List<Date> dateValue = null;
+    List<String> stringValue = null;
+    
     if (attr==null) {
       if ((flags.provide(r, attr, properties) & OBLIGATORY)!=0) {
-        value = getDefaultValue(properties);
+        dateValue = getDefaultValue(properties);
       } else {
         return;
       }
     } else {
-      value = readValue(attr,field);
-    }
-    
-    if (value==null) return;
-    
-    ArrayList<String>  strDates = new ArrayList<String>();
-    for (Date date: value) {
-      try {
-        strDates.add(ISODF.format(date));
-      } catch (IllegalArgumentException ex) {
-        LOGGER.log(Level.FINE, "Invalid date format", ex);
+      if ("date".equals(field.getType().toLowerCase())) {
+        dateValue = readValuesAsDate(attr);
+      } else if ("string".equals(field.getType().toLowerCase())) {
+        stringValue = readValuesAsString(attr);
       }
     }
+
+    if (dateValue!=null) {
+      String dateFormat = Val.chkStr(field.getDateFormat(),DATE_FORMAT);
+      SimpleDateFormat DF = new SimpleDateFormat(dateFormat);
+
+      stringValue = new ArrayList<String>();
+      for (Date date: dateValue) { 
+    	    Calendar cal = Calendar.getInstance();
+    	           cal.setTime(date);
+    	           if (cal.get(Calendar.YEAR)>9999) {
+    	             LOGGER.log(Level.FINE, "Invalid date format");
+    	             stringValue.add(DF.format(new Date()));
+    	             continue;
+    	           }
     
-    if (strDates.isEmpty()) return;
+    	           try {
+    	               stringValue.add(DF.format(date));
+    	               } catch (IllegalArgumentException ex) {
+    	               LOGGER.log(Level.FINE, "Invalid date format", ex);
+    	              stringValue = null;
+    	              break;
+    	             }
+    	           }
+    	         }
+if (stringValue==null || stringValue.isEmpty()) return;
     
-    String temporal = Val.join(strDates.toArray(new String[strDates.size()]), field.getDelimiter());
+    String temporal = Val.join(stringValue.toArray(new String[stringValue.size()]), field.getDelimiter());
     
     jsonWriter.name(getOutFieldName()).value(temporal);
   }

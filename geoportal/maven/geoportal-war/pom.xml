@@ -1,0 +1,174 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  
+  <parent>
+    <groupId>com.esri.gpt</groupId>
+    <artifactId>geoportal</artifactId>
+    <version>1.2.7-SNAPSHOT</version>
+  </parent>
+    
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>geoportal-war</artifactId>
+  <packaging>war</packaging>
+  <name>Geoportal WAR</name>
+
+  <properties>
+    <gpt.endorsed.dir>${user.home}/geoportal/endorsed</gpt.endorsed.dir>
+    <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>geoportal-jar</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-web-api</artifactId>
+      <version>6.0</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <!-- build for default profile -->
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+          <compilerArguments>
+            <endorseddirs>${endorsed.dir}</endorseddirs>
+          </compilerArguments>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <warSourceDirectory>${project.basedir}/../../www</warSourceDirectory>
+          <warName>geoportal-${project.version}</warName>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+          <webResources>
+            <resource>
+              <directory>${project.basedir}/../../src</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <excludes>
+                <exclude>com/**</exclude>
+              </excludes>
+            </resource>
+          </webResources>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.6</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${endorsed.dir}</outputDirectory>
+              <silent>true</silent>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>javax</groupId>
+                  <artifactId>javaee-endorsed-api</artifactId>
+                  <version>7.0</version>
+                  <type>jar</type>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  
+  <!-- development profile build -->      
+  <profiles>
+      
+    <profile>
+      <id>development-profile</id>
+        
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>2.3.2</version>
+            <configuration>
+              <source>1.6</source>
+              <target>1.6</target>
+              <compilerArguments>
+                <endorseddirs>${endorsed.dir}</endorseddirs>
+              </compilerArguments>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>2.6</version>
+            <configuration>
+              <warSourceDirectory>${project.basedir}/../../www</warSourceDirectory>
+              <warName>geoportal-${project.version}</warName>
+              <failOnMissingWebXml>false</failOnMissingWebXml>
+              <webResources>
+                <resource>
+                  <directory>${gpt.endorsed.dir}</directory>
+                  <targetPath>.</targetPath>
+                </resource>
+                <resource>
+                  <directory>${project.basedir}/../../src</directory>
+                  <targetPath>WEB-INF/classes</targetPath>
+                  <excludes>
+                    <exclude>com/**</exclude>
+                  </excludes>
+                </resource>
+              </webResources>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>2.6</version>
+            <executions>
+              <execution>
+                <phase>validate</phase>
+                <goals>
+                  <goal>copy</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${endorsed.dir}</outputDirectory>
+                  <silent>true</silent>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>javax</groupId>
+                      <artifactId>javaee-endorsed-api</artifactId>
+                      <version>7.0</version>
+                      <type>jar</type>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+      
+   
+  </profiles>
+
+
+</project>

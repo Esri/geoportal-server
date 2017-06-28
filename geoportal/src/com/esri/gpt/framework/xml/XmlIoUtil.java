@@ -179,6 +179,7 @@ public static void writeXmlFile(String xml, File file) throws TransformerExcepti
 public static String jsonToXml(String xmlString, String rootElement) 
   throws Exception {
   try {
+  	if (xmlString != null) xmlString = xmlString.replaceAll("\"registry:","\"registry_");
     JSONObject jso = new JSONObject(xmlString);
     rootElement = Val.chkStr(rootElement);
     if("".equals(rootElement)) {

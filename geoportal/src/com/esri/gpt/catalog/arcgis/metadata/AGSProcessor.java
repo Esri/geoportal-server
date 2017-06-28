@@ -21,8 +21,10 @@ import com.esri.gpt.catalog.publication.ResourceProcessor;
 import com.esri.arcgisws.ServiceCatalogBindingStub;
 import com.esri.arcgisws.ServiceDescription;
 import com.esri.arcgisws.runtime.exception.ArcGISWebServiceException;
+import com.esri.gpt.control.webharvest.AccessException;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.common.CommonResult;
+import com.esri.gpt.framework.http.crawl.CrawlLocker;
 import com.esri.gpt.framework.resource.adapters.FlatResourcesAdapter;
 import com.esri.gpt.framework.resource.adapters.LimitedLengthResourcesAdapter;
 import com.esri.gpt.framework.resource.adapters.PublishablesAdapter;
@@ -32,6 +34,9 @@ import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
+import com.esri.gpt.framework.robots.Bots;
+import static com.esri.gpt.framework.robots.BotsUtils.parser;
+import static com.esri.gpt.framework.robots.BotsUtils.transformUrl;
 import com.esri.gpt.framework.security.credentials.UsernamePasswordCredentials;
 import com.esri.gpt.framework.util.ReadOnlyIterator;
 import com.esri.gpt.framework.util.Val;
@@ -40,8 +45,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -61,6 +68,7 @@ public class AGSProcessor extends ResourceProcessor {
   private ServiceHandlerFactory factory = new ServiceHandlerFactory();
   private AGSTarget             target = new AGSTarget();
   private UsernamePasswordCredentials credentials;
+  private Long throttleDelay;
 
   /** constructors ============================================================ */
 
@@ -109,6 +117,26 @@ public class AGSProcessor extends ResourceProcessor {
    */
   public void setCredentials(UsernamePasswordCredentials credentials) {
     this.credentials = credentials;
+  }
+
+  /**
+   * Gets throttle delay.
+   * <p>
+   * If set it will override "Crawl-Delay" from robots.txt if robots.txt present.
+   * @return throttle delay in milliseconds or {@code null} if no throttling required
+   */
+  public Long getThrottleDelay() {
+    return throttleDelay;
+  }
+
+  /**
+   * Sets throttle delay.
+   * <p>
+   * If set it will override "Crawl-Delay" from robots.txt if robots.txt present.
+   * @param throttleDelay throttle delay in milliseconds or {@code null} if no throttling required
+   */
+  public void setThrottleDelay(Long throttleDelay) {
+    this.throttleDelay = throttleDelay;
   }
   
   /** methods ================================================================= */
@@ -309,6 +337,19 @@ public class AGSProcessor extends ResourceProcessor {
   }
 
   /**
+   * Resolves throttle delay.
+   * @param bots robots.txt or {@code null} if robots.txt unavailable
+   * @return throttle delay in milliseconds or {@code null} if no throttling required
+   */
+  protected Long resolveThrottleDelay(Bots bots) {
+    return getThrottleDelay()!=null? 
+            getThrottleDelay(): 
+            bots!=null && bots.getCrawlDelay()!=null?  
+              1000L*bots.getCrawlDelay(): 
+              null;
+  }
+  
+  /**
    * Normalizes URL by removing 'wsdl'.
    * @param url URL
    * @return normalized URL
@@ -355,12 +396,31 @@ public class AGSProcessor extends ResourceProcessor {
 
   /**
    * Reads service descriptions.
+   * @param context iteration context
    * @return array of service descriptions
    * @throws ArcGISWebServiceException if accessing service descriptions 
    */
-  private ServiceDescription[] readServiceDescriptions() throws ArcGISWebServiceException {
+  private ServiceDescription[] readServiceDescriptions(IterationContext context) throws ArcGISWebServiceException {
     String soapUrl = extractRootUrl(getTarget().getSoapUrl());
+    Bots bots = null;
+    if (context!=null) {
+      bots = context.getRobotsTxt();
+      soapUrl = transformUrl(bots,soapUrl);
+      try {
+        context.assertAccess(soapUrl);
+      } catch (AccessException ex) {
+        throw new ArcGISWebServiceException(String.format("Access to: %s forbidden by robots.txt", getTarget().getSoapUrl()), ex);
+      }
+      if (bots!=null) {
+        CrawlLocker.getInstance().enterServer(soapUrl, resolveThrottleDelay(bots));
+      }
+    }
     ServiceCatalogBindingStub stub = new ServiceCatalogBindingStub(soapUrl);
+    if (bots!=null && !parser().getUserAgent().isEmpty()) {
+      HashMap<String,List<String>> headers = new HashMap<String, List<String>>();
+      headers.put("User-Agent", Arrays.asList(new String[]{parser().getUserAgent()}));
+      stub.addHTTPRequestHeaders(headers);
+    }
     ServiceDescription[] descriptors = stub.getServiceDescriptions();
     return descriptors;
   }
@@ -372,7 +432,7 @@ public class AGSProcessor extends ResourceProcessor {
    */
   private ResourceFolders createResourceFolders(IterationContext context) {
     try {
-      ServiceDescription[] descriptors = readServiceDescriptions();
+      ServiceDescription[] descriptors = readServiceDescriptions(context);
       return new ResourceFolders(context, factory, descriptors);
     } catch (ArcGISWebServiceException ex) {
       context.onIterationException(ex);

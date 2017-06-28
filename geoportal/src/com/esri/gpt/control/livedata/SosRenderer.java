@@ -14,6 +14,8 @@
  */
 package com.esri.gpt.control.livedata;
 
+import static com.esri.gpt.framework.util.Val.stripHttpProtocol;
+
 /**
  * Sensor observation service renderer.
  */
@@ -27,7 +29,7 @@ package com.esri.gpt.control.livedata;
 
   @Override
   protected String newLayerDeclaration() {
-    return "new esri.gpt.layers.SOSLayer(\"" +getContextUrl()+ "\",\"" +getUrl()+ "\",\"" +getProxyUrl()+ "\",geometryService)";
+    return "new esri.gpt.layers.SOSLayer(\"" +getContextUrl()+ "\",\"" +getUrl()+ "\",\"" +stripHttpProtocol(getProxyUrl())+ "\",geometryService)";
   }
 
   @Override

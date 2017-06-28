@@ -17,10 +17,12 @@ package com.esri.gpt.framework.dcat.adaptors;
 
 import com.esri.gpt.framework.dcat.dcat.DcatContactPoint;
 import com.esri.gpt.framework.dcat.dcat.DcatDistributionList;
+import com.esri.gpt.framework.dcat.dcat.DcatPublisher;
 import com.esri.gpt.framework.dcat.dcat.DcatRecord;
 import com.esri.gpt.framework.dcat.json.JsonAttribute;
 import com.esri.gpt.framework.dcat.json.JsonRecord;
 import com.esri.gpt.framework.util.Val;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +63,15 @@ public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
       keywords.add(keyword.getString());
     }
     return keywords;
+  }
+  
+  @Override
+  public List<String> getThemes() {
+    ArrayList<String> themes = new ArrayList<String>();
+    for (JsonAttribute theme: record.getThemes()) {
+      themes.add(theme.getString());
+    }
+    return themes;
   }
 
   @Override
@@ -119,10 +130,10 @@ public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
   }
 
   @Override
-  public String getPublisher() {
-    return getString("publisher");
+  public DcatPublisher getPublisher() {
+	    return new DcatPublisherAdaptor(record);
   }
-
+  
   @Override
   public String getPerson() {
     return getString("person");
@@ -159,13 +170,23 @@ public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
   }
 
   @Override
-  public String getBureauCode() {
-    return getString("bureauCode");
+  public List<String> getBureauCodes() {
+    ArrayList<String> codes = new ArrayList<String>();
+    for (JsonAttribute jsonCcode: record.getBureauCodes()) {
+      String code = jsonCcode.getString();
+      codes.add(code);
+    }
+    return codes;
   }
 
   @Override
-  public String getProgramCode() {
-    return getString("programCode");
+  public List<String> getProgramCodes() {
+    ArrayList<String> codes = new ArrayList<String>();
+    for (JsonAttribute jsonCcode: record.getProgramCodes()) {
+      String code = jsonCcode.getString();
+      codes.add(code);
+    }
+    return codes;
   }
 
   @Override
@@ -189,7 +210,7 @@ public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
   }
 
   @Override
-  public String getdescribedByType() {
+  public String getDescribedByType() {
     return getString("describedByType");
   }
 
@@ -204,8 +225,12 @@ public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
   }
 
   @Override
-  public String getLanguage() {
-    return getString("language");
+  public List<String> getLanguages() {
+    ArrayList<String> languages = new ArrayList<String>();
+    for (JsonAttribute reference: record.getLanguages()) {
+      languages.add(reference.getString());
+    }
+    return languages;
   }
 
   @Override
@@ -244,6 +269,11 @@ public class DcatRecordAdaptor extends DcatAdaptor implements DcatRecord {
   @Override
   public String getTheme() {
     return getString("theme");
+  }
+
+  @Override
+  public String getIsPartOf() {
+    return getString("isPartOf");
   }
   
   

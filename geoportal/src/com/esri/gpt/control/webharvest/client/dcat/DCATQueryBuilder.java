@@ -20,6 +20,7 @@ import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.common.CommonCapabilities;
 import com.esri.gpt.framework.dcat.DcatParser;
 import com.esri.gpt.framework.dcat.DcatParserAdaptor;
+import com.esri.gpt.framework.dcat.DcatVersion;
 import com.esri.gpt.framework.resource.api.Native;
 import com.esri.gpt.framework.resource.api.Publishable;
 import com.esri.gpt.framework.resource.api.SourceUri;
@@ -29,12 +30,18 @@ import com.esri.gpt.framework.resource.query.Capabilities;
 import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.transform.TransformerException;
+import org.apache.commons.io.IOUtils;
 
 /**
  * DCAT query builder.
@@ -75,15 +82,73 @@ public class DCATQueryBuilder implements QueryBuilder {
     LOGGER.log(Level.FINER, "Query created: {0}", q);
     return q;
   }
+    
+    /**
+     * Open stream.
+     * @return stream
+     * @throws IOException if opening stream fails
+     */
+    private InputStream openStream(URL url) throws IOException {
+      
+      // create temporary file
+      final File tempFile = File.createTempFile("dcat_", Long.toString(System.nanoTime()));
+      
+      InputStream in = null;
+      OutputStream out = null;
+      
+      try {
+        
+        // copy URL stream into temporary file
+        in = url.openStream();
+        out = new FileOutputStream(tempFile);
+        IOUtils.copy(in, out);
+        
+      } catch (IOException ex) {
+        
+        // close temporary file stream and delete file
+        IOUtils.closeQuietly(out);
+        out = null;
+        tempFile.delete();
+        
+        // rethrow exception
+        throw ex;
+        
+      } catch (RuntimeException ex) {
+        
+        // close temporary file stream and delete file
+        IOUtils.closeQuietly(out);
+        out = null;
+        tempFile.delete();
+        
+        // rethrow exception
+        throw ex;
+        
+      } finally {
+        
+        // close all quietly
+        IOUtils.closeQuietly(out);
+        IOUtils.closeQuietly(in);
+        
+      }
+      
+      return new FileInputStream(tempFile) {
+        @Override
+        public void close() throws IOException {
+          super.close();
+          // delete temporary file
+          tempFile.delete();
+        }
+      };
+    }
 
   @Override
   public Native getNativeResource() {
     DCATIteratorAdaptor adaptor = null;
     try {
       URL url = new URL(info.getUrl());
-      adaptor = new DCATIteratorAdaptor(info.getFormat(), new DcatParserAdaptor(new DcatParser(url.openStream())));
+      adaptor = new DCATIteratorAdaptor(info.getFormat(), new DcatParserAdaptor(new DcatParser(openStream(url))));
       Iterator<Publishable> iterator = adaptor.iterator();
-      if (iterator.hasNext()) {
+      if (iterator.hasNext() && adaptor.getDcatVersion().compareTo(DcatVersion.DV10)==0) {
         return new NativeImpl(iterator.next().getContent());
       }
     } catch (Exception ex) {

@@ -49,13 +49,14 @@ public class DcatCacheServlet extends BaseServlet {
 
     try {
       cacheStream = cache.createInputCacheStream();
-      BufferedReader reader = new BufferedReader(new InputStreamReader(cacheStream));
+      InputStreamReader reader = new InputStreamReader(cacheStream,"UTF-8");
 
       char[] buffer = new char[1024];
       int length = -1;
 
       while ((length = reader.read(buffer)) != -1) {
         writer.write(buffer, 0, length);
+        writer.flush();
       }
 
     } catch (FileNotFoundException ex) {

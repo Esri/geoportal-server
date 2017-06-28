@@ -20,7 +20,6 @@ import com.esri.gpt.framework.collection.StringAttribute;
 import com.esri.gpt.framework.collection.StringAttributeMap;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
 import com.esri.gpt.framework.util.Val;
-import java.util.regex.Pattern;
 
 /**
  * ArcGIS server protocol.

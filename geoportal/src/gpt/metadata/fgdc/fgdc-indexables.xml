@@ -95,6 +95,7 @@
   <property meaning="dcat.webService" xpath="/metadata/idinfo/citation/citeinfo/onlink[2]"/>
   <property meaning="dcat.references" xpath="/metadata/idinfo/citation/citeinfo/onlink[3]"/>
   <property meaning="dcat.landingPage" xpath="/metadata/idinfo/citation/citeinfo/onlink[4]"/>  
+  <property meaning="dcat.parentIdentifier" xpath="/metadata/idinfo/citation/citeinfo/lworkcit/citeinfo/othcit"/>
  
   <!-- Full-text search -->
   <property meaning="body" xpathType="STRING" xpath="//*"/>

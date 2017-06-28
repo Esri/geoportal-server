@@ -17,6 +17,7 @@ import com.esri.gpt.catalog.context.CatalogConfiguration;
 import com.esri.gpt.framework.context.ApplicationContext;
 import com.esri.gpt.framework.http.multipart.MultiPartContentProvider;
 import com.esri.gpt.framework.http.multipart.PartWriter;
+import static com.esri.gpt.framework.robots.BotsUtils.parser;
 import com.esri.gpt.framework.util.Val;
 import java.io.File;
 import java.io.IOException;
@@ -446,7 +447,7 @@ public class HttpClientRequest {
    * the ContentProvider is null. Otherwise, a PostMethod will be created.
    * @return the HTTP method
    */
-  private HttpMethodBase createMethod() throws IOException {
+  protected HttpMethodBase createMethod() throws IOException {
     HttpMethodBase method = null;
     MethodName name = this.getMethodName();
 
@@ -486,13 +487,18 @@ public class HttpClientRequest {
       }
     }
     
-    // set headers, add the retry method
-    for (Map.Entry<String,String> hdr: this.requestHeaders.entrySet()) {
-      method.addRequestHeader(hdr.getKey(),hdr.getValue());
-    }
+    if (method!=null) {
+      // set headers, add the retry method
+      for (Map.Entry<String,String> hdr: this.requestHeaders.entrySet()) {
+        method.addRequestHeader(hdr.getKey(),hdr.getValue());
+      }
 
-    // declare possible gzip handling
-    method.setRequestHeader("Accept-Encoding", "gzip");
+      // declare possible gzip handling
+      method.setRequestHeader("Accept-Encoding", "gzip");
+      if (!parser().getUserAgent().isEmpty()) {
+        method.setRequestHeader("User-Agent", parser().getUserAgent());
+      }
+    }
     
     this.addRetryHandler(method);
     return method;

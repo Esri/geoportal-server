@@ -17,11 +17,15 @@ package com.esri.gpt.control.webharvest.client.waf;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.query.Criteria;
+import com.esri.gpt.framework.robots.Access;
+import com.esri.gpt.framework.robots.Bots;
+import static com.esri.gpt.framework.robots.BotsUtils.requestAccess;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,7 +38,7 @@ class WafFolderQuick extends WafFolder {
   private static final Pattern A_PATTERN = Pattern.compile("[<]a[^>]*[>]", Pattern.CASE_INSENSITIVE);
   private static final Pattern HREF_PATTERN = Pattern.compile("href\\p{Space}*=\\p{Space}*(\"[^\"]*\"|\'[^\']*\')", Pattern.CASE_INSENSITIVE);
   private static final String  HREF_VALUE_PATTERN = "^[^\"]*\"|\"[^\"]*$|^[^\']*\'|\'[^\']*$";
-  private Set<String> processedFolders;
+  private final Set<String> processedFolders;
 
   /**
    * Creates instance of the WAF folder.
@@ -80,8 +84,8 @@ class WafFolderQuick extends WafFolder {
                   processedFolders.add(pathExternalForm.toLowerCase());
                 }
               }
-            } else if (documentUrl.toLowerCase().endsWith(".xml")) {
-              if (!processedFiles.contains(pathExternalForm.toLowerCase())) {
+            } else if (pathExternalForm.toLowerCase().endsWith(".xml")) {
+              if (!processedFiles.contains(pathExternalForm.toLowerCase()) && requestAccess(context.getRobotsTxt(),pathExternalForm).hasAccess()) {
                 directoryUrls.add(new WafFile(proxy, pathExternalForm));
                 processedFiles.add(pathExternalForm.toLowerCase());
               }
@@ -96,4 +100,5 @@ class WafFolderQuick extends WafFolder {
     }
     return directoryUrls;
   }
+  
 }

@@ -19,6 +19,7 @@ import com.esri.gpt.catalog.arcims.ExtendedQueryRequest.SpatialOperator;
 import com.esri.gpt.catalog.arcims.HarvestMetadataRequest;
 import com.esri.gpt.catalog.arcims.ImsServiceException;
 import com.esri.gpt.catalog.search.ISearchFilterSpatialObj.OptionsBounds;
+import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.StringHandler;
 import com.esri.gpt.framework.resource.query.Criteria;
@@ -45,14 +46,18 @@ class ArcImsProxy {
 private static final Logger LOGGER = Logger.getLogger(ArcImsProxy.class.getCanonicalName());
 /** service info */
 private ArcImsInfo info;
+/** iteration context */
+private IterationContext context;
 
 /**
  * Creates instance of the proxy.
  * @param info service info
  */
-public ArcImsProxy(ArcImsInfo info) {
+public ArcImsProxy(ArcImsInfo info, IterationContext context) {
   if (info==null) throw new IllegalArgumentException("No info provided.");
+  if (context==null) throw new IllegalArgumentException("No context provided.");
   this.info = info;
+  this.context = context;
 }
 
 /**
@@ -114,7 +119,8 @@ public String read(String sourceUri) throws IOException {
     if (url.length()==0) return "";
 
     url = Val.chkStr(url).replaceAll("\\{", "%7B").replaceAll("\\}", "%7D");
-    HttpClientRequest cr = new HttpClientRequest();
+    context.assertAccess(url);
+    HttpClientRequest cr = context.newHttpClientRequest();
     cr.setUrl(url);
 
     StringHandler sh = new StringHandler();

@@ -18,7 +18,6 @@ define([
     'dojo/dom-construct',
 	  'dojo/dom',
 	  'dojo/topic',
-    'widgets/GeoportalSearch/common/ResourceHandler',
 	  'widgets/GeoportalSearch/views/SearchPane',
     'widgets/GeoportalSearch/views/ResultsPane'    
   ],
@@ -26,8 +25,7 @@ define([
 function(declare, _WidgetsInTemplateMixin, BaseWidget, 
 	TabContainer, Message, utils, LoadingShelter, 	
 	JSON,lang, html, array,
-  query, mouse, on, aspect, domConstruct, dom,topic,
-  ResourceHandler) {	
+  query, mouse, on, aspect, domConstruct, dom,topic) {	
   return declare([BaseWidget, _WidgetsInTemplateMixin], {
 
   	name: 'GeoportalSearch',
@@ -47,12 +45,6 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget,
       this._attachTopics();      
 	  },
 
-    startup: function() {
-      console.log('startup');
-	    this.inherited(arguments);
-      this._addResource();	    
-    },
-
     onOpen: function(){
       console.log('onOpen');
     },
@@ -63,14 +55,6 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget,
 		this.inherited(arguments);
 	 },
 
-   _addResource: function(){
-    console.log('_addResource');
-    var resourceHandler = new ResourceHandler();
-    resourceHandler.addResource({
-                                  map:this.map, 
-                                  nls:this.nls
-                               });
-   },
 
 	destroy:function(){
     console.log('destroy');

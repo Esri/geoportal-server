@@ -118,7 +118,14 @@ public void execute() throws Exception {
     nRows = adminDao.updateApprovalStatus(getPublisher(),uuids,MmdEnums.ApprovalStatus.disapproved);
   } else if (sAction.equalsIgnoreCase("setReviewed")) {
     nRows = adminDao.updateApprovalStatus(getPublisher(),uuids,MmdEnums.ApprovalStatus.reviewed);
+  } else if (sAction.equalsIgnoreCase("Duplicate")) {
+		nRows = adminDao.duplicateRecord(getPublisher(),uuids);
   }
+  /** Action: "SetEditable" **/
+  else if (sAction.equalsIgnoreCase("setEditable")) {
+		nRows = adminDao.setEditable(getPublisher(),uuids);
+  }
+
   getActionResult().setNumberOfRecordsModified(nRows);
   this.hadUnalteredDraftDocuments = adminDao.hadUnalteredDraftDocuments();
 
@@ -210,6 +217,12 @@ public void execute(MmdQueryCriteria queryCriteria) throws Exception {
       nRows = adminDao.updateAcl(getPublisher(), queryCriteria, null);
     }
   }
+  
+  // check collection sharing (isPartOf)
+  if (sAction.equalsIgnoreCase("shareWith") || sAction.equalsIgnoreCase("dontShareWith") ) {
+    String colUuid = Val.chkStr(getActionCriteria().getSharingCollectionUuid());
+    nRows = this.executeAssignCollection(sAction,colUuid,queryCriteria);
+  }
 
   getActionResult().setNumberOfRecordsModified(nRows);
 }
@@ -235,6 +248,20 @@ private void executeAssignCollection(String option, String colUuid, StringSet uu
       result.setNumberOfRecordsModified(nMod);
     }
   }
+}
+
+private int executeAssignCollection(String option, String colUuid, MmdQueryCriteria criteria) 
+  throws SQLException, CatalogIndexException {
+  int nMod = 0;
+  if (colUuid.length() > 0) {
+    CollectionDao colDao = new CollectionDao(this.getRequestContext());
+    if (option.equalsIgnoreCase("shareWith")) {
+      nMod = colDao.addMembers(getPublisher(),criteria,colUuid);
+    } else if (option.equalsIgnoreCase("dontShareWith")) {
+      nMod = colDao.removeMembers(getPublisher(),criteria,colUuid);
+    }
+  }
+  return nMod;
 }
 
 /**

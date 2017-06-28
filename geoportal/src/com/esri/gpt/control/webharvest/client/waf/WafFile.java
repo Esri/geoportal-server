@@ -32,6 +32,7 @@ private WafProxy proxy;
 private WafProxy.Content content;
 private IOException storedException;
 private String encodedUrl;
+private boolean preApproved;
 
 public WafFile(WafProxy proxy, String url) {
   this.proxy = proxy;
@@ -51,7 +52,7 @@ public String getContent() throws IOException {
     throw storedException;
   }
   if (content==null) {
-    content = proxy.readContent(encodedUrl);
+    content = proxy.readContent(encodedUrl,isPreApproved());
   }
   String metadata = "";
   if (content!=null) {
@@ -65,7 +66,7 @@ public String getContent() throws IOException {
 public Date getUpdateDate() {
   try {
     if (content==null) {
-      content = proxy.readContent(encodedUrl);
+      content = proxy.readContent(encodedUrl,isPreApproved());
     }
   } catch (IOException ex) {
     // store that exception here because getUpdateDate can not throw any exception by interface
@@ -73,6 +74,14 @@ public Date getUpdateDate() {
     storedException = ex;
   }
   return content!=null? content.getLastModifedDate(): null;
+}
+
+public boolean isPreApproved() {
+  return preApproved;
+}
+
+public void setPreApproved(boolean approved) {
+  this.preApproved = approved;
 }
 
 private String encode(String url) {

@@ -64,7 +64,8 @@ namespace com.esri.gpt.security
             {
                 return;
             }
-            else if (!url.StartsWith("https://"))
+            //else if (!url.StartsWith("https://"))
+            else
             {
                 return;
             }

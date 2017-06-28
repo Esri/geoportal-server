@@ -15,11 +15,15 @@
 package com.esri.gpt.control.webharvest.client.arcims;
 
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolArcIms;
+import com.esri.gpt.control.webharvest.AccessException;
 import com.esri.gpt.control.webharvest.IterationContext;
+import com.esri.gpt.control.webharvest.client.MockIterationContext;
 import com.esri.gpt.control.webharvest.common.CommonCriteria;
+import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.resource.api.Resource;
 import com.esri.gpt.framework.resource.query.Query;
 import com.esri.gpt.framework.resource.query.Result;
+import com.esri.gpt.framework.robots.Bots;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -29,25 +33,21 @@ import static org.junit.Assert.*;
  */
 public class ArcImsQueryBuilderTest {
 
-private static ArcImsQueryBuilder instance = null;
+  private static ArcImsQueryBuilder instance = null;
 
-public ArcImsQueryBuilderTest() {
-}
-
-@BeforeClass
-public static void setUpClass() throws Exception {
-  HarvestProtocolArcIms protocol = new HarvestProtocolArcIms();
-  protocol.setServiceName("Metadata");
-  IterationContext context = new IterationContext() {
-
-  public void onIterationException(Exception ex) {
+  public ArcImsQueryBuilderTest() {
   }
-  };
-  instance = new ArcImsQueryBuilder(context, protocol, "http://datawarehouse.hrsa.gov");
-}
 
-@Test
-public void testNewQuery() {
+  @BeforeClass
+  public static void setUpClass() throws Exception {
+    HarvestProtocolArcIms protocol = new HarvestProtocolArcIms();
+    protocol.setServiceName("Metadata");
+    IterationContext context = new MockIterationContext();
+    instance = new ArcImsQueryBuilder(context, protocol, "http://datawarehouse.hrsa.gov");
+  }
+
+  @Test
+  public void testNewQuery() {
     System.out.println("newQuery");
     CommonCriteria crt = new CommonCriteria();
     crt.setMaxRecords(5);
@@ -62,5 +62,5 @@ public void testNewQuery() {
       count++;
     }
     assertTrue(count <= crt.getMaxRecords());
-}
+  }
 }

@@ -127,6 +127,9 @@ public String determineUsername(HttpServletRequest request) {
   if (_canCheck && _checkUserPrincipal) {
     if (request.getUserPrincipal() != null) {
       sUsername = Val.chkStr(request.getUserPrincipal().getName());
+      if (sUsername.indexOf("\\") > 0) {
+      	sUsername = sUsername.substring(sUsername.indexOf("\\")+1);
+      }
     }
   } else if (_canCheck && (_headerVariableName.length() > 0)) {
     sUsername = Val.chkStr(request.getHeader(_headerVariableName));

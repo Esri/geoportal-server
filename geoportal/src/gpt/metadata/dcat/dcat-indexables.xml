@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<!-- dc-indexables.xml -->
+<indexables>
+
+  <!-- namespaces -->
+  <namespace prefix="rdf" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+  <namespace prefix="dc" uri="http://purl.org/dc/elements/1.1/"/>
+  <namespace prefix="dct" uri="http://purl.org/dc/terms/"/>
+  <namespace prefix="pod" uri="http://project-open-data.cio.gov/v1.1/schema" />
+  <namespace prefix="dcat" uri="http://www.w3.org/ns/dcat#" />
+  <namespace prefix="dctype" uri="http://purl.org/dc/dcmitype/" />
+  <namespace prefix="foaf" uri="http://xmlns.com/foaf/0.1/" />
+  <namespace prefix="org" uri="http://www.w3.org/ns/org#" />
+  <namespace prefix="ows" uri="http://www.opengis.net/ows" />
+  <namespace prefix="rdfs" uri="http://www.w3.org/2000/01/rdf-schema#" />
+  <namespace prefix="skos" uri="http://www.w3.org/2004/02/skos/core#" />
+  <namespace prefix="vcard" uri="http://www.w3.org/2006/vcard/ns#" />
+
+  <property meaning="fileIdentifier" xpath="/rdf:RDF/dcat:dataset/dct:identifier"/>
+
+  <property meaning="title" xpath="/rdf:RDF/dcat:dataset/dct:title"/>
+  <property meaning="abstract" xpath="/rdf:RDF/dcat:dataset/dct:description"/>
+  <property meaning="publisher" xpath="/rdf:RDF/dcat:dataset/dct:publisher/foaf:name"/>
+    
+  <property meaning="keywords" xpath="/rdf:RDF/dcat:dataset/dcat:keyword"/>
+    
+  <property meaning="envelope" xpath="/rdf:RDF/dcat:dataset/ows:WGS84BoundingBox">
+    <property meaning="envelope.lowerCorner" xpath="ows:LowerCorner"/>
+    <property meaning="envelope.upperCorner" xpath="ows:UpperCorner"/>
+
+    <!-- these are incorrect, but we'll include to be compatible with envelopes defined in this way -->
+    <property meaning="envelope.west" xpath="westbc"/>
+    <property meaning="envelope.south" xpath="southbc"/>
+    <property meaning="envelope.east" xpath="eastbc"/>
+    <property meaning="envelope.north" xpath="northbc"/>
+  </property>   
+    
+  <property meaning="resource.url" xpath="/rdf:RDF/dcat:dataset/dcat:distribution[1]/dcat:downloadURL"/>
+  <property meaning="website.url" xpath="/rdf:RDF/dcat:dataset/dcat:landingPage"/>
+    
+  <property meaning="contentType" xpath="/rdf:RDF/dcat:dataset/dcat:distribution[1]/dcat:mediaType"/>
+  <property meaning="dataTheme" xpath="/rdf:RDF/dcat:dataset/dcat:theme[1]"/>
+    
+  <!-- index all text content as part of the body field -->
+  <property meaning="body" xpath="/rdf:RDF/dcat:dataset/*"/>
+
+  <!-- dcat-specific -->
+  <property meaning="dcat.modified" xpath="/rdf:RDF/dcat:dataset/dct:modified"/>
+  <property meaning="dcat.issued" xpath="/rdf:RDF/dcat:dataset/dct:issued"/>
+  <property meaning="dcat.publisher" xpath="/rdf:RDF/dcat:dataset/dct:publisher/foaf:name"/>
+  <property meaning="dcat.person" xpath="/rdf:RDF/dcat:dataset/dcat:contactPoint/vcard:fn"/>
+  <property meaning="dcat.mbox" xpath="/rdf:RDF/dcat:dataset/dcat:contactPoint/vcard:hasEmail"/>
+  <property meaning="dcat.accessLevel" xpath="/rdf:RDF/dcat:dataset/pod:accessLevel"/>
+  <property meaning="dcat.programCode" xpath="/rdf:RDF/dcat:dataset/pod:programCode"/>   
+  <property meaning="dcat.bureauCode" xpath="/rdf:RDF/dcat:dataset/pod:bureauCode"/>   
+  <property meaning="dcat.license" xpath="/rdf:RDF/dcat:dataset/dct:license"/>
+  <property meaning="dcat.accessLevelComment" xpath="/rdf:RDF/dcat:dataset/dct:rights"/> 
+  <property meaning="dcat.accrualPeriodicity" xpath="/rdf:RDF/dcat:dataset/dct:accrualPeriodicity"/>
+  <property meaning="dcat.language" xpath="/rdf:RDF/dcat:dataset/dct:language"/>
+  <property meaning="dcat.landingPage" xpath="/rdf:RDF/dcat:dataset/dcat:landingPage"/>
+  <property meaning="dcat.primaryITInvestmentUII" xpath="/rdf:RDF/dcat:dataset/pod:primaryITInvestmentUII"/>
+  <property meaning="dcat.parentIdentifier" xpath="/rdf:RDF/dcat:dataset/pod:isPartOf"/>
+  <property meaning="dcat.dataQuality" xpath="/rdf:RDF/dcat:dataset/pod:dataQuality"/>
+  <property meaning="dcat.accessUrl" xpath="/rdf:RDF/dcat:dataset/dcat:distribution/dcat:accessURL"/>
+  <property meaning="dcat.downloadUrl" xpath="/rdf:RDF/dcat:dataset/dcat:distribution/dcat:downloadURL"/>
+  <property xpath="/rdf:RDF/dcat:dataset">
+    <property meaning="timeperiod.analyze" xpathType="STRING"
+      xpath="concat('tp.begin.',dct:temporal[1],'.end.',dct:temporal[2])"/>
+  </property>
+  <property meaning="dcat.describedBy" xpath="/rdf:RDF/dcat:dataset/dcat:describedBy"/>
+  <property meaning="dcat.describedByType" xpath="/rdf:RDF/dcat:dataset/dcat:describedByType"/>
+  <property meaning="dcat.references" xpath="/rdf:RDF/dcat:dataset/dct:references"/>
+    
+</indexables>
+

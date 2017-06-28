@@ -96,6 +96,11 @@ public class SearchResultRecordAdapter implements IFeedRecord {
   }
 
   @Override
+  public String getThumbnailUrl() {
+    return record.getThumbnailUrl();
+  }
+
+  @Override
   public String getFileIdentifier() {
     return record.getFileIdentifier();
   }

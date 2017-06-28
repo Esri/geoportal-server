@@ -77,6 +77,14 @@ public class DcatParser {
   }
 
   /**
+   * Gets parsed DCAT version.
+   * @return version
+   */
+  public DcatVersion getDcatVersion() {
+    return version;
+  }
+  
+  /**
    * Closes parser.
    * @throws java.io.IOException if error closing reader
    */
@@ -292,6 +300,18 @@ public class DcatParser {
           } else if ("programCode".equals(attrName)) {
             jsonReader.beginArray();
             parsePrimitiveArray(record.getProgramCodes());
+            jsonReader.endArray();
+          } else if ("language".equals(attrName)) {
+            jsonReader.beginArray();
+            parsePrimitiveArray(record.getLanguages());
+            jsonReader.endArray();
+          } else if ("theme".equals(attrName)) {
+            jsonReader.beginArray();
+            parsePrimitiveArray(record.getThemes());
+            jsonReader.endArray();
+          } else if ("references".equals(attrName)) {
+            jsonReader.beginArray();
+            parsePrimitiveArray(record.getReferences());
             jsonReader.endArray();
           } else {
             // skip

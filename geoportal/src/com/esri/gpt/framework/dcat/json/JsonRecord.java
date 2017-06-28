@@ -24,10 +24,12 @@ import java.util.List;
 public class JsonRecord extends JsonAttributes {
   private final JsonArray<JsonAttributes> distribution = new JsonArray<JsonAttributes>();
   private final List<JsonAttribute> keywords = new ArrayList<JsonAttribute>();
+  private final List<JsonAttribute> themes = new ArrayList<JsonAttribute>();
   private final List<JsonAttribute> bureauCodes = new ArrayList<JsonAttribute>();
   private final List<JsonAttribute> programCodes = new ArrayList<JsonAttribute>();
   private final List<JsonAttribute> references = new ArrayList<JsonAttribute>();
   private final List<JsonAttribute> systemRecords = new ArrayList<JsonAttribute>();
+  private final List<JsonAttribute> languages = new ArrayList<JsonAttribute>();
 
   public JsonArray<JsonAttributes> getDistribution() {
     return distribution;
@@ -52,6 +54,10 @@ public class JsonRecord extends JsonAttributes {
   public List<JsonAttribute> getSystemRecords() {
     return systemRecords;
   }
+
+  public List<JsonAttribute> getLanguages() {
+    return languages;
+  }
   
   @Override
   public String toString() {
@@ -65,4 +71,8 @@ public class JsonRecord extends JsonAttributes {
     }
     return "{"+sb.toString()+"}";
   }
+
+	public List<JsonAttribute> getThemes() {
+	    return themes;
+	}
 }

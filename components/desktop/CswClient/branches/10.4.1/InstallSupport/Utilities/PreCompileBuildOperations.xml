@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<operations>  
+  <fileoperations>
+    <operation>
+      <replaceword>
+        <file> CSWClients.ism </file>
+        <path> $SOURCES$\CswClient\trunk\InstallSupport </path>
+        <fromword regex="false">CSW Clients for ArcGIS 10.2 Build 0.0.0</fromword>
+        <toword>CSW Clients for ArcGIS Build $BUILDNUM$</toword>
+        <replaceline>false</replaceline>
+      </replaceword>
+      <!--<replaceword>
+        <file> CSWClients.ism </file>
+        <path> $SOURCES$\CswClient\InstallSupport </path>
+        <fromword regex="false">CSWClientsforArcGISBuild0.0.0</fromword>
+        <toword>CSWClientsforArcGISBuild$BUILDNUM$</toword>
+        <replaceline>false</replaceline>
+      </replaceword>-->
+    </operation>
+  </fileoperations>
+</operations>

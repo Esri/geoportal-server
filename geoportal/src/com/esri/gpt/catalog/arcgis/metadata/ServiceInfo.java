@@ -613,6 +613,11 @@ public class ServiceInfo {
           return null;
         }
 
+        // make sure the protocol is present
+        if (geomRestUrl.startsWith("//")) {
+          geomRestUrl = "http:"+geomRestUrl;
+        }
+        
         // build the projection service url
         StringBuilder sb = new StringBuilder();
         StringBuilder sbg = new StringBuilder();

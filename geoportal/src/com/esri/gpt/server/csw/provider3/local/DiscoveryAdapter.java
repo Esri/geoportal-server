@@ -71,8 +71,8 @@ public class DiscoveryAdapter {
     throws OwsException, XPathExpressionException  {
     
     // parse the property name
-    String locator = "PropertyName";
-    Node ndPropName = (Node)xpath.evaluate("ogc:PropertyName",parent,XPathConstants.NODE);
+    String locator = "ValueReference";
+    Node ndPropName = (Node)xpath.evaluate("fes:ValueReference",parent,XPathConstants.NODE);
     if (ndPropName == null) {
       String msg = "The parameter was not found";
       throw new OwsException(OwsException.OWSCODE_MissingParameterValue,locator,msg);

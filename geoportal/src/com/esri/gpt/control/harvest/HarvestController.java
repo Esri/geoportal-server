@@ -44,6 +44,7 @@ import com.esri.gpt.control.webharvest.engine.Statistics;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactories;
 import com.esri.gpt.control.webharvest.protocol.ProtocolFactory;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
+import com.esri.gpt.framework.robots.BotsMode;
 import com.esri.gpt.control.webharvest.protocol.factories.AgpProtocolFactory;
 import com.esri.gpt.control.webharvest.validator.IConnectionChecker;
 import com.esri.gpt.control.webharvest.validator.IValidator;
@@ -56,6 +57,7 @@ import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.request.SortOption;
+import com.esri.gpt.framework.robots.BotsParser;
 import com.esri.gpt.framework.security.identity.NotAuthorizedException;
 import com.esri.gpt.framework.security.identity.local.LocalDao;
 import com.esri.gpt.framework.security.principal.Publisher;
@@ -997,6 +999,13 @@ public void setTimeCodes(String timeCodes) {
   getEditor().setTimeCodes(timeCodes);
 }
 
+/**
+ * Checks if robots.txt mode can be overridden.
+ * @return <code>true</code> if robots.txt mode can be overridden
+ */
+public boolean getRobotsTxtOverride() {
+  return BotsParser.getDefaultInstance().canOverride();
+}
   /**
    * Creates editor.
    *
@@ -1044,6 +1053,7 @@ public void setTimeCodes(String timeCodes) {
         record.setFindable(true);
         record.setSearchable(true);
         record.setSynchronizable(true);
+        ProtocolInvoker.setRobotsTxtMode(record.getProtocol(), BotsMode.getDefault());
       }
     }
 

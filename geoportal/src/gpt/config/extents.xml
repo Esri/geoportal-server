@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extents>
+  <!--
+  Enable section below and/or define custom extends to turn functionality on
+  -->
+  <!--
+	<extent place="Africa"  ext="-54.5;-41;91.5;44.5"/>
+	<extent place="Asia"  ext="29.08;9.56;170.7;77.33"/>
+	<extent place="Australia"  ext="102.15;-43.69;172.98;-9.81"/>
+	<extent place="Europe"  ext="-14.51;35.87;56.30;69.75"/>
+	<extent place="North America"  ext="-165.94;8.25;-24.32;76.02"/>
+	<extent place="South America"  ext="-127.80;-55.33;13.83;12.44"/>
+  -->
+</extents>

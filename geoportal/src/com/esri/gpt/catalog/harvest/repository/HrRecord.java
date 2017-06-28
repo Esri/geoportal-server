@@ -22,6 +22,7 @@ import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgp2Agp;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolAgs2Agp;
 import com.esri.gpt.catalog.harvest.protocols.HarvestProtocolNone;
 import com.esri.gpt.catalog.management.MmdEnums.ApprovalStatus;
+import com.esri.gpt.control.webharvest.DefaultIterationContext;
 import com.esri.gpt.control.webharvest.IterationContext;
 import com.esri.gpt.control.webharvest.protocol.Protocol;
 import com.esri.gpt.control.webharvest.protocol.ProtocolInvoker;
@@ -31,6 +32,8 @@ import com.esri.gpt.framework.resource.api.SourceUri;
 import com.esri.gpt.framework.resource.common.CommonPublishable;
 import com.esri.gpt.framework.resource.common.UrlUri;
 import com.esri.gpt.framework.resource.query.QueryBuilder;
+import com.esri.gpt.framework.robots.BotsMode;
+import static com.esri.gpt.framework.robots.BotsUtils.readBots;
 import com.esri.gpt.framework.util.LogUtil;
 import com.esri.gpt.framework.util.ResourceXml;
 import com.esri.gpt.framework.util.UuidUtil;
@@ -540,14 +543,21 @@ public boolean getIsHarvestDue() {
  */
 public QueryBuilder newQueryBuilder(IterationContext iterationContext) {
   if (iterationContext==null) {
-    iterationContext = new IterationContext() {
-        @Override
-        public void onIterationException(Exception ex) {
-        }
-    };
+    iterationContext = new DefaultIterationContext(readBots(
+            getRobotsTxtMode(),getHostUrl()
+    ));
   }
   return getProtocol() != null ? getProtocol().newQueryBuilder(iterationContext, getHostUrl()) : null;
 }
+
+/**
+ * Gets robots.txt mode.
+ * @return robots.txt mode.
+ */
+public BotsMode getRobotsTxtMode() {
+  return ProtocolInvoker.getRobotsTxtMode(this.getProtocol());
+}
+
 // custom types ================================================================
 
 /**
