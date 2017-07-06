@@ -15,17 +15,17 @@
     <RootNamespace>Documentation</RootNamespace>
     <Name>Documentation</Name>
     <!-- SHFB properties -->
-    <OutputPath>C:\Builds\GeoportalServer\10.5_PublishClient\Binaries\</OutputPath>
+    <OutputPath>C:\Builds\4\b\</OutputPath>
     <HtmlHelpName>PublishClient</HtmlHelpName>
     <WorkingPath>C:\Temp\SandCastleWorkingFolder\</WorkingPath>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\AppLogger.dll" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\AppLogger.xml" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\PublishClient.dll" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\PublishClient.xml" />
-    </DocumentationSources>
+      <DocumentationSource sourceFile="..\..\..\..\..\..\b\PublishClient.dll" />
+      <DocumentationSource sourceFile="..\..\..\..\..\..\b\PublishClient.xml" />
+      <DocumentationSource sourceFile="..\..\..\..\..\..\b\AppLogger.dll" />
+      <DocumentationSource sourceFile="..\..\..\..\..\..\b\AppLogger.xml" />
+	</DocumentationSources>
     <HelpTitle>A Publish Client Documented Class Library</HelpTitle>
-    <CopyrightText>Copyright &amp;#169%3b ESRI 2016</CopyrightText>
+    <CopyrightText>Copyright &amp;#169%3b ESRI 2017</CopyrightText>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
     <FrameworkVersion>.NET Framework 4.5</FrameworkVersion>
     <SaveComponentCacheCapacity>100</SaveComponentCacheCapacity>
@@ -68,7 +68,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ESRI.ArcGIS.Desktop.AddIns">
-      <HintPath>..\..\..\..\..\..\ArcGIS\DeveloperKit10.5\DotNet\ESRI.ArcGIS.Desktop.AddIns.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\ArcGIS\DeveloperKit10.5\DotNet\ESRI.ArcGIS.Desktop.AddIns.dll</HintPath>
     </Reference>
   </ItemGroup>
   <!-- Import the SHFB build targets -->

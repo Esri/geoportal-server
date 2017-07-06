@@ -15,21 +15,20 @@
     <RootNamespace>Documentation</RootNamespace>
     <Name>Documentation</Name>
     <!-- SHFB properties -->
-    <OutputPath>C:\Builds\GeoportalServer\10.5_CSWClients\Binaries\</OutputPath>
+    <OutputPath>C:\Builds\3\b\</OutputPath>
     <HtmlHelpName>CSWClients</HtmlHelpName>
     <WorkingPath>C:\Temp\SandCastleWorkingFolder\</WorkingPath>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\AppLogger.dll" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\AppLogger.xml" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\CswClient.dll" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\CswClient.xml" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\CswSearch.dll" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\CswSearch.xml" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\CSWSearchDockWindow.dll" />
-      <DocumentationSource sourceFile="..\..\..\..\Binaries\CSWSearchDockWindow.xml" />
-    </DocumentationSources>
+      <DocumentationSource sourceFile="..\..\..\..\..\..\b\CswClient.dll" />
+      <DocumentationSource sourceFile="..\..\..\..\..\..\b\CswClient.xml" />
+      <DocumentationSource sourceFile="..\..\..\..\..\..\b\CswSearch.dll" />
+      <DocumentationSource sourceFile="..\..\..\..\..\..\b\CswSearch.xml" />
+      <DocumentationSource sourceFile="..\..\..\..\..\..\b\CSWSearchDockWindow.dll" />
+      <DocumentationSource sourceFile="..\..\..\..\..\..\b\CSWSearchDockWindow.xml" />
+      <DocumentationSource sourceFile="..\..\..\..\..\..\b\AppLogger.dll" />
+      <DocumentationSource sourceFile="..\..\..\..\..\..\b\AppLogger.xml" /></DocumentationSources>
     <HelpTitle>A CSW Clients Documented Class Library</HelpTitle>
-    <CopyrightText>Copyright &amp;#169%3b ESRI 2016</CopyrightText>
+    <CopyrightText>Copyright &amp;#169%3b ESRI 2017</CopyrightText>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
     <BuildLogFile>
     </BuildLogFile>
@@ -78,13 +77,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ESRI.ArcGIS.Desktop.AddIns">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\ArcGIS\DeveloperKit10.5\DotNet\ESRI.ArcGIS.Desktop.AddIns.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\ArcGIS\DeveloperKit10.5\DotNet\ESRI.ArcGIS.Desktop.AddIns.dll</HintPath>
     </Reference>
     <Reference Include="ESRI.ArcGISExplorer">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Explorer (x86)\bin\ESRI.ArcGISExplorer.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Explorer\bin\ESRI.ArcGISExplorer.dll</HintPath>
     </Reference>
     <Reference Include="ESRI.ArcGISExplorer.Application">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Explorer (x86)\bin\ESRI.ArcGISExplorer.Application.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Explorer\bin\ESRI.ArcGISExplorer.Application.dll</HintPath>
     </Reference>
   </ItemGroup>
   <!-- Import the SHFB build targets -->
