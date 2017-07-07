@@ -30,6 +30,7 @@ define([
       symbol.setColor(new esri.Color([0,0,0,0.05]));
 
       array.forEach(features, function(feature, i){
+        if (!feature.geometry) return;
         var type = feature.geometry.type;
         var json = {};
         var geometry, centerpoint;
