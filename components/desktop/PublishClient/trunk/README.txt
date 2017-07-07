@@ -40,7 +40,7 @@ Required tools for project compilation and testing:
    - version 4.5 or above
 
 2. ArcGIS Desktop and ArcGIS Desktop Dotnet SDK:
-   - version 10.5
+   - version 10.5.1
 
 3. IDE (developed on):
    - Microsoft Visual Studio 2013 or 2015
