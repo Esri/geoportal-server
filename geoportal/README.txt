@@ -1,6 +1,6 @@
 =====================================================
 ESRI Geoportal Server
-Copyright ©2010 Esri. 
+Copyright Â©2017 Esri. 
 
 =====================================================
 This is the primary Java Web Application for the ESRI Geoportal Server.
