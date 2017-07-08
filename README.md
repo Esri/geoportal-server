@@ -22,10 +22,10 @@ With the Geoportal Server you can:
 
 Want to learn more? Try our [sandbox site](https://gptogc.esri.com)!
 
-Want to get started right away? Download the [compiled distribution and installation files] (https://github.com/Esri/geoportal-server/releases/download/v1.2.7/geoportal-1.2.7.zip).
+Want to get started right away? Download the [compiled distribution and installation files] (https://github.com/Esri/geoportal-server/releases/download/v1.2.8/geoportal-1.2.8.zip).
 
 ## Releases and Downloads
-- 1.2.7 - Released June 24, 2016, click [here](https://github.com/Esri/geoportal-server/wiki) for release information and downloads.
+- 1.2.8 - Released July 7, 2017, click [here](https://github.com/Esri/geoportal-server/wiki) for release information and downloads.
 
 ## Features
 
