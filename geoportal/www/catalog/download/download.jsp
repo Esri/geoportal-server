@@ -14,12 +14,12 @@
  limitations under the License.
 --%>
 <% // extract.jsp - Download extract %>
-<%@taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
+<%@taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@taglib uri="http://www.esri.com/tags-gpt" prefix="gpt" %>
 
 <gpt:page id="catalog.download.download" 
 captionkey="catalog.download.caption"
 prepareView="#{DownloadController.getDownloadView}"/>
-<tiles:insert definition=".gptLayout" flush="false" >
-  <tiles:put name="body" value="/catalog/download/downloadBody10.jsp"/>
-</tiles:insert>
+<tiles:insertDefinition name=".gptLayout" flush="false" >
+  <tiles:putAttribute name="body" value="/catalog/download/downloadBody10.jsp"/>
+</tiles:insertDefinition>

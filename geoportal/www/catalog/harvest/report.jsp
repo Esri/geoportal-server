@@ -14,12 +14,12 @@
  limitations under the License.
 --%>
 <% // report.jsp - report popup page (tiles definition) %>
-<%@taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
+<%@taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@taglib uri="http://www.esri.com/tags-gpt" prefix="gpt" %>
 
 <gpt:page id="catalog.harvest.manage.report" 
 captionkey="catalog.harvest.manage.report.caption"
 prepareView="#{HarvestHistoryController.getViewReportView}"/>
-<tiles:insert definition=".gptLayout" flush="false" >
-  <tiles:put name="body" value="/catalog/harvest/reportBody.jsp"/>
-</tiles:insert>
+<tiles:insertDefinition name=".gptLayout" flush="false" >
+  <tiles:putAttribute name="body" value="/catalog/harvest/reportBody.jsp"/>
+</tiles:insertDefinition>
