@@ -14,11 +14,11 @@
  limitations under the License.
 --%>
 <% // createMetadata.jsp - Create metadata page (tiles definition) %>
-<%@taglib prefix="tiles" uri="http://struts.apache.org/tags-tiles"%>
+<%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
 <%@taglib prefix="gpt" uri="http://www.esri.com/tags-gpt"%>
 
 <% // initialize the page %>
 <gpt:page id="catalog.publication.createMetadata"/>
-<tiles:insert definition=".gptLayout" flush="false" >
-  <tiles:put name="body" value="/catalog/publication/createMetadataBody.jsp"/>
-</tiles:insert>
+<tiles:insertDefinition name=".gptLayout" flush="false" >
+  <tiles:putAttribute name="body" value="/catalog/publication/createMetadataBody.jsp"/>
+</tiles:insertDefinition>

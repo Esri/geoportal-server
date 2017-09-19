@@ -14,7 +14,7 @@
  limitations under the License.
 --%>
 <% // login.jsp - Login page (tiles definition) %>
-<%@taglib prefix="tiles" uri="http://struts.apache.org/tags-tiles"%>
+<%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
 <%@taglib prefix="gpt" uri="http://www.esri.com/tags-gpt"%>
 
 <%
@@ -53,6 +53,6 @@ _chkoa();
 
 <% // initialize the page %>
 <gpt:page id="catalog.identity.login"/>
-<tiles:insert definition=".gptLayout" flush="false" >
-  <tiles:put name="body" value="/catalog/identity/loginBody.jsp"/>
-</tiles:insert>
+<tiles:insertDefinition name=".gptLayout" flush="false" >
+  <tiles:putAttribute name="body" value="/catalog/identity/loginBody.jsp"/>
+</tiles:insertDefinition>

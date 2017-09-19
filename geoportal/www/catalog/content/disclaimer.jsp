@@ -14,11 +14,11 @@
  limitations under the License.
 --%>
 <% // disclaimer.jsp - Disclaimer page (tiles definition) %>
-<%@taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
+<%@taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@taglib uri="http://www.esri.com/tags-gpt" prefix="gpt" %>
 
 <% // initialize the page %>
 <gpt:page id="catalog.content.disclaimer"/>
-<tiles:insert definition=".gptLayout" flush="false" >
-  <tiles:put name="body" value="/catalog/content/disclaimerBody.jsp"/>
-</tiles:insert>
+<tiles:insertDefinition name=".gptLayout" flush="false" >
+  <tiles:putAttribute name="body" value="/catalog/content/disclaimerBody.jsp"/>
+</tiles:insertDefinition>

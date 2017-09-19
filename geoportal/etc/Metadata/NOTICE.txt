@@ -62,12 +62,6 @@ This project contains annotations derived from JCIP-ANNOTATIONS
 Copyright (c) 2005 Brian Goetz and Tim Peierls. See http://www.jcip.net
 
 
-Apache Struts
-Copyright 2000-2007 The Apache Software Foundation
-This product includes the ANTLR parsing library,
-developed by JGuru.com (http://www.antlr.org and
-http://www.jguru.com).
-
 JavaServerFaces
 Copyright (C) 2002 The Apache Software Foundation. All rights reserved.
 

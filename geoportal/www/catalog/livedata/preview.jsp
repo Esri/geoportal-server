@@ -14,11 +14,11 @@
  limitations under the License.
 --%>
 <% // preview.jsp - preview page (tiles definition) %>
-<%@taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
+<%@taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@taglib uri="http://www.esri.com/tags-gpt" prefix="gpt" %>
 
 <gpt:page id="catalog.livedata.preview"
 captionkey="catalog.search.liveData.title"/>
-<tiles:insert definition=".gptPreview" flush="false" >
-  <tiles:put name="body" value="/catalog/livedata/previewBody.jsp"/>
-</tiles:insert>
+<tiles:insertDefinition name=".gptPreview" flush="false" >
+  <tiles:putAttribute name="body" value="/catalog/livedata/previewBody.jsp"/>
+</tiles:insertDefinition>
