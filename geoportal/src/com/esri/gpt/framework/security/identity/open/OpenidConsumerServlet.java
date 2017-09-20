@@ -35,11 +35,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.expressme.openid.Association;
-import org.expressme.openid.Authentication;
-import org.expressme.openid.Endpoint;
-import org.expressme.openid.OpenIdException;
-import org.expressme.openid.OpenIdManager;
+//import org.expressme.openid.Association;
+//import org.expressme.openid.Authentication;
+//import org.expressme.openid.Endpoint;
+//import org.expressme.openid.OpenIdException;
+//import org.expressme.openid.OpenIdManager;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -85,6 +85,8 @@ public class OpenidConsumerServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) 
     throws ServletException, IOException {
+  	throw new ServletException("OpenidConsumerServlet is no longer supported.");
+  	/* functionality disabled
     RequestContext context = null;
     boolean useFacade = false;
     String err = "";
@@ -345,6 +347,7 @@ public class OpenidConsumerServlet extends HttpServlet {
     } finally {
       if (context != null) context.onExecutionPhaseCompleted();
     }
+    */
   }
   
   /**
@@ -364,6 +367,7 @@ public class OpenidConsumerServlet extends HttpServlet {
    */
   private void checkNonce(String nonce) {
     // check response_nonce to prevent replay-attack:
+  	/* functionality disabled
     if (nonce==null || nonce.length()<20) throw new OpenIdException("Verify failed.");
     long nonceTime = getNonceTime(nonce);
     long diff = System.currentTimeMillis() - nonceTime;
@@ -371,6 +375,7 @@ public class OpenidConsumerServlet extends HttpServlet {
     if (diff > ONE_HOUR) throw new OpenIdException("Bad nonce time.");
     if (isNonceExist(nonce)) throw new OpenIdException("Verify nonce failed.");
     storeNonce(nonce, nonceTime + TWO_HOUR);
+    */
   }
 
   /**
@@ -392,11 +397,14 @@ public class OpenidConsumerServlet extends HttpServlet {
    * Taken from org.expressme.openid.MainServlet
    */
   private long getNonceTime(String nonce) {
+  	return 0;
+  	/* functionality disabled
     try {
       return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(nonce.substring(0,19)+"+0000").getTime();
     } catch(ParseException e) {
       throw new OpenIdException("Bad nonce time.");
     }
+    */
   }
 
 }

@@ -253,14 +253,7 @@
             <artifactId>gson</artifactId>
             <version>2.2.4</version>
         </dependency>
-        
-        <!-- OpenID -->
-		<dependency>
-			<groupId>org.expressme</groupId>
-			<artifactId>JOpenId</artifactId>
-			<version>1.08</version>
-		</dependency>
-        
+                
         <!-- WSDL support -->
 		<dependency>
 			<groupId>wsdl4j</groupId>
