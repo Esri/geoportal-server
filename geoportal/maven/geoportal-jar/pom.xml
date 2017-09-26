@@ -277,7 +277,7 @@
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>
 			<artifactId>batik-codec</artifactId>
-			<version>1.7</version>
+			<version>1.9.1</version>
 		</dependency>
         
         <!-- Mail -->
@@ -298,13 +298,13 @@
         <dependency>
 			<groupId>com.esri.arcgis</groupId>
 			<artifactId>arcgis_ws_runtime</artifactId>
-			<version>10.0</version>
+			<version>10.2.2</version>
         </dependency>
 
 		<dependency>
 			<groupId>com.esri.arcgis</groupId>
 			<artifactId>arcgis_agsws_stubs</artifactId>
-			<version>10.0</version>
+			<version>10.2.2</version>
 		</dependency>
         
         <!-- JUnit -->
