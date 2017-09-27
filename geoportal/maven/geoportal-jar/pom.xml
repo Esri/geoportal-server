@@ -298,13 +298,13 @@
         <dependency>
 			<groupId>com.esri.arcgis</groupId>
 			<artifactId>arcgis_ws_runtime</artifactId>
-			<version>10.2.2</version>
+			<version>10.5.1</version>
         </dependency>
 
 		<dependency>
 			<groupId>com.esri.arcgis</groupId>
 			<artifactId>arcgis_agsws_stubs</artifactId>
-			<version>10.2.2</version>
+			<version>10.5.1</version>
 		</dependency>
         
         <!-- JUnit -->
