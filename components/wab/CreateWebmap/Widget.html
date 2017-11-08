@@ -1,0 +1,31 @@
+<div>
+	
+	<div>Use this tool to create a web map on your ArcGIS Online account.</div>
+
+	<div class="signInDiv">
+		<label for="signInName">1. Please log in to your ArcGIS Online Account:</label> 
+
+		<br>
+		
+		<div class="jimu-btn signInButton " name="signInName" data-dojo-attach-point="signInNode" data-dojo-attach-event="onclick: _onExecuteSignInClick">Sign In</div>
+		
+		<div style="font-weight:bold;" data-dojo-attach-point="signInNameNode"></div>
+		
+		<div class="jimu-btn signInButton " style="display:none;" data-dojo-attach-point="signOutNode" data-dojo-attach-event="onclick: _onExecuteSignOutClick">Sign Out</div>
+	</div>
+
+
+	<div class="webMapNameDiv">
+		<label for="webMapName">2. Enter a name for the new web map:</label>
+		<input type="text" name="webMapName" data-dojo-attach-point="webMapNameNode"/>
+	</div>
+	
+	<div class="createWebMapDiv">
+		<div class="jimu-btn createWebMapButton" data-dojo-attach-point="generateWebmapNode" data-dojo-attach-event="onclick:_onCreateWebmapClick">
+		Create Web Map
+		</div>
+	</div>
+
+	<div class="outputMessageDiv" data-dojo-attach-point="outputWebmapNode"></div>
+
+</div>
