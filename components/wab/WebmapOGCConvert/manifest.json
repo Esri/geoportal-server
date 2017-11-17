@@ -1,0 +1,10 @@
+{
+  "name": "Webmap to OGC Conversion",
+  "platform": "HTML",
+  "version": "2.4",
+  "wabVersion": "2.4",
+  "author": "Esri Inc.",
+  "description": "This widget reads saves the current map to an GeoJSON-encoded OGC Context document.",
+  "copyright": "2017 (c) Esri Inc",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0"
+}

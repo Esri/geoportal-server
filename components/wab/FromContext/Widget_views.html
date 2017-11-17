@@ -1,0 +1,12 @@
+<div>
+	<div>${nls.description}</div>
+	
+	<div data-dojo-attach-point="tabQuery">
+		<div id="tabOpen" class="query-tab-node" data-dojo-attach-point="tabOpen">  
+			<div data-dojo-type="views/OpenPane" data-dojo-props="appConfig: this.appConfig,config: this.config, map:this.map"></div>
+		</div>
+		<div id="tabSaveAs" class="query-tab-node" data-dojo-attach-point="tabSaveAs">
+			<div data-dojo-type="views/SaveAsPane" data-dojo-props="appConfig: this.appConfig,config: this.config, map:this.map"></div>
+		</div>
+	</div>	
+</div>

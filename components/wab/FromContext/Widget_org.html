@@ -1,0 +1,42 @@
+<div>
+	<div>${nls.description}</div>
+	<div data-dojo-attach-point="tabQuery">
+
+		<div id="tabOpen" class="query-tab-node" data-dojo-attach-event="onclick:tabOpenClick">  
+			<div class="jimu-r-row play-section">
+			<div class="jimu-r-row play-section">
+				<div class="jimu-r-row" style="overflow:auto;height:250px">
+					<form enctype="multipart/form-data" method="post" id="uploadForm" data-dojo-attach-point="_fileUpload" data-dojo-attach-event="onchange:onUpload">
+						<div class="field">
+							<label class="file-upload">
+							data-dojo-attach-point="tabOpen" 
+							data-dojo-attach-point="tabSaveAs"
+								<span><strong>${nls.addFile}</strong></span>
+								<input type="file" name="file" id="inFile" />
+							</label>
+						</div>
+					</form>
+				</div>
+				<div class="jimu-r-row play-section">
+					<span id="uploadStatus" class="file-upload-status" style="opacity:1;" data-dojo-attach-point="uploadStatus"></span>
+				</div>        
+				<div class="jimu-r-row play-section">
+					<div  id="contextList" data-dojo-attach-point="List" class="jimu-container" data-dojo-attach-event="click:_selectResultItem" style="position:absolute;width:100%;height:400px;left:0;right:0;top:0px;bottom:0;overflow-x:hidden;overflow-y:auto;"></div>
+				</div>
+			</div>
+			</div>
+		</div>
+		<div id="tabSaveAs" class="query-tab-node" data-dojo-attach-event="onclick:tabSaveAsClick">
+			<div class="jimu-r-row play-section">
+				<div class="field">
+					<label class="file-upload">
+						<span><strong>${nls.saveAsFile}</strong></span>
+						<a href="" id="a" style="display:none">hidden</a>
+						<button data-dojo-attach-event="onclick:onSaveAs">Create file</button>
+					</label>
+				</div>
+			</div>        
+		</div>
+
+	</div>	
+</div>

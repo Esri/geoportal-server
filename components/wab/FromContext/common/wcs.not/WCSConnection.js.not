@@ -1,0 +1,38 @@
+﻿define(["dojo/_base/declare","dojo/_base/lang","dojo/io-query","dojo/has","esri/lang","esri/domUtils","esri/request","esri/kernel","esri/SpatialReference","esri/geometry/Extent","esri/geometry","./WCSLayer"],
+function(n,t,i,r,u,f,e,o,s,h,c,l){
+	var a=n(null,{supportedVersions:["1.0.0","1.1.0","1.1.1","2.0.1"],constructor:function(n,t){
+		var r=n.indexOf("?");
+		r>-1&&r<=this.url.length-1?(this.optionalParameters=i.queryToObject(n.substring(r+1,n.length)),this.url=this.url.substring(0,r+1)):this.url=n;t&&(this.version=t.version);
+		this.version=this.version||"1.0.0"
+	},
+	connect:function(){function i(n){
+		if(this.onConnectionFailed)this.onConnectionFailed(n);
+		throw n;
+	}
+
+var n=e({url:this.url,content:t.mixin({request:"GetCapabilities",service:"WCS",version:this.version},this.OptionalParameters),handleAs:"xml",headers:{"X-Requested-With":null}});
+n.then(t.hitch(this,this._parseCapabilities),i)},createLayer:function(n){(n===undefined||n===null)&&(n=this.coverages[0].name);
+var t={version:"1.0.0",onlineResources:this.onlineResources,coverageId:n};
+return new l(this.url,t)},
+_parseCapabilities:function(n){var t=n.getElementsByTagName("Capabilities"),i;
+if(t.length===0&&(t=n.getElementsByTagName("WCS_Capabilities")),t.length===0)throw"not a valid capabilities file -- cannot find Capabilities or WCS_Capabilities root element";
+i=t[0].getAttribute("version");
+switch(i){
+	case"1.0.0":
+		this._parse100(n)}try{if(this.onConnected)this.onConnected(this)}catch(r){if(this.onConnectionFailed)this.onConnectionFailed(r);
+throw r;
+}},
+_parse100:function(n){var a=n.getElementsByTagName("Service")[0],i,u,e,f,o,r,t;
+for(this.name=a.getElementsByTagName("name")[0].textContent,i={},u=n.getElementsByTagName("Capability")[0],i.getCapabilities=u.getElementsByTagName("GetCapabilities")[0].getElementsByTagName("Get")[0].getElementsByTagName("OnlineResource")[0].getAttribute("xlink:href"),i.describeCoverage=u.getElementsByTagName("DescribeCoverage")[0].getElementsByTagName("Get")[0].getElementsByTagName("OnlineResource")[0].getAttribute("xlink:href"),i.getCoverage=u.getElementsByTagName("GetCoverage")[0].getElementsByTagName("Get")[0].getElementsByTagName("OnlineResource")[0].getAttribute("xlink:href"),this.onlineResources=i,e=n.getElementsByTagName("CoverageOfferingBrief"),o=[],f=0;
+f<e.length;
+f++){r=e[f];
+t={};
+t.name=r.getElementsByTagName("name")[0].textContent;
+t.label=r.getElementsByTagName("label")[0].textContent;
+t.description=r.getElementsByTagName("description")[0].textContent;
+var s=r.getElementsByTagName("pos"),c=s[0].textContent.split(" "),l=s[1].textContent.split(" ");
+t.lonLatEnvelope=new h({xmin:parseFloat(c[0]),ymin:parseFloat(c[1]),xmax:parseFloat(l[0]),ymax:parseFloat(l[1]),spatialReference:{wkid:4326}});
+o.push(t)}return this.coverages=o,!0}});
+return r("extend-esri")&&t.setObject("layers.WCSConnection",a,o),a});
+
+//# sourceMappingURL=WCSConnection.min.js.map
