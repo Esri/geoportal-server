@@ -350,7 +350,7 @@
 		<row><td>ISRegistryComponent</td><td>{DC9AC8E5-68DB-4546-A1CD-B6ED496D2DF8}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>InstallDirFiles</td><td>{8B3319ED-032F-4F37-BE44-D76C663BCB87}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>LoggingFolderFiles</td><td>{1CE5A7B0-E40A-49F3-878A-153ADE816825}</td><td>LOGGINGFOLDER</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>MyDocumentsArcGISAddInsDesktop10Files</td><td>{B3A2AC63-A4D8-421F-9C5D-635417842B90}</td><td>DESKTOP10.5</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>MyDocumentsArcGISAddInsDesktop10Files</td><td>{B3A2AC63-A4D8-421F-9C5D-635417842B90}</td><td>DESKTOP10.6</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>WMC.chm</td><td>{A545F540-B269-4429-A615-6A9A1A2983BD}</td><td>BIN1</td><td>8</td><td/><td>wmc.chm</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>WMCOpener.dll</td><td>{8A9278BA-7310-4E58-AEB1-1E31E39B7143}</td><td>BIN1</td><td>8</td><td/><td>wmcopener.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
@@ -1179,7 +1179,7 @@
 		<row><td>CommonFiles64Folder</td><td>TARGETDIR</td><td>.:Common64</td><td/><td>0</td><td/></row>
 		<row><td>CommonFilesFolder</td><td>TARGETDIR</td><td>.:Common</td><td/><td>0</td><td/></row>
 		<row><td>DATABASEDIR</td><td>ISYourDataBaseDir</td><td>.</td><td/><td>0</td><td/></row>
-		<row><td>DESKTOP10.5</td><td>ADDINS</td><td>DESKTO~1|Desktop10.5</td><td/><td>0</td><td/></row>
+		<row><td>DESKTOP10.6</td><td>ADDINS</td><td>DESKTO~1|Desktop10.6</td><td/><td>0</td><td/></row>
 		<row><td>DESKTOPHOME</td><td>TARGETDIR</td><td>DESKTO~1|DESKTOPHOME</td><td/><td>0</td><td/></row>
 		<row><td>DesktopFolder</td><td>TARGETDIR</td><td>.:Desktop</td><td/><td>3</td><td/></row>
 		<row><td>ESRI</td><td>ProgramFilesFolder</td><td>ESRI</td><td/><td>0</td><td/></row>
@@ -2429,13 +2429,15 @@
 		<col def="S255">Value</col>
 		<col def="S255">TestValue</col>
 		<col def="i4">Type</col>
+		<row><td>BUILD_BINARIESDIRECTORY</td><td>BUILD_BINARIESDIRECTORY</td><td/><td>4</td></row>
+		<row><td>BUILD_SOURCESDIRECTORY</td><td>BUILD_SOURCESDIRECTORY</td><td/><td>4</td></row>
 		<row><td>CommonFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISPROJECTDIR</td><td/><td/><td>1</td></row>
 		<row><td>ISProductFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectFolder</td><td/><td/><td>1</td></row>
-		<row><td>PATH_TO_BIN_FILES1</td><td>C:\Builds\5\b</td><td/><td>2</td></row>
-		<row><td>PATH_TO_SRC_FILES</td><td>C:\Builds\5\s\components\desktop\WMCOpener\trunk\src</td><td/><td>2</td></row>
+		<row><td>PATH_TO_BIN_FILES1</td><td>&lt;BUILD_BINARIESDIRECTORY&gt;</td><td/><td>2</td></row>
+		<row><td>PATH_TO_SRC_FILES</td><td>&lt;BUILD_SOURCESDIRECTORY&gt;\components\desktop\WMCOpener\trunk\src</td><td/><td>2</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
 		<row><td>WindowsFolder</td><td/><td/><td>1</td></row>
@@ -3881,7 +3883,7 @@
 		<row><td>ID_STRING3</td><td>1033</td><td>WMCOpener</td><td>0</td><td/><td>-1054953335</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>All Users</td><td>0</td><td/><td>-1054962295</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>Current Users</td><td>0</td><td/><td>-1054969047</td></row>
-		<row><td>ID_STRING6</td><td>1033</td><td>[ProductName] requires ArcGIS 10.5.1 for Desktop. Please install ArcGIS 10.5.1 for Desktop and restart this installation.</td><td>0</td><td/><td>866464367</td></row>
+		<row><td>ID_STRING6</td><td>1033</td><td>[ProductName] requires ArcGIS Desltop 10.6. Please install ArcGIS Desktop 10.6 and restart this installation.</td><td>0</td><td/><td>-173720499</td></row>
 		<row><td>ID_STRING7</td><td>1033</td><td>&lt; &amp;Back</td><td>0</td><td/><td>-1054990615</td></row>
 		<row><td>ID_STRING8</td><td>1033</td><td>Cancel</td><td>0</td><td/><td>-1054990615</td></row>
 		<row><td>ID_STRING9</td><td>1033</td><td>{&amp;MSSansBold8}[ProductName] Parameters</td><td>0</td><td/><td>1042189643</td></row>
@@ -4196,7 +4198,7 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 	<table name="LaunchCondition">
 		<col key="yes" def="s255">Condition</col>
 		<col def="l255">Description</col>
-		<row><td>DESKTOPVERSION&lt;&lt;"10.5"</td><td>##ID_STRING6##</td></row>
+		<row><td>DESKTOPVERSION&lt;&lt;"10.6"</td><td>##ID_STRING6##</td></row>
 	</table>
 
 	<table name="ListBox">
@@ -4568,8 +4570,8 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<col def="s255">Key</col>
 		<col def="S255">Name</col>
 		<col def="I2">Type</col>
-		<row><td>NewSignature1</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.5</td><td>InstallDir</td><td>2</td></row>
-		<row><td>NewSignature11</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.5</td><td>RealVersion</td><td>2</td></row>
+		<row><td>NewSignature1</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.6</td><td>InstallDir</td><td>2</td></row>
+		<row><td>NewSignature11</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.6</td><td>RealVersion</td><td>2</td></row>
 	</table>
 
 	<table name="Registry">
@@ -4580,9 +4582,9 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<col def="S0">Value</col>
 		<col def="s72">Component_</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>Registry1</td><td>2</td><td>SOFTWARE\ESRI\Applications\WMCOpener</td><td>ConfigFilePath</td><td>[INSTALLDIR]</td><td>ISRegistryComponent</td><td>0</td></row>
-		<row><td>Registry2</td><td>2</td><td>SOFTWARE\ESRI\Applications\WMCOpener</td><td>InstallDir</td><td>[INSTALLDIR]</td><td>ISRegistryComponent</td><td>0</td></row>
-		<row><td>Registry3</td><td>2</td><td>SOFTWARE\ESRI\Applications\WMCOpener</td><td>Version</td><td>[ProductVersion]</td><td>ISRegistryComponent</td><td>0</td></row>
+		<row><td>Registry1</td><td>2</td><td>SOFTWARE\ESRI\Applications\Portal_WMCOpener</td><td>ConfigFilePath</td><td>[INSTALLDIR]</td><td>ISRegistryComponent</td><td>0</td></row>
+		<row><td>Registry2</td><td>2</td><td>SOFTWARE\ESRI\Applications\Portal_WMCOpener</td><td>InstallDir</td><td>[INSTALLDIR]</td><td>ISRegistryComponent</td><td>0</td></row>
+		<row><td>Registry3</td><td>2</td><td>SOFTWARE\ESRI\Applications\Portal_WMCOpener</td><td>Version</td><td>[ProductVersion]</td><td>ISRegistryComponent</td><td>0</td></row>
 	</table>
 
 	<table name="RemoveFile">
