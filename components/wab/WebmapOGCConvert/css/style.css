@@ -1,0 +1,13 @@
+.jimu-widget-demo{
+}
+
+.convert-checkbox {
+width:20px;
+height:20px;
+}
+
+.convert-checkbox-span {
+position:relative;
+bottom:5px;
+font-weight:bold;
+}

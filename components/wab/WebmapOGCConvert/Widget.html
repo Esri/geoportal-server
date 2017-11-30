@@ -1,0 +1,27 @@
+<div>
+	
+	<div>Use this tool to write and read a json-encoded OGC Context document.</div>
+	<div class="jimu-r-row play-section" style="height:80px">
+		<div class="field">
+			<label class="file-upload"><span><strong>Save as Context Document</strong></span></label>
+			<br>
+				<select id="outputType" style="height:28px">
+				  <option value="outputContextTypeGeoJSON">GeoJSON</option>
+				  <option value="outputContextTypeATOM">ATOM</option>
+				  <option value="outputContextTypeContext">Web Map Context</option>
+				</select>
+
+				<a href="" id="a" style="display:none">hidden</a>
+				<div class="jimu-btn" data-dojo-attach-point="convertWebToOGCNode" data-dojo-attach-event="onclick:_onConvertToOGCClick">
+					Convert to OGC
+				</div>
+		</div>
+
+		<div>
+			<input type="checkbox" class="convert-checkbox" name="addedLayers" data-dojo-attach-point="addedLayersNode"> 
+			<span class="convert-checkbox-span">Include Added Layers</span>
+		</div>
+
+	</div>
+
+</div>

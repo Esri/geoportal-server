@@ -1,0 +1,10 @@
+﻿=====================================================
+ESRI Geoportal Server
+Copyright ©2017 Esri. 
+
+=====================================================
+
+This product was created based on contributions from Esri, Inc for the Geoportal, Ontology Service, CSW clients, Publishing Client, WMC Opener, Flex Widget, Silverlight Widget, and OpenLS Connector.
+  
+This product includes software developed at
+Esri. (http://www.esri.com/).

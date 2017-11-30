@@ -10,7 +10,7 @@
       },
       {
         "name": "Geoportal 2.5.0",
-        "url": "http://geoss.esri.com/geoportal2/rest/metadata/search?gptVersion=2",
+        "url": "http://geoss.esri.com/geoportal2/rest/metadata/search",
         "gptVersion": 2
       }
   ],

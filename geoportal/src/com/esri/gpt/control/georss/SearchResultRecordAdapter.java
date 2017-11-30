@@ -18,11 +18,9 @@ package com.esri.gpt.control.georss;
 import com.esri.gpt.catalog.search.ResourceLinks;
 import com.esri.gpt.catalog.search.SearchResultRecord;
 import com.esri.gpt.framework.geometry.Envelope;
-import com.esri.gpt.framework.util.UuidUtil;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * SearchResultRecord adapter.
@@ -87,7 +85,7 @@ public class SearchResultRecordAdapter implements IFeedRecord {
 
   @Override
   public String getServiceType() {
-    return record.getService();
+    return record.getServiceType();
   }
 
   @Override

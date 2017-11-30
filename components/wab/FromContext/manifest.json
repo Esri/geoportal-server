@@ -1,0 +1,24 @@
+{
+  "name": "FromContext",
+  "2D": true,
+  "3D": false,
+  "platform": "HTML",
+  "version": "1.0",
+  "wabVersion": "1.3",
+  "author": "Marten Hogeweg",
+  "description": "Add content from an OGC Context document (JSON)",
+  "copyright": "",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0",
+  "properties": {
+		"inPanel":true,
+		"hasLocale": true,
+		"hasStyle":true,
+		"hasConfig":false,
+		"hasUIFile":true,
+		"hasSettingPage":false,
+		"hasSettingUIFile":false,
+		"hasSettingLocale":false,
+		"hasSettingStyle":false,
+		"IsController":false
+  }
+}

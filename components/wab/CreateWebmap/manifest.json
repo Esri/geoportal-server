@@ -1,0 +1,10 @@
+{
+  "name": "Create Web Map",
+  "platform": "HTML",
+  "version": "2.4",
+  "wabVersion": "2.4",
+  "author": "Esri R&D Center Beijing",
+  "description": "This is the widget used in developer guide",
+  "copyright": "",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0"
+}

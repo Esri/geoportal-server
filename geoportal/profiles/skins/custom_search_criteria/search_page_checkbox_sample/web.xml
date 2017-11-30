@@ -16,6 +16,9 @@
 -->
 <web-app id="WebApp_ID" version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
     <display-name>Geoportal Server</display-name>
+    <listener>
+        <listener-class>com.esri.gpt.framework.context.ATilesListener</listener-class>
+    </listener>
     <filter>
         <filter-name>EncodingFilter</filter-name>
         <filter-class>com.esri.gpt.control.filter.EncodingFilter</filter-class>
@@ -48,27 +51,6 @@
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet>
-        <servlet-name>action</servlet-name>
-        <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
-        <init-param>
-            <param-name>chainConfig</param-name>
-            <param-value>org/apache/struts/tiles/chain-config.xml</param-value>
-        </init-param>
-        <init-param>
-            <param-name>config</param-name>
-            <param-value>/WEB-INF/struts-config.xml</param-value>
-        </init-param>
-        <init-param>
-            <param-name>debug</param-name>
-            <param-value>2</param-value>
-        </init-param>
-        <init-param>
-            <param-name>detail</param-name>
-            <param-value>2</param-value>
-        </init-param>
-        <load-on-startup>2</load-on-startup>
     </servlet>
     <servlet>
         <servlet-name>InitializationServlet</servlet-name>
@@ -136,10 +118,6 @@
         <servlet-name>SimpleSOSBridge</servlet-name>
         <servlet-class>com.esri.gpt.control.livedata.sos.SimpleSOSBridge</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>action</servlet-name>
-        <url-pattern>*.do</url-pattern>
-    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ThumbnailServlet</servlet-name>
         <url-pattern>/thumbnail</url-pattern>

@@ -1,0 +1,41 @@
+﻿define(["dojo/_base/declare","dojo/_base/lang","dojo/_base/array","dojo/has","esri/kernel","esri/SpatialReference","esri/geometry/Extent"],function(n,t,i,r,u,f,e){
+	var o=n(null,{declaredClass:"esri.layers.WCSCoverageDescription",constructor:function(n,i){
+	var r;
+switch(i){
+	case"1.0.0":r=this._parse100(n);break;case"2.0.1":r=this._parse201(n)}t.mixin(this,r)},
+_getContent:function(n){
+	return n.textContent||n.innerText},
+_parse100:function(n){
+	var u={},
+at=n.getElementsByTagNameNS("*","CoverageDescription")[0],lt,ft,b,ii;this._supportCustomCRS=at.getAttribute("xmlns")==="http://www.opengis.net/wcs";for(var vt=at.getElementsByTagNameNS("*","CoverageOffering")[0],ri=vt.childNodes.length,i,r,d,g,nt,o,c,l,et,ot,y,st,tt,a,p,h,it,rt,ht,ct,yt,pt,f=function(n,t){
+	if(n===null||t===null||n.tagName===null||n.tagName===undefined)return!1;var i=n.tagName.toLowerCase(),r=t.toLowerCase();return i===r||i.indexOf(":"+r)>0},
+k=0;k<ri;k++)if(i=vt.childNodes[k],f(i,"description"))u.description=i.textContent;else if(f(i,"name"))u.name=i.textContent;else if(f(i,"label"))u.label=i.textContent;else if(f(i,"supportedFormats"))for(u.supportedFormats=[],r=0;r<i.childNodes.length;r++)o=i.childNodes[r],f(o,"formats")&&u.supportedFormats.push(o.textContent);else if(f(i,"supportedCRSs")){
+	for(et=[],ot=[],r=0;r<i.childNodes.length;r++)o=i.childNodes[r],f(o,"requestResponseCRSs")?ot.push(o.textContent.split(":")[1]):f(o,"nativeCRSs")&&et.push(o.textContent.split(":")[1]);u.supportedCRSs={requestResponseCRSs:ot,nativeCRSs:et}}else if(f(i,"supportedInterpolations"))for(u.supportedInterpolations=[],y=i.getAttribute("default"),y===undefined&&y===null||u.supportedInterpolations.push(y),r=0;r<i.childNodes.length;r++)o=i.childNodes[r],f(o,"interpolationMethod")&&o.textContent!==y&&u.supportedInterpolations.push(o.textContent);else if(f(i,"lonLatEnvelope"))st=i.getElementsByTagNameNS("*","pos"),c=st[0].textContent.split(" "),l=st[1].textContent.split(" "),u.lonLatEnvelope=new e({xmin:parseFloat(c[0]),ymin:parseFloat(c[1]),xmax:parseFloat(l[0]),ymax:parseFloat(l[1]),spatialReference:{wkid:4326}});else if(f(i,"rangeSet"))for(u.rangeSet=[],tt=i.getElementsByTagNameNS("*","RangeSet"),r=0;r<tt.length;r++){
+	for(a={},
+a.name=tt[r].getElementsByTagNameNS("*","name")[0].textContent,a.label=tt[r].getElementsByTagNameNS("*","label")[0].textContent,a.axis=[],h=i.getElementsByTagNameNS("*","AxisDescription"),r=0;r<h.length;r++){
+	if(p={},
+p.name=h[r].getElementsByTagNameNS("*","name")[0].textContent,p.label=h[r].getElementsByTagNameNS("*","label")[0].textContent,it=[],rt=h[r].getElementsByTagNameNS("*","singleValue"),rt.length>0)for(g=0;g<rt.length;g++)it.push(rt[g].textContent);else if(ht=h[r].getElementsByTagNameNS("*","min"),ct=h[r].getElementsByTagNameNS("*","max"),ht.length>0&&ct.length>0)for(yt=parseInt(ht[0].textContent),pt=parseInt(ct[0].textContent),nt=yt;nt<=pt;nt++)it.push(nt);p.values=it;a.axis.push(p)}u.rangeSet.push(a)}else if(f(i,"domainSet")){
+	u.domainSet={};var v={},
+ut=i.getElementsByTagNameNS("*","spatialDomain")[0],wt=ut.getElementsByTagNameNS("*","Envelope")[0],ui=wt.getAttribute("srsName").split(":")[1],bt=wt.getElementsByTagNameNS("*","pos");c=bt[0].textContent.split(" ");l=bt[1].textContent.split(" ");v.envelope=new e({xmin:parseFloat(c[0]),ymin:parseFloat(c[1]),xmax:parseFloat(l[0]),ymax:parseFloat(l[1]),spatialReference:{wkid:parseInt(ui)}});var kt=ut.getElementsByTagNameNS("*","RectifiedGrid")[0],fi=kt.getElementsByTagNameNS("*","low")[0],ei=kt.getElementsByTagNameNS("*","high")[0],dt=fi.textContent.split(" "),gt=ei.textContent.split(" "),oi=parseInt(gt[0])-parseInt(dt[0])+1,si=parseInt(gt[1])-parseInt(dt[1])+1,hi=ut.getElementsByTagNameNS("*","origin")[0].getElementsByTagNameNS("*","pos")[0],ni=hi.textContent.split(" "),ti=ut.getElementsByTagNameNS("*","offsetVector"),ci=parseFloat(ti[0].textContent.split(" ")[0]),li=parseFloat(ti[1].textContent.split(" ")[1]);v.columns=oi;v.rows=si;v.offset={x:ci,y:li};v.origin={x:parseFloat(ni[0]),y:parseFloat(ni[1])};u.domainSet.spatialDomain=v;var s={begin:null,end:null},
+w=[],ai=i.getElementsByTagNameNS("*","temporalDomain");if(ai.length>0){
+	if(lt=i.getElementsByTagNameNS("*","temporalDomain")[0],ft=lt.getElementsByTagNameNS("*","timeposition"),ft.length>0){
+	for(d=0;d<ft.length;d++)w.push(new Date(ft[d].textContent));s.begin=w[0];s.end=w[w.length-1];s.values=w}else b=lt.getElementsByTagNameNS("*","timePeriod"),b.length>0&&(s.begin=new Date(b[0].getElementsByTagNameNS("*","beginPosition")[0].textContent),s.end=new Date(b[0].getElementsByTagNameNS("*","endPosition")[0].textContent),ii=b[0].getElementsByTagNameNS("*","timeResolution")[0].textContent,s=t.mixin(s,this._parseTimeResolution(ii)));u.domainSet.temporalDomain=s}}return u},
+_parseTimeResolution:function(n){
+	var t=n.toUpperCase(),u=["Years","Months","Days","Hours","Minutes","Seconds"],i,r;return t.indexOf("PT")===-1?(t=t.slice(1),i=u[this._findIndex(["Y","M","D"],function(n){
+	return t.indexOf(n)>-1})],r=parseFloat(t.substring(0,t.length-1))):(t=t.slice(2),i=u[3+this._findIndex(["H","M","S"],function(n){
+	return t.indexOf(n)>-1})],r=parseFloat(t.substring(0,t.length-1))),{resolution:r,units:i}},
+_findIndex:function(n,t){
+	var r=0,i;if(n.findIndex)r=n.findIndex(t);else for(i=0;i<n.length;i++)if(t(n[i])){
+	r=i;break}return r},
+_parse201:function(n){
+	for(var r={},
+ot=n.getElementsByTagNameNS("*","CoverageDescriptions")[0],d=ot.getElementsByTagNameNS("*","CoverageDescription")[0],st=d.childNodes.length,t,i,p,g,v,f=function(n,t){
+	if(n===null||t===null||n.tagName===null||n.tagName===undefined)return!1;var i=n.tagName.toLowerCase(),r=t.toLowerCase();return i===r||i.indexOf(":"+r)>0},
+w,o,s,b,h,k,c,it,a=0;a<st;a++)if(t=d.childNodes[a],f(t,"coverageId"))r.coverageId=t.textContent;else if(f(t,"ServiceParameters"))for(r.supportedFormats=[],w=t.getElementsByTagNameNS("*","nativeFormat"),i=0;i<w.length;i++)g=w[i],r.supportedFormats.push(g.textContent);else if(f(t,"boundedBy")){
+	var y=t.getElementsByTagNameNS("*","Envelope")[0],nt=y.getAttribute("srsName"),tt=nt.slice(nt.lastIndexOf("/")+1);v=y.getAttribute("axisLabels");o=y.getElementsByTagNameNS("*","lowerCorner")[0].textContent.split(" ");s=y.getElementsByTagNameNS("*","upperCorner")[0].textContent.split(" ");r.envelope=v[0]==="x"?new e({xmin:parseFloat(o[0]),ymin:parseFloat(o[1]),xmax:parseFloat(s[0]),ymax:parseFloat(s[1]),spatialReference:{wkid:parseInt(tt)}}):new e({xmin:parseFloat(o[1]),ymin:parseFloat(o[0]),xmax:parseFloat(s[1]),ymax:parseFloat(s[0]),spatialReference:{wkid:parseInt(tt)}})}else if(f(t,"rangeType")){
+	for(r.rangeSet=[],b=t.getElementsByTagNameNS("*","DataRecord"),i=0;i<b.length;i++)for(h=b[i].getElementsByTagNameNS("*","field"),k=[],p=0;p<h.length;p++)c={},
+c.name=h[i].getAttribute("name"),c.description=h[i].getElementsByTagNameNS("*","description")[0].textContent,it=h[i].getElementsByTagNameNS("*","interval")[0].textContent.split(" "),c.allowedValues=it.map(function(n){
+	return parseFloat(n)}),k.push(c);r.rangeSet.push(k)}else if(f(t,"domainSet")){
+	r.domainSet={};var u={},
+l=t.getElementsByTagNameNS("*","RectifiedGrid")[0],ht=l.getElementsByTagNameNS("*","low")[0],ct=l.getElementsByTagNameNS("*","high")[0],rt=ht.textContent.split(" "),ut=ct.textContent.split(" "),lt=parseInt(ut[0])-parseInt(rt[0])+1,at=parseInt(ut[1])-parseInt(rt[1])+1,vt=l.getElementsByTagNameNS("*","axisLabels")[0];v=vt.textContent.split(" ");var yt=l.getElementsByTagNameNS("*","origin")[0].getElementsByTagNameNS("*","pos")[0],ft=yt.textContent.split(" "),et=l.getElementsByTagNameNS("*","offsetVector"),pt=parseFloat(et[0].textContent.split(" ")[0]),wt=parseFloat(et[1].textContent.split(" ")[1]);u.columns=lt;u.rows=at;u.axisLabels=v;u.offset={x:pt,y:wt};u.origin={x:parseFloat(ft[0]),y:parseFloat(ft[1])};r.domainSet=u}return r}});return r("extend-esri")&&t.setObject("layers.WCSCoverageDescription",o,u),o});
+//# sourceMappingURL=WCSCoverageDescription.min.js.map

@@ -1,0 +1,106 @@
+﻿define(["dojo/_base/declare","dojo/_base/lang","dojo/_base/connect","dojo/_base/array","dojo/_base/kernel","dojo/_base/Deferred","dojo/io-query","esri/request","esri/deferredUtils","./BaseRasterLayer","./WCSCoverageDescription","./Raster","esri/layers/rasterFormats/ImageCanvasDecoder","esri/SpatialReference","esri/geometry/Extent","esri/geometry","esri/layers/TimeInfo"],function(n,t,i,r,u,f,e,o,s,h,c,l,a,v,y,p,w){return n([h],{declaredClass:"esri.layers.WCSLayer",constructor:function(){
+	this._supportedVersions=["1.0.0"];
+	this._WEB_MERCATOR=[102100,3857,102113,900913];
+	this._rasterReadPromise=null},_initialize:function(i,r){
+		var u,f,o;
+		this._params={};
+		n.safeMixin(this,r);
+		this.coverageId=this.coverageId||"1";
+		this.version="1.0.0";
+		this.resamplingType=this.resamplingType||"bilinear";
+		this.format=this.format||"TIFF";
+		this.band=this.band||null;
+		u=this.url.indexOf("?");
+		u>-1&&u<=this.url.length-1&&(this.optionalParameters=e.queryToObject(this.url.substring(u+1,this.url.length)),this.url=this.url.substring(0,u+1));
+		f=this;
+		o=function(){f.describeCoverage().then(t.hitch(f,"_initialized"),t.hitch(f,"_initializationFailed"))};
+		o()
+	},
+_initialized:function(n){
+	if (n == null) return;
+	
+	var t=new c(n,this.version),o,i,r,u,f,e;
+	this.coverageDescription=t;
+	this._findCredential();
+	o=this.credential&&this.credential.ssl||n&&n._ssl;
+	o&&this._useSSL();
+	this._params.token=this._getToken();
+	switch(this.version){
+		case"1.0.0":
+			for(this.fullExtent=t.lonLatEnvelope,u=t.rangeSet,f=!1,i=0;i<u.length;	i++) {
+				if(f)break;
+				for(r=0;r<u[i].axis.length;r++)
+					if(u[i].axis[r].name.toLowerCase()==="band"){
+						this.band=u[i].axis[r].values.join(",");
+						f=!0;
+						break
+					}
+			}
+			t.domainSet.temporalDomain&&(this.timeInfo=new w({timeExtent:[t.domainSet.temporalDomain.begin,t.domainSet.temporalDomain.end]}));
+			break;
+		case"2.0.1":
+			this.fullExtent=t.envelope
+	}
+	this.currentBandCount=3;
+	this.loaded=!0;
+	this.onLoad(this);
+	e=this._loadCallback;
+	e&&(delete this._loadCallback,e(this))
+},
+
+_initializationFailed:function(n){
+	this.loaded=!1;
+	throw n;
+},
+
+onRasterReadComplete:function(){},_setMap:function(n){return n.extent&&(this._projectedfullMapExtent=this._convertExtentToMap(this.fullExtent,n.extent.spatialReference)),this.inherited(arguments)},_convertExtentToNative:function(n){var t=null,u=this.fullExtent,i=u.spatialReference.wkid,r=n.spatialReference.wkid;
+return i===r||this._WEB_MERCATOR.indexOf(i)>-1&&this._WEB_MERCATOR.indexOf(r)>-1?t=n:i===4326&&this._WEB_MERCATOR.indexOf(r)>-1?t=p.webMercatorUtils.webMercatorToGeographic(n):r===4326&&this._WEB_MERCATOR.indexOf(i)>-1&&(t=p.webMercatorUtils.geographicToWebMercator(n)),t},_convertExtentToMap:function(n,t){var i=null,r=t?t.wkid:this._map.extent.spatialReference.wkid,u=n.spatialReference.wkid;
+return r===u||this._WEB_MERCATOR.indexOf(r)>-1&&this._WEB_MERCATOR.indexOf(u)>-1?i=n:r===4326&&this._WEB_MERCATOR.indexOf(u)>-1?i=p.webMercatorUtils.webMercatorToGeographic(n):u===4326&&this._WEB_MERCATOR.indexOf(r)>-1&&(i=p.webMercatorUtils.geographicToWebMercator(n)),this._WEB_MERCATOR.indexOf(i.spatialReference.wkid)>-1&&(i.spatialReference.wkid=3857),i},_requestData:function(n,i,r){var u,o,e,p,c,k,v,d;
+if(this._rasterReadPromise&&this._rasterReadPromise.cancel(),u=this._projectedfullMapExtent,o=n,o.xmax<=u.xmin||o.xmin>=u.xmax||o.ymax<=u.ymin||o.ymin>=u.ymax){this.clear();
+return}e=new y(o);
+e.xmin=Math.max(e.xmin,u.xmin);
+e.xmax=Math.min(e.xmax,u.xmax);
+e.ymin=Math.max(e.ymin,u.ymin);
+e.ymax=Math.min(e.ymax,u.ymax);
+p=e;
+this._requestExtent=p;
+var g=Math.round((e.xmax-e.xmin)/(o.xmax-o.xmin)*i),nt=Math.round((e.ymax-e.ymin)/(o.ymax-o.ymin)*r),w=[];
+w.push("x,http://www.opengis.net/def/crs/EPSG/0/"+u.spatialReference.wkid+"("+u.xmin+","+u.xmax+")");
+w.push("y,http://www.opengis.net/def/crs/EPSG/0/"+u.spatialReference.wkid+"("+u.ymin+","+u.ymax+")");
+c=this._params;
+t.mixin(this._params,{extent:e,width:g,height:nt,crs:"EPSG:"+u.spatialReference.wkid,coverageId:this.coverageId,format:this.format});
+this.coverageDescription.supportedInterpolations&&this.coverageDescription.supportedInterpolations.length>0&&(c.interpolation=this.coverageDescription.supportedInterpolations[0]);
+this.band&&(c.band=this.band);
+!c.time&&this.coverageDescription.domainSet.temporalDomain&&(c.time=this.coverageDescription.domainSet.temporalDomain.end.toISOString());
+var h=this,tt=new l(""),it=this._useBrowserDecoding(),b;
+it&&(k=new a({ctx:this._context}),b=t.hitch(k,"decode"));
+v=new f(s._dfdCanceller);
+v._pendingDfd=this.getCoverage(c);
+v._pendingDfd.then(function(n){var i={width:c.width,height:c.height,planes:null,pixelType:"UNKNOWN",decodeFunc:b},r=tt.decode(n,i);
+r.then(function(n){d={pixelBlock:n,extent:p};
+h._resolve([d],"onRasterReadComplete",t.hitch(h,h._requestDataHandler),v,!1)},function(n){h._resolve([n],null,t.hitch(h,h._requestDataErrorHandler),v,!0)})},function(n){h._resolve([n],null,t.hitch(h,h._requestDataErrorHandler),v,!0)});
+this._rasterReadPromise=v.promise},_requestDataHandler:function(n){this._rasterReadPromise&&this._rasterReadPromise.isCanceled()||(this.originalPixelData=n,this.hasDataChanged=!0,this._setPixelData(n))},_setPixelData:function(n){var t=this._clonePixelData(n);
+(this.pixelFilter&&this.pixelFilter(t),this.pixelData=t,this._rasterReadPromise&&this._rasterReadPromise.isCanceled())||(this._drawPixelData(),this._rasterReadPromise=null)},_useBrowserDecoding:function(){var n=this._requestExtent,i=this._map.width,r=this._map.height,t=this.getCurrentResolution(),u=Math.round((n.xmax-n.xmin)/t.x)===i&&Math.round((n.ymax-n.ymin)/t.y)===r;
+return u&&(this.pixelFilter===undefined||this.pixelFilter===null)&&(this.format.toLowerCase()==="jpeg"||this.format.toLowerCase()==="jpg"||this.format.toLowerCase().indexOf("png")>-1)},_clonePixelData:function(n){var i,r;
+return n===null||n===undefined?n:(i={},n.extent&&(i.extent=t.clone(n.extent)),r=n.pixelBlock,r===null||r===undefined)?i:(i.pixelBlock=r.clone(),i)},_resolve:function(n,t,i,r,u){t&&this[t].apply(this,n);
+i&&i.apply(null,n);
+r&&s._resDfd(r,n,u)},_toggleTime:function(){var n=this._map;
+this.timeInfo&&this.useMapTime&&n&&!this.suspended?(this._timeConnect||(this._timeConnect=i.connect(n,"onTimeExtentChange",this,this._onTimeExtentChangeHandler)),this._setTime(n.timeExtent)):(i.disconnect(this._timeConnect),this._timeConnect=null,this._setTime(null))},_setTime:function(n){var t;
+this._params&&(n?(t=[],n.startTime&&t.push(n.startTime.toISOString()),n.endTime&&t.push(n.endTime.toISOString()),this._params.time=t.join(",")):this._params.time=null)},_onTimeExtentChangeHandler:function(n){this.suspended||(this._setTime(n),this.refresh(!0))},describeCoverage:function(){var i=this.coverageId,n={request:"DescribeCoverage",service:"WCS",version:this.version};
+switch(this.version){case"1.0.0":n=t.mixin(n,{coverage:i});
+break;
+case"1.1.0":case"1.1.1":case"1.1.2":n=t.mixin(n,{identifiers:i});
+break;
+case"2.0.1":n=t.mixin(n,{coverageId:i})}return o({url:this.onlineResources?this.onlineResources.describeCoverage:this.url,content:t.mixin(n,this.optionalParameters),handleAs:"xml",headers:{"X-Requested-With":null}})},getCoverage:function(n){var e=this.version,r,u,i,f;
+switch(e){case"1.0.0":r={request:"GetCoverage",service:"WCS",version:this.version,coverage:n.coverageId,format:n.format||"png",crs:n.crs,bbox:n.extent.xmin+","+n.extent.ymin+","+n.extent.xmax+","+n.extent.ymax,width:n.width,height:n.height};
+u="arraybuffer";
+break;
+case"2.0.1":i=[];
+f=this.coverageDescription.domainSet.axisLabels;
+f[1]==="x"?(i.push("x,http://www.opengis.net/def/crs/EPSG/0/"+n.extent.spatialReference.wkid+"("+n.extent.xmin+","+n.extent.xmax+")"),i.push("y,http://www.opengis.net/def/crs/EPSG/0/"+n.extent.spatialReference.wkid+"("+n.extent.ymin+","+n.extent.ymax+")")):(i.push("y,http://www.opengis.net/def/crs/EPSG/0/"+n.extent.spatialReference.wkid+"("+n.extent.xmin+","+n.extent.xmax+")"),i.push("x,http://www.opengis.net/def/crs/EPSG/0/"+n.extent.spatialReference.wkid+"("+n.extent.ymin+","+n.extent.ymax+")"));
+var s=i.join("&subset="),h=Math.abs((n.extent.xmax-n.extent.xmin)/n.width/this.coverageDescription.domainSet.offset.x),r={request:"GetCoverage",service:"WCS",version:this.version,coverageId:n.coverageId,rangesubset:null,scalefactor:h,subset:s,extension:null,format:"BIP",mediaType:null};
+u="multipart_gml_coverage"}return r=t.mixin(r,n,this.optionalParameters),r.extent=null,o({url:this.onlineResources?this.onlineResources.getCoverage:this.url,content:r,handleAs:u},{usePost:!1,useProxy:!1})},setUseMapTime:function(n,t){this.useMapTime=n;
+this._toggleTime();
+!t&&this._map&&this.refresh(!0)}})});
+
+//# sourceMappingURL=WCSLayer.min.js.map

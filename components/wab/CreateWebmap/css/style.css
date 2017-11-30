@@ -1,0 +1,47 @@
+.jimu-widget-create-webmap{
+
+}
+
+.convert-checkbox {
+width:20px;
+height:20px;
+}
+
+.convert-checkbox-span {
+position:relative;
+bottom:5px;
+font-weight:bold;
+}
+
+.signInButton {
+  width: 100px;
+  position: relative;
+  top: 5px;
+}
+
+.errorNotification {
+  color:red;
+  font-weight: bold;
+}
+
+.signInDiv {
+	padding: 5px;
+}
+
+.webMapNameDiv {
+	padding: 5px;
+}
+
+.createWebMapButton {
+	position: relative;
+	top: 5px;
+}
+
+.createWebMapDiv {
+	padding: 5px;
+}
+
+.outputMessageDiv {
+	padding: 10px;
+	font-size: 14px;
+}
