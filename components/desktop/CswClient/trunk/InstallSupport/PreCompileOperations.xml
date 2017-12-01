@@ -16,6 +16,13 @@
         <toword>&lt;Date&gt;$DATE$&lt;/Date&gt;</toword>
         <replaceline>false</replaceline>
       </replaceword>
+	  <replaceword>
+        <file> CSWClientsHelp.shfbproj </file>
+        <path> $SOURCES$\components\desktop\CswClient\trunk\InstallSupport </path>
+        <fromword regex="false">&lt;HelpFileVersion&gt;1.0.0.0&lt;/HelpFileVersion&gt;</fromword>
+        <toword>&lt;Date&gt;$BUILDNUM$&lt;/Date&gt;</toword>
+        <replaceline>false</replaceline>
+      </replaceword>
     </operation>
   </fileoperations>
 </operations>
