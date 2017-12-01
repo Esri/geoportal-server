@@ -20,9 +20,10 @@
     <WorkingPath>C:\Temp\SandCastleWorkingFolder\</WorkingPath>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\..\..\..\..\..\b\WMCOpener.dll" />
-<DocumentationSource sourceFile="..\..\..\..\..\..\b\WMCOpener.xml" />
-<DocumentationSource sourceFile="..\..\..\..\..\..\b\AppLogger.dll" />
-<DocumentationSource sourceFile="..\..\..\..\..\..\b\AppLogger.xml" /></DocumentationSources>
+      <DocumentationSource sourceFile="..\..\..\..\..\..\b\WMCOpener.xml" />
+      <DocumentationSource sourceFile="..\..\..\..\..\..\b\AppLogger.dll" />
+      <DocumentationSource sourceFile="..\..\..\..\..\..\b\AppLogger.xml" />
+    </DocumentationSources>
     <HelpTitle>A WMC Documented Class Library</HelpTitle>
     <CopyrightText>Copyright &amp;#169%3b ESRI 2017</CopyrightText>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
@@ -67,7 +68,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ESRI.ArcGIS.Desktop.AddIns">
-      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\ArcGIS\DeveloperKit10.5\DotNet\ESRI.ArcGIS.Desktop.AddIns.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\ArcGIS\DeveloperKit10.6\bin\ESRI.ArcGIS.Desktop.AddIns.dll</HintPath>
     </Reference>
   </ItemGroup>
   <!-- Import the SHFB build targets -->
