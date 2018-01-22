@@ -28,8 +28,12 @@ import com.esri.gpt.framework.context.RequestContext;
 import com.esri.gpt.framework.jsf.FacesContextBroker;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
+import java.util.Arrays;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.faces.application.FacesMessage;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
@@ -311,11 +315,14 @@ protected String getRestSearchRequestUrl(String format) {
   RequestContext context =  this.getContextBroker().extractRequestContext();
   HttpServletRequest request = this.getContextBroker().extractHttpServletRequest();
   
-  // If request is coming from search page then we can parse the url and
-  // come up with the url
-  String queryString = Val.chkStr(request.getQueryString());
-  if(!"".equals(queryString) && 
-      queryString.toLowerCase().contains("f=searchpage")) {
+  // sanitize input parameters
+  Set<String> spValues = Arrays.stream(SearchParameter.values()).map(sp -> sp.toString().toLowerCase()).collect(Collectors.toSet());
+  String queryString = request.getParameterMap().entrySet().stream()
+          .filter((Entry<String, String[]> e) -> spValues.contains(e.getKey().toLowerCase()))
+          .map((Entry<String, String[]> e) -> Arrays.stream(e.getValue()).map(v -> String.format("%s=%s", e.getKey(), v)).collect(Collectors.joining("&")))
+          .collect(Collectors.joining("&"));
+  
+  if(!"".equals(queryString) && queryString.toLowerCase().contains("f=searchpage")) {
     queryString = queryString.replaceAll("(?i)F=[^&]*", "f=" + format + "&");
     queryString = queryString.replaceAll("(?i)maxSearchTimeMilliSec=[^&]*", "");
     queryString = queryString.replaceAll("(?i)rids=[^&]*", "");
