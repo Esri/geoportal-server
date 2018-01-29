@@ -29,6 +29,8 @@ import com.esri.gpt.framework.jsf.FacesContextBroker;
 import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.util.Val;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
@@ -316,11 +318,21 @@ protected String getRestSearchRequestUrl(String format) {
   HttpServletRequest request = this.getContextBroker().extractHttpServletRequest();
   
   // sanitize input parameters
-  Set<String> spValues = Arrays.stream(SearchParameter.values()).map(sp -> sp.toString().toLowerCase()).collect(Collectors.toSet());
-  String queryString = request.getParameterMap().entrySet().stream()
-          .filter((Entry<String, String[]> e) -> spValues.contains(e.getKey().toLowerCase()))
-          .map((Entry<String, String[]> e) -> Arrays.stream(e.getValue()).map(v -> String.format("%s=%s", e.getKey(), v)).collect(Collectors.joining("&")))
-          .collect(Collectors.joining("&"));
+  Set<String> spValues = new HashSet<String>();
+  for (SearchParameter sp : SearchParameter.values()) {
+    spValues.add(sp.toString().toLowerCase());
+  }
+  
+  StringBuilder queryStringBuilder = new StringBuilder();
+  for (Map.Entry<String, String[]> e: request.getParameterMap().entrySet()) {
+    if (spValues.contains(e.getKey().toLowerCase())) {
+      for (String v: e.getValue()) {
+          queryStringBuilder.append(queryStringBuilder.length() > 0 ? "&" : "").append(String.format("%s=%s", e.getKey(), v));
+      }
+    }
+  }
+  
+  String queryString = queryStringBuilder.toString();
   
   if(!"".equals(queryString) && queryString.toLowerCase().contains("f=searchpage")) {
     queryString = queryString.replaceAll("(?i)F=[^&]*", "f=" + format + "&");
