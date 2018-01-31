@@ -321,7 +321,8 @@ protected String getRestSearchRequestUrl(String format) {
   }
   
   StringBuilder queryStringBuilder = new StringBuilder();
-  for (Map.Entry<String, String[]> e: request.getParameterMap().entrySet()) {
+  Map<String, String[]> parMap = request.getParameterMap();
+  for (Map.Entry<String, String[]> e: parMap.entrySet()) {
     if (spValues.contains(e.getKey().toLowerCase())) {
       for (String v: e.getValue()) {
           queryStringBuilder.append(queryStringBuilder.length() > 0 ? "&" : "").append(String.format("%s=%s", e.getKey(), v));
