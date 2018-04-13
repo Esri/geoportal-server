@@ -19,7 +19,7 @@
     cswOutputSchema="http://www.isotc211.org/2005/gmd" 
     cswBriefXslt="gpt/metadata/iso/apiso-brief.xslt" 
     cswSummaryXslt="gpt/metadata/iso/apiso-summary.xslt"
-    xsdLocation="http://www.isotc211.org/2005/gmd/metadataEntity.xsd"> 
+    xsdLocation="http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd"> 
 
     <!-- schema label -->
 
