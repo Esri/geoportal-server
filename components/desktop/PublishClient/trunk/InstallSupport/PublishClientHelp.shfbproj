@@ -15,7 +15,7 @@
     <RootNamespace>Documentation</RootNamespace>
     <Name>Documentation</Name>
     <!-- SHFB properties -->
-    <OutputPath>C:\Builds\12\b\</OutputPath>
+    <OutputPath>..\..\..\..\..\..\b\</OutputPath>
     <HtmlHelpName>PublishClient</HtmlHelpName>
     <WorkingPath>C:\Temp\SandCastleWorkingFolder\</WorkingPath>
     <DocumentationSources>
@@ -25,7 +25,7 @@
       <DocumentationSource sourceFile="..\..\..\..\..\..\b\AppLogger.xml" />
     </DocumentationSources>
     <HelpTitle>A Publish Client Documented Class Library</HelpTitle>
-    <CopyrightText>Copyright &amp;#169%3b ESRI 2017</CopyrightText>
+    <CopyrightText>Copyright &amp;#169%3b ESRI 2018</CopyrightText>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
     <FrameworkVersion>.NET Framework 4.5</FrameworkVersion>
     <SaveComponentCacheCapacity>100</SaveComponentCacheCapacity>

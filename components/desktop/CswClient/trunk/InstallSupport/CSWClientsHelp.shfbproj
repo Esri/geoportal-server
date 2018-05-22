@@ -15,7 +15,7 @@
     <RootNamespace>Documentation</RootNamespace>
     <Name>Documentation</Name>
     <!-- SHFB properties -->
-    <OutputPath>C:\Builds\11\b\</OutputPath>
+    <OutputPath>..\..\..\..\..\..\b\</OutputPath>
     <HtmlHelpName>CSWClients</HtmlHelpName>
     <WorkingPath>C:\Temp\SandCastleWorkingFolder\</WorkingPath>
     <DocumentationSources>
@@ -29,7 +29,7 @@
       <DocumentationSource sourceFile="..\..\..\..\..\..\b\AppLogger.xml" />
     </DocumentationSources>
     <HelpTitle>A CSW Clients Documented Class Library</HelpTitle>
-    <CopyrightText>Copyright &amp;#169%3b ESRI 2017</CopyrightText>
+    <CopyrightText>Copyright &amp;#169%3b ESRI 2018</CopyrightText>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
     <BuildLogFile>
     </BuildLogFile>
@@ -53,9 +53,10 @@
     <NamingMethod>Guid</NamingMethod>
     <Language>en-US</Language>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
-    <HelpFileVersion>1.0.0.0</HelpFileVersion>
+    <Date>0.2.9.1001</Date>
     <MaximumGroupParts>2</MaximumGroupParts>
     <NamespaceGrouping>False</NamespaceGrouping>
+    <HelpFileVersion>1.0.0.0</HelpFileVersion>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
        order for Visual Studio to perform the build.  The others are optional
