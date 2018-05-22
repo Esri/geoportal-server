@@ -10,7 +10,7 @@ function DisplayMessage(hMSI)
     STRING szMsg;
     
 begin
-	szMsg = "CSW Client for ArcGIS Desktop requires ArcGIS Desktop 10.6." + 
+	szMsg = "CSW Client for ArcGIS Desktop requires ArcGIS Desktop 10.6.1." + 
     		"\nCSW Client for ArcGIS Desktop will not be installed at this time.";
    
     MessageBox ( szMsg, WARNING );   
