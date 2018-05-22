@@ -1,0 +1,76 @@
+// Include Ifx.h for built-in InstallScript function prototypes.
+#include "Ifx.h"   
+// Include header file for MSI API functions and constants
+#include "iswi.h"  
+
+prototype FolderBrowse(BYREF STRING, STRING, HWND);
+
+// Changes path format for reg files.
+// Create property: INSTALLDIR_FS
+// Put variables in paths in reg files.
+// Put custom action after Install Welcome in 
+// User Interface sequence.
+export prototype Fn_ChangePathFormat(HWND);
+
+function Fn_ChangePathFormat(hMSI)
+	STRING properties, INSTALLPATH;  
+	NUMBER nvSize, nError;
+	LIST   listID;
+	
+begin 
+     
+  	nvSize = 256;
+	
+       INSTALLPATH = INSTALLDIR;
+       
+    //MessageBox("Install path: " + INSTALLPATH, INFORMATION);
+        
+    // Change paths        
+    StrReplace (INSTALLPATH, "\\", "/", 0);
+    
+    //MessageBox("Install path: " + INSTALLPATH, INFORMATION);
+    
+    // Set property in MSI database    
+    MsiSetProperty(hMSI, "INSTALLDIR_FS", INSTALLPATH);    
+        
+end;
+
+
+export prototype FolderBrowseLogLoc(HWND); 
+function FolderBrowseLogLoc(hMSI)
+
+STRING svFolder;
+
+begin 
+
+	FolderBrowse(svFolder, "Select log location", hMSI);
+
+    //MessageBox("Selected folder:\n\n" + svFolder, 0);
+    if (StrLength(svFolder) > 0) then
+    	MsiSetProperty(hMSI,"LOGDIR",svFolder);
+    endif;
+     
+end;  
+
+
+
+function FolderBrowse(svFolder, svDesc, hMSI)
+	STRING szSupportDir, szProductName, szWindowTitle;
+	NUMBER nLength;
+	OBJECT dotNetDll;
+begin
+   
+  	nLength = MAX_PATH + 1;
+	MsiGetProperty(hMSI, "SUPPORTDIR", szSupportDir, nLength);
+	MsiGetProperty(hMSI, "ProductName", szProductName, nLength);
+
+	szWindowTitle = szProductName + " - Installshield Wizard";
+	//MessageBox("Support Dir: " + szSupportDir + "\nProduct name: " + szProductName, INFORMATION); 
+
+	set dotNetDll = CoCreateObjectDotNet(szSupportDir ^ "InstallUtils.dll", "InstallUtils.Dialogs");   
+	dotNetDll.WindowTitle = szWindowTitle;
+	// BrowseForFolder(string desc, string initDir)
+	svFolder = dotNetDll.BrowseForFolder("Select folder");
+	//MessageBox("Folder = " + svFolder, INFORMATION);
+end; 
+ 
