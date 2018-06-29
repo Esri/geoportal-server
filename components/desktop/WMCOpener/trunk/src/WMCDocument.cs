@@ -19,6 +19,7 @@ using System.Xml;
 using System.Xml.Xsl;
 using System.Xml.XPath;
 using ESRI.ArcGIS.Geometry;
+using System.Globalization;
 
 namespace com.esri.gpt.wmc
 {
