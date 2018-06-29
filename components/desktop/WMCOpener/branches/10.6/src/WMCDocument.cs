@@ -303,10 +303,11 @@ namespace com.esri.gpt.wmc
 
             Double xmax, xmin, ymax, ymin;
 
-            xmax = Double.Parse(getAttribute(theAttributes, "maxx"));
-            xmin = Double.Parse(getAttribute(theAttributes, "minx"));
-            ymax = Double.Parse(getAttribute(theAttributes, "maxy"));
-            ymin = Double.Parse(getAttribute(theAttributes, "miny"));
+            CultureInfo culture = new CultureInfo("us");
+            xmax = Double.Parse(getAttribute(theAttributes, "maxx"), culture);
+            xmin = Double.Parse(getAttribute(theAttributes, "minx"), culture);
+            ymax = Double.Parse(getAttribute(theAttributes, "maxy"), culture);
+            ymin = Double.Parse(getAttribute(theAttributes, "miny"), culture);
 
             extent = new EnvelopeClass();
             extent.XMax = xmax;
