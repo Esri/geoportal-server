@@ -159,17 +159,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\AppLogger\trunk\src\AppLogger.csproj">
-      <Project>{2FFDEA64-1BC3-4FBF-BFEB-44C09499036C}</Project>
-      <Name>AppLogger</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\ClientCert\trunk\src\ClientCert.csproj">
-      <Project>{d101ed10-5252-4bb3-a278-f13b94af6d4f}</Project>
-      <Name>ClientCert</Name>
-      <Private>True</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <COMReference Include="ActiveDs">
       <Guid>{97D25DB0-0363-11CF-ABC4-02608C9E7553}</Guid>
       <VersionMajor>1</VersionMajor>

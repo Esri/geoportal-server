@@ -222,14 +222,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\AppLogger\trunk\src\AppLogger.csproj">
-      <Project>{2ffdea64-1bc3-4fbf-bfeb-44c09499036c}</Project>
-      <Name>AppLogger</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\ClientCert\trunk\src\ClientCert.csproj">
-      <Project>{d101ed10-5252-4bb3-a278-f13b94af6d4f}</Project>
-      <Name>ClientCert</Name>
-    </ProjectReference>
     <ProjectReference Include="..\common\CswClient.csproj">
       <Project>{f3d05b12-5f2f-489b-a634-3b3bd44f85a2}</Project>
       <Name>CswClient</Name>
