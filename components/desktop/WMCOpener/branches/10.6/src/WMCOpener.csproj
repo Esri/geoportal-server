@@ -186,6 +186,12 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\AppLogger\branches\10.6\src\AppLogger.csproj">
+      <Project>{2ffdea64-1bc3-4fbf-bfeb-44c09499036c}</Project>
+      <Name>AppLogger</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <ZipFileExtension>esriAddIn</ZipFileExtension>
     <AddInTargetProduct>Desktop</AddInTargetProduct>
