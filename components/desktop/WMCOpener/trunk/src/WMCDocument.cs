@@ -304,7 +304,7 @@ namespace com.esri.gpt.wmc
 
             Double xmax, xmin, ymax, ymin;
 
-            CultureInfo culture = new CultureInfo("us");
+            CultureInfo culture = new CultureInfo("en");
             xmax = Double.Parse(getAttribute(theAttributes, "maxx"), culture);
             xmin = Double.Parse(getAttribute(theAttributes, "minx"), culture);
             ymax = Double.Parse(getAttribute(theAttributes, "maxy"), culture);
