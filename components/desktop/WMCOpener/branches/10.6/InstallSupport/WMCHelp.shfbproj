@@ -19,13 +19,13 @@
     <HtmlHelpName>WMC</HtmlHelpName>
     <WorkingPath>C:\Temp\SandCastleWorkingFolder\</WorkingPath>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\..\..\..\..\..\b\WMCOpener.dll" />
-      <DocumentationSource sourceFile="..\..\..\..\..\..\b\WMCOpener.xml" />
-      <DocumentationSource sourceFile="..\..\..\..\..\..\b\AppLogger.dll" />
-      <DocumentationSource sourceFile="..\..\..\..\..\..\b\AppLogger.xml" />
+      <DocumentationSource sourceFile="..\..\..\..\..\..\..\b\WMCOpener.dll" />
+      <DocumentationSource sourceFile="..\..\..\..\..\..\..\b\WMCOpener.XML" />
+      <DocumentationSource sourceFile="..\..\..\..\..\..\..\b\AppLogger.dll" />
+      <DocumentationSource sourceFile="..\..\..\..\..\..\..\b\AppLogger.XML" />
     </DocumentationSources>
     <HelpTitle>A WMC Documented Class Library</HelpTitle>
-    <CopyrightText>Copyright &amp;#169%3b ESRI 2017</CopyrightText>
+    <CopyrightText>Copyright &amp;#169%3b ESRI 2018</CopyrightText>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
     <FrameworkVersion>.NET Framework 4.5</FrameworkVersion>
     <SaveComponentCacheCapacity>100</SaveComponentCacheCapacity>
