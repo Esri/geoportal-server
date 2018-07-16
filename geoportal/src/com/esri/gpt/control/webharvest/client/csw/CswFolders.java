@@ -21,13 +21,21 @@ import com.esri.gpt.framework.resource.query.Criteria;
 import com.esri.gpt.framework.util.ReadOnlyIterator;
 import com.esri.gpt.server.csw.client.*;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -67,6 +75,7 @@ public Iterator<Resource> iterator() {
  */
 private class CswFolderIterator extends ReadOnlyIterator<Resource> {
 /** index of the next start record */
+private Integer lastNextRecord;
 private int nextStartRecord = 1;
 /** next collection of records */
 private ArrayList<Resource> nextCswrecords = null;
@@ -76,7 +85,7 @@ private boolean noMore;
 @Override
 public boolean hasNext() {
   if (!noMore && nextCswrecords == null) {
-    if (criteria!=null && criteria.getMaxRecords()!=null && nextStartRecord>criteria.getMaxRecords()) {
+    if (criteria!=null && criteria.getMaxRecords()!=null && (nextStartRecord>criteria.getMaxRecords() || (lastNextRecord!=null && lastNextRecord<=0))) {
       noMore = true;
     } else {
       try {
@@ -130,6 +139,7 @@ private void advanceToNextRecords() throws IOException {
 
     // get response
     CswRecords cswRecords = cswResponse.getRecords();
+    lastNextRecord = readNextRecordAttribute(cswResponse);
     nextStartRecord += cswRecords.getSize();
 
     ArrayList<Resource> resources = new ArrayList<Resource>();
@@ -172,6 +182,25 @@ private Envelope getEnvelope() {
     env.setMaxX(criteria.getBBox().getMaxX());
     env.setMaxY(criteria.getBBox().getMaxY());
     return env;
+  }
+  return null;
+}
+
+private Integer readNextRecordAttribute(CswSearchResponse response) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+  if (response!=null && response.getResponseXML()!=null) {
+    DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+    builderFactory.setNamespaceAware(false);
+    DocumentBuilder builder = builderFactory.newDocumentBuilder();
+    Document doc = builder.parse(new InputSource(new StringReader(response.getResponseXML())));
+    
+    XPath xPath = XPathFactory.newInstance().newXPath();
+    String nextRecordValue = (String) xPath.evaluate("//SearchResults/@nextRecord", doc, XPathConstants.STRING);
+    
+    if (nextRecordValue!=null) {
+      try {
+        return Integer.parseInt(nextRecordValue);
+      } catch (NumberFormatException ex) {}
+    }
   }
   return null;
 }
