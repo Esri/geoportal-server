@@ -77,7 +77,10 @@ public class ServiceHandlerFactory {
     //handlers.put("searchserver","com.esri.gpt.catalog.arcgis.metadata.SearchServerHandler");
     handlers.put("featureserver","com.esri.gpt.catalog.arcgis.metadata.FeatureServerHandler");
     
-  }
+    // INSPIRE specific
+    handlers.put("inspireview", "com.esri.gpt.catalog.arcgis.metadata.WMSServerHandler");
+    handlers.put("inspirefeaturedownload", "com.esri.gpt.catalog.arcgis.metadata.WFSServerHandler");
+ }
   
   /**
    * Instantiates a handler capabable of processing a specific ArcGIS Server service type.
