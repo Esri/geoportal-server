@@ -464,6 +464,7 @@ public class DcatParser {
           attributes.put(attrName, new JsonAttribute(jsonReader.nextBoolean()));
           return;
         case NULL:
+          jsonReader.nextNull();
           return;
         default:
           throw new DcatParseException("Unexpected token in the data: " + token);
