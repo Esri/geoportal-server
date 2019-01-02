@@ -35,6 +35,10 @@ BUILD INSTRUCTIONS
 	
 	mvn install -P development-profile
 	
+Note: If running this for the first time, esri file dependencies must be installed locally, or the mvn install will fail.  Following approach described in item 1 in the Dependencies section of maven docs: http://maven.apache.org/pom.html#Dependencies
+
+	mvn install:install-file -Dfile=../lib/arcgis_ws_runtime.jar -DgroupId=com.esri.arcgis -DartifactId=arcgis_ws_runtime -Dversion=10.5.1 -Dpackaging=jar
+	mvn install:install-file -Dfile=../lib/arcgis_agsws_stubs.jar -DgroupId=com.esri.arcgis -DartifactId=arcgis_agsws_stubs -Dversion=10.5.1 -Dpackaging=jar  
 	
 USING NETBEANS
 
