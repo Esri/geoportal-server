@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>gspro</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="cache-control" content="no-cache">
+<!--
+<link rel="stylesheet" href="//esri.github.io/calcite-bootstrap/assets/css/calcite-bootstrap.css">
+<link rel="stylesheet" href="//js.arcgis.com/3.21/esri/themes/calcite/dijit/calcite.css">
+<link rel="stylesheet" href="//js.arcgis.com/3.21/esri/css/esri.css">
+-->
+<link rel="stylesheet" href="https://js.arcgis.com/3.23/esri/themes/calcite/dijit/calcite.css">
+<link rel="stylesheet" href="https://js.arcgis.com/3.23/esri/css/esri.css">
+<link rel="stylesheet" href="../gs/widget/style/style.css?z1">
+<style>
+  html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+</style>
+<script>
+  var dojoConfig = {
+    locale: "en",
+    async: true,
+    parseOnLoad: true,
+    packages: [
+      {
+        name: "gs",
+        location: location.pathname.replace(/\/[^/]*$/,"") + "/../gs",
+      }
+    ]
+  };
+  var widgetConfig = {
+    "targets": [
+      {
+        "name": "ArcGIS Online",
+        "url": "https://www.arcgis.com",
+        "type": "portal",
+        "profile": null,
+        "requiredFilter": null,
+        "enabled": true
+      },
+      {
+        "name": "gptdb1 (geoportal)",
+        "url": "http://gptdb1.esri.com:8080/geoportal/elastic/metadata/item/_search",
+        "type": "geoportal",
+        "profile": null,
+        "requiredFilter": null,
+        "enabled": true,
+        "disableContentType": true
+      },
+      /*
+      {
+        "name": "gptdb1 (elasticsearch)",
+        "url": "http://gptdb1.esri.com:9200/metadata/item/_search",
+        "type": "elasticsearch",
+        "profile": null,
+        "requiredFilter": null,
+        "enabled": true,
+        "useProxy": true,
+        "disableContentType": true
+      },
+      {
+        "name": "CSW3 Geoportal2 (urban)",
+        "url": "http://urban.esri.com:8080/geoportal/csw?service=CSW&request=GetRecords",
+        "type": "csw3",
+        "profile": null,
+        "enabled": true
+      },
+      {
+        "name": "CSW2 Geoportal2 (urban)",
+        "url": "http://urban.esri.com:8080/geoportal/csw?service=CSW&request=GetRecords",
+        "type": "csw2",
+        "profile": "CSW2_Geoportal1",
+        "enabled": true
+      },
+      */
+      {
+        "name": "CSW2 Geoportal2 (gptogc)",
+        "url": "https://gptogc.esri.com/geoportal/csw?service=CSW&request=GetRecords",
+        "type": "csw2",
+        "profile": "CSW2_Geoportal1",
+        "enabled": true,
+        "useProxy": true,
+        "disableContentType": true
+      }
+    ]
+  };
+</script>
+</head>
+<body class="calcite geoportal-search-pro">
+<div id="idSearch"></div>
+<script src="https://js.arcgis.com/3.23/"></script>
+<script>
+  require(["dojo/ready",
+    "esri/map",
+    "gs/widget/SearchPane",
+    "gs/widget/WidgetContextForPro",
+    "dojo/i18n!gs/widget/nls/strings",
+    "gs/widget/TestSearch",
+    "gs/widget/layers/LayerLoader",
+    "esri/config"],
+  function(ready,Map,SearchPane,WidgetContext,i18n,TestSearch,LayerLoader,esriConfig) {
+    ready(function() {
+      if (document.location.href.indexOf("test=true") === -1) {
+        esriConfig.defaults.io.proxyUrl = "http://gptdb1.esri.com:8080/geoportal/viewer/proxy.jsp";
+        esriConfig.defaults.io.alwaysUseProxy = false;
+        var widgetContext = new WidgetContext({
+          i18n: i18n,
+          map: null,
+          proxyUrl: esriConfig.defaults.io.proxyUrl,
+          widgetConfig: widgetConfig,
+          widgetFolder: "gs/widget",
+        });
+        var searchPane = new SearchPane({
+          i18n: i18n,
+          widgetContext: widgetContext
+        },"idSearch");
+        searchPane.startup();
+        var layerLoader = new LayerLoader({
+          i18n: i18n,
+          map: null
+        });
+        //layerLoader.addFeatureService("http://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_States_Generalized/FeatureServer/0");
+      } else {
+        new TestSearch({},"idSearch");
+      }
+    });
+  });
+</script>
+</body>
+</html>
