@@ -1,0 +1,14 @@
+<div class="search-sort-options">
+  <label for="${id}_select" class="sort-prompt">${i18n.search.sortOptions.prompt}</label>
+  <select id="${id}_select" style="font-size:10px;"
+    data-dojo-type="dijit/form/Select" data-dojo-attach-point="sortSelect">
+    <option value="_rel_" selected="selected">${i18n.search.sortOptions.relevance}</option>
+    <option value="title">${i18n.search.sortOptions.title}</option>
+    <option value="modified">${i18n.search.sortOptions.date}</option>
+  </select>
+  <a href="#" class="sort-order-icon"
+    title="${i18n.search.sortOptions.switchOrder}"
+    data-dojo-attach-point="sortOrderBtn"
+    data-dojo-attach-event="onclick: sortOrderClicked">
+  </a>
+</div>

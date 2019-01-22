@@ -1,0 +1,27 @@
+<div class="geoportal-search search-pane">
+  <div>
+    <div class="search-bar main-search-bar">
+      <div data-dojo-attach-point="searchBoxNode"></div>
+      <div style="clear:both"></div>
+    </div>
+    <div class="search-bar secondary-search-bar">
+      <div data-dojo-attach-point="targetOptionsNode"></div>
+      <div data-dojo-attach-point="bboxOptionNode"></div>
+      <div data-dojo-attach-point="liveDataOptionNode"></div>
+      <div data-dojo-attach-point="sortOptionsNode"></div>
+      <div style="clear:both"></div>
+    </div>
+  </div>
+  <div class="search-pane-content" data-dojo-attach-point="contentNode">
+    <div data-dojo-attach-point="resultsPaneNode"></div>
+  </div>
+  <div class="search-pane-footer" data-dojo-attach-point="footerNode">
+    <div class="loading-node left-side" data-dojo-attach-point="loadingNode"></div>
+    <a href="javascript:void(0)" class="gap" style="display:none;"
+      data-dojo-attach-point="settingsButton"
+      data-dojo-attach-event="onClick: showSettings"
+      >zzz</a>
+    <div data-dojo-attach-point="pagingNode"></div>
+    <div style="clear:both"></div>
+  </div>
+</div>

@@ -1,0 +1,34 @@
+<div class="search-paging">
+	<ul class="pagination pagination-sm">
+		<li class="search-count">
+		  <span data-dojo-attach-point="countNode">&nbsp;</span>
+		</li>
+		<li>
+			<a href="#" aria-label="First"
+				data-dojo-attach-point="firstButton"
+				data-dojo-attach-event="onClick: firstButtonClicked"
+				title="${i18n.search.paging.firstTip}">
+				<span aria-hidden="true" class="esri-icon-expand"></span>
+			</a>
+		</li>
+		<li>
+			<a href="#" aria-label="Previous"
+				data-dojo-attach-point="previousButton"
+				data-dojo-attach-event="onClick: previousButtonClicked"
+				title="${i18n.search.paging.previousTip}">
+				<span aria-hidden="true" class="esri-icon-left"></span>
+			</a>
+		</li>
+		<li class="current-page">
+		  <span data-dojo-attach-point="pageNode">&nbsp;</span>
+		</li>
+		<li>
+			<a href="#" aria-label="Next"
+				data-dojo-attach-point="nextButton"
+				data-dojo-attach-event="onClick: nextButtonClicked"
+				title="${i18n.search.paging.nextTip}">
+				<span aria-hidden="true" class="esri-icon-right"></span>
+			</a>
+		</li>
+	</ul>
+</div>

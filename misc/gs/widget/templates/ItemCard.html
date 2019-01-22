@@ -1,0 +1,33 @@
+<div class="item-card">
+  <div class="item-card-inner">
+    <div class="thumbnail-div thumbnail-placeholder"
+      data-dojo-attach-point="thumbnailDiv">
+      <img data-dojo-attach-point="thumbnailImage"/>
+    </div>
+    <div class="info-div">
+      <h3 class="title" data-dojo-attach-point="titleNode"></h3>
+      <div class="info" data-dojo-attach-point="typeNode"></div>
+      <div class="info" data-dojo-attach-point="authorNode"></div>
+      <div class="info" data-dojo-attach-point="dateNode"></div>
+    </div>
+    <div class="action-bar">
+      <span class="message" data-dojo-attach-point="messageNode"></span>
+      <a href="javascript:void(0)"
+        data-dojo-attach-point="addButton"
+        data-dojo-attach-event="onClick: addClicked"></a>
+      <a href="javascript:void(0)"
+        data-dojo-attach-point="detailsButton"
+        data-dojo-attach-event="onClick: detailsClicked"></a>
+      <div class="links-dropdown"
+        data-dojo-type="dijit/form/DropDownButton",
+        data-dojo-attach-point="linksDropdown">
+        <span data-dojo-attach-point="linksCaptionNode"></span>
+        <div data-dojo-type="dijit/TooltipDialog"
+          data-dojo-attach-point="linksTooltipDialog"
+          data-dojo-props="'class':'geoportal-search dd-popup'">
+          <div data-dojo-attach-point="linksContent"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
