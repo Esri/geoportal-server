@@ -19,7 +19,7 @@
         cswOutputSchema="http://www.isotc211.org/2005/gmd" 
         cswBriefXslt="gpt/metadata/iso/apiso-brief.xslt" 
         cswSummaryXslt="gpt/metadata/iso/apiso-summary.xslt" 
-        xsdLocation="http://www.isotc211.org/2005/gmd/metadataEntity.xsd[GML32]http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmd/metadataEntity.xsd"
+        xsdLocation="https://www.isotc211.org/2005/gmd/metadataEntity.xsd[GML32]http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmd/metadataEntity.xsd"
         toEsriItemInfoXslt="gpt/metadata/iso/iso-toEsriItemInfo.xslt"
         detailsXslt="gpt/metadata/iso/iso-details.xslt" >
   
