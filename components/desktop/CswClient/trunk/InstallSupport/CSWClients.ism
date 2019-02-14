@@ -60,8 +60,8 @@
 		<lastauthor>Administrator</lastauthor>
 		<revnumber>{E14AB8EA-91D2-4CAC-904E-EAFFE4DF5184}</revnumber>
 		<lastprinted/>
-		<createdtm>06/21/1999 06:00</createdtm>
-		<lastsavedtm>07/14/2000 09:50</lastsavedtm>
+		<createdtm>06/21/1999 05:00</createdtm>
+		<lastsavedtm>07/14/2000 08:50</lastsavedtm>
 		<pagecount>200</pagecount>
 		<wordcount>0</wordcount>
 		<charcount/>
@@ -229,13 +229,6 @@
 	<table name="AppSearch">
 		<col key="yes" def="s72">Property</col>
 		<col key="yes" def="s72">Signature_</col>
-		<row><td>AGX1200HOME</td><td>NewSignature1</td></row>
-		<row><td>AGX1500HOME</td><td>NewSignature16</td></row>
-		<row><td>AGX1700HOME</td><td>NewSignature17</td></row>
-		<row><td>AGX1750HOME</td><td>NewSignature18</td></row>
-		<row><td>AGX2500HOME</td><td>NewSignature19</td></row>
-		<row><td>AGX2505HOME</td><td>NewSignature110</td></row>
-		<row><td>AGX3400HOME</td><td>NewSignature111</td></row>
 		<row><td>ARCGISHOME</td><td>NewSignature15</td></row>
 		<row><td>ARCGISVERSION</td><td>NewSignature14</td></row>
 		<row><td>DOTNETROOT</td><td>NewSignature12</td></row>
@@ -357,30 +350,25 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
-		<row><td>AGXBinFiles</td><td>{18DA7E80-97F3-4D29-9251-7647F94D0D15}</td><td>BIN2</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>AGXHomeFiles</td><td>{BF8F2CFB-EBE0-4A57-AEC5-639C277749B7}</td><td>AGXHOME</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ARCGISBinFiles</td><td>{99C7404A-58F6-4150-84A7-5854F21C3A04}</td><td>BIN</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ARCGISHomeFiles</td><td>{477F7ABB-B079-4F99-8149-CCE2D72075B3}</td><td>ARCGISHOME</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>AppLogger.dll</td><td>{A26A0F1B-6694-4F9E-B2CC-87FC88BE55D2}</td><td>BIN1</td><td>8</td><td/><td>applogger.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ArcGISHomeBinAddinsFiles</td><td>{541BC22D-A7EF-454B-84AE-83847BEA1CB4}</td><td>ADDINS</td><td>8</td><td>ALLUSERS = 1</td><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>BinFiles</td><td>{56B5696D-1CF6-4BEA-8FD9-36EF046BFDFF}</td><td>BIN1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>CSWClients.chm</td><td>{EC362F39-1F95-4620-993D-F81CCE82A98D}</td><td>BIN1</td><td>8</td><td/><td>cswclients.chm</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>CSWSearchDockWindowFiles</td><td>{C76B71C8-E4A3-4295-BAFA-E8484693FA4B}</td><td>CSWSEARCHDOCKWINDOW</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>CswClient.dll</td><td>{DA5DD3EE-33F1-4EC4-899B-EA6EC2166EDB}</td><td>BIN1</td><td>8</td><td/><td>cswclient.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>CswSearch.dll</td><td>{218E909B-375D-491B-AC52-98B2A25423D9}</td><td>BIN1</td><td>8</td><td/><td>cswsearch.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>DataFiles</td><td>{970433BB-01EF-4225-9540-41EE2201DFF5}</td><td>DATA</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ISRegistryComponent</td><td>{093DE7B2-A87B-4B56-A348-CF7E6B143549}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ImagesFiles</td><td>{F4C524E8-23F8-4EF8-9E98-8EAA42FBFCAA}</td><td>IMAGES1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>InstallDirFiles</td><td>{6F677B65-B26A-4214-9ADE-B396BF2384FD}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>LogDirFiles</td><td>{2D6A08AE-EA6A-479E-9071-CB1BE6DC8CF9}</td><td>LOGDIR</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>MyDocsArcGISAddInsDesktop10Files</td><td>{1C3BAFA6-E42C-48B7-9B8A-0188CC583A1A}</td><td>DESKTOP10.6</td><td>8</td><td>ALLUSERS &lt;&gt; 1</td><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>MyDocsArcGISAddInsDesktop10Files</td><td>{1C3BAFA6-E42C-48B7-9B8A-0188CC583A1A}</td><td>DESKTOP10.7</td><td>8</td><td>ALLUSERS &lt;&gt; 1</td><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="i2">Level</col>
 		<col def="S255">Condition</col>
-		<row><td>CSWAgx</td><td>1</td><td>AGX3400HOME OR AGX2505HOME OR AGX2500HOME OR AGX1750HOME OR AGX1700HOME OR AGX1500HOME OR AGX1200HOME</td></row>
 	</table>
 
 	<table name="Control">
@@ -400,17 +388,6 @@
 		<col def="I4">ISControlId</col>
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="S72">Binary_</col>
-		<row><td>AGXType</td><td>Back</td><td>PushButton</td><td>164</td><td>243</td><td>66</td><td>17</td><td>3</td><td/><td>##ID_STRING14##</td><td>RadioButtonGroup1</td><td/><td>0</td><td/><td/><td/></row>
-		<row><td>AGXType</td><td>Banner</td><td>Bitmap</td><td>0</td><td>0</td><td>374</td><td>44</td><td>1</td><td/><td/><td/><td/><td/><td/><td/><td>NewBinary20</td></row>
-		<row><td>AGXType</td><td>BannerLine</td><td>Line</td><td>0</td><td>44</td><td>374</td><td>0</td><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>AGXType</td><td>Branding1</td><td>Text</td><td>4</td><td>229</td><td>50</td><td>13</td><td>3</td><td/><td>{&amp;MSSWhiteSerif8}InstallShield</td><td/><td/><td/><td/><td/><td/></row>
-		<row><td>AGXType</td><td>Branding2</td><td>Text</td><td>3</td><td>228</td><td>50</td><td>13</td><td>65537</td><td/><td>{&amp;Tahoma8}InstallShield</td><td/><td/><td/><td/><td/><td/></row>
-		<row><td>AGXType</td><td>Cancel</td><td>PushButton</td><td>301</td><td>243</td><td>66</td><td>17</td><td>3</td><td/><td>##ID_STRING15##</td><td>Back</td><td/><td>0</td><td/><td/><td/></row>
-		<row><td>AGXType</td><td>DlgDesc</td><td>Text</td><td>21</td><td>23</td><td>292</td><td>25</td><td>65539</td><td/><td>##ID_STRING17##</td><td/><td/><td>0</td><td>0</td><td/><td/></row>
-		<row><td>AGXType</td><td>DlgLine</td><td>Line</td><td>80</td><td>234</td><td>294</td><td>0</td><td>1</td><td/><td/><td/><td/><td>0</td><td/><td/><td/></row>
-		<row><td>AGXType</td><td>DlgTitle</td><td>Text</td><td>13</td><td>6</td><td>292</td><td>25</td><td>65539</td><td/><td>##ID_STRING16##</td><td/><td/><td>0</td><td>0</td><td/><td/></row>
-		<row><td>AGXType</td><td>Next</td><td>PushButton</td><td>230</td><td>243</td><td>66</td><td>17</td><td>3</td><td/><td>##ID_STRING13##</td><td>Cancel</td><td/><td>0</td><td/><td/><td/></row>
-		<row><td>AGXType</td><td>RadioButtonGroup1</td><td>RadioButtonGroup</td><td>29</td><td>63</td><td>247</td><td>67</td><td>16777219</td><td>AGXVERSION</td><td>##NEW_STRING5##</td><td>Next</td><td/><td/><td/><td/><td/></row>
 		<row><td>AdminChangeFolder</td><td>Banner</td><td>Bitmap</td><td>0</td><td>0</td><td>374</td><td>44</td><td>1</td><td/><td/><td/><td/><td/><td/><td/><td>NewBinary20</td></row>
 		<row><td>AdminChangeFolder</td><td>BannerLine</td><td>Line</td><td>0</td><td>44</td><td>374</td><td>0</td><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>AdminChangeFolder</td><td>Branding1</td><td>Text</td><td>4</td><td>229</td><td>50</td><td>13</td><td>3</td><td/><td>##IDS_INSTALLSHIELD_FORMATTED##</td><td/><td/><td>0</td><td/><td/><td/></row>
@@ -945,13 +922,6 @@
 		<col key="yes" def="s255">Argument</col>
 		<col key="yes" def="S255">Condition</col>
 		<col def="I2">Ordering</col>
-		<row><td>AGXType</td><td>Back</td><td>NewDialog</td><td>CustomerInformation</td><td>1</td><td>1</td></row>
-		<row><td>AGXType</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>1</td></row>
-		<row><td>AGXType</td><td>Next</td><td>AddLocal</td><td>CSWAgx</td><td>AGXVERSION="1"</td><td>2</td></row>
-		<row><td>AGXType</td><td>Next</td><td>AddLocal</td><td>CSWAgx900</td><td>AGXVERSION="2"</td><td>4</td></row>
-		<row><td>AGXType</td><td>Next</td><td>NewDialog</td><td>DestinationFolder</td><td>(Not SERIALNUMVALRETURN) OR (SERIALNUMVALRETURN=SERIALNUMVALSUCCESSRETVAL)</td><td>1</td></row>
-		<row><td>AGXType</td><td>Next</td><td>Remove</td><td>CSWAgx</td><td>AGXVERSION="2"</td><td>5</td></row>
-		<row><td>AGXType</td><td>Next</td><td>Remove</td><td>CSWAgx900</td><td>AGXVERSION="1"</td><td>3</td></row>
 		<row><td>AdminChangeFolder</td><td>Cancel</td><td>EndDialog</td><td>Return</td><td>1</td><td>2</td></row>
 		<row><td>AdminChangeFolder</td><td>Cancel</td><td>Reset</td><td>0</td><td>1</td><td>1</td></row>
 		<row><td>AdminChangeFolder</td><td>NewFolder</td><td>DirectoryListNew</td><td>0</td><td>1</td><td>0</td></row>
@@ -975,21 +945,21 @@
 		<row><td>CustomSetup</td><td>ChangeFolder</td><td>SelectionBrowse</td><td>InstallChangeFolder</td><td>1</td><td>0</td></row>
 		<row><td>CustomSetup</td><td>Details</td><td>SelectionBrowse</td><td>DiskSpaceRequirements</td><td>1</td><td>1</td></row>
 		<row><td>CustomSetup</td><td>Help</td><td>SpawnDialog</td><td>CustomSetupTips</td><td>1</td><td>1</td></row>
-		<row><td>CustomSetup</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.6" And &amp;CSWArcMap = 3</td><td>2</td></row>
+		<row><td>CustomSetup</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.7" And &amp;CSWArcMap = 3</td><td>2</td></row>
 		<row><td>CustomSetup</td><td>Next</td><td>NewDialog</td><td>DestinationFolder</td><td>OutOfNoRbDiskSpace &lt;&gt; 1</td><td>5</td></row>
 		<row><td>CustomSetup</td><td>Next</td><td>NewDialog</td><td>OutOfSpace</td><td>OutOfNoRbDiskSpace = 1</td><td>4</td></row>
-		<row><td>CustomSetup</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.6" And &amp;CSWArcMap = 3</td><td>3</td></row>
+		<row><td>CustomSetup</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.7" And &amp;CSWArcMap = 3</td><td>3</td></row>
 		<row><td>CustomSetup</td><td>Next</td><td>[_IsSetupTypeMin]</td><td>Custom</td><td>1</td><td>1</td></row>
 		<row><td>CustomSetupTips</td><td>OK</td><td>EndDialog</td><td>Return</td><td>1</td><td>1</td></row>
 		<row><td>CustomerInformation</td><td>Back</td><td>NewDialog</td><td>LicenseAgreement</td><td>1</td><td>1</td></row>
 		<row><td>CustomerInformation</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
-		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.6" And &amp;CSWArcMap = 3</td><td>7</td></row>
+		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.7" And &amp;CSWArcMap = 3</td><td>7</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>SetAllUsersDefaultLogLoc</td><td>ApplicationUsers = "AllUsers"</td><td>5</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>SetCurrentUserDefaultLogLoc</td><td>ApplicationUsers = "OnlyCurrentUser"</td><td>4</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>SetLogDirWithEndingBackslash</td><td>ApplicationUsers = "AllUsers"</td><td>6</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>EndDialog</td><td>Exit</td><td>(SERIALNUMVALRETRYLIMIT) And (SERIALNUMVALRETRYLIMIT&lt;0) And (SERIALNUMVALRETURN&lt;&gt;SERIALNUMVALSUCCESSRETVAL)</td><td>3</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>NewDialog</td><td>SetupType</td><td>1</td><td>9</td></row>
-		<row><td>CustomerInformation</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.6" And &amp;CSWArcMap = 3</td><td>8</td></row>
+		<row><td>CustomerInformation</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.7" And &amp;CSWArcMap = 3</td><td>8</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>[ALLUSERS]</td><td>1</td><td>ApplicationUsers = "AllUsers" And Privileged</td><td>1</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>[ALLUSERS]</td><td>{}</td><td>ApplicationUsers = "OnlyCurrentUser" And Privileged</td><td>2</td></row>
 		<row><td>DatabaseFolder</td><td>Back</td><td>NewDialog</td><td>CustomerInformation</td><td>1</td><td>1</td></row>
@@ -1064,7 +1034,7 @@
 		<row><td>ReadyToInstall</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
 		<row><td>ReadyToInstall</td><td>InstallNow</td><td>EndDialog</td><td>Return</td><td>OutOfNoRbDiskSpace &lt;&gt; 1</td><td>1</td></row>
 		<row><td>ReadyToInstall</td><td>InstallNow</td><td>NewDialog</td><td>OutOfSpace</td><td>OutOfNoRbDiskSpace = 1</td><td>2</td></row>
-		<row><td>ReadyToInstall</td><td>InstallNow</td><td>Remove</td><td>CSWArcMap</td><td>Not ARCGISVERSION&lt;&lt;"10.6"</td><td>6</td></row>
+		<row><td>ReadyToInstall</td><td>InstallNow</td><td>Remove</td><td>CSWArcMap</td><td>Not ARCGISVERSION&lt;&lt;"10.7"</td><td>6</td></row>
 		<row><td>ReadyToInstall</td><td>InstallNow</td><td>[ProgressType1]</td><td>Installing</td><td>1</td><td>3</td></row>
 		<row><td>ReadyToInstall</td><td>InstallNow</td><td>[ProgressType2]</td><td>installed</td><td>1</td><td>4</td></row>
 		<row><td>ReadyToInstall</td><td>InstallNow</td><td>[ProgressType3]</td><td>installs</td><td>1</td><td>5</td></row>
@@ -1120,12 +1090,12 @@
 		<row><td>SetupResume</td><td>Next</td><td>NewDialog</td><td>OutOfSpace</td><td>OutOfNoRbDiskSpace = 1</td><td>0</td></row>
 		<row><td>SetupType</td><td>Back</td><td>NewDialog</td><td>CustomerInformation</td><td>1</td><td>1</td></row>
 		<row><td>SetupType</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
-		<row><td>SetupType</td><td>Next</td><td>AddLocal</td><td>ALL</td><td>_IsSetupTypeMin = "Typical" And ARCGISVERSION &lt;&lt; "10.6"</td><td>1</td></row>
-		<row><td>SetupType</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.6" And _IsSetupTypeMin &lt;&gt; "Custom" And &amp;CSWArcMap = 3</td><td>2</td></row>
+		<row><td>SetupType</td><td>Next</td><td>AddLocal</td><td>ALL</td><td>_IsSetupTypeMin = "Typical" And ARCGISVERSION &lt;&lt; "10.7"</td><td>1</td></row>
+		<row><td>SetupType</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.7" And _IsSetupTypeMin &lt;&gt; "Custom" And &amp;CSWArcMap = 3</td><td>2</td></row>
 		<row><td>SetupType</td><td>Next</td><td>NewDialog</td><td>CustomSetup</td><td>_IsSetupTypeMin = "Custom"</td><td>4</td></row>
 		<row><td>SetupType</td><td>Next</td><td>NewDialog</td><td>DestinationFolder</td><td>_IsSetupTypeMin &lt;&gt; "Custom"</td><td>6</td></row>
 		<row><td>SetupType</td><td>Next</td><td>NewDialog</td><td>OutOfSpace</td><td>OutOfNoRbDiskSpace = 1</td><td>5</td></row>
-		<row><td>SetupType</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.6" And _IsSetupTypeMin &lt;&gt; "Custom" And &amp;CSWArcMap = 3</td><td>3</td></row>
+		<row><td>SetupType</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.7" And _IsSetupTypeMin &lt;&gt; "Custom" And &amp;CSWArcMap = 3</td><td>3</td></row>
 		<row><td>SplashBitmap</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
 		<row><td>SplashBitmap</td><td>Next</td><td>NewDialog</td><td>InstallWelcome</td><td>1</td><td>0</td></row>
 	</table>
@@ -1133,7 +1103,6 @@
 	<table name="CreateFolder">
 		<col key="yes" def="s72">Directory_</col>
 		<col key="yes" def="s72">Component_</col>
-		<row><td>AGXHOME</td><td>AGXHomeFiles</td></row>
 		<row><td>ARCGISHOME</td><td>ARCGISHomeFiles</td></row>
 		<row><td>INSTALLDIR</td><td>ISRegistryComponent</td></row>
 		<row><td>INSTALLDIR</td><td>InstallDirFiles</td></row>
@@ -1149,7 +1118,6 @@
 		<col def="S255">ISComments</col>
 		<row><td>CheckForProductUpdates</td><td>226</td><td>ISUpdateServiceFolder</td><td>[ISUpdateServiceFolder]agent.exe "/au[ProductCode] /EndOfInstall"</td><td/><td>Checks for product updates</td></row>
 		<row><td>CheckForProductUpdatesOnReboot</td><td>226</td><td>ISUpdateServiceFolder</td><td>[ISUpdateServiceFolder]agent.exe "/au[ProductCode] /EndOfInstall /Reboot"</td><td/><td>Checks for product updates on reboot</td></row>
-		<row><td>Fn_FindReplaceAGXBinFiles</td><td>3073</td><td>ISSetup.dll</td><td>f7</td><td/><td/></row>
 		<row><td>Fn_FindReplaceArcGISBinFiles</td><td>3073</td><td>ISSetup.dll</td><td>f8</td><td/><td/></row>
 		<row><td>Fn_FindReplaceBinFiles</td><td>3073</td><td>ISSetup.dll</td><td>f9</td><td/><td/></row>
 		<row><td>FolderBrowse_LogLoc</td><td>1</td><td>ISSetup.dll</td><td>f5</td><td/><td/></row>
@@ -1164,19 +1132,9 @@
 		<row><td>ISUnSelfRegisterFiles</td><td>3073</td><td>ISSELFREG.DLL</td><td>ISUnSelfRegisterFiles</td><td/><td/></row>
 		<row><td>MessageBox</td><td>1</td><td>ISSetup.dll</td><td>f1</td><td/><td/></row>
 		<row><td>PassTo_FindReplace</td><td>51</td><td>FindReplace</td><td>[INSTALLDIR]</td><td/><td/></row>
-		<row><td>PassTo_Fn_FindReplaceAGXBinFiles</td><td>51</td><td>Fn_FindReplaceAGXBinFiles</td><td>[INSTALLDIR];[LOGDIR];[BIN2]</td><td/><td/></row>
 		<row><td>PassTo_Fn_FindReplaceArcGISBinFiles</td><td>51</td><td>Fn_FindReplaceArcGISBinFiles</td><td>[INSTALLDIR];[LOGDIR];[BIN]</td><td/><td/></row>
 		<row><td>PassTo_Fn_FindReplaceBinFiles</td><td>51</td><td>Fn_FindReplaceBinFiles</td><td>[INSTALLDIR];[LOGDIR];[BIN1]</td><td/><td/></row>
-		<row><td>PassTo_ProcessEAZFile</td><td>51</td><td>ProcessEAZFile</td><td>[INSTALLDIR];[SUPPORTDIR];[LOGDIR]</td><td/><td/></row>
-		<row><td>ProcessEAZFile</td><td>3073</td><td>ISSetup.dll</td><td>f6</td><td/><td/></row>
 		<row><td>RemoveFile</td><td>3137</td><td>ISSetup.dll</td><td>f3</td><td/><td/></row>
-		<row><td>SetAGXHOME_1200</td><td>51</td><td>AGXHOME</td><td>[AGX1200HOME]</td><td/><td/></row>
-		<row><td>SetAGXHOME_1500</td><td>51</td><td>AGXHOME</td><td>[AGX900HOME]</td><td/><td/></row>
-		<row><td>SetAGXHOME_1700</td><td>51</td><td>AGXHOME</td><td>[AGX1700HOME]</td><td/><td/></row>
-		<row><td>SetAGXHOME_1750</td><td>51</td><td>AGXHOME</td><td>[AGX1750HOME]</td><td/><td/></row>
-		<row><td>SetAGXHOME_2500</td><td>51</td><td>AGXHOME</td><td>[AGX2500HOME]</td><td/><td/></row>
-		<row><td>SetAGXHOME_2505</td><td>51</td><td>AGXHOME</td><td>[AGX2505HOME]</td><td/><td/></row>
-		<row><td>SetAGXHOME_3400</td><td>51</td><td>AGXHOME</td><td>[AGX3400HOME]</td><td/><td/></row>
 		<row><td>SetARPINSTALLLOCATION</td><td>51</td><td>ARPINSTALLLOCATION</td><td>[INSTALLDIR]</td><td/><td/></row>
 		<row><td>SetAllUsersDefaultLogLoc</td><td>51</td><td>LOGDIR</td><td>[CommonAppDataFolder]ESRI\Geoportal\CSWClients\Logs</td><td/><td/></row>
 		<row><td>SetAllUsersProfileNT</td><td>51</td><td>ALLUSERSPROFILE</td><td>[%SystemRoot]\Profiles\All Users</td><td/><td/></row>
@@ -1202,7 +1160,6 @@
 		<col def="S72">TextStyle_</col>
 		<col def="I4">ISWindowStyle</col>
 		<col def="I4">ISResourceId</col>
-		<row><td>AGXType</td><td>50</td><td>50</td><td>374</td><td>266</td><td>3</td><td>##ID_STRING18##</td><td>Next</td><td>Next</td><td>Cancel</td><td>Interior</td><td/><td>0</td><td/></row>
 		<row><td>AdminChangeFolder</td><td>50</td><td>50</td><td>374</td><td>266</td><td>3</td><td>##IDS_PRODUCTNAME_INSTALLSHIELD##</td><td>Tail</td><td>OK</td><td>Cancel</td><td>Install Point Browse</td><td/><td>0</td><td/></row>
 		<row><td>AdminNetworkLocation</td><td>50</td><td>50</td><td>374</td><td>266</td><td>3</td><td>##IDS_PRODUCTNAME_INSTALLSHIELD##</td><td>InstallNow</td><td>InstallNow</td><td>Cancel</td><td>Network Location</td><td/><td>0</td><td/></row>
 		<row><td>AdminWelcome</td><td>50</td><td>50</td><td>374</td><td>266</td><td>3</td><td>##IDS_PRODUCTNAME_INSTALLSHIELD##</td><td>Next</td><td>Next</td><td>Cancel</td><td>Administration Welcome</td><td/><td>0</td><td/></row>
@@ -1266,7 +1223,7 @@
 		<row><td>DATA</td><td>INSTALLDIR</td><td>Data</td><td/><td>0</td><td/></row>
 		<row><td>DATABASEDIR</td><td>ISYourDataBaseDir</td><td>.</td><td/><td>0</td><td/></row>
 		<row><td>DESKTOP10.0</td><td>ADDINS1</td><td>DESKTO~1|Desktop10.0</td><td/><td>0</td><td/></row>
-		<row><td>DESKTOP10.6</td><td>ADDINS1</td><td>DESKTO~1|Desktop10.6</td><td/><td>0</td><td/></row>
+		<row><td>DESKTOP10.7</td><td>ADDINS1</td><td>DESKTO~1|Desktop10.7</td><td/><td>0</td><td/></row>
 		<row><td>DEVHELP</td><td>INSTALLDIR</td><td>DevHelp</td><td/><td>0</td><td/></row>
 		<row><td>DesktopFolder</td><td>TARGETDIR</td><td>.:Desktop</td><td/><td>3</td><td/></row>
 		<row><td>ESRI</td><td>ProgramFilesFolder</td><td>ESRI</td><td/><td>0</td><td/></row>
@@ -1990,7 +1947,6 @@
 		<col def="S255">ISComments</col>
 		<col def="S255">ISFeatureCabName</col>
 		<col def="S255">ISProFeatureName</col>
-		<row><td>CSWAgx</td><td/><td>##ID_STRING12##</td><td/><td>8</td><td>1</td><td>INSTALLDIR</td><td>8</td><td/><td/><td/><td/></row>
 		<row><td>CSWArcMap</td><td/><td>##IDS_FEATURE_DISPLAY_NAME2##</td><td/><td>2</td><td>1</td><td>INSTALLDIR</td><td>8</td><td/><td/><td/><td/></row>
 		<row><td>Common</td><td/><td>##ID_STRING10##</td><td/><td>0</td><td>1</td><td>INSTALLDIR</td><td>24</td><td/><td/><td/><td/></row>
 	</table>
@@ -1998,10 +1954,6 @@
 	<table name="FeatureComponents">
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s72">Component_</col>
-		<row><td>CSWAgx</td><td>AGXBinFiles</td></row>
-		<row><td>CSWAgx</td><td>AGXHomeFiles</td></row>
-		<row><td>CSWAgx</td><td>CSWSearchDockWindowFiles</td></row>
-		<row><td>CSWAgx</td><td>ImagesFiles</td></row>
 		<row><td>CSWArcMap</td><td>ARCGISBinFiles</td></row>
 		<row><td>CSWArcMap</td><td>ARCGISHomeFiles</td></row>
 		<row><td>CSWArcMap</td><td>ArcGISHomeBinAddinsFiles</td></row>
@@ -2035,13 +1987,11 @@
 		<row><td>cswclient.pdb</td><td>CswClient.dll</td><td>CSWCLI~1.PDB|CswClient.pdb</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BINARIES_FILES&gt;\CswClient.pdb</td><td>1</td><td/></row>
 		<row><td>cswclient.properties</td><td>BinFiles</td><td>CSWCLI~1.PRO|CswClient.properties</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_COMMON_FILES&gt;\CswClient.properties</td><td>1</td><td/></row>
 		<row><td>cswclient.properties1</td><td>ARCGISBinFiles</td><td>CSWCLI~1.PRO|CswClient.properties</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_COMMON_FILES&gt;\CswClient.properties</td><td>1</td><td/></row>
-		<row><td>cswclient.properties2</td><td>AGXBinFiles</td><td>CSWCLI~1.PRO|CswClient.properties</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_COMMON_FILES&gt;\CswClient.properties</td><td>1</td><td/></row>
 		<row><td>cswclients.chm</td><td>CSWClients.chm</td><td>CSWCLI~1.CHM|CSWClients.chm</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BINARIES_FILES&gt;\CSWClients.chm</td><td>1</td><td/></row>
 		<row><td>cswsearch.dll</td><td>CswSearch.dll</td><td>CSWSEA~1.DLL|CswSearch.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BINARIES_FILES&gt;\CswSearch.dll</td><td>1</td><td/></row>
 		<row><td>cswsearch.esriaddin</td><td>ArcGISHomeBinAddinsFiles</td><td>CSWSEA~1.ESR|CswSearch.esriAddIn</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BINARIES_FILES&gt;\CswSearch.esriAddIn</td><td>1</td><td/></row>
 		<row><td>cswsearch.esriaddin1</td><td>MyDocsArcGISAddInsDesktop10Files</td><td>CSWSEA~1.ESR|CswSearch.esriAddIn</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BINARIES_FILES&gt;\CswSearch.esriAddIn</td><td>1</td><td/></row>
 		<row><td>cswsearch.pdb</td><td>CswSearch.dll</td><td>CSWSEA~1.PDB|CswSearch.pdb</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BINARIES_FILES&gt;\CswSearch.pdb</td><td>1</td><td/></row>
-		<row><td>cswsearchdockwindow.eaz</td><td>CSWSearchDockWindowFiles</td><td>CSWSEA~1.EAZ|CSWSearchDockWindow.eaz</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BINARIES_FILES&gt;\CSWSearchDockWindow.eaz</td><td>1</td><td/></row>
 	</table>
 
 	<table name="FileSFPCatalog">
@@ -2189,20 +2139,16 @@
 		<col def="S0">FTPLocation</col>
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
-		<row><td>AGXBinFiles</td><td/><td/><td>_F701ABAC_9E02_4682_A8FE_24026F64A25C_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>AGXHomeFiles</td><td/><td/><td>_BFE22798_5CE2_409D_A498_3F27D9BF1308_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ARCGISBinFiles</td><td/><td/><td>_A64E335D_130E_46C0_8F21_CDE8C0E66E90_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ARCGISHomeFiles</td><td/><td/><td>_D5488209_3E8E_4158_8C40_A702AE5B221A_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>AppLogger.dll</td><td/><td/><td>_C531D835_B745_4C60_B310_1060567B0DDC_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ArcGISHomeBinAddinsFiles</td><td/><td/><td>_2423DC1B_5FB2_4121_9E22_CF89DC99D462_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>BinFiles</td><td/><td/><td>_D3B8671E_911A_4F74_BD3D_C5ED9496D739_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>CSWClients.chm</td><td/><td/><td>_5159CAED_2319_4C42_BCD6_50F6F862809A_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>CSWSearchDockWindowFiles</td><td/><td/><td>_461893EC_700A_4E7D_9B80_96FA85262FFA_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>CswClient.dll</td><td/><td/><td>_461F64B5_3457_4CE4_AE9C_755568B6FAFB_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>CswSearch.dll</td><td/><td/><td>_1130A262_94F8_4A20_A565_CCC47F7DD197_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>DataFiles</td><td/><td/><td>_F95BA317_A7FE_490C_817C_15ECCBDC9555_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ISRegistryComponent</td><td/><td/><td>_134EFB60_3FDC_462B_8735_306F1D0C4CAA_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ImagesFiles</td><td/><td/><td>_FCCE3896_3A86_45C7_B767_431946FF7B73_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>InstallDirFiles</td><td/><td/><td>_B0E26853_BB19_4601_A8B0_6CDD3C9771D0_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>LogDirFiles</td><td/><td/><td>_61500814_73F4_4DD8_9D02_24E0E3785EBE_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>MyDocsArcGISAddInsDesktop10Files</td><td/><td/><td>_BFC1B788_39E8_4390_8818_C40B0EF831B8_FILTER</td><td/><td/><td/><td/></row>
@@ -2299,7 +2245,6 @@
 		<col def="S0">ExcludeFiles</col>
 		<col def="I4">ISAttributes</col>
 		<row><td>DataFiles</td><td>&lt;PATH_TO_PROFILES_FILES&gt;</td><td>4</td><td/><td>*.scc</td><td>2</td></row>
-		<row><td>ImagesFiles</td><td>&lt;PATH_TO_IMAGES_FILES1&gt;</td><td>4</td><td/><td/><td>10</td></row>
 	</table>
 
 	<table name="ISFeatureDIMReferences">
@@ -2364,8 +2309,6 @@
 		<row><td>f1</td><td>65536</td><td>DisplayMessage</td><td/></row>
 		<row><td>f3</td><td>68672</td><td>Fn_RemoveFile</td><td/></row>
 		<row><td>f5</td><td>0</td><td>FolderBrowseLogLoc</td><td/></row>
-		<row><td>f6</td><td>68608</td><td>ProcessEAZFile</td><td/></row>
-		<row><td>f7</td><td>68608</td><td>Fn_FindReplaceAGXBin</td><td/></row>
 		<row><td>f8</td><td>68608</td><td>Fn_FindReplaceArcGISBin</td><td/></row>
 		<row><td>f9</td><td>68608</td><td>Fn_FindReplaceBinFiles</td><td/></row>
 	</table>
@@ -2541,18 +2484,17 @@
 		<col def="S255">Value</col>
 		<col def="S255">TestValue</col>
 		<col def="i4">Type</col>
-		<row><td>BUILD_BINARIESDIRECTORY</td><td>BUILD_BINARIESDIRECTORY</td><td/><td>4</td></row>
-		<row><td>BUILD_SOURCESDIRECTORY</td><td>BUILD_SOURCESDIRECTORY</td><td/><td>4</td></row>
+		<row><td>BINARIESDIR</td><td>BUILD_BINARIESDIRECTORY</td><td/><td>4</td></row>
 		<row><td>CommonFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISPROJECTDIR</td><td/><td/><td>1</td></row>
 		<row><td>ISProductFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectFolder</td><td/><td/><td>1</td></row>
-		<row><td>PATH_TO_BINARIES_FILES</td><td>&lt;BUILD_BINARIESDIRECTORY&gt;</td><td/><td>2</td></row>
-		<row><td>PATH_TO_COMMON_FILES</td><td>&lt;BUILD_SOURCESDIRECTORY&gt;\components\desktop\CswClient\trunk\common</td><td/><td>2</td></row>
-		<row><td>PATH_TO_IMAGES_FILES1</td><td>&lt;BUILD_SOURCESDIRECTORY&gt;\components\desktop\CswClient\trunk\explorer\Images</td><td/><td>2</td></row>
-		<row><td>PATH_TO_PROFILES_FILES</td><td>&lt;BUILD_SOURCESDIRECTORY&gt;\geoportal\src\gpt\search\profiles</td><td/><td>2</td></row>
+		<row><td>PATH_TO_BINARIES_FILES</td><td>&lt;BINARIESDIR&gt;</td><td/><td>2</td></row>
+		<row><td>PATH_TO_COMMON_FILES</td><td>&lt;SOURCESDIR&gt;\components\desktop\CswClient\trunk\common</td><td/><td>2</td></row>
+		<row><td>PATH_TO_PROFILES_FILES</td><td>&lt;SOURCESDIR&gt;\geoportal\src\gpt\search\profiles</td><td/><td>2</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
+		<row><td>SOURCESDIR</td><td>BUILD_SOURCESDIRECTORY</td><td/><td>4</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
 		<row><td>WindowsFolder</td><td/><td/><td>1</td></row>
 	</table>
@@ -4173,7 +4115,6 @@
 		<row><td>DuplicateFiles</td><td/><td>3500</td><td>DuplicateFiles</td><td/></row>
 		<row><td>FileCost</td><td/><td>400</td><td>FileCost</td><td/></row>
 		<row><td>FindRelatedProducts</td><td>NOT ISSETUPDRIVEN</td><td>14</td><td>FindRelatedProducts</td><td/></row>
-		<row><td>Fn_FindReplaceAGXBinFiles</td><td>&amp;CSWAgx=3</td><td>5790</td><td/><td/></row>
 		<row><td>Fn_FindReplaceArcGISBinFiles</td><td>&amp;CSWArcMap=3</td><td>5762</td><td/><td/></row>
 		<row><td>Fn_FindReplaceBinFiles</td><td>&amp;Common=3</td><td>5650</td><td/><td/></row>
 		<row><td>ISLockPermissionsCost</td><td/><td>801</td><td/><td/></row>
@@ -4197,13 +4138,10 @@
 		<row><td>MsiConfigureServices</td><td>VersionMsi &gt;= "5.00"</td><td>5801</td><td>MSI5 MsiConfigureServices</td><td/></row>
 		<row><td>MsiPublishAssemblies</td><td/><td>6250</td><td>MsiPublishAssemblies</td><td/></row>
 		<row><td>MsiUnpublishAssemblies</td><td/><td>1200</td><td>MsiUnpublishAssemblies</td><td/></row>
-		<row><td>PassTo_Fn_FindReplaceAGXBinFiles</td><td/><td>5781</td><td/><td/></row>
 		<row><td>PassTo_Fn_FindReplaceArcGISBinFiles</td><td/><td>5725</td><td/><td/></row>
 		<row><td>PassTo_Fn_FindReplaceBinFiles</td><td/><td>5500</td><td/><td/></row>
-		<row><td>PassTo_ProcessEAZFile</td><td/><td>3725</td><td/><td/></row>
 		<row><td>PatchFiles</td><td/><td>3400</td><td>PatchFiles</td><td/></row>
 		<row><td>ProcessComponents</td><td/><td>1010</td><td>ProcessComponents</td><td/></row>
-		<row><td>ProcessEAZFile</td><td>&amp;CSWAgx=3</td><td>3750</td><td/><td/></row>
 		<row><td>PublishComponents</td><td/><td>6200</td><td>PublishComponents</td><td/></row>
 		<row><td>PublishFeatures</td><td/><td>6300</td><td>PublishFeatures</td><td/></row>
 		<row><td>PublishProduct</td><td/><td>6400</td><td>PublishProduct</td><td/></row>
@@ -4230,13 +4168,6 @@
 		<row><td>ScheduleReboot</td><td>ISSCHEDULEREBOOT</td><td>6410</td><td>ScheduleReboot</td><td/></row>
 		<row><td>SelfRegModules</td><td/><td>5000</td><td>SelfRegModules</td><td/></row>
 		<row><td>SelfUnregModules</td><td/><td>1750</td><td>SelfUnregModules</td><td/></row>
-		<row><td>SetAGXHOME_1200</td><td>AGX1200HOME</td><td>6</td><td/><td/></row>
-		<row><td>SetAGXHOME_1500</td><td>AGX1500HOME</td><td>7</td><td/><td/></row>
-		<row><td>SetAGXHOME_1700</td><td>AGX1700HOME</td><td>8</td><td/><td/></row>
-		<row><td>SetAGXHOME_1750</td><td>AGX1750HOME</td><td>9</td><td/><td/></row>
-		<row><td>SetAGXHOME_2500</td><td>AGX2500HOME</td><td>10</td><td/><td/></row>
-		<row><td>SetAGXHOME_2505</td><td>AGX2505HOME</td><td>11</td><td/><td/></row>
-		<row><td>SetAGXHOME_3400</td><td>AGX3400HOME</td><td>12</td><td/><td/></row>
 		<row><td>SetARPINSTALLLOCATION</td><td>Not Installed</td><td>500</td><td>SetARPINSTALLLOCATION</td><td/></row>
 		<row><td>SetODBCFolders</td><td/><td>600</td><td>SetODBCFolders</td><td/></row>
 		<row><td>StartServices</td><td>VersionNT</td><td>5900</td><td>StartServices</td><td/></row>
@@ -4315,13 +4246,6 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<row><td>PatchWelcome</td><td>PATCH And Not IS_MAJOR_UPGRADE</td><td>1205</td><td>Patch Panel</td><td/></row>
 		<row><td>RMCCPSearch</td><td>Not CCP_SUCCESS And CCP_TEST</td><td>600</td><td>RMCCPSearch</td><td/></row>
 		<row><td>ResolveSource</td><td>Not Installed And Not PATCH</td><td>990</td><td>ResolveSource</td><td/></row>
-		<row><td>SetAGXHOME_1200</td><td>AGX1200HOME</td><td>401</td><td/><td/></row>
-		<row><td>SetAGXHOME_1500</td><td>AGX1500HOME</td><td>402</td><td/><td/></row>
-		<row><td>SetAGXHOME_1700</td><td>AGX1700HOME</td><td>403</td><td/><td/></row>
-		<row><td>SetAGXHOME_1750</td><td>AGX1750HOME</td><td>404</td><td/><td/></row>
-		<row><td>SetAGXHOME_2500</td><td>AGX2500HOME</td><td>405</td><td/><td/></row>
-		<row><td>SetAGXHOME_2505</td><td>AGX2505HOME</td><td>406</td><td/><td/></row>
-		<row><td>SetAGXHOME_3400</td><td>AGX3400HOME</td><td>407</td><td/><td/></row>
 		<row><td>SetAllUsersProfileNT</td><td>VersionNT = 400</td><td>970</td><td/><td/></row>
 		<row><td>SetupCompleteError</td><td/><td>-3</td><td>SetupCompleteError</td><td/></row>
 		<row><td>SetupCompleteSuccess</td><td/><td>-1</td><td>SetupCompleteSuccess</td><td/></row>
@@ -4662,7 +4586,7 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<row><td>ProductID</td><td>none</td><td/></row>
 		<row><td>ProductLanguage</td><td>1033</td><td/></row>
 		<row><td>ProductName</td><td>CSW Client for ArcGIS</td><td/></row>
-		<row><td>ProductVersion</td><td>1.2.9.0</td><td/></row>
+		<row><td>ProductVersion</td><td>1.2.10.0</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
@@ -4671,7 +4595,7 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<row><td>ReinstallModeText</td><td>omus</td><td/></row>
 		<row><td>RestartManagerOption</td><td>CloseRestart</td><td/></row>
 		<row><td>SHOWLAUNCHPROGRAM</td><td>0</td><td/></row>
-		<row><td>SecureCustomProperties</td><td>AGXVERSION;INSTALLDIR;SUPPORTDIR;ARCGISHOME;ARCGISVERSION;NET2_0SP;AGX1200HOME;AGX1500HOME;TEMP;TEMP1;AGX1700HOME;AGX1750HOME;AGX2500HOME;AGX2505HOME;AGX3400HOME</td><td/></row>
+		<row><td>SecureCustomProperties</td><td>AGXVERSION;INSTALLDIR;SUPPORTDIR;ARCGISHOME;ARCGISVERSION;NET2_0SP;TEMP;TEMP1</td><td/></row>
 		<row><td>SetupType</td><td>Typical</td><td/></row>
 		<row><td>TEMP</td><td>0</td><td/></row>
 		<row><td>TEMP1</td><td>0</td><td/></row>
@@ -4723,18 +4647,11 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<col def="s255">Key</col>
 		<col def="S255">Name</col>
 		<col def="I2">Type</col>
-		<row><td>NewSignature1</td><td>2</td><td>SOFTWARE\ESRI\Explorer1200</td><td>InstallDir</td><td>2</td></row>
 		<row><td>NewSignature11</td><td>2</td><td>SOFTWARE\Microsoft\.NETFramework\policy\v2.0</td><td>50727</td><td>2</td></row>
-		<row><td>NewSignature110</td><td>2</td><td>SOFTWARE\ESRI\Explorer2505</td><td>InstallDir</td><td>2</td></row>
-		<row><td>NewSignature111</td><td>2</td><td>SOFTWARE\ESRI\Explorer3400</td><td>InstallDir</td><td>2</td></row>
 		<row><td>NewSignature12</td><td>2</td><td>SOFTWARE\Microsoft\.NetFramework</td><td>InstallRoot</td><td>2</td></row>
 		<row><td>NewSignature13</td><td>2</td><td>SOFTWARE\ESRI\Applications\Portal_CswClients\Install</td><td>Path</td><td>2</td></row>
-		<row><td>NewSignature14</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.6</td><td>RealVersion</td><td>2</td></row>
-		<row><td>NewSignature15</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.6</td><td>InstallDir</td><td>2</td></row>
-		<row><td>NewSignature16</td><td>2</td><td>SOFTWARE\ESRI\Explorer1500</td><td>InstallDir</td><td>2</td></row>
-		<row><td>NewSignature17</td><td>2</td><td>SOFTWARE\ESRI\Explorer1700</td><td>InstallDir</td><td>2</td></row>
-		<row><td>NewSignature18</td><td>2</td><td>SOFTWARE\ESRI\Explorer1750</td><td>InstallDir</td><td>2</td></row>
-		<row><td>NewSignature19</td><td>2</td><td>SOFTWARE\ESRI\Explorer2500</td><td>InstallDir</td><td>2</td></row>
+		<row><td>NewSignature14</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.7</td><td>RealVersion</td><td>2</td></row>
+		<row><td>NewSignature15</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.7</td><td>InstallDir</td><td>2</td></row>
 	</table>
 
 	<table name="Registry">
@@ -5014,7 +4931,7 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<row><td>AppId</td><td>RunAsInteractiveUser</td><td>Y</td><td>0</td><td>1</td><td/><td/><td/><td/><td/></row>
 		<row><td>AppId</td><td>ServiceParameters</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td/></row>
 		<row><td>AppSearch</td><td>Property</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>The property associated with a Signature</td></row>
-		<row><td>AppSearch</td><td>Signature_</td><td>N</td><td/><td/><td>ISXmlLocator;Signature;RegLocator;IniLocator;DrLocator;CompLocator</td><td>1</td><td>Identifier</td><td/><td>The Signature_ represents a unique file signature and is also the foreign key in the Signature,  RegLocator, IniLocator, CompLocator and the DrLocator tables.</td></row>
+		<row><td>AppSearch</td><td>Signature_</td><td>N</td><td/><td/><td>ISXmlLocator;Signature</td><td>1</td><td>Identifier</td><td/><td>The Signature_ represents a unique file signature and is also the foreign key in the Signature,  RegLocator, IniLocator, CompLocator and the DrLocator tables.</td></row>
 		<row><td>BBControl</td><td>Attributes</td><td>Y</td><td>0</td><td>2147483647</td><td/><td/><td/><td/><td>A 32-bit word that specifies the attribute flags to be applied to this control.</td></row>
 		<row><td>BBControl</td><td>BBControl</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Name of the control. This name must be unique within a billboard, but can repeat on different billboard.</td></row>
 		<row><td>BBControl</td><td>Billboard_</td><td>N</td><td/><td/><td>Billboard</td><td>1</td><td>Identifier</td><td/><td>External key to the Billboard table, name of the billboard.</td></row>

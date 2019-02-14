@@ -60,8 +60,8 @@
 		<lastauthor>Administrator</lastauthor>
 		<revnumber>{E38A03B5-0CE8-48BC-B386-87398AFCAC82}</revnumber>
 		<lastprinted/>
-		<createdtm>06/21/1999 06:00</createdtm>
-		<lastsavedtm>07/14/2000 09:50</lastsavedtm>
+		<createdtm>06/21/1999 05:00</createdtm>
+		<lastsavedtm>07/14/2000 08:50</lastsavedtm>
 		<pagecount>200</pagecount>
 		<wordcount>0</wordcount>
 		<charcount/>
@@ -352,7 +352,7 @@
 		<row><td>ISRegistryComponent</td><td>{C82E63DB-2C9E-40AE-A8FA-592EFC1AABC5}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>InstallDirFiles</td><td>{ADD0B2F0-B0A3-4D23-8AC4-7EF86D92FBB8}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>LoggingFolderFiles</td><td>{E60E5F79-ED79-44F9-A6C9-3DCF60BC85D3}</td><td>LOGGINGFOLDER</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>MyDocsArcGISAddInsDesktop10Files</td><td>{D470B5F3-04DD-4402-96ED-DAD2F80394E0}</td><td>DESKTOP10.6</td><td>8</td><td>ALLUSERS &lt;&gt; 1</td><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>MyDocsArcGISAddInsDesktop10Files</td><td>{D470B5F3-04DD-4402-96ED-DAD2F80394E0}</td><td>DESKTOP10.7</td><td>8</td><td>ALLUSERS &lt;&gt; 1</td><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>PublishClient.chm</td><td>{A84C3D7C-62C1-4E85-A5FA-3606F0FD41C0}</td><td>BIN1</td><td>8</td><td/><td>publishclient.chm</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>PublishClient.dll</td><td>{003C06A3-5812-442B-9E4C-BE11B7A6E5FA}</td><td>BIN1</td><td>8</td><td/><td>publishclient.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
@@ -1203,7 +1203,7 @@
 		<row><td>DATABASEDIR</td><td>ISYourDataBaseDir</td><td>.</td><td/><td>0</td><td/></row>
 		<row><td>DESKTOP10.0</td><td>ARCGIS</td><td>DESKTO~1|Desktop10.0</td><td/><td>0</td><td/></row>
 		<row><td>DESKTOP10.01</td><td>ADDINS</td><td>DESKTO~1|Desktop10.0</td><td/><td>0</td><td/></row>
-		<row><td>DESKTOP10.6</td><td>ADDINS</td><td>DESKTO~1|Desktop10.6</td><td/><td>0</td><td/></row>
+		<row><td>DESKTOP10.7</td><td>ADDINS</td><td>DESKTO~1|Desktop10.7</td><td/><td>0</td><td/></row>
 		<row><td>DesktopFolder</td><td>TARGETDIR</td><td>.:Desktop</td><td/><td>3</td><td/></row>
 		<row><td>ESRI</td><td>ProgramFilesFolder</td><td>ESRI</td><td/><td>0</td><td/></row>
 		<row><td>ESRI1</td><td>CommonAppDataFolder</td><td>ESRI</td><td/><td>0</td><td/></row>
@@ -2454,16 +2454,16 @@
 		<col def="S255">Value</col>
 		<col def="S255">TestValue</col>
 		<col def="i4">Type</col>
-		<row><td>BUILD_BINARIESDIRECTORY</td><td>BUILD_BINARIESDIRECTORY</td><td/><td>4</td></row>
-		<row><td>BUILD_SOURCESDIRECTORY</td><td>BUILD_SOURCESDIRECTORY</td><td/><td>4</td></row>
+		<row><td>BINARIESDIR</td><td>BUILD_BINARIESDIRECTORY</td><td/><td>4</td></row>
 		<row><td>CommonFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISPROJECTDIR</td><td/><td/><td>1</td></row>
 		<row><td>ISProductFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectFolder</td><td/><td/><td>1</td></row>
-		<row><td>PATH_TO_BIN_FILES</td><td>&lt;BUILD_BINARIESDIRECTORY&gt;</td><td/><td>2</td></row>
-		<row><td>PATH_TO_PUBLISHCLIENT_FILE</td><td>&lt;BUILD_SOURCESDIRECTORY&gt;\components\desktop\PublishClient\trunk\src</td><td/><td>2</td></row>
+		<row><td>PATH_TO_BIN_FILES</td><td>&lt;BINARIESDIR&gt;</td><td/><td>2</td></row>
+		<row><td>PATH_TO_PUBLISHCLIENT_FILE</td><td>&lt;SOURCESDIR&gt;\components\desktop\PublishClient\trunk\src</td><td/><td>2</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
+		<row><td>SOURCESDIR</td><td>BUILD_SOURCESDIRECTORY</td><td/><td>4</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
 		<row><td>WindowsFolder</td><td/><td/><td>1</td></row>
 	</table>
@@ -3899,7 +3899,7 @@
 		<row><td>ID_STRING16</td><td>1033</td><td>PUBLIS~1|Publish Client</td><td>0</td><td/><td>975058256</td></row>
 		<row><td>ID_STRING17</td><td>1033</td><td>Environmental Systems Research Institute, Inc.</td><td>0</td><td/><td>-1776067384</td></row>
 		<row><td>ID_STRING2</td><td>1033</td><td>AllUsers</td><td>0</td><td/><td>-1575156306</td></row>
-		<row><td>ID_STRING3</td><td>1033</td><td>[ProductName] requires ArcGIS Desltop 10.6.1. Please install ArcGIS Desktop 10.6.1 and restart this installation.</td><td>0</td><td/><td>-1297714995</td></row>
+		<row><td>ID_STRING3</td><td>1033</td><td>ArcGIS 10.7 for Desktop was not found. Please install ArcGIS 10.7 for Desktop and then restart this installation.</td><td>0</td><td/><td>866495087</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>CurrentUser</td><td>0</td><td/><td>-1575150162</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>&amp;Next &gt;</td><td>0</td><td/><td>-1575130835</td></row>
 		<row><td>ID_STRING6</td><td>1033</td><td>&lt; &amp;Back</td><td>0</td><td/><td>-1575130835</td></row>
@@ -4165,7 +4165,6 @@
 		<row><td>CurrentMedia</td><td dt:dt="bin.base64" md5="b491486f2ea923dc16dc8132d9c8c265">
 UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8AbgAgADEA
 			</td></row>
-		<row><td>EnableSwidtag</td><td>0</td></row>
 		<row><td>ISCompilerOption_CompileBeforeBuild</td><td>1</td></row>
 		<row><td>ISCompilerOption_Debug</td><td>0</td></row>
 		<row><td>ISCompilerOption_IncludePath</td><td/></row>
@@ -4236,7 +4235,7 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 	<table name="LaunchCondition">
 		<col key="yes" def="s255">Condition</col>
 		<col def="l255">Description</col>
-		<row><td>ARCGISVERSION&lt;&lt;"10.6.1"</td><td>##ID_STRING3##</td></row>
+		<row><td>ARCGISVERSION&lt;&lt;"10.7"</td><td>##ID_STRING3##</td></row>
 	</table>
 
 	<table name="ListBox">
@@ -4554,7 +4553,7 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<row><td>ProductID</td><td>none</td><td/></row>
 		<row><td>ProductLanguage</td><td>1033</td><td/></row>
 		<row><td>ProductName</td><td>Geoportal Server Publish Client</td><td/></row>
-		<row><td>ProductVersion</td><td>1.2.9.0</td><td/></row>
+		<row><td>ProductVersion</td><td>1.2.10.0</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
@@ -4613,8 +4612,8 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<col def="s255">Key</col>
 		<col def="S255">Name</col>
 		<col def="I2">Type</col>
-		<row><td>NewSignature12</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.6</td><td>RealVersion</td><td>2</td></row>
-		<row><td>NewSignature13</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.6</td><td>InstallDir</td><td>2</td></row>
+		<row><td>NewSignature12</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.7</td><td>RealVersion</td><td>2</td></row>
+		<row><td>NewSignature13</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.7</td><td>InstallDir</td><td>2</td></row>
 	</table>
 
 	<table name="Registry">
@@ -4893,7 +4892,7 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<row><td>AppId</td><td>RunAsInteractiveUser</td><td>Y</td><td>0</td><td>1</td><td/><td/><td/><td/><td/></row>
 		<row><td>AppId</td><td>ServiceParameters</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td/></row>
 		<row><td>AppSearch</td><td>Property</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>The property associated with a Signature</td></row>
-		<row><td>AppSearch</td><td>Signature_</td><td>N</td><td/><td/><td>ISXmlLocator;Signature;RegLocator;IniLocator;DrLocator;CompLocator</td><td>1</td><td>Identifier</td><td/><td>The Signature_ represents a unique file signature and is also the foreign key in the Signature,  RegLocator, IniLocator, CompLocator and the DrLocator tables.</td></row>
+		<row><td>AppSearch</td><td>Signature_</td><td>N</td><td/><td/><td>ISXmlLocator;Signature</td><td>1</td><td>Identifier</td><td/><td>The Signature_ represents a unique file signature and is also the foreign key in the Signature,  RegLocator, IniLocator, CompLocator and the DrLocator tables.</td></row>
 		<row><td>BBControl</td><td>Attributes</td><td>Y</td><td>0</td><td>2147483647</td><td/><td/><td/><td/><td>A 32-bit word that specifies the attribute flags to be applied to this control.</td></row>
 		<row><td>BBControl</td><td>BBControl</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Name of the control. This name must be unique within a billboard, but can repeat on different billboard.</td></row>
 		<row><td>BBControl</td><td>Billboard_</td><td>N</td><td/><td/><td>Billboard</td><td>1</td><td>Identifier</td><td/><td>External key to the Billboard table, name of the billboard.</td></row>
