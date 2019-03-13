@@ -69,7 +69,7 @@ public class OGCServerHandler extends ServiceHandler {
   @Override
   public void collectMetadata(ServiceHandlerFactory handlerFactory, ServiceInfo serviceInfo)
     throws Exception {
-    String url = serviceInfo.getSoapUrl()+"?request=GetCapabilities&service="+this.getOgcType();
+    String url = serviceInfo.getRestUrl()+"?request=GetCapabilities&service="+this.getOgcType();
     serviceInfo.getKeywords().add(serviceInfo.getType());
     serviceInfo.getKeywords().add(this.getOgcType());
     serviceInfo.addKeywords("liveData,service",",");
@@ -94,13 +94,17 @@ public class OGCServerHandler extends ServiceHandler {
 
   @Override
   public ServiceInfo createServiceInfo(ServiceInfo parentInfo, ServiceDescription desc, String currentRestUrl, String currentSoapUrl) {
-    ServiceInfo serviceInfo = super.createServiceInfo(parentInfo, desc, currentSoapUrl.replaceAll("\\?wsdl$", "") /*currentRestUrl*/, currentSoapUrl);
+    ServiceInfo serviceInfo = super.createServiceInfo(parentInfo, desc, makeRestUrl(currentRestUrl, currentSoapUrl), currentSoapUrl);
     if (parentInfo!=null) {
       serviceInfo.setLayersInfo(parentInfo.getLayersInfo());
       serviceInfo.setEnvelope(parentInfo.getEnvelope());
       serviceInfo.setCopyright(parentInfo.getCopyright());
     }
     return serviceInfo;
+  }
+  
+  protected String makeRestUrl(String currentRestUrl, String currentSoapUrl) {
+    return currentSoapUrl.replaceAll("\\?wsdl$", "");
   }
     
 }
