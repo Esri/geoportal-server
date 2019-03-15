@@ -21,7 +21,7 @@ public class InspireViewHandler extends WMSServerHandler {
 
   @Override
   protected String makeRestUrl(String currentRestUrl, String currentSoapUrl) {
-    return currentRestUrl.replaceFirst("/InspireView$", "/ext/InspireView/service");
+    return currentRestUrl.replaceFirst("/InspireView$", "/exts/InspireView/service");
   }
   
 }
