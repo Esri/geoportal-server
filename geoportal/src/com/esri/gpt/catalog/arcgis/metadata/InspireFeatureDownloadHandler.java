@@ -21,7 +21,7 @@ public class InspireFeatureDownloadHandler extends WFSServerHandler {
 
   @Override
   protected String makeRestUrl(String currentRestUrl, String currentSoapUrl) {
-    return currentRestUrl.replaceFirst("/InspireFeatureDownload$", "/ext/InspireFeatureDownload/service");
+    return currentRestUrl.replaceFirst("/InspireFeatureDownload$", "/exts/InspireFeatureDownload/service");
   }
   
 }
