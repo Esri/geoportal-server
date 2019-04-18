@@ -18,6 +18,7 @@
  */
 
 dojo.require("dijit.Dialog");
+var StringUtil = require("dojo/string");
 
 
 /**
@@ -5576,6 +5577,25 @@ dojo.declare("gxe.control.InputText",gxe.control.InputBase,{
     if ((this.htmlElement != null) && (this.htmlElement.value != null)) {
       var sValue = dojo.trim(this.htmlElement.value);
       if (!bInFeedbackMode) {
+        // handle 'precision' attribute
+        var sType = gxe.cfg.getGxeAttributeValue(this.xmlNode.cfgObject,"valueType");
+        if (sType != null) sType = dojo.trim(sType);
+        if ((sType == "decimal") || (sType == "xs:decimal") || (sType == "xsd:decimal") ||
+                   (sType == "number")) {
+          var precision = gxe.cfg.getGxeAttributeValue(this.cfgObject,"precision");
+          if (precision!=null && !isNaN(Number(precision)) && Number(precision)>0) {
+            precision = Number(precision);
+            var dotIndex = sValue.lastIndexOf(".");
+            if (dotIndex<0) {
+              sValue += "." + StringUtil.rep("0", precision);
+            } else {
+              var currPrecision = sValue.length - dotIndex - 1;
+              if (currPrecision<precision) {
+                sValue += StringUtil.rep("0", precision - currPrecision);
+              }
+            }
+          }
+        }
         if (sValue != this.htmlElement.value) this.htmlElement.value = sValue;
       }
       if (sValue.length > 0) return sValue;

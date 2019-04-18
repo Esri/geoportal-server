@@ -20,7 +20,7 @@ With the Geoportal Server you can:
 * Ensure the use of approved, high-quality datasets.
 * Reduce the time users spend trying to find relevant, usable geospatial resources.
 
-Want to learn more? Try our [sandbox site](https://gptogc.esri.com)!
+Want to learn more? Try our [sandbox site](https://gptogc.esri.com/geoportal/catalog/main/home.page)!
 
 Want to get started right away? Download the [compiled distribution and installation files] (https://github.com/Esri/geoportal-server/releases/download/v1.2.8/geoportal-1.2.8.zip).
 
