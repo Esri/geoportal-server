@@ -5,7 +5,7 @@
            g:targetNS="http://www.isotc211.org/2005/gmd" 
            g:targetName="MD_Metadata" 
            g:i18nBase="catalog.iso19139.MD_Metadata" 
-           g:label="$i18n.catalog.mdParam.schema.iso19139.coregeog"
+           g:label="$i18n.catalog.mdParam.schema.inspire.coregeog"
            g:extends="$base/xtn/ui/UI_Element.xml">
   
     <g:attribute g:targetName="xsi:schemaLocation" g:value="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/iso/19139/20070417/gmd/gmd.xsd"></g:attribute>
