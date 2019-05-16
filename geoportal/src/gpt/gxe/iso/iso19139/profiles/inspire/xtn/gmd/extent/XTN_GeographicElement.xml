@@ -20,7 +20,7 @@
 							  <g:body>
 							    <g:element>
 							      <g:body>
-				              <g:input h:size="24" h:gxeMapPart="envelope_west" g:value="-180" g:precision="2"
+				              <g:input h:size="24" h:gxeMapPart="envelope_west" g:value="-80.00" g:precision="2"
 				                g:tip="$i18n.catalog.general.inputLongitudeFormat"
 				                g:extends="$base/core/ui/InputText.xml"/>
 				            </g:body> 
@@ -33,7 +33,7 @@
 				        <g:body>
 				          <g:element>
 				            <g:body>
-				              <g:input h:size="24" h:gxeMapPart="envelope_east" g:value="180" g:precision="2"
+				              <g:input h:size="24" h:gxeMapPart="envelope_east" g:value="80.00" g:precision="2"
 				                g:tip="$i18n.catalog.general.inputLongitudeFormat"
 				                g:extends="$base/core/ui/InputText.xml"/>
 				            </g:body> 
@@ -46,7 +46,7 @@
 				        <g:body>
 				          <g:element>
 				            <g:body>
-				              <g:input h:size="24" h:gxeMapPart="envelope_south" g:value="-90" g:precision="2"
+				              <g:input h:size="24" h:gxeMapPart="envelope_south" g:value="-9.00" g:precision="2"
 				                g:tip="$i18n.catalog.general.inputLatitudeFormat"
 				                g:extends="$base/core/ui/InputText.xml"/>
 				            </g:body> 
@@ -59,7 +59,7 @@
 				        <g:body>
 				          <g:element>
 				            <g:body>
-				              <g:input h:size="24" h:gxeMapPart="envelope_north" g:value="90" g:precision="2"
+				              <g:input h:size="24" h:gxeMapPart="envelope_north" g:value="9.00" g:precision="2"
 				                g:tip="$i18n.catalog.general.inputLatitudeFormat"
 				                g:extends="$base/core/ui/InputText.xml"/>
 				            </g:body> 
