@@ -3899,7 +3899,7 @@
 		<row><td>ID_STRING16</td><td>1033</td><td>PUBLIS~1|Publish Client</td><td>0</td><td/><td>975058256</td></row>
 		<row><td>ID_STRING17</td><td>1033</td><td>Environmental Systems Research Institute, Inc.</td><td>0</td><td/><td>-1776067384</td></row>
 		<row><td>ID_STRING2</td><td>1033</td><td>AllUsers</td><td>0</td><td/><td>-1575156306</td></row>
-		<row><td>ID_STRING3</td><td>1033</td><td>ArcGIS 10.7 for Desktop was not found. Please install ArcGIS 10.7 for Desktop and then restart this installation.</td><td>0</td><td/><td>866495087</td></row>
+		<row><td>ID_STRING3</td><td>1033</td><td>ArcGIS 10.7.1 for Desktop was not found. Please install ArcGIS 10.7.1 for Desktop and then restart this installation.</td><td>0</td><td/><td>-1566079370</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>CurrentUser</td><td>0</td><td/><td>-1575150162</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>&amp;Next &gt;</td><td>0</td><td/><td>-1575130835</td></row>
 		<row><td>ID_STRING6</td><td>1033</td><td>&lt; &amp;Back</td><td>0</td><td/><td>-1575130835</td></row>
@@ -4235,7 +4235,7 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 	<table name="LaunchCondition">
 		<col key="yes" def="s255">Condition</col>
 		<col def="l255">Description</col>
-		<row><td>ARCGISVERSION&lt;&lt;"10.7"</td><td>##ID_STRING3##</td></row>
+		<row><td>ARCGISVERSION&lt;&lt;"10.7.1"</td><td>##ID_STRING3##</td></row>
 	</table>
 
 	<table name="ListBox">
