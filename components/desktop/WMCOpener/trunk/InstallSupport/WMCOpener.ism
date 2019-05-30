@@ -4629,8 +4629,8 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<col def="s255">Key</col>
 		<col def="S255">Name</col>
 		<col def="I2">Type</col>
-		<row><td>NewSignature1</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.7.1</td><td>InstallDir</td><td>2</td></row>
-		<row><td>NewSignature11</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.7.1</td><td>RealVersion</td><td>2</td></row>
+		<row><td>NewSignature1</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.7</td><td>InstallDir</td><td>2</td></row>
+		<row><td>NewSignature11</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.7</td><td>RealVersion</td><td>2</td></row>
 	</table>
 
 	<table name="Registry">
