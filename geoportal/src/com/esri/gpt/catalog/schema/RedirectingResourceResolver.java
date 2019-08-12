@@ -20,7 +20,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import org.apache.commons.io.IOUtils;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 
@@ -42,11 +41,9 @@ public class RedirectingResourceResolver implements LSResourceResolver {
             connection = (HttpURLConnection) url.openConnection();
             InputStream stream = connection.getInputStream();
             InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
-            String stringData = IOUtils.toString(reader);
             Input input = new Input();
-            input.setStringData(stringData);
-            // input.setCharacterStream(reader);
-            // input.setPublicId(location);
+            input.setCharacterStream(reader);
+            input.setSystemId(location);
             return input;
           }
         }
