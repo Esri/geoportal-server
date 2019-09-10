@@ -28,7 +28,7 @@
 	<!-- schema namespaces -->
 	<namespace prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
 	<namespace prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
-	<namespace prefix="gml" uri="http://www.opengis.net/gml"/>
+	<namespace prefix="gml" uri="http://www.opengis.net/gml/3.2"/>
 	<namespace prefix="srv" uri="http://www.isotc211.org/2005/srv"/>
 
 	<!-- schema interrogation -->
