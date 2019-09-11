@@ -33,17 +33,21 @@
   <schema fileName="gpt/metadata/iso/Gemini2_R1r2/gemini-iso-19115-definition.xml"/>
   <schema fileName="gpt/metadata/iso/Gemini2_R1r2/gemini-iso-19119-definition.xml"/>
   
-  <!--  NOTE: Only one of INSPIRE or standard ISO should be enabled 
+  <!--  NOTE: Only one of INSPIRE or standard ISO should be enabled -->
+
+  <schema fileName="gpt/metadata/iso/inspire_V2.0/inspire-iso-19115-definition.xml"/>
+  <schema fileName="gpt/metadata/iso/inspire_V2.0/inspire-iso-19119-definition.xml"/>
   
+  <!--
   <schema fileName="gpt/metadata/iso/inspire/inspire-iso-19115-definition.xml"/>
   <schema fileName="gpt/metadata/iso/inspire/inspire-iso-19119-definition.xml"/>
-  
    --> 
-  
+
+  <!--  
   <schema fileName="gpt/metadata/iso/iso-19115-definition.xml"/>
   <schema fileName="gpt/metadata/iso/iso-19119-definition.xml"/>
-
   <schema fileName="gpt/metadata/iso/iso-19115-2-definition.xml"/>
+  -->
   
    <!-- ATOM 1.0 -->
   <schema fileName="gpt/metadata/atom/atom-1-0-entry-definition.xml"/> 

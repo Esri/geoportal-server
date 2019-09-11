@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ Esri Inc. licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<!-- apiso-indexables.xml -->
+<indexables>
+
+  <!-- namespaces -->
+  <namespace prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
+  <namespace prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
+  <namespace prefix="gml" uri="http://www.opengis.net/gml"/>
+  <namespace prefix="gml32" uri="http://www.opengis.net/gml/3.2"/>
+  <namespace prefix="srv" uri="http://www.isotc211.org/2005/srv"/>
+  <namespace prefix="xlink" uri="http://www.w3.org/1999/xlink"/>
+  
+  <property meaning="keywords"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode | /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString"/>
+      
+  <property meaning="apiso:Subject"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode | /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString"/>
+
+  <property meaning="apiso:Title"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
+    
+  <property meaning="apiso:Abstract"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:abstract/gco:CharacterString"/>
+
+  <property meaning="apiso:Format"
+    xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/name/gco:CharacterString"/>
+  
+  <property meaning="apiso:Identifier"
+    xpath="/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString"/>
+
+  <property meaning="apiso:Modified"
+    xpath="/gmd:MD_Metadata/gmd:dateStamp/gco:Date | /gmd:MD_Metadata/gmd:dateStamp/gco:DateTime"/>
+  <!-- general core meaning, we assume is equivalent -->
+  <property meaning="Modified"
+    xpath="/gmd:MD_Metadata/gmd:dateStamp/gco:Date | /gmd:MD_Metadata/gmd:dateStamp/gco:DateTime"/>
+
+  <!-- codeListValue has the priority on element's value -->
+  <property meaning="apiso:Type"
+    xpath="/gmd:MD_Metadata/gmd:hierarchyLevel/gmd:MD_ScopeCode/text()[count(/gmd:MD_Metadata/gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue)=0] | /gmd:MD_Metadata/gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue[count(/gmd:MD_Metadata/gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue)>0]"/> 
+    
+    <!-- general core meaning -->
+  <property meaning="Type"
+    xpath="/gmd:MD_Metadata/gmd:hierarchyLevel/gmd:MD_ScopeCode/text()[count(/gmd:MD_Metadata/gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue)=0] | /gmd:MD_Metadata/gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue[count(/gmd:MD_Metadata/gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue)>0]"/>
+
+  <property meaning="apiso:BoundingBox"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
+    <property meaning="envelope.west" xpath="gmd:westBoundLongitude/gco:Decimal"/>
+    <property meaning="envelope.south" xpath="gmd:southBoundLatitude/gco:Decimal"/>
+    <property meaning="envelope.east" xpath="gmd:eastBoundLongitude/gco:Decimal"/>
+    <property meaning="envelope.north" xpath="gmd:northBoundLatitude/gco:Decimal"/>
+  </property>    
+
+ <property meaning="apiso:CRS"
+    xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier">
+    <property meaning="apiso:CRS.Authority" xpath="gmd:codeSpace/gco:CharacterString"/>
+    <property meaning="apiso:CRS.ID" xpath="gmd:code/gco:CharacterString"/>
+    <property meaning="apiso:CRS.Version" xpath="gmd:version/gco:CharacterString"/>
+  </property> 
+  <!-- end of CSW core (common) queryables -->  
+  
+  <!-- Specific CSW  ISO AP common (datasets and services) queryables -->
+   <property meaning="apiso:RevisionDate"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date[../../gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='revision'] | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date[../../gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='revision']"/>
+
+   <property meaning="apiso:AlternateTitle"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString"/>
+
+ <property meaning="apiso:CreationDate"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date[../../gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='creation'] | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date[../../gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='creation']"/>
+    
+ <property meaning="apiso:PublicationDate"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date[../../gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='publication'] | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date[../../gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='publication']"/>
+
+  <property meaning="apiso:OrganizationName"  
+    xpath="/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString">
+  </property>
+
+  <property meaning="apiso:OrganisationName"  
+    xpath="/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString">
+  </property>
+  
+  
+<!-- stores true or false depending on constraints availability -->
+ <property meaning="apiso:HasSecurityConstraints" xpathType="BOOLEAN"
+    xpath="count(/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints)>0"/>
+
+<property meaning="apiso:Language"
+    xpath="/gmd:MD_Metadata/gmd:language/gmd:LanguageCode/text()[count(/gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue)=0] | /gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue[count(/gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue)=1] | /gmd:MD_Metadata/gmd:language/gco:CharacterString[count(/gmd:MD_Metadata/gmd:language/gmd:LanguageCode)=0]"/>
+
+<property meaning="apiso:ResourceIdentifier"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString"/>
+
+<property meaning="apiso:ParentIdentifier"
+    xpath="/gmd:MD_Metadata/gmd:parentIdentifier/gco:CharacterString"/>
+
+<property meaning="apiso:KeywordType"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue"/>
+
+ <!-- ISO queryables applicable to datasets -->
+ <property meaning="apiso:Topiccategory"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode"/>
+
+ <!-- priority to the codeListValue if available -->
+ <property meaning="apiso:ResourceLanguage"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language/gmd:LanguageCode/text()[count(/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language/gmd:LanguageCode/@codeListValue)=0] | /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language/gmd:LanguageCode/@codeListValue[count(/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language/gmd:LanguageCode/@codeListValue)>0]"/>
+
+  <!-- rules for datasets and services, they are mutually exclusive so no need for conditions on the OR -->
+  <property meaning="apiso:GeographicDescriptionCode"  
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code"/>
+
+  <!-- spatial  (table 12) -->
+  <property meaning="apiso:Denominator"  
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer"/>
+  <property meaning="apiso:DistanceValue"  
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance"/>
+  <property meaning="apiso:DistanceUOM"  
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance/@uom"/>
+
+ <!-- temporalExtent (table 13)-->
+  <property meaning="apiso:TempExtent_begin"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:begin/gml:TimeInstant/gml:timePosition"/>
+  <property meaning="apiso:TempExtent_begin"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:begin/gml32:TimeInstant/gml32:timePosition"/>
+  <property meaning="apiso:TempExtent_begin"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition"/>
+  <property meaning="apiso:TempExtent_begin"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:beginPosition"/>
+  <property meaning="apiso:TempExtent_end"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:end/gml:TimeInstant/gml:timePosition"/>
+  <property meaning="apiso:TempExtent_end"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:end/gml32:TimeInstant/gml32:timePosition"/>
+  <property meaning="apiso:TempExtent_end"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition"/>
+  <property meaning="apiso:TempExtent_end"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:endPosition"/>
+  <property meaning="apiso:TempExtent_begin"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:begin/gml:TimeInstant/gml:timePosition"/>
+  <property meaning="apiso:TempExtent_begin"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:begin/gml32:TimeInstant/gml32:timePosition"/>
+  <property meaning="apiso:TempExtent_begin"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition"/>
+  <property meaning="apiso:TempExtent_begin"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:beginPosition"/>
+  <property meaning="apiso:TempExtent_end"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:end/gml:TimeInstant/gml:timePosition"/>
+  <property meaning="apiso:TempExtent_end"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:end/gml32:TimeInstant/gml32:timePosition"/>
+  <property meaning="apiso:TempExtent_end"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition"/>
+  <property meaning="apiso:TempExtent_end"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:endPosition"/>
+
+
+  <!-- table 14 (page 49) for service  -->
+  <!-- ISO queryables applicable to services -->
+ <property meaning="apiso:ServiceType"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName"/>
+        
+ <property meaning="apiso:ServiceTypeVersion"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceTypeVersion/gco:CharacterString"/>
+    
+ <property meaning="apiso:Operation"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:operationName/gco:CharacterString"/>
+  
+ <!-- see CSW ISO 2.0.2 ISO AP spec, Annex F -->
+ <property meaning="apiso:OperatesOn"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn/@uuidref | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn/@xlink:href"/>
+    
+ <property meaning="apiso:OperatesOnIdentifier"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:coupledResource/srv:SV_CoupledResource/srv:identifier"/>
+
+ <property meaning="apiso:OperatesOnName"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:coupledResource/srv:SV_CoupledResource/srv:operationName"/>
+
+ <property meaning="apiso:CouplingType"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:couplingType/srv:SV_CouplingType[count(/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:couplingType/srv:SV_CouplingType/@codeListValue)=0] | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:couplingType/srv:SV_CouplingType/@codeListValue[count(/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:couplingType/srv:SV_CouplingType/@codeListValue)>0]"/>
+
+
+  <!-- END OF CSW ISO Queryables  -->
+  
+  <!-- additional supported queryables used to meet INSPIRE discovery requirements -->
+  
+ <property meaning="apiso:Degree"
+    xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass/gco:Boolean"/>  
+
+ <property meaning="apiso:Lineage"
+    xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement/gco:CharacterString"/>  
+
+ <property meaning="apiso:ResponsiblePartyRole"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode[count(/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue)=0] | /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue[count(/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue)>0]"/>  
+
+ <property meaning="apiso:ConditionApplyingToAccessAndUse"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString"/>  
+ 
+ <property meaning="apiso.inspireSpatialDataThemes"
+    xpath="//gmd:title[gco:CharacterString='GEMET - INSPIRE themes, version 1.0']/../../../gmd:keyword/gco:CharacterString"/>  
+       
+ <property meaning="apiso:AccessConstraints"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation/gco:CharacterString | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation/gco:CharacterString"/>  
+ <property meaning="apiso:OtherConstraints"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString"/>  
+ <property meaning="apiso:Classification"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_SecurityConstraints/gmd:classification/gmd:MD_ClassificationCode/@codeListValue | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_SecurityConstraints/gmd:classification/gmd:MD_ClassificationCode/@codeListValue"/>  
+
+ <property meaning="apiso:SpecificationTitle"
+    xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
+ <property meaning="apiso:SpecificationDate"
+    xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/date/gco:Date"/>  
+ <property meaning="apiso:SpecificationDateType"
+    xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue"/>  
+
+
+  <!-- extra Geoportal common meanings -->  
+  <!-- thumbnail.url -->
+  <property meaning="apiso:BrowseGraphic"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
+
+  <!-- website.url -->
+  <!-- 
+  <property meaning="website.url"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
+  <property meaning="website.url"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
+  -->
+  <property meaning="apiso:Contact.URL"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
+  <property meaning="apiso:Contact.URL"
+    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
+
+  <!-- resource.url -->
+  <property meaning="resource.url"
+    xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
+
+  <!-- contentType -->
+  <property meaning="contentType"
+    xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:function/gmd:CI_OnLineFunctionCode"/>
+
+  <!-- time period of the content -->
+  <property xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent | /gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent">
+    <property xpath="gml:TimePeriod">
+      <property meaning="timeperiod.analyze" xpathType="STRING"
+        xpath="concat('tp.begin.',gml:beginPosition,'.indeterminate.',gml:beginPosition/@indeterminatePosition,'.end.',gml:endPosition,'.indeterminate.',gml:endPosition/@indeterminatePosition)"/>
+      <property meaning="timeperiod.analyze" xpathType="STRING"
+        xpath="concat('tp.begin.',gml:begin/gml:TimeInstant/gml:timePosition,'.indeterminate.',gml:begin/gml:TimeInstant/gml:timePosition/@indeterminatePosition,'.end.',gml:end/gml:TimeInstant/gml:timePosition,'.indeterminate.',gml:end/gml:TimeInstant/gml:timePosition/@indeterminatePosition)"/>
+    </property>
+    <property xpath="gml:TimeInstant">
+      <property meaning="timeperiod.analyze" xpathType="STRING"
+        xpath="concat('tp.position.',gml:timePosition,'.indeterminate.',gml:timePosition/@indeterminatePosition)"/>
+    </property>
+    <property xpath="gml32:TimePeriod">
+      <property meaning="timeperiod.analyze" xpathType="STRING"
+        xpath="concat('tp.begin.',gml32:beginPosition,'.indeterminate.',gml32:beginPosition/@indeterminatePosition,'.end.',gml32:endPosition,'.indeterminate.',gml32:endPosition/@indeterminatePosition)"/>
+      <property meaning="timeperiod.analyze" xpathType="STRING"
+        xpath="concat('tp.begin.',gml32:begin/gml32:TimeInstant/gml32:timePosition,'.indeterminate.',gml32:begin/gml32:TimeInstant/gml32:timePosition/@indeterminatePosition,'.end.',gml32:end/gml32:TimeInstant/gml32:timePosition,'.indeterminate.',gml32:end/gml32:TimeInstant/gml32:timePosition/@indeterminatePosition)"/>
+    </property>
+    <property xpath="gml32:TimeInstant">
+      <property meaning="timeperiod.analyze" xpathType="STRING"
+        xpath="concat('tp.position.',gml32:timePosition,'.indeterminate.',gml32:timePosition/@indeterminatePosition)"/>
+    </property>
+  </property>
+  
+</indexables>
+
