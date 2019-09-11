@@ -4,7 +4,7 @@
 		<gco:CharacterString/>
 	</fileIdentifier>
 	<language>
-		<gmd:LanguageCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#LanguageCode" codeListValue="eng"></gmd:LanguageCode>
+		<gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"></gmd:LanguageCode>
 	</language>
 	<hierarchyLevel>
 		<MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue=""></MD_ScopeCode>
@@ -255,7 +255,7 @@
 				</MD_Resolution>
 			</spatialResolution>
 			<language>
-				<gmd:LanguageCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#LanguageCode" codeListValue="eng"></gmd:LanguageCode>
+				<gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"></gmd:LanguageCode>
 			</language>
 			<topicCategory>
 				<MD_TopicCategoryCode>boundaries</MD_TopicCategoryCode>
