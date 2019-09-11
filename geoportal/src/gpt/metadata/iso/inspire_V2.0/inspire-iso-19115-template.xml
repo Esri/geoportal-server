@@ -67,7 +67,7 @@
 								<gco:Date>1970</gco:Date>
 							</date>
 							<dateType>
-								<CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+								<CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
 							</dateType>
 						</CI_Date>
 					</date>
@@ -77,7 +77,7 @@
 								<gco:Date>1970</gco:Date>
 							</date>
 							<dateType>
-								<CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation"/>
+								<CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation"/>
 							</dateType>
 						</CI_Date>
 					</date>
@@ -87,7 +87,7 @@
 								<gco:Date>1970</gco:Date>
 							</date>
 							<dateType>
-								<CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="revision"/>
+								<CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="revision"/>
 							</dateType>
 						</CI_Date>
 					</date>
@@ -188,7 +188,7 @@
 										<gco:Date>2008-06-01</gco:Date>
 									</gmd:date>
 									<gmd:dateType>
-										<gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode>
+										<gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode>
 									</gmd:dateType>
 								</gmd:CI_Date>
 							</gmd:date>
@@ -212,7 +212,7 @@
 										<gco:Date></gco:Date>
 									</gmd:date>
 									<gmd:dateType>
-										<gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue=""></gmd:CI_DateTypeCode>
+										<gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue=""></gmd:CI_DateTypeCode>
 									</gmd:dateType>
 								</gmd:CI_Date>
 							</gmd:date>
@@ -365,7 +365,7 @@
 												<gco:Date>1970</gco:Date>
 											</date>
 											<dateType>
-												<CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue=""></CI_DateTypeCode>
+												<CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue=""></CI_DateTypeCode>
 											</dateType>
 										</CI_Date>
 									</date>
