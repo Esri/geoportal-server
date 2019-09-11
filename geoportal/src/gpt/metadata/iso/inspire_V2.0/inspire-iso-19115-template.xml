@@ -26,7 +26,7 @@
 				</CI_Contact>
 			</contactInfo>
 			<role>
-				<CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue=""></CI_RoleCode>
+				<CI_RoleCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode" codeListValue=""></CI_RoleCode>
 			</role>
 		</CI_ResponsibleParty>
 	</contact>
@@ -155,7 +155,7 @@
 						</CI_Contact>
 					</contactInfo>
 					<role>
-						<CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue=""/>
+						<CI_RoleCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode" codeListValue=""/>
 					</role>
 				</CI_ResponsibleParty>
 			</pointOfContact>
