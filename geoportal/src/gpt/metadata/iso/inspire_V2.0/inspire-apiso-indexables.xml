@@ -22,6 +22,7 @@
   <namespace prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
   <namespace prefix="gml" uri="http://www.opengis.net/gml/3.2"/>
   <namespace prefix="srv" uri="http://www.isotc211.org/2005/srv"/>
+  <namespace prefix="gmx" uri="http://www.isotc211.org/2005/gmx"/>
   <namespace prefix="xlink" uri="http://www.w3.org/1999/xlink"/>
   
   <property meaning="keywords"
