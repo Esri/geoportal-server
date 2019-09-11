@@ -7,7 +7,7 @@
 		<gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
 	</language>
 	<hierarchyLevel>
-		<MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="service">service</MD_ScopeCode>
+		<MD_ScopeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode" codeListValue="service">service</MD_ScopeCode>
 	</hierarchyLevel>
 	<contact>
 		<CI_ResponsibleParty>
@@ -337,7 +337,7 @@
 			<scope>
 				<DQ_Scope>
 					<level>
-						<MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue=""/>
+						<MD_ScopeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode" codeListValue=""/>
 					</level>
 				</DQ_Scope>
 			</scope>
