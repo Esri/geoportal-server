@@ -2981,6 +2981,7 @@ dojo.declare("gxe.control.Control",null,{
           var ns = xmlDocument.namespaces;
           var topMatches = new Array();
           for (var i=0; i<domMatches.length; i++) {
+            var index = i;
             var nd = domMatches[i];
             var bMatched = true;
             var nConditions = 0;
@@ -2991,8 +2992,9 @@ dojo.declare("gxe.control.Control",null,{
                 var qPath = gxe.cfg.getGxeAttributeValue(cfgChild,"qPath");
                 var qValue = gxe.cfg.getGxeAttributeValue(cfgChild,"qValue");
                 var qMode = gxe.cfg.getGxeAttributeValue(cfgChild,"qMode");
+                var qIndex = gxe.cfg.getGxeAttributeValue(cfgChild,"qIndex");
                 var bMust = (qMode != "mustNot");
-                if (qPath != null) {
+                if (qPath != null && (!qIndex || qIndex==index)) {
                   var b = domProcessor.matchTopElement(ns,nd,qPath,qValue,bMust);
                   if (b) nConditionsMatched++;
                 }

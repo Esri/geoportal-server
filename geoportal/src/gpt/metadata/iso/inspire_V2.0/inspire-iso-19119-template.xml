@@ -221,15 +221,15 @@
 			</descriptiveKeywords>
 			<resourceConstraints>
 				<MD_Constraints>
-					<useLimitation>
-						<gco:CharacterString/>
-					</useLimitation>
+					<useConstraints>
+						<MD_RestrictionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions">otherRestrictions</MD_RestrictionCode>
+					</useConstraints>
 				</MD_Constraints>
 			</resourceConstraints>
 			<resourceConstraints>
 				<MD_LegalConstraints>
 					<accessConstraints>
-						<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions">otherRestrictions</MD_RestrictionCode>
+						<MD_RestrictionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions">otherRestrictions</MD_RestrictionCode>
 					</accessConstraints>
 					<otherConstraints>
 						<gco:CharacterString/>
