@@ -31,6 +31,7 @@
 	<namespace prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
 	<namespace prefix="gml" uri="http://www.opengis.net/gml/3.2"/>
   <namespace prefix="gmx" uri="http://www.isotc211.org/2005/gmx"/>
+  <namespace prefix="xlink" uri="http://www.w3.org/1999/xlink"/>
 	
 	<!-- schema interrogation -->
 	<interrogation count="count(/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification)"/>
@@ -559,49 +560,40 @@
 		<label resourceKey="catalog.mdParam.inspire.constraints.caption"/>
 		<section key="constraints.conditions">
 			<label resourceKey="catalog.mdParam.inspire.constraints.contitions.label"/>
-			<section key="constraints.conditions.section.predefined" obligation="exclusive" open="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation[gco:CharacterString='no conditions apply' or gco:CharacterString='conditions unknown']/gco:CharacterString">
+			<section key="constraints.conditions.section.predefined" obligation="exclusive" open="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useConstraints/../gmd:otherConstraints/gmx:Anchor/@xlink:href">
 				<label resourceKey="catalog.mdParam.inspire.constraints.contitions.predefined.label"/>
 				<parameter key="constraints.conditions.predefined">
 					<label resourceKey="catalog.mdParam.inspire.constraints.accesAndUse"/>
 					<input type="selectOneMenu"/>
 					<validation required="true"/>
-					<content useSelectForUpdate="true" deleteParentIfEmpty="false" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation/gco:CharacterString">
+					<content useSelectForUpdate="true" deleteParentIfEmpty="false" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useConstraints/../gmd:otherConstraints/gmx:Anchor/@xlink:href">
 						<codes>
-							<code key="no conditions apply" resourceKey="catalog.mdParam.inspire.constraints.accesAndUse.noCondition"/>
-							<code key="conditions unknown" resourceKey="catalog.mdParam.inspire.constraints.accesAndUse.unknownCondition"/>
+							<code key="http://inspire.ec.europa.eu/metadata-codelist/ConditionsApplyingToAccessAndUse/conditionsUnknown" resourceKey="catalog.mdParam.inspire.constraints.accesAndUse.unknownCondition"/>
+							<code key="http://inspire.ec.europa.eu/metadata-codelist/ConditionsApplyingToAccessAndUse/noConditionsApply" resourceKey="catalog.mdParam.inspire.constraints.accesAndUse.noCondition"/>
 						</codes>
 					</content>
-				</parameter>
-			</section>
-			<section key="constraints.conditions.section.free" obligation="exclusive" open="false" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation[gco:CharacterString!='no conditions apply' and gco:CharacterString!='conditions unknown']/gco:CharacterString">
-				<label resourceKey="catalog.mdParam.inspire.constraints.contitions.free.label"/>
-				<parameter key="constraints.conditions.free">
-					<label resourceKey="catalog.mdParam.inspire.constraints.accesAndUse"/>
-					<input type="text" size="50" maxlength="2048"/>
-					<validation required="true"/>
-					<content useSelectForUpdate="true" deleteParentIfEmpty="false" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation/gco:CharacterString"/>
 				</parameter>
 			</section>
 		</section>
 		<section key="constraints.limitations">
 			<label resourceKey="catalog.mdParam.inspire.constraints.limitations.label"/>
-			<section key="constraints.limitations.section.predefined" obligation="exclusive" open="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints[gco:CharacterString='no limitations' or starts-with(gco:CharacterString,'(a)') or starts-with(gco:CharacterString,'(b)') or starts-with(gco:CharacterString,'(c)') or starts-with(gco:CharacterString,'(d)') or starts-with(gco:CharacterString,'(e)') or starts-with(gco:CharacterString,'(f)') or starts-with(gco:CharacterString,'(g)') or starts-with(gco:CharacterString,'(h)')]/gco:CharacterString">
+			<section key="constraints.limitations.section.predefined" obligation="exclusive" open="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints/../gmd:otherConstraints/gmx:Anchor/@xlink:href">
 				<label resourceKey="catalog.mdParam.inspire.constraints.contitions.predefined.label"/>
 				<parameter key="constraints.limitations.predefined">
 					<label resourceKey="catalog.mdParam.inspire.constraints.publicAccess"/>
 					<input type="selectOneMenu"/>
 					<validation required="true"/>
-					<content useSelectForUpdate="true" deleteParentIfEmpty="false" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString">
+					<content useSelectForUpdate="true" deleteParentIfEmpty="false" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints/../gmd:otherConstraints/gmx:Anchor/@xlink:href">
 						<codes>
-							<code key="no limitations" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.noLimitations"/>
-							<code key="(a) the confidentiality of the proceedings of public authorities,where such confidentiality is provided for by law;" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.confidentialityOfProceedings"/>
-							<code key="(b) international relations, public security or national defence;" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.internationalRelations"/>
-							<code key="(c) the course of justice, the ability of any person to receive a fair trial or the ability of a public authority to conduct an enquiry of a criminal or disciplinary nature;" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.courseOfJustice"/>
-							<code key="(d) the confidentiality of commercial or industrial information, where such confidentiality is provided for by national or Community   law to protect a legitimate economic interest, including the public interest in maintaining statistical confidentiality and tax secrecy;" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.confidentialityOfCommercial"/>
-							<code key="(e) intellectual property rights;" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.intellectualProperty"/>
-							<code key="(f) the confidentiality of personal data and/or files relating to a natural person where that person has not consented to the disclosure of the information to the public, where such confidentiality is provided for by national or Community law;" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.confidentialityOfPersonalData"/>
-							<code key="(g) the interests or protection of any person who supplied the information requested on a voluntary basis without being under, or capable of being put under, a legal obligation to do so, unless that person has consented to the release of the information concerned;" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.interestsOrProtection"/>
-							<code key="(h) the protection of the environment to which such information relates, such as the location of rare species." resourceKey="catalog.mdParam.inspire.constraints.publicAccess.protectionOfEnvironment"/>
+							<code key="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.noLimitations"/>
+							<code key="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/INSPIRE_Directive_Article13_1a" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.confidentialityOfProceedings"/>
+							<code key="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/INSPIRE_Directive_Article13_1b" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.internationalRelations"/>
+							<code key="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/INSPIRE_Directive_Article13_1c" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.courseOfJustice"/>
+							<code key="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/INSPIRE_Directive_Article13_1d" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.confidentialityOfCommercial"/>
+							<code key="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/INSPIRE_Directive_Article13_1e" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.intellectualProperty"/>
+							<code key="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/INSPIRE_Directive_Article13_1f" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.confidentialityOfPersonalData"/>
+							<code key="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/INSPIRE_Directive_Article13_1g" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.interestsOrProtection"/>
+							<code key="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/INSPIRE_Directive_Article13_1h" resourceKey="catalog.mdParam.inspire.constraints.publicAccess.protectionOfEnvironment"/>
 						</codes>
 					</content>
 				</parameter>

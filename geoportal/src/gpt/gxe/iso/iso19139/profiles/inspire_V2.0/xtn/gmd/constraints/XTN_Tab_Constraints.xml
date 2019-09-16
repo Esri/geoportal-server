@@ -53,7 +53,7 @@
                   <g:attribute xmlns:g="http://www.esri.com/geoportal/gxe" 
                                xmlns:h="http://www.esri.com/geoportal/gxe/html"
                                h:class="gxeWrappedAttribute"
-                               g:targetNS="" g:targetName="xlink:href" 
+                               g:targetNS="http://www.w3.org/1999/xlink" g:targetName="href" 
                                g:use="required" g:valueType="xs:anyURI"
                                g:label="$i18n.catalog.mdParam.inspire.constraints.anchor.href" 
                                g:extends="$base/xtn/ui/UI_Attribute.xml">
@@ -123,7 +123,7 @@
                   <g:attribute xmlns:g="http://www.esri.com/geoportal/gxe" 
                                xmlns:h="http://www.esri.com/geoportal/gxe/html"
                                h:class="gxeWrappedAttribute"
-                               g:targetNS="" g:targetName="xlink:href" 
+                               g:targetNS="http://www.w3.org/1999/xlink" g:targetName="href" 
                                g:use="required" g:valueType="xs:anyURI"
                                g:label="$i18n.catalog.mdParam.inspire.constraints.anchor.href" 
                                g:extends="$base/xtn/ui/UI_Attribute.xml">

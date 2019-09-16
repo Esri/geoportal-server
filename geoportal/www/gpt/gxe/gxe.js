@@ -2283,7 +2283,7 @@ dojo.declare("gxe.xml.XmlElement",gxe.xml.XmlNode,{
             }
           }
         }
-        if (attr.nodeInfo.localName == "xlink:href") {
+        if (attr.nodeInfo.localName == "href") {
           var ic = attr.getInputControl();
           if (ic != null) {
             if (!ic.getSupportsMultipleValues()) {
