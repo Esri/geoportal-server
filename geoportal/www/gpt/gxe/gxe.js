@@ -2283,6 +2283,16 @@ dojo.declare("gxe.xml.XmlElement",gxe.xml.XmlNode,{
             }
           }
         }
+        if (attr.nodeInfo.localName == "xlink:href") {
+          var ic = attr.getInputControl();
+          if (ic != null) {
+            if (!ic.getSupportsMultipleValues()) {
+              var sCode = ic.getInputValueLabel(true);
+              if ((sCode == null) || (sCode.length == 0)) return;
+              else nodeValue = sCode;
+            }
+          }
+        }
       }
     }
     
@@ -5067,7 +5077,9 @@ dojo.declare("gxe.control.InputBase",gxe.control.Control,{
    * @return {Object} the input value
    */  
   getInputValue: function(bInFeedbackMode) {return null;},
-  
+
+  getInputValueLabel: function(bInFeedbackMode) {return null;},
+
   /**
    * Gets the values associated with the input control.
    * This method should be overridden for all sub-classes that support multi-valued
@@ -5468,6 +5480,26 @@ dojo.declare("gxe.control.InputSelectOne",gxe.control.InputBase,{
       } else {
         return elOption.value;
       }
+    }
+    return null;
+  },
+
+  /** Override gxe.control.InputBase.getInputValue() */
+  getInputValueLabel: function(bInFeedbackMode) {
+    if ((this.htmlElement != null) && (this.htmlElement.selectedIndex != null) &&
+        (this.htmlElement.selectedIndex >= 0)) {
+      var elOptions = this.htmlElement.options;
+      var elOption = elOptions[this.htmlElement.selectedIndex];
+      if ((this._htmlOther != null) && (elOption.label == this._htmlOther.gxeOptionValue)) {
+        var sValue = dojo.trim(this._htmlOther.value);
+        if (!bInFeedbackMode) {
+          if (sValue != this._htmlOther.value) this._htmlOther.value = sValue;
+        }
+        if (sValue.length > 0) return sValue;
+      } else {
+        return elOption.label;
+      }
+      return elOption.label;
     }
     return null;
   },
