@@ -322,7 +322,7 @@
 								<URL/>
 							</linkage>
 							<function>
-								<CI_OnLineFunctionCode codeListValue="" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode"/>
+								<CI_OnLineFunctionCode codeListValue="" codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode"/>
 							</function>
 						</CI_OnlineResource>
 					</onLine>
