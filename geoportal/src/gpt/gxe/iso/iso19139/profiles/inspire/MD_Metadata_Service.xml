@@ -8,7 +8,7 @@
            g:label="$i18n.catalog.mdParam.schema.inspire.services"
            g:extends="$base/xtn/ui/UI_Element.xml">
   
-    <g:attribute g:targetName="xsi:schemaLocation" g:value="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/iso/19139/20070417/gmd/gmd.xsd http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20070417/srv/1.0/srv.xsd"></g:attribute>
+    <g:attribute g:targetName="xsi:schemaLocation" g:value="http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20070417/srv/1.0/srv.xsd"></g:attribute>
     <!-- namespaces -->
     <g:namespaces g:overridable="true">
         <g:namespace g:prefix="gmd" g:uri="http://www.isotc211.org/2005/gmd"/>
