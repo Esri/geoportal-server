@@ -1924,7 +1924,17 @@ dojo.declare("gxe.xml.XmlNode",null,{
         status.message = this.formatValidationMessage(inputControl,"validate.date");
       }
       
+    } else if ((sType == "exactDate") || (sType == "xs:exactDate") || (sType == "xsd:exactDate")) {
+
+      // allows exact date as yyyy-mm-dd
+      regexp = /^([0-9]{4})-(1[0-2]|0[1-9])-(3[0-1]|0[1-9]|[1-2][0-9])/;
+      if (!regexp.test(value)) {
+        status.isValid = false;
+        status.message = this.formatValidationMessage(inputControl, "validate.date");
+      } 
+      
     } else if ((sType == "dateTime") || (sType == "xs:dateTime") || (sType == "xsd:dateTime")) {
+      
       // ISO 8601
       regexp = /^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[0-1]|0[1-9]|[1-2][0-9])T(2[0-3]|[0-1][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-](?:2[0-3]|[0-1][0-9]):[0-5][0-9])?$/;
       if (!regexp.test(value)) {

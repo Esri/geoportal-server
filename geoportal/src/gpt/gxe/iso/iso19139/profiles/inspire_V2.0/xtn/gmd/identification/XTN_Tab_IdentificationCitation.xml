@@ -22,7 +22,7 @@
 	    <!--  resource date -->
 	    <g:element g:targetName="gmd:date" g:minOccurs="1" g:maxOccurs="unbounded"
 	      g:label="$i18n.catalog.iso19139.XTN_Identification.citation.date" 
-	      g:extends="$base/xtn/gmd/citation/XTN_Date_PropertyType.xml"/> 
+	      g:extends="$base/xtn/gmd/identification/XTN_ExactDate_PropertyType.xml"/> 
 	    
 	    <!--  resource identifier -->  
 	    <g:element g:extends="$base/xtn/gmd/identification/XTN_ResourceIdentifier.xml"/>     
