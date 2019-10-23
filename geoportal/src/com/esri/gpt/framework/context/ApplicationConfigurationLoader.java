@@ -88,6 +88,7 @@ import com.esri.gpt.framework.util.Val;
 import com.esri.gpt.framework.xml.DomUtil;
 import com.esri.gpt.framework.xml.NodeListAdapter;
 import com.esri.gpt.framework.xml.XmlIoUtil;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Application configuration loader.
@@ -954,6 +955,19 @@ private void loadMail(ApplicationConfiguration appConfig, Document dom,
     }
     if ((sUser != null) && (sUser.length() > 0) && (sPwd != null) && (sPwd.length() > 0)) {
       mcfg.setPasswordAuthentication(new javax.mail.PasswordAuthentication(sUser, sPwd));
+    }
+  }
+  
+  // load custom properties
+  NodeList ndProps = (NodeList) xpath.evaluate("mail/property", root, XPathConstants.NODESET);
+  if (ndProps != null) {
+    for (int i=0; i < ndProps.getLength(); i++) {
+      Node ndProp = ndProps.item(i);
+      String sKey = StringUtils.trimToEmpty(xpath.evaluate("@key", ndProp));
+      String sValue = StringUtils.trimToEmpty(xpath.evaluate("@value", ndProp));
+      if (!sKey.isEmpty() && !sValue.isEmpty()) {
+        mcfg.setProperty(sKey, sValue);
+      }
     }
   }
 }
