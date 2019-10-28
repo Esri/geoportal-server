@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- simplified spatial extent, gmd:geographicElement (Service) -->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe"
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:minOccurs="0" 
+           g:extends="$base/xtn/gmd/extent/XTN_GeographicElement.xml"/>

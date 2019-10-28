@@ -26,6 +26,7 @@ import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Validator;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -158,6 +159,7 @@ private javax.xml.validation.Validator newValidator(Schema schema)
     if (xsd == null) {
       javax.xml.validation.SchemaFactory factory = 
         javax.xml.validation.SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI); 
+      factory.setResourceResolver(new RedirectingResourceResolver());
       try {
         String [] xsdLocations = Val.tokenize(xsdLocation, ",");
         if (xsdLocations!=null && xsdLocations.length>1) {
@@ -192,7 +194,9 @@ private javax.xml.validation.Validator newValidator(Schema schema)
           sMsg,getValidationErrors());
       }
     }
-    return xsd.newValidator();
+    Validator validator = xsd.newValidator();
+    validator.setResourceResolver(new RedirectingResourceResolver());
+    return validator;
   }
   return null;
 }

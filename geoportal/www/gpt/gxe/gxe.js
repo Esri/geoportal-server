@@ -1924,7 +1924,17 @@ dojo.declare("gxe.xml.XmlNode",null,{
         status.message = this.formatValidationMessage(inputControl,"validate.date");
       }
       
+    } else if ((sType == "exactDate") || (sType == "xs:exactDate") || (sType == "xsd:exactDate")) {
+
+      // allows exact date as yyyy-mm-dd
+      regexp = /^([0-9]{4})-(1[0-2]|0[1-9])-(3[0-1]|0[1-9]|[1-2][0-9])/;
+      if (!regexp.test(value)) {
+        status.isValid = false;
+        status.message = this.formatValidationMessage(inputControl, "validate.date");
+      } 
+      
     } else if ((sType == "dateTime") || (sType == "xs:dateTime") || (sType == "xsd:dateTime")) {
+      
       // ISO 8601
       regexp = /^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[0-1]|0[1-9]|[1-2][0-9])T(2[0-3]|[0-1][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-](?:2[0-3]|[0-1][0-9]):[0-5][0-9])?$/;
       if (!regexp.test(value)) {
@@ -2278,6 +2288,16 @@ dojo.declare("gxe.xml.XmlElement",gxe.xml.XmlNode,{
           if (ic != null) {
             if (!ic.getSupportsMultipleValues()) {
               var sCode = ic.getInputValue(true);
+              if ((sCode == null) || (sCode.length == 0)) return;
+              else nodeValue = sCode;
+            }
+          }
+        }
+        if (attr.nodeInfo.localName == "href") {
+          var ic = attr.getInputControl();
+          if (ic != null) {
+            if (!ic.getSupportsMultipleValues()) {
+              var sCode = ic.getInputValueLabel(true);
               if ((sCode == null) || (sCode.length == 0)) return;
               else nodeValue = sCode;
             }
@@ -2981,6 +3001,7 @@ dojo.declare("gxe.control.Control",null,{
           var ns = xmlDocument.namespaces;
           var topMatches = new Array();
           for (var i=0; i<domMatches.length; i++) {
+            var index = i;
             var nd = domMatches[i];
             var bMatched = true;
             var nConditions = 0;
@@ -2991,8 +3012,9 @@ dojo.declare("gxe.control.Control",null,{
                 var qPath = gxe.cfg.getGxeAttributeValue(cfgChild,"qPath");
                 var qValue = gxe.cfg.getGxeAttributeValue(cfgChild,"qValue");
                 var qMode = gxe.cfg.getGxeAttributeValue(cfgChild,"qMode");
+                var qIndex = gxe.cfg.getGxeAttributeValue(cfgChild,"qIndex");
                 var bMust = (qMode != "mustNot");
-                if (qPath != null) {
+                if (qPath != null && (!qIndex || qIndex==index)) {
                   var b = domProcessor.matchTopElement(ns,nd,qPath,qValue,bMust);
                   if (b) nConditionsMatched++;
                 }
@@ -5065,7 +5087,9 @@ dojo.declare("gxe.control.InputBase",gxe.control.Control,{
    * @return {Object} the input value
    */  
   getInputValue: function(bInFeedbackMode) {return null;},
-  
+
+  getInputValueLabel: function(bInFeedbackMode) {return null;},
+
   /**
    * Gets the values associated with the input control.
    * This method should be overridden for all sub-classes that support multi-valued
@@ -5466,6 +5490,26 @@ dojo.declare("gxe.control.InputSelectOne",gxe.control.InputBase,{
       } else {
         return elOption.value;
       }
+    }
+    return null;
+  },
+
+  /** Override gxe.control.InputBase.getInputValue() */
+  getInputValueLabel: function(bInFeedbackMode) {
+    if ((this.htmlElement != null) && (this.htmlElement.selectedIndex != null) &&
+        (this.htmlElement.selectedIndex >= 0)) {
+      var elOptions = this.htmlElement.options;
+      var elOption = elOptions[this.htmlElement.selectedIndex];
+      if ((this._htmlOther != null) && (elOption.label == this._htmlOther.gxeOptionValue)) {
+        var sValue = dojo.trim(this._htmlOther.value);
+        if (!bInFeedbackMode) {
+          if (sValue != this._htmlOther.value) this._htmlOther.value = sValue;
+        }
+        if (sValue.length > 0) return sValue;
+      } else {
+        return elOption.label;
+      }
+      return elOption.label;
     }
     return null;
   },

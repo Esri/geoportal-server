@@ -4,7 +4,7 @@
         cswOutputSchema="http://www.isotc211.org/2005/gmd" 
         cswBriefXslt="gpt/metadata/iso/apiso-2-brief.xslt" 
         cswSummaryXslt="gpt/metadata/iso/apiso-2-summary.xslt"
-        xsdLocation="http://www.isotc211.org/2005/gmi/gmi.xsd">
+        xsdLocation="https://www.isotc211.org/2005/gmi/gmi.xsd">
    
   
 <!-- schema label -->
