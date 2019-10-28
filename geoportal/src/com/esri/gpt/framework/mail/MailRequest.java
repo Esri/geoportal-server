@@ -16,6 +16,8 @@ package com.esri.gpt.framework.mail;
 import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.util.Val;
 import static com.esri.gpt.framework.util.Val.stripControls;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -50,6 +52,7 @@ private int           _port = -1;
 private StringSet     _recipients;
 private String        _subject = "";
 private String        _toAddress = "";
+private Map<String, String>    _props = new HashMap<>();
   
 //constructors ================================================================
 
@@ -198,7 +201,15 @@ public void setToAddress(String address) {
   getRecipients().clear();
   getRecipients().addDelimited(getToAddress());
 }
-  
+
+/**
+ * Appends custom properties.
+ * @param props custom properties
+ */
+public void appendProperties(Map<String, String> props) {
+  this._props.putAll(props);
+}
+
 // methods =====================================================================
 
 /**
@@ -225,6 +236,8 @@ public void send() throws AddressException, MessagingException {
   if (getPort() > 0) {
     props.put("mail.smtp.port",""+getPort());
   }
+  
+  props.putAll(_props);
   
   // set up the message
   Session session = Session.getDefaultInstance(props,_authenticator);

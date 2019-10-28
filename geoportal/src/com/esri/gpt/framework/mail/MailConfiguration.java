@@ -16,6 +16,8 @@ package com.esri.gpt.framework.mail;
 import com.esri.gpt.framework.collection.StringSet;
 import com.esri.gpt.framework.context.Configuration;
 import com.esri.gpt.framework.util.Val;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
@@ -34,6 +36,7 @@ private String                 _outgoingFromAddress = "";
 private PasswordAuthentication _passwordAuthentication;
 private String                 _smtpHost = "";
 private int                    _smtpPort = -1;
+private Map<String, String>    _props = new HashMap<>();
 
 /** Default constructor. */
 public MailConfiguration() {}
@@ -154,6 +157,7 @@ public MailRequest newInboundRequest() {
   request.setHost(getSmtpHost());
   request.setPort(getSmtpPort());
   request.setToAddress(getIncomingToAddress());
+  request.appendProperties(_props);
   return request;
 }
 
@@ -167,6 +171,7 @@ public MailRequest newOutboundRequest() {
   request.setHost(getSmtpHost());
   request.setPort(getSmtpPort());
   request.setFromAddress(getOutgoingFromAddress());
+  request.appendProperties(_props);
   return request;
 }
 
@@ -200,6 +205,24 @@ public void put(String smtpHost,
     setIncomingToAddress(incomingToAddress);
   }
 }
+
+/**
+ * Sets custom property.
+ * @param key key
+ * @param value value
+ */
+public void setProperty(String key, String value) {
+  _props.put(key, value);
+}
+
+/**
+ * Lists all custom properties.
+ * @return custom properties
+ */
+public Map<String, String> listProperties() {
+  return _props;
+}
+
 
 /**
  * Returns the string representation of the object.

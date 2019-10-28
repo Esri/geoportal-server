@@ -26,7 +26,9 @@
         - smptAuth: configuration for a mail server requiring authentication credentials
         - username: the username credential
         - password: the password credential
-        - encrypted: "true" or "false" (indicates if this password is encrypted) -->
+        - encrypted: "true" or "false" (indicates if this password is encrypted) 
+        - properties list of custom properties (see: https://javaee.github.io/javamail/docs/api/com/sun/mail/smtp/package-summary.html)
+    -->
     <mail
         smtpHost="mail_server_smtp_host"  
         smtpPort="" 
@@ -36,6 +38,10 @@
             username=""
             password=""
             encrypted="false"/>
+        <!--
+        <property key="mail.smtp.auth" value="true"/>
+        <property key="mail.smtp.starttls.enable" value="true"/>
+        -->
     </mail>
 
    <!-- Base map configuration. (used in search page, preview, details page, editor)
