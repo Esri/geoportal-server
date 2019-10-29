@@ -52,7 +52,7 @@ private int           _port = -1;
 private StringSet     _recipients;
 private String        _subject = "";
 private String        _toAddress = "";
-private Map<String, String>    _props = new HashMap<>();
+private Map<String, String>    _props = new HashMap<String, String>();
   
 //constructors ================================================================
 

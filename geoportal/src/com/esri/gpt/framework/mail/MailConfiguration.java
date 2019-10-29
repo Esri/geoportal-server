@@ -36,7 +36,7 @@ private String                 _outgoingFromAddress = "";
 private PasswordAuthentication _passwordAuthentication;
 private String                 _smtpHost = "";
 private int                    _smtpPort = -1;
-private Map<String, String>    _props = new HashMap<>();
+private Map<String, String>    _props = new HashMap<String, String>();
 
 /** Default constructor. */
 public MailConfiguration() {}
