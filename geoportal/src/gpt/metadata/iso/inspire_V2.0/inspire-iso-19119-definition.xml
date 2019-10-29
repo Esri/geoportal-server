@@ -40,7 +40,7 @@
   <indexables fileName="gpt/metadata/iso/inspire_V2.0/inspire-apiso-indexables.xml"/>
   
   <!-- Geoportal XML editor -->
-  <editor fileName="gpt/gxe/iso/iso19139/profiles_V2.0/inspire/inspire-iso19139-service-editor.xml"/>
+  <editor fileName="gpt/gxe/iso/iso19139/profiles/inspire_V2.0/inspire-iso19139-service-editor.xml"/>
 
 
   <!-- general section -->
