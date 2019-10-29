@@ -48,7 +48,7 @@
 	      <g:element g:targetName="gmd:otherConstraints" g:minOccurs="1" g:maxOccurs="unbounded"
 	        g:extends="$base/xtn/ui/UI_Element.xml">
 	        <g:body>
-	          <g:element g:targetName="gmx:Anchor" g:extends="$base/schema/gco/gcoBase/CodeListValue_Type.xml">
+	          <g:element g:targetName="Anchor" g:namespacePrefix="gmx" g:targetNS="http://www.isotc211.org/2005/gmx" g:extends="$base/schema/gco/gcoBase/CodeListValue_Type.xml">
 						  <g:body>
                   <g:attribute xmlns:g="http://www.esri.com/geoportal/gxe" 
                                xmlns:h="http://www.esri.com/geoportal/gxe/html"
@@ -118,7 +118,7 @@
 	      <g:element g:targetName="gmd:otherConstraints" g:minOccurs="1" g:maxOccurs="unbounded"
 	        g:extends="$base/xtn/ui/UI_Element.xml">
 	        <g:body>
-	          <g:element g:targetName="gmx:Anchor" g:extends="$base/schema/gco/gcoBase/CodeListValue_Type.xml">
+	          <g:element g:targetName="Anchor" g:namespacePrefix="gmx" g:targetNS="http://www.isotc211.org/2005/gmx" g:extends="$base/schema/gco/gcoBase/CodeListValue_Type.xml">
 						  <g:body>
                   <g:attribute xmlns:g="http://www.esri.com/geoportal/gxe" 
                                xmlns:h="http://www.esri.com/geoportal/gxe/html"
