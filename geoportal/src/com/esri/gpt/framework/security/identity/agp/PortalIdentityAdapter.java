@@ -16,6 +16,7 @@ package com.esri.gpt.framework.security.identity.agp;
 import com.esri.gpt.framework.http.HttpClientRequest;
 import com.esri.gpt.framework.http.StringHandler;
 import com.esri.gpt.framework.http.StringProvider;
+import com.esri.gpt.framework.jsf.MessageBroker;
 import com.esri.gpt.framework.security.credentials.ChangePasswordCriteria;
 import com.esri.gpt.framework.security.credentials.CredentialPolicyException;
 import com.esri.gpt.framework.security.credentials.Credentials;
@@ -44,6 +45,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.naming.NamingException;
+import org.apache.commons.lang3.StringUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -74,6 +76,12 @@ public class PortalIdentityAdapter extends IdentityAdapter {
 	public static boolean AllUsersCanPublish = false;
 	
 	 private static Logger LOGGER = Logger.getLogger(PortalIdentityAdapter.class.getName());
+   
+   private final static MessageBroker messageBroker;
+   static {
+      messageBroker = new MessageBroker();
+      messageBroker.setBundleBaseName("gpt.resources.gpt");
+   }
 	
 	/** Default constructor. */
 	public PortalIdentityAdapter() {
@@ -403,6 +411,17 @@ public class PortalIdentityAdapter extends IdentityAdapter {
   	if (jsoResponse.has("email") && (!jsoResponse.isNull("email"))) {
   		user.getProfile().setEmailAddress(jsoResponse.getString("email"));
   	}
+    if (jsoResponse.has("orgId") && (!jsoResponse.isNull("orgId"))) {
+      String orgId = StringUtils.trimToNull(jsoResponse.getString("orgId"));
+      if (orgId!=null) {
+        Group group = new Group();
+        group.setIsOrg(true);
+        group.setKey(orgId);
+        group.setDistinguishedName(group.getKey());
+        group.setName(messageBroker.retrieveMessage("catalog.identity.portal.myOrg"));
+        user.getGroups().add(group);
+      }
+    }
   	if (jsoResponse.has("groups") && (!jsoResponse.isNull("groups"))) {
   		JSONArray jsoGroups = jsoResponse.getJSONArray("groups");
       for (int i=0;i<jsoGroups.length();i++) {

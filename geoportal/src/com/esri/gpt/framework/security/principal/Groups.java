@@ -44,6 +44,8 @@ public Groups() {
  * @param o2 second group to compare
  */
 public int compare(Group o1, Group o2) {
+  if (o1.isIsOrg()) return -1;
+  if (o2.isIsOrg()) return 1;
   if ((o1 != null) && (o2 != null)) {
     return o1.getName().toUpperCase().compareTo(
            o2.getName().toUpperCase());

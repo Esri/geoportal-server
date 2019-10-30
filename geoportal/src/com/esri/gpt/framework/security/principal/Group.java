@@ -22,7 +22,8 @@ public class Group extends SecurityPrincipal {
 // class variables =============================================================
 
 // instance variables ==========================================================
- 
+private boolean _isOrg;
+
 // constructors ================================================================
 
 /** Default constructor. */
@@ -53,5 +54,13 @@ public Group(int id, String key, String name) {
 // properties ==================================================================
 
 // methods =====================================================================
+
+  public boolean isIsOrg() {
+    return _isOrg;
+  }
+
+  public void setIsOrg(boolean _isOrg) {
+    this._isOrg = _isOrg;
+  }
 
 }
