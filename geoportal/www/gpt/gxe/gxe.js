@@ -2908,6 +2908,22 @@ dojo.declare("gxe.control.Control",null,{
    */
   onHtmlElementCreated: function(domProcessor,domNode) {},
 
+  processHiddenAttribute: function(cfgAttribute, htmlParentElement, domNode) {
+    var sTargetName = gxe.cfg.getGxeAttributeValue(cfgAttribute,"targetName");
+	var bHidden = gxe.cfg.getGxeAttributeValue(cfgAttribute,"hidden");
+	if (bHidden) {
+		console.log("Hidden", this, domNode);
+		if (htmlParentElement && htmlParentElement.children) {
+			for (childIdx = 0; childIdx < htmlParentElement.children.length; childIdx++) {
+				var child = htmlParentElement.children[childIdx];
+				if (child.attributes && child.attributes.gxetargetname && child.attributes.gxetargetname.value===sTargetName) {
+					child.style.display = "none";
+				}
+			}
+		}
+	}
+  },
+  
   /**
    * Processes a configuration object associated with a targeted XML attribute (g:attribute).
    * @function 
@@ -2954,6 +2970,8 @@ dojo.declare("gxe.control.Control",null,{
         xmlAttribute.nodeInfo.nodeValue = sNodeValue;
       }
     }
+
+	this.processHiddenAttribute(cfgAttribute, htmlParentElement, domNode);
   },
 
   /**
@@ -3047,7 +3065,8 @@ dojo.declare("gxe.control.Control",null,{
         }
       }
     }
-    
+	
+	this.processHiddenAttribute(cfgElement, htmlParentElement, domNode);
   },
 
   /**
@@ -5675,6 +5694,7 @@ dojo.declare("gxe.control.InputText",gxe.control.InputBase,{
       if (sType == "fgdc:date") sValue = sValue.replace(/-/g,"");
       this.htmlElement.value = sValue;
     }
+	
     dojo.connect(this.htmlElement,"onchange",this,"fireInputChanged");
     dojo.connect(this.htmlElement,"onkeyup",this,"fireInputChangedOnKeyUp");
   }

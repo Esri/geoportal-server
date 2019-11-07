@@ -20,7 +20,7 @@
         </g:options>
       </g:input>
       
-      <g:attribute g:targetNS="" g:targetName="codeSpace" h:tag="div" g:jsClass="gxe.control.Attribute">
+      <g:attribute g:targetNS="" g:targetName="codeSpace" h:tag="div" g:jsClass="gxe.control.Attribute" g:hidden="true">
         <g:input g:extends="$base/core/ui/InputText.xml" h:readonly="readonly" g:fixedValue="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType"/>
       </g:attribute>
       
