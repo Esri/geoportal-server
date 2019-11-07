@@ -13,7 +13,7 @@
       <g:body>
         <g:element g:minOccurs="$parent" g:extends="$base/schema/gco/basicTypes/CharacterString.xml">
           <g:body>
-            <g:input g:extends="$base/core/ui/InputText.xml"  h:readonly="readonly" g:fixedValue="Service"/>
+            <g:input g:extends="$base/core/ui/InputText.xml" h:readonly="readonly" g:fixedValue="Service"/>
           </g:body>
         </g:element>
       </g:body>
