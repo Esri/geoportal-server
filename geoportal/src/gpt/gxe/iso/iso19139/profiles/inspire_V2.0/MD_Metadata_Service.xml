@@ -34,7 +34,7 @@
         
         <!-- Distribution tab -->
         <h:div g:label="$i18n.catalog.iso19139.MD_Metadata.section.distribution">
-          <g:element g:extends="$base/xtn/gmd/distribution/XTN_Distribution_Service.xml"/>
+          <g:element g:extends="$base/xtn/srv/distribution/XTN_Distribution_Service.xml"/>
         </h:div>
         
         <!-- Quality tab -->
