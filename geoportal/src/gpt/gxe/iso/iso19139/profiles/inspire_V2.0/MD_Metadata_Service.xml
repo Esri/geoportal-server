@@ -8,13 +8,14 @@
            g:label="$i18n.catalog.mdParam.schema.inspire.services"
            g:extends="$base/xtn/ui/UI_Element.xml">
   
-    <g:attribute g:targetName="xsi:schemaLocation" g:value="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/iso/19139/20070417/gmd/gmd.xsd http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20070417/srv/1.0/srv.xsd"></g:attribute>
+    <g:attribute g:targetName="xsi:schemaLocation" g:value="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd"></g:attribute>
     <!-- namespaces -->
     <g:namespaces g:overridable="true">
         <g:namespace g:prefix="gmd" g:uri="http://www.isotc211.org/2005/gmd"/>
         <g:namespace g:prefix="gco" g:uri="http://www.isotc211.org/2005/gco"/>
         <g:namespace g:prefix="srv" g:uri="http://www.isotc211.org/2005/srv"/>
         <g:namespace g:prefix="gml" g:uri="http://www.opengis.net/gml/3.2"/>
+        <g:namespace g:prefix="gmx" g:uri="http://www.isotc211.org/2005/gmx"/>
         <g:namespace g:prefix="xlink" g:uri="http://www.w3.org/1999/xlink"/>
         <g:namespace g:prefix="xsi" g:uri="http://www.w3.org/2001/XMLSchema-instance" />
     </g:namespaces>
@@ -33,12 +34,12 @@
         
         <!-- Distribution tab -->
         <h:div g:label="$i18n.catalog.iso19139.MD_Metadata.section.distribution">
-          <g:element g:extends="$base/xtn/gmd/distribution/XTN_Distribution_Service.xml"/>
+          <g:element g:extends="$base/xtn/srv/distribution/XTN_Distribution_Service.xml"/>
         </h:div>
         
         <!-- Quality tab -->
         <h:div g:label="$i18n.catalog.iso19139.MD_Metadata.section.quality">
-          <g:element g:extends="$base/xtn/gmd/dataQuality/XTN_Quality_Service.xml"/>
+          <g:element g:extends="$base/xtn/srv/dataQuality/XTN_Quality_Service.xml"/>
         </h:div>
                  
       </g:body>

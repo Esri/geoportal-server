@@ -205,7 +205,7 @@
 	               g:fixedValue="publication">
 	               <g:input g:extends="$base/core/ui/InputText.xml"/>
 	               <g:attribute g:targetNS="" g:targetName="codeList" h:tag="div" g:jsClass="gxe.control.Attribute"
-	                 g:fixedValue="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode">
+	                 g:fixedValue="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode">
 	                 <g:input g:extends="$base/core/ui/InputText.xml"/>
 	               </g:attribute>
 	               <g:attribute g:targetNS="" g:targetName="codeListValue" h:tag="div" g:jsClass="gxe.control.Attribute"

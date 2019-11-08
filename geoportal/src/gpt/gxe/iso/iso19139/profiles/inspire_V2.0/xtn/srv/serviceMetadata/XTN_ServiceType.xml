@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?> 
-<!--  provides a service type domain srv:SV_ServiceIdentification/srv:serviceType -->      
 <g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
            xmlns:h="http://www.esri.com/geoportal/gxe/html"
            g:targetName="srv:serviceType" g:minOccurs="1" g:maxOccurs="1"
@@ -8,6 +7,7 @@
   <g:body>
     <g:element g:targetName="gco:LocalName" g:minOccurs="1" g:maxOccurs="1"
       h:tag="div" g:jsClass="gxe.control.Element">
+      
       <g:input g:extends="$base/core/ui/InputSelectOne.xml">
         <g:options g:i18nBase="catalog.mdParam.inspire.identification">
           <g:option g:label="" g:value=""/>
@@ -19,6 +19,11 @@
           <g:option g:value="other" g:label="$i18nBase.other"/>
         </g:options>
       </g:input>
+      
+      <g:attribute g:targetNS="" g:targetName="codeSpace" h:tag="div" g:jsClass="gxe.control.Attribute" g:hidden="true">
+        <g:input g:extends="$base/core/ui/InputText.xml" h:readonly="readonly" g:fixedValue="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType"/>
+      </g:attribute>
+      
     </g:element>
   </g:body>
 </g:element>
