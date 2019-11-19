@@ -2944,8 +2944,12 @@ dojo.declare("gxe.control.Control",null,{
     var xmlAttribute = new gxe.xml.XmlAttribute(xmlDocument,xmlParentElement,cfgAttribute);
     xmlParentElement.attributes.add(xmlAttribute);
     var domMatch = null;
+	
     var sDefault = gxe.cfg.getGxeAttributeValue(this.cfgObject,"fixedValue");
-    if (sDefault == null) sDefault = gxe.cfg.getGxeAttributeValue(cfgAttribute,"value");
+    if (sDefault == null) {
+	  	sDefault = gxe.cfg.getGxeAttributeValue(cfgAttribute,"value");
+  	}
+	
     if ((domProcessor != null) && (domNode != null)) {
       domMatch = domProcessor.findMatchingChildAttribute(domNode,cfgAttribute);
     } else {
@@ -5676,10 +5680,12 @@ dojo.declare("gxe.control.InputText",gxe.control.InputBase,{
   /** Override gxe.control.Control.onHtmlElementCreated() */
   onHtmlElementCreated: function(domProcessor,domNode) {
     this.xmlNode.setInputControl(this);
+	
     var sValue = gxe.cfg.getGxeAttributeValue(this.cfgObject,"fixedValue");
     if (sValue == null) {
       sValue = gxe.cfg.getGxeAttributeValue(this.xmlNode.cfgObject,"fixedValue");
     }
+	
     if (sValue == null) {
       if ((domProcessor != null) && (domNode != null)) {
         sValue = domProcessor.getNodeText(domNode);
@@ -5727,10 +5733,12 @@ dojo.declare("gxe.control.InputTextArea",gxe.control.InputBase,{
   /** Override gxe.control.Control.onHtmlElementCreated() */
   onHtmlElementCreated: function(domProcessor,domNode) {
     this.xmlNode.setInputControl(this);
+	
     var sValue = gxe.cfg.getGxeAttributeValue(this.cfgObject,"fixedValue");
     if (sValue == null) {
       sValue = gxe.cfg.getGxeAttributeValue(this.xmlNode.cfgObject,"fixedValue");
     }
+	
     if (sValue == null) {
       if ((domProcessor != null) && (domNode != null)) {
         sValue = domProcessor.getNodeText(domNode);
