@@ -200,7 +200,7 @@
 			<label resourceKey="catalog.mdParam.inspire.identification.datasetIdentifier"/>
 			<input type="text" size="50" editable="false" maxlength="2048" defaultValue="#{EditMetadataController.newUuid}"/>
 			<validation required="true"/>
-			<content useSelectForUpdate="false" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString|/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString" update="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString" delete="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier"/>
+			<content useSelectForUpdate="false" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString|/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString|/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/gmd:code/gmx:Anchor|/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor" update="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString" delete="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier"/>
 		</parameter>
 		<!-- 2.2.6 - not applicable to dataset and series -->
 		<!-- 2.2.7 - Resource Language -->
@@ -304,7 +304,7 @@
 			<label resourceKey="catalog.mdParam.referenceSystemInfo.code"/>
 			<input type="text" editable="true" maxlength="100" defaultValue="4326"/>
 			<validation required="true"/>
-			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
+			<content useSelectForUpdate="true" deleteParentIfEmpty="true" select="/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString|/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gmx:Anchor"/>
 		</parameter>
 		<parameter key="referenceSystemInfo.codespace">
 			<label resourceKey="catalog.mdParam.referenceSystemInfo.codespace"/>
@@ -323,7 +323,7 @@
 				<label resourceKey="catalog.mdParam.inspire.keyword.dataTheme"/>
 				<input type="selectOneMenu"/>
 				<validation required="true"/>
-				<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords[1]/gmd:MD_Keywords/gmd:keyword/gco:CharacterString">
+				<content useSelectForUpdate="true" select="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords[1]/gmd:MD_Keywords/gmd:keyword/gco:CharacterString|/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords[1]/gmd:MD_Keywords/gmd:keyword/gmx:Anchor">
 					<codes>
 						<code key="Addresses" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.addresses"/>
 						<code key="Administrative_units" resourceKey="catalog.mdParam.inspire.keyword.dataTheme.administrativeUnits"/>
