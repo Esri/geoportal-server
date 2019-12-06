@@ -60,8 +60,8 @@
 		<lastauthor>Administrator</lastauthor>
 		<revnumber>{E14AB8EA-91D2-4CAC-904E-EAFFE4DF5184}</revnumber>
 		<lastprinted/>
-		<createdtm>06/21/1999 06:00</createdtm>
-		<lastsavedtm>07/14/2000 09:50</lastsavedtm>
+		<createdtm>06/21/1999 05:00</createdtm>
+		<lastsavedtm>07/14/2000 08:50</lastsavedtm>
 		<pagecount>200</pagecount>
 		<wordcount>0</wordcount>
 		<charcount/>
@@ -362,7 +362,7 @@
 		<row><td>ISRegistryComponent</td><td>{093DE7B2-A87B-4B56-A348-CF7E6B143549}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>InstallDirFiles</td><td>{6F677B65-B26A-4214-9ADE-B396BF2384FD}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>LogDirFiles</td><td>{2D6A08AE-EA6A-479E-9071-CB1BE6DC8CF9}</td><td>LOGDIR</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>MyDocsArcGISAddInsDesktop10Files</td><td>{1C3BAFA6-E42C-48B7-9B8A-0188CC583A1A}</td><td>DESKTOP10.7.1</td><td>8</td><td>ALLUSERS &lt;&gt; 1</td><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>MyDocsArcGISAddInsDesktop10Files</td><td>{1C3BAFA6-E42C-48B7-9B8A-0188CC583A1A}</td><td>DESKTOP10.8</td><td>8</td><td>ALLUSERS &lt;&gt; 1</td><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -945,21 +945,21 @@
 		<row><td>CustomSetup</td><td>ChangeFolder</td><td>SelectionBrowse</td><td>InstallChangeFolder</td><td>1</td><td>0</td></row>
 		<row><td>CustomSetup</td><td>Details</td><td>SelectionBrowse</td><td>DiskSpaceRequirements</td><td>1</td><td>1</td></row>
 		<row><td>CustomSetup</td><td>Help</td><td>SpawnDialog</td><td>CustomSetupTips</td><td>1</td><td>1</td></row>
-		<row><td>CustomSetup</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.7.1" And &amp;CSWArcMap = 3</td><td>2</td></row>
+		<row><td>CustomSetup</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.8" And &amp;CSWArcMap = 3</td><td>2</td></row>
 		<row><td>CustomSetup</td><td>Next</td><td>NewDialog</td><td>DestinationFolder</td><td>OutOfNoRbDiskSpace &lt;&gt; 1</td><td>5</td></row>
 		<row><td>CustomSetup</td><td>Next</td><td>NewDialog</td><td>OutOfSpace</td><td>OutOfNoRbDiskSpace = 1</td><td>4</td></row>
-		<row><td>CustomSetup</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.7.1" And &amp;CSWArcMap = 3</td><td>3</td></row>
+		<row><td>CustomSetup</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.8" And &amp;CSWArcMap = 3</td><td>3</td></row>
 		<row><td>CustomSetup</td><td>Next</td><td>[_IsSetupTypeMin]</td><td>Custom</td><td>1</td><td>1</td></row>
 		<row><td>CustomSetupTips</td><td>OK</td><td>EndDialog</td><td>Return</td><td>1</td><td>1</td></row>
 		<row><td>CustomerInformation</td><td>Back</td><td>NewDialog</td><td>LicenseAgreement</td><td>1</td><td>1</td></row>
 		<row><td>CustomerInformation</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
-		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.7.1" And &amp;CSWArcMap = 3</td><td>7</td></row>
+		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.8" And &amp;CSWArcMap = 3</td><td>7</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>SetAllUsersDefaultLogLoc</td><td>ApplicationUsers = "AllUsers"</td><td>5</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>SetCurrentUserDefaultLogLoc</td><td>ApplicationUsers = "OnlyCurrentUser"</td><td>4</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>DoAction</td><td>SetLogDirWithEndingBackslash</td><td>ApplicationUsers = "AllUsers"</td><td>6</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>EndDialog</td><td>Exit</td><td>(SERIALNUMVALRETRYLIMIT) And (SERIALNUMVALRETRYLIMIT&lt;0) And (SERIALNUMVALRETURN&lt;&gt;SERIALNUMVALSUCCESSRETVAL)</td><td>3</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>NewDialog</td><td>SetupType</td><td>1</td><td>9</td></row>
-		<row><td>CustomerInformation</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.7.1" And &amp;CSWArcMap = 3</td><td>8</td></row>
+		<row><td>CustomerInformation</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.8" And &amp;CSWArcMap = 3</td><td>8</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>[ALLUSERS]</td><td>1</td><td>ApplicationUsers = "AllUsers" And Privileged</td><td>1</td></row>
 		<row><td>CustomerInformation</td><td>Next</td><td>[ALLUSERS]</td><td>{}</td><td>ApplicationUsers = "OnlyCurrentUser" And Privileged</td><td>2</td></row>
 		<row><td>DatabaseFolder</td><td>Back</td><td>NewDialog</td><td>CustomerInformation</td><td>1</td><td>1</td></row>
@@ -1034,7 +1034,7 @@
 		<row><td>ReadyToInstall</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
 		<row><td>ReadyToInstall</td><td>InstallNow</td><td>EndDialog</td><td>Return</td><td>OutOfNoRbDiskSpace &lt;&gt; 1</td><td>1</td></row>
 		<row><td>ReadyToInstall</td><td>InstallNow</td><td>NewDialog</td><td>OutOfSpace</td><td>OutOfNoRbDiskSpace = 1</td><td>2</td></row>
-		<row><td>ReadyToInstall</td><td>InstallNow</td><td>Remove</td><td>CSWArcMap</td><td>Not ARCGISVERSION&lt;&lt;"10.7.1"</td><td>6</td></row>
+		<row><td>ReadyToInstall</td><td>InstallNow</td><td>Remove</td><td>CSWArcMap</td><td>Not ARCGISVERSION&lt;&lt;"10.8"</td><td>6</td></row>
 		<row><td>ReadyToInstall</td><td>InstallNow</td><td>[ProgressType1]</td><td>Installing</td><td>1</td><td>3</td></row>
 		<row><td>ReadyToInstall</td><td>InstallNow</td><td>[ProgressType2]</td><td>installed</td><td>1</td><td>4</td></row>
 		<row><td>ReadyToInstall</td><td>InstallNow</td><td>[ProgressType3]</td><td>installs</td><td>1</td><td>5</td></row>
@@ -1090,12 +1090,12 @@
 		<row><td>SetupResume</td><td>Next</td><td>NewDialog</td><td>OutOfSpace</td><td>OutOfNoRbDiskSpace = 1</td><td>0</td></row>
 		<row><td>SetupType</td><td>Back</td><td>NewDialog</td><td>CustomerInformation</td><td>1</td><td>1</td></row>
 		<row><td>SetupType</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
-		<row><td>SetupType</td><td>Next</td><td>AddLocal</td><td>ALL</td><td>_IsSetupTypeMin = "Typical" And ARCGISVERSION &lt;&lt; "10.7.1"</td><td>1</td></row>
-		<row><td>SetupType</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.7.1" And _IsSetupTypeMin &lt;&gt; "Custom" And &amp;CSWArcMap = 3</td><td>2</td></row>
+		<row><td>SetupType</td><td>Next</td><td>AddLocal</td><td>ALL</td><td>_IsSetupTypeMin = "Typical" And ARCGISVERSION &lt;&lt; "10.8"</td><td>1</td></row>
+		<row><td>SetupType</td><td>Next</td><td>DoAction</td><td>MessageBox</td><td>NOT ARCGISVERSION &lt;&lt; "10.8" And _IsSetupTypeMin &lt;&gt; "Custom" And &amp;CSWArcMap = 3</td><td>2</td></row>
 		<row><td>SetupType</td><td>Next</td><td>NewDialog</td><td>CustomSetup</td><td>_IsSetupTypeMin = "Custom"</td><td>4</td></row>
 		<row><td>SetupType</td><td>Next</td><td>NewDialog</td><td>DestinationFolder</td><td>_IsSetupTypeMin &lt;&gt; "Custom"</td><td>6</td></row>
 		<row><td>SetupType</td><td>Next</td><td>NewDialog</td><td>OutOfSpace</td><td>OutOfNoRbDiskSpace = 1</td><td>5</td></row>
-		<row><td>SetupType</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.7.1" And _IsSetupTypeMin &lt;&gt; "Custom" And &amp;CSWArcMap = 3</td><td>3</td></row>
+		<row><td>SetupType</td><td>Next</td><td>Remove</td><td>CSWArcMap</td><td>NOT ARCGISVERSION &lt;&lt; "10.8" And _IsSetupTypeMin &lt;&gt; "Custom" And &amp;CSWArcMap = 3</td><td>3</td></row>
 		<row><td>SplashBitmap</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
 		<row><td>SplashBitmap</td><td>Next</td><td>NewDialog</td><td>InstallWelcome</td><td>1</td><td>0</td></row>
 	</table>
@@ -1224,7 +1224,7 @@
 		<row><td>DATA</td><td>INSTALLDIR</td><td>Data</td><td/><td>0</td><td/></row>
 		<row><td>DATABASEDIR</td><td>ISYourDataBaseDir</td><td>.</td><td/><td>0</td><td/></row>
 		<row><td>DESKTOP10.0</td><td>ADDINS1</td><td>DESKTO~1|Desktop10.0</td><td/><td>0</td><td/></row>
-		<row><td>DESKTOP10.7.1</td><td>ADDINS1</td><td>DESKTO~1|Desktop10.7.1</td><td/><td>0</td><td/></row>
+		<row><td>DESKTOP10.8</td><td>ADDINS1</td><td>DESKTO~1|Desktop10.8</td><td/><td>0</td><td/></row>
 		<row><td>DEVHELP</td><td>INSTALLDIR</td><td>DevHelp</td><td/><td>0</td><td/></row>
 		<row><td>DesktopFolder</td><td>TARGETDIR</td><td>.:Desktop</td><td/><td>3</td><td/></row>
 		<row><td>ESRI</td><td>ProgramFilesFolder</td><td>ESRI</td><td/><td>0</td><td/></row>
@@ -2437,6 +2437,18 @@
 		<col key="yes" def="S50">Property</col>
 		<col def="S0">Value</col>
 		<col def="I2">IncludeInBuild</col>
+	</table>
+
+	<table name="ISPSFFixup">
+		<col key="yes" def="s72">PSFFixup</col>
+		<col key="yes" def="s72">Application</col>
+		<col def="I4">FixupType</col>
+	</table>
+
+	<table name="ISPSFFixupVariableProp">
+		<col key="yes" def="s72">PSFFixup_</col>
+		<col def="S255">FixUpParam1</col>
+		<col def="S255">FixUpParam2</col>
 	</table>
 
 	<table name="ISPatchConfigImage">
@@ -4265,7 +4277,7 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<row><td>SaveAsSchema</td><td/></row>
 		<row><td>SccEnabled</td><td>0</td></row>
 		<row><td>SccPath</td><td/></row>
-		<row><td>SchemaVersion</td><td>779</td></row>
+		<row><td>SchemaVersion</td><td>781</td></row>
 		<row><td>Type</td><td>MSI</td></row>
 	</table>
 
@@ -4633,7 +4645,7 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<row><td>ProductID</td><td>none</td><td/></row>
 		<row><td>ProductLanguage</td><td>1033</td><td/></row>
 		<row><td>ProductName</td><td>CSW Client for ArcGIS</td><td/></row>
-		<row><td>ProductVersion</td><td>1.2.10.0</td><td/></row>
+		<row><td>ProductVersion</td><td>1.2.9.400</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
@@ -4697,8 +4709,8 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<row><td>NewSignature11</td><td>2</td><td>SOFTWARE\Microsoft\.NETFramework\policy\v2.0</td><td>50727</td><td>2</td></row>
 		<row><td>NewSignature12</td><td>2</td><td>SOFTWARE\Microsoft\.NetFramework</td><td>InstallRoot</td><td>2</td></row>
 		<row><td>NewSignature13</td><td>2</td><td>SOFTWARE\ESRI\Applications\Portal_CswClients\Install</td><td>Path</td><td>2</td></row>
-		<row><td>NewSignature14</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.7</td><td>RealVersion</td><td>2</td></row>
-		<row><td>NewSignature15</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.7</td><td>InstallDir</td><td>2</td></row>
+		<row><td>NewSignature14</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.8</td><td>RealVersion</td><td>2</td></row>
+		<row><td>NewSignature15</td><td>2</td><td>SOFTWARE\ESRI\Desktop10.8</td><td>InstallDir</td><td>2</td></row>
 	</table>
 
 	<table name="Registry">
@@ -5391,6 +5403,12 @@ UgBlAGwAZQBhAHMAZQAgADEAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8A
 		<row><td>ISObjectProperty</td><td>ObjectName</td><td>Y</td><td/><td/><td>ISObject</td><td>1</td><td>Text</td><td/><td/></row>
 		<row><td>ISObjectProperty</td><td>Property</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td/></row>
 		<row><td>ISObjectProperty</td><td>Value</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td/></row>
+		<row><td>ISPSFFixup</td><td>Application</td><td>N</td><td/><td/><td>Shortcut</td><td>1</td><td>Identifier</td><td/><td>Foreign key into Shortcut table.</td></row>
+		<row><td>ISPSFFixup</td><td>FixupType</td><td>Y</td><td/><td/><td/><td/><td>Number</td><td/><td>Fixup Type of PSF</td></row>
+		<row><td>ISPSFFixup</td><td>PSFFixup</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Primary key, non-localized token.</td></row>
+		<row><td>ISPSFFixupVariableProp</td><td>FixUpParam1</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Variable parameter value,it varies based on fixup type</td></row>
+		<row><td>ISPSFFixupVariableProp</td><td>FixUpParam2</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Variable parameter value,it varies based on fixup type</td></row>
+		<row><td>ISPSFFixupVariableProp</td><td>PSFFixup_</td><td>N</td><td/><td/><td>ISPSFFixup</td><td>1</td><td>Identifier</td><td/><td>Foreign key into ISPSFFixup table.</td></row>
 		<row><td>ISPatchConfigImage</td><td>PatchConfiguration_</td><td>Y</td><td/><td/><td>ISPatchConfiguration</td><td>1</td><td>Text</td><td/><td>Foreign key to the ISPatchConfigurationTable</td></row>
 		<row><td>ISPatchConfigImage</td><td>UpgradedImage_</td><td>N</td><td/><td/><td>ISUpgradedImage</td><td>1</td><td>Text</td><td/><td>Foreign key to the ISUpgradedImageTable</td></row>
 		<row><td>ISPatchConfiguration</td><td>Attributes</td><td>Y</td><td/><td/><td/><td/><td/><td/><td>PatchConfiguration attributes</td></row>
