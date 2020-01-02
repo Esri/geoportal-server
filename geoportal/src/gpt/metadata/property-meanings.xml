@@ -162,7 +162,11 @@
     <property-meaning name="sys.collection" valueType="String" comparisonType="keyword">
         <dc name="dc:collection" aliases="collection"/>
     </property-meaning>
-    
+
+    <property-meaning name="acl" valueType="String" comparisonType="value">
+      <dc name="dct:acl" aliases="acl"/>
+    </property-meaning>
+        
   <!-- ================================================================================= -->
       
   <!--  Dublin Core response property sets (brief, summary, full) -->
@@ -193,7 +197,7 @@
         <meaning-names>dateModified,abstract</meaning-names>
         <meaning-names>resource.url,website.url,thumbnail.url,xml.url</meaning-names>
         <meaning-names>geometry,date,relation</meaning-names>
-        <meaning-names>sys.siteuuid,isPartOf</meaning-names>
+        <meaning-names>sys.siteuuid,isPartOf,acl</meaning-names>
       </dc>
     </full>    
     
