@@ -75,6 +75,8 @@ public static final String KEY_REFERENCES = "XSL_RESULT_REFERENCES";
 
 public static final String KEY_TYPES = "XSL_RESULT_TYPES";
 
+public static final String KEY_ACL = "XSL_RESULT_ACL";
+
 /** constructors ============================================================ */
 public SearchEngineCSW(RequestContext context) {
   super(context);
@@ -728,6 +730,7 @@ protected SearchResultRecord marshallRecord(
   searchResultRecord.getObjectMap().put(KEY_LINK_INFO, cswRecord.getLinks());
   searchResultRecord.getObjectMap().put(KEY_TYPES, cswRecord.getTypes());
   searchResultRecord.getObjectMap().put(KEY_REFERENCES, cswRecord.getReferences());
+  searchResultRecord.getObjectMap().put(KEY_ACL, cswRecord.getAcl());
   return searchResultRecord;
 
 }

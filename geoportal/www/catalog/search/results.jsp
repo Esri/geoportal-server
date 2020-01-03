@@ -596,6 +596,7 @@ function rsGetQualityOfService() {
 				  <h:outputLink id="recLnkTitle"
 				    value="javascript:void(0)"
             onclick="javascript:return rsExpandRecord(#{dTable.dataTable.rowIndex});">
+            <h:outputText value="* " rendered="#{record.restricted}" />
 					  <h:outputText styleClass="resultsTitle" id="recTxtTitle" value="#{record.title}" />
 					</h:outputLink>
 					

@@ -444,4 +444,11 @@ public SearchResultRecord() {
     this._defaultGeometry = defaultGeometry;
   }
  
+  public boolean isRestricted() {
+    Object acl = getObjectMap().get(SearchEngineCSW.KEY_ACL);
+    if (acl instanceof String[] && ((String[])acl).length>0) {
+      return true;
+    }
+    return false;
+  }
 }
