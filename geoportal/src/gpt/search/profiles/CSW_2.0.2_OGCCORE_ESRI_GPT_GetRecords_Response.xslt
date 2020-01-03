@@ -76,10 +76,12 @@
               </ModifiedDate>
               <References>
                 <xsl:for-each select="./dct:references">
-                  <xsl:value-of select="."/>
-                  <xsl:text>&#x2714;</xsl:text>
-                  <xsl:value-of select="@scheme"/>
-                  <xsl:text>&#x2715;</xsl:text>
+                  <xsl:if test="@scheme!='urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ACL'">
+                    <xsl:value-of select="."/>
+                    <xsl:text>&#x2714;</xsl:text>
+                    <xsl:value-of select="@scheme"/>
+                    <xsl:text>&#x2715;</xsl:text>
+                  </xsl:if>
                 </xsl:for-each>
               </References>
               <Types>
@@ -90,6 +92,14 @@
                   <xsl:text>&#x2715;</xsl:text>
                 </xsl:for-each>
               </Types>
+              <Acl>
+                <xsl:for-each select="./dct:references">
+                  <xsl:if test="@scheme='urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ACL'">
+                    <xsl:value-of select="."/>
+                    <xsl:text>,</xsl:text>
+                  </xsl:if>
+                </xsl:for-each>
+              </Acl>
         </Record>
       </xsl:for-each>
 

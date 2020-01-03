@@ -164,7 +164,7 @@
     </property-meaning>
 
     <property-meaning name="acl" valueType="String" comparisonType="value">
-      <dc name="dct:acl" aliases="acl"/>
+      <dc name="dct:references" scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ACL" aliases="acl"/>
     </property-meaning>
         
   <!-- ================================================================================= -->

@@ -18,19 +18,16 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.esri.gpt.catalog.search.ResourceLinkBuilder;
 import com.esri.gpt.catalog.search.SearchException;
-import com.esri.gpt.catalog.search.SearchResult;
 import com.esri.gpt.catalog.search.SearchResultRecord;
 import com.esri.gpt.framework.geometry.Envelope;
 import com.esri.gpt.framework.request.Record;
 import com.esri.gpt.framework.util.Val;
-import com.esri.gpt.server.csw.client.CswRecord;
+import java.util.ArrayList;
 
 /**
  * The Class CswRecord.
@@ -96,6 +93,8 @@ private String modifiedDate;
 private SearchXslRecordLinks links;
 
 private boolean isDefaultGeometry = false;
+
+private String [] acl;
 
 // constructors ================================================================
 /**
@@ -445,6 +444,39 @@ public boolean isDefaultGeometry() {
  */
 public void setDefaultEnvelope(boolean isDefaultGeometry) {
   this.isDefaultGeometry = isDefaultGeometry;
+}
+
+/**
+ * Sets the acl.
+ * 
+ * @param list the new acl
+ */
+public void setAcl(String list) {
+  String [] elements = list!=null? list.split(","): new String[0];
+  ArrayList nonEmptyElements = new ArrayList();
+  for (int i=0; i<elements.length; i++) {
+    if (elements[i]!=null && elements[i].trim().length()>0) {
+      nonEmptyElements.add(elements[i]);
+    }
+  }
+  elements = (String[])nonEmptyElements.toArray(new String[nonEmptyElements.size()]);
+  setAcl(elements);
+}
+
+public void setAcl(String [] acl) {
+  this.acl = acl;
+}
+
+/**
+ * Gets the acl.
+ * 
+ * @return the acl(never null)
+ */
+public String[] getAcl() {
+  if(acl == null) {
+    acl = new String[0];
+  }
+  return acl;
 }
 
 // methods =====================================================================
