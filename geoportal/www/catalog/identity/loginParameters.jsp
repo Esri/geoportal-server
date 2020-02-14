@@ -34,7 +34,7 @@
   <% // password %>
   <h:outputLabel for="userP" styleClass="requiredField"
      value="#{gptMsg['catalog.identity.profile.label.password']}"/>
-  <h:inputSecret id="userP" size="30" maxlength="64" 
+  <h:inputSecret id="userP" size="30" maxlength="64" autocomplete="off"
     value="#{LoginController.credentials.password}"/>
     
   <% // submit button %>
