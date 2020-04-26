@@ -1,11 +1,19 @@
+# Esri Geoportal Server v1
+
+## UPDATE: Esri Geoportal Server v2 is now available
+
+The next generation Esri Geoportal Server v2 is now available. Geoportal Server 2 provides the metadata catalog and harvesting capabilities as separate modules. The repositories are located at [Geoportal Server Catalog](https://github.com/Esri/geoportal-server-catalog) and [Geoportal Server Harvester](https://github.com/ArcGIS/geoportal-server-harvester).
+
+This repository is maintained as an archive for those who are still actively using Esri Geoportal Server v1.
+
+# Geoportal Server 
+
 [![Coverage Status](https://img.shields.io/coveralls/Esri/geoportal-server.svg)](https://coveralls.io/r/Esri/geoportal-server) <a href="https://scan.coverity.com/projects/3614">
   <img alt="Coverity Scan Build Status"
        src="https://scan.coverity.com/projects/3614/badge.svg"/>
 </a>
 
-# geoportal-server
-
-## Welcome 
+## Introduction to geoportal-server 
 
 Geoportal Server is a standards-based, open source product that enables discovery and use of geospatial resources including data and services.
 
