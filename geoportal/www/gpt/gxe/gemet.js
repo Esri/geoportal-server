@@ -608,7 +608,7 @@ dojo.declare(
 			var elContent = dojo.create("div", {}, this.elDivResults);
 			
 			var elError = dojo.create("div", {innerHTML:error}, elContent);
-			djDialogGemet.attr("content", elContent);
+			this.djDialogGemet.attr("content", elContent);
 			//this.addButton(elContent, this.lblOk, djDialogGemet);
 			
 			/*djDialogGemet.attr("style", "height: 200px");
