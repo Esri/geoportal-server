@@ -60,14 +60,11 @@ dojo.declare(
 		lblErrorKeywordEmpty: "Keyword to check gemet against cannot be empty",
 		lblSearch: "Search",
 		imgLoading: "catalog/images/loading.gif",
-		conceptsUrl : "http://www.eionet.europa.eu/gemet/"
+		conceptsUrl : "https://www.eionet.europa.eu/gemet/"
 			+ "getConceptsMatchingRegexByThesaurus?thesaurus_uri="+
 			"http://www.eionet.europa.eu/gemet/concept/&language={0}&regex={1}",
-	    /*conceptsThemeUrl: "http://www.eionet.europa.eu/gemet/"
-			+ "getTopmostConcepts?thesaurus_uri="+
-			"http://inspire.ec.europa.eu/theme/them.{0}.json",*/	
-			conceptsThemeUrl: "http://inspire.ec.europa.eu/theme/theme.{0}.xml",/* only change to json format when endpoint has valid json and is jsonp*/	
-		conceptsKeywordUrl: "http://www.eionet.europa.eu/gemet/"
+			conceptsThemeUrl: "https://inspire.ec.europa.eu/theme/theme.{0}.xml",/* only change to json format when endpoint has valid json and is jsonp*/	
+		conceptsKeywordUrl: "https://www.eionet.europa.eu/gemet/"
 			+ "getConceptsMatchingRegexByThesaurus?thesaurus_uri="+
 			"http://www.eionet.europa.eu/gemet/concept/&language={0}&regex={1}",
 		
