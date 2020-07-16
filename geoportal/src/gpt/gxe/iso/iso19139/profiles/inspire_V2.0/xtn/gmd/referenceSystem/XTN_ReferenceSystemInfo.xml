@@ -49,9 +49,9 @@
 -->
           </g:element>
           
-          <g:element g:targetName="gmd:codeSpace" g:minOccurs="0" g:maxOccurs="1"
+<!--          <g:element g:targetName="gmd:codeSpace" g:minOccurs="0" g:maxOccurs="1"
             g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml">
-          </g:element>            
+          </g:element>            -->
                       
         </g:element>
       </g:element>
