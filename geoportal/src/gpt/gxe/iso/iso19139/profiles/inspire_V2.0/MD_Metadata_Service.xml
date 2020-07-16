@@ -25,7 +25,7 @@
       <g:body>
       
         <!-- Metadata tab -->
-        <h:div g:extends="$base/xtn/gmd/metadataEntity/XTN_Tab_Metadata_Service.xml"/>
+        <h:div g:extends="$base/xtn/srv/metadataEntity/XTN_Tab_Metadata_Service.xml"/>
         
          <!-- Identification tab -->
         <h:div g:label="$i18n.catalog.iso19139.MD_Metadata.section.identification">

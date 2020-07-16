@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- simplified reference system info gmd:MD_Metadata/gmd:referenceSystemInfo -->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           g:targetName="gmd:referenceSystemInfo" g:minOccurs="1" g:maxOccurs="unbounded"
+           g:label="$i18n.catalog.iso19139.MD_Metadata.referenceSystemInfo"
+           g:extends="$base/xtn/ui/UI_Element.xml">            
+  <g:body>
+    <g:element g:targetName="gmd:MD_ReferenceSystem" h:tag="div" g:jsClass="gxe.control.Element">
+      <g:element g:targetName="gmd:referenceSystemIdentifier" h:tag="div" g:jsClass="gxe.control.Element">
+        <g:element g:targetName="gmd:RS_Identifier" g:i18nBase="catalog.iso19139.RS_Identifier" h:tag="div" g:jsClass="gxe.control.Element">
+            <!-- g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"> -->
+          
+          <g:element g:targetName="gmd:code" g:minOccurs="1" g:maxOccurs="1" g:extends="$base/xtn/ui/UI_Element.xml">
+              <g:element g:targetName="gco:CharacterString" g:label="Select from below" g:minOccurs="1" g:maxOccurs="1" g:tip=" http://www.opengis.net/def/crs/EPSG/0/4258" g:extends="$base/core/xml/ElementTextOnly.xml">
+                  <g:body>
+                    <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+                      <g:options>
+                        <g:option g:label=""                  g:value=""/>
+                        <g:option g:label="ETRS89-XYZ"        g:value="http://www.opengis.net/def/crs/EPSG/0/4936"/>
+                        <g:option g:label="ETRS89-GRS80"      g:value="http://www.opengis.net/def/crs/EPSG/0/4937"/>
+                        <g:option g:label="ETRS89-GRS80"      g:value="http://www.opengis.net/def/crs/EPSG/0/4258"/>
+                        <g:option g:label="ETRS89-LAEA"       g:value="http://www.opengis.net/def/crs/EPSG/0/3035"/>
+                        <g:option g:label="ETRS89-LCC"        g:value="http://www.opengis.net/def/crs/EPSG/0/3034"/>
+                        <g:option g:label="ETRS89-TM26N"      g:value="http://www.opengis.net/def/crs/EPSG/0/3038"/>
+                        <g:option g:label="ETRS89-TM27N"      g:value="http://www.opengis.net/def/crs/EPSG/0/3039"/>
+                        <g:option g:label="ETRS89-TM28N"      g:value="http://www.opengis.net/def/crs/EPSG/0/3040"/>
+                        <g:option g:label="ETRS89-TM29N"      g:value="http://www.opengis.net/def/crs/EPSG/0/3041"/>
+                        <g:option g:label="ETRS89-TM30N"      g:value="http://www.opengis.net/def/crs/EPSG/0/3042"/>
+                        <g:option g:label="ETRS89-TM31N"      g:value="http://www.opengis.net/def/crs/EPSG/0/3043"/>
+                        <g:option g:label="ETRS89-TM32N"      g:value="http://www.opengis.net/def/crs/EPSG/0/3044"/>
+                        <g:option g:label="ETRS89-TM33N"      g:value="http://www.opengis.net/def/crs/EPSG/0/3045"/>
+                        <g:option g:label="ETRS89-TM34N"      g:value="http://www.opengis.net/def/crs/EPSG/0/3046"/>
+                        <g:option g:label="ETRS89-TM35N"      g:value="http://www.opengis.net/def/crs/EPSG/0/3047"/>
+                        <g:option g:label="ETRS89-TM36N"      g:value="http://www.opengis.net/def/crs/EPSG/0/3048"/>
+                        <g:option g:label="ETRS89-TM37N"      g:value="http://www.opengis.net/def/crs/EPSG/0/3049"/>
+                        <g:option g:label="ETRS89-TM38N"      g:value="http://www.opengis.net/def/crs/EPSG/0/3050"/>
+                        <g:option g:label="ETRS89-TM39N"      g:value="http://www.opengis.net/def/crs/EPSG/0/3051"/>
+                        <g:option g:label="EVRS"              g:value="http://www.opengis.net/def/crs/EPSG/0/5730"/>
+                        <g:option g:label="ETRS89-GRS80-EVRS" g:value="http://www.opengis.net/def/crs/EPSG/0/7409"/>
+                      </g:options>
+                    </g:input>
+                  </g:body>
+              </g:element>
+<!--
+            <g:body>
+              <g:element g:value="4326"/>
+            </g:body>
+-->
+          </g:element>
+          
+          <g:element g:targetName="gmd:codeSpace" g:minOccurs="0" g:maxOccurs="1"
+            g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml">
+          </g:element>            
+                      
+        </g:element>
+      </g:element>
+    </g:element>
+  </g:body>
+</g:element>
+
