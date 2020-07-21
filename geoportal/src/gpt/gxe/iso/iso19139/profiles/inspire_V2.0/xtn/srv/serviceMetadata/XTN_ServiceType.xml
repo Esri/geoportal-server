@@ -15,7 +15,6 @@
           <g:option g:value="view" g:label="$i18nBase.view"/>
           <g:option g:value="download" g:label="$i18nBase.download"/>
           <g:option g:value="transformation" g:label="$i18nBase.transformation"/>
-          <g:option g:value="invoke" g:label="$i18nBase.invoke"/>
           <g:option g:value="other" g:label="$i18nBase.other"/>
         </g:options>
       </g:input>
