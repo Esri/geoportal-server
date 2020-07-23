@@ -721,6 +721,12 @@ dojo.declare("gxe.Context",null,{
     if (bInitialize) {
       ctl.initialize(this,cfgObject);
     }
+    
+    var mask = gxe.cfg.getGxeAttributeValue(cfgObject,"mask");
+    if (mask === "true")
+      // store an intent to mask; will be deleted after processing
+      ctl.designatedToMask = true;
+    
     return ctl;
   }
   
@@ -921,7 +927,7 @@ dojo.declare("gxe.html.HtmlAttributes",gxe.util.ArrayList,{
                 if (attr.name == "class") {
                   elHtml.className = value; 
                   //
-                } else if (attr.name = "readonly")  {
+                } else if (attr.name == "readonly")  {
                   //elHtml.readOnly = true;
                 }
               }
@@ -1584,6 +1590,7 @@ dojo.declare("gxe.xml.XmlNode",null,{
   cfgObject: null,
   isOptionalPlaceHolder: false,
   isPlaceHolder: false,
+  isMasked: false, // if set to true it will cause echo() to skip content generation
   nodeInfo: null,
   parentDocument: null,
   parentElement: null,
@@ -2130,6 +2137,7 @@ dojo.declare("gxe.xml.XmlAttribute",gxe.xml.XmlNode,{
   /** Override gxe.xml.XmlNode.echo() */
   echo: function(xmlGenerator,stringBuffer,nDepth) {
     if (this.isPlaceHolder || this.isOptionalPlaceHolder) return;
+    if (this.isMasked) return;
     
     var bSerialize = true;
     var bValidating = xmlGenerator.isValidating;
@@ -2219,6 +2227,7 @@ dojo.declare("gxe.xml.XmlElement",gxe.xml.XmlNode,{
   /** Override gxe.xml.XmlNode.echo() */
   echo: function(xmlGenerator,stringBuffer,nDepth) {
     if (this.isPlaceHolder || this.isOptionalPlaceHolder) return;
+    if (this.isMasked) return;
     
     var pfx = "\r\n";
     for (var i=0; i<nDepth; i++) pfx += "\t";
@@ -2615,6 +2624,18 @@ dojo.declare("gxe.control.Control",null,{
       } 
     }
   },
+  
+  /**
+   * Masks the element
+   * @param {type} flag true to mask
+   */
+  mask: function(flag) {
+    var doMask = flag === true || flag == undefined
+    if (this.xmlNode) {
+      this.xmlNode.isMasked = doMask;
+      this.htmlElement.style.display = doMask? "none": "block";
+    }
+  },
 
   /**
    * Builds the user interface control.
@@ -2630,6 +2651,11 @@ dojo.declare("gxe.control.Control",null,{
    */
   build: function(htmlParentElement,domProcessor,domNode) {
     this.execBuild(htmlParentElement,domProcessor,domNode);
+    if (this.designatedToMask) {
+      this.mask(true);
+      delete this.designatedToMask;
+    }
+//    this.exclude();
   },
 
   /**
@@ -2975,7 +3001,7 @@ dojo.declare("gxe.control.Control",null,{
       }
     }
 
-	this.processHiddenAttribute(cfgAttribute, htmlParentElement, domNode);
+    this.processHiddenAttribute(cfgAttribute, htmlParentElement, domNode);
   },
 
   /**
