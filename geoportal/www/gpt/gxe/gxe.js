@@ -19,6 +19,7 @@
 
 dojo.require("dijit.Dialog");
 var StringUtil = require("dojo/string");
+var topic = require("dojo/topic");
 
 
 /**
@@ -6272,5 +6273,23 @@ dojo.declare("fgdc.control.KeywordSelector",gxe.control.Control,{
     }
   }
   
+});
+
+/**
+ * @class Provides specialised 'select one' for the resource type.
+ * @name fgdc.control.ResourceType
+ * @extends gxe.control.InputSelectOne
+ */
+dojo.provide("gxe.control.ResourceType");
+dojo.declare("gxe.control.ResourceType",gxe.control.InputSelectOne,{
+  _onChange: function(e) {
+    this.inherited(arguments);
+    topic.publish("service-type", this.getInputValue());
+  },
+  
+  onHtmlElementCreated: function(domProcessor,domNode) {
+    this.inherited(arguments);
+    topic.publish("service-type", this.getInputValue());
+  }
 });
 
