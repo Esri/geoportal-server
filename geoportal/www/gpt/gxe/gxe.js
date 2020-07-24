@@ -6280,8 +6280,8 @@ dojo.declare("fgdc.control.KeywordSelector",gxe.control.Control,{
  * @name fgdc.control.ResourceType
  * @extends gxe.control.InputSelectOne
  */
-dojo.provide("gxe.control.ResourceType");
-dojo.declare("gxe.control.ResourceType",gxe.control.InputSelectOne,{
+dojo.provide("gxe.control.ServiceType");
+dojo.declare("gxe.control.ServiceType",gxe.control.InputSelectOne,{
   _onChange: function(e) {
     this.inherited(arguments);
     topic.publish("service-type", this.getInputValue());
