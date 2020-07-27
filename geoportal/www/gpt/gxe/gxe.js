@@ -20,6 +20,7 @@
 dojo.require("dijit.Dialog");
 var StringUtil = require("dojo/string");
 var topic = require("dojo/topic");
+var lang = require("dojo/_base/lang");
 
 
 /**
@@ -618,6 +619,7 @@ dojo.declare("gxe.Context",null,{
   idPrefix: "gxeId",
   messageArea: null,
   _uniqueId: 0,
+  finalizers: [],
 
   /**
    * Builds the editor user interface.
@@ -659,6 +661,12 @@ dojo.declare("gxe.Context",null,{
     ctl.xmlParentElement = null;
     ctl.xmlNode = xmlRoot;
     ctl.build(htmlParentElement,domProcessor,domRoot);
+    
+    this.finalizers.forEach(function(finalizer) {
+      finalizer();
+    });
+    this.finalizers = [];
+    
   },
   
   /**
@@ -6276,7 +6284,7 @@ dojo.declare("fgdc.control.KeywordSelector",gxe.control.Control,{
 });
 
 /**
- * @class Provides specialised 'select one' for the resource type.
+ * @class Provides specialized 'select one' for the resource type.
  * @name fgdc.control.ResourceType
  * @extends gxe.control.InputSelectOne
  */
@@ -6289,7 +6297,41 @@ dojo.declare("gxe.control.ServiceType",gxe.control.InputSelectOne,{
   
   onHtmlElementCreated: function(domProcessor,domNode) {
     this.inherited(arguments);
-    topic.publish("service-type", this.getInputValue());
+    this.context.finalizers.push(lang.hitch(this, function() {
+      topic.publish("service-type", this.getInputValue());
+    }))
+  }
+});
+
+
+/**
+ * @class Provides specialized type to intercept service type.
+ * @name gxe.control.ActiveWhenNetworkService
+ * @extends gxe.control.Section
+ */
+dojo.provide("gxe.control.ActiveWhenNetworkService");
+dojo.declare("gxe.control.ActiveWhenNetworkService",gxe.control.Section,{
+  onHtmlElementCreated: function(domProcessor,domNode) {
+    this.inherited(arguments);
+    topic.subscribe("service-type", lang.hitch(this, function(serviceType) {
+      this.mask(serviceType === "other");
+    }));
+  }
+});
+
+
+/**
+ * @class Provides specialized type to intercept service type.
+ * @name gxe.control.ActiveWhenNetworkService
+ * @extends gxe.control.Section
+ */
+dojo.provide("gxe.control.ActiveWhenNotNetworkService");
+dojo.declare("gxe.control.ActiveWhenNotNetworkService",gxe.control.Section,{
+  onHtmlElementCreated: function(domProcessor,domNode) {
+    this.inherited(arguments);
+    topic.subscribe("service-type", lang.hitch(this, function(serviceType) {
+      this.mask(serviceType !== "other");
+    }));
   }
 });
 
