@@ -6306,11 +6306,11 @@ dojo.declare("gxe.control.ServiceType",gxe.control.InputSelectOne,{
 
 /**
  * @class Provides specialized type to intercept service type.
- * @name gxe.control.ActiveWhenNetworkService
- * @extends gxe.control.Section
+ * @name gxe.control.Element.NetworkService
+ * @extends gxe.control.Element
  */
-dojo.provide("gxe.control.ActiveWhenNetworkService");
-dojo.declare("gxe.control.ActiveWhenNetworkService",gxe.control.Section,{
+dojo.provide("gxe.control.Element.NetworkService");
+dojo.declare("gxe.control.Element.NetworkService",gxe.control.Element,{
   onHtmlElementCreated: function(domProcessor,domNode) {
     this.inherited(arguments);
     topic.subscribe("service-type", lang.hitch(this, function(serviceType) {
@@ -6322,11 +6322,11 @@ dojo.declare("gxe.control.ActiveWhenNetworkService",gxe.control.Section,{
 
 /**
  * @class Provides specialized type to intercept service type.
- * @name gxe.control.ActiveWhenNetworkService
- * @extends gxe.control.Section
+ * @name gxe.control.Element.NotNetworkService
+ * @extends gxe.control.Element
  */
-dojo.provide("gxe.control.ActiveWhenNotNetworkService");
-dojo.declare("gxe.control.ActiveWhenNotNetworkService",gxe.control.Section,{
+dojo.provide("gxe.control.Element.NotNetworkService");
+dojo.declare("gxe.control.Element.NotNetworkService",gxe.control.Element,{
   onHtmlElementCreated: function(domProcessor,domNode) {
     this.inherited(arguments);
     topic.subscribe("service-type", lang.hitch(this, function(serviceType) {
