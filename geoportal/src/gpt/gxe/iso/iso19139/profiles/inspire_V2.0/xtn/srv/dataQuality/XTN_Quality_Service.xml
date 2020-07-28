@@ -46,6 +46,14 @@
             <g:tabs g:extends="$base/xtn/ui/UI_Tabs.xml">
               <g:body>
                 <h:div g:label="Free Text">
+                  <g:element g:extends="$base/xtn/srv/dataQuality/XTN_FreeTextConformanceReport.xml">
+                    <g:matchTopElements> 
+                      <g:match
+                        g:qPath="gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor/@xlink:href"
+                        g:qValue="http://inspire.ec.europa.eu/id/ats/metadata/2.0/common/conformity-specification/free-text"
+                        g:qMode="must"/>
+                    </g:matchTopElements>
+                  </g:element>
                 </h:div>
                 <h:div g:label="Official Title">
                   <g:element g:extends="$base/xtn/srv/dataQuality/XTN_OfficialTitleConformanceReport.xml"/>
