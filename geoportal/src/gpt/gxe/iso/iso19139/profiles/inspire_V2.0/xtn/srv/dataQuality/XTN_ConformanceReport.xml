@@ -20,8 +20,11 @@
                 <g:element g:targetName="gmd:specification" h:tag="div" g:jsClass="gxe.control.Element">
 		          <g:element g:targetName="gmd:CI_Citation" g:i18nBase="catalog.iso19139.CI_Citation" h:tag="div" g:jsClass="gxe.control.Element">
 		            <g:element g:targetName="gmd:title" g:label="$i18n.catalog.iso19139.CI_Citation.specification.title" h:tag="div" g:jsClass="gxe.control.Element"> <!--g:extends="$base/xtn/ui/UI_Element.xml" -->
-                        <g:element g:targetName="gco:CharacterString" g:label="$i18n.catalog.iso19139.CI_Citation.specification.title" g:extends="$base/core/xml/ElementTextOnly.xml">
+                        <g:element g:targetName="gmx:Anchor" g:label="$i18n.catalog.iso19139.CI_Citation.specification.title" g:extends="$base/core/xml/ElementTextOnly.xml">
                         <g:body>
+                            <g:attribute g:targetName="xlink:href" g:extends="$base/schema/gco/gcoBase/codeList.xml"
+                              g:value="http://inspire.ec.europa.eu/id/ats/metadata/2.0/common/conformity-specification/official-title"/>
+                            <g:input g:overridable="true" g:extends="$base/core/ui/InputText.xml" h:readonly="readonly"/>
                             <h:br></h:br>
                             <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='';_o.fireInputChanged();">Blank</h:a>
                             <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='РЕГЛАМЕНТ (ЕС) № 1089/2010 НА КОМИСИЯТА от 23 ноември 2010 година за прилагане на Директива 2007/2/ЕО на Европейския парламент и на Съвета по отношение на оперативната съвместимост на масиви от пространствени данни и услуги за пространствени данни';_o.fireInputChanged();">BG</h:a>
