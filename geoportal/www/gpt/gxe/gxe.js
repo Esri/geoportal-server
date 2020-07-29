@@ -1151,6 +1151,27 @@ dojo.declare("gxe.xml.DomProcessor",null,{
     }
   },
   
+  forEachAttribute: function(domParentNode, callback) {
+    var attributes = domParentNode.attributes;
+    if (attributes != null && attributes.length > 0) {
+      var n = attributes.length;
+      for (var i=0; i<n; i++) {
+        var attribute = attributes[i];
+        var _ret = callback(attribute);
+        if ((typeof(_ret) == "string") && (_ret == "break")) break;
+      }
+    }
+  },
+  
+  forEachMatchingAttribute: function(domParentNode,sNamespaceUri,sLocalName,callback) {
+    var targetNS = sNamespaceUri;
+    if ((targetNS != null) && (targetNS.length == 0)) targetNS = null;
+    this.forEachAttribute(domParentNode, dojo.hitch(this, function(attribute) {
+      if (attribute.namespaceURI === sNamespaceUri && attribute.localName === sLocalName) {
+        return callback(attribute);
+      }
+    }));
+  },
   
   /**
    * Executes a function for each immediate child element of a DOM Node that matches
@@ -1335,22 +1356,37 @@ dojo.declare("gxe.xml.DomProcessor",null,{
 
       var domCurrentMatches = new Array();
       for (var j=0; j<domCurrentNodes.length; j++) {
-        this.forEachMatchingElementNode(domCurrentNodes[j],uri,localName,
-          dojo.hitch(this,function(domChildNode) {
+        if (pfxPlusLocal.isAttribute) {
+          this.forEachMatchingAttribute(domCurrentNodes[j], uri, localName, dojo.hitch(this,function(domChildAttribute) {
             if (bIsLast) {
               if (sMatchTextNodeValue == null) {
-                domCurrentMatches.push(domChildNode);
+                domCurrentMatches.push(domCurrentNodes[j]);
               } else {
-                var s = this.getNodeText(domChildNode);
-                if (s == sMatchTextNodeValue) {
-                  domCurrentMatches.push(domChildNode);
+                var s = domChildAttribute.nodeValue;
+                if (s === sMatchTextNodeValue) {
+                  domCurrentMatches.push(domCurrentNodes[j]);
                 }
               }
-            } else {
-              domCurrentMatches.push(domChildNode);
             }
-          }
-        ));
+          }));
+        } else {
+          this.forEachMatchingElementNode(domCurrentNodes[j],uri,localName,
+            dojo.hitch(this,function(domChildNode) {
+              if (bIsLast) {
+                if (sMatchTextNodeValue == null) {
+                  domCurrentMatches.push(domChildNode);
+                } else {
+                  var s = this.getNodeText(domChildNode);
+                  if (s == sMatchTextNodeValue) {
+                    domCurrentMatches.push(domChildNode);
+                  }
+                }
+              } else {
+                domCurrentMatches.push(domChildNode);
+              }
+            }
+          ));
+        }
       }
       domCurrentNodes = domCurrentMatches;
       if (domCurrentNodes.length == 0) break;
@@ -1370,7 +1406,11 @@ dojo.declare("gxe.xml.DomProcessor",null,{
    * @returns {"prefix":{String}, "localName":{String}} the prefix plus localName pair
    */
   splitQualifiedName: function(sQualifiedName) {
-    var prefixPlusLocalName = {"prefix": null, "localName": sQualifiedName};
+    var prefixPlusLocalName = {"prefix": null, "localName": sQualifiedName, isAttribute: false};
+    if (sQualifiedName.startsWith("@")) {
+      prefixPlusLocalName.isAttribute = true;
+      sQualifiedName = sQualifiedName.substring(1);
+    }
     var tokens = sQualifiedName.split(":");
     if (tokens.length == 2) {
       prefixPlusLocalName.prefix = tokens[0];
