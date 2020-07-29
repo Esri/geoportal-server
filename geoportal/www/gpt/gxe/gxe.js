@@ -1345,6 +1345,10 @@ dojo.declare("gxe.xml.DomProcessor",null,{
     var domCurrentNodes = new Array();
     domCurrentNodes.push(domNode);
     
+    if (sMatchTextNodeValue && sMatchTextNodeValue.startsWith("[") && sMatchTextNodeValue.endsWith("]")) {
+      sMatchTextNodeValue = sMatchTextNodeValue.substring(1,sMatchTextNodeValue.length-1).split(",");
+    }
+    
     for (var i=0; i<nTokens; i++) {
       var bIsLast = (i == (nTokens - 1));
       var uri = null;
@@ -1363,7 +1367,7 @@ dojo.declare("gxe.xml.DomProcessor",null,{
                 domCurrentMatches.push(domCurrentNodes[j]);
               } else {
                 var s = domChildAttribute.nodeValue;
-                if (s === sMatchTextNodeValue) {
+                if ((sMatchTextNodeValue instanceof Array && sMatchTextNodeValue.indexOf(s) >= 0) || (s == sMatchTextNodeValue)) {
                   domCurrentMatches.push(domCurrentNodes[j]);
                 }
               }
@@ -1377,7 +1381,7 @@ dojo.declare("gxe.xml.DomProcessor",null,{
                   domCurrentMatches.push(domChildNode);
                 } else {
                   var s = this.getNodeText(domChildNode);
-                  if (s == sMatchTextNodeValue) {
+                  if ((sMatchTextNodeValue instanceof Array && sMatchTextNodeValue.indexOf(s) >= 0) || (s == sMatchTextNodeValue)) {
                     domCurrentMatches.push(domChildNode);
                   }
                 }

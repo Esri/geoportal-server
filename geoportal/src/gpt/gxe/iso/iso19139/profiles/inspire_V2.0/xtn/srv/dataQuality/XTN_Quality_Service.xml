@@ -66,6 +66,14 @@
                   </g:element>
                 </h:div>
                 <h:div g:label="Conformance Class">
+                  <g:element g:extends="$base/xtn/srv/dataQuality/XTN_ConformanceClass.xml">
+                    <g:matchTopElements> 
+                      <g:match
+                        g:qPath="gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor/@xlink:href"
+                        g:qValue="[http://inspire.ec.europa.eu/id/ats/metadata/2.0/sds-invokable,http://inspire.ec.europa.eu/id/ats/metadata/2.0/sds-interoperable,http://inspire.ec.europa.eu/id/ats/metadata/2.0/sds-harmonised]"
+                        g:qMode="must"/>
+                    </g:matchTopElements>
+                  </g:element>
                 </h:div>
               </g:body>
             </g:tabs>
