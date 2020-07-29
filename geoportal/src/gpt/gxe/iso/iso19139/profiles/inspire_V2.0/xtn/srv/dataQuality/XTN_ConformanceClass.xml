@@ -20,13 +20,29 @@
             <g:element g:targetName="gmd:specification" h:tag="div" g:jsClass="gxe.control.Element">
               <g:element g:targetName="gmd:CI_Citation" g:i18nBase="catalog.iso19139.CI_Citation" h:tag="div" g:jsClass="gxe.control.Element">
                 <g:element g:targetName="gmd:title" g:label="$i18n.catalog.iso19139.CI_Citation.specification.title" h:tag="div" g:jsClass="gxe.control.Element">
-                  <g:element g:targetName="gmx:Anchor" g:label="$i18n.catalog.iso19139.CI_Citation.specification.title" g:extends="$base/core/xml/ElementTextOnly.xml">
+                  <g:element g:targetName="Anchor" g:namespacePrefix="gmx" g:targetNS="http://www.isotc211.org/2005/gmx" g:extends="$base/schema/gco/gcoBase/CodeListValue_Type.xml">
                     <g:body>
-                      <g:attribute g:targetName="xlink:href" h:tag="div" g:jsClass="gxe.control.Attribute" g:hidden="true"
-                                         g:fixedValue="http://inspire.ec.europa.eu/id/ats/metadata/2.0/sds-invokable">
-                        <g:input g:extends="$base/core/ui/InputText.xml"/>
+                        <g:attribute xmlns:g="http://www.esri.com/geoportal/gxe" 
+                                     xmlns:h="http://www.esri.com/geoportal/gxe/html"
+                                     h:class="gxeWrappedAttribute"
+                                     g:targetNS="http://www.w3.org/1999/xlink" g:targetName="href" 
+                                     g:use="required" g:valueType="xs:anyURI"
+                                     g:label="Conformance class" 
+                                     g:extends="$base/xtn/ui/UI_Attribute.xml">
+                        <g:body>
+                          <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+                            <g:options>
+                              <g:option g:value="" g:label=""/>
+                              <g:option g:value="http://inspire.ec.europa.eu/id/ats/metadata/2.0/sds-invokable" 
+                                        g:label="invokable"/>
+                              <g:option g:value="http://inspire.ec.europa.eu/id/ats/metadata/2.0/sds-interoperable" 
+                                        g:label="interoperable"/>
+                              <g:option g:value="http://inspire.ec.europa.eu/id/ats/metadata/2.0/sds-harmonised" 
+                                        g:label="harmonised"/>
+                            </g:options>
+                          </g:input>
+                        </g:body>
                       </g:attribute>
-                      <g:input g:overridable="true" g:extends="$base/core/ui/InputText.xml" h:hidden="true" g:fixedValue="invokable"/>
                     </g:body>
                   </g:element>
                 </g:element>
