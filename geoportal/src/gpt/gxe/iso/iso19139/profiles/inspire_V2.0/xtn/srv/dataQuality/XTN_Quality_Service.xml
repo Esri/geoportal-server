@@ -56,7 +56,14 @@
                   </g:element>
                 </h:div>
                 <h:div g:label="Official Title">
-                  <g:element g:extends="$base/xtn/srv/dataQuality/XTN_OfficialTitleConformanceReport.xml"/>
+                  <g:element g:extends="$base/xtn/srv/dataQuality/XTN_OfficialTitleConformanceReport.xml">
+                    <g:matchTopElements> 
+                      <g:match
+                        g:qPath="gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor/@xlink:href"
+                        g:qValue="http://inspire.ec.europa.eu/id/ats/metadata/2.0/common/conformity-specification/official-title"
+                        g:qMode="must"/>
+                    </g:matchTopElements>
+                  </g:element>
                 </h:div>
                 <h:div g:label="Conformance Class">
                 </h:div>

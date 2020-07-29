@@ -22,8 +22,10 @@
 		            <g:element g:targetName="gmd:title" g:label="$i18n.catalog.iso19139.CI_Citation.specification.title" h:tag="div" g:jsClass="gxe.control.Element"> <!--g:extends="$base/xtn/ui/UI_Element.xml" -->
                         <g:element g:targetName="gmx:Anchor" g:label="$i18n.catalog.iso19139.CI_Citation.specification.title" g:extends="$base/core/xml/ElementTextOnly.xml">
                         <g:body>
-                            <g:attribute g:targetName="xlink:href" g:extends="$base/schema/gco/gcoBase/codeList.xml"
-                              g:value="http://inspire.ec.europa.eu/id/ats/metadata/2.0/common/conformity-specification/official-title"/>
+                            <g:attribute g:targetName="xlink:href" h:tag="div" g:jsClass="gxe.control.Attribute" g:hidden="true"
+                                         g:fixedValue="http://inspire.ec.europa.eu/id/ats/metadata/2.0/common/conformity-specification/official-title">
+                              <g:input g:extends="$base/core/ui/InputText.xml"/>
+                            </g:attribute>
                             <g:input g:overridable="true" g:extends="$base/core/ui/InputText.xml" h:readonly="readonly"/>
                             <h:br></h:br>
                             <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='';_o.fireInputChanged();">Blank</h:a>
