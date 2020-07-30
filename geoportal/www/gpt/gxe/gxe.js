@@ -6349,6 +6349,28 @@ dojo.declare("gxe.control.ServiceType",gxe.control.InputSelectOne,{
 
 
 /**
+ * @class Provides specialized 'select one' for the conformance class.
+ * @name gxe.control.ConformanceClass
+ * @extends gxe.control.InputSelectOne
+ */
+dojo.provide("gxe.control.ConformanceClass");
+dojo.declare("gxe.control.ConformanceClass",gxe.control.InputSelectOne,{
+  _onChange: function(e) {
+    this.inherited(arguments);
+    var conformanceClass = this.getInputValue().split("/").reverse()[0];
+    topic.publish("conformance-class", conformanceClass);
+  },
+  
+  onHtmlElementCreated: function(domProcessor,domNode) {
+    this.inherited(arguments);
+    this.context.finalizers.push(lang.hitch(this, function() {
+      var conformanceClass = this.getInputValue().split("/").reverse()[0];
+      topic.publish("conformance-class", conformanceClass);
+    }))
+  }
+});
+
+/**
  * @class Provides specialized type to intercept service type.
  * @name gxe.control.Element.NetworkService
  * @extends gxe.control.Element

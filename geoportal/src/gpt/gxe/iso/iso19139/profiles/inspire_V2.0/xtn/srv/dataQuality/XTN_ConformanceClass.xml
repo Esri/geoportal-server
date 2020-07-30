@@ -30,7 +30,7 @@
                                      g:label="Conformance class" 
                                      g:extends="$base/xtn/ui/UI_Attribute.xml">
                         <g:body>
-                          <g:input g:extends="$base/core/ui/InputSelectOne.xml">
+                          <g:input g:extends="$base/core/ui/InputSelectOne.xml" g:jsClass="gxe.control.ConformanceClass">
                             <g:options>
                               <g:option g:value="" g:label=""/>
                               <g:option g:value="http://inspire.ec.europa.eu/id/ats/metadata/2.0/sds-invocable" 
