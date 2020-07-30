@@ -6401,3 +6401,21 @@ dojo.declare("gxe.control.Element.NotNetworkService",gxe.control.Element,{
   }
 });
 
+
+/**
+ * @class Provides specialized type to intercept service type.
+ * @name gxe.control.Element.NotNetworkService
+ * @extends gxe.control.Element
+ */
+dojo.provide("gxe.control.ConceptualConsistencyTab");
+dojo.declare("gxe.control.ConceptualConsistencyTab",gxe.control.Tabs,{
+    build: function(htmlParentElement,domProcessor,domNode) {
+      this.inherited(arguments);
+      this.htmlElement.querySelectorAll(":scope > div[gxename='header'] li")[2].style.display = "none";
+      topic.subscribe("conformance-class", lang.hitch(this, function(conformanceClass) {
+        console.log('Received conformance class=', conformanceClass);
+        this.htmlElement.querySelectorAll(":scope > div[gxename='header'] li")[2].style.display = conformanceClass==="sds-invocable"? "none": "inline";
+      }));
+    }
+});
+
