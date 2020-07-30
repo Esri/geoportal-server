@@ -56,11 +56,6 @@
                         </g:body>
                         </g:element>
                     </g:element>
-                    <!-- "$base/schema/gmd/citation/CI_Date_PropertyType.xml" 
-		            <g:element g:targetName="gmd:date" g:minOccurs="1" g:maxOccurs="unbounded" g:label="$i18n.catalog.iso19139.CI_Citation.specification.date" g:extends="$base/schema/gco/basicTypes/Date_PropertyType.xml"> 
-                        <g:body><g:element g:value="2010-12-08"/></g:body>
-                    </g:element>
-                    -->
                     
 		            <g:element g:targetName="gmd:date" g:minOccurs="1" g:maxOccurs="unbounded" g:label="$i18n.catalog.iso19139.CI_Citation.specification.date" g:extends="$base/xtn/ui/UI_Element.xml"> <!--"$base/schema/gmd/citation/CI_Date_PropertyType.xml" -->
                         <g:body>

@@ -10,7 +10,7 @@
       g:value="ISOTC211/19115"/>
        
     <g:attribute g:extends="$base/schema/gco/gcoBase/codeList.xml"
-      g:value="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"/>
+      g:value="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode"/>
      
     <g:attribute g:extends="$base/schema/gco/gcoBase/codeListValue.xml">
       <g:body>
