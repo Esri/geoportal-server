@@ -188,7 +188,55 @@
                 </h:div>
                 
                 <h:div g:label="Capacity Report">
-                  
+                  <g:element g:targetName="gmd:report" h:tag="div" g:masked="true" g:jsClass="gxe.control.ConceptualConsistencyReportElement">
+                    <g:matchTopElements> 
+                      <g:match
+                        g:qPath="gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor/@xlink:href"
+                        g:qValue="http://inspire.ec.europa.eu/metadata-codelist/QualityOfServiceCriteriaCode/capacity"
+                        g:qMode="must"/>
+                    </g:matchTopElements>
+                    <g:element g:targetName="gmd:DQ_ConceptualConsistency" h:tag="div" g:jsClass="gxe.control.Element">
+                      <g:element g:targetName="gmd:nameOfMeasure" h:tag="div" g:jsClass="gxe.control.Element">
+                        <g:element g:targetName="gmx:Anchor" g:hidden="true" g:extends="$base/core/xml/ElementTextOnly.xml" g:fixedValue="Performance">
+                          <g:body>
+                            <g:attribute g:targetName="xlink:href" h:tag="div" g:jsClass="gxe.control.Attribute" g:hidden="true"
+                                         g:fixedValue="http://inspire.ec.europa.eu/metadata-codelist/QualityOfServiceCriteriaCode/capacity">
+                              <g:input g:extends="$base/core/ui/InputText.xml"/>
+                            </g:attribute>
+                            <g:input g:extends="$base/core/ui/InputText.xml" h:readonly="readonly"/>
+                          </g:body>
+                        </g:element>
+                      </g:element>
+                      
+                      <g:element g:targetName="gmd:measureDescription" g:label="Description"
+                        g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
+                      
+                      <g:element g:targetName="gmd:result" h:tag="div" g:jsClass="gxe.control.Element">
+                        <g:element g:targetName="gmd:DQ_QuantitativeResult" h:tag="div" g:jsClass="gxe.control.Element">
+                          <g:element g:targetName="gmd:valueUnit" h:tag="div" g:jsClass="gxe.control.Element">
+                            <g:attribute g:targetName="xlink:href" h:tag="div" g:jsClass="gxe.control.Attribute" g:hidden="true"
+                                         g:fixedValue="http://www.opengis.net/def/uom/OGC/1.0/unity">
+                              <g:input g:extends="$base/core/ui/InputText.xml"/>
+                            </g:attribute>
+                          </g:element>
+                          <g:element g:targetName="gmd:value" h:tag="div" g:jsClass="gxe.control.Element">
+                            <g:element g:targetName="gco:Record" g:label="Value (0 or more, whole numbers only)" h:tag="div" g:valueType="xs:integer" g:extends="$base/core/xml/Element.xml" >
+                              <g:restriction>
+                                <g:minInclusive g:value="0"/>
+                              </g:restriction>
+                              <g:body>
+                                <g:attribute g:targetName="xsi:type" h:tag="div" g:jsClass="gxe.control.Attribute" g:hidden="true"
+                                             g:fixedValue="xs:integer">
+                                  <g:input g:extends="$base/core/ui/InputText.xml"/>
+                                </g:attribute>
+                                <g:input g:extends="$base/core/ui/InputText.xml"/>
+                              </g:body>
+                            </g:element>
+                          </g:element>
+                        </g:element>
+                      </g:element>
+                    </g:element>
+                  </g:element>
                 </h:div>
               </g:body>
             </g:tabs>
