@@ -6403,19 +6403,42 @@ dojo.declare("gxe.control.Element.NotNetworkService",gxe.control.Element,{
 
 
 /**
- * @class Provides specialized type to intercept service type.
- * @name gxe.control.Element.NotNetworkService
- * @extends gxe.control.Element
+ * @class Provides specialized type to conceptual consistency tab.
+ * @name gxe.control.Element.ConceptualConsistencyTab
+ * @extends gxe.control.Tabs
  */
 dojo.provide("gxe.control.ConceptualConsistencyTab");
 dojo.declare("gxe.control.ConceptualConsistencyTab",gxe.control.Tabs,{
-    build: function(htmlParentElement,domProcessor,domNode) {
-      this.inherited(arguments);
-      this.htmlElement.querySelectorAll(":scope > div[gxename='header'] li")[2].style.display = "none";
-      topic.subscribe("conformance-class", lang.hitch(this, function(conformanceClass) {
-        console.log('Received conformance class=', conformanceClass);
-        this.htmlElement.querySelectorAll(":scope > div[gxename='header'] li")[2].style.display = conformanceClass==="sds-invocable"? "none": "inline";
-      }));
-    }
+  build: function(htmlParentElement,domProcessor,domNode) {
+    this.inherited(arguments);
+    this.htmlElement.querySelectorAll(":scope > div[gxename='header'] li")[2].style.display = "none";
+    topic.subscribe("conformance-class", lang.hitch(this, function(conformanceClass) {
+      this.htmlElement.querySelectorAll(":scope > div[gxename='header'] li")[2].style.display = conformanceClass==="sds-invocable"? "none": "inline";
+    }));
+  }
+});
+
+
+/**
+ * @class Provides specialized type to conceptual consistency report element.
+ * @name gxe.control.Element.NotNetworkService
+ * @extends gxe.control.Element
+ */
+dojo.provide("gxe.control.ConceptualConsistencyReportElement");
+dojo.declare("gxe.control.ConceptualConsistencyReportElement",gxe.control.Element,{
+  isOther: false,
+  isInvocable: false,
+  
+  onHtmlElementCreated: function(domProcessor,domNode) {
+    this.inherited(arguments);
+    topic.subscribe("service-type", lang.hitch(this, function(serviceType) {
+      this.isOther = serviceType === "other";
+      this.mask(!this.isOther || this.isInvocable);
+    }));
+    topic.subscribe("conformance-class", lang.hitch(this, function(conformanceClass) {
+      this.isInvocable = conformanceClass==="sds-invocable";
+      this.mask(!this.isOther || this.isInvocable);
+    }));
+  }
 });
 

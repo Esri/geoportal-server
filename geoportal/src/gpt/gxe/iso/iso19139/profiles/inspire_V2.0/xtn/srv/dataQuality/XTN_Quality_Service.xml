@@ -83,7 +83,7 @@
             <g:tabs g:extends="$base/xtn/ui/UI_Tabs.xml">
               <g:body>
                 <h:div g:label="Availability Report">
-                  <g:element g:targetName="gmd:report" h:tag="div" g:jsClass="gxe.control.Element">
+                  <g:element g:targetName="gmd:report" h:tag="div" g:masked="true" g:jsClass="gxe.control.ConceptualConsistencyReportElement">
                     <g:matchTopElements> 
                       <g:match
                         g:qPath="gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor/@xlink:href"
