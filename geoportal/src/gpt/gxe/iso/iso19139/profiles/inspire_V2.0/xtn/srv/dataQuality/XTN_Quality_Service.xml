@@ -42,10 +42,10 @@
 			    </h:div>
 			    
 			    <!-- conformance report -->
-          <h:div g:label="$i18n.catalog.iso19139.MD_Metadata.section.quality.conformance">
+          <h:div g:label="$i18n.catalog.inspire2.quality.conformance.report.tab.conformance">
             <g:tabs g:extends="$base/xtn/ui/UI_Tabs.xml">
               <g:body>
-                <h:div g:label="Free Text">
+                <h:div g:label="$i18n.catalog.inspire2.quality.report.tab.freetext">
                   <g:element g:extends="$base/xtn/srv/dataQuality/XTN_FreeTextConformanceReport.xml">
                     <g:matchTopElements> 
                       <g:match
@@ -55,7 +55,7 @@
                     </g:matchTopElements>
                   </g:element>
                 </h:div>
-                <h:div g:label="Official Title">
+                <h:div g:label="$i18n.catalog.inspire2.quality.report.tab.officialtitle">
                   <g:element g:extends="$base/xtn/srv/dataQuality/XTN_OfficialTitleConformanceReport.xml">
                     <g:matchTopElements> 
                       <g:match
@@ -65,7 +65,7 @@
                     </g:matchTopElements>
                   </g:element>
                 </h:div>
-                <h:div g:label="Conformance Class">
+                <h:div g:label="$i18n.catalog.inspire2.quality.report.tab.conformanceclass">
                   <g:element g:extends="$base/xtn/srv/dataQuality/XTN_ConformanceClass.xml">
                     <g:matchTopElements> 
                       <g:match
@@ -79,10 +79,10 @@
             </g:tabs>
           </h:div>
 			    
-          <h:div g:label="Conceptual Consistency">
+          <h:div g:label="$i18n.catalog.inspire2.quality.conformance.report.tab.consistency">
             <g:tabs g:extends="$base/xtn/ui/UI_Tabs.xml">
               <g:body>
-                <h:div g:label="Availability Report">
+                <h:div g:label="$i18n.catalog.inspire2.quality.conformance.report.tab.consistency.tab.availability">
                   <g:element g:targetName="gmd:report" h:tag="div" g:masked="true" g:jsClass="gxe.control.ConceptualConsistencyReportElement">
                     <g:matchTopElements> 
                       <g:match
@@ -103,7 +103,7 @@
                         </g:element>
                       </g:element>
                       
-                      <g:element g:targetName="gmd:measureDescription" g:label="Description"
+                      <g:element g:targetName="gmd:measureDescription" g:label="$i18n.catalog.inspire2.quality.conformance.report.tab.consistency.tab.availability.descr"
                         g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
                       
                       <g:element g:targetName="gmd:result" h:tag="div" g:jsClass="gxe.control.Element">
@@ -115,7 +115,7 @@
                             </g:attribute>
                           </g:element>
                           <g:element g:targetName="gmd:value" h:tag="div" g:jsClass="gxe.control.Element">
-                            <g:element g:targetName="gco:Record" g:label="Value (0 - 100)" h:tag="div" g:valueType="xs:decimal" g:extends="$base/core/xml/Element.xml" >
+                            <g:element g:targetName="gco:Record" g:label="$i18n.catalog.inspire2.quality.conformance.report.tab.consistency.tab.availability.value" h:tag="div" g:valueType="xs:decimal" g:extends="$base/core/xml/Element.xml" >
                               <g:restriction>
                                 <g:minInclusive g:value="0"/>
                                 <g:maxInclusive g:value="100"/>
@@ -135,7 +135,7 @@
                   </g:element>
                 </h:div>
                 
-                <h:div g:label="Performance Report">
+                <h:div g:label="$i18n.catalog.inspire2.quality.conformance.report.tab.consistency.tab.performance">
                   <g:element g:targetName="gmd:report" h:tag="div" g:masked="true" g:jsClass="gxe.control.ConceptualConsistencyReportElement">
                     <g:matchTopElements> 
                       <g:match
@@ -156,7 +156,7 @@
                         </g:element>
                       </g:element>
                       
-                      <g:element g:targetName="gmd:measureDescription" g:label="Description"
+                      <g:element g:targetName="gmd:measureDescription" g:label="$i18n.catalog.inspire2.quality.conformance.report.tab.consistency.tab.performance.descr"
                         g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
                       
                       <g:element g:targetName="gmd:result" h:tag="div" g:jsClass="gxe.control.Element">
@@ -168,7 +168,7 @@
                             </g:attribute>
                           </g:element>
                           <g:element g:targetName="gmd:value" h:tag="div" g:jsClass="gxe.control.Element">
-                            <g:element g:targetName="gco:Record" g:label="Value (0 or more)" h:tag="div" g:valueType="xs:decimal" g:extends="$base/core/xml/Element.xml" >
+                            <g:element g:targetName="gco:Record" g:label="$i18n.catalog.inspire2.quality.conformance.report.tab.consistency.tab.performance.value" h:tag="div" g:valueType="xs:decimal" g:extends="$base/core/xml/Element.xml" >
                               <g:restriction>
                                 <g:minInclusive g:value="0"/>
                               </g:restriction>
@@ -187,7 +187,7 @@
                   </g:element>
                 </h:div>
                 
-                <h:div g:label="Capacity Report">
+                <h:div g:label="$i18n.catalog.inspire2.quality.conformance.report.tab.consistency.tab.capacity">
                   <g:element g:targetName="gmd:report" h:tag="div" g:masked="true" g:jsClass="gxe.control.ConceptualConsistencyReportElement">
                     <g:matchTopElements> 
                       <g:match
@@ -208,7 +208,7 @@
                         </g:element>
                       </g:element>
                       
-                      <g:element g:targetName="gmd:measureDescription" g:label="Description"
+                      <g:element g:targetName="gmd:measureDescription" g:label="$i18n.catalog.inspire2.quality.conformance.report.tab.consistency.tab.capacity.descr"
                         g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml"/>
                       
                       <g:element g:targetName="gmd:result" h:tag="div" g:jsClass="gxe.control.Element">
@@ -220,7 +220,7 @@
                             </g:attribute>
                           </g:element>
                           <g:element g:targetName="gmd:value" h:tag="div" g:jsClass="gxe.control.Element">
-                            <g:element g:targetName="gco:Record" g:label="Value (0 or more, whole numbers only)" h:tag="div" g:valueType="xs:integer" g:extends="$base/core/xml/Element.xml" >
+                            <g:element g:targetName="gco:Record" g:label="$i18n.catalog.inspire2.quality.conformance.report.tab.consistency.tab.capacity.value" h:tag="div" g:valueType="xs:integer" g:extends="$base/core/xml/Element.xml" >
                               <g:restriction>
                                 <g:minInclusive g:value="0"/>
                               </g:restriction>

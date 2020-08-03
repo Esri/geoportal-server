@@ -27,7 +27,7 @@
                                      h:class="gxeWrappedAttribute"
                                      g:targetNS="http://www.w3.org/1999/xlink" g:targetName="href" 
                                      g:use="required" g:valueType="xs:anyURI"
-                                     g:label="Conformance class" 
+                                     g:label="$i18n.catalog.inspire2.conformance.class.label" 
                                      g:extends="$base/xtn/ui/UI_Attribute.xml">
                         <g:body>
                           <g:input g:extends="$base/core/ui/InputSelectOne.xml" g:jsClass="gxe.control.ConformanceClass">
