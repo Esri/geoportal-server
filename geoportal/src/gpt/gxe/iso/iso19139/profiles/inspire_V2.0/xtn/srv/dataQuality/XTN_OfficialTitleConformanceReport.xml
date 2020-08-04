@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- simplified conformance report 
+(gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult -->
+<g:element xmlns:g="http://www.esri.com/geoportal/gxe" 
+           xmlns:h="http://www.esri.com/geoportal/gxe/html"
+           xmlns:gco="http://www.isotc211.org/2005/gco"
+           xmlns:gmd="http://www.isotc211.org/2005/gmd"
+           g:targetName="gmd:report"
+           g:label="$i18n.catalog.iso19139.DQ_DataQuality.report"
+           g:extends="$base/xtn/ui/UI_Element.xml">
+  <g:body>        
+    <g:element g:targetName="gmd:DQ_DomainConsistency" h:tag="div">
+		  
+      <!--  conformance result -->
+      <g:element g:targetName="gmd:result" g:label="$i18n.catalog.iso19139.DQ_ConformanceResult" g:i18nBase="catalog.iso19139.DQ_ConformanceResult" g:extends="$base/xtn/ui/UI_Element.xml">
+        <g:body >
+          <g:element g:targetName="gmd:DQ_ConformanceResult" h:tag="div" g:jsClass="gxe.control.Element">
+		        
+            <!-- Citation for the specification to which the degree of conformance will be judged -->
+            <g:element g:targetName="gmd:specification" h:tag="div" g:jsClass="gxe.control.Element">
+              <g:element g:targetName="gmd:CI_Citation" g:i18nBase="catalog.iso19139.CI_Citation" h:tag="div" g:jsClass="gxe.control.Element">
+                <g:element g:targetName="gmd:title" g:label="$i18n.catalog.iso19139.CI_Citation.specification.title" h:tag="div" g:jsClass="gxe.control.Element"> <!--g:extends="$base/xtn/ui/UI_Element.xml" -->
+                  <g:element g:targetName="gmx:Anchor" g:label="$i18n.catalog.iso19139.CI_Citation.specification.title" g:extends="$base/core/xml/ElementTextOnly.xml">
+                    <g:body>
+                      <g:attribute g:targetName="xlink:href" h:tag="div" g:jsClass="gxe.control.Attribute" g:hidden="true"
+                                   g:fixedValue="http://inspire.ec.europa.eu/id/ats/metadata/2.0/common/conformity-specification/official-title">
+                        <g:input g:extends="$base/core/ui/InputText.xml"/>
+                      </g:attribute>
+                      <g:input g:overridable="true" g:extends="$base/core/ui/InputText.xml" h:readonly="readonly"/>
+                      <h:br></h:br>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='';_o.fireInputChanged();">Blank</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='РЕГЛАМЕНТ (ЕС) № 1089/2010 НА КОМИСИЯТА от 23 ноември 2010 година за прилагане на Директива 2007/2/ЕО на Европейския парламент и на Съвета по отношение на оперативната съвместимост на масиви от пространствени данни и услуги за пространствени данни';_o.fireInputChanged();">BG</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='NAŘÍZENÍ KOMISE (EU) č. 1089/2010 ze dne 23. listopadu 2010, kterým se provádí směrnice Evropského parlamentu a Rady 2007/2/ES, pokud jde o interoperabilitu sad prostorových dat a služeb prostorových dat';_o.fireInputChanged();">CS</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='KOMMISSIONENS FORORDNING (EU) Nr. 1089/2010 af 23. november 2010 om gennemførelse af Europa-Parlamentets og Rådets direktiv 2007/2/EF for så vidt angår interoperabilitet for geodatasæt og -tjenester';_o.fireInputChanged();">DA</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten';_o.fireInputChanged();">DE</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='ΚΑΝΟΝΙΣΜΟΣ (ΕΕ) αριθ. 1089/2010 ΤΗΣ ΕΠΙΤΡΟΠΗΣ της 23ης Νοεμβρίου 2010 σχετικά με την εφαρμογή της οδηγίας 2007/2/ΕΚ του Ευρωπαϊκού Κοινοβουλίου και του Συμβουλίου όσον αφορά τη διαλειτουργικότητα των συνόλων και των υπηρεσιών χωρικών δεδομένων';_o.fireInputChanged();">EL</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services';_o.fireInputChanged();">EN</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='REGLAMENTO (UE) No 1089/2010 DE LA COMISIÓN de 23 de noviembre de 2010 por el que se aplica la Directiva 2007/2/CE del Parlamento Europeo y del Consejo en lo que se refiere a la interoperabilidad de los conjuntos y los servicios de datos espaciales';_o.fireInputChanged();">ES</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='KOMISJONI MÄÄRUS (EL) nr 1089/2010, 23. november 2010, millega rakendatakse Euroopa Parlamendi ja nõukogu direktiivi 2007/2/EÜ seoses ruumiandmekogumite ja -teenuste ristkasutatavusega';_o.fireInputChanged();">ET</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='KOMISSION ASETUS (EU) N:o 1089/2010, annettu 23 päivänä marraskuuta 2010, Euroopan parlamentin ja neuvoston direktiivin 2007/2/EY täytäntöönpanosta paikkatietoaineistojen ja -palvelujen yhteentoimivuuden osalta';_o.fireInputChanged();">FI</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value=&quot;RÈGLEMENT (UE) No 1089/2010 DE LA COMMISSION du 23 novembre 2010 portant modalités d&apos;application de la directive 2007/2/CE du Parlement européen et du Conseil en ce qui concerne l&apos;interopérabilité des séries et des services de données géographiques&quot;;_o.fireInputChanged();">FR</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='UREDBA KOMISIJE (EU) br. 1089/2010 od 23. studenoga 2010 o provedbi Direktive 2007/2/EZ Europskog parlamenta i Vijeća o međuoperativnosti skupova prostornih podataka i usluga u vezi s prostornim podacima';_o.fireInputChanged();">HR</h:a>
+                      <h:br></h:br>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='A BIZOTTSÁG 1089/2010/EU RENDELETE (2010. november 23.) a 2007/2/EK európai parlamenti és tanácsi irányelv téradatkészletek és -szolgáltatások interoperabilitására vonatkozó rendelkezéseinek végrehajtásáról';_o.fireInputChanged();">HU</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value=&quot;REGOLAMENTO (UE) N. 1089/2010 DELLA COMMISSIONE del 23 novembre 2010 recante attuazione della direttiva 2007/2/CE del Parlamento europeo e del Consiglio per quanto riguarda l&apos;interoperabilità dei set di dati territoriali e dei servizi di dati territoriali&quot;;_o.fireInputChanged();">IT</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='KOMISIJOS REGLAMENTAS (ES) Nr. 1089/2010 2010 m. lapkričio 23 d. kuriuo įgyvendinamos Europos Parlamento ir Tarybos direktyvos 2007/2/EB nuostatos dėl erdvinių duomenų rinkinių ir paslaugų sąveikumo';_o.fireInputChanged();">LT</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='KOMISIJAS REGULA (ES) Nr. 1089/2010 (2010. gada 23. novembris), ar kuru īsteno Eiropas Parlamenta un Padomes Direktīvu 2007/2/EK attiecībā uz telpisko datu kopu un telpisko datu pakalpojumu savstarpējo izmantojamību';_o.fireInputChanged();">LV</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value=&quot;REGOLAMENT TAL-KUMMISSJONI (UE) Nru 1089/2010 tat-23 ta' Novembru 2010 li jimplimenta d-Direttiva 2007/2/KE tal-Parlament Ewropew u tal-Kunsill fir-rigward tal- interoperabbiltà tas-settijiet ta’ dejta u servizzi ġeografiċi&quot;;_o.fireInputChanged();">MT</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='VERORDENING (EU) Nr. 1089/2010 VAN DE COMMISSIE van 23 november 2010 ter uitvoering van Richtlijn 2007/2/EG van het Europees Parlement en de Raad betreffende de interoperabiliteit van verzamelingen ruimtelijke gegevens en van diensten met betrekking tot ruimtelijke gegevens';_o.fireInputChanged();">NL</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='ROZPORZĄDZENIE KOMISJI (UE) NR 1089/2010 z dnia 23 listopada 2010 r. w sprawie wykonania dyrektywy 2007/2/WE Parlamentu Europejskiego i Rady w zakresie interoperacyjności zbiorów i usług danych przestrzennych';_o.fireInputChanged();">PL</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='REGULAMENTO (UE) N. o 1089/2010 DA COMISSÃO de 23 de Novembro de 2010 que estabelece as disposições de execução da Directiva 2007/2/CE do Parlamento Europeu e do Conselho relativamente à interoperabilidade dos conjuntos e serviços de dados geográficos';_o.fireInputChanged();">PT</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='REGULAMENTUL (UE) NR. 1089/2010 AL COMISIEI din 23 noiembrie 2010 de punere în aplicare a Directivei 2007/2/CE a Parlamentului European şi a Consiliului în ceea ce priveşte interoperabilitatea seturilor şi serviciilor de date spaţiale';_o.fireInputChanged();">RO</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='NARIADENIE KOMISIE (EÚ) č. 1089/2010 z 23. novembra 2010, ktorým sa vykonáva smernica Európskeho parlamentu a Rady 2007/2/ES, pokiaľ ide o interoperabilitu súborov a služieb priestorových údajov';_o.fireInputChanged();">SK</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='UREDBA KOMISIJE (EU) št. 1089/2010 z dne 23. novembra 2010 o izvajanju Direktive 2007/2/ES Evropskega parlamenta in Sveta glede medopravilnosti zbirk prostorskih podatkov in storitev v zvezi s prostorskimi podatki';_o.fireInputChanged();">SL</h:a>
+                      <h:a h:href="javascript:void(0);" h:class="gxeInputTool" h:onclick="var _o=this.gxeControl.xmlNode.getInputControl();_o.htmlElement.value='KOMMISSIONENS FÖRORDNING (EU) nr 1089/2010 av den 23 november 2010 om genomförande av Europaparlamentets och rådets direktiv 2007/2/EG vad gäller interoperabilitet för rumsliga datamängder och datatjänster';_o.fireInputChanged();">SV</h:a>
+                    </g:body>
+                  </g:element>
+                </g:element>
+                    
+                <g:element g:targetName="gmd:date" g:minOccurs="1" g:maxOccurs="unbounded" g:label="$i18n.catalog.iso19139.CI_Citation.specification.date" g:extends="$base/xtn/ui/UI_Element.xml"> <!--"$base/schema/gmd/citation/CI_Date_PropertyType.xml" -->
+                  <g:body>
+                    <g:element g:targetName="gmd:CI_Date" g:label="$i18n.catalog.iso19139.CI_Citation.specification.date" g:extends="$base/xtn/ui/UI_Element.xml"> <!--"$base/schema/gmd/citation/CI_Date_PropertyType.xml" -->
+                      <g:body>
+
+                        <g:element g:targetName="gmd:date" g:label="$i18n.catalog.iso19139.CI_Date.date" g:minOccurs="1" g:maxOccurs="1" g:extends="$base/schema/gco/basicTypes/Date_PropertyType.xml">
+                          <g:body>
+                            <g:element g:value="2010-12-08"/>
+                          </g:body>
+                        </g:element>
+
+                        <g:element g:targetName="gmd:dateType" g:hidden="true" g:label="$i18n.catalog.iso19139.CI_Date.dateType" g:minOccurs="1" g:maxOccurs="1" g:extends="$base/xtn/gmd/identification/XTN_DateTypeCode_PropertyType.xml"></g:element>
+                      </g:body>
+                    </g:element>
+                  </g:body>
+                </g:element>
+                    
+              </g:element> 
+            </g:element>
+		          
+            <!-- an explanation of the result -->
+            <g:element g:targetName="gmd:explanation" g:extends="$base/schema/gco/basicTypes/CharacterString_PropertyType.xml">
+              <g:body>
+                <g:element>
+                  <g:body>
+                    <g:input g:extends="$base/core/ui/InputTextArea.xml"/>
+                  </g:body>
+                </g:element>
+              </g:body>
+            </g:element> 
+		        
+            <!-- degree of conformance (pass/fail) -->
+            <g:element g:targetName="gmd:pass" g:hidden="true" h:tag="div" g:jsClass="gxe.control.Element">
+              <g:element g:targetName="gco:Boolean" g:fixedValue="true" h:tag="div" g:jsClass="gxe.control.Element">
+                <g:input g:extends="$base/core/ui/InputText.xml"/>
+              </g:element>
+            </g:element>
+            
+          </g:element>
+        </g:body>
+      </g:element>
+		  
+    </g:element>
+  </g:body>
+</g:element>

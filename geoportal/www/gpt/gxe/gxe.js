@@ -19,6 +19,8 @@
 
 dojo.require("dijit.Dialog");
 var StringUtil = require("dojo/string");
+var topic = require("dojo/topic");
+var lang = require("dojo/_base/lang");
 
 
 /**
@@ -617,6 +619,7 @@ dojo.declare("gxe.Context",null,{
   idPrefix: "gxeId",
   messageArea: null,
   _uniqueId: 0,
+  finalizers: [],
 
   /**
    * Builds the editor user interface.
@@ -658,6 +661,12 @@ dojo.declare("gxe.Context",null,{
     ctl.xmlParentElement = null;
     ctl.xmlNode = xmlRoot;
     ctl.build(htmlParentElement,domProcessor,domRoot);
+    
+    this.finalizers.forEach(function(finalizer) {
+      finalizer();
+    });
+    this.finalizers = [];
+    
   },
   
   /**
@@ -721,6 +730,12 @@ dojo.declare("gxe.Context",null,{
     if (bInitialize) {
       ctl.initialize(this,cfgObject);
     }
+    
+    var mask = gxe.cfg.getGxeAttributeValue(cfgObject,"mask");
+    if (mask === "true")
+      // store an intent to mask; will be deleted after processing
+      ctl.designatedToMask = true;
+    
     return ctl;
   }
   
@@ -921,7 +936,7 @@ dojo.declare("gxe.html.HtmlAttributes",gxe.util.ArrayList,{
                 if (attr.name == "class") {
                   elHtml.className = value; 
                   //
-                } else if (attr.name = "readonly")  {
+                } else if (attr.name == "readonly")  {
                   //elHtml.readOnly = true;
                 }
               }
@@ -1136,6 +1151,27 @@ dojo.declare("gxe.xml.DomProcessor",null,{
     }
   },
   
+  forEachAttribute: function(domParentNode, callback) {
+    var attributes = domParentNode.attributes;
+    if (attributes != null && attributes.length > 0) {
+      var n = attributes.length;
+      for (var i=0; i<n; i++) {
+        var attribute = attributes[i];
+        var _ret = callback(attribute);
+        if ((typeof(_ret) == "string") && (_ret == "break")) break;
+      }
+    }
+  },
+  
+  forEachMatchingAttribute: function(domParentNode,sNamespaceUri,sLocalName,callback) {
+    var targetNS = sNamespaceUri;
+    if ((targetNS != null) && (targetNS.length == 0)) targetNS = null;
+    this.forEachAttribute(domParentNode, dojo.hitch(this, function(attribute) {
+      if (attribute.namespaceURI === sNamespaceUri && attribute.localName === sLocalName) {
+        return callback(attribute);
+      }
+    }));
+  },
   
   /**
    * Executes a function for each immediate child element of a DOM Node that matches
@@ -1309,6 +1345,10 @@ dojo.declare("gxe.xml.DomProcessor",null,{
     var domCurrentNodes = new Array();
     domCurrentNodes.push(domNode);
     
+    if (sMatchTextNodeValue && sMatchTextNodeValue.startsWith("[") && sMatchTextNodeValue.endsWith("]")) {
+      sMatchTextNodeValue = sMatchTextNodeValue.substring(1,sMatchTextNodeValue.length-1).split(",");
+    }
+    
     for (var i=0; i<nTokens; i++) {
       var bIsLast = (i == (nTokens - 1));
       var uri = null;
@@ -1320,22 +1360,37 @@ dojo.declare("gxe.xml.DomProcessor",null,{
 
       var domCurrentMatches = new Array();
       for (var j=0; j<domCurrentNodes.length; j++) {
-        this.forEachMatchingElementNode(domCurrentNodes[j],uri,localName,
-          dojo.hitch(this,function(domChildNode) {
+        if (pfxPlusLocal.isAttribute) {
+          this.forEachMatchingAttribute(domCurrentNodes[j], uri, localName, dojo.hitch(this,function(domChildAttribute) {
             if (bIsLast) {
               if (sMatchTextNodeValue == null) {
-                domCurrentMatches.push(domChildNode);
+                domCurrentMatches.push(domCurrentNodes[j]);
               } else {
-                var s = this.getNodeText(domChildNode);
-                if (s == sMatchTextNodeValue) {
-                  domCurrentMatches.push(domChildNode);
+                var s = domChildAttribute.nodeValue;
+                if ((sMatchTextNodeValue instanceof Array && sMatchTextNodeValue.indexOf(s) >= 0) || (s == sMatchTextNodeValue)) {
+                  domCurrentMatches.push(domCurrentNodes[j]);
                 }
               }
-            } else {
-              domCurrentMatches.push(domChildNode);
             }
-          }
-        ));
+          }));
+        } else {
+          this.forEachMatchingElementNode(domCurrentNodes[j],uri,localName,
+            dojo.hitch(this,function(domChildNode) {
+              if (bIsLast) {
+                if (sMatchTextNodeValue == null) {
+                  domCurrentMatches.push(domChildNode);
+                } else {
+                  var s = this.getNodeText(domChildNode);
+                  if ((sMatchTextNodeValue instanceof Array && sMatchTextNodeValue.indexOf(s) >= 0) || (s == sMatchTextNodeValue)) {
+                    domCurrentMatches.push(domChildNode);
+                  }
+                }
+              } else {
+                domCurrentMatches.push(domChildNode);
+              }
+            }
+          ));
+        }
       }
       domCurrentNodes = domCurrentMatches;
       if (domCurrentNodes.length == 0) break;
@@ -1355,7 +1410,11 @@ dojo.declare("gxe.xml.DomProcessor",null,{
    * @returns {"prefix":{String}, "localName":{String}} the prefix plus localName pair
    */
   splitQualifiedName: function(sQualifiedName) {
-    var prefixPlusLocalName = {"prefix": null, "localName": sQualifiedName};
+    var prefixPlusLocalName = {"prefix": null, "localName": sQualifiedName, isAttribute: false};
+    if (sQualifiedName.startsWith("@")) {
+      prefixPlusLocalName.isAttribute = true;
+      sQualifiedName = sQualifiedName.substring(1);
+    }
     var tokens = sQualifiedName.split(":");
     if (tokens.length == 2) {
       prefixPlusLocalName.prefix = tokens[0];
@@ -1584,6 +1643,7 @@ dojo.declare("gxe.xml.XmlNode",null,{
   cfgObject: null,
   isOptionalPlaceHolder: false,
   isPlaceHolder: false,
+  isMasked: false, // if set to true it will cause echo() to skip content generation
   nodeInfo: null,
   parentDocument: null,
   parentElement: null,
@@ -2130,6 +2190,7 @@ dojo.declare("gxe.xml.XmlAttribute",gxe.xml.XmlNode,{
   /** Override gxe.xml.XmlNode.echo() */
   echo: function(xmlGenerator,stringBuffer,nDepth) {
     if (this.isPlaceHolder || this.isOptionalPlaceHolder) return;
+    if (this.isMasked) return;
     
     var bSerialize = true;
     var bValidating = xmlGenerator.isValidating;
@@ -2219,6 +2280,7 @@ dojo.declare("gxe.xml.XmlElement",gxe.xml.XmlNode,{
   /** Override gxe.xml.XmlNode.echo() */
   echo: function(xmlGenerator,stringBuffer,nDepth) {
     if (this.isPlaceHolder || this.isOptionalPlaceHolder) return;
+    if (this.isMasked) return;
     
     var pfx = "\r\n";
     for (var i=0; i<nDepth; i++) pfx += "\t";
@@ -2615,6 +2677,18 @@ dojo.declare("gxe.control.Control",null,{
       } 
     }
   },
+  
+  /**
+   * Masks the element
+   * @param {type} flag true to mask
+   */
+  mask: function(flag) {
+    var doMask = flag === true || flag == undefined
+    if (this.xmlNode) {
+      this.xmlNode.isMasked = doMask;
+      this.htmlElement.style.display = doMask? "none": "block";
+    }
+  },
 
   /**
    * Builds the user interface control.
@@ -2630,6 +2704,11 @@ dojo.declare("gxe.control.Control",null,{
    */
   build: function(htmlParentElement,domProcessor,domNode) {
     this.execBuild(htmlParentElement,domProcessor,domNode);
+    if (this.designatedToMask) {
+      this.mask(true);
+      delete this.designatedToMask;
+    }
+//    this.exclude();
   },
 
   /**
@@ -2975,7 +3054,7 @@ dojo.declare("gxe.control.Control",null,{
       }
     }
 
-	this.processHiddenAttribute(cfgAttribute, htmlParentElement, domNode);
+    this.processHiddenAttribute(cfgAttribute, htmlParentElement, domNode);
   },
 
   /**
@@ -6246,5 +6325,120 @@ dojo.declare("fgdc.control.KeywordSelector",gxe.control.Control,{
     }
   }
   
+});
+
+/**
+ * @class Provides specialized 'select one' for the resource type.
+ * @name fgdc.control.ResourceType
+ * @extends gxe.control.InputSelectOne
+ */
+dojo.provide("gxe.control.ServiceType");
+dojo.declare("gxe.control.ServiceType",gxe.control.InputSelectOne,{
+  _onChange: function(e) {
+    this.inherited(arguments);
+    topic.publish("service-type", this.getInputValue());
+  },
+  
+  onHtmlElementCreated: function(domProcessor,domNode) {
+    this.inherited(arguments);
+    this.context.finalizers.push(lang.hitch(this, function() {
+      topic.publish("service-type", this.getInputValue());
+    }))
+  }
+});
+
+
+/**
+ * @class Provides specialized 'select one' for the conformance class.
+ * @name gxe.control.ConformanceClass
+ * @extends gxe.control.InputSelectOne
+ */
+dojo.provide("gxe.control.ConformanceClass");
+dojo.declare("gxe.control.ConformanceClass",gxe.control.InputSelectOne,{
+  _onChange: function(e) {
+    this.inherited(arguments);
+    var conformanceClass = this.getInputValue().split("/").reverse()[0];
+    topic.publish("conformance-class", conformanceClass);
+  },
+  
+  onHtmlElementCreated: function(domProcessor,domNode) {
+    this.inherited(arguments);
+    this.context.finalizers.push(lang.hitch(this, function() {
+      var conformanceClass = this.getInputValue().split("/").reverse()[0];
+      topic.publish("conformance-class", conformanceClass);
+    }))
+  }
+});
+
+/**
+ * @class Provides specialized type to intercept service type.
+ * @name gxe.control.Element.NetworkService
+ * @extends gxe.control.Element
+ */
+dojo.provide("gxe.control.Element.NetworkService");
+dojo.declare("gxe.control.Element.NetworkService",gxe.control.Element,{
+  onHtmlElementCreated: function(domProcessor,domNode) {
+    this.inherited(arguments);
+    topic.subscribe("service-type", lang.hitch(this, function(serviceType) {
+      this.mask(serviceType === "other");
+    }));
+  }
+});
+
+
+/**
+ * @class Provides specialized type to intercept service type.
+ * @name gxe.control.Element.NotNetworkService
+ * @extends gxe.control.Element
+ */
+dojo.provide("gxe.control.Element.NotNetworkService");
+dojo.declare("gxe.control.Element.NotNetworkService",gxe.control.Element,{
+  onHtmlElementCreated: function(domProcessor,domNode) {
+    this.inherited(arguments);
+    topic.subscribe("service-type", lang.hitch(this, function(serviceType) {
+      this.mask(serviceType !== "other");
+    }));
+  }
+});
+
+
+/**
+ * @class Provides specialized type to conceptual consistency tab.
+ * @name gxe.control.Element.ConceptualConsistencyTab
+ * @extends gxe.control.Tabs
+ */
+dojo.provide("gxe.control.ConceptualConsistencyTab");
+dojo.declare("gxe.control.ConceptualConsistencyTab",gxe.control.Tabs,{
+  build: function(htmlParentElement,domProcessor,domNode) {
+    this.inherited(arguments);
+    this.htmlElement.querySelectorAll(":scope > div[gxename='header'] li")[2].style.display = "none";
+    topic.subscribe("conformance-class", lang.hitch(this, function(conformanceClass) {
+      this.htmlElement.querySelectorAll(":scope > div[gxename='header'] li")[2].style.display = conformanceClass==="sds-invocable"? "none": "inline";
+    }));
+  }
+});
+
+
+/**
+ * @class Provides specialized type to conceptual consistency report element.
+ * @name gxe.control.Element.NotNetworkService
+ * @extends gxe.control.Element
+ */
+dojo.provide("gxe.control.ConceptualConsistencyReportElement");
+dojo.declare("gxe.control.ConceptualConsistencyReportElement",gxe.control.Element,{
+  isOther: false,
+  isInvocable: false,
+  
+  onHtmlElementCreated: function(domProcessor,domNode) {
+    this.inherited(arguments);
+    topic.subscribe("service-type", lang.hitch(this, function(serviceType) {
+      this.isOther = serviceType === "other";
+      this.mask(!this.isOther || this.isInvocable);
+    }));
+    topic.subscribe("conformance-class", lang.hitch(this, function(conformanceClass) {
+      this.isInvocable = conformanceClass==="sds-invocable";
+      this.mask(!this.isOther || this.isInvocable);
+    }));
+  }
 });
 
