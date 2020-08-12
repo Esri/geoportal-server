@@ -2991,7 +2991,6 @@ dojo.declare("gxe.control.Control",null,{
     var sTargetName = gxe.cfg.getGxeAttributeValue(cfgAttribute,"targetName");
 	var bHidden = gxe.cfg.getGxeAttributeValue(cfgAttribute,"hidden");
 	if (bHidden) {
-		console.log("Hidden", this, domNode);
 		if (htmlParentElement && htmlParentElement.children) {
 			for (childIdx = 0; childIdx < htmlParentElement.children.length; childIdx++) {
 				var child = htmlParentElement.children[childIdx];
@@ -6409,12 +6408,27 @@ dojo.declare("gxe.control.Element.NotNetworkService",gxe.control.Element,{
  */
 dojo.provide("gxe.control.ConceptualConsistencyTab");
 dojo.declare("gxe.control.ConceptualConsistencyTab",gxe.control.Tabs,{
+  isOtherServiceType: false,
+  isWithConceptualClass: false,
+  
   build: function(htmlParentElement,domProcessor,domNode) {
     this.inherited(arguments);
-    this.htmlElement.querySelectorAll(":scope > div[gxename='header'] li")[2].style.display = "none";
-    topic.subscribe("conformance-class", lang.hitch(this, function(conformanceClass) {
-      this.htmlElement.querySelectorAll(":scope > div[gxename='header'] li")[2].style.display = conformanceClass==="sds-invocable"? "none": "inline";
+    this.mask(true);
+    topic.subscribe("service-type", lang.hitch(this, function(serviceType) {
+      this.isOtherServiceType = serviceType === "other";
+      var visible = this.isOtherServiceType && this.isWithConceptualClass;
+      this.mask(!visible);
     }));
+    topic.subscribe("conformance-class", lang.hitch(this, function(conformanceClass) {
+      this.isWithConceptualClass = conformanceClass==="sds-interoperable" || conformanceClass==="sds-harmonised";
+      var visible = this.isOtherServiceType && this.isWithConceptualClass;
+      this.mask(!visible);
+    }));
+    
+  },
+  
+  mask: function(flag) {
+    this.htmlElement.querySelectorAll(":scope > div[gxename='header'] li")[2].style.display = flag? "none": "inline";
   }
 });
 
@@ -6426,18 +6440,20 @@ dojo.declare("gxe.control.ConceptualConsistencyTab",gxe.control.Tabs,{
  */
 dojo.provide("gxe.control.ConceptualConsistencyReportElement");
 dojo.declare("gxe.control.ConceptualConsistencyReportElement",gxe.control.Element,{
-  isOther: false,
-  isInvocable: false,
+  isOtherServiceType: false,
+  isWithConceptualClass: false,
   
   onHtmlElementCreated: function(domProcessor,domNode) {
     this.inherited(arguments);
     topic.subscribe("service-type", lang.hitch(this, function(serviceType) {
-      this.isOther = serviceType === "other";
-      this.mask(!this.isOther || this.isInvocable);
+      this.isOtherServiceType = serviceType === "other";
+      var visible = this.isOtherServiceType && this.isWithConceptualClass;
+      this.mask(!visible);
     }));
     topic.subscribe("conformance-class", lang.hitch(this, function(conformanceClass) {
-      this.isInvocable = conformanceClass==="sds-invocable";
-      this.mask(!this.isOther || this.isInvocable);
+      this.isWithConceptualClass = conformanceClass==="sds-interoperable" || conformanceClass==="sds-harmonised";
+      var visible = this.isOtherServiceType && this.isWithConceptualClass;
+      this.mask(!visible);
     }));
   }
 });
