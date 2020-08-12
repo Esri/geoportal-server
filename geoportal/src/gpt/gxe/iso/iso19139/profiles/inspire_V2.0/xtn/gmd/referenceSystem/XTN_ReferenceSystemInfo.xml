@@ -28,7 +28,7 @@
                         <g:options>
                           <g:option g:label=""                  g:value=""/>
                           <g:option g:label="ETRS89-XYZ"        g:value="http://www.opengis.net/def/crs/EPSG/0/4936"/>
-                          <g:option g:label="ETRS89-GRS80"      g:value="http://www.opengis.net/def/crs/EPSG/0/4937"/>
+                          <g:option g:label="ETRS89-GRS80h"     g:value="http://www.opengis.net/def/crs/EPSG/0/4937"/>
                           <g:option g:label="ETRS89-GRS80"      g:value="http://www.opengis.net/def/crs/EPSG/0/4258"/>
                           <g:option g:label="ETRS89-LAEA"       g:value="http://www.opengis.net/def/crs/EPSG/0/3035"/>
                           <g:option g:label="ETRS89-LCC"        g:value="http://www.opengis.net/def/crs/EPSG/0/3034"/>
