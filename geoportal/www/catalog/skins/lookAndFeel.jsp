@@ -46,7 +46,7 @@ String VER124 = "v1.2.4";
 <script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER+ "/GPTMapViewer.js"%>"></script>
 <script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER+ "/jquery-1.2.3.pack.js"%>"></script>
 <script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER+ "/ui.datepicker.packed.js"%>"></script>
-<script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER12+ "/gpt.js"%>"></script>
+<script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER12+ "/gpt-main.js"%>"></script>
 <script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER+ "/Utils.js"%>"></script>
 <script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER123+ "/livedata.js"%>"></script>
 <script type="text/javascript" src="<%=request.getContextPath()+"/catalog/js/" +VER+ "/gpt-asn.js"%>"></script>
