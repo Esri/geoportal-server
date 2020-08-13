@@ -23,7 +23,7 @@
          
           <!-- Contact tab -->
           <h:div g:label="$i18n.catalog.iso19139.MD_Metadata.section.identification.contact">
-            <g:element g:extends="$base/xtn/gmd/citation/XTN_Resource_Contact.xml"/>
+            <g:element g:extends="$base/xtn/srv/citation/XTN_Resource_Contact.xml"/>
           </h:div>
           
           <!-- Thumbnail tab -->
