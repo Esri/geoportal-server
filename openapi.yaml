@@ -1,0 +1,324 @@
+openapi: 3.0.0
+info:
+  version: "0.0.1"
+  title: |
+    Geodati REST API
+  description: |
+    REST search interface for the Geoportal's catalog.
+    '/find/document?start=1&max=15&geometryType=esriGeometryBox&searchText=natura&spatialRel=all&f=json'
+        
+    The CSW endpoint is in /RNDT/csw
+    
+  termsOfService: 'http://geodati.gov.it/geoportale/note-legali'
+  contact:
+    email: "info@example.com"
+    name: "ESRI"
+    url: "http://geoportal.example.com"
+  x-api-id: REPLACEME
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: public
+    description: Public search.
+    externalDocs:
+      url: >-
+        https://github.com/Esri/geoportal-server/wiki/REST-API-Syntax
+servers:
+  - description: Geodati Server.
+    url: >-
+      http://geoportal.example.com/geoportalRNDTPA/
+
+paths:
+  /geoportalRNDTPA/rest/find/document:
+    get:
+      summary: Search documents.
+      description: |
+        Search data into the catalog.
+      operationId: findDocument
+      tags:
+      - public
+      parameters:
+      - name: bbox
+        in: path
+        required: true
+        description: |
+          Query by extent specified as two pairs of coordinates (west-south and east-north).
+          Comma-delimited string of integers between -180,180 and -90, 90.
+        example: TODO
+        schema:
+          type: array
+          items:
+            type: integer
+          minItems: 4
+          maxItems: 4
+          explode: false
+          style: simple
+      - name: spatialRel
+        in: path
+        required: true
+        description: |
+          Query by spatial relationship. Used in conjunction with bbox parameter.
+        example: TODO
+        schema:
+          type: string
+          default: esriSpatialRelWithin
+          enum:
+          - esriSpatialRelWithin
+          - esriSpatialRelOverlaps
+      - name: searchText
+        in: path
+        required: true
+        description: |
+          Query by keyword. String value representing a keyword.
+          Note, as of version 1.1.1, you can use searchText=sys.schema.key to query
+          for documents that correspond to a specific metadata schema.
+          See How to find all documents of a particular metadata standard for more details.
+        example: sys.schema.key
+        schema:
+          type: string
+
+      - name: contains
+        in: path
+        required: true
+        description: |
+          Keyword concatenation options. This parameter is obsolete with the Lucene syntax (see Using Lucene Search Text Queries).
+          For an exact match use double quotes. For example, see the syntax for two terms, Hawaii and quads:
+
+          - Exact: "Hawaii quads"
+          - Any: Hawaii quads
+          - All: +Hawaii+quads
+          - eg:  //serverName/geoportal/rest/find/document?searchText="Hawaii quads"&f=georss
+
+        example: "Hawaii quads"
+        schema:
+          type: string
+      - name: contentType
+        in: path
+        required: true
+        description: |
+          Query by content type.  String value representing an Esri content type. See Javadoc for complete list.
+        example: TODO
+        schema:
+          type: string
+
+      - name: dataCategory
+        in: path
+        required: true
+        description: |
+          Query by data category (ISO 19115 themes).
+          Comma-delimited list of strings. Keywords identified by the ISO 19115 specification. See JavaDoc for complete list.
+        example: TODO
+        schema:
+          type: array
+          items:
+            type: string
+          explode: false
+          style: simple
+      - name: after
+        in: path
+        required: true
+        description: |
+          Query by date.
+        example: TODO
+        schema:
+          type: string
+          format: date
+          example: "2014-12-30"
+      - name: before
+        in: path
+        required: true
+        description: |
+          Query by date.
+        example: TODO
+        schema:
+          type: string
+          format: date
+          example: "2014-12-30"
+      - name: orderBy
+        in: path
+        required: true
+        description: |
+          Result sort options.
+        example: TODO
+        schema:
+          type: string
+          default: dateDescending
+          enum:
+          - dateDescending
+          - areaAscending
+          - areaDescending
+          - dateAscending
+          - format
+          - relevance
+          - title
+      - name: start
+        in: path
+        required: true
+        description: |
+          Specify which item to start the response with out of the entire resultset.
+          When used with the max parameter, this provides for pagination of the search results.
+        example: 12
+        schema:
+          type: integer
+      - name: max
+        in: path
+        required: true
+        description: |
+          Specify max number of records to retrieve.
+          There is a limit of max=100 on unqualified queries.
+          An 'unqualified query' is when there are no search parameters set.
+          The limit on qualified queries is max=5000. Default: 10.
+           When used with the start parameter, this provides for pagination of the search results.
+        example: 50
+        schema:
+          type: integer
+          default: 10
+      - name: geometryType
+        in: path
+        required: true
+        description: |
+          Defines how spatial data will be represented.
+        example: TODO
+        schema:
+          type: string
+          default: esriGeometryPolygon
+          enum:
+          - esriGeometryPolygon
+          - esriGeometryPoint
+          - esriGeometryBox
+
+      - name: f
+        in: path
+        description: |
+          the response format.
+        example: TODO
+        schema:
+          type: string
+          default: georss
+          enum:
+          - georss
+          - atom
+          - json
+          - pjson
+          - xjson
+          - dcat (1.2.4)
+          - kml
+          - html
+          - htmlfragment
+          - searchpage (as of 1.1.1)
+          - CSV (as of 1.2)
+          - xjson
+
+      - name: style
+        in: path
+        required: true
+        description: |
+          CSS stylesheet for HTML results.
+          String value representing a URL to a stylesheet.
+        example: TODO
+        schema:
+          type: string
+          format: url
+      - name: target
+        in: path
+        description: |
+          Behavior of links (open in same or new window).
+        example: TODO
+        schema:
+          type: String value. One of blank (default), parent, self, top.
+
+      - name: rid
+        in: path
+        required: true
+        description: |
+          Id associated with the repository. Multiple ridparameters are allowed for comparing results between different repositories.
+        example: TODO
+        schema:
+          type: string
+
+      - name: rids
+        in: path
+        required: true
+        description: |
+          Comma Delimited rid. Can be used instead of the multiple ridparameters.
+        example: TODO
+        schema:
+          type: String values.
+
+      - name: maxSearchTimeMilliSec
+        in: path
+        required: true
+        description: |
+          Maximum amount of time allowed to retrieve results.
+        example: TODO
+        schema:
+          type: integer Default is 5000 milliseconds.
+
+      - name: filter
+        in: path
+        required: true
+        description: |
+          Can apply a persistent filter to the search interface. See URL Filter Customization
+        example: TODO
+        schema:
+          type: lucene-based query syntax
+
+        responses:
+        '200':
+          description: |
+            A list of datasources.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        default:
+          $ref: '#/components/responses/default'
+
+components:
+  parameters:
+    limit:
+      $ref: 'https://teamdigitale.github.io/openapi/parameters/v3.yaml#/limit'
+    offset:
+      $ref: 'https://teamdigitale.github.io/openapi/parameters/v3.yaml#/offset'
+    sort:
+      $ref: 'https://teamdigitale.github.io/openapi/parameters/v3.yaml#/sort'
+
+  headers:
+    # Headers conform to http://zalando.github.io/restful-api-guidelines/index.html#132
+    X-RateLimit-Limit:
+      $ref: 'https://teamdigitale.github.io/openapi/headers/v3.yaml#/X-RateLimit-Limit'
+    X-RateLimit-Remaining:
+      $ref: 'https://teamdigitale.github.io/openapi/headers/v3.yaml#/X-RateLimit-Remaining'
+    X-RateLimit-Reset:
+      $ref: 'https://teamdigitale.github.io/openapi/headers/v3.yaml#/X-RateLimit-Reset'
+
+  responses:
+    # Predefined error codes for this API
+    400BadRequest:
+      $ref: 'https://teamdigitale.github.io/openapi/responses/v3.yaml#/400BadRequest'
+    404NotFound:
+      $ref: 'https://teamdigitale.github.io/openapi/responses/v3.yaml#/404NotFound'
+    429TooManyRequests:
+      $ref: 'https://teamdigitale.github.io/openapi/responses/v3.yaml#/429TooManyRequests'
+    503ServiceUnavailable:
+      $ref: 'https://teamdigitale.github.io/openapi/responses/v3.yaml#/503ServiceUnavailable'
+    default:
+      $ref: 'https://teamdigitale.github.io/openapi/responses/v3.yaml#/default'
+
+  schemas:
+    Problem:
+      $ref: 'https://teamdigitale.github.io/openapi/schemas/problem.yaml#Problem'
