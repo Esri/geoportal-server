@@ -8,7 +8,7 @@ This repository is maintained as an archive for those who are still actively usi
 
 We are not planning any updates to this repository. 
 
-Note: Geoportal Server 1.x does not use Log4j and as such is not vulnerable to the recently identified issue with Log4j 2.
+**Note**: Geoportal Server 1.x does not use Log4j and as such is not vulnerable to the recently identified issue with Log4j 2.
 
 # Geoportal Server 
 
