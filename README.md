@@ -6,6 +6,10 @@ The next generation Esri Geoportal Server v2 is now available. Geoportal Server 
 
 This repository is maintained as an archive for those who are still actively using Esri Geoportal Server v1.
 
+We are not planning any updates to this repository. 
+
+Note: Geoportal Server 1.x does not use Log4j and as such is not vulnerable to the recently identified issue with Log4j 2.
+
 # Geoportal Server 
 
 [![Coverage Status](https://img.shields.io/coveralls/Esri/geoportal-server.svg)](https://coveralls.io/r/Esri/geoportal-server) <a href="https://scan.coverity.com/projects/3614">
