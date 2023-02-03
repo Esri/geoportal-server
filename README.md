@@ -1,4 +1,4 @@
-# Esri Geoportal Server v1
+# Esri Geoportal Server v1 - ARCHIVE
 
 ## UPDATE: Esri Geoportal Server v2 is now available
 
