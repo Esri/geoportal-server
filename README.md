@@ -1,4 +1,5 @@
-# UPDATE: Esri Geoportal Server v2 is now available (https://github.com/Esri/geoportal-server-catalog)
+# IMPORTANT: Esri Geoportal Server v1.x is retired
+# Esri Geoportal Server v2.x is now available (https://github.com/Esri/geoportal-server-catalog)
 
 The next generation Esri Geoportal Server v2 is now available. Geoportal Server 2 provides the metadata catalog and harvesting capabilities as separate modules. The repositories are located at [Geoportal Server Catalog](https://github.com/Esri/geoportal-server-catalog) and [Geoportal Server Harvester](https://github.com/ArcGIS/geoportal-server-harvester).
 
