@@ -1,7 +1,7 @@
-# IMPORTANT: Esri Geoportal Server v1.x is retired
-# Esri Geoportal Server v2.x is now available (https://github.com/Esri/geoportal-server-catalog)
+# IMPORTANT: This repository is for Esri Geoportal Server v1.x (RETIRED).
 
-The next generation Esri Geoportal Server v2 is now available. Geoportal Server 2 provides the metadata catalog and harvesting capabilities as separate modules. The repositories are located at [Geoportal Server Catalog](https://github.com/Esri/geoportal-server-catalog) and [Geoportal Server Harvester](https://github.com/ArcGIS/geoportal-server-harvester).
+# The next generation Esri Geoportal Server v2 is now available!
+Esri Geoportal Server 2 provides the metadata catalog and harvesting capabilities as separate modules. The repositories are located at [Esri Geoportal Server Catalog](https://github.com/Esri/geoportal-server-catalog) and [Esri Geoportal Server Harvester](https://github.com/ArcGIS/geoportal-server-harvester).
 
 ## Esri Geoportal Server v1 - ARCHIVE
 This repository is maintained as an archive for those who are still actively using Esri Geoportal Server v1.
@@ -10,7 +10,7 @@ We are not planning any updates to this repository.
 
 **Note**: Geoportal Server 1.x does not use Log4j and as such is not vulnerable to the recently identified issue with Log4j 2.
 
-## Geoportal Server v1
+## Geoportal Server v1.x
 
 [![Coverage Status](https://img.shields.io/coveralls/Esri/geoportal-server.svg)](https://coveralls.io/r/Esri/geoportal-server) <a href="https://scan.coverity.com/projects/3614">
   <img alt="Coverity Scan Build Status"
