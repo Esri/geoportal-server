@@ -1,7 +1,7 @@
-# IMPORTANT: This repository is for Esri Geoportal Server v1.x (RETIRED).
+# IMPORTANT: This is the archive for Esri Geoportal Server v1.x (RETIRED)
 
-# The next generation Esri Geoportal Server v2 is now available!
-Esri Geoportal Server 2 provides the metadata catalog and harvesting capabilities as separate modules. The repositories are located at [Esri Geoportal Server Catalog](https://github.com/Esri/geoportal-server-catalog) and [Esri Geoportal Server Harvester](https://github.com/ArcGIS/geoportal-server-harvester).
+# NOW AVAILABLE: Esri Geoportal Server v2
+Visit Esri Geoportal Server 2 to explore the next generation metadata catalog and harvesting capabilities as separate modules. The repositories are located at [Esri Geoportal Server Catalog](https://github.com/Esri/geoportal-server-catalog) and [Esri Geoportal Server Harvester](https://github.com/ArcGIS/geoportal-server-harvester).
 
 ## Esri Geoportal Server v1 - ARCHIVE
 This repository is maintained as an archive for those who are still actively using Esri Geoportal Server v1.
