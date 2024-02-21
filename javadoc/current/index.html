@@ -10,7 +10,7 @@ Esri Geoportal Server 1.2.9 API Specification
     targetPage = "" + window.location.search;
     if (targetPage != "" && targetPage != "undefined")
         targetPage = targetPage.substring(1);
-    if (targetPage.indexOf(":") != -1 && targetPage.indexOf("//") >= 0 && targetPage.indexOf("com/") != 0)
+    if (targetPage.indexOf(":") != -1 && targetPage.indexOf("//") > -1 && targetPage.indexOf("com/") != 0)
         targetPage = "undefined";
     function loadFrames() {
         if (targetPage != "" && targetPage != "undefined")
