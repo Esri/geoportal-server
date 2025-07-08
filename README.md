@@ -1,7 +1,8 @@
 # IMPORTANT: This is the archive for Esri Geoportal Server v1.x (RETIRED)
 
-# NOW AVAILABLE: Esri Geoportal Server v2
-Visit Esri Geoportal Server 2 to explore the next generation metadata catalog and harvesting capabilities as separate modules. The repositories are located at [Esri Geoportal Server Catalog](https://github.com/Esri/geoportal-server-catalog) and [Esri Geoportal Server Harvester](https://github.com/ArcGIS/geoportal-server-harvester).
+Instead, use the next generation Geoportal Server metadata catalog and harvesting capabilities. The repositories are located at:
+[Esri Geoportal Server Catalog](https://github.com/Esri/geoportal-server-catalog) and 
+[Esri Geoportal Server Harvester](https://github.com/ArcGIS/geoportal-server-harvester).
 
 ## Esri Geoportal Server v1 - ARCHIVE
 This repository is maintained as an archive for those who are still actively using Esri Geoportal Server v1.
@@ -10,67 +11,10 @@ We are not planning any updates to this repository.
 
 **Note**: Geoportal Server 1.x does not use Log4j and as such is not vulnerable to the recently identified issue with Log4j 2.
 
-## Geoportal Server v1.x
-
-[![Coverage Status](https://img.shields.io/coveralls/Esri/geoportal-server.svg)](https://coveralls.io/r/Esri/geoportal-server) <a href="https://scan.coverity.com/projects/3614">
-  <img alt="Coverity Scan Build Status"
-       src="https://scan.coverity.com/projects/3614/badge.svg"/>
-</a>
-
-## Introduction to geoportal-server 
-
-Geoportal Server is a standards-based, open source product that enables discovery and use of geospatial resources including data and services.
-
-Geoportal Server allows you to catalog the locations and descriptions of your organization's geospatial resources in a central repository called a geoportal, which you can publish to the Internet or your intranet. Visitors to the geoportal can search and access these resources to use with their projects. If you grant them permission, visitors can also register geospatial resources with the geoportal. Geoportals give you an enterprise-level view of your geospatial resources regardless of their type or location. Resources are registered with a geoportal using metadata, which describes the location, age, quality, and other characteristics of the resources. With access to this information about resources, an organization can make decisions based on the best resources available.
-
-With the Geoportal Server you can:
-* Improve the efficiency and effectiveness of geospatial activities within your enterprise and across organizations.
-* Support collaboration and cooperation among departments and organizations by facilitating the sharing of geospatial resources regardless of the GIS platform.
-* Gain an enterprise-level awareness of disparate geospatial data, Web services, and activities.
-* Leverage existing geospatial resources so your organization doesn't duplicate those resources or the effort to create them.
-* Ensure the use of approved, high-quality datasets.
-* Reduce the time users spend trying to find relevant, usable geospatial resources.
-
-Want to learn more? Try our [sandbox site](https://gptogc.esri.com/geoportal/catalog/main/home.page)!
-
-Want to get started right away? Download the [compiled distribution and installation files] (https://github.com/Esri/geoportal-server/releases/download/v1.2.8/geoportal-1.2.8.zip).
-
-## Releases and Downloads
-- 1.2.9 - Released September 29, 2017, click [here](https://github.com/Esri/geoportal-server/wiki) for release information and downloads.
-
-## Features
-
-Please click [here](http://www.esri.com/software/arcgis/geoportal/key-features) for key features of Geoportal Server.
-
-## Requirements
-
-Please refer to [here](https://github.com/Esri/geoportal-server/wiki/Preinstallation) for system requirements.
-
-## Resources
-
-Geoportal Server documentation is broken down into three buckets: a wiki, Javadoc for server components, and JavaScript documentation for the Geoportal XML Editor.
-
-* The [wiki](https://github.com/Esri/geoportal-server/wiki) hosts topics for how to install, configure, customize, and use the Geoportal Server and its related components.</li>
-* The [Javadoc](http://esri.github.com/geoportal-server/javadoc/current) describes the Java packages used in the Geoportal Server web application.</li>
-* The [XML Editor JavaScript](http://esri.github.com/geoportal-server/gxe/xmldoc) documentation</a> explains its JavaScript classes and XML elements and configuration files.</li>
-
-
-## Support or Contact
-
-Contact us at [portal@esri.com](mailto:portal@esri.com) for questions and we’ll help you sort it out.
-
-
-## Issues
-
-Find a bug or want to request a new feature?  Please let us know by submitting an issue.
-
-## Contributing
-
-Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
 
 ## Licensing
 
-Copyright 2013 Esri
+Copyright 2013-2025 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
