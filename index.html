@@ -1,96 +1,2577 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta http-equiv='cache-control' content='no-cache'> 
-    <meta http-equiv='expires' content='0'> 
-    <meta http-equiv='pragma' content='no-cache'>
-    <meta name="description" content="Esri Geoportal Server is a free, open-source, stand-alone metadata catalog management app that enables discovery and use of geospatial resources such as datasets, raster data &amp; web services."/>
+<!DOCTYPE HTML>
+<html lang="en-us" dir="ltr">
+
+<head>
+	<meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+	<title>Esri Geoportal Server | Open-Source Metadata Management</title>
+
+     
+    
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"/>
+     
 	
-    <title>Esri Geoportal Server</title>
+    <meta name="description" content="Esri Geoportal Server is a free, open-source, stand-alone metadata catalog management app that enables discovery and use of geospatial resources such as datasets, raster data &amp; web services."/>
+	<meta name="template" content="esri-content-template"/>
+	
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1>Esri Geoportal Server</h1>
-        <p>An open-source metadata catalog management app for data discovery</p>
+	
 
-        <p class="view"><a href="https://github.com/Esri/geoportal-server-catalog">View the Project on GitHub</a></p>
+	
+<meta name="content-page-ref" content="ukWXiyDuvO9gvMDwTiuM7grxEJt5tOWKImZh7fGp1mbVvDpVW8yeJ586xr8rpPrY_EDjJJ9qLXpmjNDg34IqKb_jTSB-xNBbKUGWZe2IHqoXcRbqtdJl2yGqrXuM4FJ9"/>
+<script defer="defer" type="text/javascript" src="assets/www.esri.com/c7f716266afd-micro.js"></script>
+<link rel="canonical" href="https://www.esri.com/en-us/arcgis/products/esri-geoportal-server/overview"/>
 
 
-        <ul>
-          <li><a href="https://github.com/Esri/geoportal-server-catalog">View On <strong>GitHub</strong></a></li>
-        </ul>
+	
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="assets/fast.fonts.net/1b452e637ae8-1.css"/>
+<link rel="stylesheet" href="assets/webapps-cdn.esri.com/84be2e424e66-fonts.css"/>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="modulepreload" href="https://js.arcgis.com/calcite-components/1.8.0/calcite.esm.js" crossorigin/>
+<link rel="preload" as="style" href="assets/js.arcgis.com/c54c70540522-calcite.css" crossorigin/>
+<link rel="stylesheet" href="assets/js.arcgis.com/c54c70540522-calcite.css" type="text/css" crossorigin/>
+
+
+
+
+
+
+
+
+
+<link rel="preload" as="style" href="assets/webapps-cdn.esri.com/55e2f4893b4c-esri-ui.css" crossorigin="anonymous"/>
+<link rel="stylesheet" href="assets/webapps-cdn.esri.com/55e2f4893b4c-esri-ui.css" type="text/css" crossorigin="anonymous"/>
+
+
+<script type="module" src="assets/js.arcgis.com/010c5be42a2b-calcite.esm.js"></script>
+
+
+
+
+
+
+<script type="text/javascript">
+  window.gnav_jsonPath = "/content/experience-fragments/esri-sites/en-us/site-settings/global-navigation-config/2022-nav-config.25.json"
+</script>
+<script>
+  window.gnav_mode = ""
+  window.window.gnav_login = ""
+  window.window.gnav_collapseMenus = "" === 'true'
+</script>
+
+
+
+<script>
+  window.chatHandler = "https://go.esri.com/l/82202/2023-08-15/qbvz8f"
+</script>
+<link rel="stylesheet" href="assets/webapps-cdn.esri.com/9424715eb422-esriChat.css"/>
+
+
+
+
+
+
+
+
+
+<style>
+  :root {
+    --secondarytheme-color: oklch(from #009AF2 l c h);
+
+    --theme-color: oklch(from #009AF2 l c h);
+    --theme-color10: oklch(from var(--theme-color) l c h / 10%);
+    --theme-color50: oklch(from var(--theme-color) l c h / 50%);
+    --theme-color-secondary: oklch(from #009AF2 l c h);
+    --theme-color-secondary10: oklch(from var(--theme-color-secondary) l c h / 10%);
+    --theme-color-secondary50: oklch(from var(--theme-color-secondary) l c h / 50%);
+
+    --theme-color-dark: oklch(from #009AF2 l c h);
+    --theme-color-dark10: oklch(from var(--theme-color-dark) l c h / 10%);
+    --theme-color-dark50: oklch(from var(--theme-color-dark) l c h / 50%);
+    --theme-color-secondary-dark: oklch(from var(--esri-ui-brand-default) l c h);
+    --theme-color-secondary-dark10: oklch(from var(--theme-color-secondary-dark) l c h / 10%);
+    --theme-color-secondary-dark50: oklch(from var(--theme-color-secondary-dark) l c h / 50%);
+  }
+
+  .calcite-mode-dark {
+    --theme-color: var(--theme-color-dark);
+    --theme-color10: var(--theme-color-dark10);
+    --theme-color50: var(--theme-color-dark50);
+    --theme-color-secondary: var(--theme-color-secondary-dark);
+    --theme-color-secondary10: var(--theme-color-secondary-dark10);
+    --theme-color-secondary50: var(--theme-color-secondary-dark50);
+  }
+
+  .calcite-mode-light {
+    --theme-color: oklch(from #009AF2 l c h);
+    --theme-color10: oklch(from var(--theme-color) l c h / 10%);
+    --theme-color50: oklch(from var(--theme-color) l c h / 50%);
+    --theme-color-secondary: oklch(from #009AF2 l c h);
+    --theme-color-secondary10: oklch(from var(--theme-color-secondary) l c h / 10%);
+    --theme-color-secondary50: oklch(from var(--theme-color-secondary) l c h / 50%);
+  }
+
+  .theme-secondary {
+    --theme-color: var(--theme-color-secondary);
+    --theme-color10: var(--theme-color-secondary10);
+    --theme-color50: var(--theme-color-secondary50);
+  }
+
+  .theme-secondary .calcite-mode-light {
+    --theme-color: var(--theme-color-secondary);
+    --theme-color10: var(--theme-color-secondary10);
+    --theme-color50: var(--theme-color-secondary50);
+  }
+  .theme-secondary .calcite-mode-dark {
+    --theme-color: var(--theme-color-secondary-dark);
+    --theme-color10: var(--theme-color-secondary-dark10);
+    --theme-color50: var(--theme-color-secondary-dark50);
+  }
+</style>
+
+
+
+
+
+
+
+<link rel="apple-touch-icon-precomposed" sizes="180x180" href="https://www.esri.com/content/dam/esrisites/en-us/common/favicon/esri-favicon-light-180.png"/>
+<link rel="icon" media="(prefers-color-scheme:dark)" type="image/png" sizes="32x32" href="assets/www.esri.com/03710ec4e153-esri-favicon-dark-32.png"/>
+<link rel="icon" media="(prefers-color-scheme:light)" type="image/png" sizes="32x32" href="assets/www.esri.com/028addb211a5-esri-favicon-light-32.png"/>
+<link rel="icon" type="image/svg+xml" sizes="16x16 32x32 48x48 180x180" href="assets/www.esri.com/20a773bdf30f-esri-favicon.svg"/>
+
+
+
+  <link rel="alternate" href="https://www.esri.com/en-us/arcgis/products/esri-geoportal-server/overview" hreflang="en-us"/>
+
+  <link rel="alternate" href="https://www.esri.com/fr-fr/arcgis/products/esri-geoportal-server/overview" hreflang="fr-fr"/>
+
+  <link rel="alternate" href="https://www.esri.com/zh-cn/arcgis/products/esri-geoportal-server/overview" hreflang="zh-cn"/>
+
+  <link rel="alternate" href="https://www.esri.com/ja-jp/arcgis/products/esri-geoportal-server/overview" hreflang="ja-jp"/>
+
+  <link rel="alternate" href="https://www.esri.com/es-es/arcgis/products/esri-geoportal-server/overview" hreflang="es-es"/>
+
+  <link rel="alternate" href="https://www.esri.com/ru-ru/arcgis/products/esri-geoportal-server/overview" hreflang="ru-ru"/>
+
+  <link rel="alternate" href="https://www.esri.com/de-de/arcgis/products/esri-geoportal-server/overview" hreflang="de-de"/>
+
+  <link rel="alternate" href="https://www.esri.com/ar-sa/arcgis/products/esri-geoportal-server/overview" hreflang="ar-sa"/>
+
+  <link rel="alternate" href="https://www.esri.com/it-it/arcgis/products/esri-geoportal-server/overview" hreflang="it-it"/>
+
+  <link rel="alternate" href="https://www.esri.com/ko-kr/arcgis/products/esri-geoportal-server/overview" hreflang="ko-kr"/>
+
+  <link rel="alternate" href="https://www.esri.com/pl-pl/arcgis/products/esri-geoportal-server/overview" hreflang="pl-pl"/>
+
+  <link rel="alternate" href="https://www.esri.com/pt-br/arcgis/products/esri-geoportal-server/overview" hreflang="pt-br"/>
+
+  <link rel="alternate" href="https://www.esri.com/en-us/arcgis/products/esri-geoportal-server/overview" hreflang="x-default"/>
+
+
+
+
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:site" content="@Esri"/>
+<meta name="twitter:title" content="Esri Geoportal Server | Open-Source Metadata Management"/>
+<meta property="twitter:url" content="https://www.esri.com/en-us/arcgis/products/esri-geoportal-server/overview"/>
+<meta name="twitter:description" content="Esri Geoportal Server is a free, open-source, stand-alone metadata catalog management app that enables discovery and use of geospatial resources such as datasets, raster data &amp; web services."/>
+<meta property="twitter:image" content="assets/www.esri.com/1466d2c4c32b-geoportal-server-social-share.jpg"/>
+
+
+<meta property="fb:app_id" content="1703715456573377"/>
+<meta property="og:title" content="Esri Geoportal Server | Open-Source Metadata Management"/>
+<meta property="og:url" content="https://www.esri.com/en-us/arcgis/products/esri-geoportal-server/overview"/>
+<meta property="og:description" content="Esri Geoportal Server is a free, open-source, stand-alone metadata catalog management app that enables discovery and use of geospatial resources such as datasets, raster data &amp; web services."/>
+<meta property="og:image" content="assets/www.esri.com/1466d2c4c32b-geoportal-server-social-share.jpg"/>
+<meta property="og:type" content="website"/>
+
+
+<meta name="date-sort" content="Tue, 17 Feb 2026 23:15:39 GMT"/>
+<meta name="last-modified" content="Tue, 17 Feb 2026 23:15:39 GMT"/>
+<meta name="created" content="Fri, 12 May 2023 18:53:41 GMT"/>
+
+
+
+
+
+
+
+
+    
+    <script type="application/ld+json">
+    {
+       "@context": "https://schema.org",
+       "@type": "WebPage",
+       "name": "Esri Geoportal Server | Open-Source Metadata Management",
+        "sourceOrganization" : {
+            "@type": "Organization",
+            "name" : "Esri"
+            },
+            "url": "https://www.esri.com/en-us/arcgis/products/esri-geoportal-server/overview",
+            "image": "https://www.esri.com/content/dam/esrisites/en-us/arcgis/products/geoportal-server/2023/assets/spatial-data-infrastructure-banner-fg.png",
+            "inLanguage" : {
+                "@type": "Language",
+                "name": "en-us"
+            },
+            "description":"Esri Geoportal Server is a free, open-source, stand-alone metadata catalog management app that enables discovery and use of geospatial resources such as datasets, raster data &amp; web services."
+        }
+    </script>
+
+
+
+
+
+
+<!-- Sitelinks Search Box -->
+
+
+<!-- breadcrumb -->
+<script type="application/ld+json" id="breadcrumbs">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement":  [{"@type":"ListItem","position":1,"name":"ArcGIS","item":"/en-us/arcgis/geospatial-platform/overview"},{"@type":"ListItem","position":2,"name":"Products","item":"/en-us/arcgis/products/index"},{"@type":"ListItem","position":3,"name":"Esri Geoportal Server","item":"/en-us/arcgis/products/esri-geoportal-server/overview"},{"@type":"ListItem","position":4,"name":"Overview","item":"/en-us/arcgis/products/esri-geoportal-server/overview"}]
+ }
+</script>
+
+<meta name="format-detection" content="telephone=no"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+<script src="assets/www.esri.com/cd286203602f-datalayer.js"></script>
+
+
+
+<script>
+  window.dataLayer = Object.assign({}, window.dataLayer, {
+    pageTitle: "Overview",
+    pageName: "Arcgis:Products:Esri Geoportal Server:Overview",
+    pagePath: "/content/esri-sites/en-us/arcgis/products/esri-geoportal-server/overview",
+    pageType: "",
+    pageSubType: "",
+    metaOgTitle: "Esri Geoportal Server | Open-Source Metadata Management",
+    metaOgUrl: "https://www.esri.com/en-us/arcgis/products/esri-geoportal-server/overview",
+    metaOgDescription: "Esri Geoportal Server is a free, open-source, stand-alone metadata catalog management app that enables discovery and use of geospatial resources such as datasets, raster data &amp; web services.",
+    metaOgImage: "https://www.esri.com/content/dam/esrisites/en-us/arcgis/products/geoportal-server/2023/assets/geoportal-server-social-share.jpg",
+    datePublished: "",
+    domain: window.location.host,
+    environment: "crx3composite,nosamplecontent,publish,cloud\u002Dready",
+    hierarchy1: "Arcgis",
+    hierarchy2: "Products",
+    hierarchy3: "Esri Geoportal Server",
+    hierarchy4: "",
+    locale: "en-us",
+    resourceType: "esri-sites/components/pages/editablecontentpage",
+    template: "/conf/esri-sites/settings/wcm/templates/esri-content-template",
+    language: "en",
+    countryCode: "us",
+    tags: "adobe\u002Danalytics\u002D\u002D\u002Donly\u002Dfor\u002Dsites:page\u002Dtype\/products|page\u002Dsub\u002Dtype\/overview,products:arcgis\u002Dgeoportal\u002Dserver,forms:high\u002Dcommitment\u002Dform\/sales\u002Dcontact\u002Dform",
+  })
+</script>
+
+
+<script type="text/javascript">
+  window.storeVariables = Object.assign({}, window.storeVariables, {
+    eCommUrl: "https://www.esri.com/api/ecomm",
+    lookupUrl: "https://ecomm-api.esri.com/lookup",
+    accountsUrl: "https://www.esri.com/en-us/signin",
+    checkoutUrl: "https://www.esri.com/checkout",
+    cartUrl: "https://www.esri.com/en-us/store/cart",
+    customerNumberUrl: "https://www.esri.com/en-us/store/customer-number",
+  })
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="color theme" content="009AF2"/>
+
+<!-- /* Clientlibs */ -->
+
+    
+<link rel="stylesheet" href="assets/www.esri.com/183e53fb8d1b-components.css" type="text/css">
+
+
+
+
+	
+    
+    
+
+    
+
+    
+
+
         
-        <p class="view">&nbsp;</p>
-        <p class="view">
-          <img src="images/Certified_OGC_Compliant_Logo_Web.gif" />
-          <img src="images/badge.csw202.gif" />
-          <img src="images/badge.cat202.gif" />
-          <img src="https://stacspec.org/public/images-original/STAC-01.png" />
 
-        </p>
-      </header>
-      <section>
-        <h1>About Esri Geoportal Server</h1>
 
-<p>Esri Geoportal Server is a free, open-source stand-alone metadata catalog management app that enables discovery and use of geospatial resources such as datasets, raster data, & web services.</p>
+    
+    
+    
+    
+    
 
-<p>Geoportal Server consists of two standalone components -- Catalog and Harvester -- and complements ArcGIS for organizations managing, serving, and harvesting metadata. Learn more on <a href="https://www.esri.com/en-us/arcgis/products/geoportal-server/overview">Esri.com</a>.</p>
-<p>With Geoportal Server, you can catalog your organization's geospatial resources in a central repository called a geoportal, which you can publish to the Internet or your intranet. Visitors to your geoportal can search and access these resources to use with their projects. If you grant them permission, visitors can also register geospatial resources with the geoportal using metadata that describes the location, age, quality, and other characteristics of the resources.
-</p>
 
-<p>Try it out on our sandbox site!</p>
-<ul>
-<li><a href="https://gpt.geocloud.com/geoportal3">Traditional geospatial metadata catalog</a></li>
-<li><a href="https://gpt.geocloud.com/geoportal">Spatio-Temporal Asset Catalog (STAC) configuration</a>
-  <ul>
-    <li><a href="https://gpt.geocloud.com/geoportal/stac">STAC API</a></li>
-    <li><a href="https://gpt.geocloud.com/geoportal/mcp">Model Context Protocol (MCP) for Generative AI integration of the STAC instance</a></li>
-</ul>
-  </li>
-</ul>
+	
+	
 
-<h2>Download the Latest Release</h2>
-<a href="https://github.com/ArcGIS/geoportal-server-catalog/releases">Click here</a> to access the Release Notes and download assets.</p>
+                    <script>var w=window;if(w.performance||w.mozPerformance||w.msPerformance||w.webkitPerformance){var d=document;AKSB=w.AKSB||{},AKSB.q=AKSB.q||[],AKSB.mark=AKSB.mark||function(e,_){AKSB.q.push(["mark",e,_||(new Date).getTime()])},AKSB.measure=AKSB.measure||function(e,_,t){AKSB.q.push(["measure",e,_,t||(new Date).getTime()])},AKSB.done=AKSB.done||function(e){AKSB.q.push(["done",e])},AKSB.mark("firstbyte",(new Date).getTime()),AKSB.prof={custid:"1138123",ustr:"",originlat:"0",clientrtt:"34",ghostip:"23.52.41.138",ipv6:true,pct:"10",clientip:"2a09:bac5:6416:1800::264:c7",requestid:"1242a53",region:"42312",protocol:"",blver:14,akM:"dscx",akN:"ae",akTT:"O",akTX:"1",akTI:"1242a53",ai:"225692",ra:"false",pmgn:"",pmgi:"",pmp:"",qc:""},function(e){var _=d.createElement("script");_.async="async",_.src=e;var t=d.getElementsByTagName("script"),t=t[t.length-1];t.parentNode.insertBefore(_,t)}(("https:"===d.location.protocol?"https:":"http:")+"//ds-aksb-a.akamaihd.net/aksb.min.js")}</script>
+                    </head>
+
+<body class="editablecontentpage page basicpage" id="editablecontentpage-0e2dbbe43b" data-instant-intensity="viewport">
+
+	
+
+
+
+
+
+	
+
+
+
+
+	
+<link rel="stylesheet" href="assets/webapps-cdn.esri.com/d4f1eccb74cd-gn.css"/>
+<script src="assets/webapps-cdn.esri.com/eb64f14eda66-gn.js"></script>
+<header id="globalnav" aria-label="Main" class="calcite-mode-light"></header>
+<main id="main-content">
+
+
+<div class="aem-Grid aem-Grid--12 aem-Grid--default--12 ">
+    
+    <div class="hero-banner-global-v2 aem-GridColumn aem-GridColumn--default--12">
+ <link rel="stylesheet" href="assets/www.esri.com/65f78f5898df-clientlibs.css" type="text/css">
+ <script src="assets/www.esri.com/b3e7628c4505-csrf.js"></script>
+<script src="assets/www.esri.com/8c1ba9fb5e35-components.js"></script>
+<script src="assets/www.esri.com/79f5501faf2a-clientlibs.js"></script>
+ 
+
+
+
+
+
+
+<div class="hbg-container hbg-container--medium calcite-mode-dark has-background has-background--img  has-background--cover " style="
+	--bg-color: #00082C; --bg-gradient-end: var(--bg-color);;
+	--posX: center;
+	--posY: center;
+	">
+  <div class="hbg-container hbg-container--medium">
+    
+      
+      <picture class="hbg-container--medium--backgroundImage">
         
-<h2>Documentation</h2>
-<p>Visit <a href="https://github.com/Esri/geoportal-server-catalog/wiki">our Wiki documentation</a> to explore how to install, configure, customize, and use Geoportal Server.</p>
+        <img alt fetchpriority="low" loading="lazy" class="hbg-container--medium--backgroundImage" src="assets/www.esri.com/aaec80ea9969-spatial-data-infrastructure-banner-bg.jpg"/>
+      </picture>
+      
+    
+
+    
+    
+
+    <div class="hbg-container--medium--left">
+      <div class="hbg-container--content--medium calcite-animate" data-animation="calcite-animate__in-up">
+        <div class="hbg-content">
+          <div class="esriText esri-text">
+
+    
+
+
+
+
+
+
+
+
+<div class="esri-text-container">
+	
+
+	
+
+	<h1 class="esri-text__title">Esri Geoportal Server</h1>
+
+	
+
+	<p class="esri-text__description ">An open-source metadata catalog management app for data discovery</p>
+</div>
+</div>
+
+        </div>
+        <div class="hbg-cta-buttons">
+          
+
+
+
+
+<!-- primary for video (if video then no other button)-->
+
+
+<!-- primary for no video -->
+
+  <a class="esri-ui-button esri-ui-button--brand esri-ui-button--solid  " href="https://esri.github.io/geoportal-server/" data-component-link-placement="Primary-link - Download from GitHub" data-event="track-component" data-component-name="cta-buttons" data-link-type="external" data-component-link-type="button" data-component-link="Download from GitHub" target="_blank" rel="noopener" aria-describedby="new-window">Download from GitHub</a>
+
+  <!-- secondary -->
+  
+
+  <!-- tertiary link -->
+  
+
+
+        </div>
+      </div>
+    </div>
+    <div class="hbg-container--medium--right">
+      
+        <div class="hbg-container--medium--foregroundImage">
+          
+          
+            <picture>
+              
+
+              <img loading="lazy" alt="An illustration of a blue globe with interconnected dots and lines next to an inset image of a world map " width="1728" height="1152" class="hbg-foregroundImage" data-aem-asset-id="a032e2a4-9c5e-4531-a367-58041acd5727" fetchpriority="high" src="assets/www.esri.com/cae1b637120f-spatial-data-infrastructure-banner-fg.png"/>
+            </picture>
+          
+          
+        </div>
+      
+
+      
+      
+    </div>
+  </div>
+</div>
+</div>
+<div class="contentbar aem-GridColumn aem-GridColumn--default--12">
+ <link rel="stylesheet" href="assets/www.esri.com/a8da756d4208-clientlibs.css" type="text/css">
+ 
+
+
+
+
+
+  <div class="contentbar-wrapper">
+    <section class="contentbar--content left-aligned calcite-mode-dark alignleft calcite-animate has-background has-background--color" data-animation="calcite-animate__in-up" style="background-color: #0051af; ;">
+      <div class="grid-container">
+        <div class="contentbar-text">
+          
+
+          
+          
+          
+          <div class="esri-text__description richtext-container"><p>Esri Geoportal Server is a free, open-source, standards-based metadata catalog management application that enables the discovery and use of geospatial and nongeospatial resources. It consists of two stand-alone components—Server and Harvester—and complements ArcGIS for organizations managing, serving, and harvesting metadata.</p>
+<p>If you are currently using ArcGIS, Esri also provides metadata management, data catalog tools, and search capabilities to share open and secure content in an integrated way. </p>
+</div>
+
+          <div>
+            
+
+            <a class="esri-ui-button  esri-ui-button--neutral esri-ui-button--outline  " data-cb-cta="one" data-event="track-component" data-component-name="Content Bar" data-link-type="internal" data-component-link-type="button" data-component-link=" - Visit ArcGIS Hub" data-component-link-placement="2" href="https://www.esri.com/en-us/arcgis/products/arcgis-hub/overview"> Visit ArcGIS Hub</a>
+
+            
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+</div>
+<div class="calcite-container aem-GridColumn aem-GridColumn--default--12">
+
+
+
+
+<div class="
+  leader-0
+  trailer-0
+  padding-leader-3
+  padding-trailer-2
+  has-background
+  has-background--
+  
+  
+  
+  " style=" ;
+     ;
+    --bg-img: url();
+    --bg-img-position: center center;
+     ;">
+
+  <div class="grid-container " id="what-it-can-do">
+    
+
+    
+    
+    
+    <div id="container-a6b78ff146" class="cmp-container">
         
-<h2>Support or Contact</h2>
-<p>Contact us at <a href="mailto:portal@esri.com">portal@esri.com</a> for questions and we'll help you sort it out.</p>
+        <div class="esri-title text-center">
+<div id="title-112537fe6f" class="cmp-title">
+    <h2 class="cmp-title__text">What can Esri Geoportal Server do?</h2>
+</div>
 
-<h2>Issues</h2>
-<p>Find a bug or want to request a new feature?  Please let us know by <a href="https://github.com/Esri/geoportal-server-catalog/issues">submitting an issue</a>.</p>
+    
 
-<h2>Contributing</h2>
-<p>Anyone and everyone is welcome to contribute.</p>
+</div>
+<div data-cmp-is="tabs" class="esri-tabs tab-icons">
+<div id="tabs-2bd0aa5c96" class="cmp-tabs" data-cmp-is="tabs" data-placeholder-text="false">
+    <ol role="tablist" class="cmp-tabs__tablist" aria-multiselectable="false">
+        
+        <li role="tab" id="tabs-2bd0aa5c96-item-fdbee1cf01-tab" class="cmp-tabs__tab cmp-tabs__tab--active" aria-controls="tabs-2bd0aa5c96-item-fdbee1cf01-tabpanel" tabindex="0" data-cmp-hook-tabs="tab">Search and discover</li>
+    
+        
+        <li role="tab" id="tabs-2bd0aa5c96-item-4be31ff0c7-tab" class="cmp-tabs__tab" aria-controls="tabs-2bd0aa5c96-item-4be31ff0c7-tabpanel" tabindex="-1" data-cmp-hook-tabs="tab">Create metadata</li>
+    
+        
+        <li role="tab" id="tabs-2bd0aa5c96-item-bb31eee229-tab" class="cmp-tabs__tab" aria-controls="tabs-2bd0aa5c96-item-bb31eee229-tabpanel" tabindex="-1" data-cmp-hook-tabs="tab">Harvest catalogs</li>
+    
+        
+        <li role="tab" id="tabs-2bd0aa5c96-item-ba3fb0610b-tab" class="cmp-tabs__tab" aria-controls="tabs-2bd0aa5c96-item-ba3fb0610b-tabpanel" tabindex="-1" data-cmp-hook-tabs="tab">Link producers and consumers</li>
+    </ol>
+    <div id="tabs-2bd0aa5c96-item-fdbee1cf01-tabpanel" role="tabpanel" aria-labelledby="tabs-2bd0aa5c96-item-fdbee1cf01-tab" tabindex="0" class="cmp-tabs__tabpanel cmp-tabs__tabpanel--active" data-cmp-hook-tabs="tabpanel" data-cmp-data-layer="{&#34;tabs-2bd0aa5c96-item-fdbee1cf01&#34;:{&#34;@type&#34;:&#34;esri-sites/components/core/tabs/item&#34;,&#34;dc:title&#34;:&#34;Search and discover&#34;}}"><div class="responsivegrid">
 
-<h2>Licensing</h2>
-<p>Copyright 2010-2023 Esri</p>
 
-<p>Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at</p>
-
-<p><a href="https://www.apache.org/licenses/LICENSE-2.0">https://www.apache.org/licenses/LICENSE-2.0</a></p>
-
-<p>Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.</p>
+<div class="aem-Grid aem-Grid--12 aem-Grid--default--12 ">
+    
+    <article class="media-split media-split__small aem-GridColumn aem-GridColumn--default--12">
+    
+<link rel="stylesheet" href="assets/www.esri.com/7b1322676629-clientlibs.css" type="text/css">
 
 
-<p>This project is maintained by <a href="https://github.com/Esri">Esri</a></p>
-<p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-  </body>
+
+
+
+	
+
+
+
+
+
+
+
+<div class="split calcite-animate split--swap" data-animation="calcite-animate__in-up">
+
+	<div class="split__copy">
+		<div class="split__copy--esritext">
+			<div class="esriText esri-text">
+
+    
+
+
+
+
+
+
+
+
+<div class="esri-text-container">
+	
+
+	
+
+	<h3 class="esri-text__title">Search and discover</h3>
+
+	
+
+	<p class="esri-text__description ">Esri Geoportal Server provides a stand-alone, open-source data catalog and website of metadata for existing geospatial data and services. It allows you to create and manage descriptions of geospatial resources using easy-to-use, sophisticated data discovery technologies and provides an INSPIRE-compliant discovery service.</p>
+</div>
+</div>
+
+			
+		</div>
+		<div class="split__copy--esritext">
+
+		</div>
+		
+	</div>
+
+	<div class="split__image">
+		
+			<div class="media-split-img">
+				
+<div data-cmp-is="image" data-cmp-widths="400,750,820,1440,1640,2160" data-cmp-dmimage data-cmp-src="assets/www.esri.com/73ab02a39c1e-spatial-data-infrastructure-mts-search-discover.bin" data-asset-id="44d11da6-46ec-44e6-abcc-8bf028ce40dc" data-cmp-filereference="assets/www.esri.com/087f8adb0f21-spatial-data-infrastructure-mts-search-discover.png" id="mediasplit-image-v3-eda1c99260" data-cmp-hook-image="imageV3" class="cmp-image" itemscope itemtype="http://schema.org/ImageObject">
+    
+        <img src="assets/www.esri.com/26cf519edd52-spatial-data-infrastructure-mts-search-discover.bin" srcset="assets/www.esri.com/966193c4c65a-spatial-data-infrastructure-mts-search-discover.bin 400w, assets/www.esri.com/158110ddcf32-spatial-data-infrastructure-mts-search-discover.bin 750w, assets/www.esri.com/34419019c48a-spatial-data-infrastructure-mts-search-discover.bin 820w, assets/www.esri.com/73ab02a39c1e-spatial-data-infrastructure-mts-search-discover.bin 1440w, assets/www.esri.com/4d5f14f0e5c6-spatial-data-infrastructure-mts-search-discover.bin 1640w" loading="lazy" class="cmp-image__image" itemprop="contentUrl" width="644" height="363" sizes="(max-width: 820px) 100vw, 720px" alt="A small world map on the left side next to four white boxes of text representing the Search Catalog user interface"/>
+    
+    
+    
+</div>
+
+    
+
+
+				
+			</div>
+		
+		
+	</div>
+</div>
+</article>
+
+    
+</div>
+</div>
+</div>
+<div id="tabs-2bd0aa5c96-item-4be31ff0c7-tabpanel" role="tabpanel" aria-labelledby="tabs-2bd0aa5c96-item-4be31ff0c7-tab" tabindex="0" class="cmp-tabs__tabpanel" data-cmp-hook-tabs="tabpanel" data-cmp-data-layer="{&#34;tabs-2bd0aa5c96-item-4be31ff0c7&#34;:{&#34;@type&#34;:&#34;esri-sites/components/core/tabs/item&#34;,&#34;dc:title&#34;:&#34;Create metadata&#34;}}"><div class="responsivegrid">
+
+
+<div class="aem-Grid aem-Grid--12 aem-Grid--default--12 ">
+    
+    <article class="media-split media-split__small aem-GridColumn aem-GridColumn--default--12">
+    
+
+
+
+
+
+	
+
+
+
+
+
+
+
+<div class="split calcite-animate split--swap" data-animation="calcite-animate__in-up">
+
+	<div class="split__copy">
+		<div class="split__copy--esritext">
+			<div class="esriText esri-text">
+
+    
+
+
+
+
+
+
+
+
+<div class="esri-text-container">
+	
+
+	
+
+	<h3 class="esri-text__title">Create metadata</h3>
+
+	
+
+	<p class="esri-text__description ">Similar to ArcGIS, Esri Geoportal Server supports metadata creation and data catalog tools using common metadata profiles, including Federal Geographic Data Committee (FGDC), International Organization for Standardization (ISO), ISO North American Profile (NAP), Infrastructure for Spatial Information in Europe (INSPIRE), and Dublin Core.</p>
+</div>
+</div>
+
+			
+		</div>
+		<div class="split__copy--esritext">
+
+		</div>
+		
+	</div>
+
+	<div class="split__image">
+		
+			<div class="media-split-img">
+				
+<div data-cmp-is="image" data-cmp-widths="400,750,820,1440,1640,2160" data-cmp-dmimage data-cmp-src="assets/www.esri.com/1326626bd7ff-spatial-data-infrastructure-mts-create-metadata.bin" data-asset-id="42ab95ce-92ff-4ba6-95ac-56b0f39cf8c6" data-cmp-filereference="assets/www.esri.com/891b8a284fdf-spatial-data-infrastructure-mts-create-metadata.png" id="mediasplit-image-v3-b9f006e4b7" data-cmp-hook-image="imageV3" class="cmp-image" itemscope itemtype="http://schema.org/ImageObject">
+    
+        <img src="assets/www.esri.com/8edc065629fe-spatial-data-infrastructure-mts-create-metadata.bin" srcset="assets/www.esri.com/b70829e2dfd7-spatial-data-infrastructure-mts-create-metadata.bin 400w, assets/www.esri.com/4067d52080ef-spatial-data-infrastructure-mts-create-metadata.bin 750w, assets/www.esri.com/613c971f49a5-spatial-data-infrastructure-mts-create-metadata.bin 820w, assets/www.esri.com/1326626bd7ff-spatial-data-infrastructure-mts-create-metadata.bin 1440w, assets/www.esri.com/f3ce0159708e-spatial-data-infrastructure-mts-create-metadata.bin 1640w" loading="lazy" class="cmp-image__image" itemprop="contentUrl" width="644" height="363" sizes="(max-width: 820px) 100vw, 720px" alt="A screenshot showing small folders on the left and gray search result boxes on the right representing ta user interface"/>
+    
+    
+    
+</div>
+
+    
+
+
+				
+			</div>
+		
+		
+	</div>
+</div>
+</article>
+
+    
+</div>
+</div>
+</div>
+<div id="tabs-2bd0aa5c96-item-bb31eee229-tabpanel" role="tabpanel" aria-labelledby="tabs-2bd0aa5c96-item-bb31eee229-tab" tabindex="0" class="cmp-tabs__tabpanel" data-cmp-hook-tabs="tabpanel" data-cmp-data-layer="{&#34;tabs-2bd0aa5c96-item-bb31eee229&#34;:{&#34;@type&#34;:&#34;esri-sites/components/core/tabs/item&#34;,&#34;dc:title&#34;:&#34;Harvest catalogs&#34;}}"><div class="responsivegrid">
+
+
+<div class="aem-Grid aem-Grid--12 aem-Grid--default--12 ">
+    
+    <article class="media-split media-split__small aem-GridColumn aem-GridColumn--default--12">
+    
+
+
+
+
+
+	
+
+
+
+
+
+
+
+<div class="split calcite-animate split--swap" data-animation="calcite-animate__in-up">
+
+	<div class="split__copy">
+		<div class="split__copy--esritext">
+			<div class="esriText esri-text">
+
+    
+
+
+
+
+
+
+
+
+<div class="esri-text-container">
+	
+
+	
+
+	<h3 class="esri-text__title">Harvest catalogs</h3>
+
+	
+
+	<p class="esri-text__description ">The Harvester component in Esri Geoportal Server is a module that supports harvesting metadata and data assets from other catalogs and brings that content for data users into Geoportal, local folders, or ArcGIS Enterprise and ArcGIS Online.</p>
+</div>
+</div>
+
+			
+		</div>
+		<div class="split__copy--esritext">
+
+		</div>
+		
+	</div>
+
+	<div class="split__image">
+		
+			<div class="media-split-img">
+				
+<div data-cmp-is="image" data-cmp-widths="400,750,820,1440,1640,2160" data-cmp-dmimage data-cmp-src="assets/www.esri.com/f2b114b81970-spatial-data-infrastructure-mts-harvester.bin" data-asset-id="13f507ec-8d3e-4b72-aa6c-edded67f6c23" data-cmp-filereference="assets/www.esri.com/e75a206d0e0a-spatial-data-infrastructure-mts-harvester.png" id="mediasplit-image-v3-cb36814b5b" data-cmp-hook-image="imageV3" class="cmp-image" itemscope itemtype="http://schema.org/ImageObject">
+    
+        <img src="assets/www.esri.com/12bfe1f3654f-spatial-data-infrastructure-mts-harvester.bin" srcset="assets/www.esri.com/80d5b1bff843-spatial-data-infrastructure-mts-harvester.bin 400w, assets/www.esri.com/c412070ba55c-spatial-data-infrastructure-mts-harvester.bin 750w, assets/www.esri.com/01c1c819ae06-spatial-data-infrastructure-mts-harvester.bin 820w, assets/www.esri.com/f2b114b81970-spatial-data-infrastructure-mts-harvester.bin 1440w, assets/www.esri.com/d6046dd68c72-spatial-data-infrastructure-mts-harvester.bin 1640w" loading="lazy" class="cmp-image__image" itemprop="contentUrl" width="644" height="363" sizes="(max-width: 820px) 100vw, 720px" alt="A diagram with a globe and connected squares representing a workflow next to a folder icon and purple and blue product logos"/>
+    
+    
+    
+</div>
+
+    
+
+
+				
+			</div>
+		
+		
+	</div>
+</div>
+</article>
+
+    
+</div>
+</div>
+</div>
+<div id="tabs-2bd0aa5c96-item-ba3fb0610b-tabpanel" role="tabpanel" aria-labelledby="tabs-2bd0aa5c96-item-ba3fb0610b-tab" tabindex="0" class="cmp-tabs__tabpanel" data-cmp-hook-tabs="tabpanel" data-cmp-data-layer="{&#34;tabs-2bd0aa5c96-item-ba3fb0610b&#34;:{&#34;@type&#34;:&#34;esri-sites/components/core/tabs/item&#34;,&#34;dc:title&#34;:&#34;Link producers and consumers&#34;}}"><div class="responsivegrid">
+
+
+<div class="aem-Grid aem-Grid--12 aem-Grid--default--12 ">
+    
+    <article class="media-split media-split__small aem-GridColumn aem-GridColumn--default--12">
+    
+
+
+
+
+
+	
+
+
+
+
+
+
+
+<div class="split calcite-animate split--swap" data-animation="calcite-animate__in-up">
+
+	<div class="split__copy">
+		<div class="split__copy--esritext">
+			<div class="esriText esri-text">
+
+    
+
+
+
+
+
+
+
+
+<div class="esri-text-container">
+	
+
+	
+
+	<h3 class="esri-text__title">Connect producers and consumers</h3>
+
+	
+
+	<p class="esri-text__description ">Esri Geoportal Server is an open-source product that enables discovery and use of geospatial resources. Standards-based geoportals help connect geospatial data producers with consumers, such as data users and data scientists, to integrate metadata catalogs with other enterprise systems.</p>
+</div>
+</div>
+
+			
+		</div>
+		<div class="split__copy--esritext">
+
+		</div>
+		
+	</div>
+
+	<div class="split__image">
+		
+			<div class="media-split-img">
+				
+<div data-cmp-is="image" data-cmp-widths="400,750,820,1440,1640,2160" data-cmp-dmimage data-cmp-src="assets/www.esri.com/9a061333a29a-spatial-data-infrastructure-mts-connect-customers.bin" data-asset-id="e64ce868-d54f-4505-9c0c-a124c8e1a66f" data-cmp-filereference="assets/www.esri.com/8c2b7d398460-spatial-data-infrastructure-mts-connect-customers.jpg" id="mediasplit-image-v3-4d56b6633e" data-cmp-hook-image="imageV3" class="cmp-image" itemscope itemtype="http://schema.org/ImageObject">
+    
+        <img src="assets/www.esri.com/50d6c2773bdb-spatial-data-infrastructure-mts-connect-customers.bin" srcset="assets/www.esri.com/4b997f48344c-spatial-data-infrastructure-mts-connect-customers.bin 400w, assets/www.esri.com/9f09367f3c5c-spatial-data-infrastructure-mts-connect-customers.bin 750w, assets/www.esri.com/9a6c721e0bd2-spatial-data-infrastructure-mts-connect-customers.bin 820w, assets/www.esri.com/9a061333a29a-spatial-data-infrastructure-mts-connect-customers.bin 1440w, assets/www.esri.com/2c1f733a965a-spatial-data-infrastructure-mts-connect-customers.bin 1640w" loading="lazy" class="cmp-image__image" itemprop="contentUrl" width="644" height="363" sizes="(max-width: 820px) 100vw, 720px" alt="People gathered around a table in a conference room talking and viewing paper reports"/>
+    
+    
+    
+</div>
+
+    
+
+
+				
+			</div>
+		
+		
+	</div>
+</div>
+</article>
+
+    
+</div>
+</div>
+</div>
+
+    
+</div>
+</div>
+
+        
+    </div>
+
+
+  </div>
+</div>
+
+
+</div>
+<div class="cards-container-v3 aem-GridColumn aem-GridColumn--default--12">
+
+
+
+	<link rel="stylesheet" href="assets/www.esri.com/318b7232edd8-clientlibs.css" type="text/css">
+<script defer src="assets/www.esri.com/50fb28ecdba0-clientlibs.js"></script>
+
+
+
+<div class="
+    padding-leader-2
+    padding-trailer-2
+    calcite-mode-light
+    has-background
+    has-background--color
+    
+    
+    " style="--bg-color: #fff;  --bg-img: url(); --posX: center; --posY: center;  ;">
+    
+
+    
+    
+
+    
+    <div class="grid-container" id="how-it-works">
+    
+    
+        
+        
+        
+        
+        
+        
+        <div class="card-container-v3 card-container-v3--centered cardsPerRow-3 centered" data-author-mode="false">
+        
+        
+        
+            
+            <div class="container-v3 esri-text-container ">
+                <h2 class="esri-text__title stylesystem ">How Esri Geoportal Server works</h2>
+                
+                <p class="esri-text__description stylesystem">Esri Geoportal Server includes capabilities for generating and registering metadata for a variety of geospatial content, including raster and vector datasets, image collections, web services, analyses, GIS tools, maps, and publications. </p>
+                
+                  
+            </div>
+            
+
+            
+            
+            
+            
+            
+            <ul class="no-list calcite-mode-light relatedLinkMatrix card-container-v3 card-container-v3--centered cardsPerRow-3 centered" data-author-mode="false">
+            
+            
+                <!-- Start Component Parsys -->
+                
+
+
+
+
+    
+    
+    <li class="block">
+ <link rel="stylesheet" href="assets/www.esri.com/a7e40c6ebdd5-clientlibs.css" type="text/css">
+ 
+
+
+
+<article class="esri-text--card text-link-stack-icon calcite-animate calcite-mode-light" calcite-animate="true" data-animation="calcite-animate__in-up">
+  
+
+  <div class="text-link-stack-icon-wrapper">
+    <div class="esri-text__iconContainer">
+      
+
+      
+
+      
+
+      
+      
+        <span><svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M47.9 37.9h-16v8.97L15.19 32.52l15.232-15.012L16.9 4.92V12.9H.9v10.2H17v.8H.1V12.1h16V3.081l15.478 14.41L16.372 32.48 31.1 45.13V37.1h16V26.9H31v-.8h16.9zM9 9.1H0v.8h9zm30 31v.8h9v-.8z" id="icon-ui-svg--base"/></svg></span>
+      
+    </div>
+
+    <div class="contentarea esri-text-container">
+      <h3 class="esri-text__title">System integration</h3>
+      <div class="esri-text__description trailer-1 richtext-container"><p>Esri Geoportal Server supports international open standards and specifications to simplify its integration with external websites and applications.</p>
+</div>
+
+      <div class="bottom-link">
+        <div class="esri-button-wrapper">
+          
+        </div>
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</article>
+</li>
+
+
+    
+    
+    <li class="block">
+  
+
+
+
+<article class="esri-text--card text-link-stack-icon calcite-animate calcite-mode-light" calcite-animate="true" data-animation="calcite-animate__in-up">
+  
+
+  <div class="text-link-stack-icon-wrapper">
+    <div class="esri-text__iconContainer">
+      
+
+      
+
+      
+
+      
+      
+        <span><svg xmlns="http://www.w3.org/2000/svg" id="icon-ui-svg" class="icon-ui-svg" viewBox="0 0 48 48"><path id="icon-ui-svg--base" d="M35.9 22.1v-5.379c0-6.96-5.563-12.62-12.4-12.62S11.1 9.76 11.1 16.72v5.38h-3V43.9h30.8V22.1zm-24-5.379C11.9 10.203 17.104 4.9 23.5 4.9s11.6 5.303 11.6 11.821v5.38h-2.2v-5.494c0-5.242-4.216-9.507-9.4-9.507s-9.4 4.265-9.4 9.507V22.1h-2.2zm20.2 5.38H14.9v-5.494c0-4.8 3.858-8.707 8.6-8.707s8.6 3.906 8.6 8.707zm6 21H8.9V22.9h29.2zM22.9 40h-.8v-3.9h2v-1.2h-2v-2.8h2v-1.2h-2V27h.8v1.1H25v.8h-2.1v1.2h2v2.8h-2v1.2h2v2.8h-2v1.2H25v.8h-2.1z"/></svg></span>
+      
+    </div>
+
+    <div class="contentarea esri-text-container">
+      <h3 class="esri-text__title">Flexible security</h3>
+      <div class="esri-text__description trailer-1 richtext-container"><p>Esri Geoportal Server supports simple or user authentication, with an external Lightweight Directory Access Protocol (LDAP) and OAuth 2.0 for access and security. Authentication allows you to designate record-level metadata access as unrestricted, public protected, or restricted.</p>
+</div>
+
+      <div class="bottom-link">
+        <div class="esri-button-wrapper">
+          
+        </div>
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</article>
+</li>
+
+
+    
+    
+    <li class="block">
+  
+
+
+
+<article class="esri-text--card text-link-stack-icon calcite-animate calcite-mode-light" calcite-animate="true" data-animation="calcite-animate__in-up">
+  
+
+  <div class="text-link-stack-icon-wrapper">
+    <div class="esri-text__iconContainer">
+      
+
+      
+
+      
+
+      
+      
+        <span><svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M38.085 38.104a19.96 19.96 0 0 1-27.185.864V45h-.8v-7.9H18v.8h-7.1v.01A19.099 19.099 0 0 0 40.006 13.58l.669-.437a19.973 19.973 0 0 1-2.59 24.96zM10.508 10.527a19.122 19.122 0 0 1 27.012 0c.187.187.366.38.544.573H31.01v.8h7.9V4h-.8v5.987l-.025-.026A19.902 19.902 0 0 0 7.943 35.774l.645-.472a19.222 19.222 0 0 1 1.92-24.775z" id="icon-ui-svg--base"/></svg></span>
+      
+    </div>
+
+    <div class="contentarea esri-text-container">
+      <h3 class="esri-text__title">Server-side synchronization</h3>
+      <div class="esri-text__description trailer-1 richtext-container"><p>Esri Geoportal Server can automatically monitor registered resources and synchronize any changes to the catalog service.</p>
+</div>
+
+      <div class="bottom-link">
+        <div class="esri-button-wrapper">
+          
+        </div>
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</article>
+</li>
+
+
+    
+    
+    <li class="block">
+  
+
+
+
+<article class="esri-text--card text-link-stack-icon calcite-animate calcite-mode-light" calcite-animate="true" data-animation="calcite-animate__in-up">
+  
+
+  <div class="text-link-stack-icon-wrapper">
+    <div class="esri-text__iconContainer">
+      
+
+      
+
+      
+
+      
+      
+        <span><svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M19.47 44.219v.681h-5.784a2.589 2.589 0 0 1-2.586-2.586v-1.867a2.585 2.585 0 0 1-2.18-2.742l.956-12.593a6.47 6.47 0 0 1 6.438-6.012h7.057a6.41 6.41 0 0 1 3.712 1.19c-.41.06-.824.13-1.237.21a5.573 5.573 0 0 0-2.475-.6h-7.058a5.668 5.668 0 0 0-5.64 5.27L9.72 37.765a1.786 1.786 0 0 0 1.781 1.914h.4v2.635a1.787 1.787 0 0 0 1.786 1.786h5.709c.022.04.051.078.075.119zM13.1 9a6.9 6.9 0 1 1 6.9 6.9A6.908 6.908 0 0 1 13.1 9zm.8 0A6.1 6.1 0 1 0 20 2.9 6.107 6.107 0 0 0 13.9 9zm30 16.5v17c0 2.208-5.874 3.4-11.4 3.4s-11.4-1.192-11.4-3.4v-17c0-2.208 5.874-3.4 11.4-3.4s11.4 1.192 11.4 3.4zm-22 0c0 1.086 4.033 2.6 10.6 2.6s10.6-1.514 10.6-2.6-4.033-2.6-10.6-2.6-10.6 1.514-10.6 2.6zm21.2 17v-9.694c-1.782 1.366-6.29 2.094-10.6 2.094s-8.818-.728-10.6-2.094V42.5c0 1.086 4.033 2.6 10.6 2.6s10.6-1.514 10.6-2.6zm0-11v-4.694c-1.782 1.366-6.29 2.094-10.6 2.094s-8.818-.728-10.6-2.094V31.5c0 1.086 4.033 2.6 10.6 2.6s10.6-1.514 10.6-2.6z" id="icon-ui-svg--base"/></svg></span>
+      
+    </div>
+
+    <div class="contentarea esri-text-container">
+      <h3 class="esri-text__title">Metadata publishing</h3>
+      <div class="esri-text__description trailer-1 richtext-container"><p>Reduce time and redundancy using tools for generating and registering high-quality metadata. Publishers can directly create metadata in the geoportal web application, upload their existing metadata, and allow autogeneration of metadata.</p>
+</div>
+
+      <div class="bottom-link">
+        <div class="esri-button-wrapper">
+          
+        </div>
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</article>
+</li>
+
+
+    
+    
+    <li class="block">
+  
+
+
+
+<article class="esri-text--card text-link-stack-icon calcite-animate calcite-mode-light" calcite-animate="true" data-animation="calcite-animate__in-up">
+  
+
+  <div class="text-link-stack-icon-wrapper">
+    <div class="esri-text__iconContainer">
+      
+
+      
+
+      
+
+      
+      
+        <span><svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M22.157 11.714l.32.8.729.264.505-.112.621-1.163-.55-.724-.02-.295-.49-.74-.635-.244-.362.046-.794.81.12.924zm.454-1.367l.136.051.232.352.022.323.384.506-.185.346-.114-.042-.267-.667-.466-.364-.028-.213zM20 35.18c-.169.005-.335.02-.505.02a15.417 15.417 0 0 1-10.588-4.221l.076-.123.099-.316a1.523 1.523 0 0 0 .07-.559l-.002-.04.188-.354.32-.196.537-.623-.04-.794-.185-.267-.925-.758a12.18 12.18 0 0 0-1.41-1.039l-.315-.203-.175-.567.007-1.668-.244-.338A17.176 17.176 0 0 1 4.28 17.93l-.052-.153-.135-.071a15.534 15.534 0 0 1 2.872-7.284l.236.072.333-.116c.464-.308 1.381-.91 1.79-1.158l.125.005c.38.017 1.027.045 1.185.05l.15.005.383-.312a5.094 5.094 0 0 0 .912-.83l.043-.049c.067.016.138.036.212.055a4.58 4.58 0 0 0 .623.132l.108.012.704-.322 1.189-1.633.426-1.142-.313-.539a15.345 15.345 0 0 1 2.7-.551l-.933.766-.86 1.478.5.936.6.158.427-.111 1.324-.93h2.519l.106-.235a2.472 2.472 0 0 1 .94-1.233l.35-.582a15.407 15.407 0 0 1 5.913 2.683l-.225.348-.343-.082a45.733 45.733 0 0 0-1.182-.276l-.146-.026-1.355.804-.052.09a4.227 4.227 0 0 0-.338.666 3.843 3.843 0 0 1-.405.726l-.09.142.261 1.119.825.697-.063.051a3.664 3.664 0 0 0-.606.57 6.297 6.297 0 0 1-1.112.871l-.093.067-.45 1.112.069.155a1.698 1.698 0 0 1 .091.27.89.89 0 0 1-.198-.034 3.318 3.318 0 0 0-.482-.09l-.136-.016-.889.54-.08.301a4.877 4.877 0 0 0-.135 1.322l-.006.141.453.624-.51.464a12.876 12.876 0 0 0-1.364 1.588 1.896 1.896 0 0 0-.734.097l-.12.043-1.24 1.764-.273.688-.066.569c-.22.554-.326.597-.404.629a.918.918 0 0 0-.497.43l-.056.094v1.047l2.33 2.99.964.457v-.854l-.395-.174-2.098-2.694v-.53a.321.321 0 0 1 .054-.025c.33-.135.566-.356.869-1.133l.065-.57.206-.545 1.04-1.462a1.343 1.343 0 0 1 .469-.006l.268.056.149-.229a11.088 11.088 0 0 1 1.41-1.674l.287-.3.264-.109.028.005.29.14a4.344 4.344 0 0 0 .442.241l.185.043 1.19-.378.428-.026a4.11 4.11 0 0 1 1.075.018l.079.01.382.482a.914.914 0 0 0-.001.179l.196.483 2.236 1.029.895-.818c.092.03.194.066.289.101a4.621 4.621 0 0 0 .51.164l.091.02.304-.072a3.665 3.665 0 0 0 .585-.177l.395-.142.453-.67-.28-1.04-.648-.383-.278-.06c-.14-.006-.178-.008-.261-.007l-.462-.3-.404-.55-.745.544-.222-.1a3.098 3.098 0 0 0-1.443-1.745l-.295-.206-.533.616-.068.015-.244-.076-.316-.232-.6-.194-.701.244-1.07.986-.065.081a2.155 2.155 0 0 0-.24.476l-.187.227-.429.18a3.875 3.875 0 0 1-.462-.114l-.358-.471a3.863 3.863 0 0 1 .097-.998l.377-.235a2.488 2.488 0 0 1 .245.053 1.711 1.711 0 0 0 .785.03l.194-.025.302-.516-.075-.29a4.32 4.32 0 0 0-.106-.372l.24-.592a5.684 5.684 0 0 0 1.173-.95 2.668 2.668 0 0 1 .43-.404l.216-.066c.196.05.608.154.849.212l.066.015 1.535-.16V9.841l-.108-.115a1.188 1.188 0 0 0-.956-.407l-.443-.17-.315.112-.202.456-.036.144.004.094c.006.169.012.303.022.447l-.192.353-.034.01-.18-.058-.716-.605-.125-.533a3.831 3.831 0 0 0 .382-.716 3.22 3.22 0 0 1 .235-.471l.914-.542c.224.05.636.15.995.236l.898.211.499-.773A15.6 15.6 0 0 1 35.024 19.6c0 .144-.012.285-.016.428.25.009.517.02.794.036.004-.156.023-.308.023-.464A16.322 16.322 0 0 0 3.24 18.16c-.042.475-.073.953-.073 1.439A16.383 16.383 0 0 0 19.496 36c.17 0 .335-.021.504-.026zm4.533-18.52a1.865 1.865 0 0 1 .131-.243l.821-.797.382-.133.16.044.31.228.627.218.535-.115.232-.27a2.296 2.296 0 0 1 .922 1.32l.06.152.942.429.48-.35.702.47.177.067.122-.002c.08-.002.094-.002.256.006l.28.166.1.371-.101.151-.15.054a3.04 3.04 0 0 1-.499.152l-.118.028c-.101-.03-.215-.072-.329-.114a3.527 3.527 0 0 0-.647-.192l-.17-.024-.881.694-1.393-.64c.003-.024.01-.058.018-.119l.023-.17-.8-1.012-.409-.046a4.755 4.755 0 0 0-1.214-.022l-.485.03-.366.113c.266-.32.272-.34.282-.445zm2.905-6.084l-.01-.118a9.554 9.554 0 0 1-.02-.366 1.326 1.326 0 0 0 .217.024.383.383 0 0 1 .231.06v1.063l-.681.072-.12-.03zm-8.603-6.543c.22-.01.437-.033.66-.033a15.432 15.432 0 0 1 2.416.208l-.084.154a3.007 3.007 0 0 0-.993 1.238h-2.265l-1.34.973-.15.04-.19-.258.516-.919 1.032-.846zm-4.536.884l.206.355-.228.637-1.032 1.418-.306.14c-.127-.023-.268-.06-.402-.096a3.686 3.686 0 0 0-.532-.112l-.201-.018-.33.375a4.487 4.487 0 0 1-.81.732l-.152.123c-.257-.01-.727-.03-1.028-.044l-.362-.016-.1.059c-.194.111-.576.356-.95.599a15.544 15.544 0 0 1 6.227-4.152zM8.352 30.002a.876.876 0 0 1-.046.346l-.014.026A15.57 15.57 0 0 1 3.967 19.6c0-.056.007-.11.008-.164a16.991 16.991 0 0 0 2.287 4.168l.09.124-.007 1.47.297 1.022.561.363a11.462 11.462 0 0 1 1.343.992l.799.634.036.292-.198.243-.45.276-.386.73zM33.5 22.1c-5.526 0-11.4 1.191-11.4 3.4v17c0 2.208 5.874 3.4 11.4 3.4s11.4-1.191 11.4-3.4v-17c0-2.209-5.874-3.4-11.4-3.4zm0 .8c6.567 0 10.6 1.515 10.6 2.6s-4.033 2.6-10.6 2.6-10.6-1.515-10.6-2.6 4.033-2.6 10.6-2.6zm0 22.2c-6.567 0-10.6-1.515-10.6-2.6v-9.694c1.782 1.366 6.29 2.094 10.6 2.094s8.818-.728 10.6-2.094V42.5c0 1.085-4.033 2.6-10.6 2.6zm0-11c-6.567 0-10.6-1.515-10.6-2.6v-4.694c1.782 1.366 6.29 2.094 10.6 2.094s8.818-.728 10.6-2.094V31.5c0 1.085-4.033 2.6-10.6 2.6z" id="icon-ui-svg--base"/></svg></span>
+      
+    </div>
+
+    <div class="contentarea esri-text-container">
+      <h3 class="esri-text__title">Distributed data cataloging</h3>
+      <div class="esri-text__description trailer-1 richtext-container"><p>Register geospatial metadata in a catalog service that is Open Geospatial Consortium (OGC) compliant, such as Catalogue Service for the Web (CSW) 2.0.2. Organizations use metadata to share the authoritative version of trusted data among their users.</p>
+</div>
+
+      <div class="bottom-link">
+        <div class="esri-button-wrapper">
+          
+        </div>
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</article>
+</li>
+
+
+
+                <!-- End Component Parsys -->
+            </ul>
+            
+            
+
+            
+
+            
+            <div class="card-container-v3_i18n">
+                <div class="card-container-v3_i18n-previous">Previous</div>
+                <div class="card-container-v3_i18n-next">Next</div>
+            </div>
+
+            
+            
+                
+                    <button class="paginate-container" hidden data-paginate="false">
+                      <span>Show More</span> <calcite-icon icon="chevron-down"/>
+                    </button>
+						        <calcite-pagination class="paginate-container" page-size="" start-item="1" total-items="" hidden data-paginate-calcite="false" scale="m" calcite-hydrated=""></calcite-pagination>
+                
+            
+            
+
+            
+            
+        </div>
+    </div>
+</div>
+</div>
+<div class="centered-content-switcher aem-GridColumn aem-GridColumn--default--12">
+ <link rel="stylesheet" href="assets/www.esri.com/075eb13fcec5-clientlibs.css" type="text/css">
+<script defer src="assets/www.esri.com/5e21b4779ba2-clientlibs.js"></script>
+ 
+
+
+
+
+<div class="centered-content-switcher calcite-mode-light">
+  <div class="centered-content-switcher_wrapper" id="live-user-site">
+    
+      
+      
+        
+        
+        <section data-lazy-image="assets/www.esri.com/f7726845342b-italian-national-registry-of-spatial-data-portal-ccs.jpg" class="centered-content-switcher_slide calcite-animate calcite-animate__in" data-slide="1" aria-hidden="false" data-aem-asset-id="8399a461-febb-46f2-af70-d3ec27fac2f7">
+          <div class="grid-container">
+            <div class="centered-content-switcher_call-out column-20 tablet-column-10 phone-column-6 pre-2 tablet-pre-1 phone-pre-0">
+              <div class="centered-content-switcher_content calcite-animate calcite-animate__in-up animate-delay__2x">
+                <div class="centered-content-switcher_info " data-slide-count="5">
+                  <p class="esri-text__category">LIVE USER SITE</p>
+                  <h2 class="esri-text__title">Italian National Registry of Spatial Data Portal</h2>
+
+                  
+                  
+                    <p class="esri-text__description">This portal allows users to discover spatial data made available by Italian public administrations at national, regional, and local levels.</p>
+                  
+
+                  
+                  
+
+                  
+                  
+
+                  
+                  
+
+                  <a class="esri-ui-button esri-ui-button--neutral esri-ui-button--solid  " data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Italian National Registry of Spatial Data Portal - Go to live site" data-link-type="external" data-component-link-placement="0" data-component-link-type="button" data-modal="false" href="https://geodati.gov.it/geoportale/eng" target="_blank" rel="noopener" aria-describedby="new-window"> Go to live site </a>
+
+                </div>
+              </div>
+
+              
+              <div class="centered-content-switcher_nav calcite-animate calcite-animate__in-up animate-delay__4x">
+                <button data-action-slide="prev">Previous</button>
+                <div class="centered-content-switcher_options">
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="true" data-action-slide="1" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Italian National Registry of Spatial Data Portal" data-component-link-placement="1" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/9021a03f251e-italian-national-registry-of-spatial-data-portal-thumbnail.jpg" alt="World map in shades of indigo and blue with population centers shown as clusters of golden light" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Italian National Registry of Spatial Data Portal</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="2" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Canada: GeoDiscover Alberta" data-component-link-placement="2" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/703a274bc5eb-spatial-data-infrastructure-lcs-canada-thumb.jpg" alt="Tall mountain peaks with green pine trees and a blue body of water" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Canada: GeoDiscover Alberta</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="3" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Greek Cadastre" data-component-link-placement="3" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/426c4eac7b8d-spatial-data-infrastructure-lcs-greece-thumb.jpg" alt="A Greek city with white buildings on a waterfront " decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Greek Cadastre</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="4" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="West Coast Ocean Data Portal partnership" data-component-link-placement="4" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/190955ee2382-spatial-data-infrastructure-lcs-pacific-ocean-thumb.jpg" alt="Several large mountain peaks and a blue ocean with waves crashing near the shore" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">West Coast Ocean Data Portal partnership</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="5" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Hong Kong CSDI" data-component-link-placement="5" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/3a6c27d0e06d-spatial-data-infrastructure-lcs-hong-kong-thumb.jpg" alt="A city skyline showing tall buildings and a blue sky with mountain peaks in the background" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Hong Kong CSDI</span>
+                      </span>
+                    </button>
+                  
+                </div>
+                <button data-action-slide="next">Next</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      
+      
+    
+      
+      
+        
+        
+        <section data-lazy-image="assets/www.esri.com/19ecbfe23e9d-spatial-data-infrastructure-lcs-canada.jpg" class="centered-content-switcher_slide calcite-animate " data-slide="2" aria-hidden="true" data-aem-asset-id="de824cad-d971-45dc-9eba-91fb95da92ba">
+          <div class="grid-container">
+            <div class="centered-content-switcher_call-out column-20 tablet-column-10 phone-column-6 pre-2 tablet-pre-1 phone-pre-0">
+              <div class="centered-content-switcher_content calcite-animate calcite-animate__in-up animate-delay__2x">
+                <div class="centered-content-switcher_info " data-slide-count="5">
+                  <p class="esri-text__category">LIVE USER SITE</p>
+                  <h2 class="esri-text__title">Canada: GeoDiscover Alberta</h2>
+
+                  
+                  
+                    <p class="esri-text__description">GeoDiscover Alberta provides enhanced details on Alberta, Canada&#39;s geospatial data.</p>
+                  
+
+                  
+                  
+
+                  
+                  
+
+                  
+                  
+
+                  <a class="esri-ui-button esri-ui-button--neutral esri-ui-button--solid  " data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Canada: GeoDiscover Alberta - Go to live site" data-link-type="external" data-component-link-placement="0" data-component-link-type="button" data-modal="false" href="https://geodiscover.alberta.ca/geoportal/#searchPanel" target="_blank" rel="noopener" aria-describedby="new-window"> Go to live site </a>
+
+                </div>
+              </div>
+
+              
+              <div class="centered-content-switcher_nav calcite-animate calcite-animate__in-up animate-delay__4x">
+                <button data-action-slide="prev">Previous</button>
+                <div class="centered-content-switcher_options">
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="1" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Italian National Registry of Spatial Data Portal" data-component-link-placement="1" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/9021a03f251e-italian-national-registry-of-spatial-data-portal-thumbnail.jpg" alt="World map in shades of indigo and blue with population centers shown as clusters of golden light" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Italian National Registry of Spatial Data Portal</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="true" data-action-slide="2" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Canada: GeoDiscover Alberta" data-component-link-placement="2" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/703a274bc5eb-spatial-data-infrastructure-lcs-canada-thumb.jpg" alt="Tall mountain peaks with green pine trees and a blue body of water" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Canada: GeoDiscover Alberta</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="3" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Greek Cadastre" data-component-link-placement="3" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/426c4eac7b8d-spatial-data-infrastructure-lcs-greece-thumb.jpg" alt="A Greek city with white buildings on a waterfront " decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Greek Cadastre</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="4" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="West Coast Ocean Data Portal partnership" data-component-link-placement="4" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/190955ee2382-spatial-data-infrastructure-lcs-pacific-ocean-thumb.jpg" alt="Several large mountain peaks and a blue ocean with waves crashing near the shore" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">West Coast Ocean Data Portal partnership</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="5" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Hong Kong CSDI" data-component-link-placement="5" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/3a6c27d0e06d-spatial-data-infrastructure-lcs-hong-kong-thumb.jpg" alt="A city skyline showing tall buildings and a blue sky with mountain peaks in the background" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Hong Kong CSDI</span>
+                      </span>
+                    </button>
+                  
+                </div>
+                <button data-action-slide="next">Next</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      
+      
+    
+      
+      
+        
+        
+        <section data-lazy-image="assets/www.esri.com/148c4c6e5156-spatial-data-infrastructure-lcs-greece.jpg" class="centered-content-switcher_slide calcite-animate " data-slide="3" aria-hidden="true" data-aem-asset-id="afbe2d60-f3a1-4c85-8833-f35223de9bc9">
+          <div class="grid-container">
+            <div class="centered-content-switcher_call-out column-20 tablet-column-10 phone-column-6 pre-2 tablet-pre-1 phone-pre-0">
+              <div class="centered-content-switcher_content calcite-animate calcite-animate__in-up animate-delay__2x">
+                <div class="centered-content-switcher_info " data-slide-count="5">
+                  <p class="esri-text__category">LIVE USER SITE</p>
+                  <h2 class="esri-text__title">Greek Cadastre</h2>
+
+                  
+                  
+                    <p class="esri-text__description">Hellenic Land Registry Agency provides the ability to search, display, download, and invoke geospatial data in accordance with the INSPIRE Directive.</p>
+                  
+
+                  
+                  
+
+                  
+                  
+
+                  
+                  
+
+                  <a class="esri-ui-button esri-ui-button--neutral esri-ui-button--solid  " data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Greek Cadastre - Go to live site" data-link-type="external" data-component-link-placement="0" data-component-link-type="button" data-modal="false" href="https://www.ktimanet.gr/geoportal/catalog/main/home.page" target="_blank" rel="noopener" aria-describedby="new-window"> Go to live site </a>
+
+                </div>
+              </div>
+
+              
+              <div class="centered-content-switcher_nav calcite-animate calcite-animate__in-up animate-delay__4x">
+                <button data-action-slide="prev">Previous</button>
+                <div class="centered-content-switcher_options">
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="1" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Italian National Registry of Spatial Data Portal" data-component-link-placement="1" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/9021a03f251e-italian-national-registry-of-spatial-data-portal-thumbnail.jpg" alt="World map in shades of indigo and blue with population centers shown as clusters of golden light" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Italian National Registry of Spatial Data Portal</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="2" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Canada: GeoDiscover Alberta" data-component-link-placement="2" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/703a274bc5eb-spatial-data-infrastructure-lcs-canada-thumb.jpg" alt="Tall mountain peaks with green pine trees and a blue body of water" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Canada: GeoDiscover Alberta</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="true" data-action-slide="3" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Greek Cadastre" data-component-link-placement="3" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/426c4eac7b8d-spatial-data-infrastructure-lcs-greece-thumb.jpg" alt="A Greek city with white buildings on a waterfront " decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Greek Cadastre</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="4" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="West Coast Ocean Data Portal partnership" data-component-link-placement="4" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/190955ee2382-spatial-data-infrastructure-lcs-pacific-ocean-thumb.jpg" alt="Several large mountain peaks and a blue ocean with waves crashing near the shore" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">West Coast Ocean Data Portal partnership</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="5" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Hong Kong CSDI" data-component-link-placement="5" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/3a6c27d0e06d-spatial-data-infrastructure-lcs-hong-kong-thumb.jpg" alt="A city skyline showing tall buildings and a blue sky with mountain peaks in the background" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Hong Kong CSDI</span>
+                      </span>
+                    </button>
+                  
+                </div>
+                <button data-action-slide="next">Next</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      
+      
+    
+      
+      
+        
+        
+        <section data-lazy-image="assets/www.esri.com/634554e2aae1-spatial-data-infrastructure-lcs-pacific-ocean.jpg" class="centered-content-switcher_slide calcite-animate " data-slide="4" aria-hidden="true" data-aem-asset-id="3d6639c0-807b-4b55-9214-13f1189c6e56">
+          <div class="grid-container">
+            <div class="centered-content-switcher_call-out column-20 tablet-column-10 phone-column-6 pre-2 tablet-pre-1 phone-pre-0">
+              <div class="centered-content-switcher_content calcite-animate calcite-animate__in-up animate-delay__2x">
+                <div class="centered-content-switcher_info " data-slide-count="5">
+                  <p class="esri-text__category">LIVE USER SITE</p>
+                  <h2 class="esri-text__title">West Coast Ocean Data Portal partnership</h2>
+
+                  
+                  
+                    <p class="esri-text__description">This partnership increases discovery and connectivity between ocean/coastal data and people for regional resource management, policy, and planning.</p>
+                  
+
+                  
+                  
+
+                  
+                  
+
+                  
+                  
+
+                  <a class="esri-ui-button esri-ui-button--neutral esri-ui-button--solid  " data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="West Coast Ocean Data Portal partnership - Go to live site" data-link-type="external" data-component-link-placement="0" data-component-link-type="button" data-modal="false" href="https://portal.westcoastoceans.org/" target="_blank" rel="noopener" aria-describedby="new-window"> Go to live site </a>
+
+                </div>
+              </div>
+
+              
+              <div class="centered-content-switcher_nav calcite-animate calcite-animate__in-up animate-delay__4x">
+                <button data-action-slide="prev">Previous</button>
+                <div class="centered-content-switcher_options">
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="1" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Italian National Registry of Spatial Data Portal" data-component-link-placement="1" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/9021a03f251e-italian-national-registry-of-spatial-data-portal-thumbnail.jpg" alt="World map in shades of indigo and blue with population centers shown as clusters of golden light" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Italian National Registry of Spatial Data Portal</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="2" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Canada: GeoDiscover Alberta" data-component-link-placement="2" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/703a274bc5eb-spatial-data-infrastructure-lcs-canada-thumb.jpg" alt="Tall mountain peaks with green pine trees and a blue body of water" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Canada: GeoDiscover Alberta</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="3" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Greek Cadastre" data-component-link-placement="3" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/426c4eac7b8d-spatial-data-infrastructure-lcs-greece-thumb.jpg" alt="A Greek city with white buildings on a waterfront " decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Greek Cadastre</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="true" data-action-slide="4" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="West Coast Ocean Data Portal partnership" data-component-link-placement="4" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/190955ee2382-spatial-data-infrastructure-lcs-pacific-ocean-thumb.jpg" alt="Several large mountain peaks and a blue ocean with waves crashing near the shore" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">West Coast Ocean Data Portal partnership</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="5" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Hong Kong CSDI" data-component-link-placement="5" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/3a6c27d0e06d-spatial-data-infrastructure-lcs-hong-kong-thumb.jpg" alt="A city skyline showing tall buildings and a blue sky with mountain peaks in the background" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Hong Kong CSDI</span>
+                      </span>
+                    </button>
+                  
+                </div>
+                <button data-action-slide="next">Next</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      
+      
+    
+      
+      
+        
+        
+        <section data-lazy-image="assets/www.esri.com/cb4248fc52af-spatial-data-infrastructure-lcs-hong-kong.jpg" class="centered-content-switcher_slide calcite-animate " data-slide="5" aria-hidden="true" data-aem-asset-id="19f3ec04-8e28-4d14-b61a-62d26a1bfcce">
+          <div class="grid-container">
+            <div class="centered-content-switcher_call-out column-20 tablet-column-10 phone-column-6 pre-2 tablet-pre-1 phone-pre-0">
+              <div class="centered-content-switcher_content calcite-animate calcite-animate__in-up animate-delay__2x">
+                <div class="centered-content-switcher_info " data-slide-count="5">
+                  <p class="esri-text__category">LIVE USER SITE</p>
+                  <h2 class="esri-text__title">Hong Kong CSDI</h2>
+
+                  
+                  
+                    <p class="esri-text__description">Hong Kong’s Common Spatial Data Infrastructure (CSDI) Portal facilitates the exchange of quality and up-to-date spatial information and services.</p>
+                  
+
+                  
+                  
+
+                  
+                  
+
+                  
+                  
+
+                  <a class="esri-ui-button esri-ui-button--neutral esri-ui-button--solid  " data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Hong Kong CSDI - Go to live site" data-link-type="external" data-component-link-placement="0" data-component-link-type="button" data-modal="false" href="https://portal.csdi.gov.hk/" target="_blank" rel="noopener" aria-describedby="new-window"> Go to live site </a>
+
+                </div>
+              </div>
+
+              
+              <div class="centered-content-switcher_nav calcite-animate calcite-animate__in-up animate-delay__4x">
+                <button data-action-slide="prev">Previous</button>
+                <div class="centered-content-switcher_options">
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="1" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Italian National Registry of Spatial Data Portal" data-component-link-placement="1" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/9021a03f251e-italian-national-registry-of-spatial-data-portal-thumbnail.jpg" alt="World map in shades of indigo and blue with population centers shown as clusters of golden light" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Italian National Registry of Spatial Data Portal</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="2" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Canada: GeoDiscover Alberta" data-component-link-placement="2" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/703a274bc5eb-spatial-data-infrastructure-lcs-canada-thumb.jpg" alt="Tall mountain peaks with green pine trees and a blue body of water" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Canada: GeoDiscover Alberta</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="3" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Greek Cadastre" data-component-link-placement="3" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/426c4eac7b8d-spatial-data-infrastructure-lcs-greece-thumb.jpg" alt="A Greek city with white buildings on a waterfront " decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Greek Cadastre</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="false" data-action-slide="4" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="West Coast Ocean Data Portal partnership" data-component-link-placement="4" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/190955ee2382-spatial-data-infrastructure-lcs-pacific-ocean-thumb.jpg" alt="Several large mountain peaks and a blue ocean with waves crashing near the shore" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">West Coast Ocean Data Portal partnership</span>
+                      </span>
+                    </button>
+                  
+                    <button class="centered-content-switcher_nav-item" data-selected="true" data-action-slide="5" data-event="track-component" data-component-name="Centered Content Switcher" data-component-link="Hong Kong CSDI" data-component-link-placement="5" data-component-link-type="button">
+                      
+                        
+
+                        <img class="centered-content-switcher_thumb" width="64" height="64" loading="lazy" src="assets/www.esri.com/3a6c27d0e06d-spatial-data-infrastructure-lcs-hong-kong-thumb.jpg" alt="A city skyline showing tall buildings and a blue sky with mountain peaks in the background" decoding="async"/>
+                      
+
+                      <span class="centered-content-switcher_nav-label-container">
+                        <span class="centered-content-switcher_nav-label">Hong Kong CSDI</span>
+                      </span>
+                    </button>
+                  
+                </div>
+                <button data-action-slide="next">Next</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      
+      
+    
+  </div>
+</div>
+</div>
+<div class="mosaic-reveal aem-GridColumn aem-GridColumn--default--12">
+
+	<link rel="stylesheet" href="assets/www.esri.com/13519804f53f-clientlibs.css" type="text/css">
+<script defer src="assets/www.esri.com/771e3b6d0921-clientlibs.js"></script>
+
+
+
+
+
+
+<style>
+	[data-node-id="mosaic_reveal_copy_c"] .mosaic-reveal_content-bg {
+		background: #009AF2;
+	}
+</style>
+
+
+	<div class="mosaic-reveal core-is-first" id="related-products" data-node-id="mosaic_reveal_copy_c">
+
+		
+		
+			<div class="mosaic-reveal_core calcite-mode-light" style="background: #ffffff;">
+		
+		
+
+	<div class="mosaic-reveal_core-content centered calcite-animate" data-animation="calcite-animate__in-up">
+      
+			<h2 class="esri-text__title">Related products</h2>
+			<p class="esri-text__description">ArcGIS provides several metadata, catalog, and search capabilities to share open and secure content in an integrated way.</p>
+			
+	</div>
+	</div>
+
+	<div class="mosaic-reveal_mosaics calcite-mode-dark">
+		
+			<div class="mosaic-reveal_mosaic" data-action-show data-lazy-image="assets/www.esri.com/e74a06104071-spatial-data-infrastructure-mr-pro.jpg">
+				<div class="mosaic-reveal_tease">
+					
+				<div id="title-1" class="mosaic-reveal_tease-title font-size-2">ArcGIS Pro
+				</div>
+				<button class="mosaic-reveal_content-show mosaic-reveal_expand-button" id="open-1" aria-label="expand" aria-labelledby="open-1 title-1">
+						<calcite-icon icon="expand" scale="s" aria-hidden="true"></calcite-icon>
+					</button>
+				</div>
+
+				<div data-action-hide class="mosaic-reveal_content">
+					<section aria-label="tile-1 expanded" class="mosaic-reveal_content-bg"></section>
+					
+					<h3 class="mosaic-reveal_content-title">ArcGIS Pro</h3>
+					<p class="mosaic-reveal_content-body">Document the content and project items you create and use with standards-based metadata in ArcGIS Pro, a next generation desktop GIS. </p>
+
+						<a class="esri-text-button esri-text--neutral  " data-event="track-component" data-component-name="Mosaic Reveal" data-component-link="Explore ArcGIS Pro" data-component-link-type="text" data-component-link-placement="panel-1" href="https://www.esri.com/en-us/arcgis/products/arcgis-pro/overview" data-link-type="internal">
+						Explore ArcGIS Pro
+					</a>
+
+					<button class="mosaic-reveal_content-show mosaic-reveal_collapse-button" id="close-1" aria-label="collapse" aria-labelledby="close-1 title-1">
+						<calcite-icon icon="contract" scale="s" aria-hidden="true"></calcite-icon>
+					</button>
+				</div>
+			</div>
+		
+			<div class="mosaic-reveal_mosaic" data-action-show data-lazy-image="assets/www.esri.com/a95a5174f56b-spatial-data-infrastructure-mr-enterprise.jpg">
+				<div class="mosaic-reveal_tease">
+					
+				<div id="title-2" class="mosaic-reveal_tease-title font-size-2">ArcGIS Enterprise
+				</div>
+				<button class="mosaic-reveal_content-show mosaic-reveal_expand-button" id="open-2" aria-label="expand" aria-labelledby="open-2 title-2">
+						<calcite-icon icon="expand" scale="s" aria-hidden="true"></calcite-icon>
+					</button>
+				</div>
+
+				<div data-action-hide class="mosaic-reveal_content">
+					<section aria-label="tile-2 expanded" class="mosaic-reveal_content-bg"></section>
+					
+					<h3 class="mosaic-reveal_content-title">ArcGIS Enterprise</h3>
+					<p class="mosaic-reveal_content-body">Apply detailed metadata to your ArcGIS Server services and federated ArcGIS Enterprise portal to ensure that your services are found, used, and attributed correctly. </p>
+
+						<a class="esri-text-button esri-text--neutral  " data-event="track-component" data-component-name="Mosaic Reveal" data-component-link="Explore ArcGIS Enterprise" data-component-link-type="text" data-component-link-placement="panel-2" href="https://www.esri.com/en-us/arcgis/products/arcgis-enterprise/overview" data-link-type="internal">
+						Explore ArcGIS Enterprise
+					</a>
+
+					<button class="mosaic-reveal_content-show mosaic-reveal_collapse-button" id="close-2" aria-label="collapse" aria-labelledby="close-2 title-2">
+						<calcite-icon icon="contract" scale="s" aria-hidden="true"></calcite-icon>
+					</button>
+				</div>
+			</div>
+		
+			<div class="mosaic-reveal_mosaic" data-action-show data-lazy-image="assets/www.esri.com/10225dbe2205-spatial-data-infrastructure-mr-hub.jpg">
+				<div class="mosaic-reveal_tease">
+					
+				<div id="title-3" class="mosaic-reveal_tease-title font-size-2">ArcGIS Hub
+				</div>
+				<button class="mosaic-reveal_content-show mosaic-reveal_expand-button" id="open-3" aria-label="expand" aria-labelledby="open-3 title-3">
+						<calcite-icon icon="expand" scale="s" aria-hidden="true"></calcite-icon>
+					</button>
+				</div>
+
+				<div data-action-hide class="mosaic-reveal_content">
+					<section aria-label="tile-3 expanded" class="mosaic-reveal_content-bg"></section>
+					
+					<h3 class="mosaic-reveal_content-title">ArcGIS Hub</h3>
+					<p class="mosaic-reveal_content-body">With Hub included in ArcGIS Online, share open and secure content via a configurable catalog and federate using standards-based web services, metadata, and catalog feeds.</p>
+
+						<a class="esri-text-button esri-text--neutral  " data-event="track-component" data-component-name="Mosaic Reveal" data-component-link="Explore ArcGIS Hub" data-component-link-type="text" data-component-link-placement="panel-3" href="https://www.esri.com/en-us/arcgis/products/arcgis-hub/overview" data-link-type="internal">
+						Explore ArcGIS Hub
+					</a>
+
+					<button class="mosaic-reveal_content-show mosaic-reveal_collapse-button" id="close-3" aria-label="collapse" aria-labelledby="close-3 title-3">
+						<calcite-icon icon="contract" scale="s" aria-hidden="true"></calcite-icon>
+					</button>
+				</div>
+			</div>
+		
+			<div class="mosaic-reveal_mosaic" data-action-show data-lazy-image="assets/www.esri.com/383d1978b73c-spatial-data-infrastructure-mr-inspire.jpg">
+				<div class="mosaic-reveal_tease">
+					
+				<div id="title-4" class="mosaic-reveal_tease-title font-size-2">ArcGIS for INSPIRE Classic
+				</div>
+				<button class="mosaic-reveal_content-show mosaic-reveal_expand-button" id="open-4" aria-label="expand" aria-labelledby="open-4 title-4">
+						<calcite-icon icon="expand" scale="s" aria-hidden="true"></calcite-icon>
+					</button>
+				</div>
+
+				<div data-action-hide class="mosaic-reveal_content">
+					<section aria-label="tile-4 expanded" class="mosaic-reveal_content-bg"></section>
+					
+					<h3 class="mosaic-reveal_content-title">ArcGIS for INSPIRE Classic</h3>
+					<p class="mosaic-reveal_content-body">Prepare harmonized INSPIRE spatial data and web services, metadata, and catalog discovery services pursuant to the European Union (EU) INSPIRE Directive. </p>
+
+						<a class="esri-text-button esri-text--neutral  " data-event="track-component" data-component-name="Mosaic Reveal" data-component-link="Explore INSPIRE Classic" data-component-link-type="text" data-component-link-placement="panel-4" href="https://www.esri.com/en-us/arcgis/products/arcgis-inspire/classic" data-link-type="internal">
+						Explore INSPIRE Classic
+					</a>
+
+					<button class="mosaic-reveal_content-show mosaic-reveal_collapse-button" id="close-4" aria-label="collapse" aria-labelledby="close-4 title-4">
+						<calcite-icon icon="contract" scale="s" aria-hidden="true"></calcite-icon>
+					</button>
+				</div>
+			</div>
+		
+	</div>
+	</div>
+
+</div>
+<div class="cards-container-v3 aem-GridColumn aem-GridColumn--default--12">
+
+
+
+	
+
+
+<div class="
+    padding-leader-2
+    padding-trailer-2
+    calcite-mode-light
+    has-background
+    has-background--color
+    
+    
+    " style="--bg-color: var(--esri-ui-background-default);  --bg-img: url(); --posX: center; --posY: center;  ;">
+    
+
+    
+    
+
+    
+    <div class="grid-container" id="resources">
+    
+    
+        
+        
+        
+        
+        
+        
+        <div class="card-container-v3 card-container-v3--centered cardsPerRow-4 centered" data-author-mode="false">
+        
+        
+        
+            
+            <div class="container-v3 esri-text-container marginbottom50px ">
+                <h2 class="esri-text__title stylesystem ">Resources</h2>
+                
+                  
+            </div>
+            
+
+            
+            
+            
+            
+            
+            <ul class="no-list calcite-mode-light relatedLinkMatrix card-container-v3 card-container-v3--centered cardsPerRow-4 centered" data-author-mode="false">
+            
+            
+                <!-- Start Component Parsys -->
+                
+
+
+
+
+    
+    
+    <li class="block">
+
+
+
+
+
+	<link rel="stylesheet" href="assets/www.esri.com/996d5d945c98-clientlibs.css" type="text/css">
+
+
+
+<article class="esri-text--card cards-simple calcite-animate activelink calcite-mode-light" aria-hidden='true' calcite-animate='true' data-animation="calcite-animate__in-up">
+	
+		<a href="https://github.com/Esri/geoportal-server-catalog/wiki" data-custom-analytics="true" data-event="track-component" data-component-name="cards-simple" data-component-link="Documentation (GitHub)" data-component-link-placement="cards_simple_copy" data-component-link-type="full" data-link-type="external" target="_blank" rel="noopener" aria-describedby="new-window">
+	
+	<div class="card-content esri-text-container card-border">
+		<div class="esri-text__iconContainer">
+			
+			
+				<span><svg xmlns="http://www.w3.org/2000/svg" id="icon-ui-svg" class="icon-ui-svg" viewBox="0 0 48 48"><path id="icon-ui-svg--base" d="m37 17.17 1.37-3.6-14.88-5.65-3.82-3.82H6.1v30.8h4.51l3.15 1.2 8.49 8.47 3.8-3.8 1.74.65 1.25-3.3.22-.56 14.06-14.07zM19.9 5.47l7.63 7.63H19.9zM6.9 34.1V4.9h12.2v9h9v20.2zm15.35 9.33-6.66-6.64 9.64 3.66zm6.39-6.51-1.32 3.47-14.46-5.49H28.9V13.33L24.86 9.3l12.48 4.74zm8.05-18.93 5.5 5.5-12.24 12.24z"/></svg></span>
+			
+		</div>
+
+		<div class="text-container">
+			<h3 class="card-title esri-text__title" data-link-type="external">Documentation (GitHub)</h3>
+
+			
+				<div class="card-text esri-text__description">Find out how to get started with Esri Geoportal Server.</div>
+			
+		</div>
+
+	</div>
+	</a>
+</article>
+</li>
+
+
+    
+    
+    <li class="block">
+
+
+
+
+
+	
+
+
+<article class="esri-text--card cards-simple calcite-animate activelink calcite-mode-light" aria-hidden='true' calcite-animate='true' data-animation="calcite-animate__in-up">
+	
+		<a href="https://github.com/Esri/geoportal-server-catalog/wiki#installation-and-upgrade" data-custom-analytics="true" data-event="track-component" data-component-name="cards-simple" data-component-link="Installation and upgrades (GitHub)" data-component-link-placement="cards_simple_copy_co_682999118" data-component-link-type="full" data-link-type="external" target="_blank" rel="noopener" aria-describedby="new-window">
+	
+	<div class="card-content esri-text-container card-border">
+		<div class="esri-text__iconContainer">
+			
+			
+				<span><svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M30.991 21.733l-7.395 7.394-7.395-7.394.567-.566L23.1 27.5V3h.8v24.691l6.525-6.524zm6.7-7.633H26v.8h11.1v26.2H9.9V14.9H21v-.8H9.31L.69 24.748l.62.504L9.1 15.63V41.9h28.8V15.63l7.79 9.622.62-.504z" id="icon-ui-svg--base"/></svg></span>
+			
+		</div>
+
+		<div class="text-container">
+			<h3 class="card-title esri-text__title" data-link-type="external">Installation and upgrades (GitHub)</h3>
+
+			
+				<div class="card-text esri-text__description">Learn how to install Esri Geoportal Server and migrate or upgrade to newer versions. </div>
+			
+		</div>
+
+	</div>
+	</a>
+</article>
+</li>
+
+
+    
+    
+    <li class="block">
+
+
+
+
+
+	
+
+
+<article class="esri-text--card cards-simple calcite-animate activelink calcite-mode-light" aria-hidden='true' calcite-animate='true' data-animation="calcite-animate__in-up">
+	
+		<a href="https://github.com/Esri/geoportal-server-catalog/wiki/FAQ-Frequently-Asked-Questions" data-custom-analytics="true" data-event="track-component" data-component-name="cards-simple" data-component-link="Frequently asked questions" data-component-link-placement="cards_simple_copy_338015698" data-component-link-type="full" data-link-type="external" target="_blank" rel="noopener" aria-describedby="new-window">
+	
+	<div class="card-content esri-text-container card-border">
+		<div class="esri-text__iconContainer">
+			
+			
+				<span><svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M18.495 23.09a3.22 3.22 0 0 1 3.502 3.123 3.526 3.526 0 0 1-1.593 3.034 3.413 3.413 0 0 0-1.524 3.096V33h-.8v-.657a4.165 4.165 0 0 1 1.812-3.71 2.727 2.727 0 0 0 1.305-2.42 2.425 2.425 0 0 0-2.702-2.322c-1.716 0-2.498.99-2.498 1.912h-.8c0-1.348 1.133-2.712 3.298-2.712zm22.849-2.748l.843 4.81-3.579-1.014.218-.77 2.354.668-.721-4.111.246-.139c3.427-1.927 5.393-4.774 5.393-7.81 0-5.554-6.55-10.072-14.6-10.072s-14.6 4.518-14.6 10.072a8.111 8.111 0 0 0 2.73 5.856l.313.3C29.924 18.47 37.9 24.104 37.9 31c0 7.113-8.479 12.9-18.9 12.9-1.417 0-3.901-.295-4.433-.36l-9.71 3.627 2.062-6.238C2.58 38.47.1 34.867.1 31c0-7.064 8.364-12.813 18.686-12.893a8.769 8.769 0 0 1-2.688-6.131c0-5.995 6.908-10.872 15.4-10.872s15.4 4.877 15.4 10.872c0 3.258-2.02 6.295-5.554 8.366zM19 18.9C9.02 18.9.9 24.328.9 31c0 3.65 2.44 7.073 6.694 9.389l.293.16-1.746 5.285 8.33-3.112.097.012c.03.004 2.923.366 4.432.366 9.98 0 18.1-5.428 18.1-12.1S28.98 18.9 19 18.9zm.4 16.6a.9.9 0 1 1-.9-.9.901.901 0 0 1 .9.9zm-.8 0a.1.1 0 0 0-.2 0c0 .11.2.11.2 0zm12.9-25.025a1.025 1.025 0 1 1-1.025 1.025 1.026 1.026 0 0 1 1.025-1.025zm0 .8a.225.225 0 0 0-.225.225c0 .248.45.248.45 0a.225.225 0 0 0-.225-.225zm6.975.225a1.025 1.025 0 1 1 1.025 1.025 1.026 1.026 0 0 1-1.025-1.025zm.8 0c0 .248.45.248.45 0a.225.225 0 0 0-.45 0zM23.5 10.475a1.025 1.025 0 1 1-1.025 1.025 1.026 1.026 0 0 1 1.025-1.025zm0 .8a.225.225 0 0 0-.225.225c0 .248.45.248.45 0a.225.225 0 0 0-.225-.225z" id="icon-ui-svg--base"/></svg></span>
+			
+		</div>
+
+		<div class="text-container">
+			<h3 class="card-title esri-text__title" data-link-type="external">Frequently asked questions</h3>
+
+			
+				<div class="card-text esri-text__description">Find answers to commonly asked questions.</div>
+			
+		</div>
+
+	</div>
+	</a>
+</article>
+</li>
+
+
+    
+    
+    <li class="block">
+
+
+
+
+
+	
+
+
+<article class="esri-text--card cards-simple calcite-animate activelink calcite-mode-light" aria-hidden='true' calcite-animate='true' data-animation="calcite-animate__in-up">
+	
+		<a href="https://www.esri.com/en-us/arcgis/products/esri-geoportal-server/release-calendar" data-custom-analytics="true" data-event="track-component" data-component-name="cards-simple" data-component-link="Release schedule" data-component-link-placement="cards_simple_2107817558" data-component-link-type="full" data-link-type="internal">
+	
+	<div class="card-content esri-text-container card-border">
+		<div class="esri-text__iconContainer">
+			
+			
+				<span><svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M45.89 34.5V9.1h-7V6.3a1.202 1.202 0 0 0-1.2-1.2h-1.4a1.202 1.202 0 0 0-1.2 1.2v2.8h-21.2V6.3a1.202 1.202 0 0 0-1.2-1.2h-1.4a1.202 1.202 0 0 0-1.2 1.2v2.8h-7v33.8h35.463l.06-.02c7.99-2.597 7.281-8.377 7.277-8.38zm-10-28.2a.4.4 0 0 1 .4-.4h1.4a.4.4 0 0 1 .4.4v5.4a.4.4 0 0 1-.4.4h-1.4a.4.4 0 0 1-.4-.4zm-25 0a.4.4 0 0 1 .4-.4h1.4a.4.4 0 0 1 .4.4v5.4a.4.4 0 0 1-.4.4h-1.4a.4.4 0 0 1-.4-.4zm-.8 3.6v1.8a1.202 1.202 0 0 0 1.2 1.2h1.4a1.202 1.202 0 0 0 1.2-1.2V9.9h21.2v1.8a1.202 1.202 0 0 0 1.2 1.2h1.4a1.202 1.202 0 0 0 1.2-1.2V9.9h6.2l.001 8.2H3.89V9.9zm28.057 24.807a7.83 7.83 0 0 1 .105 7.393H31.89v-7.2h4.1v-.8h-4.1v-7.2h13.202l.001 7.2h-7.312zM17.89 25.815V18.9h12.088zm13.2-6.628V26.1H19.006zm-14 6.913H4.993l12.097-6.91zm-13.2-.292V18.9h12.093zm0 1.092h13.2v7.2H3.89zm14 0h13.2v7.2h-13.2zm13.2 8v7.2h-13.2v-7.2zm.8-8.8v-7.2H45.09l.001 7.2zm-28 8.8h13.2v7.2H3.89zm35.43 6.865a8.467 8.467 0 0 0-.176-6.865h5.968c.015 1.13-.4 4.74-5.792 6.865z" id="icon-ui-svg--base"/></svg></span>
+			
+		</div>
+
+		<div class="text-container">
+			<h3 class="card-title esri-text__title" data-link-type="internal">Release schedule</h3>
+
+			
+				<div class="card-text esri-text__description">Review the latest and past releases for Esri Geoportal Server Catalog and Harvester components.</div>
+			
+		</div>
+
+	</div>
+	</a>
+</article>
+</li>
+
+
+    
+    
+    <li class="block">
+
+
+
+
+
+	
+
+
+<article class="esri-text--card cards-simple calcite-animate activelink calcite-mode-light" aria-hidden='true' calcite-animate='true' data-animation="calcite-animate__in-up">
+	
+		<a href="https://community.esri.com/t5/esri-geoportal-documents/articles-about-esri-geoportal-server/ta-p/1271511" data-custom-analytics="true" data-event="track-component" data-component-name="cards-simple" data-component-link="Articles" data-component-link-placement="cards_simple_copy_co" data-component-link-type="full" data-link-type="internal">
+	
+	<div class="card-content esri-text-container card-border">
+		<div class="esri-text__iconContainer">
+			
+			
+				<span><svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M29 23.9H16v-.8h13zm0 4.2H16v.8h13zm-6 5h-7v.8h7zm11.1-10h4.8v4.8h-4.8zm.8 4h3.2v-3.2h-3.2zm4-10.2H16.1v-4.8h22.8zm-.8-4H16.9v3.2h21.2zm6.8-6.8v28.87c0 2.916-1.732 5.93-4.63 5.93H6.5a4.406 4.406 0 0 1-4.4-4.4V19.1h8v-13zm-38.4 34a3.603 3.603 0 0 0 3.6-3.6V19.9H2.9v16.6a3.603 3.603 0 0 0 3.6 3.6zM44.1 6.9H10.9v29.6a4.398 4.398 0 0 1-1.873 3.6h31.244c2.397 0 3.829-2.608 3.829-5.13z" id="icon-ui-svg--base"/></svg></span>
+			
+		</div>
+
+		<div class="text-container">
+			<h3 class="card-title esri-text__title" data-link-type="internal">Articles</h3>
+
+			
+				<div class="card-text esri-text__description">Access an archive of articles about how organizations use Esri Geoportal Server.</div>
+			
+		</div>
+
+	</div>
+	</a>
+</article>
+</li>
+
+
+    
+    
+    <li class="block">
+
+
+
+
+
+	
+
+
+<article class="esri-text--card cards-simple calcite-animate activelink calcite-mode-light" aria-hidden='true' calcite-animate='true' data-animation="calcite-animate__in-up">
+	
+		<a href="https://www.esri.com/en-us/arcgis/products/arcgis-inspire/overview" data-custom-analytics="true" data-event="track-component" data-component-name="cards-simple" data-component-link="ArcGIS INSPIRE Open Data" data-component-link-placement="cards_simple_copy_155711313" data-component-link-type="full" data-link-type="internal">
+	
+	<div class="card-content esri-text-container card-border">
+		<div class="esri-text__iconContainer">
+			
+			
+				<span><svg xmlns="http://www.w3.org/2000/svg" id="icon-ui-svg" class="icon-ui-svg" viewBox="0 0 48 48"><path id="icon-ui-svg--base" d="m37 17.17 1.37-3.6-14.88-5.65-3.82-3.82H6.1v30.8h4.51l3.15 1.2 8.49 8.47 3.8-3.8 1.74.65 1.25-3.3.22-.56 14.06-14.07zM19.9 5.47l7.63 7.63H19.9zM6.9 34.1V4.9h12.2v9h9v20.2zm15.35 9.33-6.66-6.64 9.64 3.66zm6.39-6.51-1.32 3.47-14.46-5.49H28.9V13.33L24.86 9.3l12.48 4.74zm8.05-18.93 5.5 5.5-12.24 12.24z"/></svg></span>
+			
+		</div>
+
+		<div class="text-container">
+			<h3 class="card-title esri-text__title" data-link-type="internal">ArcGIS INSPIRE Open Data</h3>
+
+			
+				<div class="card-text esri-text__description">Learn about a next generation, standards-based solution for European public authorities</div>
+			
+		</div>
+
+	</div>
+	</a>
+</article>
+</li>
+
+
+    
+    
+    <li class="block">
+
+
+
+
+
+	
+
+
+<article class="esri-text--card cards-simple calcite-animate activelink calcite-mode-light" aria-hidden='true' calcite-animate='true' data-animation="calcite-animate__in-up">
+	
+		<a href="https://www.esri.com/en-us/arcgis/integrated-geospatial-infrastructure/overview" data-custom-analytics="true" data-event="track-component" data-component-name="cards-simple" data-component-link="Integrated geospatial infrastructure" data-component-link-placement="cards_simple" data-component-link-type="full" data-link-type="internal">
+	
+	<div class="card-content esri-text-container card-border">
+		<div class="esri-text__iconContainer">
+			
+			
+				<span><svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M14.9 33.1v-8.782l.08-.007c1.219-.097 8.1-1.332 13.12-2.444V26h.8v-5.81a1.869 1.869 0 0 1 2.2.003V26h.8v-5.142a10.923 10.923 0 0 0 1.093-.424 4.954 4.954 0 0 0 2.935-4.428c.185-5.69-6.58-9.6-17.744-15.361l-.368.71c12.337 6.368 17.47 9.807 17.312 14.624a4.65 4.65 0 0 1-.192 1.149 5.347 5.347 0 0 0-.187-1.229c-.556-2.032-2.48-4.887-7.863-8.291l.002-.01-.031-.009a69.709 69.709 0 0 0-9.7-4.957l-.315.736A77.435 77.435 0 0 1 24.484 7.1H13.707a317.047 317.047 0 0 0-6.166-2.586c-1.927-.79-3.45-1.415-4.362-1.872l-.358.716c.94.47 2.474 1.099 4.417 1.896A379.16 379.16 0 0 1 11.68 7.1H2.56L.953 6.155l-.406.69 1.633.96.993 2.979 7.927 3.963v7.85c-.023.004-.045.008-.068.014-.032.008-3.262.775-5.717 1.143a23.025 23.025 0 0 1-4.188.271l-.005.1h-.023l.005.32-.022.38h.027l.002.1 9.99-.146V33.1H.999v.8h17v-.8zm8.59-22.158l.975.488-8.872 3.022zm-1.855 2.297c3.399 1.407 5.47 2.823 5.54 3.797.024.342-.237.676-.778.994-3.577 2.105-9.764 3.564-11.497 3.944v-6.441zm12.343 2.872a3.5 3.5 0 0 1-.3 2.929 4.623 4.623 0 0 1-1.028.671 8.922 8.922 0 0 1-.75.302V20l-.024-.203-.137-.12a2.673 2.673 0 0 0-3.501.02l-.138.12v1.231c-5.213 1.162-12.125 2.38-13.184 2.465l-.016.001v-.718c1.285-.273 7.98-1.769 11.903-4.076a1.907 1.907 0 0 0 1.17-1.741c-.09-1.258-1.855-2.644-5.21-4.124l3.072-1.046.847-3.388c4.982 3.183 6.784 5.817 7.296 7.69zm-8.01-8.137l-.735 2.945-1.244-.622.975-2.924c.35.203.68.403 1.005.601zM3.056 7.9h20.89l-.769 2.306-8.761 3.894h-2.82l-7.768-3.884zm5.286 16.12a102.34 102.34 0 0 0 2.76-.603v.562zm3.559-9.155l2.2.029V33.1h-2.2zM20.1 28.1v18.8h26.8V28.1zm26 18H20.9V28.9h25.2zm-4-5.6h.8a4.394 4.394 0 1 1-3.187-4.231l-.22.77A3.6 3.6 0 1 0 42.1 40.5zM24 31.1h19v.8H24zm14 2.8h-9v-.8h9zm5.717 1.917l.566.566-5.783 5.783-2.283-2.283.566-.566 1.717 1.717zM24 41.1h5v.8h-5z" id="icon-ui-svg--base"/></svg></span>
+			
+		</div>
+
+		<div class="text-container">
+			<h3 class="card-title esri-text__title" data-link-type="internal">Integrated geospatial infrastructure</h3>
+
+			
+				<div class="card-text esri-text__description">Read how organizations are working beyond borders, jurisdictions, and sectors to address shared challenges.</div>
+			
+		</div>
+
+	</div>
+	</a>
+</article>
+</li>
+
+
+
+                <!-- End Component Parsys -->
+            </ul>
+            
+            
+
+            
+
+            
+            <div class="card-container-v3_i18n">
+                <div class="card-container-v3_i18n-previous">Previous</div>
+                <div class="card-container-v3_i18n-next">Next</div>
+            </div>
+
+            
+            
+                
+                    <button class="paginate-container" hidden data-paginate="false">
+                      <span>Show More</span> <calcite-icon icon="chevron-down"/>
+                    </button>
+						        <calcite-pagination class="paginate-container" page-size="" start-item="1" total-items="" hidden data-paginate-calcite="false" scale="m" calcite-hydrated=""></calcite-pagination>
+                
+            
+            
+
+            
+            
+        </div>
+    </div>
+</div>
+</div>
+<div class="elastic-content-strip aem-GridColumn aem-GridColumn--default--12">
+
+	<link rel="stylesheet" href="assets/www.esri.com/0c18e16027f1-clientlibs.css" type="text/css">
+<script defer src="assets/www.esri.com/89dcd3a5f84e-clientlibs.js"></script>
+
+
+
+
+
+
+
+<div class="ecs__wrapper">
+
+	
+
+	<div class="ecs__main ">
+		
+			
+			<section class="ecs__panel has-background has-background--color   calcite-mode-dark" style="--bg-color: #0051af;    --bg-img-size: cover;">
+				
+					<a href="https://community.esri.com/t5/esri-geoportal-server/ct-p/esri-geoportal-server" class="ecs__link-wrapper" data-event="track-component" data-component-name="Elastic content strip" data-link-text="ec-strip_Become a part of the community" data-component-link="Become a part of the community - Join Esri Community" data-component-link-placement="1" data-component-link-type="full">
+						<div class="ecs__content calcite-animate animate-delay__1x" data-animation="calcite-animate__in-up">
+							
+
+							<div class="ecs__panel__icon">
+								<svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M25.349 42.9a18.233 18.233 0 0 1-18.25-18.173A17.718 17.718 0 0 1 24.624 7.1a16.405 16.405 0 0 1 4.224.552l.386.103-1.447 5.39-.389-.106a10.58 10.58 0 0 0-2.807-.37 11.666 11.666 0 0 0-11.448 11.576 12.177 12.177 0 0 0 20.083 9.189.803.803 0 0 1 1.102.056l3.35 3.514a.8.8 0 0 1-.041 1.148A18.299 18.299 0 0 1 25.349 42.9zm-.725-35A16.916 16.916 0 0 0 7.899 24.727a17.456 17.456 0 0 0 29.2 12.832l-3.35-3.517a12.98 12.98 0 0 1-21.407-9.797A12.477 12.477 0 0 1 24.59 11.87a11.503 11.503 0 0 1 2.63.298l1.032-3.841a15.618 15.618 0 0 0-3.629-.427zm15.543 20H24.209a5.135 5.135 0 0 1-5.11-5.15.651.651 0 0 1 .651-.65h14.774a11.708 11.708 0 0 0-2.43-5.592l-.13-.159 1.67-6.281.475.356A17.317 17.317 0 0 1 40.9 24.248v2.918a.734.734 0 0 1-.733.734zm-20.265-5a4.334 4.334 0 0 0 4.307 4.2h15.89v-2.852a16.546 16.546 0 0 0-6-12.816l-1.257 4.727a12.701 12.701 0 0 1 2.518 6.095l.128.646z" id="icon-ui-svg--base"/></svg>
+							</div>
+
+							
+
+							<h2 class="esri-text__title title-text ">
+								Become a part of the community</h2>
+							
+								<p class="esri-text__description">
+									Connect with Esri Geoportal Server users to ask questions and find resources.</p>
+								<div class="ecs__link">
+                  Join Esri Community
+                  <calcite-icon icon="arrowRight" scale="s"></calcite-icon>
+                </div>
+							
+						</div>
+					</a>
+				
+			</section>
+		
+			
+			<section class="ecs__panel has-background has-background--color   calcite-mode-dark" style="--bg-color: #00428F;    --bg-img-size: cover;">
+				
+					<a href="https://www.esri.com/en-us/arcgis/open-vision/initiatives/open-data" class="ecs__link-wrapper" data-event="track-component" data-component-name="Elastic content strip" data-link-text="ec-strip_Explore alternatives" data-component-link="Explore alternatives - Learn more" data-component-link-placement="2" data-component-link-type="full">
+						<div class="ecs__content calcite-animate animate-delay__2x" data-animation="calcite-animate__in-up">
+							
+
+							<div class="ecs__panel__icon">
+								<svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M32.865 9.286l-.01-.003a29.839 29.839 0 0 0-8.848-1.177 30.114 30.114 0 0 0-8.872 1.13c-2.602.839-4.035 2.031-4.035 3.357a2.327 2.327 0 0 0 .77 1.69c2.338 2.293 9.555 2.666 12.122 2.613.142.002.298.004.466.004 2.896 0 9.463-.45 11.672-2.616a2.328 2.328 0 0 0 .77-1.691c0-1.312-1.395-2.455-4.035-3.307zm2.705 4.427c-1.972 1.933-8.635 2.443-11.578 2.383-2.92.06-9.59-.45-11.562-2.385a1.539 1.539 0 0 1-.53-1.118c0-.923 1.301-1.893 3.468-2.592a29.271 29.271 0 0 1 8.637-1.095 29.249 29.249 0 0 1 8.62 1.143c2.208.713 3.475 1.64 3.475 2.544a1.54 1.54 0 0 1-.53 1.12zm.365 21.068a19.078 19.078 0 0 1-2.126.875.588.588 0 0 0-.166 1.055l4.837 3.207a1.223 1.223 0 0 0 1.277.047A4.201 4.201 0 0 0 41.9 36.31V12.821c0-4.239-8.03-7.687-17.9-7.687S6.1 8.582 6.1 12.82c0 7.473 13.7 8.054 17.9 8.054 8.181 0 11.76-1.377 13.1-2.125v14.227a1.983 1.983 0 0 1-1.165 1.804zm1.643-16.888a.623.623 0 0 0-.634.019c-.799.507-4.094 2.163-12.944 2.163-4.012 0-17.1-.523-17.1-7.254 0-3.734 7.831-6.887 17.1-6.887s17.1 3.153 17.1 6.887v23.488a3.398 3.398 0 0 1-1.735 2.958.421.421 0 0 1-.443-.016l-4.477-2.967a34.517 34.517 0 0 0 1.819-.773 2.784 2.784 0 0 0 1.636-2.534v-14.54a.62.62 0 0 0-.322-.544zm-11.102 27.66a.652.652 0 0 0 .69-.092l5.87-4.967a.648.648 0 0 0-.001-.989l-5.87-4.966a.648.648 0 0 0-1.065.496V37.1H24c-7.765 0-10.988-1.48-12.218-2.364a2.12 2.12 0 0 1-.882-1.719v-5.073c.59.061 1.148.097 1.792.116a40.544 40.544 0 0 0 10.85-1.934.554.554 0 0 0-.169-1.074c-4.856-.17-11.637-1.242-16.101-3.745a.685.685 0 0 0-.39-.1.785.785 0 0 0-.78.786V35.48c.054 4.161 7.916 7.42 17.898 7.42h2.1v2.066a.653.653 0 0 0 .376.589zM24 42.1c-9.38 0-17.05-2.975-17.099-6.627L6.88 22.005c4.95 2.774 11.743 3.557 15.097 3.777a39.824 39.824 0 0 1-9.286 1.478 18.022 18.022 0 0 1-1.794-.12l-.797-.082v5.96a2.923 2.923 0 0 0 1.215 2.369C12.914 36.533 16.412 37.9 24 37.9h2.252a.648.648 0 0 0 .648-.648v-1.89L32.38 40l-5.48 4.638v-1.89a.648.648 0 0 0-.648-.648z" id="icon-ui-svg--base"/></svg>
+							</div>
+
+							
+
+							<h2 class="esri-text__title title-text ">
+								Explore alternatives</h2>
+							
+								<p class="esri-text__description">
+									Many organizations use ArcGIS to share open data. These capabilities are included at no cost in ArcGIS Online and ArcGIS Hub.</p>
+								<div class="ecs__link">
+                  Learn more
+                  <calcite-icon icon="arrowRight" scale="s"></calcite-icon>
+                </div>
+							
+						</div>
+					</a>
+				
+			</section>
+		
+	</div>
+</div>
+</div>
+<div class="cta-container aem-GridColumn aem-GridColumn--default--12">
+	<script defer src="assets/www.esri.com/2c361a6cbd08-clientlibs.js"></script>
+
+
+
+
+
+
+	<div class="cta-questions calcite-mode-dark">
+		
+		
+			<div class="grid-container ctaprimary">
+				
+
+	<link rel="stylesheet" href="assets/www.esri.com/9d4e7262178b-clientlibs.css" type="text/css">
+
+
+
+
+
+
+
+
+<div class="leader-2 phone-leader-1 tablet-leader-1 text-center">
+	
+	<h2 class="esri-text__title text-center">
+		Download Esri Geoportal Server
+	</h2>
+</div>
+
+
+    <p class="esri-text__subtitle text-center">Contact us via GitHub.</p>
+
+
+
+
+
+
+    <div class="calcite-button-wrapper" data-event="track-component" data-component-name="CTA Container" data-component-link="Download Esri Geoportal Server - Go to GitHub" data-component-link-type="button">
+
+        <calcite-button class="cta-primary-button" id="CTAButton" tabindex='-1' appearance="solid" color="blue" kind="brand" scale="l" href="https://esri.github.io/geoportal-server/" data-primary="true" target="_blank" rel="noopener" aria-describedby="new-window">Go to GitHub
+        </calcite-button>
+
+    </div>
+
+
+
+
+
+			</div>
+			
+			
+		
+		
+		
+	</div>
+
+
+</div>
+<div class="experiencefragment aem-GridColumn aem-GridColumn--default--12">
+
+    
+    
+
+    
+
+
+
+<div class="xf-content-height">
+    <div class="root responsivegrid">
+
+
+<div class="aem-Grid aem-Grid--12 aem-Grid--default--12 ">
+    
+    <div class="cta-container aem-GridColumn aem-GridColumn--default--12">
+	
+
+
+
+
+
+	<div class="cta-questions calcite-mode-dark" id="help">
+		
+		
+			<div class="grid-container ctaprimary">
+				
+
+	
+
+
+<div class="unauthored-primary"></div>
+
+
+			</div>
+			
+				<div class="grid-container ctasecondary">
+					<div class="cta-questions_social">
+							<div class="cta-questions_block size-4">
+								
+	<link rel="stylesheet" href="assets/www.esri.com/379e5c4cd620-clientlibs.css" type="text/css">
+
+
+
+
+
+
+<h2 class="esri_text-title ">Get help and technical support</h2>
+<div class="block-group block-group-3-up phone-block-group-1-up questions-contact">
+
+	
+		<a href="/en-us/contact#t=3" class="block question-container" data-event="track-component" data-component-name="CTA Container" data-component-link="Get help and technical support - Customer service" data-component-link-placement="0" data-component-link-type="button">
+			<div class="question">
+				
+				<div class="esri-text__iconContainer text-center">
+					<svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M7.9 34.956a16.874 16.874 0 0 1 16.6-17.1 16.874 16.874 0 0 1 16.6 17.1A1.123 1.123 0 0 1 40 36.1H9a1.123 1.123 0 0 1-1.1-1.144zM39.312 40.9c1.7 0 2.631.74 2.77 2.2H6.939c.222-1.123 1.388-2.2 3.66-2.2zM23.939 21.068l.035.8a12.76 12.76 0 0 0-11.772 10.226l-.781-.168a13.557 13.557 0 0 1 12.517-10.858zM39.312 40.1H24.9v-3.2H40a1.925 1.925 0 0 0 1.9-1.944 17.68 17.68 0 0 0-17-17.88V14.9H29v-.8h-9v.8h4.1v2.177a17.68 17.68 0 0 0-17 17.88A1.925 1.925 0 0 0 9 36.9h15.1v3.2H10.6c-3.092 0-4.5 1.762-4.5 3.4v.4h36.8v-.4c0-2.161-1.308-3.4-3.588-3.4zM40.45 8.116l-2.12 2.121-.567-.566 2.12-2.121zM11.237 9.671l-.566.566-2.121-2.12.566-.567zM42 19.1h3v.8h-3zm-35 .8H4v-.8h3zM24.9 2v3h-.8V2z" id="icon-ui-svg--base"/></svg>
+				</div>
+				<p class="esri_text-description">Customer service</p>
+				<p class="question-sub-title"></p>
+			</div>
+		</a>
+	
+
+	
+		<a href="/en-us/contact#t=5" class="block question-container" data-event="track-component" data-component-name="CTA Container" data-component-link="Get help and technical support - Technical support" data-component-link-placement="0" data-component-link-type="button">
+			<div class="question">
+				
+				<div class="esri-text__iconContainer text-center">
+					<svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M39.973 19.342l.069-.016a67.604 67.604 0 0 0-.898-3.54A16.04 16.04 0 0 0 23.514 4.1 16.006 16.006 0 0 0 7.797 16.11c-.175.663-.324 1.326-.477 1.99H6.5a1.402 1.402 0 0 0-1.4 1.4v2a1.402 1.402 0 0 0 1.4 1.4h1.4v-3.792q.304-1.398.67-2.796A15.216 15.216 0 0 1 23.514 4.9a15.248 15.248 0 0 1 14.86 11.104 66.99 66.99 0 0 1 .805 3.156c-.375.029-1.054.27-1.054 1.659v8.47c0 1.376.666 1.625 1.043 1.658-2.449 5.636-4.985 9.933-11.21 10.536a1.979 1.979 0 0 0-1.904-1.464h-2.108a1.981 1.981 0 1 0 0 3.962h2.108a1.978 1.978 0 0 0 1.953-1.699c6.887-.656 9.598-5.636 12.153-11.61 1.29-.717 2.766-2.661 2.766-3.924V23.36c0-1.324-1.624-3.396-2.953-4.018zM7.1 22.1h-.6a.6.6 0 0 1-.6-.6v-2a.6.6 0 0 1 .6-.6h.6zm18.954 21.081h-2.108a1.181 1.181 0 0 1 0-2.362h2.108a1.181 1.181 0 0 1 0 2.362zm16.071-16.433c0 1.207-2.003 3.406-2.856 3.406-.284 0-.343-.47-.343-.865v-8.47c0-.395.06-.865.343-.865.853 0 2.856 2.2 2.856 3.406z" id="icon-ui-svg--base"/></svg>
+				</div>
+				<p class="esri_text-description">Technical support</p>
+				<p class="question-sub-title"></p>
+			</div>
+		</a>
+	
+
+	
+		<a href="/en-us/contact#t=4" class="block question-container" data-event="track-component" data-component-name="CTA Container" data-component-link="Get help and technical support - Training" data-component-link-placement="0" data-component-link-type="button">
+			<div class="question">
+				
+				<div class="esri-text__iconContainer text-center">
+					<svg id="icon-ui-svg" class="icon-ui-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M3.1 3.1v29.8h18.022v-.8h-6.834l-.022-.085a2.155 2.155 0 0 0-.065-.222 2.158 2.158 0 0 1 .637-1.212 3.437 3.437 0 0 0 .619-.969 1.832 1.832 0 0 0-.075-1.147 2.476 2.476 0 0 1-.135-.694c0-1.29-1.323-1.598-2.386-1.847-.55-.128-1.236-.288-1.363-.543-.564-1.126-.044-1.73.851-2.623a3.397 3.397 0 0 0 1.32-2.323c0-.71-.376-1.875-1.384-1.977a2.859 2.859 0 0 0-1.465.243 2.548 2.548 0 0 1-1.021.228c-.452 0-.94-.268-.94-.702a2.549 2.549 0 0 1 .424-1.271 3.296 3.296 0 0 0 .52-1.65 4.085 4.085 0 0 0-.17-1.089 3.3 3.3 0 0 1-.144-.882 1.502 1.502 0 0 1 1.414-1.574c.699 0 1.032.533 1.543 1.45a2.353 2.353 0 0 0 2.243 1.153c1.738 0 2.846-2.012 2.846-3.398a1.047 1.047 0 0 1 .942-1.098 1.692 1.692 0 0 1 1.02.47 2.397 2.397 0 0 0 1.504.635c1.218 0 1.733-.915 2.188-1.723a3.494 3.494 0 0 1 1.236-1.482A3.41 3.41 0 0 0 25.918 3.9H44.1v7.411l-.02.002a3.967 3.967 0 0 1-2.516-1.1 2.894 2.894 0 0 1-.59-.865c-.289-.556-.65-1.248-1.569-1.248a2.346 2.346 0 0 0-1.865 1.304c-.42.598-.705.965-1.21.965a2.178 2.178 0 0 1-.778-.198 2.895 2.895 0 0 0-1.06-.25c-.835 0-1.765.573-1.765 1.396v1.54a1.36 1.36 0 0 1-.497.98l.576.556a2.134 2.134 0 0 0 .72-1.537v-1.54c0-.306.544-.595.965-.595a2.174 2.174 0 0 1 .775.197 2.894 2.894 0 0 0 1.063.25 2.346 2.346 0 0 0 1.865-1.304c.421-.598.705-.965 1.211-.965.397 0 .551.225.86.819a3.552 3.552 0 0 0 .771 1.096 4.743 4.743 0 0 0 3.044 1.3l.02-.003v19.99H39.88v.799h5.02V3.1zm20.944 3.964a4.15 4.15 0 0 0-1.551 1.793c-.474.84-.777 1.316-1.492 1.316a1.69 1.69 0 0 1-1.021-.472 2.395 2.395 0 0 0-1.503-.633 1.85 1.85 0 0 0-1.742 1.898c0 .892-.796 2.598-2.046 2.598a1.588 1.588 0 0 1-1.57-.789c-.474-.85-1.012-1.814-2.216-1.814a2.3 2.3 0 0 0-2.214 2.374 3.99 3.99 0 0 0 .17 1.085 3.32 3.32 0 0 1 .145.886 2.54 2.54 0 0 1-.424 1.267 3.307 3.307 0 0 0-.521 1.654 1.644 1.644 0 0 0 1.74 1.502 3.289 3.289 0 0 0 1.311-.283 2.066 2.066 0 0 1 1.094-.192c.464.047.666.805.666 1.18 0 .675-.528 1.201-1.086 1.758-.825.823-1.852 1.848-1.002 3.547.296.59 1.073.772 1.897.965 1.068.25 1.768.458 1.768 1.067a3.178 3.178 0 0 0 .167.92 1.197 1.197 0 0 1 .087.66 2.869 2.869 0 0 1-.486.729 2.797 2.797 0 0 0-.814 1.713 1.277 1.277 0 0 0 .06.307H3.9V3.9h21.202c.201 1.225.173 2.499-1.058 3.164zm15.288 16.939a2.691 2.691 0 0 1-1.529-3.69 1.589 1.589 0 0 0-2.117-2.117 2.725 2.725 0 0 1-2.185.056 2.695 2.695 0 0 1-1.503-1.584 1.59 1.59 0 0 0-2.996 0 2.69 2.69 0 0 1-3.688 1.528 1.609 1.609 0 0 0-1.807.31 1.593 1.593 0 0 0-.312 1.808 2.69 2.69 0 0 1-1.527 3.688 1.59 1.59 0 0 0 0 2.996 2.69 2.69 0 0 1 1.527 3.688 1.574 1.574 0 0 0 1.905 2.182v14.564l5.4-4.57 5.4 4.57V32.867a1.571 1.571 0 0 0 1.903-2.18 2.692 2.692 0 0 1 1.529-3.69 1.589 1.589 0 0 0 0-2.994zM30.5 41.814l-4.6 3.893V32.612a2.72 2.72 0 0 1 1.599.138 2.692 2.692 0 0 1 1.503 1.584 1.59 1.59 0 0 0 2.996-.001 2.698 2.698 0 0 1 1.504-1.585 2.725 2.725 0 0 1 1.598-.136v13.095zm8.564-15.57a3.492 3.492 0 0 0-1.983 4.786.79.79 0 0 1-.153.897.8.8 0 0 1-.899.155 3.49 3.49 0 0 0-4.785 1.983.79.79 0 0 1-1.488.001 3.489 3.489 0 0 0-4.788-1.983.781.781 0 0 1-.894-.156.792.792 0 0 1-.156-.897 3.49 3.49 0 0 0-1.982-4.786.79.79 0 0 1 0-1.488 3.49 3.49 0 0 0 1.982-4.786.79.79 0 0 1 .154-.897.801.801 0 0 1 .898-.155 3.488 3.488 0 0 0 4.786-1.982.79.79 0 0 1 1.489 0 3.487 3.487 0 0 0 4.784 1.982.789.789 0 0 1 1.052 1.053 3.49 3.49 0 0 0 1.982 4.785.789.789 0 0 1 .001 1.488zM30.5 22.2a3.3 3.3 0 1 0 3.3 3.3 3.304 3.304 0 0 0-3.3-3.3zm0 5.8a2.5 2.5 0 1 1 2.5-2.5 2.503 2.503 0 0 1-2.5 2.5z" id="icon-ui-svg--base"/></svg>
+				</div>
+				<p class="esri_text-description">Training</p>
+				<p class="question-sub-title trailer-0"></p>
+			</div>
+		</a>
+	
+
+</div>
+
+
+
+
+							</div>
+					</div>
+				</div>
+			
+			
+		
+		
+		
+	</div>
+
+
+</div>
+
+    
+</div>
+</div>
+
+</div>
+
+</div>
+
+    
+</div>
+</main>
+
+	
+	
+    
+     <script defer src="assets/www.esri.com/c29c1935dc60-container.js"></script>
+ 
+
+<div hidden><span id="new-window">opens in new window</span></div>
+
+<calcite-modal id="page-modal" scale="m" width="m" aria-modal="true" role="dialog">
+  <div slot="header"></div>
+  <div slot="content"></div>
+</calcite-modal>
+
+<div id="live-region" class="assistText" aria-live="polite"></div>
+
+<script src="assets/webapps-cdn.esri.com/8f9b1a51ae73-esriChat.js"></script>
+<script src="assets/webapps-cdn.esri.com/7f26ba22b3a0-instantpage.min.js"></script>
+
+
+
+    
+
+    
+
+    
+
+
+        <script type="text/javascript">_satellite.pageBottom();</script>
+
+
+    
+    
+
+	
+    
+<script src="assets/www.esri.com/b0bc255575c1-clientlib-dependencies.js"></script>
+
+
+
+
+</body>
+
 </html>
