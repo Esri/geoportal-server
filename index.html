@@ -130,6 +130,62 @@
         --theme-color10: var(--theme-color-secondary-dark10);
         --theme-color50: var(--theme-color-secondary-dark50);
       }
+
+      .geoportal-release-banner .grid-container {
+        display: flex;
+        align-items: center;
+        gap: 3rem;
+      }
+
+      .geoportal-release-banner .contentbar-text {
+        flex: 0 1 50%;
+      }
+
+      .geoportal-release-banner .release-schedule-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-left: auto;
+        padding: 0.85rem 1.25rem;
+        border: 2px solid #fff;
+        border-radius: 0.25rem;
+        color: #fff;
+        font-weight: 600;
+        line-height: 1.25;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      .geoportal-release-banner .release-schedule-link:hover,
+      .geoportal-release-banner .release-schedule-link:focus-visible {
+        background-color: #fff;
+        color: #0051af;
+      }
+
+      .geoportal-release-banner .release-schedule-link:focus-visible {
+        outline: 3px solid #fff;
+        outline-offset: 4px;
+      }
+
+      @media (max-width: 900px) {
+        .geoportal-release-banner .grid-container {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 0;
+          padding-bottom: 2.5rem;
+        }
+
+        .geoportal-release-banner .contentbar-text {
+          flex: initial;
+          max-inline-size: 100%;
+          margin-bottom: 1rem;
+        }
+
+        .geoportal-release-banner .release-schedule-link {
+          margin-left: 0;
+        }
+      }
     </style>
 
     <link
@@ -462,7 +518,7 @@
 
           <div class="contentbar-wrapper">
             <section
-              class="contentbar--content left-aligned calcite-mode-dark alignleft calcite-animate has-background has-background--color"
+              class="contentbar--content left-aligned calcite-mode-dark alignleft calcite-animate has-background has-background--color geoportal-release-banner"
               data-animation="calcite-animate__in-up"
               style="background-color: #0051af;"
             >
@@ -478,6 +534,9 @@
                     </p>
                   </div>
                 </div>
+                <a class="release-schedule-link" href="release-calendar.html">
+                  Release schedule <span aria-hidden="true">→</span>
+                </a>
               </div>
             </section>
           </div>
